@@ -1,0 +1,97 @@
+name: Publish design reviews
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "results/**"
+      - "site/**"
+      - "designs/**"
+      - "src/opencad/site/**"
+      - "src/opencad/render.py"
+      - "tests/test_site.py"
+      - ".github/workflows/deploy-site.yml"
+  pull_request:
+    paths:
+      - "results/**"
+      - "site/**"
+      - "designs/**"
+      - "src/opencad/site/**"
+      - "src/opencad/render.py"
+      - "tests/test_site.py"
+      - ".github/workflows/deploy-site.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build static site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # LFS bandwidth is metered: restore the object store and fetch only what changed
+      - name: List LFS objects
+        run: git lfs ls-files --long | cut -d' ' -f1 | sort > .lfs-objects
+
+      - name: Restore LFS cache
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs
+          key: lfs-${{ hashFiles('.lfs-objects') }}
+          restore-keys: lfs-
+
+      - name: Fetch LFS objects
+        run: git lfs pull
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install project
+        run: uv sync --frozen --python 3.12
+
+      - name: Test site publishing contract
+        run: uv run --frozen pytest tests/test_site.py -q
+
+      - name: Restore card renders
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/opencad/site-cards
+          key: site-cards-${{ github.run_id }}
+          restore-keys: site-cards-
+
+      - name: Build site
+        run: uv run --frozen python -m opencad.site build --out _site
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+          include-hidden-files: true
+
+  deploy:
+    name: Deploy GitHub Pages
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    steps:
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Deploy site
+        id: deployment
+        uses: actions/deploy-pages@v5
