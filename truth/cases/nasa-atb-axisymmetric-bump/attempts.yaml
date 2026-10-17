@@ -1,0 +1,155 @@
+attempts:
+- started: '2026-09-16T09:36:54Z'
+  arm: text-and-points
+  backend: zoo
+  design: nasa-atb-axisymmetric-bump
+  stage_reached: scored
+  force: false
+  resume_from: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nasa-atb-axisymmetric-bump-1789551415
+  draft:
+    ok: true
+    rounds: 1
+    thread_id: 01a0a993-9758-7b51-8b0f-23042fe90812
+    problems: []
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0a9a4-edd5-74c1-b09e-1709f342cb3a
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 11
+      required_total: 11
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 3099
+  finished: '2026-09-16T10:28:34Z'
+- started: '2026-09-20T05:52:55Z'
+  arm: text-and-points
+  backend: build123d
+  design: nasa-atb-axisymmetric-bump
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nasa-atb-axisymmetric-bump
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 76ce84dd-4186-4207-9021-aaf6f4061587
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/nasa-atb-axisymmetric-bump/manifest.yaml'''
+  seconds: 627
+  finished: '2026-09-20T06:03:24Z'
+- started: '2026-09-20T05:52:56Z'
+  arm: text-and-points
+  backend: freecad
+  design: nasa-atb-axisymmetric-bump
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nasa-atb-axisymmetric-bump
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 05a5654f-98ea-4f75-9acc-d8068ad833c4
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/nasa-atb-axisymmetric-bump/manifest.yaml'''
+  seconds: 720
+  finished: '2026-09-20T06:04:55Z'
+- started: '2026-09-20T05:52:55Z'
+  arm: text-and-points
+  backend: cadquery
+  design: nasa-atb-axisymmetric-bump
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nasa-atb-axisymmetric-bump
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 035ff6a5-7fe6-4345-89d1-b1e5f833a060
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 11
+      required_total: 11
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 849
+  finished: '2026-09-20T06:07:07Z'
+- started: '2026-09-20T06:07:21Z'
+  finished: '2026-09-20T06:07:23Z'
+  arm: text-and-points
+  design: nasa-atb-axisymmetric-bump
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 11
+      required_total: 11
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 155d6a4edb15bf5c9b7724ad0f9b0150c4dd462543a5e25047c1454189c4ccec
+  seconds: 9
+  backend: build123d
+- started: '2026-09-20T06:07:31Z'
+  finished: '2026-09-20T06:07:31Z'
+  arm: text-and-points
+  design: nasa-atb-axisymmetric-bump
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 11
+      required_total: 11
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 96fe1959a6890bdfc26261e7e3785efdd4b7484bb6ea03110a057f1ba9032ad5
+  seconds: 7
+  backend: freecad

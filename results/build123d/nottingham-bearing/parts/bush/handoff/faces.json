@@ -1,0 +1,133 @@
+{
+  "named_faces": {
+    "endFront": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 4893.014850002834,
+      "ok": true,
+      "position": 0.0,
+      "centroid_uv": [
+        4.379603313844965e-16,
+        -40.346426906896816
+      ]
+    },
+    "endBack": {
+      "plane": "z",
+      "at": 75.0,
+      "normal": "+",
+      "found": 1,
+      "area": 4893.014850002834,
+      "ok": true,
+      "position": 75.0,
+      "area_expected": 4893.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        -40.346
+      ],
+      "center_error": 0.0004269068968199008,
+      "centroid_uv": [
+        4.379603313844965e-16,
+        -40.346426906896816
+      ]
+    },
+    "splitInlet": {
+      "plane": "y",
+      "at": 0.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1867.5,
+      "ok": true,
+      "position": 0.0,
+      "area_expected": 1867.5,
+      "area_ok": true,
+      "center_expected": [
+        -62.55,
+        37.5
+      ],
+      "center_error": 7.105427357601002e-15,
+      "centroid_uv": [
+        -62.550000000000004,
+        37.5
+      ]
+    },
+    "splitOutlet": {
+      "plane": "y",
+      "at": 0.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1867.5,
+      "ok": true,
+      "position": 0.0,
+      "area_expected": 1867.5,
+      "area_ok": true,
+      "center_expected": [
+        62.55,
+        37.5
+      ],
+      "center_error": 7.105427357601002e-15,
+      "centroid_uv": [
+        62.550000000000004,
+        37.5
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "endFront",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "endBack",
+      "plane": "z",
+      "at": 75.0,
+      "normal": "+",
+      "area": 4893.0,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        -40.346
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "splitInlet",
+      "plane": "y",
+      "at": 0.0,
+      "normal": "+",
+      "area": 1867.5,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        -62.55,
+        37.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "splitOutlet",
+      "plane": "y",
+      "at": 0.0,
+      "normal": "+",
+      "area": 1867.5,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        62.55,
+        37.5
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 4
+}

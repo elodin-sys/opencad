@@ -1,0 +1,8 @@
+Source URL: https://zoo.dev/docs/glossary/part
+Title: Part
+
+# Part
+
+An individual component of a design.
+
+In modeling, a part is refered to as an individual component. It can either be used as a standalone piece or as part of an assembly. Often, a part is manufactured in bulk quantities, unless it is a [one-off](/docs/glossary/one-off) part.

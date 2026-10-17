@@ -1,0 +1,184 @@
+schema_version: 1
+kind: assembly
+name: nottingham-bearing
+intent: >-
+  Half-journal bearing test section of the University of Nottingham highly loaded bearing rig, reconstructed from
+  sources/bearing-packet.md (Layton et al. 2026, Lubricants 14(2) 76, section 2; the only and authoritative source, text
+  only, no CAD, so the reference geometry is the stated dimensions): an EN24T steel shaft with a D100.0 journal turning
+  positively about +z on a revolute joint in a stationary 180-degree EN24T bush (D100.2 bore, 75 long, z = 0..75, below
+  the shaft with bottom dead centre toward -y), with the concentric 0.1 mm Eastman Turbo Oil 2197 film between them as a
+  derived fluid body at rest. Predict with the reduced thermal Reynolds film analysis, at six speed/load points of the
+  test matrix (1000-4000 rpm, 10-20 kN), the film pressure at the -20 and -45 deg tappings, the minimum operating film
+  thickness and its angle from BDC, and the ratio of the maximum bush-centreline temperature to the temperature nearest
+  the inlet (-85 deg).
+units: {length: mm, angle: deg}
+frame:
+  origin: on the bearing axis in the plane of the bush end face z = 0 (the bush spans z = 0..75)
+  axes:
+    x: "horizontal, from the axis toward the outlet edge of the bush arc (+90 deg from BDC); the inlet edge is at -x"
+    y: "vertical, from bottom dead centre (BDC, -y, the bush below the shaft) toward the shaft"
+    z: "bearing axis; the shaft turns positively about +z, so its surface at BDC moves toward +x"
+  datums:
+    - {name: A, description: bush end face z = 0}
+    - {name: B, description: bearing axis x = y = 0}
+    - {name: C, description: "bush split plane y = 0 (inlet edge at -x, outlet edge at +x)"}
+    - {name: D, description: "bush axial centreline z = 37.5 (centre tappings, shaft mid-length)"}
+envelope: {min: [-75.0, -75.0, -77.5], max: [75.0, 50.0, 152.5], tolerance: 0.1}
+datum_part: bush
+parts:
+  - name: bush
+    kind: modelled
+    design: nottingham-bearing-bush
+    intent: >-
+      Stationary 180-degree half-journal bush, EN24T steel with an Ra 0.1 um bore, in its own frame, which is the
+      assembly frame: bearing axis +z through the origin, end faces z = 0 and z = 75 (length 75.0, axial centreline
+      z = 37.5). Bore D100.2 (radius 50.1, diameter tolerance 0.01) about the z axis, spanning exactly 180 deg below the
+      axis. Angles t are measured from bottom dead centre (BDC, the -y direction), positive toward +x, a bore point being
+      (50.1 sin t, -50.1 cos t, z): the arc runs from t = -90 deg (inlet edge, x = -50.1) through BDC (t = 0) to
+      t = +90 deg (outlet edge, x = +50.1), and both split faces lie in the plane y = 0. Outside surface: a concentric
+      half cylinder D150 (radius 75, inferred; the sources give no outside dimension), so the body is the half annulus
+      50.1 <= r <= 75, y <= 0, 0 <= z <= 75. Interfaces: the bore faces the D100.0 shaft journal across a 0.1 mm radial
+      clearance and is the outer wall of the oil film; the split faces (y = 0) and end faces (z = 0, z = 75) bound the
+      film edges. The six pressure tappings (t = -20 and -45 deg at z = 18.5, 37.5 and 56) and the centreline
+      thermocouple row (t = -85..+90 deg, 1 mm below the bore) are measurement locations only: no holes, grooves,
+      chamfers or feed ports (the inlet film generator is not modelled).
+    material: EN24T steel
+    density_kg_m3: 7850
+    description: datum body; stationary half-journal bush carrying the tappings and thermocouples
+  - name: shaft
+    kind: modelled
+    design: nottingham-bearing-shaft
+    intent: >-
+      Instrumented EN24T steel shaft (Ra 0.1 um) in its own frame: rotation axis +z through the origin, origin at
+      mid-length, which is mid-way between the two supporting cylindrical roller bearings (230 apart) and sits on the
+      bush axial centreline at rest. A plain D100.0 cylinder (radius 50.0, diameter tolerance 0.01) from z = -115 to
+      z = +115 (length 230, the support span; bearing seats, shoulders and the drive end are not stated and not
+      modelled). Interfaces: the journal surface runs concentrically in the D100.2 bush bore over z = -37.5..+37.5 of
+      this frame with a 0.1 mm radial clearance and is the inner, moving wall of the oil film; the end faces z = -115
+      and z = +115 are the support-bearing stations. No keyways, pockets or holes (the ultrasonic film sensors are not
+      modelled).
+    material: EN24T steel
+    density_kg_m3: 7850
+    description: rotating journal shaft, driven at the case speed
+  - name: oil
+    kind: derived
+    role: fluid
+    material: Eastman Turbo Oil 2197
+    density_kg_m3: 996.8
+    description: >-
+      Oil film between the shaft journal and the bush bore at rest (concentric): the half annulus 50.0 <= r <= 50.1
+      over the bush arc (y <= 0, t = -90..+90 deg) and length (z = 0..75), volume (pi/2)(50.1^2 - 50.0^2)(75) =
+      1179.3 mm3, built in the assembly source from the placed bush bore and shaft.
+parameters:
+  - {name: journalDiameter, value: 100.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/bearing-packet.md, Unit under test", description: shaft journal diameter}
+  - {name: bushBoreDiameter, value: 100.2, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/bearing-packet.md, Unit under test", description: half-journal bush bore diameter}
+  - {name: radialClearance, value: 0.1, unit: mm, provenance: derived, tolerance: 0.01, formula: "(bushBoreDiameter - journalDiameter) / 2", description: "nominal radial clearance at zero load (the packet states 100 um)"}
+  - {name: bushLength, value: 75.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/bearing-packet.md, Unit under test", description: "bush axial length, z = 0..75"}
+  - {name: bushCentreline, value: 37.5, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/bearing-packet.md, Unit under test", description: "axial position of the bush centreline; the journal joint station"}
+  - {name: bushArc, value: 180.0, unit: deg, provenance: stated, tolerance: 0.1, source: "sources/bearing-packet.md, Unit under test", description: "bush arc, -90 deg (inlet edge) through BDC to +90 deg (outlet edge)"}
+  - {name: supportSpan, value: 230.0, unit: mm, provenance: stated, tolerance: 0.1, source: "sources/bearing-packet.md, Unit under test", description: "distance between the two support roller bearings; the modelled shaft length"}
+  - {name: bushOuterDiameter, value: 150.0, unit: mm, provenance: inferred, tolerance: 0.1, rationale: "the sources give no outside dimension; a 24.9 mm wall leaves room for the tappings and the thermocouples 1 mm below the bore", description: bush outside diameter}
+joints:
+  - name: journal
+    kind: revolute
+    parent: bush
+    child: shaft
+    parent_frame: {origin: [0.0, 0.0, 37.5], axis: [0.0, 0.0, 1.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0]}
+    offset: 0.0
+    drive: {kind: motor, case_value: speedRpm, description: "shaft speed set point per case (+-4 rpm), positive about +z so the surface at BDC moves toward +x"}
+    description: "shaft mid-length on the bush centreline, concentric with the bore at rest; the reduced film analysis solves the operating eccentricity"
+  - name: oilFixed
+    kind: rigid
+    parent: bush
+    child: oil
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: the derived film is built in the assembly frame and stays with the stationary bush
+fluid_volumes:
+  - name: oil
+    body: oil
+    walls: [bush]
+    minus: [shaft]
+    caps:
+      - {name: splitCap, point: [0.0, 0.0, 37.5], normal: [0.0, 1.0, 0.0]}
+      - {name: endCap0, point: [0.0, -50.05, 0.0], normal: [0.0, 0.0, -1.0]}
+      - {name: endCap75, point: [0.0, -50.05, 75.0], normal: [0.0, 0.0, 1.0]}
+    seed: [0.0, -50.05, 37.5]
+    volume: {expected: 1179.3, tolerance_rel: 0.05, provenance: derived, note: "(pi/2)(50.1^2 - 50.0^2) x 75, the concentric half-annulus film"}
+    description: "concentric film at rest; the seed sits mid-film at BDC (0.05 mm from each wall, the film being 0.1 mm thick)"
+boundaries:
+  - {name: oilFeed, role: inlet, body: oil, select: region, region: [[-50.2, -0.05, -0.05], [-49.9, 0.05, 75.05]], description: "film inlet edge at -90 deg (x = -50.05, y = 0), fed by the inlet film generator"}
+  - {name: oilOutlet, role: outlet, body: oil, select: region, region: [[49.9, -0.05, -0.05], [50.2, 0.05, 75.05]], description: "film outlet edge at +90 deg (x = +50.05, y = 0), into the ambient chamber"}
+  - {name: endZ0, role: opening, body: oil, select: plane, point: [0.0, -50.05, 0.0], normal: [0.0, 0.0, -1.0], description: "side-leakage end z = 0, ambient chamber pressure"}
+  - {name: endZ75, role: opening, body: oil, select: plane, point: [0.0, -50.05, 75.0], normal: [0.0, 0.0, 1.0], description: "side-leakage end z = 75, ambient chamber pressure"}
+  - {name: shaftSurface, role: rotating_wall, body: oil, select: cylinder, point: [0.0, 0.0, 0.0], direction: [0.0, 0.0, 1.0], radius: 50.0, tolerance: 0.02, description: "film face on the D100.0 journal, rotating at the case speed"}
+  - {name: bushBore, role: wall, body: oil, select: rest, description: "film face on the stationary D100.2 bush bore"}
+operating_cases:
+  - {id: n1000w10, values: {speedRpm: 1000.0, loadKN: 10.0}, units: {speedRpm: rpm, loadKN: kN}, split: development, source: "sources/bearing-packet.md, Test matrix", description: "1000 rpm, 10 kN applied normal load along BDC"}
+  - {id: n2000w15, values: {speedRpm: 2000.0, loadKN: 15.0}, units: {speedRpm: rpm, loadKN: kN}, split: held_out, source: "sources/bearing-packet.md, Test matrix", description: "2000 rpm, 15 kN applied normal load along BDC"}
+  - {id: n3000w10, values: {speedRpm: 3000.0, loadKN: 10.0}, units: {speedRpm: rpm, loadKN: kN}, split: development, source: "sources/bearing-packet.md, Test matrix", description: "3000 rpm, 10 kN applied normal load along BDC"}
+  - {id: n3000w15, values: {speedRpm: 3000.0, loadKN: 15.0}, units: {speedRpm: rpm, loadKN: kN}, split: held_out, source: "sources/bearing-packet.md, Test matrix", description: "3000 rpm, 15 kN applied normal load along BDC"}
+  - {id: n4000w10, values: {speedRpm: 4000.0, loadKN: 10.0}, units: {speedRpm: rpm, loadKN: kN}, split: development, source: "sources/bearing-packet.md, Test matrix", description: "4000 rpm (highest speed, 20 L/min supply), 10 kN applied normal load along BDC"}
+  - {id: n4000w20, values: {speedRpm: 4000.0, loadKN: 20.0}, units: {speedRpm: rpm, loadKN: kN}, split: held_out, source: "sources/bearing-packet.md, Test matrix", description: "4000 rpm (highest speed, 20 L/min supply), 20 kN applied normal load along BDC"}
+observables:
+  - {id: p20c_n1000w10, quantity: pressure, unit: MPa, simulation: film, case: n1000w10, location: [-17.135, -47.079, 37.5], averaging: steady, description: "film pressure at the -20 deg tap on the bush centreline (z = 37.5)"}
+  - {id: p20c_n3000w10, quantity: pressure, unit: MPa, simulation: film, case: n3000w10, location: [-17.135, -47.079, 37.5], averaging: steady, description: "film pressure at the -20 deg tap on the bush centreline (z = 37.5)"}
+  - {id: p20s_n3000w10, quantity: pressure, unit: MPa, simulation: film, case: n3000w10, location: [-17.135, -47.079, 18.5], averaging: steady, description: "film pressure at the -20 deg tap, axial position z = 18.5"}
+  - {id: p45c_n3000w10, quantity: pressure, unit: MPa, simulation: film, case: n3000w10, location: [-35.426, -35.426, 37.5], averaging: steady, description: "film pressure at the -45 deg tap on the bush centreline (z = 37.5)"}
+  - {id: p20c_n3000w15, quantity: pressure, unit: MPa, simulation: film, case: n3000w15, location: [-17.135, -47.079, 37.5], averaging: steady, description: "film pressure at the -20 deg tap on the bush centreline (z = 37.5)"}
+  - {id: p20c_n4000w10, quantity: pressure, unit: MPa, simulation: film, case: n4000w10, location: [-17.135, -47.079, 37.5], averaging: steady, description: "film pressure at the -20 deg tap on the bush centreline (z = 37.5)"}
+  - {id: hmin_n1000w10, quantity: min_film_thickness, unit: um, simulation: film, case: n1000w10, averaging: minimum, description: minimum operating film thickness}
+  - {id: hminAngle_n1000w10, quantity: min_film_angle, unit: deg, simulation: film, case: n1000w10, averaging: steady, description: "angle of the minimum film from BDC, positive in the rotation direction"}
+  - {id: hmin_n3000w10, quantity: min_film_thickness, unit: um, simulation: film, case: n3000w10, averaging: minimum, description: minimum operating film thickness}
+  - {id: hminAngle_n3000w10, quantity: min_film_angle, unit: deg, simulation: film, case: n3000w10, averaging: steady, description: "angle of the minimum film from BDC, positive in the rotation direction"}
+  - {id: hmin_n4000w10, quantity: min_film_thickness, unit: um, simulation: film, case: n4000w10, averaging: minimum, description: minimum operating film thickness}
+  - {id: hminAngle_n4000w10, quantity: min_film_angle, unit: deg, simulation: film, case: n4000w10, averaging: steady, description: "angle of the minimum film from BDC, positive in the rotation direction"}
+  - {id: hmin_n3000w15, quantity: min_film_thickness, unit: um, simulation: film, case: n3000w15, averaging: minimum, description: minimum operating film thickness}
+  - {id: hminAngle_n3000w15, quantity: min_film_angle, unit: deg, simulation: film, case: n3000w15, averaging: steady, description: "angle of the minimum film from BDC, positive in the rotation direction"}
+  - {id: hmin_n2000w15, quantity: min_film_thickness, unit: um, simulation: film, case: n2000w15, averaging: minimum, description: minimum operating film thickness}
+  - {id: hminAngle_n2000w15, quantity: min_film_angle, unit: deg, simulation: film, case: n2000w15, averaging: steady, description: "angle of the minimum film from BDC, positive in the rotation direction"}
+  - {id: hmin_n4000w20, quantity: min_film_thickness, unit: um, simulation: film, case: n4000w20, averaging: minimum, description: minimum operating film thickness}
+  - {id: hminAngle_n4000w20, quantity: min_film_angle, unit: deg, simulation: film, case: n4000w20, averaging: steady, description: "angle of the minimum film from BDC, positive in the rotation direction"}
+  - {id: tRatio_n1000w10, quantity: max_temperature_ratio, unit: "", simulation: film, case: n1000w10, averaging: steady, description: "maximum bush-centreline temperature over the temperature nearest the inlet (-85 deg), both in degC"}
+  - {id: tRatio_n3000w10, quantity: max_temperature_ratio, unit: "", simulation: film, case: n3000w10, averaging: steady, description: "maximum bush-centreline temperature over the temperature nearest the inlet (-85 deg), both in degC"}
+  - {id: tRatio_n4000w10, quantity: max_temperature_ratio, unit: "", simulation: film, case: n4000w10, averaging: steady, description: "maximum bush-centreline temperature over the temperature nearest the inlet (-85 deg), both in degC"}
+simulations:
+  - id: film
+    physics: reduced
+    solver: reduced:reynolds_film
+    cases: [n1000w10, n2000w15, n3000w10, n3000w15, n4000w10, n4000w20]
+    bodies: [shaft, bush]
+    inputs:
+      oilDensity: {value: 996.8, unit: kg/m3, provenance: stated, source: "sources/bearing-packet.md, Lubricant (0.9968 at 15 degC)", rationale: "stated at 15 degC; about 3 % lower at the film temperatures, not corrected", uncertainty: 15.0}
+      oilViscosity40: {value: 26.98, unit: mm2/s, provenance: stated, source: "sources/bearing-packet.md, Lubricant (kinematic, 40 degC)"}
+      oilViscosity100: {value: 5.28, unit: mm2/s, provenance: stated, source: "sources/bearing-packet.md, Lubricant (kinematic, 100 degC)"}
+      oilSpecificHeat: {value: 2000.0, unit: J/kg K, provenance: inferred, rationale: "not stated in the paper; typical of polyol-ester (MIL-PRF-23699 class) turbine oils at 40-100 degC, about 1.9-2.1 kJ/kg K", uncertainty: 100.0}
+      inletTemperature: {value: 30.0, unit: degC, provenance: inferred, rationale: "the sources state the oil tank temperature (30 degC, cartridge heater), not the film inlet temperature; supply-line heating and hot-oil carry-over are neglected", uncertainty: 3.0}
+    settings: {load_key: loadKN, speed_key: speedRpm, grid: [181, 41], thermal: true, ratio_reference_deg: -85.0}
+    outputs: [p20c_n1000w10, p20c_n3000w10, p20s_n3000w10, p45c_n3000w10, p20c_n3000w15, p20c_n4000w10, hmin_n1000w10, hminAngle_n1000w10, hmin_n3000w10, hminAngle_n3000w10, hmin_n4000w10, hminAngle_n4000w10, hmin_n3000w15, hminAngle_n3000w15, hmin_n2000w15, hminAngle_n2000w15, hmin_n4000w20, hminAngle_n4000w20, tRatio_n1000w10, tRatio_n3000w10, tRatio_n4000w10]
+    refinement: [1.0, 0.5]
+    description: >-
+      Finite-difference Reynolds film over the placed bush arc and length with the thermal wedge: the applied load acts
+      along BDC (-y), the shaft turns at the case speed, the arc edges and bush ends are at ambient (zero gauge) chamber
+      pressure; the operating eccentricity and attitude follow from the load balance.
+acceptance:
+  clearances:
+    - {name: journalClearance, a: shaft, b: bush, min_gap: 0.09, max_gap: 0.11, description: "concentric radial clearance 0.100 at rest, +-0.01 from the stated 0.01 mm manufacturing tolerance"}
+  motions:
+    - {name: spin, drive: journal, range: [0.0, 360.0], steps: 8, pairs: [[shaft, bush]], description: "one shaft revolution; the plain journal must clear the bore at every step"}
+references:
+  - {path: sources/bearing-packet.md, kind: text, role: authoritative, sha256: 59abf634a3867c0c21ea6118b6bf08e72e4cfdfc5d0eb56ceacbfd8c8d944c4b, note: "Layton et al. (2026) Lubricants 14(2) 76, doi:10.3390/lubricants14020076, CC BY 4.0; section 2 (method) only, no measured results"}
+open_questions:
+  - "The bush outside geometry is not stated: it is modelled as a D150 half cylinder (inferred); the tapping and thermocouple holes, the inlet film generator and the loading mechanism are not modelled."
+  - "The shaft length, bearing seats and drive end are not stated: the shaft is a plain D100.0 x 230 cylinder spanning the two support-bearing centres, symmetric about the bush centreline (inferred); the support roller bearings and the chamber are not modelled."
+  - "The oil specific heat is not stated: 2000 J/kg K is inferred for a polyol-ester turbine oil (standard uncertainty 100 J/kg K)."
+  - "The film inlet temperature is not stated: it is taken as the 30 degC tank temperature (standard uncertainty 3 K); supply-line heating and hot-oil carry-over at the inlet edge are neglected."
+  - "The oil density is stated at 15 degC only; the analysis uses it at every film temperature (about 3 % high at 60 degC)."
+  - "Viscosity is stated at 40 and 100 degC only; the 30 degC inlet lies below that range, so the viscosity-temperature law extrapolates there."
+  - "The supply flow is stated only at the highest speed (20 L/min, partly overflowing); the film is taken as fully flooded at the -90 deg inlet edge in every case, with ambient (zero gauge) pressure at the arc edges and bush ends."
+  - "The EN24T density (7850 kg/m3) is inferred, and no thermal properties of the steel are stated; heat conduction into the bush and shaft is not an input of the reduced film analysis."
+  - "The thermocouples sit 1 mm below the bush surface while the reduced analysis predicts film temperatures; the temperature ratio compares the film maximum with the film at -85 deg."
+  - "The film is 0.1 mm thick, so the fluid seed cannot be 1 mm from every wall; it sits mid-film at BDC, 0.05 mm from each wall."
+  - "Rigid, aligned, smooth surfaces are assumed: elastic and thermal distortion of the highly loaded bush, shaft deflection between the supports, misalignment and the Ra 0.1 um roughness are not represented."
+release_status: reconstruction

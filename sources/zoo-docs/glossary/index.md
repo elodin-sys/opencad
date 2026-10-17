@@ -1,0 +1,8 @@
+Source URL: https://zoo.dev/docs/glossary
+Title: Glossary
+
+# Glossary
+
+Home to Zoo's lexicon
+
+Our software bridges the gap between software and hardware engineering, but the gap in how these two groups _speak_ is large. So we've gathered a list of terms that are normal in either or both of those domains, so that we can start building a shared understanding of software for hardware design.

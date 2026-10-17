@@ -1,0 +1,333 @@
+attempts:
+- started: '2026-09-15T07:31:19Z'
+  arm: text-only
+  backend: zoo
+  design: nasa-backstep-driver-seegmiller
+  stage_reached: scored
+  force: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nasa-backstep-driver-seegmiller-1789457479
+  draft:
+    ok: true
+    rounds: 1
+    thread_id: 01a0a3fa-381e-7420-bb97-070386b3c78d
+    problems: []
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0a406-0319-7ce0-8de4-1c5647639f78
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - edit_robustness
+    retry: false
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 2360
+  finished: '2026-09-15T08:10:39Z'
+- started: '2026-09-15T08:17:44Z'
+  arm: text-only
+  backend: zoo
+  design: nasa-backstep-driver-seegmiller
+  stage_reached: scored
+  note: 'targeted correction on the model thread (equality asserts removed, geometry
+    unchanged: STEP sha256 c6a4901ad133 identical), pipeline re-run from verify with
+    --no-retry'
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+    failed: []
+  seconds: 340
+  finished: '2026-09-15T08:17:44Z'
+- started: '2026-09-16T07:49:01Z'
+  finished: '2026-09-16T07:49:01Z'
+  arm: text-only
+  backend: zoo
+  design: nasa-backstep-driver-seegmiller
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552
+  seconds: 0
+- started: '2026-09-16T07:53:22Z'
+  arm: text-only
+  backend: zoo
+  design: nasa-backstep-driver-seegmiller
+  stage_reached: scored
+  force: true
+  resume_from: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nasa-backstep-driver-seegmiller-1789545204
+  draft:
+    ok: true
+    rounds: 1
+    thread_id: 01a0a934-d005-7903-b821-1d9a059f1c82
+    problems: []
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0a943-b4ac-7be0-a470-e13cb8df8643
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 2488
+  finished: '2026-09-16T08:34:52Z'
+- started: '2026-09-16T08:35:18Z'
+  finished: '2026-09-16T08:35:18Z'
+  arm: text-only
+  backend: zoo
+  design: nasa-backstep-driver-seegmiller
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552
+  seconds: 0
+- started: '2026-09-16T08:42:33Z'
+  finished: '2026-09-16T08:42:33Z'
+  arm: text-only
+  backend: zoo
+  design: nasa-backstep-driver-seegmiller
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552
+  seconds: 0
+- started: '2026-09-16T09:29:15Z'
+  finished: '2026-09-16T09:29:16Z'
+  arm: text-only
+  backend: zoo
+  design: nasa-backstep-driver-seegmiller
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552
+  seconds: 0
+- started: '2026-09-16T09:36:54Z'
+  finished: '2026-09-16T09:36:54Z'
+  arm: text-only
+  backend: zoo
+  design: nasa-backstep-driver-seegmiller
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552
+  seconds: 0
+- started: '2026-09-16T09:45:55Z'
+  finished: '2026-09-16T09:45:55Z'
+  arm: text-only
+  backend: zoo
+  design: nasa-backstep-driver-seegmiller
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552
+  seconds: 0
+- started: '2026-09-16T10:30:12Z'
+  finished: '2026-09-16T10:30:12Z'
+  arm: text-only
+  backend: zoo
+  design: nasa-backstep-driver-seegmiller
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552
+  seconds: 0
+- started: '2026-09-20T05:35:40Z'
+  arm: text-only
+  backend: freecad
+  design: nasa-backstep-driver-seegmiller
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nasa-backstep-driver-seegmiller
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 443ec56d-0743-4e4e-baed-ebdc43a7a724
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/nasa-backstep-driver-seegmiller/manifest.yaml'''
+  seconds: 287
+  finished: '2026-09-20T05:40:27Z'
+- started: '2026-09-20T05:35:39Z'
+  arm: text-only
+  backend: cadquery
+  design: nasa-backstep-driver-seegmiller
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nasa-backstep-driver-seegmiller
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: ae1922cf-d483-441c-9ce1-ddc2417273ea
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/nasa-backstep-driver-seegmiller/manifest.yaml'''
+  seconds: 379
+  finished: '2026-09-20T05:42:00Z'
+- started: '2026-09-20T05:35:40Z'
+  arm: text-only
+  backend: build123d
+  design: nasa-backstep-driver-seegmiller
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nasa-backstep-driver-seegmiller
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 2fb3109d-9ddd-4024-8cba-e1275b1d9f7c
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 440
+  finished: '2026-09-20T05:43:02Z'
+- started: '2026-09-20T05:43:22Z'
+  finished: '2026-09-20T05:43:24Z'
+  arm: text-only
+  design: nasa-backstep-driver-seegmiller
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 4f742bdbd5f678841ce4495d993d6123183eadf2b7da68aac2adfd5200271584
+  seconds: 2
+  backend: cadquery
+- started: '2026-09-20T05:43:25Z'
+  finished: '2026-09-20T05:43:25Z'
+  arm: text-only
+  design: nasa-backstep-driver-seegmiller
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: af0def5ba30969be38cf4d76e659cb6c894ff1080b29664703a9148126be066f
+  seconds: 0
+  backend: freecad

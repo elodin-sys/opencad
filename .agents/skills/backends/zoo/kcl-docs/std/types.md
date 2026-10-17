@@ -1,0 +1,41 @@
+# std::types
+
+Type names usable in signatures and `fn` parameter annotations.
+- `Axis2d`: An abstract and infinite line in 2d space.
+- `Axis3d`: An abstract and infinite line in 3d space.
+- `BoundedEdge`: A bounded edge of a solid.
+- `Edge`: An edge of a solid.
+- `Face`: A face of a solid.
+- `GdtAnnotation`: A GD&T annotation created by one of the `gdt` functions.
+- `Helix`: A helix.
+- `ImportedGeometry`: Represents geometry which is defined using some other CAD system and imported into KCL.
+- `Plane`: An abstract plane.
+- `Point2d`: A point in two dimensional space.
+- `Point3d`: A point in three dimensional space.
+- `Segment` !exp: A segment in a sketch created in a sketch block. It may be a line, arc, point, or other segment type.
+- `Sketch`: A sketch is a collection of paths.
+- `Solid`: A solid is a collection of extruded surfaces.
+- `TagDecl`: Tags are used to give a name (tag) to a specific path.
+- `TaggedEdge`: A tag which references a line, arc, or other edge in a sketch or an edge of a solid.
+- `TaggedFace`: A tag which references a face of a solid, including the distinguished tags `START` and `END`.
+- `any`: The `any` type is the type of all possible values in KCL. I.e., if a function accepts an argument with type `any`, then it can accept any value.
+- `bool`: A boolean value.
+- `cm`: 
+- `deg`: 
+- `fn`: The type of any function in KCL.
+- `ft`: 
+- `in`: 
+- `m`: 
+- `mm`: 
+- `never` !exp: The uninhabited type of computations that never complete normally.
+- `none` !exp: The type of the none (aka null) value.
+- `number`: A number.
+- `rad`: 
+- `string`: A sequence of characters
+- `tag`: Reference a previously created tag. Used much like a variable.
+- `yd`: 
+- `view::CameraView` !exp: A camera viewpoint, stored as intent: what the camera looks at and from which direction, not a snapshot of engine camera state.
+- `view::NamedView` !exp: A named view: a camera paired with the set of objects it shows or hides.
+- `view::Orientation` !exp: A standard camera orientation for a named view.
+- `view::Projection` !exp: The camera projection of a named view.
+- `view::Visibility` !exp: Whether the objects of a named view start visible or hidden.

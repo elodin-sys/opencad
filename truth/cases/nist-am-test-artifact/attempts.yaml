@@ -1,0 +1,155 @@
+attempts:
+- started: '2026-09-17T07:12:07Z'
+  arm: drawing-renders-sheet
+  backend: zoo
+  design: nist-am-test-artifact
+  stage_reached: scored
+  force: false
+  resume_from: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nist-am-test-artifact-1789629128
+  draft:
+    ok: true
+    rounds: 3
+    thread_id: 01a0ae35-6a94-74d1-956d-b7b06fecdc8d
+    problems: []
+  blockout:
+    ok: false
+    iterations: 2
+    thread_id: 01a0af52-5caa-75d3-9a71-bb1034e0d54b
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 69
+      required_total: 69
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 22435
+  finished: '2026-09-17T13:26:03Z'
+- started: '2026-09-20T07:03:52Z'
+  arm: drawing-renders-sheet
+  backend: build123d
+  design: nist-am-test-artifact
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nist-am-test-artifact
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: e5206c8f-28bf-48dc-9ee2-40be1660a9b4
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 1
+    stopped: gates pass
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/nist-am-test-artifact/manifest.yaml'''
+  seconds: 1001
+  finished: '2026-09-20T07:20:36Z'
+- started: '2026-09-20T07:03:52Z'
+  arm: drawing-renders-sheet
+  backend: cadquery
+  design: nist-am-test-artifact
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nist-am-test-artifact
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: d48141ed-66da-45ba-b6c9-537116d48099
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 1
+    stopped: gates pass
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/nist-am-test-artifact/manifest.yaml'''
+  seconds: 1166
+  finished: '2026-09-20T07:23:20Z'
+- started: '2026-09-20T07:03:54Z'
+  arm: drawing-renders-sheet
+  backend: freecad
+  design: nist-am-test-artifact
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nist-am-test-artifact
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 40e94e1c-91c7-4013-acee-2be4eac8b787
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 1
+    stopped: gates pass
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 69
+      required_total: 69
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 1336
+  finished: '2026-09-20T07:26:11Z'
+- started: '2026-09-20T07:26:26Z'
+  finished: '2026-09-20T07:26:28Z'
+  arm: drawing-renders-sheet
+  design: nist-am-test-artifact
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 69
+      required_total: 69
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 397838226f95c157ad23ee18050379a15dc20654640a56b623c95c1601773d52
+  seconds: 6
+  backend: cadquery
+- started: '2026-09-20T07:26:32Z'
+  finished: '2026-09-20T07:26:34Z'
+  arm: drawing-renders-sheet
+  design: nist-am-test-artifact
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 69
+      required_total: 69
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 4c1b667d5b3a5583bdca386d5a342210d52f69f8b55bbfd0db2098c0a8f8dcd0
+  seconds: 6
+  backend: build123d

@@ -1,0 +1,99 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Envelope body: the 36-tooth disc (gearTeeth.toothedDisc, y = envelopeMinY .. +discThickness) unioned with
+// the pointy-top hex-boss prism of circumradius hexBossVertex. The prism starts bossOverlap inside the disc top
+// (a proper volume overlap, never a coplanar cap) and ends at envelopeMinY + envelopeSizeY so the cap follows
+// envelopeSizeY edits. Socket and bore are cut by hexDrive.
+import envelopeMinY, envelopeSizeY, discThickness, hexBossVertex, hexBossFlat, hexPocketFlat, hubHeight, tipOuterRadius from "params.kcl"
+import toothedDisc from "gearTeeth.kcl"
+
+assert(tipOuterRadius, isGreaterThan = 0mm, error = "disc envelope radius must be positive")
+assert(discThickness, isGreaterThan = 0mm, error = "disc thickness must be positive")
+assert(envelopeSizeY, isGreaterThan = discThickness, error = "hex boss must stand above the disc")
+assert(hubHeight, isGreaterThan = 0mm, error = "hex boss height must be positive")
+assert(hexBossVertex, isGreaterThan = 0mm, error = "hex boss vertex radius must be positive")
+assert(hexBossVertex, isLessThan = tipOuterRadius, error = "hex boss must stay inside the disc envelope")
+assert(hexBossFlat, isGreaterThan = hexPocketFlat, error = "boss flats must sit outside the pocket flats")
+
+disc = toothedDisc()
+
+// Boss sketch plane bossOverlap below the disc top: sketch X = world +X, sketch Y = world +Z, extrude +Y.
+bossOverlap = 0.05mm
+bossPlane = {
+  origin = {
+    x = 0mm,
+    y = envelopeMinY + discThickness - bossOverlap,
+    z = 0mm
+  },
+  xAxis = { x = 1, y = 0, z = 0 },
+  yAxis = { x = 0, y = 0, z = 1 }
+}
+
+// Pointy-top hex (datum C): vertices on ±Z, flats parallel to YZ at x = ±hexBossVertex*cos(30deg).
+hexSketch = sketch(on = bossPlane) {
+  s1 = line(
+    start = [
+      hexBossVertex * cos(90deg),
+      hexBossVertex * sin(90deg)
+    ],
+    end = [
+      hexBossVertex * cos(150deg),
+      hexBossVertex * sin(150deg)
+    ],
+  )
+  s2 = line(
+    start = [
+      hexBossVertex * cos(150deg),
+      hexBossVertex * sin(150deg)
+    ],
+    end = [
+      hexBossVertex * cos(210deg),
+      hexBossVertex * sin(210deg)
+    ],
+  )
+  s3 = line(
+    start = [
+      hexBossVertex * cos(210deg),
+      hexBossVertex * sin(210deg)
+    ],
+    end = [
+      hexBossVertex * cos(270deg),
+      hexBossVertex * sin(270deg)
+    ],
+  )
+  s4 = line(
+    start = [
+      hexBossVertex * cos(270deg),
+      hexBossVertex * sin(270deg)
+    ],
+    end = [
+      hexBossVertex * cos(330deg),
+      hexBossVertex * sin(330deg)
+    ],
+  )
+  s5 = line(
+    start = [
+      hexBossVertex * cos(330deg),
+      hexBossVertex * sin(330deg)
+    ],
+    end = [
+      hexBossVertex * cos(30deg),
+      hexBossVertex * sin(30deg)
+    ],
+  )
+  s6 = line(
+    start = [
+      hexBossVertex * cos(30deg),
+      hexBossVertex * sin(30deg)
+    ],
+    end = [
+      hexBossVertex * cos(90deg),
+      hexBossVertex * sin(90deg)
+    ],
+  )
+}
+hexRegion = region(segments = [hexSketch.s1, hexSketch.s2])
+hexBoss = extrude(hexRegion, length = envelopeSizeY - discThickness + bossOverlap, direction = [0, 1, 0])
+hide(hexSketch)
+
+export datum = union([disc, hexBoss])

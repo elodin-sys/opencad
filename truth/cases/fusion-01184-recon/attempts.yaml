@@ -1,0 +1,162 @@
+attempts:
+- started: '2026-09-19T05:50:33Z'
+  arm: renders-and-sheet
+  backend: zoo
+  design: fusion-01184-recon
+  stage_reached: scored
+  force: false
+  resume_from: null
+  decompose: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-01184-recon-1789797034
+  draft:
+    ok: true
+    rounds: 1
+    thread_id: b5ad849b-cf96-4608-b4d2-fa0151ca03f4
+    problems: []
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: e6f4c4f1-c0e1-4bca-97e7-6b23c49092f0
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 1
+    stopped: the worker changed nothing
+  stuck_class: kernel
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 18
+      required_total: 18
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 2968
+  finished: '2026-09-19T06:40:02Z'
+- started: '2026-09-20T10:20:27Z'
+  arm: renders-and-sheet
+  backend: freecad
+  design: fusion-01184-recon
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-01184-recon
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 91a44435-ea06-4d43-95f2-ec78e431f6d7
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/fusion-01184-recon/manifest.yaml'''
+  seconds: 607
+  finished: '2026-09-20T10:30:34Z'
+- started: '2026-09-20T10:20:25Z'
+  arm: renders-and-sheet
+  backend: cadquery
+  design: fusion-01184-recon
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-01184-recon
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 897f3895-4f9b-459c-8ec1-88f4dda7c29a
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/fusion-01184-recon/manifest.yaml'''
+  seconds: 633
+  finished: '2026-09-20T10:31:01Z'
+- started: '2026-09-20T10:20:26Z'
+  arm: renders-and-sheet
+  backend: build123d
+  design: fusion-01184-recon
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-01184-recon
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 0b3cfef3-123a-4922-b744-76e1db4a33db
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 18
+      required_total: 18
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 641
+  finished: '2026-09-20T10:31:09Z'
+- started: '2026-09-20T10:31:24Z'
+  finished: '2026-09-20T10:31:26Z'
+  arm: renders-and-sheet
+  design: fusion-01184-recon
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 18
+      required_total: 18
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: f949fc85674d44793799d7bb4fd8f14df707cf8c6e43659d2bd710263c5c286f
+  seconds: 5
+  backend: cadquery
+- started: '2026-09-20T10:31:33Z'
+  finished: '2026-09-20T10:31:33Z'
+  arm: renders-and-sheet
+  design: fusion-01184-recon
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 18
+      required_total: 18
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 2399d6625d9567185cdcca4b875758824e7ff9296b564e4531b2a073cd6282dd
+  seconds: 5
+  backend: freecad

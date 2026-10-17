@@ -1,0 +1,123 @@
+{
+  "named_faces": {
+    "bottom": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 624.5132620651304,
+      "ok": true,
+      "position": 0.0,
+      "center_expected": [
+        15.0,
+        0.0
+      ],
+      "center_error": 1.779471643498305e-15,
+      "centroid_uv": [
+        14.999999999999998,
+        -1.0524119502604854e-16
+      ]
+    },
+    "top": {
+      "plane": "z",
+      "at": 5.0,
+      "normal": "+",
+      "found": 1,
+      "area": 624.5132620651304,
+      "ok": true,
+      "position": 5.0,
+      "center_expected": [
+        15.0,
+        0.0
+      ],
+      "center_error": 1.779471643498305e-15,
+      "centroid_uv": [
+        14.999999999999998,
+        -1.0524119502604854e-16
+      ]
+    },
+    "flankPos": {
+      "plane": "y",
+      "at": 8.0,
+      "normal": "+",
+      "found": 1,
+      "area": 150.0,
+      "ok": true,
+      "position": 8.0,
+      "area_expected": 150.0,
+      "area_ok": true,
+      "centroid_uv": [
+        15.0,
+        2.5
+      ]
+    },
+    "flankNeg": {
+      "plane": "y",
+      "at": -8.0,
+      "normal": "-",
+      "found": 1,
+      "area": 150.0,
+      "ok": true,
+      "position": -8.0,
+      "area_expected": 150.0,
+      "area_ok": true,
+      "centroid_uv": [
+        15.0,
+        2.5
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "bottom",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        15.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "top",
+      "plane": "z",
+      "at": 5.0,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        15.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "flankPos",
+      "plane": "y",
+      "at": 8.0,
+      "normal": "+",
+      "area": 150.0,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "flankNeg",
+      "plane": "y",
+      "at": -8.0,
+      "normal": "-",
+      "area": 150.0,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 4
+}

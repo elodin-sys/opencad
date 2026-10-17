@@ -1,0 +1,16 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import datum from "datum.kcl"
+import exterior from "exterior.kcl"
+import lowerMounts from "lowerMounts.kcl"
+import roofMounts from "roofMounts.kcl"
+import serviceWindows from "serviceWindows.kcl"
+import thermalOpenings from "thermalOpenings.kcl"
+
+// The fixed assembly frame and the separate cover survive every feature group.
+body = datum
+  |> exterior()
+  |> lowerMounts()
+  |> roofMounts()
+  |> serviceWindows()
+  |> thermalOpenings()

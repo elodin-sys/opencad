@@ -1,0 +1,235 @@
+Source URL: https://zoo.dev/docs/kcl-book/sketch_on_face.html
+Title: Sketch on face
+
+# Sketch on face
+- [Side faces](#side-faces)
+- [Standard faces](#standard-faces)
+- [Tags](#tags)
+- [Sketch on chamfer](#sketch-on-chamfer)
+- [Updating bodies, or creating new bodies?](#updating-bodies-or-creating-new-bodies)
+
+In the previous chapter, we looked at how leveraging KCL tags lets you query your edges (to find their length, or angle with the previous edge), or apply an edge cut (like a fillet or chamfer). But you can also tag more than just edges! In this chapter, we'll learn how to tag faces, and how that lets you build more complicated 3D models.
+
+## Side faces
+Let's start with a simple example. First, we'll sketch and extrude a triangle.
+
+```kcl=triangle_for_sketching
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Make a triangle
+sketch001 = sketch(on = YZ) {
+  line1 = line(start = [var 5.29mm, var -4.11mm], end = [var -4.31mm, var -4.11mm])
+  line2 = line(start = [var -4.31mm, var -4.11mm], end = [var 0.49mm, var 5.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.49mm, var 5.14mm], end = [var 5.29mm, var -4.11mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+  equalLength([line2, line3])
+  horizontal(line1)
+}
+
+// Extrude it
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 1)
+```
+
+When our triangle is extruded, its 3 edges create 3 new side faces, one for each original edge. I like to imagine extrusion like an invisible hand grabbing the flat sketch and pulling it upwards into the third dimension, slowly stretching each edge until they expand to become faces (surfaces). So, each new side face corresponds to an existing edge. And crucially, the faces are linked back to their parent edge. This means the face which grew out of the `line1` can be referred to via `extrude001.sketch.tags.line1`. We can use this to reference this face in our 3D model.
+
+Now, if we want to start a new sketch *on that face*, we can do so, with the [`faceOf`](https://zoo.dev/docs/kcl-std/functions/std-sketch-faceOf) function!
+
+```kcl
+myFace = faceOf(extrude001, face = region001.tags.line3)
+sketch003 = sketch(on = myFace) {
+  // We'll add lines to this sketch later.
+}
+```
+
+In all the previous example sketches, we've sketched on a *plane* (like XY or YZ). But now, we're passing a solid face (of our extruded triangle) instead. The solid has five faces (three side faces, a bottom, and a top), so we use [`faceOf`](https://zoo.dev/docs/kcl-std/functions/std-sketch-faceOf) to say which face in particular we want to sketch on. As we discussed above, the face can be referenced via `line1` (the line that it was extruded from). Now we can start sketching on this face, and even extrude that sketch too.
+
+```kcl=triangle_with_cylinder_sketched
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Make a triangle
+sketch001 = sketch(on = YZ) {
+  line1 = line(start = [var 5.29mm, var -4.11mm], end = [var -4.31mm, var -4.11mm])
+  line2 = line(start = [var -4.31mm, var -4.11mm], end = [var 0.49mm, var 5.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.49mm, var 5.14mm], end = [var 5.29mm, var -4.11mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+  equalLength([line2, line3])
+  horizontal(line1)
+}
+
+// Extrude it
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 1)
+
+// Sketch on a face of the triangle.
+face002 = faceOf(extrude001, face = region001.tags.line2)
+sketch003 = sketch(on = face002) {
+  line1 = line(start = [var -3.21mm, var 0mm], end = [var -2.7mm, var 0.65mm])
+  horizontal([line1.start, ORIGIN])
+  line2 = line(start = [var -2.7mm, var 0.65mm], end = [var -2.45mm, var 0.35mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var -2.45mm, var 0.35mm], end = [var -3.21mm, var 0mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+}
+
+// Extrude that sketch
+region002 = region(segments = [sketch003.line1, sketch003.line2])
+extrude002 = extrude(region002, length = 2)
+```
+
+Great! We extruded a solid (the triangle), and could sketch on one of its faces, even extruding that sketch.
+
+> **Note**: When you sketch on a face, the sketch uses the *global coordinate system*. This means when you use 2D points in your sketches, they're relative to the overall global scene, and *not* the face you're sketching on.
+
+Sketching on faces is a really common pattern when designing real-world objects. A LEGO brick is a good example -- first you'd sketch the rectangular brick, then you'd sketch on its top face, adding the little bumps on top. But wait a second. How would we specify the top face of the brick? That face isn't created from any particular edge. So we can't tag its `line` call and then reuse that tag for the face. What should we do?
+
+## Standard faces
+There's a simple solution to sketching on the top face. KCL has some built-in identifiers for the top and bottom face, [`END`](https://zoo.dev/docs/kcl-std/consts/std-END) and [`START`](https://zoo.dev/docs/kcl-std/consts/std-START). We prefer the terms "start" and "end" to "top" and "bottom" because the latter depend on your camera angle, so they can be ambiguous. "Start" always refers to the original face from your 2D sketch. "End" always refers to the new face created at the end of the extrusion. Let's use them!
+
+```kcl=triangle_top_and_bottom_sketches
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Same as previous example
+sketch001 = sketch(on = YZ) {
+  line1 = line(start = [var 5.29mm, var -4.11mm], end = [var -4.31mm, var -4.11mm])
+  line2 = line(start = [var -4.31mm, var -4.11mm], end = [var 0.49mm, var 5.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.49mm, var 5.14mm], end = [var 5.29mm, var -4.11mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+  equalLength([line2, line3])
+  horizontal(line1)
+}
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 1)
+
+// Changed: We're using `face = END` here, which is a built-in
+// identifier for the end of an extrusion.
+face002 = faceOf(extrude001, face = END)
+sketch003 = sketch(on = face002) {
+  line1 = line(start = [var -0.3mm, var 0.76mm], end = [var -1.26mm, var -1.25mm])
+  line2 = line(start = [var -1.26mm, var -1.25mm], end = [var 1.68mm, var -1.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 1.68mm, var -1.14mm], end = [var -0.3mm, var 0.76mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+}
+
+// Extrude that sketch
+region002 = region(segments = [sketch003.line1, sketch003.line2])
+extrude002 = extrude(region002, length = 1)
+```
+
+Great! These built-in face identifiers are always available on solids. We've learned how to sketch on the top, bottom and side faces. That covers all possible faces, right? Right? Not exactly! There's one more kind of face we haven't talked about yet.
+
+## Tags
+When you [`chamfer`](https://zoo.dev/docs/kcl-std/functions/std-solid-chamfer) an edge, it creates a new face, which can also be sketched on! But before we do, we've got to take a quick detour and talk about tags.
+
+When Zoo launched, tags were used a lot. These days, you probably won't ever need to use tags very much, if at all, because they've been mostly replaced by variables. There are still a *few* cases where you'll need tags, and sketching on a chamfered face is one of them. We're trying to phase them out, but we haven't finished that job yet.
+
+So far, we've been able to refer to geometric features (like edges and faces) by using variables. But tags let you refer to geometry that isn't assigned to a variable. For example, take the chamfered face created by a `chamfer(myRegion)` call. When we call `mySolid = chamfer(myRegion, length = 1)` the variable `mySolid` refers to the *entire* solid, including the chamfered face. How do we refer to some specific face, like the chamfered face?
+
+The solution: we use `mySolid = chamfer(myRegion, length = 1, tag = $myFace)`. That tags the face, so we can refer to it later as `myFace`. You can think of this like declaring a variable inside the function, when it executes. The `$` means you're declaring a tag. So, `$myFace` *declares* a tag called `myFace`. If you later use just `myFace`, you're *referring* to a tag that already exists.
+
+Here's another example. Say you extrude a square into a cube. As discussed above, the top of the cube can be referred to with the standard face `END`. You can sketch on that top face via `sketch(on = faceOf(extrude001, face = END))`. Say you extrude a cylinder from the cube. How do you sketch on the top face of the cylinder? Does `END` refer to the cylinder, or the cube?
+
+You can use `extrude(mySketch, tagEnd = $endOfCylinder)` to disambiguate these. Again, this defines a tag as part of the extrude, which refers to a particular face. Then you can use that tag later when you need to use the face.
+
+Generally you won't need to use this method, but there are some niches where it's helpful.
+
+## Sketch on chamfer
+Now that we understand tags, we can use them to sketch on a chamfer! When you [`chamfer`](https://zoo.dev/docs/kcl-std/functions/std-solid-chamfer) an edge, it creates a new face, which can also be sketched on! Consider this chamfered cube from the previous chapter:
+
+```kcl=chamfered_cube
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Same as previous examples
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Apply a chamfer
+chamferedCube = chamfer(
+  extrudeCube,
+  tags = [getOppositeEdge(extrudeCube.sketch.tags.line1)],
+  length = 0.2,
+)
+```
+
+The chamfer produced a new face, and we can sketch on it too. Firstly, we add a tag to the [`chamfer`](https://zoo.dev/docs/kcl-std/functions/std-solid-chamfer) call. Then we can use it in `faceOf`, and then we can sketch on it like any other face.
+
+```kcl=sketch_on_chamfered_cube
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Same as previous examples
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Apply a chamfer
+chamferedCube = chamfer(
+  extrudeCube,
+  tags = [getOppositeEdge(extrudeCube.sketch.tags.line1)],
+  length = 0.2,
+  // Add a tag to the chamfered face:
+  tag = $myChamferedFace,
+)
+
+// Refer back to the tagged face
+faceToSketchOn = faceOf(extrudeCube, face = myChamferedFace)
+
+// Start sketching on that face.
+triangle = sketch(on = faceToSketchOn) {
+  line1 = line(start = [var -0.37mm, var 0.33mm], end = [var -0.2mm, var 0.47mm])
+  line2 = line(start = [var -0.2mm, var 0.47mm], end = [var 0.26mm, var 0.29mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.26mm, var 0.29mm], end = [var -0.37mm, var 0.33mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+}
+region001 = region(segments = [triangle.line1, triangle.line2])
+extrude001 = extrude(region001, length = 0.4)
+```
+
+## Updating bodies, or creating new bodies?
+When you extrude a sketch from a face, you could be trying to do one of two things:
+
+- Mutating the original body, by adding a new extrusion to it
+- Creating a totally new body, which just happens to be touching the previous body.
+
+Here's an example. Say you extrude a square into a cube, and then you extrude a cylinder out of the cube. Should the cylinder be its own separate body? Or should there be a single body, with a cube volume and a cylindrical volume? Here's a visual:
+
+![The two kinds of extruded sketch-on-face](images/static/extrude_method.png)
+
+By default, extruding a sketch which was sketched on a face will *merge* the extrusion into the original body. In other words, the example on the left. But you can choose to make a *new* body instead (the example on the right). You can choose between this by setting the *extrude method*.
+
+- Use `extrude(method = MERGE)` (the default) to update the original solid.
+- Use `extrude(method = NEW)` (an optional override) to create a new solid instead.
+
+What's the practical difference between these? If you use `MERGE`, you've got one body. That means the single unified body will be translated, or rotated, or have its color changed, as one cohesive whole. With `NEW`, you've got two bodies, so you can reposition them independently, color them differently, etc. You'll learn how to move, rotate and recolor solids in the chapter on [transforms](transform_3d.md).
+
+OK! Now we've learned how to sketch on all sorts of things:
+
+- Standard planes like XY or -XZ
+- Tagged faces of existing solids
+- Top or bottom faces of solids, using [`START`](https://zoo.dev/docs/kcl-std/consts/std-START) and [`END`](https://zoo.dev/docs/kcl-std/consts/std-END)
+- Chamfered faces cut out of solids, by tagging the [`chamfer`](https://zoo.dev/docs/kcl-std/functions/std-solid-chamfer) call
+
+There's one more thing we can sketch on: custom planes. Let's learn more about planes in the next chapter.

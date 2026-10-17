@@ -1,0 +1,620 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/spleen-c1-blade/contract.yaml: 7 parameters {'stated': 4, 'measured (reference model)': 1, 'derived': 2}; sources unresolved {}; unanchored 0",
+        "open questions: 2 (blocking []); interfaces 4, unenforced ['sourceFrame', 'pressureSide', 'suctionSide', 'spanCaps'] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 4,
+          "measured (reference model)": 1,
+          "derived": 2
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "What material, density and manufacturing process, if any, should be assigned? The supplied sources establish geometry only; these fields remain null and no mass claim is made.",
+          "Is a specific original interpolation law required between published points? No spline degree, knot vector or continuity convention is supplied. The reconstruction must retain every point within 0.001 mm and preserve the contour without smoothing; exact between-point authoring geometry remains unspecified."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [
+          "sourceFrame",
+          "pressureSide",
+          "suctionSide",
+          "spanCaps"
+        ],
+        "interface_checks": []
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/spleen-c1-blade/inspect.json bbox.max_error = 0.0 (tol 0.01)",
+        "results/cadquery/spleen-c1-blade/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -0.19685863578579998,
+            -21.6984059788506,
+            0.0
+          ],
+          "expected_max": [
+            47.77582706417,
+            9.51390836469706,
+            165.0
+          ],
+          "measured_min": [
+            -0.1969,
+            -21.6984,
+            0.0
+          ],
+          "measured_max": [
+            47.7758,
+            9.5139,
+            165.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.01,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -0.19685863578579998,
+            -21.6984059788506,
+            0.0
+          ],
+          "expected_max": [
+            47.77582706417,
+            9.51390836469706,
+            165.0
+          ],
+          "measured_min": [
+            -0.1969,
+            -21.6984,
+            0.0
+          ],
+          "measured_max": [
+            47.7758,
+            9.5139,
+            165.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.01,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/spleen-c1-blade/inspect.json volume = 38055.1244 vs 38055.12443399581",
+        "results/cadquery/spleen-c1-blade/inspect.json surface_area = 20885.7127 vs 20885.71265168679",
+        "results/cadquery/spleen-c1-blade/inspect.json center_of_mass = [20.6197, 1.0449, 82.5] vs [20.619657984838426, 1.0449253890203034, 82.5]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 38055.12443399581,
+          "measured": 38055.1244,
+          "error": 0.0,
+          "band": 76.1102,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 20885.71265168679,
+          "measured": 20885.7127,
+          "error": 0.0,
+          "band": 41.7714,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            20.619657984838426,
+            1.0449253890203034,
+            82.5
+          ],
+          "measured": [
+            20.6197,
+            1.0449,
+            82.5
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.01,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/spleen-c1-blade/inspect.json features: 7/7 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {},
+        "interfaces": {}
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/cadquery/spleen-c1-blade/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/spleen-c1-blade/inspect.json agreement engine=38055.124434024314 step=38055.12443402208 stl=38055.12462585285 (rel tol 0.002; independent=False)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 38055.124434024314,
+        "kcl": 38055.124434024314,
+        "step": 38055.12443402208,
+        "stl": 38055.12462585285,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "engine_vs_step_rel": 5.869693032871337e-14,
+        "kcl_vs_step_rel": 5.869693032871337e-14,
+        "stl_vs_step_rel": 5.040865609300112e-09,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/spleen-c1-blade/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 0/0 values; infeasible refused 0/0; interfaces pinned 0"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "span",
+            "delta": 10.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 2306.3711778179277,
+                "measured": 2306.3711778194047,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  10.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  10.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "axialChord",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 799.2348292276137,
+                "measured": 799.2348292273527,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  1.0075237391351841,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  1.007523739134939,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "26c1b3a9520510eae47deeef5fd86fefc23507bd502e92d45158f356a4527c1b",
+          "re_export_sha256": "26c1b3a9520510eae47deeef5fd86fefc23507bd502e92d45158f356a4527c1b",
+          "ok": true
+        },
+        "sweep": {
+          "values": 0,
+          "passed": 0
+        },
+        "infeasible": {
+          "declared": 0,
+          "refused": 0
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/spleen-c1-blade/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=10",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "import cadquery",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "cadquery"
+          ],
+          "forbidden_imports": [],
+          "asserts": 10,
+          "sketch_blocks": 2,
+          "feature_ops": 2,
+          "construction_ops": {
+            "calls": 2,
+            "has_result": true
+          },
+          "parameters": {
+            "span": {
+              "found": true,
+              "value": 165.0,
+              "expected": 165.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "axialChord": {
+              "found": true,
+              "value": 47.6144470215,
+              "expected": 47.6144470215,
+              "file": "main.py",
+              "ok": true
+            },
+            "trailingEdgeY": {
+              "found": true,
+              "value": -21.59972305301,
+              "expected": -21.59972305301,
+              "file": "main.py",
+              "ok": true
+            },
+            "trailingEdgeRadius": {
+              "found": true,
+              "value": 0.435,
+              "expected": 0.435,
+              "file": "main.py",
+              "ok": true
+            },
+            "profilePerimeter": {
+              "found": true,
+              "value": 123.78447524923155,
+              "expected": 123.78447524923155,
+              "file": "main.py",
+              "ok": true
+            },
+            "trueChord": {
+              "found": true,
+              "value": 52.284640202739865,
+              "expected": 52.284640202739865,
+              "file": "main.py",
+              "ok": true
+            },
+            "signedStagger": {
+              "found": true,
+              "value": -24.40085023652175,
+              "expected": -24.40085023652175,
+              "file": "main.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 2031,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/spleen-c1-blade/export.json step.deterministic = True sha256 26c1b3a95205; stl=present; glb=present",
+        "results/cadquery/spleen-c1-blade/inspect.json valid = True solids = 1 (expected 1)",
+        "results/cadquery/spleen-c1-blade/inspect.json mesh watertight = True components = 1 void_shells = 0"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/cadquery/spleen-c1-blade/export/spleen-c1-blade.step",
+            "sha256": "26c1b3a9520510eae47deeef5fd86fefc23507bd502e92d45158f356a4527c1b",
+            "bytes": 8141214,
+            "deterministic": true,
+            "second_sha256": "26c1b3a9520510eae47deeef5fd86fefc23507bd502e92d45158f356a4527c1b"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/cadquery/spleen-c1-blade/export/spleen-c1-blade.stl",
+            "sha256": "42f795a05a2c1201a44c9fd2063693a158dc51cda37e08ff718bf5a3b4bc894a",
+            "bytes": 399884
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/cadquery/spleen-c1-blade/export/spleen-c1-blade.glb",
+            "sha256": "e6598ce78ac9d9d2cfe88586545c71982d6cb6660b77cc23767b6f576a7c50ed",
+            "bytes": 144708
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 7996,
+          "vertices": 4000,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 38055.12462585285,
+          "surface_area": 20885.712670760964,
+          "bbox_min": [
+            -0.19685862958431244,
+            -21.698406219482422,
+            0.0
+          ],
+          "bbox_max": [
+            47.77582550048828,
+            9.513908386230469,
+            165.0
+          ],
+          "center_of_mass": [
+            20.6196580472943,
+            1.044925342436621,
+            82.50000000000011
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread b921f8f3-6184-4cc4-982c-efbf968405db; engine versions ['2.8.0']; engine calls 8; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 8,
+        "allow_errors": false,
+        "engine_versions": [
+          "2.8.0"
+        ],
+        "zoo_versions": [
+          "2.8.0"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/spleen-c1-blade/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/spleen-c1-blade/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 2, 'has_result': True} lines = 2031"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "cadquery"
+        ],
+        "construction_ops": {
+          "calls": 2,
+          "has_result": true
+        },
+        "sketch_blocks": 2,
+        "feature_ops": 2
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

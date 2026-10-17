@@ -1,0 +1,175 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// fusion-13786-recon: 100 x 100 x 3 plate, south 45deg chamfers, north R3 corner pins,
+// central Ø5 through-hole, elliptical 35 x 14 through-slot, two Ø2 x 5 blind edge bores.
+// Frame: origin at the XY centre of the bottom face, +z through the thickness.
+
+plateWidth = 100mm
+plateHeight = 100mm
+plateThickness = 3mm
+holeDia = 5mm
+holeCentreX = 0mm
+holeCentreY = 0mm
+edgeHoleDia = 2mm
+edgeHoleY = 42mm
+edgeHoleDepth = 5mm
+edgeHoleZ = 1.5mm
+pinDia = 6mm
+pinCentreX = 47mm
+pinCentreY = 47mm
+chamferLeg = 5mm
+topStrip = 10mm
+midBridge = 9.5mm
+slotCentreX = 0mm
+slotCentreY = 26mm
+slotRx = 35mm
+slotRy = 14mm
+
+// Derived formulas recorded in the contract (not locked here):
+// edgeHoleZ = plateThickness / 2; pinCentreX = plateWidth / 2 - pinDia / 2;
+// pinCentreY = plateHeight / 2 - pinDia / 2; slotCentreY = holeCentreY + holeDia / 2 + midBridge + slotRy;
+// slotRy = (plateHeight / 2 - topStrip - holeCentreY - holeDia / 2 - midBridge) / 2.
+
+// Sanity guards: every guard is one-sided so a single parameter edit never trips a lock.
+assert(plateWidth, isGreaterThan = 0mm, error = "plateWidth must be positive")
+assert(plateHeight, isGreaterThan = 0mm, error = "plateHeight must be positive")
+assert(plateThickness, isGreaterThan = 0mm, error = "plateThickness must be positive")
+assert(chamferLeg, isGreaterThan = 0mm, error = "chamferLeg must be positive")
+assert(2 * chamferLeg, isLessThan = plateWidth, error = "chamfers must leave a south edge")
+assert(pinDia, isGreaterThan = 0mm, error = "pinDia must be positive")
+assert(pinDia, isLessThan = plateWidth, error = "corner pins must leave a north edge")
+assert(chamferLeg + pinDia / 2, isLessThan = plateHeight, error = "chamfer and pin must leave a side wall")
+assert(pinCentreX, isGreaterThan = 0mm, error = "pinCentreX must be on the +x side")
+assert(pinCentreX + pinDia / 2, isLessThanOrEqual = plateWidth / 2, error = "pin must stay inside the +x envelope")
+assert(pinCentreY + pinDia / 2, isLessThanOrEqual = plateHeight / 2, error = "pin must stay inside the +y envelope")
+assert(holeDia, isGreaterThan = 0mm, error = "holeDia must be positive")
+assert(holeCentreX - (holeDia / 2), isGreaterThan = -plateWidth / 2, error = "centre hole must stay inside -x")
+assert(holeCentreX + holeDia / 2, isLessThan = plateWidth / 2, error = "centre hole must stay inside +x")
+assert(holeCentreY - (holeDia / 2), isGreaterThan = -plateHeight / 2, error = "centre hole must stay inside -y")
+assert(holeCentreY + holeDia / 2, isLessThan = slotCentreY - slotRy, error = "centre hole must stay south of the slot (midBridge > 0)")
+assert(slotRx, isGreaterThan = 0mm, error = "slotRx must be positive")
+assert(slotRy, isGreaterThan = 0mm, error = "slotRy must be positive")
+assert(slotCentreX - slotRx, isGreaterThan = -plateWidth / 2, error = "slot must stay inside -x")
+assert(slotCentreX + slotRx, isLessThan = plateWidth / 2, error = "slot must stay inside +x")
+assert(slotCentreY + slotRy, isLessThan = plateHeight / 2, error = "slot must leave a top strip")
+assert(topStrip, isGreaterThan = 0mm, error = "topStrip must be positive")
+assert(midBridge, isGreaterThan = 0mm, error = "midBridge must be positive")
+assert(edgeHoleDia, isGreaterThan = 0mm, error = "edgeHoleDia must be positive")
+assert(edgeHoleZ - (edgeHoleDia / 2), isGreaterThan = 0mm, error = "edge bore must stay above the bottom face")
+assert(edgeHoleZ + edgeHoleDia / 2, isLessThan = plateThickness, error = "edge bore must stay below the top face")
+assert(edgeHoleDepth, isGreaterThan = 0mm, error = "edgeHoleDepth must be positive")
+assert(edgeHoleDepth, isLessThan = plateWidth / 2, error = "edge bores must not meet at the centre")
+assert(edgeHoleY + edgeHoleDia / 2, isLessThan = plateHeight / 2 - (pinDia / 2), error = "edge bore must open on the flat wall below the pin")
+assert(edgeHoleY - (edgeHoleDia / 2), isGreaterThan = -plateHeight / 2 + chamferLeg, error = "edge bore must open on the flat wall above the chamfer")
+assert(-plateWidth / 2 + edgeHoleDepth, isLessThan = slotCentreX - slotRx, error = "edge bores must end outside the slot")
+
+// Plate outline: exact coordinates, traced counter-clockwise from the south-west chamfer.
+halfW = plateWidth / 2
+halfH = plateHeight / 2
+cornerR = pinDia / 2
+plateSketch = sketch(on = XY) {
+  south = line(start = [-halfW + chamferLeg, -halfH], end = [halfW - chamferLeg, -halfH])
+  chamferSouthEast = line(start = [halfW - chamferLeg, -halfH], end = [halfW, -halfH + chamferLeg])
+  east = line(start = [halfW, -halfH + chamferLeg], end = [halfW, halfH - cornerR])
+  arcNorthEast = arc(start = [halfW, halfH - cornerR], end = [halfW - cornerR, halfH], center = [halfW - cornerR, halfH - cornerR])
+  north = line(start = [halfW - cornerR, halfH], end = [-halfW + cornerR, halfH])
+  arcNorthWest = arc(start = [-halfW + cornerR, halfH], end = [-halfW, halfH - cornerR], center = [-halfW + cornerR, halfH - cornerR])
+  west = line(start = [-halfW, halfH - cornerR], end = [-halfW, -halfH + chamferLeg])
+  chamferSouthWest = line(start = [-halfW, -halfH + chamferLeg], end = [-halfW + chamferLeg, -halfH])
+}
+plateRegion = region(segments = [
+  plateSketch.south,
+  plateSketch.chamferSouthEast
+])
+plateBlank = extrude(
+  plateRegion,
+  length = plateThickness,
+  tagStart = $bottomDatum,
+  tagEnd = $topDatum,
+)
+hide(plateSketch)
+
+// Elliptical through-slot. The engine has no KCL 2 ellipse segment and keeps circles circular
+// under non-uniform scale, so the ellipse is made exactly as the vertical projection of a
+// tilted circle: a disc of radius slotRx on a plane tilted about x by acos(slotRy / slotRx),
+// extruded along global +z. Every horizontal section is the slotRx x slotRy ellipse.
+slotTiltCos = slotRy / slotRx
+slotTiltSin = sqrt(1 - (slotTiltCos * slotTiltCos))
+slotToolStart = -slotRx - 1mm
+slotToolLength = 2 * slotRx + plateThickness + 2mm
+slotPlane = {
+  origin = [
+    slotCentreX,
+    slotCentreY,
+    slotToolStart
+  ],
+  xAxis = [1, 0, 0],
+  yAxis = [0, slotTiltCos, slotTiltSin]
+}
+slotSketch = sketch(on = slotPlane) {
+  slotCircle = circle(start = [var 35mm, var 0mm], center = [var 0mm, var 0mm])
+  coincident([slotCircle.center, ORIGIN])
+  horizontal([slotCircle.start, slotCircle.center])
+  radius(slotCircle) == slotRx
+}
+slotRegion = region(segments = [slotSketch.slotCircle])
+slotTool = extrude(slotRegion, length = slotToolLength, direction = [0, 0, 1])
+plateWithSlot = subtract(plateBlank, tools = [slotTool])
+hide(slotSketch)
+
+// Centre Ø holeDia through-hole: a tool cylinder overrunning both faces by 0.02 mm, then subtracted.
+cutOverrun = 0.02mm
+holePlane = offsetPlane(XY, offset = -cutOverrun)
+holeSketch = sketch(on = holePlane) {
+  holeCircle = circle(start = [var 2.5mm, var 0mm], center = [var 0mm, var 0mm])
+  fixed([
+    holeCircle.center,
+    [holeCentreX, holeCentreY]
+  ])
+  horizontal([holeCircle.start, holeCircle.center])
+  diameter(holeCircle) == holeDia
+}
+holeTool = extrude(region(segments = [holeSketch.holeCircle]), length = plateThickness + 2 * cutOverrun)
+
+// Two Ø edgeHoleDia blind bores along x at (edgeHoleY, edgeHoleZ), edgeHoleDepth deep from the
+// ±x walls. Tool cylinders start 0.02 mm outside the wall (no coplanar caps) and end on the
+// planar floors at x = ±(plateWidth / 2 - edgeHoleDepth). YZ plane: local x = global y, local y = global z.
+boreToolLength = edgeHoleDepth + cutOverrun
+boreNegPlane = offsetPlane(YZ, offset = -halfW - cutOverrun)
+boreNegSketch = sketch(on = boreNegPlane) {
+  boreNegCircle = circle(start = [var 43mm, var 1.5mm], center = [var 42mm, var 1.5mm])
+  fixed([
+    boreNegCircle.center,
+    [edgeHoleY, edgeHoleZ]
+  ])
+  horizontal([
+    boreNegCircle.start,
+    boreNegCircle.center
+  ])
+  diameter(boreNegCircle) == edgeHoleDia
+}
+boreNegTool = extrude(region(segments = [boreNegSketch.boreNegCircle]), length = boreToolLength)
+borePosPlane = offsetPlane(YZ, offset = halfW + cutOverrun)
+borePosSketch = sketch(on = borePosPlane) {
+  borePosCircle = circle(start = [var 43mm, var 1.5mm], center = [var 42mm, var 1.5mm])
+  fixed([
+    borePosCircle.center,
+    [edgeHoleY, edgeHoleZ]
+  ])
+  horizontal([
+    borePosCircle.start,
+    borePosCircle.center
+  ])
+  diameter(borePosCircle) == edgeHoleDia
+}
+borePosTool = extrude(region(segments = [borePosSketch.borePosCircle]), length = -boreToolLength)
+plate = subtract(plateWithSlot, tools = [holeTool, boreNegTool, borePosTool])
+hide([
+  holeSketch,
+  boreNegSketch,
+  borePosSketch
+])
+hide([holePlane, boreNegPlane, borePosPlane])
+hide([plateRegion, slotRegion])
+
+plate

@@ -1,0 +1,577 @@
+schema_version: 1
+name: fusion-01184-recon
+intent: >-
+  Reconstruct Fusion 360 Gallery body 36938_ae684b66_0002_2 (joint set joint_set_01184)
+  as editable parameterized KCL in the part's native frame (bbox min [100, 0, 70],
+  size [10, 88, 50] mm). The solid is a T: a 10 x 10 x 50 mm head with R4 vertical
+  corner fillets and a Ø5 bore along z, unioned with a Ø5 shaft along +y to y = 88.
+  Every hole, boss and shaft is an acceptance cylinder and every planar face level
+  is a named face. One solid; export STEP and STL. Held-out reconstruction: the
+  pipeline is frozen and the reference CAD is evaluator-only.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: >-
+    The dimension-sheet native frame (no re-alignment). [0, 0, 0] is the Fusion
+    origin; the part's axis-aligned bounding-box minimum corner sits at
+    [100, 0, 70], so the part occupies x = 100..110, y = 0..88, z = 70..120.
+  axes:
+    x: "+x through the 10 mm head width, from the remaining flat at x = 100 toward x = 110"
+    y: "+y along the shaft, from the remaining head flat at y = 0 toward the free end at y = 88"
+    z: "+z along the bore, from the head end at z = 70 toward z = 120"
+  datums:
+    - name: A
+      description: "remaining -y flat of the filleted head, y = 0 (2 mm x 50 mm)"
+    - name: B
+      description: "head end face at z = 70 (filleted 10 x 10 minus the Ø5 bore)"
+    - name: C
+      description: "remaining -x flat of the filleted head, x = 100 (2 mm x 50 mm)"
+
+envelope:
+  min: [100.0, 0.0, 70.0]
+  max: [110.0, 88.0, 120.0]
+  tolerance: 0.05
+
+parameters:
+  - name: xMin
+    value: 100
+    unit: mm
+    provenance: stated
+    source: "sources/dimension-sheet.md envelope bbox min [100.0, 0.0, 70.0]"
+    tolerance: 0.01
+    description: "head minimum x (native-frame bbox min x)"
+  - name: yMin
+    value: 0
+    unit: mm
+    provenance: stated
+    source: "sources/dimension-sheet.md envelope bbox min [100.0, 0.0, 70.0]"
+    tolerance: 0.01
+    description: "head minimum y / datum A"
+  - name: zMin
+    value: 70
+    unit: mm
+    provenance: stated
+    source: "sources/dimension-sheet.md envelope bbox min [100.0, 0.0, 70.0]"
+    tolerance: 0.01
+    description: "head minimum z / datum B"
+  - name: bodyWidth
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "sources/dimension-sheet.md envelope size [10.0, 88.0, 50.0] (x)"
+    tolerance: 0.01
+    description: "head extent along x"
+  - name: bodyDepth
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "sources/dimension-sheet.md +y face level y = 10 and bbox min y = 0"
+    tolerance: 0.01
+    description: "head extent along y, from yMin to the shaft junction"
+  - name: bodyHeight
+    value: 50
+    unit: mm
+    provenance: stated
+    source: "sources/dimension-sheet.md envelope size [10.0, 88.0, 50.0] (z)"
+    tolerance: 0.01
+    description: "head extent along z (bore length)"
+  - name: overallLength
+    value: 88
+    unit: mm
+    provenance: stated
+    source: "sources/dimension-sheet.md envelope size [10.0, 88.0, 50.0] (y)"
+    tolerance: 0.01
+    description: "overall y extent from yMin to the shaft free end"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 196.350
+        direction: increase
+        bbox_delta: [0, 10, 0]
+        tolerance_rel: 0.01
+      sweep: {min: 70, max: 100, steps: 4}
+      infeasible_deltas: [-80]
+  - name: holeDiameter
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "sources/dimension-sheet.md cylindrical features, hole Ø5 along [0, 0, 1] through [105, 5, 95]"
+    tolerance: 0.05
+    description: "through-bore diameter along z"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: -431.969
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.01
+      sweep: {values: [4, 5, 6]}
+      infeasible_deltas: [6]
+  - name: shaftDiameter
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "sources/dimension-sheet.md cylindrical features, pin Ø5 along [0, 1, 0] through [105, 48.854, 95]"
+    tolerance: 0.05
+    description: "side-shaft diameter along y"
+  - name: filletRadius
+    value: 4
+    unit: mm
+    provenance: stated
+    source: "sources/dimension-sheet.md four partial Ø8 pins at the 10 x 10 head corners (radius 4 = Ø8/2); remaining flats are 2 mm"
+    tolerance: 0.05
+    description: "vertical corner fillet radius of the head (four partial Ø8 cylinders)"
+  - name: xMax
+    value: 110
+    unit: mm
+    provenance: derived
+    formula: "xMin + bodyWidth"
+    tolerance: 0.01
+    description: "head maximum x"
+  - name: yHead
+    value: 10
+    unit: mm
+    provenance: derived
+    formula: "yMin + bodyDepth"
+    tolerance: 0.01
+    description: "y of the head/shaft junction plane"
+  - name: zMax
+    value: 120
+    unit: mm
+    provenance: derived
+    formula: "zMin + bodyHeight"
+    tolerance: 0.01
+    description: "head maximum z"
+  - name: holeCenterX
+    value: 105
+    unit: mm
+    provenance: derived
+    formula: "xMin + bodyWidth / 2"
+    tolerance: 0.01
+    source: "sources/dimension-sheet.md hole axis through [105.0, 5.0, 95.0]"
+    description: "bore and shaft centre x"
+  - name: holeCenterY
+    value: 5
+    unit: mm
+    provenance: derived
+    formula: "yMin + bodyDepth / 2"
+    tolerance: 0.01
+    source: "sources/dimension-sheet.md hole axis through [105.0, 5.0, 95.0]"
+    description: "bore centre y"
+  - name: shaftCenterZ
+    value: 95
+    unit: mm
+    provenance: derived
+    formula: "zMin + bodyHeight / 2"
+    tolerance: 0.01
+    source: "sources/dimension-sheet.md shaft axis through [105.0, 48.854, 95.0]"
+    description: "shaft and bore mid-z"
+
+features:
+  - id: head
+    kind: extrude
+    description: "10 x 10 mm rounded-square head extruded 50 mm along z from z = 70, R4 on the four vertical corners"
+    parameters: [xMin, yMin, zMin, bodyWidth, bodyDepth, bodyHeight, filletRadius, xMax, yHead, zMax]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[105.0, 1.25, 80.0], [101.25, 5.0, 80.0], [105.0, 8.75, 80.0]]
+        note: "inside the three remaining head walls; each probe is 1.25 mm from the Ø5 bore and the outer flat"
+      - method: face
+        face: faceXMin
+      - method: face
+        face: faceXMax
+      - method: face
+        face: faceYMin
+      - method: face
+        face: faceZMin
+      - method: face
+        face: faceZMax
+      - method: dimension
+        dimension: dimX
+      - method: dimension
+        dimension: dimZ
+  - id: cornerFillets
+    kind: fillet
+    description: "four partial Ø8 (R4) vertical cylinders at (104, 4), (104, 6), (106, 4), (106, 6)"
+    parameters: [filletRadius, bodyHeight]
+    verify:
+      - method: cylinder
+        cylinder: filletSw
+      - method: cylinder
+        cylinder: filletNw
+      - method: cylinder
+        cylinder: filletSe
+      - method: cylinder
+        cylinder: filletNe
+      - method: void
+        points: [[100.3, 0.3, 95.0], [100.3, 9.7, 95.0], [109.7, 0.3, 95.0], [109.7, 9.7, 95.0]]
+        note: "outside each R4 arc: distance from fillet centre to the bbox corner offset 0.3 mm is 5.23 > 4"
+  - id: bore
+    kind: hole
+    description: "Ø5 through-bore along z at (105, 5), from z = 70 to z = 120"
+    parameters: [holeDiameter, holeCenterX, holeCenterY, bodyHeight]
+    verify:
+      - method: void
+        points: [[105.0, 5.0, 95.0], [105.0, 5.0, 75.0], [105.0, 5.0, 115.0]]
+        note: "on the bore axis, 2.5 mm from the wall"
+      - method: cylinder
+        cylinder: boreHole
+      - method: section
+        section: sectionX105
+      - method: count
+        section: sectionX105
+        count: 2
+      - method: section
+        section: sectionZ95
+  - id: shaft
+    kind: boss
+    description: "Ø5 shaft along +y, axis through (105, z = 95), free end at y = 88; unioned into the head so the exposed pin starts at the fillet tangent y = 9.708"
+    parameters: [shaftDiameter, overallLength, holeCenterX, shaftCenterZ]
+    verify:
+      - method: solid
+        points: [[105.0, 44.0, 95.0], [105.0, 70.0, 95.0]]
+        note: "on the shaft axis, 2.5 mm from the wall"
+      - method: void
+        points: [[105.0, 44.0, 80.0]]
+        note: "15 mm below the shaft (shaft occupies z = 92.5..97.5)"
+      - method: cylinder
+        cylinder: shaftPin
+      - method: face
+        face: faceYShaftEnd
+      - method: face
+        face: faceYHeadLow
+      - method: face
+        face: faceYHeadHigh
+      - method: dimension
+        dimension: dimY
+      - method: section
+        section: sectionY44
+
+interfaces:
+  - name: headFlats
+    description: "remaining axis-aligned flats of the filleted head (2 mm x 50 mm); must survive shaft-length and bore-diameter edits"
+    must_not_change: true
+    checks: [faceXMin, faceXMax, faceYMin, dimX]
+  - name: headFillets
+    description: "four R4 vertical fillet cylinders of the head"
+    must_not_change: true
+    checks: [filletSw, filletNw, filletSe, filletNe]
+  - name: shaftCrossSection
+    description: "Ø5 shaft mid-span section at y = 44"
+    must_not_change: true
+    checks: [sectionY44]
+
+acceptance:
+  volume:
+    expected: 4863.73
+    tolerance_rel: 0.002
+    provenance: stated
+    note: >-
+      sources/dimension-sheet.md. Construction: bodyWidth*bodyDepth*bodyHeight
+      - 4*filletRadius^2*(1-pi/4)*bodyHeight - pi*(holeDiameter/2)^2*bodyHeight
+      + pi*(shaftDiameter/2)^2*(overallLength-bodyDepth) = 4863.05, plus ~0.68 mm3
+      of shaft/fillet cheek where the Ø5 shaft sits proud of the R4 arcs between
+      y = 9.708 and y = 10.
+  surface_area:
+    expected: 3802.07
+    tolerance_rel: 0.02
+    provenance: stated
+    note: "sources/dimension-sheet.md; closed-form omitted because the shaft/fillet blend is not a simple union of complete cylinders"
+  center_of_mass:
+    expected: [105.0, 18.856, 95.0]
+    tolerance: 0.1
+    provenance: stated
+    note: >-
+      sources/dimension-sheet.md. x = holeCenterX and z = shaftCenterZ by symmetry.
+      y is the volume-weighted mean of the filleted-and-bored head (~3332 mm3 near y = 5)
+      and the shaft (~1532 mm3 near y = 49).
+  solid_count: 1
+  sections:
+    - id: sectionX105
+      plane: x
+      at: 105.0
+      expect: {area: 640.0, loops: 2, holes: 0, area_tolerance_rel: 0.01}
+      description: "mid-x: isolated y = 0..2.5 wall plus the connected y = 7.5..88 T (head remnant + shaft)"
+    - id: sectionY44
+      plane: y
+      at: 44.0
+      expect: {area: 19.63, loops: 1, holes: 0, area_tolerance_rel: 0.01}
+      description: "mid-shaft Ø5 disk"
+    - id: sectionZ95
+      plane: z
+      at: 95.0
+      expect: {area: 456.92, loops: 1, holes: 1, area_tolerance_rel: 0.01}
+      description: "mid-z: filleted 10 x 10 minus Ø5 bore, plus the shaft strip to y = 88"
+  faces:
+    - name: faceXMin
+      plane: x
+      at: 100.0
+      normal: "-"
+      area: 100.0
+      area_tolerance_rel: 0.02
+      center: [5.0, 95.0]
+    - name: faceXMax
+      plane: x
+      at: 110.0
+      normal: "+"
+      area: 100.0
+      area_tolerance_rel: 0.02
+      center: [5.0, 95.0]
+    - name: faceYMin
+      plane: y
+      at: 0.0
+      normal: "-"
+      area: 100.0
+      area_tolerance_rel: 0.02
+      center: [105.0, 95.0]
+    - name: faceYHeadLow
+      plane: y
+      at: 10.0
+      normal: "+"
+      area: 45.14
+      area_tolerance_rel: 0.02
+      center: [105.0, 81.28]
+    - name: faceYHeadHigh
+      plane: y
+      at: 10.0
+      normal: "+"
+      area: 45.14
+      area_tolerance_rel: 0.02
+      center: [105.0, 108.72]
+    - name: faceYShaftEnd
+      plane: y
+      at: 88.0
+      normal: "+"
+      area: 19.63
+      area_tolerance_rel: 0.02
+      center: [105.0, 95.0]
+    - name: faceZMin
+      plane: z
+      at: 70.0
+      normal: "-"
+      area: 66.63
+      area_tolerance_rel: 0.02
+      center: [105.0, 5.0]
+    - name: faceZMax
+      plane: z
+      at: 120.0
+      normal: "+"
+      area: 66.63
+      area_tolerance_rel: 0.02
+      center: [105.0, 5.0]
+  cylinders:
+    - name: boreHole
+      point: [105.0, 5.0, 95.0]
+      direction: [0.0, 0.0, 1.0]
+      kind: hole
+      diameter: 5.0
+      radius_tolerance: 0.05
+      length: 50.0
+      length_tolerance: 0.1
+      description: "Ø5 through-bore along z"
+    - name: filletSw
+      point: [104.0, 4.0, 95.0]
+      direction: [0.0, 0.0, 1.0]
+      kind: pin
+      diameter: 8.0
+      radius_tolerance: 0.05
+      length: 50.0
+      length_tolerance: 0.1
+      description: "partial Ø8 fillet at the yMin/xMin corner"
+    - name: filletNw
+      point: [104.0, 6.0, 95.0]
+      direction: [0.0, 0.0, 1.0]
+      kind: pin
+      diameter: 8.0
+      radius_tolerance: 0.05
+      length: 50.0
+      length_tolerance: 0.1
+      description: "partial Ø8 fillet at the yHead/xMin corner"
+    - name: filletSe
+      point: [106.0, 4.0, 95.0]
+      direction: [0.0, 0.0, 1.0]
+      kind: pin
+      diameter: 8.0
+      radius_tolerance: 0.05
+      length: 50.0
+      length_tolerance: 0.1
+      description: "partial Ø8 fillet at the yMin/xMax corner"
+    - name: filletNe
+      point: [106.0, 6.0, 95.0]
+      direction: [0.0, 0.0, 1.0]
+      kind: pin
+      diameter: 8.0
+      radius_tolerance: 0.05
+      length: 50.0
+      length_tolerance: 0.1
+      description: "partial Ø8 fillet at the yHead/xMax corner"
+    - name: shaftPin
+      point: [105.0, 48.854, 95.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: pin
+      diameter: 5.0
+      radius_tolerance: 0.05
+      length: 78.292
+      length_tolerance: 0.1
+      description: "Ø5 shaft; exposed cylindrical face from y = 9.708 to y = 88"
+  dimensions:
+    - name: dimX
+      axis: x
+      expected: 10.0
+      tolerance: 0.05
+      between: [faceXMin, faceXMax]
+      description: "head width"
+    - name: dimY
+      axis: y
+      expected: 88.0
+      tolerance: 0.05
+      between: [faceYMin, faceYShaftEnd]
+      description: "overall length including the shaft"
+    - name: dimZ
+      axis: z
+      expected: 50.0
+      tolerance: 0.05
+      between: [faceZMin, faceZMax]
+      description: "head height / bore length"
+  solids:
+    - name: body
+      contains_point: [105.0, 1.25, 80.0]
+      description: "single T-shaped solid"
+  probes:
+    - name: holeVoid
+      state: void
+      points: [[105.0, 5.0, 95.0], [105.0, 5.0, 75.0], [105.0, 5.0, 115.0]]
+      description: "inside the through-bore"
+    - name: headSolid
+      state: solid
+      points: [[105.0, 1.25, 80.0], [101.25, 5.0, 80.0], [105.0, 8.75, 80.0]]
+      description: "inside the three remaining head walls"
+    - name: shaftSolid
+      state: solid
+      points: [[105.0, 44.0, 95.0]]
+      description: "inside the shaft"
+    - name: outsideVoid
+      state: void
+      points: [[105.0, 44.0, 80.0], [100.3, 0.3, 95.0]]
+      description: "beside the shaft and outside a corner fillet"
+  cylinder_counts:
+    - name: countHole5
+      diameter: 5.0
+      kind: hole
+      direction: [0.0, 0.0, 1.0]
+      expected: 1
+      description: "one Ø5 bore along z"
+    - name: countShaft5
+      diameter: 5.0
+      kind: pin
+      direction: [0.0, 1.0, 0.0]
+      expected: 1
+      description: "one Ø5 shaft along y"
+    - name: countFillet8
+      diameter: 8.0
+      kind: pin
+      direction: [0.0, 0.0, 1.0]
+      expected: 4
+      description: "four partial Ø8 head fillets"
+  passages:
+    - name: boreThrough
+      point_a: [105.0, 5.0, 72.0]
+      point_b: [105.0, 5.0, 118.0]
+      pitch: 0.5
+      plugs:
+        - [[102.0, 2.0, 68.5], [108.0, 8.0, 70.5]]
+        - [[102.0, 2.0, 119.5], [108.0, 8.0, 121.5]]
+      expect_connected: true
+      description: "air path through the Ø5 bore; mouths plugged (a 2.4 mm close cannot seal a r=2.5 port)"
+  deviation: null
+  blockout:
+    volume_min: 5200
+    volume_max: 7200
+  export_volume_tolerance_rel: 0.002
+
+references:
+  - path: sources/part-brief.md
+    kind: text
+    role: authoritative
+    sha256: 1fd7a3e2fd439c3d2dcc9a64f656afc91fd568b74e39c10f1f9d2060cf3bd6ae
+    units: mm
+    note: "held-out reconstruction intent and native-frame bbox"
+  - path: sources/dimension-sheet.md
+    kind: text
+    role: authoritative
+    sha256: 52b2551ba8b14028f430b8ffe7ec4f1af0abcb8101332afe6afbf55aed91fa3b
+    units: mm
+    note: "envelope, mass properties, planar faces, cylinders, sections"
+  - path: sources/render-notes.md
+    kind: text
+    role: illustrative
+    sha256: f76626d9b84b32b68e7aeafe877b7bbd8a0e62a7418e931f01adc9de11783b9f
+    units: mm
+    note: "render inventory and mesh extents"
+  - path: sources/front.png
+    kind: drawing
+    role: illustrative
+    sha256: 5272bbaf14764c846990e1a9ad7dfc24e290864d97385d9eb15fc16b90e4c37c
+    units: mm
+    note: "orthographic front; head silhouette 10 x 50 mm"
+  - path: sources/right.png
+    kind: drawing
+    role: illustrative
+    sha256: 372740fcee48db7a8975f1baaef255264dd323c5d222f6bf2f523d3c5cb7fbea
+    units: mm
+    note: "orthographic right with mm grid; T profile, shaft Ø5 at z = 95"
+  - path: sources/top.png
+    kind: drawing
+    role: illustrative
+    sha256: cb17ead244a8b2a12a76b5bc7c23339aa3c7e9ac3a8e9552586b3123ce060e75
+    units: mm
+    note: "orthographic top; annular head plus shaft (rounded-square reads circular at this scale)"
+  - path: sources/iso.png
+    kind: image
+    role: illustrative
+    sha256: f669f71ff9706661274180a5cd82491dcaa42257da9b8a4f9759348b4bac11ce
+    units: mm
+    note: "isometric; T with through-bore and side shaft"
+  - path: sources/iso2.png
+    kind: image
+    role: illustrative
+    sha256: 0c7fb2de4b77e9215e890ebca772c020e1dd3a208e0133e584c6d1ae0d22c467
+    units: mm
+    note: "isometric from the opposite quarter"
+  - path: sources/iso-below.png
+    kind: image
+    role: illustrative
+    sha256: 17b886df612534828ea253bfa72f51be8d7a40c36aa021149819bb0b89ac60ac
+    units: mm
+    note: "isometric from below; bore visible through the head"
+  - path: sources/section-x105.png
+    kind: drawing
+    role: illustrative
+    sha256: bec3c9216cd6bbec90223c7116b14a514bd9775e9e34d1a743bedc31b9e08404
+    units: mm
+    note: "section x = 105; caption area 639.93 mm2, two regions"
+  - path: sources/section-y44.png
+    kind: drawing
+    role: illustrative
+    sha256: 8123d17a41ee6d08e2227537410a25742d86f773697b53621380ea14dbdfa2e7
+    units: mm
+    note: "section y = 44; caption area 19.61 mm2, one Ø5 disk"
+  - path: sources/section-z95.png
+    kind: drawing
+    role: illustrative
+    sha256: 9791c0fa2267526758b2b7f3d0ebb84e91c9e5e21a8f3a2cdef9fc74fdecf3ca
+    units: mm
+    note: "section z = 95; lollipop (filleted head minus bore plus shaft strip)"
+
+open_questions:
+  - "Material, density and process are not stated; mass claims are out of scope."
+  - "The exposed shaft cylinder is reported from y = 9.708 to 88 (length 78.292 mm). That start is the R4/Ø5 tangent (y = 6 + sqrt(16 - 1.5^2)). Model the shaft as a cylinder unioned through the head out to y = yMin + overallLength so the tangent appears; do not treat 9.708 as a construction stop that is asserted equal to overallLength, because overallLength is an edit-test parameter."
+  - "Iso and top views look circular because R4 on a 10 mm square leaves only 2 mm flats. The eight planar faces and four partial Ø8 pins in the dimension sheet fix a rounded square, not a Ø10 cylinder."
+  - "Surface area 3802.07 mm2 is taken from the sheet; a closed-form including the shaft/fillet cheeks was not reconstructed to the last mm2 (analytic envelope without the blend is ~3815 mm2)."

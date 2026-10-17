@@ -1,0 +1,169 @@
+id: fan-01
+title: 'FAN-01 low-pressure axial fan in its short duct: rotor, duct and flow domain; total-to-static
+  pressure rise on the characteristic'
+kind: machine
+truth_class: A
+role: validation
+source:
+  citation: FAN-01 benchmark (Zenger, Junger, Kaltenbacher, Becker; Zenodo record 10787093 v4), Schoder
+    and Czwielong 2022 arXiv:2211.12014
+  urls:
+  - https://zenodo.org/records/10787093
+  - https://arxiv.org/abs/2211.12014
+  accessed: '2026-09-25'
+  revision: v4 (2024-03-06)
+  license: CC-BY-4.0 (Zenodo); arXiv licence for the paper
+intent: 'Analyse the FAN-01 axial fan from its supplied CAD in the rig frame: the rotor turning on a revolute
+  joint about its axis (+y through x = -400, z = 1515) inside the stationary duct with its inlet nozzle
+  and diffuser, with the shaft and the downstream hub disc turning with the rotor. Build the stationary
+  flow boundary the experiment has (the chamber wall the duct passes through, the hub closure the rotor
+  ring mounts on) as derived solids, and the flow region as a derived fluid body: a settling region on
+  the chamber side upstream of the nozzle, the duct, and a discharge region on the ambient side downstream
+  of the diffuser, bounded by an inlet cap on the chamber side and an outlet cap on the ambient side.
+  Name the inlet, outlet, rotating walls and stationary walls as boundaries. Declare the operating points
+  named in the checks (volumetric flow in m3/s, 1486 rpm) and air, and predict the total-to-static pressure
+  rise and the rotor torque with a steady OpenFOAM MRF analysis (a mesh-refinement pair at the design
+  flow).'
+inputs:
+- path: inputs/fan01-packet.md
+  kind: text
+  sha256: 6aca0573ce272e5a183a7ce4532700154e7fa6e5e642f544c1a768f277a30fa6
+  note: set-up, design parameters and CAD notes
+- path: inputs/fan-rotor.step
+  kind: cad
+  sha256: 6a526e10e9e1f9634d9eee157ad6b9758669141a03354609033ca3fac681932c
+  units: mm
+  note: rotor ring and nine blades (sewn from the rig IGES)
+- path: inputs/fan-duct.step
+  kind: cad
+  sha256: 9b70daad9041bb6d47d6d276d23de0b4747d370e0bae2ea5dd6442fad57b0f74
+  units: mm
+  note: duct with inlet nozzle and diffuser
+- path: inputs/fan-shaft.step
+  kind: cad
+  sha256: 8a2716709cddba77254aad4885ba238d406cdb7de0a71ce4ec5b245e8e5eb426
+  units: mm
+  note: drive shaft
+- path: inputs/fan-hub.step
+  kind: cad
+  sha256: 0b291d0c414b1ad6af321f45edcadaa7e23a332ad35a8247a00f859771da80c4
+  units: mm
+  note: disc on the shaft downstream of the rotor
+- path: inputs/figure-1-setup.png
+  kind: drawing
+  sha256: 23729299c2297dd027068d32f3bd8e59cbc03eb44b7a608863951488d5ce7ec6
+  note: 'measurement document figure 1: the fan in its short duct at the chamber wall'
+truth:
+- path: truth/characteristic.yaml
+  kind: yaml
+  sha256: 6eea2d538de417e662536e9404b67e7b8a39690221d41835ad829403eeb1fcd0
+  note: the 20-point characteristic
+- path: truth/raw/characteristic/characteristic/characteristic_n1ug.mat
+  kind: table
+  sha256: 98cb1646e41c54ad2b46d8a37ef21763870260e18356d084a8f8e283b4889d6c
+  note: dataset characteristic (MAT)
+- path: truth/fan-rotor.step
+  kind: cad
+  sha256: 6a526e10e9e1f9634d9eee157ad6b9758669141a03354609033ca3fac681932c
+  units: mm
+- path: truth/fan-duct.step
+  kind: cad
+  sha256: 9b70daad9041bb6d47d6d276d23de0b4747d370e0bae2ea5dd6442fad57b0f74
+  units: mm
+- path: truth/fan-shaft.step
+  kind: cad
+  sha256: 8a2716709cddba77254aad4885ba238d406cdb7de0a71ce4ec5b245e8e5eb426
+  units: mm
+- path: truth/fan-hub.step
+  kind: cad
+  sha256: 0b291d0c414b1ad6af321f45edcadaa7e23a332ad35a8247a00f859771da80c4
+  units: mm
+arms:
+- id: supplied-cad
+  design: fan-01
+  mode: analysis
+  inputs:
+  - inputs/fan01-packet.md
+  - inputs/fan-rotor.step
+  - inputs/fan-duct.step
+  - inputs/fan-shaft.step
+  - inputs/fan-hub.step
+  - inputs/figure-1-setup.png
+  images: []
+  notes: 'Analysis mode: rotor, duct, shaft and hub from the benchmark CAD; the scored work is the flow
+    domain, boundaries and the analysis.'
+observables:
+- id: rotor
+  kind: solid
+  point:
+  - -312.2
+  - -379.3
+  - 1432.4
+  expected: 1176101.8
+  tolerance_rel: 0.005
+  note: the rotor body (a point in its hub ring, r 120.6 mm), volume as published
+- id: duct
+  kind: solid
+  point:
+  - -311.0
+  - -507.5
+  - 1216.5
+  expected: 3481742.0
+  tolerance_rel: 0.005
+  note: the duct with nozzle, diffuser and flanges (a point in the nozzle lip), volume of the repaired
+    solid (qualification.yaml; the published shell's own volume integral is not meaningful, its contact
+    faces are inconsistently oriented)
+performance:
+- id: dpts_q1403
+  quantity: pressure_rise_total_to_static
+  unit: Pa
+  case: q1403
+  evidence: A
+  value: 126.46
+  uncertainty: 2.98
+  z_max: 2.0
+  split: development
+  source: 'characteristic_n1ug.mat row 12: Q = 1.403 m3/s at 1486 rpm'
+  note: 'total-to-static pressure difference (ISO 5801 chamber); u = 1 % of dp and the slope times 2 %
+    of Q (inferred: the dataset states no uncertainty)'
+- id: dpts_q1804
+  quantity: pressure_rise_total_to_static
+  unit: Pa
+  case: q1804
+  evidence: A
+  value: 63.95
+  uncertainty: 7.52
+  z_max: 2.0
+  split: held_out
+  source: 'characteristic_n1ug.mat row 16: Q = 1.804 m3/s at 1486 rpm'
+  note: 'total-to-static pressure difference (ISO 5801 chamber); u = 1 % of dp and the slope times 2 %
+    of Q (inferred: the dataset states no uncertainty)'
+- id: dpts_q0994
+  quantity: pressure_rise_total_to_static
+  unit: Pa
+  case: q0994
+  evidence: A
+  value: 134.68
+  uncertainty: 1.36
+  z_max: 2.0
+  split: held_out
+  source: 'characteristic_n1ug.mat row 8: Q = 0.994 m3/s at 1486 rpm'
+  note: 'total-to-static pressure difference (ISO 5801 chamber); u = 1 % of dp and the slope times 2 %
+    of Q (inferred: the dataset states no uncertainty); the flow is in the stall-onset saddle of the characteristic'
+- id: torque_q1403
+  quantity: torque
+  unit: N m
+  case: q1403
+  evidence: A
+  value: 2.1418
+  uncertainty: 0.0428
+  z_max: 2.0
+  split: development
+  where: the driving torque the rotating bodies absorb about the rotor axis
+  source: 'characteristic_n1ug.mat row 12: shaft power 333.30 W at 1486 rpm'
+  required: false
+  note: the torque meter also carries bearing and seal friction the analysis does not model; u 2 % (inferred)
+notes:
+- Development point q1403 (design flow); q1804 and q0994 (stall-onset saddle) are held out.
+- The supplied CAD's duct bore across the rotor band is 250 mm (outer 252), a 2.5 mm tip gap as the design
+  table states. The duct and shaft were repaired before this arm was run (qualification.yaml).

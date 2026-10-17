@@ -1,0 +1,640 @@
+{
+  "case": "bearing-housing",
+  "arm": "spec-and-views",
+  "design": "bearing-housing",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/build123d/bearing-housing",
+  "truth_class": "B",
+  "role": "validation",
+  "scored_at": "2026-09-29T22:34:12Z",
+  "verdict": "PASS",
+  "accuracy_score": 100.0,
+  "summary": {
+    "required_pass": 22,
+    "required_total": 22,
+    "optional_pass": 1,
+    "optional_total": 1
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "98.355 x 56.855 x 26 (the r = 1 round on the drafted bottom edge pulls the extremes in from 98.5 x 57)",
+      "expected": [
+        98.35526277995001,
+        56.85526277995001,
+        26.0
+      ],
+      "measured": [
+        98.35526277995001,
+        56.85526277995001,
+        26.0
+      ],
+      "error": 0.0,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "",
+      "expected": 46881.33406120509,
+      "measured": 46881.37391969989,
+      "error": 0.039858494797954336,
+      "band": 468.8133406120509,
+      "ok": true
+    },
+    {
+      "id": "section_flange_z5p5",
+      "kind": "section",
+      "required": true,
+      "note": "flange with the bore and both mounting holes",
+      "plane": "z",
+      "at": 5.5,
+      "measured": {
+        "area": 3321.7887950001846,
+        "loops": 1,
+        "holes": 3
+      },
+      "checks": {
+        "area": {
+          "expected": 3321.789,
+          "measured": 3321.7887950001846,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 3,
+          "measured": 3,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_boss_z15",
+      "kind": "section",
+      "required": true,
+      "note": "boss annulus pi (27.451^2 - 23.5^2); without the draft it would be 816.8",
+      "plane": "z",
+      "at": 15.0,
+      "measured": {
+        "area": 632.4427242372717,
+        "loops": 1,
+        "holes": 1
+      },
+      "checks": {
+        "area": {
+          "expected": 632.443,
+          "measured": 632.4427242372717,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_boss_z24",
+      "kind": "section",
+      "required": true,
+      "note": "boss annulus pi (26.822^2 - 23.5^2); the draft shrinks it with height",
+      "plane": "z",
+      "at": 24.0,
+      "measured": {
+        "area": 525.1380171247033,
+        "loops": 1,
+        "holes": 1
+      },
+      "checks": {
+        "area": {
+          "expected": 525.138,
+          "measured": 525.1380171247033,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_y0",
+      "kind": "section",
+      "required": true,
+      "note": "lobe ends outside the mounting holes and the two halves either side of the bore",
+      "plane": "y",
+      "at": 0.0,
+      "measured": {
+        "area": 844.361300187652,
+        "loops": 4,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 844.361,
+          "measured": 844.361300187652,
+          "ok": true
+        },
+        "loops": {
+          "expected": 4,
+          "measured": 4,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "bottom_face",
+      "kind": "face",
+      "required": true,
+      "note": "the oval less the r = 1 round band, the bore and both mounting holes",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 3160.9537350605797,
+      "expected_area": 3160.954,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        1.836144236655457e-08,
+        2.7229489756841876e-07
+      ],
+      "ok": true
+    },
+    {
+      "id": "counterbore_floor",
+      "kind": "face",
+      "required": true,
+      "note": "annulus pi (23.5^2 - 7^2)",
+      "plane": "z",
+      "at": 12.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1581.0065029190637,
+      "expected_area": 1581.007,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        1.7763568394002505e-15,
+        1.5389797952876481e-15
+      ],
+      "ok": true
+    },
+    {
+      "id": "flange_top_left",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 11.0,
+      "normal": "+",
+      "found": 1,
+      "area": 369.231906362875,
+      "expected_area": 369.232,
+      "mode": "one",
+      "center": [
+        -34.381,
+        0.0
+      ],
+      "centroid_uv": [
+        -34.381276049601816,
+        -1.7960479829136298e-07
+      ],
+      "ok": true
+    },
+    {
+      "id": "flange_top_right",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 11.0,
+      "normal": "+",
+      "found": 1,
+      "area": 369.2319028601223,
+      "expected_area": 369.232,
+      "mode": "one",
+      "center": [
+        34.381,
+        0.0
+      ],
+      "centroid_uv": [
+        34.38127604917501,
+        7.5321463728723e-07
+      ],
+      "ok": true
+    },
+    {
+      "id": "boss_top",
+      "kind": "face",
+      "required": true,
+      "note": "annulus between the counterbore and the start of the r = 1 round",
+      "plane": "z",
+      "at": 26.0,
+      "normal": "+",
+      "found": 1,
+      "area": 348.02868856660825,
+      "expected_area": 348.029,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        -4.973799150320701e-14,
+        1.3501348006309334e-14
+      ],
+      "ok": true
+    },
+    {
+      "id": "draft_flat_pp",
+      "kind": "plane",
+      "required": true,
+      "note": "drafted tangent flat, +x +y quadrant; the normal carries sin 4 deg in z",
+      "expected": 311.44,
+      "found": 1,
+      "measured": 311.4395026033565,
+      "ok": true
+    },
+    {
+      "id": "draft_flat_mp",
+      "kind": "plane",
+      "required": true,
+      "note": "",
+      "expected": 311.44,
+      "found": 1,
+      "measured": 311.4396388787714,
+      "ok": true
+    },
+    {
+      "id": "draft_flat_mm",
+      "kind": "plane",
+      "required": true,
+      "note": "",
+      "expected": 311.437,
+      "found": 1,
+      "measured": 311.4365138718897,
+      "ok": true
+    },
+    {
+      "id": "draft_flat_pm",
+      "kind": "plane",
+      "required": true,
+      "note": "",
+      "expected": 311.437,
+      "found": 1,
+      "measured": 311.4365139576446,
+      "ok": true
+    },
+    {
+      "id": "counterbore",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 23.5,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          19.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 23.5,
+        "length": 14.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 14.0,
+          "measured": 14.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "through_bore",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 7.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          6.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 7.0,
+        "length": 12.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 12.0,
+          "measured": 12.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "mounting_hole_left",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          -38.25,
+          0.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -38.25,
+          0.0,
+          5.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "length": 11.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 11.0,
+          "measured": 11.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "mounting_hole_right",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          38.25,
+          0.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          38.25,
+          0.0,
+          5.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "length": 11.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 11.0,
+          "measured": 11.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "material_solid",
+      "kind": "probe",
+      "required": true,
+      "note": "flange lobes, boss wall, the material under the counterbore floor; every point >= 1.5 mm from a surface",
+      "measured": [
+        "in",
+        "in",
+        "in",
+        "in",
+        "in",
+        "in",
+        "in"
+      ],
+      "expected": "solid",
+      "ok": true
+    },
+    {
+      "id": "openings_void",
+      "kind": "probe",
+      "required": true,
+      "note": "counterbore, bore, both mounting holes, air above the flange beside the boss",
+      "measured": [
+        "out",
+        "out",
+        "out",
+        "out",
+        "out",
+        "out",
+        "out"
+      ],
+      "expected": "void",
+      "ok": true
+    },
+    {
+      "id": "deviation",
+      "kind": "deviation",
+      "required": false,
+      "note": "diagnostic whole-part agreement; small features are scored individually above",
+      "measured": {
+        "p95": 0.04953088894372226,
+        "hausdorff_estimate": 0.15381863810688298,
+        "silhouette_iou_min": 0.9988746095765745,
+        "volume_ratio": 0.9993858852207724
+      },
+      "checks": {
+        "p95": {
+          "max": 0.3,
+          "measured": 0.04953088894372226,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 1.5,
+          "measured": 0.15381863810688298,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "2493ff3e0aae1bf1d6d073157dbff9d6e73572dbfcf997a6521d5be8221a4054",
+    "truth_files": {
+      "truth/housing.step": "5e573080214b1713614caaedbb991ed5e21d8b9e00d365fa7c63ece468f74d72",
+      "truth/housing.stl": "6b9808803d5bd5d7dab854fe157e84def9d1363490a6e6bf1a745e8349bfcae6",
+      "truth/cast_bearing_unit.py": "aeb7984dc7913b31824182cedf8c8da6d6fba04a29de909199b732eacf3e846e",
+      "truth/housing-no-draft.step": "a4962b379428da8fbc5edb6c199ad275045c4d68d36ca92bc6c34e9fbf89f4dc"
+    },
+    "input_files": {
+      "inputs/bearing-housing-spec.md": "d286e12f68d057825869c8474013ffee848b9d5b49efbfd8f86c3b16d65b6d35",
+      "inputs/bearing-housing-iso.png": "993e43deea9ec33e0f0ef390d84558e2f93a65aaec1f2ad424b6f8e1bd52a01e",
+      "inputs/bearing-housing-top.png": "c47574c5ab70ca03bd936d2a8b9baa37d16ab4634b9972c8823ec3240b08bb38",
+      "inputs/bearing-housing-section.png": "fe4ce0ff2989143e3e8525bed3692981ed55f7555f57a5d4c4543b669dd36740"
+    },
+    "source": {
+      "main.py": "15d1408a2306e59cb44094af01ad4e5b68c67090d559c3caff1c4bfa13d2acbb"
+    },
+    "kcl": {},
+    "step_sha256": "ec7a9e16400de75341f7070a7432a79be3d8c3e483029db78dba1ebcbf5ddcfd",
+    "design_bundle": {
+      "brief.md": "72f4ca5467d3a582dea327c8a3f926ffff6262593b97cb874d0f514ab5814b27",
+      "contract.yaml": "7f880b9247018194d232fdfaf76c06e969704212b1ec110f22dfd9192ced4645",
+      "sources/bearing-housing-iso.png": "993e43deea9ec33e0f0ef390d84558e2f93a65aaec1f2ad424b6f8e1bd52a01e",
+      "sources/bearing-housing-section.png": "fe4ce0ff2989143e3e8525bed3692981ed55f7555f57a5d4c4543b669dd36740",
+      "sources/bearing-housing-spec.md": "d286e12f68d057825869c8474013ffee848b9d5b49efbfd8f86c3b16d65b6d35",
+      "sources/bearing-housing-top.png": "c47574c5ab70ca03bd936d2a8b9baa37d16ab4634b9972c8823ec3240b08bb38"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-29T22:34:12Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "41c7fa1a7033d16c2e176e809abfa9ece7a2924d",
+      "dirty": true
+    }
+  },
+  "backend": "build123d"
+}

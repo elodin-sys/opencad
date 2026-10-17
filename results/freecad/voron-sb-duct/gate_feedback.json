@@ -1,0 +1,1711 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/voron-sb-duct/contract.yaml: 57 parameters {'stated': 41, 'derived': 6, 'measured': 10}; sources unresolved {}; unanchored 0",
+        "open questions: 8 (blocking []); interfaces 6, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 41,
+          "derived": 6,
+          "measured": 10
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "Q1. Which section source is correct at y=-5 (table 1726.99 mm2, 3 loops/6 holes; image 55.37 mm2, 5 regions) and z=20 (table 765.96 mm2; image 618.29 mm2)? The draft uses table areas, a disclosed 25% z=20 band, and leaves exact y=-5 loop/hole counts unpinned pending resolution.",
+          "Q2. Does mirrored ducts mean exact mirrored top mouths as well as the principal routes and forks? The description suggests mirrored inlets, but top.png shows left x~-25..-10 and right x~5..18. The draft mirrors the core routes and probe stations while recording the visible asymmetric mouth transitions.",
+          "Q3. What are the exact loft centerlines, section profiles, bend radii, fork-divider shape and port boundaries between the supplied stations? Interpolate the shown routes with the stated nominal walls; do not invent unseen hardware geometry.",
+          "Q4. What are acceptable sealed air-volume ranges for each duct, and do the six proposed drawing-based plug boxes seal only the actual ports? No source gives per-duct volume limits; the passage checks report volume without a numeric band, and plug behavior needs validation against the eventual model.",
+          "Q5. How should the approximate 26 x 35 mm hotend pocket at z~9..44 be reconciled with the larger fan transition and z=54 rear roof? No hotend hardware envelope, exact cavity depth or fit clearance is supplied; no rectangular hardware keep-out is assumed.",
+          "Q6. What are the angular trim limits of the 20 partial cylindrical patches, the screw entry/chamfer profiles, and the lower mounting bores beyond the documented y=-7.5..0 segment? The axis/radius/length table is pinned, but full bores or full pins must not replace partial surfaces.",
+          "Q7. Which material, density, printing process details, shrink allowance and fit tolerances are intended? Material and density remain unknown; all tolerances here are digital reconstruction comparisons, not manufacturing qualification.",
+          "Q8. What upstream revision and cosmetic detail level should be retained? Source hashes pin this bundle, but no upstream commit, font, engraving depth, grille thickness or complete optional facet radii are provided; exterior mass properties remain diagnostic and hidden geometry is not scored."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "envelopeWidth",
+          "envelopeDepth",
+          "envelopeHeight",
+          "frontToBack",
+          "backLeftMain",
+          "backRightMain",
+          "backRightMount",
+          "backLeftOutletLip",
+          "backRightOutletLip",
+          "frontFanRim",
+          "topInletRim",
+          "nozzleBaseLeft",
+          "nozzleBaseRight",
+          "leftOutletInnerLip",
+          "rightOutletInnerLip",
+          "leftOutletReturn",
+          "rightOutletReturn",
+          "sec_z10",
+          "sec_z20",
+          "sec_z30",
+          "sec_z45",
+          "sec_z55",
+          "hotendLeftWall",
+          "hotendRightWall",
+          "hotendWallSpacing",
+          "hotendRearRoof",
+          "hotendBridgeBottom",
+          "hotendBridgeTopLeft",
+          "hotendBridgeTopRight",
+          "sec_y-12",
+          "sec_x0",
+          "topPilotA",
+          "topPilotB",
+          "topCounterboreA",
+          "topCounterboreB",
+          "topCounterboreFloorA",
+          "topCounterboreFloorB",
+          "rearUpperLeftBore",
+          "rearUpperRightBore",
+          "rearAuxLowerBore",
+          "rearAuxUpperBore",
+          "lowerLeftMountBore",
+          "lowerRightMountBore",
+          "upperLeftMountBoss",
+          "lowerLeftMountBoss",
+          "lowerRightMountBoss",
+          "rearCableNotch"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/freecad/voron-sb-duct/inspect.json bbox.max_error = 0.0 (tol 0.1)",
+        "results/freecad/voron-sb-duct/verify.json engine bbox.max_error = 3.5793 (engine bbox differs: engine analyze can include cut-tool extents; disclosed, not gating)"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -35.534,
+            -27.4,
+            2.367
+          ],
+          "expected_max": [
+            35.534,
+            0.0,
+            61.5
+          ],
+          "measured_min": [
+            -35.534,
+            -27.4,
+            2.367
+          ],
+          "measured_max": [
+            35.534,
+            0.0,
+            61.5
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.1,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -35.534,
+            -27.4,
+            2.367
+          ],
+          "expected_max": [
+            35.534,
+            0.0,
+            61.5
+          ],
+          "measured_min": [
+            -35.534,
+            -27.4,
+            2.367
+          ],
+          "measured_max": [
+            35.534,
+            3.5793,
+            61.5
+          ],
+          "max_error": 3.5793,
+          "tolerance": 0.1,
+          "ok": false
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/freecad/voron-sb-duct/inspect.json volume = None vs None",
+        "results/freecad/voron-sb-duct/inspect.json surface_area = None vs None",
+        "results/freecad/voron-sb-duct/inspect.json center_of_mass = None vs None"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": false,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": false,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": false,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/freecad/voron-sb-duct/inspect.json features: 17/17 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared",
+        "results/freecad/voron-sb-duct/verify.json snapshots.reference_silhouette (IoU vs input renders, evidence) = {'back': 0.785, 'bottom': 0.85, 'front': 0.748, 'iso-below': 0.739, 'iso': 0.719, 'iso2': 0.717, 'left': 0.932, 'right-side': 0.94, 'top': 0.817}; sheet snapshots/view-compare.png"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "cavityLowerRelief": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "cavityUpperRelief": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "leftInletTurn": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightRearRelief": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "leftHotendDiagonalRelief": {
+            "found": true,
+            "axis_offset": 0.000707106778357477,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightHotendDiagonalRelief": {
+            "found": true,
+            "axis_offset": 2.82867968908309e-12,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "topCounterboreA": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "topCounterboreB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearAuxLowerBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearAuxUpperBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearUpperLeftBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearUpperRightBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearCableNotch": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightObliqueReliefA": {
+            "found": true,
+            "axis_offset": 6.7852020515631486e-12,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightObliqueReliefB": {
+            "found": true,
+            "axis_offset": 5.854540855843117e-12,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "leftRailConcaveBlend": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerLeftMountBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerRightMountBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "topPilotA": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "topPilotB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightDuctConvexTurn": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightCavityConvexBlend": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "upperLeftMountBoss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightInletConvexTurn": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerLeftMountBoss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerRightBossBlendA": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerRightBossBlendB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerRightMountBoss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "leftRailLowerBlend": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "leftRailUpperBlend": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "envelopeWidth": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "envelopeDepth": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "envelopeHeight": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "frontToBack": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "backLeftMain": {
+            "ok": true,
+            "kind": "face"
+          },
+          "backRightMain": {
+            "ok": true,
+            "kind": "face"
+          },
+          "backRightMount": {
+            "ok": true,
+            "kind": "face"
+          },
+          "backLeftOutletLip": {
+            "ok": true,
+            "kind": "face"
+          },
+          "backRightOutletLip": {
+            "ok": true,
+            "kind": "face"
+          },
+          "frontFanRim": {
+            "ok": true,
+            "kind": "face"
+          },
+          "topInletRim": {
+            "ok": true,
+            "kind": "face"
+          },
+          "nozzleBaseLeft": {
+            "ok": true,
+            "kind": "face"
+          },
+          "nozzleBaseRight": {
+            "ok": true,
+            "kind": "face"
+          },
+          "leftOutletInnerLip": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "rightOutletInnerLip": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "leftOutletReturn": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "rightOutletReturn": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "sec_z10": {
+            "ok": true,
+            "kind": "section"
+          },
+          "sec_z20": {
+            "ok": true,
+            "kind": "section"
+          },
+          "sec_z30": {
+            "ok": true,
+            "kind": "section"
+          },
+          "sec_z45": {
+            "ok": true,
+            "kind": "section"
+          },
+          "sec_z55": {
+            "ok": true,
+            "kind": "section"
+          },
+          "hotendLeftWall": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hotendRightWall": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hotendWallSpacing": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "hotendRearRoof": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hotendBridgeBottom": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hotendBridgeTopLeft": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hotendBridgeTopRight": {
+            "ok": true,
+            "kind": "face"
+          },
+          "sec_y-12": {
+            "ok": true,
+            "kind": "section"
+          },
+          "sec_x0": {
+            "ok": true,
+            "kind": "section"
+          },
+          "topPilotA": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "topPilotB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "topCounterboreA": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "topCounterboreB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "topCounterboreFloorA": {
+            "ok": true,
+            "kind": "face"
+          },
+          "topCounterboreFloorB": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rearUpperLeftBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearUpperRightBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearAuxLowerBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearAuxUpperBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerLeftMountBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerRightMountBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "upperLeftMountBoss": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerLeftMountBoss": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerRightMountBoss": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearCableNotch": {
+            "ok": true,
+            "kind": "cylinder"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/freecad/voron-sb-duct/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/freecad/voron-sb-duct/inspect.json agreement engine=44227.12949670951 step=44240.70430595756 stl=44227.347912071134 (rel tol 0.002; independent=False)",
+        "results/freecad/voron-sb-duct/inspect.json agreement.manifold = 44227.34791207114 (Manifold kernel witness, rel vs STEP 0.0003019028312489728; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 44227.12949670951,
+        "kcl": 44227.12949670951,
+        "step": 44240.70430595756,
+        "stl": 44227.347912071134,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "manifold": 44227.34791207114,
+        "manifold_vs_step_rel": 0.0003019028312489728,
+        "engine_vs_step_rel": 0.00030683980874648606,
+        "kcl_vs_step_rel": 0.00030683980874648606,
+        "stl_vs_step_rel": 0.00030190283124913723,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/freecad/voron-sb-duct/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 3/3 values; infeasible refused 2/2; interfaces pinned 47"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "topPilotDiameter",
+            "delta": 0.2,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -7.037167544041143,
+                "measured": -7.151035185132059,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 38,
+                "driven": [
+                  "hotendRearRoof",
+                  "sec_z55",
+                  "topCounterboreA",
+                  "topCounterboreB",
+                  "topCounterboreFloorA",
+                  "topCounterboreFloorB",
+                  "topInletRim",
+                  "topPilotA",
+                  "topPilotB"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": 3.0,
+                  "value": 5.7,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: freecadcmd runner failed (1): | AssertionError: infeasible: topCounterboreDiameter must exceed topPilotDiameter"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "topCounterboreDepth",
+            "delta": 0.4,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -11.127521179015048,
+                "measured": -11.12731311834068,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 38,
+                "driven": [
+                  "hotendRearRoof",
+                  "sec_z55",
+                  "topCounterboreA",
+                  "topCounterboreB",
+                  "topCounterboreFloorA",
+                  "topCounterboreFloorB",
+                  "topInletRim",
+                  "topPilotA",
+                  "topPilotB"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 2.5,
+                  "volume": 44251.82806529765,
+                  "bbox_size": [
+                    71.068,
+                    27.400000000000208,
+                    59.133000000000266
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 11.123759340087418,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 2.9,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 3.3,
+                  "volume": 44229.57699283922,
+                  "bbox_size": [
+                    71.068,
+                    27.400000000000208,
+                    59.133000000000266
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -11.12731311834068,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": 5.0,
+                  "value": 7.9,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: freecadcmd runner failed (1): | AssertionError: infeasible: topCounterboreDepth must leave a positive pilot under the floor"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "3d3876b6f2033ea9b8e73eb2d7fafcc6a42fe01b25845dfcb8d8c22efc6fd35a",
+          "re_export_sha256": "3d3876b6f2033ea9b8e73eb2d7fafcc6a42fe01b25845dfcb8d8c22efc6fd35a",
+          "ok": true
+        },
+        "sweep": {
+          "values": 3,
+          "passed": 3
+        },
+        "infeasible": {
+          "declared": 2,
+          "refused": 2
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/freecad/voron-sb-duct/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=264",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "PartDesign",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "FreeCAD",
+            "Part",
+            "PartDesign",
+            "Sketcher",
+            "params",
+            "FreeCAD",
+            "Part",
+            "PartDesign",
+            "params",
+            "FreeCAD",
+            "Part",
+            "PartDesign",
+            "params",
+            "math",
+            "FreeCAD",
+            "Part",
+            "PartDesign",
+            "params",
+            "math",
+            "FreeCAD",
+            "Part",
+            "PartDesign",
+            "params",
+            "FreeCAD",
+            "Part",
+            "PartDesign",
+            "datum",
+            "exterior",
+            "fasteners",
+            "hotendCavity",
+            "leftDuct",
+            "nozzleForks",
+            "params",
+            "rightDuct",
+            "FreeCAD",
+            "Part",
+            "PartDesign",
+            "params",
+            "FreeCAD",
+            "Part",
+            "PartDesign",
+            "params"
+          ],
+          "forbidden_imports": [],
+          "asserts": 264,
+          "sketch_blocks": 62,
+          "feature_ops": 62,
+          "construction_ops": {
+            "calls": 62,
+            "has_result": true
+          },
+          "parameters": {
+            "overallWidth": {
+              "found": true,
+              "value": 71.068,
+              "expected": 71.068,
+              "file": "params.py",
+              "ok": true
+            },
+            "overallDepth": {
+              "found": true,
+              "value": 27.4,
+              "expected": 27.4,
+              "file": "params.py",
+              "ok": true
+            },
+            "nozzleEndZ": {
+              "found": true,
+              "value": 2.367,
+              "expected": 2.367,
+              "file": "params.py",
+              "ok": true
+            },
+            "topZ": {
+              "found": true,
+              "value": 61.5,
+              "expected": 61.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "backY": {
+              "found": true,
+              "value": 0.0,
+              "expected": 0.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "overallHeight": {
+              "found": true,
+              "value": 59.133,
+              "expected": 59.133,
+              "file": "params.py",
+              "ok": true
+            },
+            "halfWidth": {
+              "found": true,
+              "value": 35.534,
+              "expected": 35.534,
+              "file": "params.py",
+              "ok": true
+            },
+            "frontY": {
+              "found": true,
+              "value": -27.4,
+              "expected": -27.4,
+              "file": "params.py",
+              "ok": true
+            },
+            "ductCount": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "outletsPerDuct": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "ductWidth": {
+              "found": true,
+              "value": 8.0,
+              "expected": 8.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "ductDepth": {
+              "found": true,
+              "value": 19.0,
+              "expected": 19.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "ductWall": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "wallMinimum": {
+              "found": true,
+              "value": 0.75,
+              "expected": 0.75,
+              "file": "params.py",
+              "ok": true
+            },
+            "hotendCavityWidth": {
+              "found": true,
+              "value": 26.0,
+              "expected": 26.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "hotendCavityHeight": {
+              "found": true,
+              "value": 35.0,
+              "expected": 35.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "hotendCavityBottomZ": {
+              "found": true,
+              "value": 9.0,
+              "expected": 9.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "hotendCavityTopZ": {
+              "found": true,
+              "value": 44.0,
+              "expected": 44.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "fanOpeningDiameter": {
+              "found": true,
+              "value": 37.5,
+              "expected": 37.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "fanCenterZ": {
+              "found": true,
+              "value": 43.3,
+              "expected": 43.3,
+              "file": "params.py",
+              "ok": true
+            },
+            "ductMidCenterX": {
+              "found": true,
+              "value": 22.0,
+              "expected": 22.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "ductMidCenterY": {
+              "found": true,
+              "value": -16.5,
+              "expected": -16.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "leftInletCenterX": {
+              "found": true,
+              "value": -17.5,
+              "expected": -17.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "rightInletCenterX": {
+              "found": true,
+              "value": 11.75,
+              "expected": 11.75,
+              "file": "params.py",
+              "ok": true
+            },
+            "leftInletWidth": {
+              "found": true,
+              "value": 15.0,
+              "expected": 15.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "rightInletWidth": {
+              "found": true,
+              "value": 13.5,
+              "expected": 13.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "inletDepth": {
+              "found": true,
+              "value": 8.2,
+              "expected": 8.2,
+              "file": "params.py",
+              "ok": true
+            },
+            "inletCenterY": {
+              "found": true,
+              "value": -19.0,
+              "expected": -19.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "topHoleAx": {
+              "found": true,
+              "value": -6.963,
+              "expected": -6.963,
+              "file": "params.py",
+              "ok": true
+            },
+            "topHoleAy": {
+              "found": true,
+              "value": -3.939,
+              "expected": -3.939,
+              "file": "params.py",
+              "ok": true
+            },
+            "topHoleBx": {
+              "found": true,
+              "value": 3.939,
+              "expected": 3.939,
+              "file": "params.py",
+              "ok": true
+            },
+            "topHoleBy": {
+              "found": true,
+              "value": -6.963,
+              "expected": -6.963,
+              "file": "params.py",
+              "ok": true
+            },
+            "topPilotDiameter": {
+              "found": true,
+              "value": 2.7,
+              "expected": 2.7,
+              "file": "params.py",
+              "ok": true
+            },
+            "topCounterboreDiameter": {
+              "found": true,
+              "value": 5.0,
+              "expected": 5.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "topPilotStartZ": {
+              "found": true,
+              "value": 54.0,
+              "expected": 54.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "topBoreCylinderEndZ": {
+              "found": true,
+              "value": 60.9,
+              "expected": 60.9,
+              "file": "params.py",
+              "ok": true
+            },
+            "topCounterboreDepth": {
+              "found": true,
+              "value": 2.9,
+              "expected": 2.9,
+              "file": "params.py",
+              "ok": true
+            },
+            "upperMountHalfSpacing": {
+              "found": true,
+              "value": 12.7,
+              "expected": 12.7,
+              "file": "params.py",
+              "ok": true
+            },
+            "upperMountZ": {
+              "found": true,
+              "value": 55.424,
+              "expected": 55.424,
+              "file": "params.py",
+              "ok": true
+            },
+            "upperMountDiameter": {
+              "found": true,
+              "value": 4.6,
+              "expected": 4.6,
+              "file": "params.py",
+              "ok": true
+            },
+            "upperMountLeftStartY": {
+              "found": true,
+              "value": -6.0,
+              "expected": -6.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "upperMountRightStartY": {
+              "found": true,
+              "value": -5.861,
+              "expected": -5.861,
+              "file": "params.py",
+              "ok": true
+            },
+            "rearBoreEndY": {
+              "found": true,
+              "value": -0.4,
+              "expected": -0.4,
+              "file": "params.py",
+              "ok": true
+            },
+            "auxLowerX": {
+              "found": true,
+              "value": -28.0,
+              "expected": -28.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "auxLowerZ": {
+              "found": true,
+              "value": 19.0,
+              "expected": 19.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "auxUpperX": {
+              "found": true,
+              "value": -25.0,
+              "expected": -25.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "auxUpperZ": {
+              "found": true,
+              "value": 35.0,
+              "expected": 35.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "auxBoreDiameter": {
+              "found": true,
+              "value": 4.7,
+              "expected": 4.7,
+              "file": "params.py",
+              "ok": true
+            },
+            "auxLowerStartY": {
+              "found": true,
+              "value": -4.2,
+              "expected": -4.2,
+              "file": "params.py",
+              "ok": true
+            },
+            "auxUpperStartY": {
+              "found": true,
+              "value": -4.257,
+              "expected": -4.257,
+              "file": "params.py",
+              "ok": true
+            },
+            "lowerMountHalfSpacing": {
+              "found": true,
+              "value": 16.25,
+              "expected": 16.25,
+              "file": "params.py",
+              "ok": true
+            },
+            "lowerMountZ": {
+              "found": true,
+              "value": 19.301,
+              "expected": 19.301,
+              "file": "params.py",
+              "ok": true
+            },
+            "lowerMountDiameter": {
+              "found": true,
+              "value": 3.4,
+              "expected": 3.4,
+              "file": "params.py",
+              "ok": true
+            },
+            "lowerMountBoreLength": {
+              "found": true,
+              "value": 7.5,
+              "expected": 7.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "rearCableNotchDiameter": {
+              "found": true,
+              "value": 4.1,
+              "expected": 4.1,
+              "file": "params.py",
+              "ok": true
+            },
+            "topCounterboreFloorZ": {
+              "found": true,
+              "value": 58.0,
+              "expected": 58.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "topPilotLength": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "params.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 2677,
+          "ok": true,
+          "partdesign_tree": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/freecad/voron-sb-duct/export.json step.deterministic = True sha256 3d3876b6f203; stl=present; glb=present",
+        "results/freecad/voron-sb-duct/inspect.json valid = True solids = 1 (expected 1)",
+        "results/freecad/voron-sb-duct/inspect.json mesh watertight = True components = 3 void_shells = 2",
+        "kernel: evaluator OpenCascade, engine_independent = False; manifold witness = 44227.34791207114"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/voron-sb-duct/export/voron-sb-duct.step",
+            "sha256": "3d3876b6f2033ea9b8e73eb2d7fafcc6a42fe01b25845dfcb8d8c22efc6fd35a",
+            "bytes": 1923186,
+            "deterministic": true,
+            "second_sha256": "3d3876b6f2033ea9b8e73eb2d7fafcc6a42fe01b25845dfcb8d8c22efc6fd35a"
+          },
+          "fcstd": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/voron-sb-duct/export/voron-sb-duct.FCStd",
+            "sha256": "0f48efdd7ad23abcc98c92905eea11bc6ded82ce824a80b366f14b5a812cb4cd",
+            "bytes": 10426175
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/voron-sb-duct/export/voron-sb-duct.stl",
+            "sha256": "ee07348a0a81c0e0f8773bc1b8b8f4a6eb013e4c1e3e632dfc60431861dfde10",
+            "bytes": 1032784
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/voron-sb-duct/export/voron-sb-duct.glb",
+            "sha256": "11087dcd9db45a4f17a5711ba214a7ad1351a284711c8f1e81a370ad41760332",
+            "bytes": 372056
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 44227.34791207114,
+          "faces": 20654,
+          "vertices": 10287,
+          "watertight": true,
+          "components_watertight": [
+            true,
+            true,
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 3,
+          "void_shells": 2,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 44227.347912071134,
+          "surface_area": 30567.642700987715,
+          "bbox_min": [
+            -35.534000396728516,
+            -27.399999618530273,
+            2.367000102996826
+          ],
+          "bbox_max": [
+            35.534000396728516,
+            0.0,
+            61.5
+          ],
+          "center_of_mass": [
+            -0.10345774263838335,
+            -14.05790526121574,
+            35.251299984275974
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread bbc21a9f-400f-42a5-96c6-bfe454838a15; engine versions [\"['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']\"]; engine calls 29; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 29,
+        "allow_errors": false,
+        "engine_versions": [
+          "['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']"
+        ],
+        "zoo_versions": [
+          "['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/freecad/voron-sb-duct/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present",
+      "ok": true,
+      "evidence": [
+        "results/freecad/voron-sb-duct/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 62, 'has_result': True} lines = 2677"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "FreeCAD",
+          "Part",
+          "PartDesign",
+          "Sketcher",
+          "params",
+          "FreeCAD",
+          "Part",
+          "PartDesign",
+          "params",
+          "FreeCAD",
+          "Part",
+          "PartDesign",
+          "params",
+          "math",
+          "FreeCAD",
+          "Part",
+          "PartDesign",
+          "params",
+          "math",
+          "FreeCAD",
+          "Part",
+          "PartDesign",
+          "params",
+          "FreeCAD",
+          "Part",
+          "PartDesign",
+          "datum",
+          "exterior",
+          "fasteners",
+          "hotendCavity",
+          "leftDuct",
+          "nozzleForks",
+          "params",
+          "rightDuct",
+          "FreeCAD",
+          "Part",
+          "PartDesign",
+          "params",
+          "FreeCAD",
+          "Part",
+          "PartDesign",
+          "params"
+        ],
+        "construction_ops": {
+          "calls": 62,
+          "has_result": true
+        },
+        "sketch_blocks": 62,
+        "feature_ops": 62
+      }
+    }
+  ],
+  "retry": {
+    "attempted": true,
+    "corrections": 2,
+    "reason": [
+      "features",
+      "edit_robustness"
+    ],
+    "gates_before": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": false,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": false,
+      "source_hygiene": true,
+      "export_integrity": true,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "gates_after": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": true,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": true,
+      "source_hygiene": true,
+      "export_integrity": true,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "history": [
+      {
+        "key": "correction-1",
+        "role": "correction",
+        "failed_after": [
+          "edit_robustness"
+        ],
+        "retryable_after": [
+          "edit_robustness"
+        ],
+        "signature": "edit_robustness|ok|-",
+        "kcl_changed": true,
+        "incomplete": false,
+        "failing_count": 0,
+        "failing_items": [],
+        "reverted_to_checkpoint": false,
+        "budget_s": 1440.0,
+        "contract_changed": false
+      },
+      {
+        "key": "correction-2",
+        "role": "correction",
+        "failed_after": [],
+        "retryable_after": [],
+        "signature": "|ok|-",
+        "kcl_changed": true,
+        "incomplete": false,
+        "failing_count": 0,
+        "failing_items": [],
+        "reverted_to_checkpoint": false,
+        "budget_s": 1350.0,
+        "contract_changed": false
+      }
+    ],
+    "stopped": "gates pass",
+    "stuck_class": null
+  }
+}

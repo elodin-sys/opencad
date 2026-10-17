@@ -1,0 +1,563 @@
+attempts:
+- started: '2026-09-15T08:17:00Z'
+  arm: drawing-only
+  backend: zoo
+  design: nist-amb2022-01-bridge
+  stage_reached: published
+  draft:
+    ok: true
+    rounds: 1
+    thread_id: 01a0a424-e669-70c1-a56e-f622b81a3a19
+  error: 'interrupted: Zoo API credits exhausted (free plan, 1205 monthly credits)
+    during the blockout stage; designs/nist-amb2022-01-bridge published (40 parameters,
+    15 features, volume 3678.1 vs truth 3679.06); resume with `python -m skillkat.truth
+    run nist-amb2022-01-bridge --arm drawing-only --resume-from blockout` once credits
+    are available'
+  seconds: 1400
+  finished: '2026-09-15T08:44:27Z'
+- started: '2026-09-15T15:36:31Z'
+  arm: drawing-only
+  backend: zoo
+  design: nist-amb2022-01-bridge
+  stage_reached: scored
+  resume_from: blockout
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0a5b6-8d0a-7eb1-8d15-86de75921f9c
+    note: Codex STEP was exact ([0,0,0]–[75,5,12.5], 4452.5 mm3). zoo kcl analyze
+      padded XY by 10% of each span ([-7.5,-0.5,0]–[82.5,5.5,12.5]). A second Codex
+      session chasing that box was stopped; blockout was remeasured on the STEP via
+      OpenCascade.
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    plan_thread: 01a0a5c9-d7f0-7140-8a75-9ca164c4960f
+    model_thread: 01a0a5d1-ea32-71c0-95a7-61defa5e1ad3
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+    seconds: 4200
+  finished: '2026-09-15T16:45:00Z'
+- started: '2026-09-15T16:44:13Z'
+  arm: mesh-input
+  backend: zoo
+  design: nist-amb2022-01-bridge-mesh
+  stage_reached: scored
+  draft:
+    ok: true
+    thread_id: 01a0a607-5665-75c0-b59e-267f17a80655
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0a607-5665-75c0-b59e-267f17a80655
+  pipeline:
+    exit: 0
+    gates:
+      pass: 12
+      fail: 0
+      not_applicable: 0
+    failed: []
+    retry: false
+    plan_thread: 01a0a60e-2621-7e01-828b-3c1bfdf6eb5c
+    model_thread: 01a0a618-a943-73f0-bc2e-565305daf6ea
+    note: First verify/export hit Zoo "modeling connection interrupted". Resume from
+      verify produced deterministic STEP+STL; GLB failed the same transient three
+      times and is treated as optional. Inspect 8/8 sections, 37/37 faces, 11/11 features;
+      deviation p95 ~0 vs the NIST mesh.
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  seconds: 4293
+  finished: '2026-09-15T17:55:46Z'
+- started: '2026-09-16T07:49:03Z'
+  finished: '2026-09-16T07:49:03Z'
+  arm: drawing-only
+  backend: zoo
+  design: nist-amb2022-01-bridge
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127
+  seconds: 2
+- started: '2026-09-16T07:49:06Z'
+  finished: '2026-09-16T07:49:06Z'
+  arm: mesh-input
+  backend: zoo
+  design: nist-amb2022-01-bridge-mesh
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: 4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2
+  seconds: 2
+- started: '2026-09-16T08:35:20Z'
+  finished: '2026-09-16T08:35:20Z'
+  arm: drawing-only
+  backend: zoo
+  design: nist-amb2022-01-bridge
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127
+  seconds: 2
+- started: '2026-09-16T08:35:23Z'
+  finished: '2026-09-16T08:35:23Z'
+  arm: mesh-input
+  backend: zoo
+  design: nist-amb2022-01-bridge-mesh
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: 4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2
+  seconds: 2
+- started: '2026-09-16T08:42:36Z'
+  finished: '2026-09-16T08:42:36Z'
+  arm: drawing-only
+  backend: zoo
+  design: nist-amb2022-01-bridge
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127
+  seconds: 2
+- started: '2026-09-16T08:42:39Z'
+  finished: '2026-09-16T08:42:39Z'
+  arm: mesh-input
+  backend: zoo
+  design: nist-amb2022-01-bridge-mesh
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: 4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2
+  seconds: 2
+- started: '2026-09-16T09:29:18Z'
+  finished: '2026-09-16T09:29:18Z'
+  arm: drawing-only
+  backend: zoo
+  design: nist-amb2022-01-bridge
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127
+  seconds: 2
+- started: '2026-09-16T09:29:21Z'
+  finished: '2026-09-16T09:29:21Z'
+  arm: mesh-input
+  backend: zoo
+  design: nist-amb2022-01-bridge-mesh
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: 4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2
+  seconds: 2
+- started: '2026-09-16T09:36:57Z'
+  finished: '2026-09-16T09:36:57Z'
+  arm: drawing-only
+  backend: zoo
+  design: nist-amb2022-01-bridge
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127
+  seconds: 2
+- started: '2026-09-16T09:36:59Z'
+  finished: '2026-09-16T09:37:00Z'
+  arm: mesh-input
+  backend: zoo
+  design: nist-amb2022-01-bridge-mesh
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: 4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2
+  seconds: 2
+- started: '2026-09-16T09:45:58Z'
+  finished: '2026-09-16T09:45:58Z'
+  arm: drawing-only
+  backend: zoo
+  design: nist-amb2022-01-bridge
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127
+  seconds: 2
+- started: '2026-09-16T09:46:00Z'
+  finished: '2026-09-16T09:46:01Z'
+  arm: mesh-input
+  backend: zoo
+  design: nist-amb2022-01-bridge-mesh
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: 4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2
+  seconds: 2
+- started: '2026-09-16T10:30:14Z'
+  finished: '2026-09-16T10:30:14Z'
+  arm: drawing-only
+  backend: zoo
+  design: nist-amb2022-01-bridge
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127
+  seconds: 2
+- started: '2026-09-16T10:30:17Z'
+  finished: '2026-09-16T10:30:17Z'
+  arm: mesh-input
+  backend: zoo
+  design: nist-amb2022-01-bridge-mesh
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: 4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2
+  seconds: 2
+- started: '2026-09-20T06:28:01Z'
+  arm: drawing-only
+  backend: cadquery
+  design: nist-amb2022-01-bridge
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nist-amb2022-01-bridge
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: ea3dad94-1008-4dec-bb59-8853ece43d28
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/nist-amb2022-01-bridge/manifest.yaml'''
+  seconds: 510
+  finished: '2026-09-20T06:36:33Z'
+- started: '2026-09-20T06:28:01Z'
+  arm: drawing-only
+  backend: build123d
+  design: nist-amb2022-01-bridge
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nist-amb2022-01-bridge
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: e5a6c9d6-c295-4052-b7ac-1694235b7306
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/nist-amb2022-01-bridge/manifest.yaml'''
+  seconds: 569
+  finished: '2026-09-20T06:37:33Z'
+- started: '2026-09-20T06:28:01Z'
+  arm: drawing-only
+  backend: freecad
+  design: nist-amb2022-01-bridge
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nist-amb2022-01-bridge
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 5e452ee6-1a04-4064-8b6d-1dda8682f521
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 1
+    stopped: gates pass
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  seconds: 705
+  finished: '2026-09-20T06:39:46Z'
+- started: '2026-09-20T06:39:58Z'
+  finished: '2026-09-20T06:40:00Z'
+  arm: drawing-only
+  design: nist-amb2022-01-bridge
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: 91b2b81c8b0248d626f99406a924ba7cef2c11081ca974108696c98664e89376
+  seconds: 4
+  backend: cadquery
+- started: '2026-09-20T06:40:03Z'
+  finished: '2026-09-20T06:40:05Z'
+  arm: drawing-only
+  design: nist-amb2022-01-bridge
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: 69be05f4ea367ae057f75d5f2510da3bebd821fc8fc6555f9757817d3aa9a9d1
+  seconds: 4
+  backend: build123d
+- started: '2026-09-20T06:40:32Z'
+  arm: mesh-input
+  backend: freecad
+  design: nist-amb2022-01-bridge-mesh
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nist-amb2022-01-bridge
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 0ea92579-f0ba-4aaf-a57e-d8243b47a3e9
+  pipeline:
+    exit: 0
+    gates:
+      pass: 12
+      fail: 0
+      not_applicable: 0
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/nist-amb2022-01-bridge/manifest.yaml'''
+  seconds: 400
+  finished: '2026-09-20T06:47:12Z'
+- started: '2026-09-20T06:40:32Z'
+  arm: mesh-input
+  backend: build123d
+  design: nist-amb2022-01-bridge-mesh
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nist-amb2022-01-bridge
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 102de290-fbe5-4103-8b54-c7bffdcb1111
+  pipeline:
+    exit: 0
+    gates:
+      pass: 12
+      fail: 0
+      not_applicable: 0
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/nist-amb2022-01-bridge/manifest.yaml'''
+  seconds: 502
+  finished: '2026-09-20T06:48:56Z'
+- started: '2026-09-20T06:40:32Z'
+  arm: mesh-input
+  backend: cadquery
+  design: nist-amb2022-01-bridge-mesh
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nist-amb2022-01-bridge
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: decc24f2-a748-4a8c-9af1-dd73456acc0e
+  pipeline:
+    exit: 0
+    gates:
+      pass: 12
+      fail: 0
+      not_applicable: 0
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  seconds: 506
+  finished: '2026-09-20T06:49:00Z'
+- started: '2026-09-20T06:49:21Z'
+  finished: '2026-09-20T06:49:23Z'
+  arm: mesh-input
+  design: nist-amb2022-01-bridge-mesh
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: d6106e89e49098c39d07e99f6e2ae290a26f3da1cbb87542ead2b5a8f6b6c09a
+  seconds: 4
+  backend: build123d
+- started: '2026-09-20T06:49:26Z'
+  finished: '2026-09-20T06:49:26Z'
+  arm: mesh-input
+  design: nist-amb2022-01-bridge-mesh
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 1
+      optional_total: 1
+    failed: []
+  step_sha256: 61ceb8f37c67473eef1006e1cec5a85d9d7e10bc9c39f07fe3f388932c1dad39
+  seconds: 2
+  backend: freecad

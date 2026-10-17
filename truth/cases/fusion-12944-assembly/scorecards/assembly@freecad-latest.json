@@ -1,0 +1,261 @@
+{
+  "case": "fusion-12944-assembly",
+  "scored_at": "2026-09-21T01:30:43Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "e0f0047b-f4f3-402e-b01d-2e3e6e7eaaa8",
+    "exit_code": 0,
+    "seconds": 120,
+    "commands": 4,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-12944-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 4,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/freecad/fusion-12944-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "",
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 0.97,
+      "visual_check": "Visual: shaft coaxial with the plate bore (front hex concentric); radial slip-fit only (gap 0.0365 mm, no interpenetration); hex on the boss side, pin hole on the far side of the plate."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "e0f0047b-f4f3-402e-b01d-2e3e6e7eaaa8",
+    "exit_code": 0,
+    "seconds": 120,
+    "commands": 4,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-12944-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 4,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/freecad/fusion-12944-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "",
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 0.97,
+      "visual_check": "Visual: shaft coaxial with the plate bore (front hex concentric); radial slip-fit only (gap 0.0365 mm, no interpenetration); hex on the boss side, pin hole on the far side of the plate."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "mode": "modelled",
+  "program_executes": true,
+  "solid_count": {
+    "measured": 2,
+    "expected": 2,
+    "ok": true
+  },
+  "export_agreement": {
+    "ok": true,
+    "bodies": {
+      "22303_e9723631_0014_1": {
+        "ok": true,
+        "volume_expected": 148190.97607994874,
+        "volume_measured": 148190.97607995712,
+        "volume_rel": 5.656149512786316e-14,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 1.485843198665159e-06,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 8.449935344917682e-12
+      },
+      "22303_e9723631_0013_1": {
+        "ok": true,
+        "volume_expected": 19943.659057378023,
+        "volume_measured": 19943.659057378067,
+        "volume_rel": 2.188953669910959e-15,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 1.5185222385072108e-07,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 2.735362954462535e-13
+      }
+    }
+  },
+  "export_integrity": {
+    "ok": true,
+    "valid": true,
+    "solids": 2,
+    "expected_solids": 2,
+    "watertight": true,
+    "deterministic": true
+  },
+  "hygiene": {
+    "ok": true,
+    "has_result": true,
+    "has_placements": true,
+    "cad_refs": [],
+    "truth_refs": [],
+    "files": [
+      "/Users/danieldriscoll/dual/skillkat/parts/freecad/fusion-12944-assembly/main.py"
+    ]
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": true,
+  "offset_truth_mm": 0.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 0.0,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": 0.0,
+      "expected": 0.0,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 180.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 0.0,
+      "truth_interference": 0.0,
+      "max": 1.0,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.036499999999999325,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "22303_e9723631_0014_1": {
+        "origin": [
+          0.0,
+          -14.5,
+          0.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -14.5
+          ],
+          [
+            0.0,
+            0.0,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "22303_e9723631_0013_1": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-12944-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-12944-assembly/handoff/assembly.html",
+    "motion": "revolute",
+    "native_glb": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-12944-assembly/handoff/assembly-native.glb"
+  }
+}

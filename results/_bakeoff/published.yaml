@@ -1,0 +1,226 @@
+entries:
+- part: bracket
+  date: '2026-10-14'
+  tags:
+    cadquery: bakeoff-astra
+    build123d: bakeoff-astra
+    freecad: bakeoff-astra
+    zoo: bakeoff-astra
+  note: All 4 backends pass every applicable gate. Zoo credits for this cell were
+    not kept (a later run on the same part replaced its cost.json); docs/bake-off-experiments.md
+    records 97 credits, $0.80.
+  backends:
+    cadquery:
+      verdict: PASS
+      passed: 11
+      failed: 0
+      not_applicable: 1
+      failed_gates: []
+      turns: 2
+      tokens_input: 1134076
+      tokens_cached: 1058944
+      tokens_output: 9086
+      codex_usd: 4.5291
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 228
+      evaluator_s: 19
+      wall_s: 247
+    build123d:
+      verdict: PASS
+      passed: 11
+      failed: 0
+      not_applicable: 1
+      failed_gates: []
+      turns: 2
+      tokens_input: 1096382
+      tokens_cached: 984320
+      tokens_output: 8895
+      codex_usd: 5.0994
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 216
+      evaluator_s: 19
+      wall_s: 235
+    freecad:
+      verdict: PASS
+      passed: 11
+      failed: 0
+      not_applicable: 1
+      failed_gates: []
+      turns: 2
+      tokens_input: 791206
+      tokens_cached: 728576
+      tokens_output: 8708
+      codex_usd: 3.5806
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 187
+      evaluator_s: 19
+      wall_s: 206
+    zoo:
+      verdict: PASS
+      passed: 11
+      failed: 0
+      not_applicable: 1
+      failed_gates: []
+      turns: 2
+      tokens_input: 2631735
+      tokens_cached: 2514048
+      tokens_output: 16829
+      codex_usd: 9.0647
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 401
+      evaluator_s: 22
+      wall_s: 423
+- part: aleph-stack-case
+  date: '2026-10-16'
+  tags:
+    cadquery: bakeoff-astra
+    build123d: bakeoff-astra
+    freecad: bakeoff-astra
+    zoo: bakeoff-astra
+  note: Every backend fails `features`.
+  backends:
+    cadquery:
+      verdict: FAIL
+      passed: 10
+      failed: 1
+      not_applicable: 1
+      failed_gates:
+      - features
+      turns: 11
+      tokens_input: 16567436
+      tokens_cached: 15563136
+      tokens_output: 201793
+      codex_usd: 71.3916
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 6454
+      evaluator_s: 2302
+      wall_s: 8756
+    build123d:
+      verdict: FAIL
+      passed: 10
+      failed: 1
+      not_applicable: 1
+      failed_gates:
+      - features
+      turns: 13
+      tokens_input: 18215938
+      tokens_cached: 17030144
+      tokens_output: 286915
+      codex_usd: 86.4677
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 8085
+      evaluator_s: 2160
+      wall_s: 10245
+    freecad:
+      verdict: FAIL
+      passed: 10
+      failed: 1
+      not_applicable: 1
+      failed_gates:
+      - features
+      turns: 12
+      tokens_input: 24875815
+      tokens_cached: 23257600
+      tokens_output: 287911
+      codex_usd: 107.6706
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 9239
+      evaluator_s: 2823
+      wall_s: 12062
+    zoo:
+      verdict: FAIL
+      passed: 10
+      failed: 1
+      not_applicable: 1
+      failed_gates:
+      - features
+      turns: 11
+      tokens_input: 30860767
+      tokens_cached: 29513216
+      tokens_output: 299129
+      codex_usd: 115.8904
+      zoo_credits: 512
+      zoo_usd: 4.25
+      worker_s: 7983
+      evaluator_s: 1248
+      wall_s: 9231
+- part: benchy
+  date: '2026-10-17'
+  tags:
+    cadquery: bakeoff-astra
+    build123d: bakeoff-astra
+    freecad: bakeoff-astra
+    zoo: bakeoff-astra
+  note: All 4 backends pass every applicable gate.
+  backends:
+    cadquery:
+      verdict: PASS
+      passed: 11
+      failed: 0
+      not_applicable: 1
+      failed_gates: []
+      turns: 2
+      tokens_input: 3848504
+      tokens_cached: 3644416
+      tokens_output: 45835
+      codex_usd: 15.9541
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 782
+      evaluator_s: 39
+      wall_s: 821
+    build123d:
+      verdict: PASS
+      passed: 11
+      failed: 0
+      not_applicable: 1
+      failed_gates: []
+      turns: 2
+      tokens_input: 3238085
+      tokens_cached: 3047936
+      tokens_output: 43735
+      codex_usd: 14.2724
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 736
+      evaluator_s: 36
+      wall_s: 772
+    freecad:
+      verdict: PASS
+      passed: 11
+      failed: 0
+      not_applicable: 1
+      failed_gates: []
+      turns: 3
+      tokens_input: 10190828
+      tokens_cached: 9843456
+      tokens_output: 82350
+      codex_usd: 34.8694
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 1474
+      evaluator_s: 36
+      wall_s: 1510
+    zoo:
+      verdict: PASS
+      passed: 11
+      failed: 0
+      not_applicable: 1
+      failed_gates: []
+      turns: 3
+      tokens_input: 8931465
+      tokens_cached: 8620672
+      tokens_output: 87136
+      codex_usd: 32.1708
+      zoo_credits: 479
+      zoo_usd: 3.98
+      worker_s: 1528
+      evaluator_s: 818
+      wall_s: 2346

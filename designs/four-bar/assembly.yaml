@@ -1,0 +1,191 @@
+schema_version: 1
+kind: assembly
+name: four-bar
+intent: >-
+  Planar crank-rocker four-bar linkage from sources/four-bar-spec.md (the only source, authoritative, text): a 160 x 60 x 5
+  ground plate with Ø6 pivot holes at O2 (0, 0) and O4 (100, 0), and three stadium links 5 thick and 16 wide with R8 ends
+  and Ø6 holes (crank O2-A 40, coupler A-B 100, rocker O4-B 80 between hole centres). Four separate solids, each drafted and
+  modelled in its own frame and stacked in layers (ground z -5..0, crank 0..5, coupler 5..10, rocker 10..15), joined by four
+  revolute pins about +z into one closed loop: O2, A and O4 form the joint tree from the ground and B is the loop's closing
+  joint. Rest is the open configuration (crank 0 deg, coupler 53.130102 deg, rocker 90 deg; A at (40, 0), B at (100, 80)).
+  The crank pin O2 is motor-driven through one full revolution (0 to 360 deg about +z); the evaluator measures the rocker
+  angle about O4 from rest, its total swing, and the x and y of the coupler point P ((50, 30) in the coupler frame, (46, 58)
+  at rest) from the placed geometry.
+units: {length: mm, angle: deg}
+frame:
+  origin: pivot O2 (the crank's ground pivot) on the ground plate's top face
+  axes:
+    x: from O2 toward O4 along the ground link
+    y: completes a right-handed frame; the rest coupler and rocker lie toward +y
+    z: up, parallel to every pin axis
+  datums:
+    - name: groundTop
+      description: ground plate top face z = 0 (the crank's seat)
+    - name: axisO2
+      description: crank pivot axis x = y = 0
+    - name: axisO4
+      description: "rocker pivot axis x = 100, y = 0"
+envelope: {min: [-30.0, -30.0, -5.0], max: [130.0, 88.0, 15.0], tolerance: 0.1}
+datum_part: ground
+parts:
+  - name: ground
+    kind: modelled
+    design: four-bar-ground
+    intent: >-
+      Ground plate in its own frame, which is the assembly frame (origin at pivot O2 on the top face, +x toward O4, +z up along
+      the pin axes): one rectangular plate 160 (x) x 60 (y) x 5 (z) from corner (-30, -30, -5) to (130, 30, 0), top face
+      z = 0, bottom face z = -5. Two Ø6 through holes along z, centred at O2 (0, 0) and O4 (100, 0) (ground length 100).
+      Interfaces: the O2 hole axis is the crank's pivot and the top face around it is the crank's seat (the crank lies on
+      z = 0..5); the O4 hole axis is the rocker's pivot (the rocker runs at z = 10..15, 10 above the top face, so nothing seats
+      there). No other features; one solid.
+    description: fixed ground link O2-O4 and the assembly datum
+  - name: crank
+    kind: modelled
+    design: four-bar-crank
+    intent: >-
+      Crank link in its own frame: first hole O2 at the origin, second hole A at (40, 0, 0) on +x (40 between hole centres),
+      bottom face z = 0, top face z = 5, hole axes along +z. A stadium plate 5 thick and 16 wide: the tangent hull of two R8
+      circles centred on the two holes (straight sides y = -8 and y = 8 from x = 0 to x = 40, semicircular R8 ends), extruded
+      z = 0..5, overall x -8..48, y -8..8. Two Ø6 through holes along z centred at (0, 0) and (40, 0). Interfaces: the bottom
+      face around the O2 hole seats on the ground's top face (pivot O2, the motor-driven joint); the top face z = 5 around the
+      A hole is the seat for the coupler's first hole (pin A). No other features; one solid.
+    description: input link O2-A, the shortest link (Grashof crank), motor-driven through full revolutions
+  - name: coupler
+    kind: modelled
+    design: four-bar-coupler
+    intent: >-
+      Coupler link in its own frame: first hole A at the origin, second hole B at (100, 0, 0) on +x (100 between hole
+      centres), bottom face z = 0, top face z = 5, hole axes along +z. The same stadium section as the crank: the tangent hull
+      of two R8 circles centred on (0, 0) and (100, 0), 16 wide (y -8..8), extruded z = 0..5, overall x -8..108. Two Ø6
+      through holes along z centred at (0, 0) and (100, 0). Interfaces: the bottom face around the A hole seats on the crank's
+      top face (pin A); the top face z = 5 around the B hole is the seat for the rocker's second hole (pin B, the loop's
+      closing joint). The coupler point P is the reference point (50, 30) in this frame's xy (50 along A to B, 30 to its
+      left, toward +y), outside the plate: it is not a feature and adds no material. No other features; one solid.
+    description: floating link A-B carrying the coupler point P
+  - name: rocker
+    kind: modelled
+    design: four-bar-rocker
+    intent: >-
+      Rocker link in its own frame: first hole O4 at the origin, second hole B at (80, 0, 0) on +x (80 between hole centres),
+      bottom face z = 0, top face z = 5, hole axes along +z. The same stadium section as the crank: the tangent hull of two R8
+      circles centred on (0, 0) and (80, 0), 16 wide (y -8..8), extruded z = 0..5, overall x -8..88. Two Ø6 through holes
+      along z centred at (0, 0) and (80, 0). Interfaces: the O4 hole is the ground pivot (the rocker's bottom face runs 10
+      above the ground's top face, nothing seats there); the bottom face around the B hole seats on the coupler's top face
+      (pin B). No other features; one solid.
+    description: output link O4-B that swings back and forth
+parameters:
+  - {name: groundLength, value: 100.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/four-bar-spec.md table, Ground: O2 (0, 0) and O4 (100, 0)", description: O2 to O4 pivot distance}
+  - {name: crankLength, value: 40.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/four-bar-spec.md table, Crank: O2 to A", description: O2 to A hole centres}
+  - {name: couplerLength, value: 100.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/four-bar-spec.md table, Coupler: A to B", description: A to B hole centres}
+  - {name: rockerLength, value: 80.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/four-bar-spec.md table, Rocker: O4 to B", description: O4 to B hole centres}
+  - {name: linkThickness, value: 5.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/four-bar-spec.md table, Crank: stadium plate 5 thick", description: thickness of every link and of the ground plate}
+  - {name: linkWidth, value: 16.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/four-bar-spec.md table, Crank: 16 wide, ends of radius 8", description: stadium width (end radius 8)}
+  - {name: holeDiameter, value: 6.0, unit: mm, provenance: stated, tolerance: 0.01, source: sources/four-bar-spec.md table (Ø6 holes), description: every pin hole}
+  - {name: crankLayerBottom, value: 0.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/four-bar-spec.md Frame: crank z 0..5", description: crank bottom face in the assembly}
+  - {name: couplerLayerBottom, value: 5.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/four-bar-spec.md Frame: coupler z 5..10", description: coupler bottom face in the assembly}
+  - {name: rockerLayerBottom, value: 10.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/four-bar-spec.md Frame: rocker z 10..15", description: rocker bottom face in the assembly (pinO4 offset)}
+  - {name: crankRestAngle, value: 0.0, unit: deg, provenance: stated, tolerance: 1.0e-6, source: "sources/four-bar-spec.md Rest configuration: crank at 0 deg", description: pinO2 rest angle}
+  - {name: couplerRestAngle, value: 53.13010235415598, unit: deg, provenance: derived, tolerance: 1.0e-6, formula: "degrees(atan2(rockerLength, groundLength - crankLength))", source: "sources/four-bar-spec.md Rest configuration: coupler at 53.130102 deg", description: "pinA rest angle (triangle A, O4, B with sides 60, 80, 100)"}
+  - {name: rockerRestAngle, value: 90.0, unit: deg, provenance: stated, tolerance: 1.0e-6, source: "sources/four-bar-spec.md Rest configuration: rocker at 90 deg from O4", description: pinO4 rest angle}
+  - {name: couplerPointAlong, value: 50.0, unit: mm, provenance: stated, tolerance: 0.01, source: sources/four-bar-spec.md Coupler point P, description: P along A to B in the coupler frame}
+  - {name: couplerPointLeft, value: 30.0, unit: mm, provenance: stated, tolerance: 0.01, source: sources/four-bar-spec.md Coupler point P, description: P to the left of A to B in the coupler frame}
+joints:
+  - name: pinO2
+    kind: revolute
+    parent: ground
+    child: crank
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 0.0
+    angle: 0.0
+    drive:
+      kind: motor
+      speed: 60.0
+      description: >-
+        the crank is motor-driven through full revolutions; the spec states no speed, so 60 rpm (one revolution per second) is
+        a default that only paces the animation (every prediction is a function of the crank angle)
+    description: pin O2, ground to crank; the crank's bottom face on the ground's top face, crank toward +x at rest (A at (40, 0))
+  - name: pinA
+    kind: revolute
+    parent: crank
+    child: coupler
+    parent_frame: {origin: [40.0, 0.0, 5.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 0.0
+    angle: 53.13010235415598
+    drive: {kind: free, description: follows the loop closure at pinB}
+    description: pin A, crank to coupler; the coupler's bottom face on the crank's top face at A, coupler at couplerRestAngle
+  - name: pinO4
+    kind: revolute
+    parent: ground
+    child: rocker
+    parent_frame: {origin: [100.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 10.0
+    angle: 90.0
+    drive: {kind: free, description: follows the loop closure at pinB}
+    description: pin O4, ground to rocker; the rocker layer starts 10 above the ground's top face, rocker toward +y at rest (B at (100, 80))
+  - name: pinB
+    kind: revolute
+    parent: coupler
+    child: rocker
+    closure: true
+    parent_frame: {origin: [100.0, 0.0, 5.0], axis: [0.0, 0.0, 1.0]}
+    child_frame: {origin: [80.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0]}
+    description: >-
+      pin B, the loop's closing joint; the rocker's bottom face on the coupler's top face at B, both frames at (100, 80, 10)
+      in the assembly at rest
+acceptance:
+  bbox_tolerance: 0.1
+  solid_count: 4
+  clearances:
+    - {name: crankOnGround, a: crank, b: ground, min_gap: 0.0, max_gap: 0.01, description: crank layer z 0..5 seats on the ground top face z = 0 (pin O2)}
+    - {name: couplerOnCrank, a: coupler, b: crank, min_gap: 0.0, max_gap: 0.01, description: coupler layer z 5..10 seats on the crank top face at pin A}
+    - {name: rockerOnCoupler, a: rocker, b: coupler, min_gap: 0.0, max_gap: 0.01, description: rocker layer z 10..15 seats on the coupler top face at pin B}
+    - {name: couplerOverGround, a: coupler, b: ground, min_gap: 4.9, description: unpinned pair; the layers leave 5 between the coupler and the ground}
+    - {name: rockerOverCrank, a: rocker, b: crank, min_gap: 4.9, description: unpinned pair; the layers leave at least 5 between the rocker and the crank}
+    - {name: rockerOverGround, a: rocker, b: ground, min_gap: 9.9, description: pinned at O4 across a 10 gap; they never touch}
+  motions:
+    - name: crankTurn
+      drive: pinO2
+      range: [0.0, 360.0]
+      steps: 360
+      description: >-
+        one full crank revolution from rest in 1 deg steps; the loop stays closed at pinB and no pair in relative motion
+        interferes (the layers keep the pinned pairs to face contact)
+observables:
+  - id: rockerAngle
+    quantity: joint_value
+    unit: deg
+    joint: pinO4
+    motion: crankTurn
+    description: rocker angle about O4 from rest (the ground as the reference, positive about +z) as a series over the crank revolution
+  - id: rockerSwing
+    quantity: joint_range
+    unit: deg
+    joint: pinO4
+    motion: crankTurn
+    description: total rocker swing (maximum minus minimum of pinO4) over the crank revolution
+  - id: couplerX
+    quantity: point_x
+    unit: mm
+    body: coupler
+    location: [46.0, 58.0, 7.5]
+    motion: crankTurn
+    description: x of the coupler point P ((50, 30) in the coupler frame, on its mid-plane) as a series over the crank revolution
+  - id: couplerY
+    quantity: point_y
+    unit: mm
+    body: coupler
+    location: [46.0, 58.0, 7.5]
+    motion: crankTurn
+    description: y of the coupler point P ((50, 30) in the coupler frame, on its mid-plane) as a series over the crank revolution
+references:
+  - {path: sources/four-bar-spec.md, kind: text, role: authoritative, sha256: aececd85a2ba8a2e020775f05a44f1bd1c3a505c8c8c5ed634606d975490bf17}
+open_questions:
+  - The spec states no material, density or mass; no material, mass or centre-of-mass acceptance is declared (the kinematic predictions do not depend on them).
+  - The spec states no crank speed; the motor drive on pinO2 defaults to 60 rpm (one revolution per second) only to pace the animation, and every prediction is a function of the crank angle, not of time.
+  - The pins are joints only; the spec defines four solids and no pin, washer, spacer or fastener bodies, so the O4 pin spans the empty 10 gap between the ground's top face (z 0) and the rocker (z 10..15), and no pin head at O2 is modelled under the coupler's path.
+  - No pin diameter or fit is stated for the Ø6 holes; no running clearance is modelled and the joints are ideal.
+  - Coupler point P lies 30 off the coupler's centreline, outside its 16-wide plate; it is a reference point fixed in the coupler frame, not a feature. Its z (7.5, the coupler mid-plane at rest) is a choice; the motion is planar, so x and y do not depend on it.
+  - The spec rounds the coupler rest angle to 53.130102 deg; the contract uses the exact atan2(80, 60) = 53.13010235415598 deg so the loop closes exactly at rest (the difference moves B by 6e-7).

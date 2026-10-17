@@ -1,0 +1,82 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import heatsinkBottom, heatsinkLength, heatsinkWidth, heatsinkCenterX, heatsinkCenterY, wallThickness, roofThickness, heatsinkMargin, innerXMin, innerXMax, innerYMin, innerYMax, roofBottom from "params.kcl"
+
+// Contract literals and their independent guards live in shared params.kcl.
+// Recompute the aperture from the editable margin; the nominal heatOpening*
+// exports are reference dimensions, not inputs to this geometry.
+apertureXMin = heatsinkCenterX - (heatsinkLength / 2) - heatsinkMargin
+apertureXMax = heatsinkCenterX + heatsinkLength / 2 + heatsinkMargin
+apertureYMin = heatsinkCenterY - (heatsinkWidth / 2) - heatsinkMargin
+apertureYMax = heatsinkCenterY + heatsinkWidth / 2 + heatsinkMargin
+liveRoofTop = roofBottom + roofThickness
+
+// Photo size and centering allowance for the lower fins is fixed independently
+// of both heatsinkMargin and portMargin. These cuts stop at the roof underside.
+exhaustAllowance = 1.5mm
+exhaustYMin = heatsinkCenterY - (heatsinkWidth / 2) - exhaustAllowance
+exhaustYMax = heatsinkCenterY + heatsinkWidth / 2 + exhaustAllowance
+toolOverrun = 0.02mm
+
+assert(heatsinkMargin, isGreaterThanOrEqual = exhaustAllowance + 2mm, error = "The roof aperture must retain 2 mm clearance to the conservative heatsink envelope.")
+assert(apertureXMin, isGreaterThan = innerXMin, error = "The roof aperture must stay inside the left cavity plane.")
+assert(apertureXMax, isLessThan = innerXMax, error = "The roof aperture must stay inside the right cavity plane.")
+assert(apertureYMin, isGreaterThan = innerYMin, error = "The roof aperture must retain the front roof land.")
+assert(apertureYMax, isLessThan = 47.4mm, error = "The aperture must stay 0.1 mm clear of the rear roof gauge region.")
+assert(apertureYMax, isLessThan = innerYMax, error = "The roof aperture must retain the rear cavity land.")
+assert(exhaustYMin, isGreaterThan = innerYMin, error = "The exhaust must not cut the front wall.")
+assert(exhaustYMax, isLessThan = innerYMax, error = "The exhaust must not cut the rear wall.")
+assert(roofBottom, isGreaterThan = heatsinkBottom, error = "The lower fin exhaust must have positive height.")
+assert(heatsinkBottom, isGreaterThanOrEqual = 23.52mm, error = "The exhaust floor must remain in this group's assigned region.")
+assert(liveRoofTop, isLessThan = 44.52mm, error = "The roof aperture must remain inside this group's height region.")
+assert(innerXMin - wallThickness, isGreaterThanOrEqual = -8.2mm, error = "The left wall cut must remain inside this group's region.")
+assert(innerXMax + wallThickness, isLessThanOrEqual = 97.51mm, error = "The right wall cut must remain inside this group's region.")
+
+fn openingTool(@xMin, xMax, yMin, yMax, zMin, zMax) {
+  toolPlane = offsetPlane(XY, offset = zMin)
+  profile = sketch(on = toolPlane) {
+    front = line(start = [xMin, yMin], end = [xMax, yMin])
+    right = line(start = [xMax, yMin], end = [xMax, yMax])
+    rear = line(start = [xMax, yMax], end = [xMin, yMax])
+    left = line(start = [xMin, yMax], end = [xMin, yMin])
+  }
+  boundary = region(segments = [profile.front, profile.right])
+  tool = extrude(boundary, length = zMax - zMin, method = NEW)
+  hide(profile.meta.sketch)
+  hide(boundary)
+  hide(toolPlane)
+  return tool
+}
+
+// Foundation body order: [upperShell, bottomCover]. Only the cap is modified.
+// Tools finish at the exterior stock planes and overlap existing cavity air
+// inward by 0.02 mm. This keeps engine construction bounds at the true envelope.
+export fn thermalOpenings(@body) {
+  roofTool = openingTool(
+    apertureXMin,
+    xMax = apertureXMax,
+    yMin = apertureYMin,
+    yMax = apertureYMax,
+    zMin = roofBottom - toolOverrun,
+    zMax = liveRoofTop,
+  )
+  leftTool = openingTool(
+    innerXMin - wallThickness,
+    xMax = innerXMin + toolOverrun,
+    yMin = exhaustYMin,
+    yMax = exhaustYMax,
+    zMin = heatsinkBottom,
+    zMax = roofBottom,
+  )
+  rightTool = openingTool(
+    innerXMax - toolOverrun,
+    xMax = innerXMax + wallThickness,
+    yMin = exhaustYMin,
+    yMax = exhaustYMax,
+    zMin = heatsinkBottom,
+    zMax = roofBottom,
+  )
+  openedCap = subtract(body[0], tools = [roofTool, leftTool, rightTool])
+  hide([roofTool, leftTool, rightTool])
+  return [openedCap, body[1]]
+}

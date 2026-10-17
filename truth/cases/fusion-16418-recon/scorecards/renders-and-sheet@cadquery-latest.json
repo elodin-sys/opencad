@@ -1,0 +1,333 @@
+{
+  "case": "fusion-16418-recon",
+  "arm": "renders-and-sheet",
+  "design": "fusion-16418-recon",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-16418-recon",
+  "truth_class": "B",
+  "role": "validation",
+  "scored_at": "2026-09-20T14:04:06Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 11,
+    "required_total": 11,
+    "optional_pass": 0,
+    "optional_total": 0
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        20.4834,
+        4.0,
+        20.4834
+      ],
+      "measured": [
+        20.483999999999998,
+        4.0,
+        20.483999999999998
+      ],
+      "error": 0.0005999999999986017,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "",
+      "expected": 827.6532984081297,
+      "measured": 827.7777409477419,
+      "error": 0.1244425396122324,
+      "band": 8.276532984081296,
+      "ok": true
+    },
+    {
+      "id": "center_of_mass",
+      "kind": "center_of_mass",
+      "required": true,
+      "note": "",
+      "expected": [
+        3.4823523950388154e-10,
+        1.515397544839943,
+        1.1887981364141823e-10
+      ],
+      "measured": [
+        6.872140746358251e-14,
+        1.51551101910126,
+        1.737455894107219e-12
+      ],
+      "error": 0.00011347426131691485,
+      "ok": true
+    },
+    {
+      "id": "hole_d3p1_0_0p5_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          0.5,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.55,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.5,
+          0.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 1.55,
+        "length": 1.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 1.0,
+          "measured": 1.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d19_0_1p5_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          1.5,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 9.5,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          1.5,
+          0.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 9.499999999999,
+        "length": 3.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": -1.000088900582341e-12,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 3.0,
+          "measured": 3.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "face_yp_1",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 1.0,
+      "normal": "+",
+      "found": 1,
+      "area": 34.00832364975985,
+      "expected_area": 34.022,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yp_3",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 3.0,
+      "normal": "+",
+      "found": 1,
+      "area": 233.35780575108134,
+      "expected_area": 233.367,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yp_4",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 4.0,
+      "normal": "+",
+      "found": 1,
+      "area": 23.423999999977816,
+      "expected_area": 23.383,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yn_0",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 290.7901294008173,
+      "expected_area": 290.771,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "deviation",
+      "kind": "deviation",
+      "required": true,
+      "note": "",
+      "measured": {
+        "p95": 0.001106648089104939,
+        "hausdorff_estimate": 0.009449792979267818,
+        "silhouette_iou_min": 0.9996702863837017,
+        "volume_ratio": 1.0002019250415894
+      },
+      "checks": {
+        "p95": {
+          "max": 0.2,
+          "measured": 0.001106648089104939,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 1.0,
+          "measured": 0.009449792979267818,
+          "ok": true
+        },
+        "silhouette_iou": {
+          "min": 0.98,
+          "measured": 0.9996702863837017,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "f03ca1875cf4559b771063bf2129910a5eae389816be28cad5b864f15bbbe0d6",
+    "truth_files": {
+      "truth/23309_76dcf100_0002_1.step": "bdbedb44e948f757042a01ab4ca1f1121d3fa1d667228ff94c928d8ea1a77e05",
+      "truth/23309_76dcf100_0002_1.stl": "9eb314e28c5871802350ce181a76edf312b9612e9d109421debe34dc1741fdbb"
+    },
+    "input_files": {
+      "inputs/part-brief.md": "539d004699f714a06e332307d4492898bea539d8b99fece78c43e6232ce55adc",
+      "inputs/dimension-sheet.md": "7d3413c8a07dd7a0739e4f0c2262587aed84b8baf2d2bdacf31f37bf758555f8",
+      "inputs/renders/front.png": "035beba138156d44c9f5edb73da5a823e0aa5f2a7fecac2aec2932b47ce5b374",
+      "inputs/renders/iso-below.png": "a47b41a08f125b259bf42f963273dc770acc596b9bb373ba3f98d5195447ce74",
+      "inputs/renders/iso.png": "f2be75464db1b2631d4ea1135d2dbeb626f582b0c93f052be4ae8906bf53dca6",
+      "inputs/renders/iso2.png": "00701f6472fc7264c630b2507ca5b6d20cfb1c6d661d753be9f2109ab6c8874e",
+      "inputs/renders/right.png": "6197f27313adbba08e45760699a7ce0ec8c87a61ab2f1a8504048b9c9a6d1dfe",
+      "inputs/renders/section-x0.png": "787d1eb358fec02f11e3daeb045448041992f560a54951e7bc8c873654497280",
+      "inputs/renders/section-y2.png": "3c1ea5cb54a63bc61e197893d9f2c839a95644c1ec81bcecfae227485e947c19",
+      "inputs/renders/section-z0.png": "2f796c1eeffdb9a891e789f839f84c3e894943642a3495a7e110e2f5a0d60761",
+      "inputs/renders/top.png": "8d47253523dcf7475880132e6a4e7632f6acf6f23351989d73de92f974d21cb7",
+      "inputs/renders/render-notes.md": "5f9477cd2b1c1233b9eeae3aaac0558ca44c95df2c5321cfeed8111beb887114"
+    },
+    "source": {
+      "main.py": "1fac1e9e8707136470cb17b1a284784cef71618dd70621187af710b42291613d"
+    },
+    "kcl": {},
+    "step_sha256": "abad361be0fc75292659c09ed50aaf82c3e2b955ac2e4caf21490451244715ca",
+    "design_bundle": {
+      "brief.md": "0ba3661f6f0f5f725d8caa7c043536d5a418b064122a22b56502399fee7e36bd",
+      "contract.yaml": "ddcceecfcc2d59adca03c5213dab4ab7b6e90759866112a757967e5619a15929",
+      "sources/dimension-sheet.md": "7d3413c8a07dd7a0739e4f0c2262587aed84b8baf2d2bdacf31f37bf758555f8",
+      "sources/front.png": "035beba138156d44c9f5edb73da5a823e0aa5f2a7fecac2aec2932b47ce5b374",
+      "sources/iso-below.png": "a47b41a08f125b259bf42f963273dc770acc596b9bb373ba3f98d5195447ce74",
+      "sources/iso.png": "f2be75464db1b2631d4ea1135d2dbeb626f582b0c93f052be4ae8906bf53dca6",
+      "sources/iso2.png": "00701f6472fc7264c630b2507ca5b6d20cfb1c6d661d753be9f2109ab6c8874e",
+      "sources/part-brief.md": "539d004699f714a06e332307d4492898bea539d8b99fece78c43e6232ce55adc",
+      "sources/render-notes.md": "5f9477cd2b1c1233b9eeae3aaac0558ca44c95df2c5321cfeed8111beb887114",
+      "sources/right.png": "6197f27313adbba08e45760699a7ce0ec8c87a61ab2f1a8504048b9c9a6d1dfe",
+      "sources/section-x0.png": "787d1eb358fec02f11e3daeb045448041992f560a54951e7bc8c873654497280",
+      "sources/section-y2.png": "3c1ea5cb54a63bc61e197893d9f2c839a95644c1ec81bcecfae227485e947c19",
+      "sources/section-z0.png": "2f796c1eeffdb9a891e789f839f84c3e894943642a3495a7e110e2f5a0d60761",
+      "sources/top.png": "8d47253523dcf7475880132e6a4e7632f6acf6f23351989d73de92f974d21cb7"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-20T14:04:08Z",
+    "skillkat_version": "0.1.0",
+    "backend": "cadquery",
+    "engine_version": "2.8.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2750651461ce329095e189d2b6e635ac797b95cd",
+      "dirty": true
+    }
+  },
+  "backend": "cadquery"
+}

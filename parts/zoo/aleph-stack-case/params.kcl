@@ -1,0 +1,416 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Contract literals: the edit pipeline rewrites these exports independently.
+export boardLength = 88mm
+export boardWidth = 52.5mm
+export stackMinX = 0mm
+export stackMinY = -2.5mm
+export stackMinZ = -1.97mm
+export stackMaxX = 89.31mm
+export baseBoardThickness = 1.56mm
+export boardStackHeight = 10mm
+export carrierBoardThickness = 1.57mm
+export carrierBottom = 11.56mm
+export carrierTop = 13.13mm
+export moduleSeatHeight = 6.56mm
+export moduleBottom = 19.69mm
+export moduleKeepoutTopLocal = 6.28mm
+export moduleKeepoutTop = 25.97mm
+export heatsinkBottom = 23.52mm
+export heatsinkLength = 61mm
+export heatsinkWidth = 40mm
+export heatsinkHeight = 15mm
+export heatsinkCenterX = 44mm
+export moduleBackY = 46mm
+export heatsinkLocalCenterY = 24.81mm
+export heatsinkCenterY = 21.19mm
+export heatsinkTop = 38.52mm
+export mountXLow = 3mm
+export mountXHigh = 85mm
+export mountYLow = 3mm
+export mountYHigh = 49.5mm
+export mountPitchX = 82mm
+export mountPitchY = 46.5mm
+export wallThickness = 3.2mm
+export roofThickness = 3.2mm
+export floorThickness = 3.2mm
+export boardClearance = 2mm
+export floorClearance = 1.5mm
+export seamGap = 0.3mm
+export roofSpacerHeight = 14mm
+export roofSpacerDiameter = 4.5mm
+export mountHoleDiameter = 3mm
+export basePadDiameter = 8mm
+export portMargin = 1.5mm
+export heatsinkMargin = 4mm
+export innerXMin = -2mm
+export innerXMax = 91.31mm
+export innerYMin = -4.5mm
+export innerYMax = 54.5mm
+export outerXMin = -5.2mm
+export outerXMax = 94.51mm
+export outerYMin = -7.7mm
+export outerYMax = 57.7mm
+export floorTop = -3.47mm
+export floorBottom = -6.67mm
+export shellBottom = -3.17mm
+export roofBottom = 27.13mm
+export roofTop = 30.33mm
+export heatOpeningLength = 69mm
+export heatOpeningWidth = 48mm
+export heatOpeningXMin = 9.5mm
+export heatOpeningXMax = 78.5mm
+export heatOpeningYMin = -2.81mm
+export heatOpeningYMax = 45.19mm
+export caseLength = 99.71mm
+export caseWidth = 65.4mm
+export caseHeight = 37mm
+export fanExposure = 8.19mm
+
+// Geometric feasibility guards; no derived parameter is equality-locked.
+assert(
+  boardLength,
+  isGreaterThan = mountXHigh,
+  isLessThan = caseLength,
+  error = "Board length must contain the mounting axes and fit the case.",
+)
+assert(
+  boardWidth,
+  isGreaterThan = mountYHigh,
+  isLessThan = caseWidth,
+  error = "Board width must contain the mounting axes and fit the case.",
+)
+assert(
+  stackMinX,
+  isGreaterThan = innerXMin,
+  isLessThan = stackMaxX,
+  error = "Hardware x minimum must lie inside the cavity span.",
+)
+assert(
+  stackMinY,
+  isGreaterThan = innerYMin,
+  isLessThan = boardWidth,
+  error = "Hardware y minimum must lie inside the cavity span.",
+)
+assert(
+  stackMinZ,
+  isGreaterThan = floorTop,
+  isLessThan = 0mm,
+  error = "Lowest component must clear the floor below the base datum.",
+)
+assert(
+  stackMaxX,
+  isGreaterThan = stackMinX,
+  isLessThan = innerXMax,
+  error = "Hardware x maximum must lie inside the cavity span.",
+)
+assert(
+  baseBoardThickness,
+  isGreaterThan = 0mm,
+  isLessThan = carrierBottom,
+  error = "Base PCB gauge must fit below the carrier.",
+)
+assert(
+  boardStackHeight,
+  isGreaterThan = 0mm,
+  isLessThan = roofBottom,
+  error = "Inter-board standoff length must be positive and fit below the roof.",
+)
+assert(
+  carrierBoardThickness,
+  isGreaterThan = 0mm,
+  isLessThan = moduleBottom - carrierBottom,
+  error = "Carrier PCB gauge must fit below the module.",
+)
+assert(
+  carrierBottom,
+  isGreaterThan = baseBoardThickness,
+  isLessThan = carrierTop,
+  error = "Carrier lower face must lie above the base and below its upper face.",
+)
+assert(
+  carrierTop,
+  isGreaterThan = carrierBottom,
+  isLessThan = moduleBottom,
+  error = "Carrier upper face must lie below the module.",
+)
+assert(
+  moduleSeatHeight,
+  isGreaterThan = 0mm,
+  isLessThan = roofBottom - carrierTop,
+  error = "Module seat must fit below the roof.",
+)
+assert(
+  moduleBottom,
+  isGreaterThan = carrierTop,
+  isLessThan = moduleKeepoutTop,
+  error = "Module underside must lie between carrier and module keep-out top.",
+)
+assert(
+  moduleKeepoutTopLocal,
+  isGreaterThan = 0mm,
+  isLessThan = roofBottom - moduleBottom,
+  error = "Module components must fit below the roof bearing plane.",
+)
+assert(
+  moduleKeepoutTop,
+  isGreaterThan = moduleBottom,
+  isLessThan = roofBottom,
+  error = "Module keep-out must clear the roof underside.",
+)
+assert(
+  heatsinkBottom,
+  isGreaterThan = moduleBottom,
+  isLessThan = roofBottom,
+  error = "Heatsink contact plane must lie below the roof underside.",
+)
+assert(
+  heatsinkLength,
+  isGreaterThan = 0mm,
+  isLessThan = innerXMax - innerXMin - (2 * heatsinkMargin),
+  error = "Heatsink and aperture allowance must fit in x.",
+)
+assert(
+  heatsinkWidth,
+  isGreaterThan = 0mm,
+  isLessThan = innerYMax - innerYMin - (2 * heatsinkMargin),
+  error = "Heatsink and aperture allowance must fit in y.",
+)
+assert(heatsinkHeight, isGreaterThan = roofTop - heatsinkBottom, error = "Heatsink must extend above the printed roof.")
+assert(
+  heatsinkCenterX,
+  isGreaterThan = innerXMin + heatsinkLength / 2 + heatsinkMargin,
+  isLessThan = innerXMax - (heatsinkLength / 2) - heatsinkMargin,
+  error = "Heatsink center must leave both x aperture lands.",
+)
+assert(
+  moduleBackY,
+  isGreaterThan = heatsinkCenterY,
+  isLessThan = boardWidth,
+  error = "Module back edge must lie on the board footprint.",
+)
+assert(
+  heatsinkLocalCenterY,
+  isGreaterThan = 0mm,
+  isLessThan = moduleBackY,
+  error = "Module-local heatsink center must lie within the module span.",
+)
+assert(
+  heatsinkCenterY,
+  isGreaterThan = innerYMin + heatsinkWidth / 2 + heatsinkMargin,
+  isLessThan = innerYMax - (heatsinkWidth / 2) - heatsinkMargin,
+  error = "Heatsink center must leave both y aperture lands.",
+)
+assert(heatsinkTop, isGreaterThan = roofTop, error = "Heatsink top must remain exposed above the case.")
+assert(
+  mountXLow,
+  isGreaterThan = mountHoleDiameter / 2,
+  isLessThan = mountXHigh,
+  error = "Low x mounting axis must clear the board edge and opposite axis.",
+)
+assert(
+  mountXHigh,
+  isGreaterThan = mountXLow,
+  isLessThan = boardLength - (mountHoleDiameter / 2),
+  error = "High x mounting axis must clear the board edge.",
+)
+assert(
+  mountYLow,
+  isGreaterThan = mountHoleDiameter / 2,
+  isLessThan = mountYHigh,
+  error = "Low y mounting axis must clear the board edge and opposite axis.",
+)
+assert(
+  mountYHigh,
+  isGreaterThan = mountYLow,
+  isLessThan = boardWidth - (mountHoleDiameter / 2),
+  error = "High y mounting axis must clear the board edge.",
+)
+assert(
+  mountPitchX,
+  isGreaterThan = basePadDiameter,
+  isLessThan = boardLength,
+  error = "X mounting pitch must separate pads within the board span.",
+)
+assert(
+  mountPitchY,
+  isGreaterThan = basePadDiameter,
+  isLessThan = boardWidth,
+  error = "Y mounting pitch must separate pads within the board span.",
+)
+assert(
+  wallThickness,
+  isGreaterThan = 0mm,
+  isLessThan = boardWidth / 2,
+  error = "Side-wall stock must be positive and smaller than half the board width.",
+)
+assert(
+  roofThickness,
+  isGreaterThan = 0mm,
+  isLessThan = heatsinkTop - roofBottom,
+  error = "Roof stock must be positive and leave the heatsink exposed.",
+)
+assert(
+  floorThickness,
+  isGreaterThan = 0mm,
+  isLessThan = caseHeight,
+  error = "Floor stock must be positive and smaller than case height.",
+)
+assert(
+  boardClearance,
+  isGreaterThan = 0mm,
+  isLessThan = boardWidth / 2,
+  error = "Board side allowance must be positive and smaller than half the board width.",
+)
+assert(
+  floorClearance,
+  isGreaterThan = 0mm,
+  isLessThan = stackMinZ - floorBottom,
+  error = "Component floor allowance must fit above the outside floor plane.",
+)
+assert(
+  seamGap,
+  isGreaterThan = 0mm,
+  isLessThan = -floorTop,
+  error = "Cover seam must remain open below the base PCB datum.",
+)
+assert(
+  roofSpacerHeight,
+  isGreaterThan = moduleKeepoutTop - carrierTop,
+  isLessThan = heatsinkTop - carrierTop,
+  error = "Roof spacers must clear the module while leaving the heatsink exposed.",
+)
+assert(
+  roofSpacerDiameter,
+  isGreaterThan = mountHoleDiameter,
+  isLessThan = basePadDiameter,
+  error = "Roof spacer must have material around its clearance bore.",
+)
+assert(
+  mountHoleDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = roofSpacerDiameter,
+  error = "Mount clearance bore must fit within the metal spacer.",
+)
+assert(
+  basePadDiameter,
+  isGreaterThan = mountHoleDiameter,
+  isLessThan = mountPitchY,
+  error = "Support pads need positive ligaments and must remain separated.",
+)
+assert(
+  portMargin,
+  isGreaterThan = 0mm,
+  isLessThan = boardWidth / 2,
+  error = "Service-window allowance must be positive and smaller than the board span.",
+)
+assert(
+  heatsinkMargin,
+  isGreaterThan = 0mm,
+  isLessThan = heatsinkCenterY - (heatsinkWidth / 2) - innerYMin,
+  error = "Heat aperture allowance must preserve the front roof land.",
+)
+assert(
+  innerXMin,
+  isGreaterThan = outerXMin,
+  isLessThan = stackMinX,
+  error = "Inner left plane must lie between the outer stock and hardware.",
+)
+assert(
+  innerXMax,
+  isGreaterThan = stackMaxX,
+  isLessThan = outerXMax,
+  error = "Inner right plane must lie between hardware and the outer stock.",
+)
+assert(
+  innerYMin,
+  isGreaterThan = outerYMin,
+  isLessThan = stackMinY,
+  error = "Inner front plane must clear the hardware overhang.",
+)
+assert(
+  innerYMax,
+  isGreaterThan = boardWidth,
+  isLessThan = outerYMax,
+  error = "Inner rear plane must clear the board edge.",
+)
+assert(outerXMin, isLessThan = innerXMin, error = "Outer left stock must extend past the cavity.")
+assert(outerXMax, isGreaterThan = innerXMax, error = "Outer right stock must extend past the cavity.")
+assert(outerYMin, isLessThan = innerYMin, error = "Outer front stock must extend past the cavity.")
+assert(outerYMax, isGreaterThan = innerYMax, error = "Outer rear stock must extend past the cavity.")
+assert(
+  floorTop,
+  isGreaterThan = floorBottom,
+  isLessThan = stackMinZ,
+  error = "Cover deck must lie above its underside and below the lowest component.",
+)
+assert(floorBottom, isLessThan = floorTop, error = "Outside floor plane must lie below the cover deck.")
+assert(
+  shellBottom,
+  isGreaterThan = floorTop,
+  isLessThan = 0mm,
+  error = "Cap rim must be separated from the deck below the base datum.",
+)
+assert(
+  roofBottom,
+  isGreaterThan = moduleKeepoutTop,
+  isLessThan = roofTop,
+  error = "Roof underside must clear the module and remain below the roof deck.",
+)
+assert(
+  roofTop,
+  isGreaterThan = roofBottom,
+  isLessThan = heatsinkTop,
+  error = "Roof deck must have positive gauge and leave the heatsink exposed.",
+)
+assert(
+  heatOpeningLength,
+  isGreaterThan = heatsinkLength,
+  isLessThan = innerXMax - innerXMin,
+  error = "Heat aperture x span must clear the sink and fit inside the cavity footprint.",
+)
+assert(
+  heatOpeningWidth,
+  isGreaterThan = heatsinkWidth,
+  isLessThan = innerYMax - innerYMin,
+  error = "Heat aperture y span must clear the sink and fit inside the cavity footprint.",
+)
+assert(
+  heatOpeningXMin,
+  isGreaterThan = innerXMin,
+  isLessThan = heatOpeningXMax,
+  error = "Left aperture boundary must lie within the cavity footprint.",
+)
+assert(
+  heatOpeningXMax,
+  isGreaterThan = heatOpeningXMin,
+  isLessThan = innerXMax,
+  error = "Right aperture boundary must lie within the cavity footprint.",
+)
+assert(
+  heatOpeningYMin,
+  isGreaterThan = innerYMin,
+  isLessThan = heatOpeningYMax,
+  error = "Front aperture boundary must lie within the cavity footprint.",
+)
+assert(
+  heatOpeningYMax,
+  isGreaterThan = heatOpeningYMin,
+  isLessThan = innerYMax,
+  error = "Rear aperture boundary must lie within the cavity footprint.",
+)
+assert(caseLength, isGreaterThan = innerXMax - innerXMin, error = "Overall x span must contain the cavity.")
+assert(caseWidth, isGreaterThan = innerYMax - innerYMin, error = "Overall y span must contain the cavity.")
+assert(caseHeight, isGreaterThan = roofBottom - floorTop, error = "Overall z span must contain both structural skins.")
+assert(
+  fanExposure,
+  isGreaterThan = 0mm,
+  isLessThan = heatsinkHeight,
+  error = "Exposed fan height must be positive and smaller than the heatsink height.",
+)
+
+// Lower pads must remain inside the fixed cavity and clear all four walls.
+assert(basePadDiameter, isLessThan = 2 * (mountXLow - innerXMin), error = "Support pads must clear the left cavity wall.")
+assert(basePadDiameter, isLessThan = 2 * (innerXMax - mountXHigh), error = "Support pads must clear the right cavity wall.")
+assert(basePadDiameter, isLessThan = 2 * (mountYLow - innerYMin), error = "Support pads must clear the front cavity wall.")
+assert(basePadDiameter, isLessThan = 2 * (innerYMax - mountYHigh), error = "Support pads must clear the rear cavity wall.")

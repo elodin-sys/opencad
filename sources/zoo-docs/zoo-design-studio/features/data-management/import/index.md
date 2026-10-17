@@ -1,0 +1,229 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/data-management/import
+Title: Import
+
+# Import
+
+Import geometry and project data into Zoo Design Studio.
+
+Import workflows bring external CAD files, 3D models, and KCL code into Zoo Design Studio for visualization, measurement, reuse, and native parametric editing. Zoo supports industry-standard formats enabling interoperability with other CAD systems and 3D content pipelines.
+
+## Supported Import Formats
+
+{/* Source of truth: modeling-app/rust/kcl-lib/src/import_format.rs. */}
+
+“Supported” means the current Design Studio import workflow accepts the format. It does not mean
+that external geometry becomes parametrically editable. Formats under active development are
+explicitly labeled “Experimental.”
+
+For proprietary CAD formats, compatibility can vary with the application version that produced the
+file. An accepted extension does not guarantee complete version coverage or preservation of native
+feature history.
+
+### CAD Formats
+
+**STEP (.step, .stp)**
+- 🧪 **Experimental:** STEP import supports read-only 3D geometry. Imported geometry cannot be edited, and 2D STEP drawings are not supported.
+- Standard for the Exchange of Product model data (ISO 10303)
+- Industry-standard neutral CAD format
+- Preserves solid geometry, assemblies, and product structure
+- Best format for high-fidelity CAD interchange
+- Recommended for importing from SolidWorks, CATIA, NX, Creo, Inventor, Fusion 360, Onshape
+- For STEP-specific syntax, export settings, and troubleshooting, see
+  [STEP Import](/docs/zoo-design-studio/features/data-management/import/step)
+
+**SolidWorks Part (.sldprt)**
+- Supported for importing external SolidWorks part geometry
+- Imported geometry does not include editable feature history
+- Useful for visualization, measurement, references, and downstream modeling operations
+
+**ACIS (.sat, .sab)**
+- Accepted for importing ACIS solid-model geometry
+- Includes both text (`.sat`) and binary (`.sab`) ACIS files
+- Imported geometry does not include editable feature history
+
+**CATIA Part (.catpart)**
+- Accepted for importing CATIA part geometry
+- Imported geometry does not include editable CATIA feature history
+
+**Creo and Siemens NX Part (.prt, versioned .prt.N)**
+- Unversioned `.prt` files can represent either Siemens NX or Creo/ProE parts
+- When the format is inferred automatically, an unversioned `.prt` file is treated as NX
+- Creo can be selected explicitly, and versioned Creo filenames such as `.prt.1` or `.prt.23` are recognized as Creo
+- Imported geometry does not include editable native feature history
+
+**Autodesk Inventor Part (.ipt)**
+- Accepted for importing Autodesk Inventor part geometry
+- Imported geometry does not include editable Inventor feature history
+
+**Parasolid (.x_t, .x_b)**
+- Accepted for importing Parasolid text (`.x_t`) and binary (`.x_b`) geometry
+- Imported geometry does not include editable feature history
+
+### 3D Model Formats
+
+**glTF/GLB (.gltf, .glb)**
+- Graphics Library Transmission Format
+- Modern 3D asset format optimized for web and real-time rendering
+- Supports meshes, materials, textures, and complex scenes
+- Commonly used for visualization assets and game engines
+
+**FBX (.fbx, .fbxb)**
+- Filmbox format
+- Autodesk interchange format for 3D content
+- Widely used in animation, VFX, and game development pipelines
+- Supports complex scenes with multiple objects and materials
+
+**OBJ (.obj)**
+- Widely supported mesh interchange format
+- Useful for visualization and compatibility with general-purpose 3D software
+- Supports custom length units and coordinate systems when imported from KCL
+
+**PLY (.ply)**
+- Polygon File Format for mesh and scan data
+- Commonly used for visualization, 3D scanning, and graphics workflows
+- Supports custom length units and coordinate systems when imported from KCL
+
+**STL (.stl)**
+- Tessellated surface format commonly used for 3D printing
+- Contains mesh geometry without parametric feature history
+- Supports custom length units and coordinate systems when imported from KCL
+
+### Native Formats
+
+**KCL (.kcl)**
+- Zoo's native parametric modeling language
+- Imports as a fully editable parametric model
+- Enables code-based design reuse and library building
+- Preserves feature history and parameter definitions
+
+## Import Methods
+
+### Add File to Project
+
+Use the **Add file to project** command to import local files or Zoo sample models:
+
+**From Local Drive:**
+1. Open Command Bar
+2. Select "Add file to project"
+3. Choose "Local Drive" as source
+4. Select add to current project or create new project
+5. Browse to file location
+6. Select file(s) to import
+
+**From KCL Samples:**
+1. Open Command Bar
+2. Select "Add file to project"
+3. Choose "KCL Samples" as source
+4. Select sample from library
+5. Choose to add to current or new project
+
+### Import File from URL
+
+Import remote files directly from web URLs:
+
+1. Open Command Bar
+2. Select "Import file from URL"
+3. Specify import method (add to current or create new project)
+4. Enter remote file URL
+5. Specify filename and optional project name
+
+Supported URL formats:
+- Direct file links (https://example.com/model.step)
+- Cloud storage shared links (Google Drive, Dropbox, OneDrive)
+- Repository raw file URLs (GitHub, GitLab)
+
+### Insert Command (KCL)
+
+Reference existing project files from within KCL code:
+
+```kcl
+// Import STEP file
+import bracket from "./parts/bracket.stp"
+
+// Import other KCL file
+import utils from "./library/utils.kcl"
+
+// Import GLB visualization
+import reference from "./reference/concept.glb"
+```
+
+The `Insert` command (available via Command Bar) provides a UI workflow for the same functionality:
+1. Select file from project directory
+2. Specify local variable name for the imported geometry
+3. KCL import statement is automatically generated
+
+## Imported Geometry Behavior
+
+### Non-Native Formats
+
+Imported CAD geometry from external formats:
+- Appears as reference geometry in the Scene
+- Can be measured, visualized, and used as construction references
+- Can be **used as boolean tools** (subtract imported geometry from KCL-created solids)
+- Can serve as **extrusion targets** ("extrude to face" with imported surfaces)
+- Geometry is **not directly editable** (no feature history)
+- To edit parametrically, manually recreate using KCL/native tools
+
+### Native KCL Format
+
+Imported KCL files:
+- Fully parametric and editable
+- Feature tree is preserved
+- Parameters can be modified
+- Code can be directly edited in Code Editor
+- Functions and variables can be reused
+
+## Import Workflow Best Practices
+
+### File Organization
+
+Organize imports in project file structure:
+```
+project/
+  main.kcl           # Primary design file
+  parts/
+    bracket.stp      # Imported STEP parts
+    housing.stp
+  library/
+    fasteners.kcl    # Reusable KCL components
+    utils.kcl
+  reference/
+    concept.glb      # Visual reference models
+```
+
+### Version Control
+
+When importing files into version-controlled projects:
+- Commit imported files to repository (enables team collaboration)
+- Use relative paths in import statements (ensures portability)
+- Document import sources and versions in comments
+
+### Unit Handling
+
+STEP files include unit metadata:
+- Zoo interprets STEP numeric values in the current KCL file or scene unit; it does not rescale
+  from STEP unit metadata
+- Match the KCL file or scene unit to the source CAD file before importing
+- If you need to keep a different scene unit, use a `Scale` transform after import
+
+See [STEP units and scale](/docs/zoo-design-studio/features/data-management/import/step#units-and-scale)
+for an example and the conversion workflow.
+
+### Performance Considerations
+
+Large imported files affect performance:
+- STEP files with thousands of features may slow viewport interaction
+- Consider simplifying complex imports for better responsiveness
+- Use level-of-detail (LOD) representations when available
+- Import only required components, not entire assemblies when possible
+
+## File Format Selection Guide
+
+| Use Case | Recommended Format | Reason |
+|----------|-------------------|--------|
+| CAD system interchange | STEP (.stp) | Industry standard, high fidelity |
+| Parametric reuse | KCL (.kcl) | Native format, fully editable |
+| Visualization reference | glTF/GLB (.glb) | Optimized for rendering, smaller file size |
+| Animation pipeline | FBX (.fbxb) | Supports complex scenes and animations |
+| Supplier-provided models | STEP (.stp) | Most common neutral format from vendors |
+| Internal library components | KCL (.kcl) | Maintains parameter definitions and editability |

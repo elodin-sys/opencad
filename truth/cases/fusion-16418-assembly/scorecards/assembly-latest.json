@@ -1,0 +1,263 @@
+{
+  "case": "fusion-16418-assembly",
+  "scored_at": "2026-09-21T01:41:11Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "5ce1680b-eb25-4f84-b1fd-506305295f77",
+    "exit_code": 0,
+    "seconds": 157,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-16418-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/cadquery/fusion-16418-assembly/main.py",
+        "parts/cadquery/fusion-16418-assembly/construction-log.md"
+      ],
+      "incomplete": false,
+      "notes": "CadQuery local export via assembly-check (1 ledger row); no hosted engine.",
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 5.53,
+      "visual_check": "Visual: gear seated on the housing face at the lower r=1.55 hole; bore and hole concentric on front and iso, axes colinear; contact at the hole (gap 0); small bore/hole interpenetration (0.53 mm\u00b3); gear teeth clear of the housing, no body-through-body clash."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "5ce1680b-eb25-4f84-b1fd-506305295f77",
+    "exit_code": 0,
+    "seconds": 157,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-16418-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/cadquery/fusion-16418-assembly/main.py",
+        "parts/cadquery/fusion-16418-assembly/construction-log.md"
+      ],
+      "incomplete": false,
+      "notes": "CadQuery local export via assembly-check (1 ledger row); no hosted engine.",
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 5.53,
+      "visual_check": "Visual: gear seated on the housing face at the lower r=1.55 hole; bore and hole concentric on front and iso, axes colinear; contact at the hole (gap 0); small bore/hole interpenetration (0.53 mm\u00b3); gear teeth clear of the housing, no body-through-body clash."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "mode": "modelled",
+  "program_executes": true,
+  "solid_count": {
+    "measured": 2,
+    "expected": 2,
+    "ok": true
+  },
+  "export_agreement": {
+    "ok": true,
+    "bodies": {
+      "23309_76dcf100_0002_1": {
+        "ok": true,
+        "volume_expected": 827.6532984081307,
+        "volume_measured": 827.6532984084457,
+        "volume_rel": 3.806258344315242e-13,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 1.6533787198709313e-12,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 1.4407324622181678e-12
+      },
+      "23309_76dcf100_0003_2": {
+        "ok": true,
+        "volume_expected": 4864.078032735531,
+        "volume_measured": 4864.076355934576,
+        "volume_rel": 3.447315080433182e-07,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 8.32799684359531e-11,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 3.4783836693402484e-06
+      }
+    }
+  },
+  "export_integrity": {
+    "ok": true,
+    "valid": true,
+    "solids": 2,
+    "expected_solids": 2,
+    "watertight": true,
+    "deterministic": true
+  },
+  "hygiene": {
+    "ok": true,
+    "has_result": true,
+    "has_placements": true,
+    "cad_refs": [],
+    "truth_refs": [],
+    "files": [
+      "/Users/danieldriscoll/dual/skillkat/parts/cadquery/fusion-16418-assembly/main.py"
+    ]
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": true,
+  "offset_truth_mm": -5.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 1.7763568394002505e-15,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": -5.0,
+      "expected": -5.0,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 0.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 0.5293460947886042,
+      "truth_interference": 0.5293460947887276,
+      "max": 1.5293460947887276,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.0,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "23309_76dcf100_0002_1": {
+        "origin": [
+          11.5,
+          3.5,
+          -38.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            11.5
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            3.5
+          ],
+          [
+            0.0,
+            0.0,
+            -1.0,
+            -38.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "23309_76dcf100_0003_2": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-16418-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-16418-assembly/handoff/assembly.html",
+    "motion": "revolute",
+    "native_glb": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-16418-assembly/handoff/assembly-native.glb"
+  }
+}

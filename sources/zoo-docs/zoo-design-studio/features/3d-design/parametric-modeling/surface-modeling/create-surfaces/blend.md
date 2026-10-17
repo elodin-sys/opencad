@@ -1,0 +1,105 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/blend
+Title: Blend
+
+# Blend
+
+Blend adjacent surfaces together in Zoo Design Studio.
+
+Use Blend to create a smooth transition surface between two selected open boundary edges. It is
+useful for connecting separate surface bodies with a controlled bridge instead of an abrupt gap or
+hard corner.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/blend/blend.webp"
+  alt="Blend surface result between two open surface edges in Zoo Design Studio"
+  aspect="2314 / 2314"
+  maxHeightPx={640}
+/>
+
+## Selection
+
+Blend works from exactly two selected open boundary edges. These are the exposed end edges of 3D
+surface bodies, not the original sketch segments used to create those surfaces.
+
+Select one boundary edge on the first surface, then select the matching boundary edge on the second
+surface to create the transition between them. If the preview crosses, twists, or uses the wrong side
+of a surface, select a different pair of boundary edges before accepting the feature.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/blend/select-segment.webp"
+  alt="Blend surface with two selected open boundary edges"
+  aspect="2334 / 1204"
+  maxHeightPx={440}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Selected open boundary edges
+</div>
+
+## Edge Spans
+
+When you select an edge in the scene, Blend uses the full length of that edge as one side of the
+transition. In KCL, the same operation can also use bounded edge spans when you only want to blend
+part of an edge.
+
+Edge spans are normalized from `0` to `1` along the selected edge. `lowerBound` defaults to `0`,
+`upperBound` defaults to `1`, and tagged edges use the full span. Keeping `lowerBound = 0` while
+lowering `upperBound` clips the blend back toward the edge start point.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/blend/left-upper-bound-1_0.webp"
+  alt="Blend surface using the full left boundary edge with lowerBound 0 and upperBound 1"
+  aspect="1216 / 956"
+  maxHeightPx={520}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Left edge span: <code>lowerBound = 0</code>, <code>upperBound = 1</code>
+</div>
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/blend/left-upper-bound-0_5.webp"
+  alt="Blend surface using half of the left boundary edge with lowerBound 0 and upperBound 0.5"
+  aspect="1216 / 956"
+  maxHeightPx={520}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Left edge span: <code>lowerBound = 0</code>, <code>upperBound = 0.5</code>
+</div>
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/blend/left-upper-bound-0_0.webp"
+  alt="Blend surface touching the left boundary edge at only the start point with lowerBound 0 and upperBound 0"
+  aspect="1216 / 956"
+  maxHeightPx={520}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Left edge span: <code>lowerBound = 0</code>, <code>upperBound = 0</code>
+</div>
+
+## Other Parameters
+
+Blend is driven by the two selected boundary edges. It cannot use fewer or more than two edges.
+Unlike Extrude, Revolve, Loft, and Sweep surface tools, there is no `bodyType` parameter to set here,
+because the Blend result is already a surface.
+
+## Are you interested in code?
+
+Zoo Design Studio writes KCL behind the scenes. A surface blend is a `blend` call with two edge
+inputs. Tagged edges blend the full edge span.
+
+```kcl
+sketch1 = sketch(on = XY) {
+  line1 = line(start = [var -3mm, var -22mm], end = [var 5mm, var -18mm])
+}
+extrude1 = extrude(sketch1.line1, length = 5, bodyType = SURFACE)
+sketch2 = sketch(on = XZ) {
+  line1 = line(start = [var -7mm, var 3mm], end = [var 7mm, var 1mm])
+}
+extrude2 = extrude(sketch2.line1, length = 5, bodyType = SURFACE)
+blendSurface = blend([
+  getBoundedEdge(extrude1, edge = getOppositeEdge(extrude1.sketch.tags.line1)),
+  getBoundedEdge(extrude2, edge = getOppositeEdge(extrude2.sketch.tags.line1))
+])
+```
+
+Want to find out more about the `blend` function? [Check it out](/docs/kcl-std/functions/std-solid-blend)
+in our KCL docs.

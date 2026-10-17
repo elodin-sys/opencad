@@ -1,0 +1,1597 @@
+# PartContract for editable construction. Figure 3 controls all external dimensions.
+# Digital tolerances are comparison thresholds, not manufacturing tolerances.
+# Reference models are inspection-only. Required final outputs: one-solid KCL, STEP and STL.
+schema_version: 1
+name: nist-amb2022-01-bridge-mesh
+intent: 'Reconstruct the NIST AMB2022-01 individual bridge artifact as editable, parameterized KCL from the attached
+  NIST description excerpts and figures; Figure 3 is the dimensioned plan and elevation drawing and is authoritative
+  for every external dimension. Frame: x along the 75 mm length with x = 0 at the pointed (45 degree tapered) end
+  and x increasing toward the far end, y across the 5 mm width with y = 0 at one long side face, z vertical from
+  the build plate (z = 0) upward. Model the tapered nose, the tall solid end block, the twelve legs with their 45
+  degree overhangs merging into the solid bridge, the eleven 1 mm wide top tabs on a 7 mm pitch, and the hollow
+  leg L10 with its 0.5 mm outer walls, 1 mm base, four 4 mm tall internal thin walls parallel to x, and flat ceiling,
+  exactly as documented. Where the sources do not fix a dimension (the single- and double-track thin-wall widths),
+  record it as an open question and use a clearly labelled inferred value with a wide tolerance rather than approximating
+  silently. One solid; export STEP and STL. Reference geometry supplied by NIST is for inspection only: the deliverable
+  must be editable construction, never an import.'
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: Laser powder bed fusion (LPBF); nominal individual as-built geometry before EDM separation or tab skim
+  cutting
+release_status: reconstruction
+frame:
+  origin: Intersection of the tip plane x=0, the plane of the lower long side in Figure 3 plan y=0, and the build
+    plate z=0. This datum intersection lies outside material. The physical nose tip is (0,2.5,0) at the base. This
+    reproduces the supplied reference ingest min-datum frame.
+  axes:
+    x: Along the 75 mm length from the pointed nose toward the square far end; rightward in Figure 3 and in the
+      recoating arrow direction.
+    y: Across the 5 mm width from the lower long side in Figure 3 plan toward its upper long side; y=0 and y=5 are
+      those side planes.
+    z: Vertically upward from the build plate z=0; body top z=12 and tab tops z=12.5.
+  datums:
+  - name: A_buildPlate
+    description: Common plane z=0 of the tall end-block foot and the twelve numbered leg feet; outward material
+      normal -z.
+  - name: B_longSide
+    description: Plane y=0 containing the lower long side in Figure 3 plan, for x from the nose shoulder to the
+      far end; outward normal -y.
+  - name: C_tipPlane
+    description: Plane x=0 through the pointed nose edge, perpendicular to the length. Intersect A, B and C to reproduce
+      the coordinate origin.
+  - name: D_farEnd
+    description: Square far-end plane x=75, outward normal +x; L1 and the last top tab end here.
+envelope:
+  min:
+  - 0
+  - 0
+  - 0
+  max:
+  - 75
+  - 5
+  - 12.5
+  tolerance: 0.1
+parameters:
+- name: overallLength
+  value: 75
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Tip-to-far-end distance; Figure 3 dimension 75 controls.
+  source: 'sources/nist-amb2022-01-description.md §2.1.3: "75 mm long"; Figure 3 top dimension.'
+- name: overallWidth
+  value: 5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Distance from the lower long side in the plan to the upper long side.
+  source: 'sources/nist-amb2022-01-description.md §2.1.3: "5 mm wide"; Figure 3 plan dimension 5.'
+- name: bodyHeight
+  value: 12
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Build plate to main bridge top, excluding the raised tabs. Tabs translate with this top.
+  source: 'sources/nist-amb2022-01-description.md §2.1.3: "12 mm tall"; §Process facts: tabs begin at 12 mm; Figure
+    3 elevation dimension 12.'
+  edit_test:
+    delta: 1
+    expect:
+      volume_delta: 368.75
+      direction: increase
+      tolerance_rel: 0.02
+      bbox_delta:
+      - 0
+      - 0
+      - 1
+- name: noseAngle
+  value: 45
+  unit: deg
+  provenance: stated
+  tolerance: 0.1
+  description: Each nose flank makes 45 degrees with x in plan; the included tip angle is 90 degrees.
+  source: 'sources/nist-amb2022-01-description.md §2.1.3: "45° taper"; Figure 3 left plan angle.'
+- name: noseLength
+  value: 2.5
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Tip plane to full-width shoulder. Figure 3 explicitly labels this length 2.5.
+  formula: overallWidth / (2 * tan(noseAngle))
+- name: legCount
+  value: 12
+  unit: ''
+  provenance: stated
+  tolerance: 0.01
+  description: Twelve numbered feet L1-L12, excluding the tall tapered end block.
+  source: 'sources/nist-amb2022-01-description.md §1: "12 legs of varying size"; Figure 4 leg numbering.'
+- name: largeLegWidth
+  value: 5
+  unit: mm
+  provenance: measured
+  tolerance: 0.1
+  description: x width of L1, L4, L7 and hollow L10.
+  source: sources/nist-figure3-drawing.png elevation, far-right 5 callout; pixel columns 2766 to 2936, about 170
+    px.
+- name: mediumLegWidth
+  value: 2.5
+  unit: mm
+  provenance: measured
+  tolerance: 0.1
+  description: x width of L3, L6, L9 and L12.
+  source: sources/nist-figure3-drawing.png elevation, 2.5 callout; pixel columns 2528 to 2613, about 85 px.
+- name: smallLegWidth
+  value: 0.5
+  unit: mm
+  provenance: measured
+  tolerance: 0.1
+  description: x width of L2, L5, L8 and L11; independent of the L10 outer-wall thickness.
+  source: sources/nist-figure3-drawing.png elevation, 0.5 callout; pixel columns 2681 to 2698, about 17 px.
+- name: gapWidth
+  value: 2
+  unit: mm
+  provenance: measured
+  tolerance: 0.1
+  description: x width of each of the twelve open-bottom gaps.
+  source: sources/nist-figure3-drawing.png elevation, bottom 2 callout; pixel columns 2698 to 2766, about 68 px.
+- name: overhangAngle
+  value: 45
+  unit: deg
+  provenance: stated
+  tolerance: 0.1
+  description: Roof of each open-bottom gap rises toward +x; angle measured from x in elevation.
+  source: 'sources/nist-amb2022-01-description.md §2.1.3: "45° overhangs"; Figure 3 elevation angle.'
+- name: legMergeHeight
+  value: 7
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: z at the high end of the gap roofs, above which the bridge is continuous.
+  source: 'sources/nist-amb2022-01-description.md §2.3: "height of 7 mm", where the gaps between legs merge.'
+- name: gapLowHeight
+  value: 5
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: z at the left/low end of every gap roof; corroborated by the Figure 3 right-hand 5 and 2 dimensions.
+  formula: legMergeHeight - gapWidth * tan(overhangAngle)
+- name: legGroupCount
+  value: 4
+  unit: ''
+  provenance: derived
+  tolerance: 0.01
+  description: Four triplets, each ordered medium, small, large when walking in +x.
+  formula: legCount / 3
+- name: legGroupPitch
+  value: 14
+  unit: mm
+  provenance: derived
+  tolerance: 0.15
+  description: Triplet length including three gaps; corroborated by Figure 3 bottom 14 dimension, columns 2460 to
+    2936.
+  formula: mediumLegWidth + smallLegWidth + largeLegWidth + 3 * gapWidth
+- name: endBlockLength
+  value: 19
+  unit: mm
+  provenance: derived
+  tolerance: 0.15
+  description: End-block foot extends from x=0 to this position, before the first gap. Figure 3 columns 382 to 1030
+    corroborate about 19.03 mm.
+  formula: overallLength - legGroupCount * legGroupPitch
+- name: tabCount
+  value: 11
+  unit: ''
+  provenance: stated
+  tolerance: 0.01
+  description: Eleven full-width raised metrology ridges.
+  source: 'sources/nist-amb2022-01-description.md §2.3: "11 tabs on top"; §3.4: "11 ridges"; counted in Figure 3.'
+- name: tabWidth
+  value: 1
+  unit: mm
+  provenance: measured
+  tolerance: 0.1
+  description: x width of every top tab.
+  source: sources/nist-figure3-drawing.png plan far-right 1 callout; columns 2901 to 2936, about 35 px.
+- name: tabPitch
+  value: 7
+  unit: mm
+  provenance: measured
+  tolerance: 0.1
+  description: Pitch between corresponding edges of consecutive tabs.
+  source: sources/nist-figure3-drawing.png plan far-right 7 callout; columns 2698 to 2936, about 238 px.
+- name: tabHeight
+  value: 0.5
+  unit: mm
+  provenance: measured
+  tolerance: 0.1
+  description: Tab rise above bodyHeight; this makes the total height 12.5 mm.
+  source: sources/nist-figure3-drawing.png elevation left 0.5 callout; tab crests near row 1069, main top near row
+    1085.
+  edit_test:
+    delta: 0.25
+    expect:
+      volume_delta: 13.75
+      direction: increase
+      tolerance_rel: 0.02
+      bbox_delta:
+      - 0
+      - 0
+      - 0.25
+- name: firstTabX
+  value: 4
+  unit: mm
+  provenance: derived
+  tolerance: 0.15
+  description: Start of tab 1 counted from the nose. The final tab ends at overallLength.
+  formula: overallLength - tabWidth - (tabCount - 1) * tabPitch
+- name: l10StartX
+  value: 28
+  unit: mm
+  provenance: derived
+  tolerance: 0.15
+  description: Left boundary of hollow L10, the large foot of the first triplet after the end block.
+  formula: endBlockLength + mediumLegWidth + smallLegWidth + 3 * gapWidth
+- name: l10OuterWallThickness
+  value: 0.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Nominal thickness of all four L10 outer walls; source says approximately. Retain square external
+    L10 footprint.
+  source: 'sources/nist-amb2022-01-description.md §2.1.3: "outer walls ... approximately 0.5 mm thick".'
+- name: l10BaseThickness
+  value: 1
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Solid base below every L10 pocket; cavity floors are at this z.
+  source: 'sources/nist-amb2022-01-description.md §2.1.3: "solid base that is 1 mm thick"; Figure 3 1.0 callout.'
+- name: thinWallHeight
+  value: 4
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Height of four internal walls and five adjacent void pockets, measured above the solid base.
+  source: 'sources/nist-amb2022-01-description.md §2.1.3: "walls are built 4 mm high before a flat-bottomed ceiling";
+    Figure 3 4.0 callout.'
+- name: l10CavityLength
+  value: 4
+  unit: mm
+  provenance: derived
+  tolerance: 0.2
+  description: Clear x length between L10 outer walls; matches the Figure 3 horizontal 4 callout.
+  formula: largeLegWidth - 2 * l10OuterWallThickness
+- name: l10CavityWidth
+  value: 4
+  unit: mm
+  provenance: derived
+  tolerance: 0.2
+  description: Clear y width before installing internal thin walls.
+  formula: overallWidth - 2 * l10OuterWallThickness
+- name: l10CavityStartX
+  value: 28.5
+  unit: mm
+  provenance: derived
+  tolerance: 0.15
+  description: Left end of all five void pockets and all four internal wall spans.
+  formula: l10StartX + l10OuterWallThickness
+- name: l10CeilingZ
+  value: 5
+  unit: mm
+  provenance: derived
+  tolerance: 0.02
+  description: Flat downward-facing cavity ceiling; material continues into the overhang and bridge above it.
+  formula: l10BaseThickness + thinWallHeight
+- name: thinWallCount
+  value: 4
+  unit: ''
+  provenance: stated
+  tolerance: 0.01
+  description: 'Four distinct physical walls: single, double, single, double in increasing y; two walls of each
+    width.'
+  source: 'sources/nist-amb2022-01-description.md §2.1.3: "four thin-wall structures", two single-track and two
+    double-track; Figure 4 labels.'
+- name: singleTrackWidth
+  value: 0.1
+  unit: mm
+  provenance: inferred
+  tolerance: 0.08
+  description: Provisional physical thickness of each single-track wall; not an as-built measurement.
+  rationale: The supplied description gives only a laser spot diameter on the order of 0.1 mm. Use 0.10 mm as a
+    necessary editable starting value, with a wide ±0.08 mm digital band. Neither laser spot size nor raster stroke
+    thickness fixes the fused-wall width. The inspection mesh uses about 0.11 mm, which is corroboration of scale
+    only. Open question OQ1 remains.
+  edit_test:
+    delta: 0.05
+    expect:
+      volume_delta: 1.6
+      direction: increase
+      tolerance_rel: 0.02
+      bbox_delta:
+      - 0
+      - 0
+      - 0
+- name: doubleTrackWidth
+  value: 0.2
+  unit: mm
+  provenance: inferred
+  tolerance: 0.15
+  description: Provisional physical thickness of each double-track wall; independent of singleTrackWidth for editing.
+  rationale: Use 0.20 mm as a necessary starting value, twice the nominal 0.10 mm spot scale, with a wide ±0.15
+    mm band. Track overlap and melt-pool width are unspecified, so this is not an enforced 2:1 relationship. The
+    inspection mesh uses about 0.22 mm. Open question OQ1 remains.
+- name: wall1CenterY
+  value: 1.25
+  unit: mm
+  provenance: measured
+  tolerance: 0.2
+  description: Center of internal wall 1 along y, measured from the lower long-side datum; single track. Graphical
+    placement remains qualified by OQ2.
+  source: 'sources/nist-figure4-legs-thinwalls.png 3900x1771 raster: single line centered at row 1357; y = overallWidth/2
+    + (1130.25 - row)/180.4, rounded to 0.05 mm; see brief §4.'
+- name: wall2CenterY
+  value: 2
+  unit: mm
+  provenance: measured
+  tolerance: 0.2
+  description: Center of internal wall 2 along y, measured from the lower long-side datum; double track. Graphical
+    placement remains qualified by OQ2.
+  source: 'sources/nist-figure4-legs-thinwalls.png 3900x1771 raster: double lines centered at rows 1211 and 1232
+    (mean 1221.5); y = overallWidth/2 + (1130.25 - row)/180.4, rounded to 0.05 mm; see brief §4.'
+- name: wall3CenterY
+  value: 2.85
+  unit: mm
+  provenance: measured
+  tolerance: 0.2
+  description: Center of internal wall 3 along y, measured from the lower long-side datum; single track. Graphical
+    placement remains qualified by OQ2.
+  source: 'sources/nist-figure4-legs-thinwalls.png 3900x1771 raster: single line centered at row 1068; y = overallWidth/2
+    + (1130.25 - row)/180.4, rounded to 0.05 mm; see brief §4.'
+- name: wall4CenterY
+  value: 3.6
+  unit: mm
+  provenance: measured
+  tolerance: 0.2
+  description: Center of internal wall 4 along y, measured from the lower long-side datum; double track. Graphical
+    placement remains qualified by OQ2.
+  source: 'sources/nist-figure4-legs-thinwalls.png 3900x1771 raster: double lines centered at rows 922 and 944 (mean
+    933); y = overallWidth/2 + (1130.25 - row)/180.4, rounded to 0.05 mm; see brief §4.'
+features:
+- id: taperedNose
+  kind: profile
+  description: 'Full-height pentagonal nose in plan: tip (0,overallWidth/2), shoulders (noseLength,0) and (noseLength,overallWidth).
+    Extrude to bodyHeight. The taper is in xy, with vertical flank faces.'
+  parameters:
+  - overallLength
+  - overallWidth
+  - bodyHeight
+  - noseAngle
+  - noseLength
+  verify:
+  - method: bbox
+  - method: solid
+    points:
+    - - 0.5
+      - 2.5
+      - 6
+    - - 2
+      - 2.5
+      - 11
+    note: ''
+  - method: void
+    points:
+    - - 1
+      - 0.5
+      - 6
+    - - 1
+      - 4.5
+      - 6
+    note: Points outside the two 45 degree plan flanks.
+  - method: section
+    section: solidBridge
+  optional: false
+- id: tallSolidEndBlock
+  kind: extrude
+  description: The tapered end block has a continuous solid foot x=0..endBlockLength, followed by the first rising
+    roof. It is additional to the twelve numbered legs.
+  parameters:
+  - overallWidth
+  - bodyHeight
+  - noseLength
+  - endBlockLength
+  verify:
+  - method: solid
+    points:
+    - - 10
+      - 2.5
+      - 0.5
+    - - 10
+      - 2.5
+      - 11.5
+    - - 18.75
+      - 2.5
+      - 4.75
+    note: ''
+  - method: face
+    face: buildPlateEndBlock
+  - method: section
+    section: feetBelowCavity
+  optional: false
+- id: twelveLegs
+  kind: pattern
+  description: Four triplets of medium, small, large feet in +x. L12 is closest to the tall end block and L1 is
+    at x=70..75. Every foot spans y=0..overallWidth. Only L10 is hollow above its base. Exact intervals and the
+    twelve gaps are tabulated in the brief.
+  parameters:
+  - legCount
+  - legGroupCount
+  - legGroupPitch
+  - endBlockLength
+  - mediumLegWidth
+  - smallLegWidth
+  - largeLegWidth
+  - gapWidth
+  - overallWidth
+  - legMergeHeight
+  verify:
+  - method: count
+    section: feetBelowCavity
+    count: 13
+    note: 13 outer material loops = 12 numbered legs plus the end block.
+  - method: solid
+    points:
+    - - 22.25
+      - 0.25
+      - 3
+    - - 25.75
+      - 0.25
+      - 3
+    - - 30.5
+      - 0.25
+      - 3
+    - - 36.25
+      - 0.25
+      - 3
+    - - 39.75
+      - 0.25
+      - 3
+    - - 44.5
+      - 0.25
+      - 3
+    - - 50.25
+      - 0.25
+      - 3
+    - - 53.75
+      - 0.25
+      - 3
+    - - 58.5
+      - 0.25
+      - 3
+    - - 64.25
+      - 0.25
+      - 3
+    - - 67.75
+      - 0.25
+      - 3
+    - - 72.5
+      - 0.25
+      - 3
+    note: One interior probe per numbered foot, including a side wall of hollow L10.
+  - method: face
+    face: buildPlateL1
+  - method: face
+    face: buildPlateL2
+  - method: face
+    face: buildPlateL3
+  - method: face
+    face: buildPlateL4
+  - method: face
+    face: buildPlateL5
+  - method: face
+    face: buildPlateL6
+  - method: face
+    face: buildPlateL7
+  - method: face
+    face: buildPlateL8
+  - method: face
+    face: buildPlateL9
+  - method: face
+    face: buildPlateL10
+  - method: face
+    face: buildPlateL11
+  - method: face
+    face: buildPlateL12
+  optional: false
+  count: 12
+- id: risingOverhangs
+  kind: cut
+  description: Twelve gaps open through both long sides and the build plate. For gap left edge a, 0 < z < gapLowHeight
+    + (x-a)*tan(overhangAngle), a < x < a+gapWidth, is void. Thus the roof rises from z=5 to z=7 toward +x; all
+    gaps close at z=7.
+  parameters:
+  - gapWidth
+  - gapLowHeight
+  - legMergeHeight
+  - overhangAngle
+  - legCount
+  - overallWidth
+  - legGroupPitch
+  verify:
+  - method: section
+    section: overhangs
+  - method: void
+    points:
+    - - 20
+      - 2.5
+      - 0.5
+    - - 24.5
+      - 2.5
+      - 0.5
+    - - 27.0
+      - 2.5
+      - 0.5
+    - - 34.0
+      - 2.5
+      - 0.5
+    - - 38.5
+      - 2.5
+      - 0.5
+    - - 41.0
+      - 2.5
+      - 0.5
+    - - 48.0
+      - 2.5
+      - 0.5
+    - - 52.5
+      - 2.5
+      - 0.5
+    - - 55.0
+      - 2.5
+      - 0.5
+    - - 62.0
+      - 2.5
+      - 0.5
+    - - 66.5
+      - 2.5
+      - 0.5
+    - - 69.0
+      - 2.5
+      - 0.5
+    note: All twelve bottom gaps.
+  - method: solid
+    points:
+    - - 19.5
+      - 2.5
+      - 5.75
+    - - 24.0
+      - 2.5
+      - 5.75
+    - - 26.5
+      - 2.5
+      - 5.75
+    - - 33.5
+      - 2.5
+      - 5.75
+    - - 38.0
+      - 2.5
+      - 5.75
+    - - 40.5
+      - 2.5
+      - 5.75
+    - - 47.5
+      - 2.5
+      - 5.75
+    - - 52.0
+      - 2.5
+      - 5.75
+    - - 54.5
+      - 2.5
+      - 5.75
+    - - 61.5
+      - 2.5
+      - 5.75
+    - - 66.0
+      - 2.5
+      - 5.75
+    - - 68.5
+      - 2.5
+      - 5.75
+    note: Above the low part of each slope.
+  - method: void
+    points:
+    - - 20.5
+      - 2.5
+      - 6.25
+    - - 25.0
+      - 2.5
+      - 6.25
+    - - 27.5
+      - 2.5
+      - 6.25
+    - - 34.5
+      - 2.5
+      - 6.25
+    - - 39.0
+      - 2.5
+      - 6.25
+    - - 41.5
+      - 2.5
+      - 6.25
+    - - 48.5
+      - 2.5
+      - 6.25
+    - - 53.0
+      - 2.5
+      - 6.25
+    - - 55.5
+      - 2.5
+      - 6.25
+    - - 62.5
+      - 2.5
+      - 6.25
+    - - 67.0
+      - 2.5
+      - 6.25
+    - - 69.5
+      - 2.5
+      - 6.25
+    note: Below the high part of each slope; rejects the opposite slope direction.
+  optional: false
+  count: 12
+- id: continuousUpperBridge
+  kind: extrude
+  description: Solid pentagonal-plan bridge from legMergeHeight to bodyHeight, continuously connected to all feet
+    and the end block.
+  parameters:
+  - overallLength
+  - overallWidth
+  - noseLength
+  - legMergeHeight
+  - bodyHeight
+  verify:
+  - method: section
+    section: solidBridge
+  - method: solid
+    points:
+    - - 20
+      - 2.5
+      - 7.25
+    - - 24.5
+      - 2.5
+      - 7.25
+    - - 27.0
+      - 2.5
+      - 7.25
+    - - 34.0
+      - 2.5
+      - 7.25
+    - - 38.5
+      - 2.5
+      - 7.25
+    - - 41.0
+      - 2.5
+      - 7.25
+    - - 48.0
+      - 2.5
+      - 7.25
+    - - 52.5
+      - 2.5
+      - 7.25
+    - - 55.0
+      - 2.5
+      - 7.25
+    - - 62.0
+      - 2.5
+      - 7.25
+    - - 66.5
+      - 2.5
+      - 7.25
+    - - 69.0
+      - 2.5
+      - 7.25
+    note: ''
+  - method: face
+    face: sideDatumY0
+  - method: face
+    face: oppositeSideY5
+  - method: face
+    face: farEndX75
+  optional: false
+- id: elevenTopTabs
+  kind: pattern
+  description: Tabs occupy x=firstTabX+i*tabPitch through +tabWidth, y=0..overallWidth, and z=bodyHeight..bodyHeight+tabHeight
+    for i=0..10. The final tab ends at x=75.
+  parameters:
+  - tabCount
+  - tabWidth
+  - tabPitch
+  - tabHeight
+  - firstTabX
+  - overallWidth
+  - bodyHeight
+  verify:
+  - method: count
+    section: topTabs
+    count: 11
+  - method: solid
+    points:
+    - - 4.5
+      - 2.5
+      - 12.25
+    - - 11.5
+      - 2.5
+      - 12.25
+    - - 18.5
+      - 2.5
+      - 12.25
+    - - 25.5
+      - 2.5
+      - 12.25
+    - - 32.5
+      - 2.5
+      - 12.25
+    - - 39.5
+      - 2.5
+      - 12.25
+    - - 46.5
+      - 2.5
+      - 12.25
+    - - 53.5
+      - 2.5
+      - 12.25
+    - - 60.5
+      - 2.5
+      - 12.25
+    - - 67.5
+      - 2.5
+      - 12.25
+    - - 74.5
+      - 2.5
+      - 12.25
+    note: ''
+  - method: void
+    points:
+    - - 8
+      - 2.5
+      - 12.25
+    - - 43
+      - 2.5
+      - 12.25
+    note: Two valleys between tabs.
+  - method: face
+    face: tabTop01
+  - method: face
+    face: tabTop02
+  - method: face
+    face: tabTop03
+  - method: face
+    face: tabTop04
+  - method: face
+    face: tabTop05
+  - method: face
+    face: tabTop06
+  - method: face
+    face: tabTop07
+  - method: face
+    face: tabTop08
+  - method: face
+    face: tabTop09
+  - method: face
+    face: tabTop10
+  - method: face
+    face: tabTop11
+  optional: false
+  count: 11
+- id: l10OuterWalls
+  kind: shell
+  description: L10 outer footprint x=28..33, y=0..5. Its four 0.5 mm nominal side walls surround a clear 4 by 4
+    mm internal plan before the four thin walls are added. No exterior opening is permitted.
+  parameters:
+  - l10StartX
+  - largeLegWidth
+  - overallWidth
+  - l10OuterWallThickness
+  - l10CavityLength
+  - l10CavityWidth
+  - l10CavityStartX
+  verify:
+  - method: solid
+    points:
+    - - 28.25
+      - 2.5
+      - 3
+    - - 32.75
+      - 2.5
+      - 3
+    - - 30.5
+      - 0.25
+      - 3
+    - - 30.5
+      - 4.75
+      - 3
+    note: ''
+  - method: section
+    section: feetAndThinWalls
+  - method: section
+    section: l10Transverse
+  optional: false
+- id: l10SolidBase
+  kind: boss
+  description: The L10 base is solid across its entire 5 by 5 mm footprint from z=0 to z=1; it supports both the
+    outer and inner walls.
+  parameters:
+  - l10StartX
+  - largeLegWidth
+  - overallWidth
+  - l10BaseThickness
+  verify:
+  - method: solid
+    points:
+    - - 30.5
+      - 0.85
+      - 0.5
+    - - 30.5
+      - 1.6
+      - 0.5
+    - - 30.5
+      - 2.45
+      - 0.5
+    - - 30.5
+      - 3.2
+      - 0.5
+    - - 30.5
+      - 4.1
+      - 0.5
+    note: ''
+  - method: section
+    section: feetBelowCavity
+  - method: face
+    face: buildPlateL10
+  - method: face
+    face: l10Pocket1Floor
+  - method: face
+    face: l10Pocket2Floor
+  - method: face
+    face: l10Pocket3Floor
+  - method: face
+    face: l10Pocket4Floor
+  - method: face
+    face: l10Pocket5Floor
+  optional: false
+- id: l10InternalThinWalls
+  kind: wall
+  description: Four planar internal walls parallel to x span x=28.5..32.5 and z=1..5, bonded to the x end walls,
+    base and ceiling. In +y their centers are 1.25, 2.00, 2.85, 3.60 mm and widths are single, double, single, double.
+    The double-track members are single physical walls, not two disconnected ribs.
+  parameters:
+  - thinWallCount
+  - thinWallHeight
+  - l10BaseThickness
+  - l10CavityLength
+  - l10CavityStartX
+  - singleTrackWidth
+  - doubleTrackWidth
+  - wall1CenterY
+  - wall2CenterY
+  - wall3CenterY
+  - wall4CenterY
+  verify:
+  - method: solid
+    points:
+    - - 30.5
+      - 1.25
+      - 3
+    - - 30.5
+      - 2
+      - 3
+    - - 30.5
+      - 2.85
+      - 3
+    - - 30.5
+      - 3.6
+      - 3
+    note: ''
+  - method: section
+    section: l10Transverse
+  - method: section
+    section: longitudinalSingleWall
+  - method: section
+    section: feetAndThinWalls
+  optional: false
+  count: 4
+- id: l10FiveSealedPockets
+  kind: cavity
+  description: The four internal walls partition the cavity into five separate sealed rectangular voids. All pockets
+    share x=28.5..32.5 and z=1..5; their nominal y intervals are [0.5,1.2], [1.3,1.9], [2.1,2.8], [2.9,3.5], [3.7,4.5].
+    Five inner section loops are required, inside one material body.
+  parameters:
+  - l10CavityLength
+  - l10CavityWidth
+  - l10CavityStartX
+  - l10BaseThickness
+  - l10CeilingZ
+  - thinWallHeight
+  - singleTrackWidth
+  - doubleTrackWidth
+  - wall1CenterY
+  - wall2CenterY
+  - wall3CenterY
+  - wall4CenterY
+  verify:
+  - method: void
+    points:
+    - - 30.5
+      - 0.85
+      - 3
+    - - 30.5
+      - 1.6
+      - 3
+    - - 30.5
+      - 2.45
+      - 3
+    - - 30.5
+      - 3.2
+      - 3
+    - - 30.5
+      - 4.1
+      - 3
+    note: ''
+  - method: section
+    section: l10Transverse
+  - method: section
+    section: longitudinalPocket
+  - method: section
+    section: feetAndThinWalls
+  optional: false
+  count: 5
+- id: l10FlatCeiling
+  kind: extrude
+  description: Five coplanar downward-facing pocket ceilings at z=5 seal the voids and bond to all four internal
+    walls. Solid material continues above the ceiling; the ceiling is flat even though the adjacent external gap
+    roof slopes.
+  parameters:
+  - l10CeilingZ
+  - l10BaseThickness
+  - thinWallHeight
+  - l10CavityStartX
+  - l10CavityLength
+  - bodyHeight
+  verify:
+  - method: solid
+    points:
+    - - 30.5
+      - 0.85
+      - 5.25
+    - - 30.5
+      - 1.6
+      - 5.25
+    - - 30.5
+      - 2.45
+      - 5.25
+    - - 30.5
+      - 3.2
+      - 5.25
+    - - 30.5
+      - 4.1
+      - 5.25
+    note: ''
+  - method: void
+    points:
+    - - 30.5
+      - 0.85
+      - 4.75
+    - - 30.5
+      - 1.6
+      - 4.75
+    - - 30.5
+      - 2.45
+      - 4.75
+    - - 30.5
+      - 3.2
+      - 4.75
+    - - 30.5
+      - 4.1
+      - 4.75
+    note: ''
+  - method: section
+    section: l10Transverse
+  - method: face
+    face: l10Pocket1Ceiling
+  - method: face
+    face: l10Pocket2Ceiling
+  - method: face
+    face: l10Pocket3Ceiling
+  - method: face
+    face: l10Pocket4Ceiling
+  - method: face
+    face: l10Pocket5Ceiling
+  optional: false
+interfaces:
+- name: buildPlateContacts
+  description: Coplanar z=0 attachment faces named buildPlateEndBlock and buildPlateL1 through buildPlateL12; no
+    build-plate slab is included.
+  must_not_change: true
+- name: sideAndEndDatums
+  description: Named y=0, y=5 and x=75 external faces preserve the specified inspection frame.
+  must_not_change: true
+- name: metrologyTabTops
+  description: Eleven named planar ridge tops tabTop01 through tabTop11, counted from the pointed end. Baseline
+    z=12.5; intentional bodyHeight/tabHeight edits move these surfaces.
+  must_not_change: false
+- name: sealedL10Pockets
+  description: Five individually sealed pockets with named floor and ceiling faces; no inlet, outlet, or powder-removal
+    opening.
+  must_not_change: true
+acceptance:
+  bbox_tolerance: 0.1
+  volume:
+    expected: 3678.1
+    tolerance_rel: 0.002
+    provenance: derived
+    note: |-
+      Derived analytic nominal construction, using the inferred widths and measured wall centers. Angles in tan() are degrees.
+      Aplan = overallWidth*(overallLength - noseLength/2).
+      Q = gapWidth*(gapLowHeight + legMergeHeight)/2 (one gap area in xz).
+      T = 2*singleTrackWidth + 2*doubleTrackWidth.
+      V = Aplan*bodyHeight + tabCount*tabWidth*overallWidth*tabHeight - legCount*overallWidth*Q - l10CavityLength*l10CavityWidth*thinWallHeight + l10CavityLength*thinWallHeight*T = 3678.10 mm3.
+      Center-of-mass formula (PointQuantity has no note field): C = sum(v_i*c_i)/V, with signed volumes and centroids of the pentagonal prism, 11 tab prisms, 12 negative gap prisms, negative cavity box, and four positive wall prisms as detailed in brief §5. First moments [Mx,My,Mz] = [135794.55, 9195.73, 24543.675] mm4; C=[36.919754765,2.500130502,6.672922161] mm.
+      Reference comparison only: reference/reference.json measurements.volume=3679.060003280461 mm3 (suggested ±1%); its 0.960003 mm3 excess is explained by reference nominal track widths about 0.11/0.22 mm versus inferred 0.10/0.20 mm. Do not silently replace the contract widths with mesh dimensions.
+  surface_area:
+    expected: 3384.458441227157
+    tolerance_rel: 0.002
+    provenance: derived
+    note: |-
+      Derived total material boundary area, including the five sealed pockets. Aplan and Q are defined in acceptance.volume.note.
+      Pplan=2*(overallLength-noseLength)+overallWidth+2*sqrt(noseLength^2+(overallWidth/2)^2).
+      Sext=2*Aplan+Pplan*bodyHeight+2*tabCount*tabHeight*(overallWidth+tabWidth)+legCount*(overallWidth*(gapLowHeight+legMergeHeight+sqrt(gapWidth^2+(legMergeHeight-gapLowHeight)^2)-gapWidth)-2*Q)=3170.058441227157 mm2.
+      qSum=l10CavityWidth-2*singleTrackWidth-2*doubleTrackWidth=3.4 mm.
+      Svoid=2*((l10CavityLength+thinWallHeight)*qSum+(thinWallCount+1)*l10CavityLength*thinWallHeight)=214.4 mm2.
+      Stotal=Sext+Svoid=3384.458441227157 mm2. The supplied reference mesh measures 3383.498437946426 mm2; reference track widths reduce the internal area by about 0.96 mm2.
+  center_of_mass:
+    expected:
+    - 36.919754765
+    - 2.500130502
+    - 6.672922161
+    tolerance: 0.25
+    provenance: derived
+  solid_count: 1
+  sections:
+  - id: feetBelowCavity
+    plane: z
+    at: 0.5
+    expect:
+      area: 248.75
+      area_tolerance_rel: 0.01
+      loops: 13
+      holes: 0
+    description: 'Derived: Aplan - legCount*gapWidth*overallWidth = 248.75 mm2. The end block and twelve separate
+      feet give 13 outer loops; L10 is solid below its 1 mm cavity floor.'
+  - id: feetAndThinWalls
+    plane: z
+    at: 3
+    expect:
+      area: 235.15
+      area_tolerance_rel: 0.01
+      loops: 13
+      holes: 5
+    description: 'Derived: 248.75 - l10CavityLength*(l10CavityWidth - 2*singleTrackWidth - 2*doubleTrackWidth).
+      L10 is one ring-and-ribs region with five holes; total outer loops remain 13.'
+  - id: overhangs
+    plane: z
+    at: 6
+    expect:
+      area: 308.75
+      area_tolerance_rel: 0.01
+      loops: 13
+      holes: 0
+    description: 'Derived: Aplan - legCount*overallWidth*(gapWidth - (6-gapLowHeight)/tan(overhangAngle)). At z=6
+      each gap has narrowed from 2 mm to 1 mm toward its +x end.'
+  - id: solidBridge
+    plane: z
+    at: 9
+    expect:
+      area: 368.75
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 0
+    description: 'Derived: Aplan = overallWidth*(overallLength - noseLength/2). The entire pentagonal plan is solid
+      above the 7 mm gap closure.'
+  - id: topTabs
+    plane: z
+    at: 12.25
+    expect:
+      area: 55
+      area_tolerance_rel: 0.01
+      loops: 11
+      holes: 0
+    description: 'Derived: tabCount*tabWidth*overallWidth = 55 mm2. Eleven disconnected section islands, each 1
+      by 5 mm, connected to the same body below.'
+  - id: l10Transverse
+    plane: x
+    at: 30.5
+    expect:
+      area: 46.4
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 5
+    description: 'Derived: overallWidth*bodyHeight - thinWallHeight*(l10CavityWidth - 2*singleTrackWidth - 2*doubleTrackWidth).
+      This cut misses the top tabs and exposes the four walls, solid base, flat ceiling, and five sealed holes.'
+  - id: longitudinalPocket
+    plane: y
+    at: 2.5
+    expect:
+      area: 745.5
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 1
+    description: 'Derived: overallLength*bodyHeight + tabCount*tabWidth*tabHeight - legCount*Q - l10CavityLength*thinWallHeight;
+      Q=gapWidth*(gapLowHeight+legMergeHeight)/2. This center plane passes through pocket 3 and the nose tip.'
+  - id: longitudinalSingleWall
+    plane: y
+    at: 1.25
+    expect:
+      area: 746.5
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 0
+    description: 'Derived: (overallLength - abs(1.25-overallWidth/2)/tan(noseAngle))*bodyHeight + tabCount*tabWidth*tabHeight
+      - legCount*Q. This plane lies in wall 1, so the L10 cavity is bridged by solid material at z=1..5.'
+  faces:
+  - name: buildPlateEndBlock
+    plane: z
+    at: 0
+    normal: '-'
+    area: 88.75
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 10.1103286385
+    - 2.5
+  - name: buildPlateL1
+    plane: z
+    at: 0
+    normal: '-'
+    area: 25.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 72.5
+    - 2.5
+  - name: buildPlateL2
+    plane: z
+    at: 0
+    normal: '-'
+    area: 2.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 67.75
+    - 2.5
+  - name: buildPlateL3
+    plane: z
+    at: 0
+    normal: '-'
+    area: 12.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 64.25
+    - 2.5
+  - name: buildPlateL4
+    plane: z
+    at: 0
+    normal: '-'
+    area: 25.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 58.5
+    - 2.5
+  - name: buildPlateL5
+    plane: z
+    at: 0
+    normal: '-'
+    area: 2.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 53.75
+    - 2.5
+  - name: buildPlateL6
+    plane: z
+    at: 0
+    normal: '-'
+    area: 12.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 50.25
+    - 2.5
+  - name: buildPlateL7
+    plane: z
+    at: 0
+    normal: '-'
+    area: 25.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 44.5
+    - 2.5
+  - name: buildPlateL8
+    plane: z
+    at: 0
+    normal: '-'
+    area: 2.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 39.75
+    - 2.5
+  - name: buildPlateL9
+    plane: z
+    at: 0
+    normal: '-'
+    area: 12.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 36.25
+    - 2.5
+  - name: buildPlateL10
+    plane: z
+    at: 0
+    normal: '-'
+    area: 25.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 2.5
+  - name: buildPlateL11
+    plane: z
+    at: 0
+    normal: '-'
+    area: 2.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 25.75
+    - 2.5
+  - name: buildPlateL12
+    plane: z
+    at: 0
+    normal: '-'
+    area: 12.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 22.25
+    - 2.5
+  - name: sideDatumY0
+    plane: y
+    at: 0
+    normal: '-'
+    area: 731.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+  - name: oppositeSideY5
+    plane: y
+    at: 5
+    normal: +
+    area: 731.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+  - name: farEndX75
+    plane: x
+    at: 75
+    normal: +
+    area: 62.5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+  - name: tabTop01
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 4.5
+    - 2.5
+  - name: tabTop02
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 11.5
+    - 2.5
+  - name: tabTop03
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 18.5
+    - 2.5
+  - name: tabTop04
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 25.5
+    - 2.5
+  - name: tabTop05
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 32.5
+    - 2.5
+  - name: tabTop06
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 39.5
+    - 2.5
+  - name: tabTop07
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 46.5
+    - 2.5
+  - name: tabTop08
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 53.5
+    - 2.5
+  - name: tabTop09
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 60.5
+    - 2.5
+  - name: tabTop10
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 67.5
+    - 2.5
+  - name: tabTop11
+    plane: z
+    at: 12.5
+    normal: +
+    area: 5
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 74.5
+    - 2.5
+  - name: l10Pocket1Floor
+    plane: z
+    at: 1
+    normal: +
+    area: 2.8
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 0.85
+  - name: l10Pocket1Ceiling
+    plane: z
+    at: 5
+    normal: '-'
+    area: 2.8
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 0.85
+  - name: l10Pocket2Floor
+    plane: z
+    at: 1
+    normal: +
+    area: 2.4
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 1.6
+  - name: l10Pocket2Ceiling
+    plane: z
+    at: 5
+    normal: '-'
+    area: 2.4
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 1.6
+  - name: l10Pocket3Floor
+    plane: z
+    at: 1
+    normal: +
+    area: 2.8
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 2.45
+  - name: l10Pocket3Ceiling
+    plane: z
+    at: 5
+    normal: '-'
+    area: 2.8
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 2.45
+  - name: l10Pocket4Floor
+    plane: z
+    at: 1
+    normal: +
+    area: 2.4
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 3.2
+  - name: l10Pocket4Ceiling
+    plane: z
+    at: 5
+    normal: '-'
+    area: 2.4
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 3.2
+  - name: l10Pocket5Floor
+    plane: z
+    at: 1
+    normal: +
+    area: 3.2
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 4.1
+  - name: l10Pocket5Ceiling
+    plane: z
+    at: 5
+    normal: '-'
+    area: 3.2
+    area_tolerance_rel: 0.01
+    tolerance: 0.1
+    center:
+    - 30.5
+    - 4.1
+  deviation:
+    p95_max: 0.2
+    hausdorff_max: 0.5
+    silhouette_iou_min: 0.98
+  blockout:
+    volume_min: 4600.15625
+    volume_max: 4618.59375
+  export_volume_tolerance_rel: 0.002
+references:
+- path: sources/nist-amb2022-01-description.md
+  kind: text
+  role: authoritative
+  sha256: ad20b8b64ceffc5122b055fd97c5e12b4b89b3cd2d52876ba74afb4d66cf2094
+  units: mm
+  revision: NIST page inspected 2026-09-15; local geometry excerpts
+  note: Geometry excerpts; §§1, 2.1.3, 2.3 and process facts. Geometry is nominal as built, before EDM and skim
+    cutting.
+- path: sources/nist-figure3-drawing.png
+  kind: drawing
+  role: authoritative
+  sha256: a2377f44a5d37ee5e2193817bc33f079d664fae8c9df7bd675480f9e97b37d49
+  units: mm
+  revision: NIST Figure 3, updated 2023-09-20
+  note: External dimensions and their arrangement control. 3127x1821 pixels; original raster coordinates are recorded
+    in §4.
+- path: sources/nist-figure4-legs-thinwalls.png
+  kind: image
+  role: authoritative
+  sha256: a55dce91299778420a4970d51478be5856a89b291644459d93b7cb71524b7417
+  units: mm
+  revision: NIST Figure 4, Layer 50; revision date unspecified; supplied 2026-09-15
+  note: Leg numbering, four-wall topology and scan-line arrangement. Physical track widths and exact scan-to-surface
+    datum are qualified by OQ1/OQ2. 3900x1771 pixels.
+- path: sources/AMB2022-01-AMMT-PartCAD.STL
+  kind: mesh
+  role: illustrative
+  sha256: d92f368a35952ff877624f3d15fb0e38c099e2528cfd96bf1d76a868a088e1f4
+  units: mm
+  revision: NIST AMB2022-01 individual-part STL; revision unspecified; supplied 2026-09-15
+  note: Inspection-only NIST reference; all construction must be editable KCL. Explicit Figure 3 dimensions take
+    precedence. Signed-shell inspection finds one outer shell and five inward pocket shells.
+- path: reference/reference.json
+  kind: reference-model
+  role: illustrative
+  sha256: 04cecbfa70a33ff22219241703a4cad614239953b5adcc7932bfeab6f4f78dff
+  units: mm
+  revision: Ingest generated 2026-09-15T16:44:16Z
+  note: Deterministic measurements with measured (reference model) provenance, identity axes, mm scale, min datum,
+    and suggested fidelity bands. Sections use to_3d matrices; their local coordinates are not part coordinates.
+- path: reference/reference.ply
+  kind: mesh
+  role: illustrative
+  sha256: 4ea678f069d6057ffc44cd324e975c35663bfd795184716f89d56ae305b00e94
+  units: mm
+  revision: Ingest generated 2026-09-15T16:44:16Z
+  note: Normalized inspection/fidelity mesh produced by the ingest; never import into the deliverable.
+- path: reference/reference-sections.png
+  kind: image
+  role: illustrative
+  sha256: 5cf02a12910b23264f1895ea5263171d248f98e3443155f82e64c7cdc04f7c8b
+  units: mm
+  revision: Ingest generated 2026-09-15T16:44:16Z
+  note: Section sheet with z=3,6,9,12.3 and x=30.5; visual aid to reference.json, not an independent dimensional
+    source.
+- path: reference/silhouette-front.png
+  kind: image
+  role: illustrative
+  sha256: f049d290879efb0e2e2b370c053c6179bd42888f833e87f7e6533dcb89cac90b
+  units: mm
+  revision: Ingest generated 2026-09-15T16:44:16Z
+  note: Orthographic xz silhouette, 840x173 px, about 0.09375 mm per pixel with 20 px margins.
+- path: reference/silhouette-right.png
+  kind: image
+  role: illustrative
+  sha256: ef9e98ec528b46c02923a529facad0ac26727041648bb1494bc8bdf5dee78ff5
+  units: mm
+  revision: Ingest generated 2026-09-15T16:44:16Z
+  note: Orthographic yz silhouette, 360x840 px, 0.015625 mm per pixel with 20 px margins.
+- path: reference/silhouette-top.png
+  kind: image
+  role: illustrative
+  sha256: b4c6d94ec479f4b6e63a0b7c71ec5b98cb365cfa618ed09b15ea8dad086a0504
+  units: mm
+  revision: Ingest generated 2026-09-15T16:44:16Z
+  note: Orthographic xy silhouette, 840x93 px, about 0.09375 mm per pixel with 20 px margins.
+open_questions:
+- 'OQ1: What are the physical single-track and double-track wall widths? Pending a dimensional or melt-track source,
+  use singleTrackWidth=0.10 ±0.08 mm and doubleTrackWidth=0.20 ±0.15 mm. The inspection mesh encodes about 0.11/0.22
+  mm, but does not establish as-built track widths.'
+- 'OQ2: What is the exact mapping from Figure 4 scan centerlines to the physical y-side datum? Use wall centers
+  [1.25, 2.00, 2.85, 3.60] mm with ±0.20 mm image-measurement tolerance; the inspection mesh places them about 0.17
+  mm higher. The nominal mapping centers the shown hatch range within the 5 mm width.'
+- 'OQ3: Which alloy and density apply to this individual specimen? The supplied excerpts identify a metal-alloy
+  LPBF bridge without selecting an alloy or density; both material and density remain unspecified.'

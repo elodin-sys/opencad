@@ -1,0 +1,242 @@
+{
+  "named_faces": {
+    "rim": {
+      "plane": "z",
+      "at": -6.0,
+      "normal": "+",
+      "found": 4,
+      "area": 531.3666869311303,
+      "mode": "sum",
+      "ok": true,
+      "position": -6.000000000000001
+    },
+    "tipEnd": {
+      "plane": "z",
+      "at": -92.065,
+      "normal": "-",
+      "found": 1,
+      "area": 66.67416340115543,
+      "ok": true,
+      "position": -92.065,
+      "area_expected": 62.5,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        -0.083
+      ],
+      "center_error": 5.9227383208633166e-08,
+      "centroid_uv": [
+        -4.141526599887518e-08,
+        -0.0830000423398
+      ]
+    },
+    "slotFloorPos": {
+      "plane": "z",
+      "at": -27.0,
+      "normal": "+",
+      "found": 1,
+      "area": 46.201812476520814,
+      "ok": true,
+      "position": -27.0,
+      "centroid_uv": [
+        1.5074513335467514e-05,
+        -30.2261418941983
+      ]
+    },
+    "slotFloorNeg": {
+      "plane": "z",
+      "at": -27.0,
+      "normal": "+",
+      "found": 1,
+      "area": 4.427156911662434,
+      "ok": true,
+      "position": -27.0,
+      "centroid_uv": [
+        22.064762857518936,
+        -19.091529710562558
+      ]
+    },
+    "slotRoofPos": {
+      "plane": "z",
+      "at": -17.0,
+      "normal": "-",
+      "found": 1,
+      "area": 41.02387409093515,
+      "ok": true,
+      "position": -17.0,
+      "centroid_uv": [
+        -2.7011174139971807e-07,
+        -32.592460120654444
+      ]
+    },
+    "slotRoofNeg": {
+      "plane": "z",
+      "at": -17.0,
+      "normal": "-",
+      "found": 1,
+      "area": 41.023872060221024,
+      "ok": true,
+      "position": -17.0,
+      "centroid_uv": [
+        2.7008205478444026e-07,
+        32.42645996539106
+      ]
+    },
+    "slotLeftPos": {
+      "plane": "x",
+      "at": -22.5,
+      "normal": "+",
+      "found": 6,
+      "area": 53.94053899991944,
+      "mode": "sum",
+      "ok": true,
+      "position": -22.5
+    },
+    "slotLeftNeg": {
+      "plane": "x",
+      "at": -22.5,
+      "normal": "+",
+      "found": 6,
+      "area": 53.94053899991944,
+      "mode": "sum",
+      "ok": true,
+      "position": -22.5
+    },
+    "slotRightPos": {
+      "plane": "x",
+      "at": 22.5,
+      "normal": "-",
+      "found": 6,
+      "area": 53.94053900041617,
+      "mode": "sum",
+      "ok": true,
+      "position": 22.5
+    },
+    "slotRightNeg": {
+      "plane": "x",
+      "at": 22.5,
+      "normal": "-",
+      "found": 6,
+      "area": 53.94053900041617,
+      "mode": "sum",
+      "ok": true,
+      "position": 22.5
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "rim",
+      "plane": "z",
+      "at": -6.0,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "tipEnd",
+      "plane": "z",
+      "at": -92.065,
+      "normal": "-",
+      "area": 62.5,
+      "area_tolerance_rel": 0.1,
+      "tolerance": null,
+      "center": [
+        0.0,
+        -0.083
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "slotFloorPos",
+      "plane": "z",
+      "at": -27.0,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.1,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "slotRoofPos",
+      "plane": "z",
+      "at": -17.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.1,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "slotLeftPos",
+      "plane": "x",
+      "at": -22.5,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.1,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "slotRightPos",
+      "plane": "x",
+      "at": 22.5,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.1,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "slotFloorNeg",
+      "plane": "z",
+      "at": -27.0,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.1,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "slotRoofNeg",
+      "plane": "z",
+      "at": -17.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.1,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "slotLeftNeg",
+      "plane": "x",
+      "at": -22.5,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.1,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "slotRightNeg",
+      "plane": "x",
+      "at": 22.5,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.1,
+      "center": null,
+      "mode": "sum"
+    }
+  ],
+  "planar_faces_total": 73
+}

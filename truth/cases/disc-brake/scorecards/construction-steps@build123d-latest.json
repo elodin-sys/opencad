@@ -1,0 +1,520 @@
+{
+  "case": "disc-brake",
+  "arm": "construction-steps",
+  "design": "disc-brake",
+  "kind": "machine",
+  "mode": "reconstruction",
+  "backend": "build123d",
+  "truth_class": "B",
+  "scored_at": "2026-09-25T11:43:30Z",
+  "verdict": "FAIL",
+  "error": null,
+  "accuracy_score": 99.99,
+  "summary": {
+    "required_pass": 11,
+    "required_total": 11,
+    "optional_pass": 0,
+    "optional_total": 0,
+    "performance_pass": 3,
+    "performance_scored": 6,
+    "performance_total": 6
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        280.0,
+        280.0,
+        23.0
+      ],
+      "measured": [
+        280.0,
+        280.0,
+        23.0
+      ],
+      "error": 0.0,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 2,
+      "measured": 2,
+      "ok": true
+    },
+    {
+      "id": "disc",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 1001539.7379644258,
+        "bbox_min": [
+          -140.0,
+          -140.0,
+          0.0
+        ],
+        "bbox_max": [
+          140.0,
+          140.0,
+          23.0
+        ],
+        "center_of_mass": [
+          -1.9760179212461634e-14,
+          -1.2288361447749578e-14,
+          8.80865746549561
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 1001539.7379644258,
+        "measured": 1001539.7379644258,
+        "band": 2003.0794759288517,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "pad",
+      "kind": "solid",
+      "required": true,
+      "note": "rational Bezier outline: a weight read differently changes the pad area by a few percent",
+      "measured": {
+        "volume": 23038.509745229527,
+        "bbox_min": [
+          -44.69422649660599,
+          88.0246912580247,
+          12.999999899999999
+        ],
+        "bbox_max": [
+          44.694226496613155,
+          135.0000001,
+          19.500000100000005
+        ],
+        "center_of_mass": [
+          1.5410091514392064e-12,
+          111.90532601923816,
+          16.249999999999996
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 23014.72002266816,
+        "measured": 23038.509745229527,
+        "band": 230.1472002266816,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "disc_rim",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          6.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 140.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          6.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 140.0,
+        "length": 13.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 13.0,
+          "measured": 13.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hub",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          18.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 80.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          18.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 80.0,
+        "length": 10.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 10.0,
+          "measured": 10.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pad_contact",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 13.0,
+      "normal": "-",
+      "found": 1,
+      "area": 3544.386136446322,
+      "expected_area": 3544.37,
+      "mode": "one",
+      "center": [
+        0.0,
+        111.91
+      ],
+      "centroid_uv": [
+        1.5388789421971794e-12,
+        111.9053255140898
+      ],
+      "ok": true
+    },
+    {
+      "id": "pad_top",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 19.5,
+      "normal": "+",
+      "found": 1,
+      "area": 3544.386136446322,
+      "expected_area": 3544.37,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        1.5388789421971794e-12,
+        111.9053255140898
+      ],
+      "ok": true
+    },
+    {
+      "id": "hub_top",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 23.0,
+      "normal": "+",
+      "found": 1,
+      "area": 20106.192982974677,
+      "expected_area": 20106.19,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        1.4210854715202004e-14,
+        5.82645043323282e-15
+      ],
+      "ok": true
+    },
+    {
+      "id": "section_z16",
+      "kind": "section",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 16.0,
+      "measured": {
+        "area": 23650.583368033127,
+        "loops": 2,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 23650.591494528708,
+          "measured": 23650.583368033127,
+          "ok": true
+        },
+        "loops": {
+          "expected": 2,
+          "measured": 2,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pad_on_disc",
+      "kind": "clearance",
+      "required": true,
+      "note": "the pad rests on the disc face, separate solids",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": 0.05
+      },
+      "error": null,
+      "ok": true
+    }
+  ],
+  "performance": [
+    {
+      "id": "peakDiscTemperature",
+      "kind": "performance",
+      "quantity": "max_temperature",
+      "unit": "K",
+      "case": "panicBrake",
+      "evidence": "N",
+      "split": "development",
+      "digitized": true,
+      "required": true,
+      "status": "scored",
+      "prediction": 424.4741869608688,
+      "reference": 430.0,
+      "error": -5.525813039131208,
+      "relative_error": -0.012850727997979552,
+      "u_meas": 5.0,
+      "u_numerical": 0.3720992282185307,
+      "u_input": 4.0,
+      "z": 0.8615335277483552,
+      "z_max": 2.0,
+      "ok": true
+    },
+    {
+      "id": "lineMaxTemperature",
+      "kind": "performance",
+      "quantity": "line_max_temperature",
+      "unit": "K",
+      "case": "panicBrake",
+      "evidence": "N",
+      "split": "development",
+      "digitized": true,
+      "required": true,
+      "status": "scored",
+      "prediction": 424.4741869608688,
+      "reference": 405.0,
+      "error": 19.474186960868792,
+      "relative_error": 0.048084412249058746,
+      "u_meas": 5.0,
+      "u_numerical": 0.3720992282185307,
+      "u_input": 4.0,
+      "z": 3.036234645221759,
+      "z_max": 2.0,
+      "ok": false
+    },
+    {
+      "id": "timeOfPeak",
+      "kind": "performance",
+      "quantity": "time_of_max_temperature",
+      "unit": "s",
+      "case": "panicBrake",
+      "evidence": "N",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "status": "scored",
+      "prediction": 2.8,
+      "reference": 3.0,
+      "error": -0.20000000000000018,
+      "relative_error": -0.06666666666666672,
+      "u_meas": 0.25,
+      "u_numerical": 0.0,
+      "u_input": 0.0,
+      "z": 0.8000000000000007,
+      "z_max": 2.0,
+      "ok": true
+    },
+    {
+      "id": "producedHeat",
+      "kind": "performance",
+      "quantity": "produced_heat",
+      "unit": "J",
+      "case": "panicBrake",
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "status": "scored",
+      "prediction": 67500.00000000029,
+      "reference": 67500.0,
+      "error": 2.9103830456733704e-10,
+      "tolerance": 675.0,
+      "ok": true
+    },
+    {
+      "id": "dissipatedHeat",
+      "kind": "performance",
+      "quantity": "dissipated_heat",
+      "unit": "J",
+      "case": "panicBrake",
+      "evidence": "N",
+      "split": "development",
+      "digitized": true,
+      "required": true,
+      "status": "scored",
+      "prediction": 981.9243978594964,
+      "reference": 590.0,
+      "error": 391.92439785949637,
+      "relative_error": 0.6642786404398243,
+      "u_meas": 90.0,
+      "u_numerical": 0.8777192997036991,
+      "u_input": 0.0,
+      "z": 4.354508458000596,
+      "z_max": 2.0,
+      "ok": false
+    },
+    {
+      "id": "hotspotRadius",
+      "kind": "performance",
+      "quantity": "hotspot_radius",
+      "unit": "mm",
+      "case": "panicBrake",
+      "evidence": "N",
+      "split": "development",
+      "digitized": true,
+      "required": false,
+      "status": "scored",
+      "prediction": 113.53356776355682,
+      "reference": 132.0,
+      "error": -18.466432236443183,
+      "relative_error": -0.13989721391244836,
+      "u_meas": 4.0,
+      "u_numerical": 0.8852228866974485,
+      "u_input": 0.0,
+      "z": 4.507546165473775,
+      "z_max": 2.0,
+      "ok": false
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": "13 pass, 0 fail, 1 n/a",
+    "failed": []
+  },
+  "simulations": {
+    "brakeThermal": {
+      "status": "ok",
+      "solver": {
+        "name": "calculix",
+        "version": "2.23",
+        "binary": "/Applications/FreeCAD.app/Contents/Resources/bin/ccx"
+      },
+      "reason": null
+    },
+    "brakeEnergy": {
+      "status": "ok",
+      "solver": {
+        "name": "reduced:brake_energy"
+      },
+      "reason": null
+    }
+  },
+  "hash_binding": {
+    "manifest_sha256": "c5146b5d8e50adc9127c3e676e1c526d80e2f240b7dba52a9b90ad540bd167dd",
+    "truth_files": {
+      "truth/disc.step": "3f17a33fe4077cb3619496d145f8b881281684e49596542796090b090dbd47fc",
+      "truth/pad.step": "95c263418ce0650b781ecb4996f036e4e47593ae7424f49687774dfeb599c766",
+      "truth/brake.step": "9d839f4c41d1c7cb9065104f95d5da36f3748b7fc6a79a3112195e9592c8557f",
+      "truth/brake-spec.yaml": "0cafabd13bc7da497bbda05b9f3d602e6cc34ae6402fbc72b9953d060d72745a",
+      "truth/raw/brake_disc.html": "c2c4eab133574313eef90af6d6476eee173901c14efbd31d5deda873a79037d3",
+      "truth/raw/figures/brake_disc.1.1.09.png": "c37f82b545dccc0278ae10cdc67faf27c1841c57f60b558e4da573642c5cfb94",
+      "truth/raw/figures/brake_disc.1.1.11.png": "eb146d02347d009a3e902eead4c25719d0e52e9185eef6e27d67449018f2a8d6",
+      "truth/raw/figures/brake_disc.1.1.12.png": "6a765919f5fc3aca8616f4244dddee6dd862a7540ba25d4e4c765c928f14f139"
+    },
+    "input_files": {
+      "inputs/comsol-brake-disc-packet.md": "85535fc3210d6d0174945725ecf1a1f29351991bc272ba55fc138b0ad254638d",
+      "inputs/figure-1-geometry.png": "8c7faad09a9d6663c0a39fe6e18e5e721807c6750bf3b40b7ab67f95a36f5c54",
+      "inputs/figure-2-velocity.png": "05a0b5ceb2f81378a47ef8ac2b41edbf948dfe3c0c3392cb62b1c0ef8c56ccc1",
+      "inputs/figure-3-acceleration.png": "bb3f0ef43eaca917061fb013edd68fece3342aebec4ef0244089d6216d71c2dd",
+      "inputs/figure-5-probe-line.png": "f3ffe42b7cc21121f49b80d52056b377c9aa4b90aec2d13ac0fbac1ecba5d0d5"
+    },
+    "step_sha256": "907ccfa08112ca987b2062e36a12ed8dadc0e12ec488c180a5a0338fb0332444",
+    "assembly_source": {
+      "checkpoint.py": "6ef2ea0b631ea63e9bcee60c8191fa924fdfd8e36d1dd3b2deae5a3bf0378c0e",
+      "main.py": "458b0445c00a2fb968f6795d35201404e88b900f45d0fbedd0d0ee325d3f90ab"
+    },
+    "design_bundle": {
+      "assembly.yaml": "fed22cf15435f431fb4f3f5f6c6b89119188e4a1f8a742c00b6480eaaca26b62",
+      "brief.md": "96ebc25c3c2790c08f2d947bb80e918a7a5b6405de486c82068e929173a176be",
+      "sources/comsol-brake-disc-packet.md": "85535fc3210d6d0174945725ecf1a1f29351991bc272ba55fc138b0ad254638d",
+      "sources/figure-1-geometry.png": "8c7faad09a9d6663c0a39fe6e18e5e721807c6750bf3b40b7ab67f95a36f5c54",
+      "sources/figure-2-velocity.png": "05a0b5ceb2f81378a47ef8ac2b41edbf948dfe3c0c3392cb62b1c0ef8c56ccc1",
+      "sources/figure-3-acceleration.png": "bb3f0ef43eaca917061fb013edd68fece3342aebec4ef0244089d6216d71c2dd",
+      "sources/figure-5-probe-line.png": "f3ffe42b7cc21121f49b80d52056b377c9aa4b90aec2d13ac0fbac1ecba5d0d5"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-25T11:43:30Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "29790d0e8b017f5f76f393e43c64fe2e2c471679",
+      "dirty": true
+    }
+  }
+}

@@ -1,0 +1,158 @@
+seed: 20260917
+criteria: test split; single RevoluteJointType; both joint geometries JointNonPlanarBRepFaceGeometry;
+  STEP one valid solid; 10..250 mm; 6..400 faces
+tried: 15
+candidates: 101
+units: STEP files are millimetres (SI_UNIT .MILLI. .METRE.); joint JSON coordinates
+  are centimetres (x10 to mm); OBJ meshes are not manifold and are not used
+selected:
+- set: joint_set_01184
+  bodies:
+  - 36938_ae684b66_0002_2
+  - 36938_ae684b66_0001_2
+  joint_type: RevoluteJointType
+  holes: 2
+  contacts: 1
+  36938_ae684b66_0002_2:
+    faces: 14
+    size_mm:
+    - 10.0
+    - 88.0
+    - 50.0
+    volume_mm3: 4863.73
+    bbox_min:
+    - 100.0
+    - 0.0
+    - 70.0
+  36938_ae684b66_0001_2:
+    faces: 11
+    size_mm:
+    - 50.0
+    - 3.0
+    - 165.0
+    volume_mm3: 21691.1
+    bbox_min:
+    - -5.0
+    - -0.0
+    - -65.0
+  truth_interference_mm3: 0.0
+- set: joint_set_16418
+  bodies:
+  - 23309_76dcf100_0002_1
+  - 23309_76dcf100_0003_2
+  joint_type: RevoluteJointType
+  holes: 1
+  contacts: 0
+  23309_76dcf100_0002_1:
+    faces: 161
+    size_mm:
+    - 20.48
+    - 4.0
+    - 20.48
+    volume_mm3: 827.65
+    bbox_min:
+    - -10.242
+    - 0.0
+    - -10.242
+  23309_76dcf100_0003_2:
+    faces: 41
+    size_mm:
+    - 23.0
+    - 10.0
+    - 69.0
+    volume_mm3: 4864.08
+    bbox_min:
+    - 0.0
+    - -0.0
+    - -50.0
+  truth_interference_mm3: 0.529
+- set: joint_set_12944
+  bodies:
+  - 22303_e9723631_0014_1
+  - 22303_e9723631_0013_1
+  joint_type: RevoluteJointType
+  holes: 5
+  contacts: 1
+  22303_e9723631_0014_1:
+    faces: 27
+    size_mm:
+    - 126.7
+    - 15.0
+    - 108.0
+    volume_mm3: 148190.98
+    bbox_min:
+    - -63.351
+    - -0.0
+    - -54.0
+  22303_e9723631_0013_1:
+    faces: 35
+    size_mm:
+    - 26.08
+    - 68.0
+    - 29.03
+    volume_mm3: 19943.66
+    bbox_min:
+    - -13.039
+    - -59.0
+    - -14.516
+  truth_interference_mm3: 0.0
+- set: joint_set_13786
+  bodies:
+  - 84608_204c01e6_0008_1
+  - 84608_204c01e6_0008_2
+  joint_type: RevoluteJointType
+  holes: 3
+  contacts: 0
+  84608_204c01e6_0008_1:
+    faces: 18
+    size_mm:
+    - 100.0
+    - 100.0
+    - 3.0
+    volume_mm3: 25187.47
+    bbox_min:
+    - -50.0
+    - -50.0
+    - -0.0
+  84608_204c01e6_0008_2:
+    faces: 6
+    size_mm:
+    - 16.2
+    - 4.0
+    - 4.0
+    volume_mm3: 40.73
+    bbox_min:
+    - 0.0
+    - 38.379
+    - 47.55
+  truth_interference_mm3: 9.749
+- set: joint_set_15317
+  bodies:
+  - 22337_e2f65ed2_0003_1
+  - 22337_e2f65ed2_0003_2
+  joint_type: RevoluteJointType
+  holes: 0
+  contacts: 3
+  22337_e2f65ed2_0003_1:
+    faces: 37
+    size_mm:
+    - 88.9
+    - 32.54
+    - 88.9
+    volume_mm3: 93854.25
+    bbox_min:
+    - -44.45
+    - 92.804
+    - -44.45
+  22337_e2f65ed2_0003_2:
+    faces: 360
+    size_mm:
+    - 88.9
+    - 28.58
+    - 88.9
+    volume_mm3: 133281.51
+    bbox_min:
+    - -44.45
+    - 62.998
+    - -44.45
+  truth_interference_mm3: 0.0

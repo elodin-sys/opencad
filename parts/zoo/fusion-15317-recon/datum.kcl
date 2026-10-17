@@ -1,0 +1,78 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Envelope body of fusion-15317-recon: Ø50.8 hub (hubYMin..flangeYMin) revolved about Y with
+// its waist silhouette, unioned into the Ø88.9 flange (flangeYMin..flangeYMax) extruded as a
+// disk. The flange is not revolved because the engine seam-splits revolved annular faces
+// (flangeBottom must be one face); the waist is in the hub profile because a revolved bowl
+// tool cannot be subtracted after or before the shoulder ring. hubWaist.kcl cuts the shoulder.
+import hubYMin, flangeYMin, flangeYMax, hubRadius, flangeRadius, grooveInnerRadius, hubNeckRadius, hubNeckY, hubWaistY from "params.kcl"
+
+assert(hubRadius, isGreaterThan = 0mm, error = "hub radius must be positive")
+assert(flangeRadius, isGreaterThan = hubRadius, error = "flange radius must exceed hub radius")
+assert(flangeYMin, isGreaterThan = hubYMin, error = "flange underside must sit above hub bottom")
+assert(flangeYMax, isGreaterThan = flangeYMin, error = "arm tops must sit above flange underside")
+assert(hubWaistY, isGreaterThan = hubYMin, error = "waist must not reach the hub bottom")
+assert(hubNeckY, isGreaterThan = hubWaistY, error = "neck must sit above the waist foot")
+assert(hubNeckRadius, isLessThan = grooveInnerRadius, error = "neck must sit inside the groove shoulder")
+assert(grooveInnerRadius, isLessThan = hubRadius, error = "groove inner radius must sit inside the hub OD")
+
+// flangeRadius = flangeDia / 2; hubRadius = hubDia / 2 (contract formulas, not asserted).
+flangeThickness = flangeYMax - flangeYMin
+hubOverlap = 1mm
+hubTopY = flangeYMin + hubOverlap
+
+// Waist silhouette (r, y): convex lip round from the groove wall down to the neck, then a
+// shallow arc back out to the OD at hubWaistY. The lip continues past its crest to a ledge
+// that the shoulder ring removes. The contract gives no arc curvature; 45.17 mm makes the
+// waist remove the acceptance volume (3651 mm3) and the secZ0 drop (48.9 mm2).
+lipRadius = grooveInnerRadius - hubNeckRadius
+lipEndAngle = 60deg
+lipEndR = grooveInnerRadius + lipRadius * cos(lipEndAngle)
+lipEndY = hubNeckY + lipRadius * sin(lipEndAngle)
+waistArcRadius = 45.17mm
+chordAngle = atan2(y = hubWaistY - hubNeckY, x = hubRadius - hubNeckRadius)
+chordLen = (hubRadius - hubNeckRadius) / cos(chordAngle)
+sag = waistArcRadius * cos(asin(chordLen / (2 * waistArcRadius)))
+normalAngle = chordAngle + 90deg
+centreR = (hubNeckRadius + hubRadius) / 2 + sag * cos(normalAngle)
+centreY = (hubNeckY + hubWaistY) / 2 + sag * sin(normalAngle)
+
+assert(lipEndY, isLessThan = flangeYMin, error = "lip ledge must sit below the flange underside")
+
+hubProfile = sketch(on = XY) {
+  hubBottom = line(start = [0mm, hubYMin], end = [hubRadius, hubYMin])
+  hubOd = line(start = [hubRadius, hubYMin], end = [hubRadius, hubWaistY])
+  bowl = arc(
+    start = [hubRadius, hubWaistY],
+    end = [hubNeckRadius, hubNeckY],
+    center = [centreR, centreY],
+    direction = CW,
+  )
+  lip = arc(
+    start = [hubNeckRadius, hubNeckY],
+    end = [lipEndR, lipEndY],
+    center = [grooveInnerRadius, hubNeckY],
+    direction = CW,
+  )
+  ledge = line(start = [lipEndR, lipEndY], end = [hubRadius, lipEndY])
+  upperOd = line(start = [hubRadius, lipEndY], end = [hubRadius, hubTopY])
+  hubTop = line(start = [hubRadius, hubTopY], end = [0mm, hubTopY])
+  axisClose = line(start = [0mm, hubTopY], end = [0mm, hubYMin])
+}
+hub = revolve(region(segments = [hubProfile.hubBottom, hubProfile.hubOd]), axis = Y, angle = 360deg)
+hide(hubProfile)
+
+// Flange disk built along +Z on XY, then rotated onto +Y (single planar faces).
+flangeSketch = sketch(on = XY) {
+  od = circle(start = [flangeRadius, 0mm], center = [0mm, 0mm])
+  coincident([od.center, ORIGIN])
+  horizontal([od.start, od.center])
+  radius(od) == flangeRadius
+}
+flange = extrude(region(segments = [flangeSketch.od]), length = flangeThickness)
+  |> rotate(axis = X, angle = -90deg, global = true)
+  |> translate(y = flangeYMin, global = true)
+hide(flangeSketch)
+
+export datum = union([flange, hub])
+datum

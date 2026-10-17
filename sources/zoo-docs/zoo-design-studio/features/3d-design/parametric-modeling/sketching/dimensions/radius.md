@@ -1,0 +1,22 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/radius
+Title: Radius
+
+# Radius
+
+Control arc and circular geometry with a radius dimension in Zoo Design Studio.
+
+The Radius dimension defines the size of arc-based geometry by its radius. Use it for arcs and
+other curved sketch geometry when the design intent is centered on the distance from the curve to its
+center point.
+
+Double-click an existing radius dimension label to edit the radius value after it has been placed.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/radius/radius.gif"
+  alt="Adding a radius dimension to sketch geometry"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Radius dimensions control circular and arc geometry from the center reference
+</div>

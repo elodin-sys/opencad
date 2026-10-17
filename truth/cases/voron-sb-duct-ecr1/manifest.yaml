@@ -1,0 +1,284 @@
+id: voron-sb-duct-ecr1
+title: 'Voron Stealthburner printhead front (Rapido V2) after ECR1: two Ø3.4 side screw holes lowered
+  3 mm to z = 16.3'
+truth_class: C
+role: validation
+source:
+  citation: VoronDesign, Voron-Stealthburner, CAD/Printheads/Stealthburner_Printhead_Rapido_V2.step (front
+    body, solid 0)
+  urls:
+  - https://github.com/VoronDesign/Voron-Stealthburner/tree/main/CAD
+  - https://raw.githubusercontent.com/VoronDesign/Voron-Stealthburner/main/CAD/Printheads/Stealthburner_Printhead_Rapido_V2.step
+  accessed: '2026-09-17'
+  revision: main as of 2026-09-17 (release 1.0, 2024-07-04)
+  license: GNU GPL v3.0
+intent: 'Score the design after change request ECR1 (two Ø3.4 side screw holes lowered 3 mm to z = 16.3):
+  the revised observables apply and every other observable is unchanged.'
+inputs:
+- path: inputs/ecr-1-screw-holes.md
+  kind: text
+  sha256: a0672875fff371485be1f08596caee68d2d81cdfac1790ff39cbb32ba9216895
+  note: the change request
+truth:
+- path: truth/revisions.yaml
+  kind: yaml
+  sha256: a874c49d730d1bb2f7880b9ef37231e3e5ec0d7e3d61d462e7340009c7840a7f
+  note: the observable revisions the request implies (evaluator-side)
+arms:
+- id: ecr1
+  design: voron-sb-duct
+  ecr: ecr1
+  inputs:
+  - inputs/ecr-1-screw-holes.md
+  images: []
+  notes: Scored with `python -m opencad.truth score voron-sb-duct-ecr1` after `python -m opencad ecr
+    voron-sb-duct <request> --contract-delta <yaml> --label ecr1`; not a drafting run.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 71.068
+  - 27.4
+  - 59.133
+  tolerance: 0.3
+- id: solid_count
+  kind: solid_count
+  expected: 1
+- id: passage_left_duct
+  kind: passage
+  point: &id001
+  - -21.2
+  - -14.4
+  - 50.8
+  point_b:
+  - -26.0
+  - -10.0
+  - 10.0
+  pitch: 0.4
+  seal_radius: 3.2
+  volume_min: 3474.3
+  volume_max: 5211.4
+  note: air path left_duct; reference passage volume 4343 mm3
+- id: passage_right_duct
+  kind: passage
+  point: &id002
+  - 22.0
+  - -11.2
+  - 43.6
+  point_b:
+  - 26.0
+  - -10.0
+  - 10.0
+  pitch: 0.4
+  seal_radius: 3.2
+  volume_min: 3440.4
+  volume_max: 5160.7
+  note: air path right_duct; reference passage volume 4301 mm3
+- id: ducts_separate
+  kind: passage
+  point: *id001
+  point_b: *id002
+  pitch: 0.4
+  seal_radius: 3.2
+  expect_connected: false
+  note: the two part-cooling ducts must not share air
+- id: section_ym12
+  kind: section
+  plane: y
+  at: -12.0
+  expected:
+    area: 1412.07
+    holes: 5
+  area_tolerance_rel: 0.06
+  note: 'material at the station: 1 loops, 5 holes in the reference'
+- id: section_ym20
+  kind: section
+  plane: y
+  at: -20.0
+  expected:
+    area: 1459.74
+  area_tolerance_rel: 0.08
+  note: 'material at the station: 3 loops, 6 holes in the reference'
+- id: section_z10
+  kind: section
+  plane: z
+  at: 10.0
+  expected:
+    area: 435.42
+  area_tolerance_rel: 0.08
+  note: 'material at the station: 3 loops, 4 holes in the reference'
+- id: section_z30
+  kind: section
+  plane: z
+  at: 30.0
+  expected:
+    area: 739.16
+  area_tolerance_rel: 0.08
+  note: 'material at the station: 2 loops, 2 holes in the reference'
+- id: section_z45
+  kind: section
+  plane: z
+  at: 45.0
+  expected:
+    area: 565.96
+  area_tolerance_rel: 0.08
+  note: 'material at the station: 3 loops, 2 holes in the reference'
+- id: wall_min
+  kind: thickness
+  stat: p05
+  min: 0.75
+  samples: 8000
+  max_thickness: 8.0
+  note: reference p05 0.87 mm, p50 2.98 mm
+- id: hole_d5_m7p0_m3p9_59p4
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -6.963
+  - -3.939
+  - 59.45
+  direction:
+  - -0.0
+  - 0.0
+  - 1.0
+  radius: 2.5
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø5, 2.9 long
+- id: hole_d5_3p9_m7p0_59p4
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 3.939
+  - -6.963
+  - 59.45
+  direction:
+  - -0.0
+  - 0.0
+  - 1.0
+  radius: 2.5
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø5, 2.9 long
+- id: hole_d4p7_m28p0_m2p3_19p0
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -28.0
+  - -2.3
+  - 19.0
+  direction:
+  - 0.0
+  - 1.0
+  - -0.0
+  radius: 2.35
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø4.7, 3.8 long
+- id: hole_d4p7_m25p0_m2p3_35p0
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -25.0
+  - -2.329
+  - 35.0
+  direction:
+  - 0.0
+  - 1.0
+  - -0.0
+  radius: 2.35
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø4.7, 3.86 long
+- id: hole_d4p6_m12p7_m3p2_55p4
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -12.7
+  - -3.2
+  - 55.424
+  direction:
+  - -0.0
+  - 1.0
+  - -0.0
+  radius: 2.3
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø4.6, 5.6 long
+- id: hole_d4p6_12p7_m3p1_55p4
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 12.7
+  - -3.131
+  - 55.424
+  direction:
+  - -0.0
+  - 1.0
+  - -0.0
+  radius: 2.3
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø4.6, 5.46 long
+- id: hole_d3p4_m16p2_m3p7_19p3
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -16.25
+  - -3.75
+  - 16.301
+  direction:
+  - 0.0
+  - 1.0
+  - -0.0
+  radius: 1.7
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø3.4, 7.5 long, lowered by ECR-1
+- id: hole_d3p4_16p3_m3p7_19p3
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 16.25
+  - -3.75
+  - 16.301
+  direction:
+  - 0.0
+  - 1.0
+  - -0.0
+  radius: 1.7
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø3.4, 7.5 long, lowered by ECR-1
+- id: hole_d2p7_m7p0_m3p9_56p0
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -6.963
+  - -3.939
+  - 56.0
+  direction:
+  - -0.0
+  - 0.0
+  - 1.0
+  radius: 1.35
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø2.7, 4 long
+- id: hole_d2p7_3p9_m7p0_56p0
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 3.939
+  - -6.963
+  - 56.0
+  direction:
+  - -0.0
+  - 0.0
+  - 1.0
+  radius: 1.35
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø2.7, 4 long
+notes:
+- 'Class C change-request case cloned from voron-sb-duct: its checks with the request''s revisions applied.'

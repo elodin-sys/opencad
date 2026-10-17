@@ -1,0 +1,125 @@
+# Presentation overrides for python -m opencad.site build. Every design with a report, gate feedback and a handoff mesh is
+# published; an entry here only changes how it is shown. Keys: title, summary, featured, section (machine|part|corpus), hidden.
+designs:
+  aleph-stack:
+    title: Aleph compute stack
+    summary: Reference model of the Aleph base board, carrier board, Jetson Orin Nano module and heatsink-fan on M2.5 standoffs, for designing enclosures and mounts.
+    featured: true
+  sprite-aleph-v2:
+    title: Sprite
+    summary: Printable tail-sitter FPV drone. A sled on the carbon frame carries the Aleph compute stack and the battery; the shell and nose cover slide on over it.
+    intent: >-
+      A printed sled bolts to the carbon X frame and carries the Aleph compute stack on edge
+      plus a 6S pack in a tray forward of it. An open-bottom shell slides down over the loaded
+      sled, and the nose cover slides on from the front. Five-inch props; PETG or ASA for the
+      sled, shell and cover, each printed part sized for a Bambu X1C.
+  peristaltic-pump:
+    title: Peristaltic pump
+    summary: The open-source 3D-printed peristaltic pump of Behrens et al., placed from its published STEP parts with a modelled silicone tube and a roller-pass motion check.
+  fan-01:
+    title: FAN-01 axial fan
+    summary: EAA benchmark low-pressure axial fan with a nine-blade rotor in its rig, with fluid regions and an MRF flow analysis.
+  fda-pump:
+    title: FDA benchmark blood pump
+    summary: The FDA interlaboratory centrifugal blood pump from its supplied CAD, with a fluid domain and a CFD analysis.
+  mixer-01:
+    title: Magnetic-drive mixer
+    summary: Sealed magnetic-drive paddle mixer for water in a 50 mm polypropylene housing.
+  disc-brake:
+    title: Disc brake
+    summary: Rebuild of the COMSOL heat-generation-in-a-disc-brake model with a thermal simulation.
+  nottingham-bearing:
+    title: Nottingham journal bearing
+    summary: Half-journal bearing test section of the University of Nottingham highly loaded bearing rig.
+  compound-train:
+    title: Compound gear train
+    summary: Compound spur-gear train on a base plate, every gear on its own revolute joint.
+  crank-slider:
+    title: Crank-slider
+    summary: Offset crank-slider mechanism of four separate solids in stacked layers, with a full-turn motion sweep.
+  four-bar:
+    title: Four-bar linkage
+    summary: Planar crank-rocker four-bar linkage on a ground plate.
+  gear-train:
+    title: Spur gear pair on a carrier
+    summary: A 20-tooth pinion and a 40-tooth wheel, module 2, on revolute joints over a carrier plate.
+  planetary-set:
+    title: Planetary gear set
+    summary: Planetary set with a fixed ring, built as seven separate solids from five part designs.
+  rack-pinion:
+    title: Rack and pinion
+    summary: Rack and pinion on a base plate, three separate solids.
+
+  aleph-stack-case:
+    title: Aleph stack case
+    summary: Printed enclosure for the full Aleph stack, with the heatsink rising through the lid for airflow and openings for every connector.
+  benchy:
+    title: 3DBenchy
+    summary: The standard tugboat calibration print, modelled from scratch.
+
+  bearing-housing:
+    title: Flanged bearing housing
+    summary: Cast oval flanged bearing housing as one connected solid.
+  chiral-keyplate:
+    title: Chiral key plate
+    summary: Square key plate built from a text specification.
+  enclosure-base:
+    title: Enclosure base
+    summary: Lower body of a two-part box enclosure, 100 × 150 × 47 mm with rounded corners.
+  fusion-01184-recon:
+    title: Fusion 360 Gallery 01184
+    summary: Parametric reconstruction of a Fusion 360 Gallery body from its joint-set data.
+  fusion-12944-recon:
+    title: Fusion 360 Gallery 12944
+    summary: Parametric reconstruction from renders, sections and a dimension sheet.
+  fusion-13786-recon:
+    title: Fusion 360 Gallery 13786
+    summary: Parametric reconstruction from renders, sections and a dimension sheet.
+  fusion-15317-recon:
+    title: Fusion 360 Gallery 15317
+    summary: Parametric reconstruction from renders, sections and a dimension sheet.
+  fusion-16418-recon:
+    title: Fusion 360 Gallery 16418
+    summary: Parametric reconstruction from renders, sections and a dimension sheet.
+  gear-pair:
+    title: Spur gear pair
+    summary: Module 2, 20° pressure-angle spur-gear pair and carrier plate to an exact specification.
+  nasa-atb-axisymmetric-bump:
+    title: NASA axisymmetric transonic bump
+    summary: The Bachalo-Johnson axisymmetric transonic bump as one solid of revolution for a CFD outer-mould line.
+  nasa-backstep-driver-seegmiller:
+    title: Driver-Seegmiller backward-facing step
+    summary: Air volume of the Driver-Seegmiller backward-facing-step channel, parallel-roof case.
+  nist-am-test-artifact:
+    title: NIST AM test artifact
+    summary: The NIST additive-manufacturing test artifact (Moylan et al. 2014) from its drawing and paper.
+  nist-amb2022-01-bridge:
+    title: NIST AMB2022-01 bridge
+    summary: The NIST AM-Bench 2022 individual bridge artifact from its description and figures.
+  nist-amb2022-01-bridge-mesh:
+    title: NIST AMB2022-01 bridge, mesh reference
+    summary: The same bridge artifact, checked against a reference mesh for surface deviation.
+    section: corpus
+  prusa-mini-extruder-front:
+    title: Prusa MINI extruder front
+    summary: The Original Prusa MINI extruder front housing from renders and section drawings.
+  rpi5-enclosure:
+    title: Raspberry Pi 5 enclosure
+    summary: Two-piece FFF-printed enclosure, base and removable lid, for a Raspberry Pi 5.
+  spleen-c1-blade:
+    title: SPLEEN C1 turbine blade
+    summary: One SPLEEN C1 turbine cascade blade.
+  voron-sb-duct:
+    title: Voron Stealthburner front housing
+    summary: The Voron Stealthburner printhead front housing, Rapido V2 variant, from renders and section drawings.
+
+  bracket:
+    hidden: true
+  coupon:
+    hidden: true
+  sprite-drone:
+    hidden: true
+  sprite-aleph:
+    hidden: true
+  aleph-radar-devkit:
+    hidden: true

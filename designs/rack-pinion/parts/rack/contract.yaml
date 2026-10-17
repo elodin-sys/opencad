@@ -1,0 +1,514 @@
+schema_version: 1
+name: rack-pinion-rack
+intent: >-
+  Straight module-2 rack of the rack-pinion assembly (sources/rack-pinion-spec.md, the only and authoritative
+  source), drafted in its own frame: origin on the pitch line at the middle of its length, +x along the pitch
+  line, +y toward the tooth tips, bottom face z = 0, thickness 8 (z = 0 to 8). Body x = -100 to 100 with its
+  back face at y = -12, 9.5 deep below the root line y = -2.5. 32 teeth, module 2 (pitch p = 2 pi = 6.283185),
+  centred at x = (k + 1/2) p for k = -16 to 15 so a tooth space is centred on x = 0; addendum 2 (tip line
+  y = 2), dedendum 2.5; straight flanks at 20 deg from the normal to the pitch line; tooth thickness on the
+  pitch line p/2 - 0.05 = 3.091593 (tip width 1.635712, root width 4.911444). Interfaces: the bottom face
+  slides on the plate top (slider joint rackSlide at own-frame point [0, 0, 0], axis +x); the flanks mesh with
+  the pinion; the tooth space at x = 0 receives the pinion's tooth at rest. One solid, no holes.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: >-
+    on the pitch line (y = 0) at the middle of the 200 mm length (x = 0), in the bottom face (z = 0); the tooth
+    space between the teeth centred at x = -p/2 and x = +p/2 is centred on the origin
+  axes:
+    x: "along the pitch line, the rack's sliding direction (slider joint rackSlide axis +x); body x = -100..100"
+    y: "normal to the pitch line toward the tooth tips: tip line y = 2, root line y = -2.5, back face y = -12"
+    z: "through the 8 mm thickness: bottom face z = 0 (slides on the plate top), top face z = 8"
+  datums:
+    - name: A
+      description: "bottom face z = 0, the slide face that rests on the plate top"
+    - name: B
+      description: "pitch line plane y = 0 (tangent to the pinion pitch circle in the assembly); tooth thickness 3.091593 is measured on it"
+    - name: C
+      description: "mid-length plane x = 0, the mirror plane; the tooth space centred on it receives the pinion tooth at rest"
+
+envelope:
+  min: [-100, -12, 0]
+  max: [100, 2, 8]
+  tolerance: 0.05
+
+parameters:
+  - name: gearModule
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, table row Module (2 mm)"
+    tolerance: 0.001
+    description: "module m; sets the pitch p = pi * m"
+  - name: toothCount
+    value: 32
+    unit: ""
+    provenance: stated
+    source: "rack-pinion-spec.md, table row Rack (32 teeth)"
+    tolerance: 0.1
+    description: "number of rack teeth, centred at x = (k + 1/2) p for k = -16..15"
+  - name: pressureAngle
+    value: 20
+    unit: deg
+    provenance: stated
+    source: "rack-pinion-spec.md, rows Pressure angle and Rack teeth (straight flanks at 20 deg from the normal to the pitch line)"
+    tolerance: 0.01
+    description: "flank angle measured from the normal to the pitch line (the y axis)"
+  - name: addendum
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, row Rack teeth (addendum 2 above the pitch line)"
+    tolerance: 0.01
+    description: "tip line height above the pitch line: tips at y = addendum"
+  - name: dedendum
+    value: 2.5
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, row Rack teeth (dedendum 2.5 below it)"
+    tolerance: 0.01
+    description: "root line depth below the pitch line: root lands at y = -dedendum"
+  - name: backlashThinning
+    value: 0.05
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, row Rack teeth (tooth thickness on the pitch line p/2 - 0.05) and row Backlash"
+    tolerance: 0.005
+    description: "reduction of the rack tooth thickness on the pitch line below p/2"
+  - name: rackLength
+    value: 200
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, row Rack (200 mm long) and Part frames (body runs from x = -100 to x = 100)"
+    tolerance: 0.01
+    description: "body length along x, centred on the origin (x = -rackLength/2 .. +rackLength/2)"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 760
+        direction: increase
+        bbox_delta: [10, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [200, 220, 250]
+      infeasible_deltas: [-10]
+  - name: rackThickness
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, row Rack (8 mm thick, z 0..8)"
+    tolerance: 0.01
+    description: "extrusion thickness along z from the bottom face z = 0"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 4742.79
+        direction: increase
+        bbox_delta: [0, 0, 2]
+        tolerance_rel: 0.02
+      sweep:
+        values: [6, 8, 12]
+      infeasible_deltas: [-8]
+  - name: bodyDepth
+    value: 9.5
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, row Rack body (9.5 mm deep below the root line)"
+    tolerance: 0.01
+    description: "solid bar depth from the root line down to the back face"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 3200
+        direction: increase
+        bbox_delta: [0, 2, 0]
+        tolerance_rel: 0.02
+      infeasible_deltas: [-10]
+  - name: pitch
+    value: 6.283185
+    unit: mm
+    provenance: derived
+    formula: "pi * gearModule"
+    source: "rack-pinion-spec.md, row Module (pitch p = 2 pi = 6.283185 mm)"
+    tolerance: 0.0005
+    description: "circular pitch along the pitch line"
+  - name: toothThickness
+    value: 3.091593
+    unit: mm
+    provenance: derived
+    formula: "pitch / 2 - backlashThinning"
+    source: "rack-pinion-spec.md, row Rack teeth (3.091593)"
+    tolerance: 0.001
+    description: "tooth thickness on the pitch line y = 0"
+  - name: tipWidth
+    value: 1.635712
+    unit: mm
+    provenance: derived
+    formula: "toothThickness - 2 * addendum * tan(pressureAngle)"
+    source: "rack-pinion-spec.md, row Rack teeth (tip width 1.635712)"
+    tolerance: 0.001
+    description: "flat tip land width at y = addendum"
+  - name: rootWidth
+    value: 4.911444
+    unit: mm
+    provenance: derived
+    formula: "toothThickness + 2 * dedendum * tan(pressureAngle)"
+    source: "rack-pinion-spec.md, row Rack teeth (root width 4.911444)"
+    tolerance: 0.001
+    description: "tooth width at the root line y = -dedendum"
+  - name: backOffset
+    value: 12
+    unit: mm
+    provenance: derived
+    formula: "dedendum + bodyDepth"
+    source: "rack-pinion-spec.md, row Rack body (back face 12 mm below the pitch line)"
+    tolerance: 0.01
+    description: "back face at y = -backOffset"
+  - name: firstToothX
+    value: -97.389372
+    unit: mm
+    provenance: derived
+    formula: "(0.5 - toothCount / 2) * pitch"
+    source: "rack-pinion-spec.md, Part frames (teeth centred at x = (k + 1/2) p for k = -16 .. 15)"
+    tolerance: 0.001
+    description: "centre of the most negative tooth (k = -16); tooth k is centred at firstToothX + (k + 16) * pitch"
+  - name: endLand
+    value: 0.154906
+    unit: mm
+    provenance: derived
+    formula: "rackLength / 2 + firstToothX - rootWidth / 2"
+    tolerance: 0.001
+    description: "root land between the outermost tooth root and each body end face; must stay >= 0 (32 full teeth inside the body)"
+
+features:
+  - id: rackBody
+    kind: extrude
+    description: "solid bar x = -100..100, y = -12..-2.5 (back face to root line), z = 0..8"
+    parameters: [rackLength, bodyDepth, dedendum, backOffset, rackThickness]
+    verify:
+      - method: bbox
+      - method: face
+        face: bottom
+      - method: face
+        face: back
+      - method: face
+        face: endNeg
+      - method: face
+        face: endPos
+      - method: dimension
+        dimension: lengthX
+      - method: dimension
+        dimension: thicknessZ
+      - method: dimension
+        dimension: bodyDepthY
+      - method: section
+        section: bodyY
+      - method: solid
+        points: [[0, -7.25, 4], [-95, -7.25, 4], [95, -7.25, 4]]
+  - id: teeth
+    kind: pattern
+    count: 32
+    description: >-
+      32 straight-flank trapezoidal teeth standing on the root line, extruded through the full thickness: root
+      width 4.911444 at y = -2.5, thickness 3.091593 on the pitch line y = 0, flat tip 1.635712 wide at y = 2,
+      flanks at 20 deg from the y axis; centred at x = (k + 1/2) p, k = -16..15 (x = -97.389372 .. 97.389372)
+    parameters: [gearModule, toothCount, pressureAngle, addendum, dedendum, backlashThinning, pitch, toothThickness, tipWidth, rootWidth, firstToothX, endLand]
+    verify:
+      - method: section
+        section: pitchLineY
+      - method: count
+        section: pitchLineY
+        count: 32
+      - method: section
+        section: toothX
+      - method: face
+        face: tips
+      - method: face
+        face: tipK0
+      - method: face
+        face: rootLands
+      - method: plane
+        plane: endFlankNeg
+      - method: plane
+        plane: endFlankPos
+      - method: dimension
+        dimension: wholeDepth
+      - method: dimension
+        dimension: depthY
+      - method: solid
+        points: [[3.141593, 0, 4], [-3.141593, 0, 4], [97.389372, 0, 4], [-97.389372, 0, 4]]
+      - method: void
+        points: [[6.283185, 0, 4], [-6.283185, 0, 4], [94.24778, 0, 4], [-94.24778, 0, 4]]
+  - id: originSpace
+    kind: other
+    description: >-
+      the tooth space centred on x = 0 between teeth k = -1 and k = 0: 3.191593 wide on the pitch line, root
+      land 1.371741 wide at y = -2.5; receives the pinion tooth at rest
+    parameters: [pitch, toothThickness, rootWidth, pressureAngle]
+    verify:
+      - method: void
+        points: [[0, 0, 4]]
+      - method: plane
+        plane: spaceFlankNeg
+      - method: plane
+        plane: spaceFlankPos
+      - method: face
+        face: spaceRoot
+      - method: section
+        section: spaceX
+
+interfaces:
+  - name: rackSlide
+    description: >-
+      slider joint rackSlide (own-frame point [0, 0, 0], axis +x): the bottom face z = 0 rides on the plate top
+      and x = 0 is the mid-length mirror plane; the length, thickness and body-depth edits move neither
+    must_not_change: true
+    checks: [bottom, mirrorX]
+  - name: pinionMesh
+    description: >-
+      the 20 deg flanks of the tooth space centred on x = 0 cross the pitch line y = 0 at x = -1.595796 and
+      x = 1.595796; the pinion tooth sits in this space at rest and the flanks mesh with the pinion through the
+      stroke; no edit test moves them (no areas pinned because the thickness edit resizes the flanks)
+    must_not_change: true
+    checks: [spaceFlankNeg, spaceFlankPos]
+
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 18971.162
+    tolerance_rel: 0.001
+    provenance: derived
+    note: >-
+      rackThickness * (rackLength * bodyDepth + toothCount * (tipWidth + rootWidth) / 2 * (addendum + dedendum))
+      = 8 * (1900 + 32 * 14.731100) = 8 * 2371.3952
+  surface_area:
+    expected: 9708.07
+    tolerance_rel: 0.002
+    provenance: derived
+    note: >-
+      top + bottom 2 * 2371.3952 + back 200 * 8 + ends 2 * 9.5 * 8 + root lands (200 - 32 * 4.911444) * 8
+      + tips 32 * 1.635712 * 8 + 64 flanks * (4.5 / cos 20) * 8 = 4742.790 + 1600 + 152 + 342.670 + 418.742
+      + 2451.866
+  center_of_mass:
+    expected: [0, -5.933106, 4]
+    tolerance: 0.05
+    provenance: derived
+    note: >-
+      x = 0 and z = 4 by symmetry; y = (1900 * -7.25 + 471.3952 * -0.625247) / 2371.3952, tooth trapezoid
+      centroid -2.5 + 4.5 * (rootWidth + 2 * tipWidth) / (3 * (rootWidth + tipWidth))
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 4
+      expect:
+        area: 2371.3952
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+      description: "full toothed profile at mid-thickness: bar 1900 + 32 teeth * 14.731100"
+    - id: pitchLineY
+      plane: y
+      at: 0
+      expect:
+        area: 791.4477
+        area_tolerance_rel: 0.005
+        loops: 32
+        holes: 0
+      description: "pitch line cut: 32 separate tooth sections, each toothThickness * rackThickness = 3.091593 * 8"
+    - id: bodyY
+      plane: y
+      at: -5
+      expect:
+        area: 1600
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+      description: "bar below the root line: 200 * 8"
+    - id: spaceX
+      plane: x
+      at: 0
+      expect:
+        area: 76
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "cut through the origin tooth space: bar only, 9.5 * 8 (a tooth here would give 112)"
+    - id: toothX
+      plane: x
+      at: 3.141593
+      expect:
+        area: 112
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "cut through the centre of tooth k = 0: back face to tip, 14 * 8"
+  faces:
+    - name: bottom
+      plane: z
+      at: 0
+      normal: "-"
+      mode: one
+    - name: top
+      plane: z
+      at: 8
+      normal: "+"
+      area: 2371.3952
+      area_tolerance_rel: 0.002
+      center: [0, -5.933106]
+      mode: one
+    - name: back
+      plane: y
+      at: -12
+      normal: "-"
+      area: 1600
+      area_tolerance_rel: 0.002
+      center: [0, 4]
+      mode: one
+    - name: endNeg
+      plane: x
+      at: -100
+      normal: "-"
+      area: 76
+      area_tolerance_rel: 0.005
+      center: [-7.25, 4]
+      mode: one
+    - name: endPos
+      plane: x
+      at: 100
+      normal: "+"
+      area: 76
+      area_tolerance_rel: 0.005
+      center: [-7.25, 4]
+      mode: one
+    - name: tips
+      plane: y
+      at: 2
+      normal: "+"
+      area: 418.7422
+      area_tolerance_rel: 0.005
+      mode: sum
+    - name: tipK0
+      plane: y
+      at: 2
+      normal: "+"
+      area: 13.085694
+      area_tolerance_rel: 0.01
+      center: [3.141593, 4]
+      mode: one
+    - name: rootLands
+      plane: y
+      at: -2.5
+      normal: "+"
+      area: 342.6704
+      area_tolerance_rel: 0.005
+      mode: sum
+    - name: spaceRoot
+      plane: y
+      at: -2.5
+      normal: "+"
+      area: 10.973932
+      area_tolerance_rel: 0.01
+      center: [0, 4]
+      mode: one
+  planes:
+    - name: spaceFlankNeg
+      point: [-1.595796, 0, 4]
+      normal: [0.939693, 0.34202, 0]
+      tolerance: 0.02
+      angle_tolerance_deg: 0.2
+      description: "flank of tooth k = -1 bounding the origin space on its -x side (faces +x, +y)"
+    - name: spaceFlankPos
+      point: [1.595796, 0, 4]
+      normal: [-0.939693, 0.34202, 0]
+      tolerance: 0.02
+      angle_tolerance_deg: 0.2
+      description: "flank of tooth k = 0 bounding the origin space on its +x side (faces -x, +y)"
+    - name: endFlankNeg
+      point: [-98.935169, 0, 4]
+      normal: [-0.939693, 0.34202, 0]
+      area: 38.3104
+      area_tolerance_rel: 0.01
+      tolerance: 0.02
+      angle_tolerance_deg: 0.2
+      description: "outer flank of tooth k = -16; its position proves the pitch accumulated over 15.5 p"
+    - name: endFlankPos
+      point: [98.935169, 0, 4]
+      normal: [0.939693, 0.34202, 0]
+      area: 38.3104
+      area_tolerance_rel: 0.01
+      tolerance: 0.02
+      angle_tolerance_deg: 0.2
+      description: "outer flank of tooth k = 15; its position proves the pitch accumulated over 15.5 p"
+  dimensions:
+    - name: lengthX
+      axis: x
+      expected: 200
+      tolerance: 0.05
+      description: "bbox length along the pitch line"
+    - name: depthY
+      axis: y
+      expected: 14
+      tolerance: 0.05
+      description: "bbox depth: back face y = -12 to tip line y = 2"
+    - name: thicknessZ
+      axis: z
+      expected: 8
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "rack thickness"
+    - name: bodyDepthY
+      axis: y
+      expected: 9.5
+      tolerance: 0.05
+      between: [back, spaceRoot]
+      description: "bar depth below the root line"
+    - name: wholeDepth
+      axis: y
+      expected: 4.5
+      tolerance: 0.05
+      between: [spaceRoot, tipK0]
+      description: "tooth whole depth, addendum + dedendum"
+  solids:
+    - name: rack
+      contains_point: [0, -7.25, 4]
+      description: "the single rack solid"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[0, -7.25, 4], [3.141593, 0, 4], [-3.141593, 0, 4], [97.389372, 0, 4], [-97.389372, 0, 4]]
+    - name: toothSpaces
+      state: void
+      points: [[0, 0, 4], [6.283185, 0, 4], [-6.283185, 0, 4], [94.24778, 0, 4], [-94.24778, 0, 4]]
+  symmetry:
+    - name: mirrorX
+      plane: x
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 18500
+    volume_max: 22500
+
+references:
+  - path: sources/rack-pinion-spec.md
+    kind: text
+    role: authoritative
+    sha256: 87f6a8bbc15c559e23899017105cd36ee8b503a6238b00213d3b99103d903561
+    units: mm
+    revision: "unversioned (file dated 2026-09-25)"
+    note: "rack-pinion assembly specification; the rack rows, Part frames and Rest configuration paragraphs"
+
+open_questions:
+  - "Material, density and process are not stated; no mass or process claim is made."
+  - "No tip, root or end-edge fillets or chamfers are stated; the rack is drafted with sharp straight-flank corners and square ends."
+  - "The body ends at x = +-100 leave only a 0.154906 mm root land beyond the outermost tooth roots (x = +-99.845094); the spec states no end treatment, so the full outermost teeth are kept."
+  - "Back face 12 below the pitch line and 9.5 below the root line are both stated and agree; bodyDepth is kept independent, so a dedendum edit would move the back face (backOffset = dedendum + bodyDepth)."
+  - "Assembly-level, not this part: one pinion revolution moves the rack 2 pi * 20 = 125.66 mm along +x, but a centred 200 mm rack only offers about 99.8 mm of toothed length on each side of the pinion, so the pinion would leave the teeth near 286 deg; the assembly should confirm the stroke (e.g. -180..180 deg) or accept disengagement."

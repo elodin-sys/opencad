@@ -1,0 +1,82 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching
+Title: Sketching
+
+# Sketching
+
+Sketch-based workflows in Zoo Design Studio.
+
+Sketching is the starting point for most parametric part-modeling workflows in Zoo Design Studio. Use
+it to create profile geometry, add construction references, apply geometric constraints and driving
+dimensions, and prepare closed regions for downstream 3D features.
+
+## Video Walkthrough
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/Xmoc6A0pWoo"
+            title="Sketch Basics in Zoo Design Studio"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>
+
+## Sketch on a Plane
+
+Start a sketch from a base plane when you want the profile to be aligned to a standard datum. Choose
+the plane first, then place geometry in the sketch workspace.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/index/start-sketch-on-plane.gif"
+  alt="Starting a sketch on a plane in Zoo Design Studio"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Start a sketch from a plane, then add editable sketch geometry
+</div>
+
+## Sketch on a Face
+
+Sketch on an existing face when the next feature should be attached to a body. This keeps the new
+profile associated with the selected face so downstream features can use it directly.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/index/sketch-on-face.gif"
+  alt="Starting a sketch on an existing solid face"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Select a face to open the sketch directly on that surface
+</div>
+
+This section covers the core parts of the sketch workflow: basic
+[Sketch Geometry](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry),
+[Construction Geometry](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/construction-geometry),
+[Tools](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/tools),
+[Constraints](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints)
+for geometric relationships,
+[Dimensions](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions)
+for measured values such as
+[Distance](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/distance),
+[Angle](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/angle),
+[Radius](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/radius),
+and [Diameter](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/diameter),
+[Snaps](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/snaps),
+[Tool Picker](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/tool-picker),
+and [Regions](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/regions).
+
+As the sketch updates, Zoo Design Studio recalculates closed loops, constrained relationships, and
+region boundaries so downstream features can regenerate from the revised profile.

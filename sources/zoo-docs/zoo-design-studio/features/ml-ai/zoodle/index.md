@@ -1,0 +1,48 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/ml-ai/zoodle
+Title: Zoodle
+
+# Zoodle
+
+Mark up the model viewport and attach visual edit guidance to a Zookeeper prompt.
+
+Zoodle is the visual handoff between the model viewport and Zookeeper. It captures the current view,
+lets you draw on top of it, and attaches that markup to your prompt so Zookeeper can understand the
+geometry you mean.
+
+Use Zoodle when text alone would be too vague: a target face, an edge direction, a hole pattern, a
+cutout location, or an annotation that belongs to a specific feature.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/ml-ai/zoodle/zoodle.webp"
+  alt="Using Zoodle to draw viewport guidance and attach it to a Zookeeper prompt"
+  aspect="1222 / 1056"
+  maxHeightPx={520}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Capture the viewport, mark the target, then pair the image with a prompt
+</div>
+
+## Choose a workflow
+
+You can use Zoodle for many kinds of visual CAD guidance. These examples cover a few common starting
+points:
+
+- [Create new parts](/docs/zoo-design-studio/features/ml-ai/zoodle/create-new-parts): mark up a
+  reference sketch or viewport and ask Zookeeper to generate editable CAD.
+- [Edit parts](/docs/zoo-design-studio/features/ml-ai/zoodle/edit-parts): mark an existing model and
+  ask Zookeeper to add, move, cut, or resize geometry.
+- [Add annotations](/docs/zoo-design-studio/features/ml-ai/zoodle/add-annotations): point to the
+  feature that needs model-based definition annotations and describe the GD&T requirement.
+
+## How it works
+
+Zoodle sends Zookeeper two pieces of context:
+
+- The captured viewport, including any markup you draw on top of it.
+- The text prompt you send with the image.
+
+The image tells Zookeeper where to look. The prompt tells it what to do. After Zookeeper responds,
+verify the generated geometry, updated KCL, and editable parameters before continuing.
+
+For the broader assistant workflow, see [Zookeeper](/docs/zoo-design-studio/zookeeper) and
+[AI Chat](/docs/zoo-design-studio/features/workspace/ai-chat).

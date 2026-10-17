@@ -1,0 +1,117 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/workspace/top-bar
+Title: Top Bar
+
+# Top Bar
+
+The main application bar at the top of Zoo Design Studio.
+
+The Top Bar is the always-visible bar at the top of Zoo Design Studio while you are working in a
+project. It gives you quick access to project navigation, undo and redo controls, the Command Bar,
+publishing, and account actions.
+
+## Left to Right Layout
+
+### Project Area
+
+It contains:
+
+- The Zoo logo, which returns to Home
+- A project dropdown menu when the menu is enabled
+- The current project and file breadcrumb in the dropdown trigger
+- The project name as static text when the dropdown is not enabled
+
+The project dropdown can include:
+
+- `Project settings`, with its keyboard shortcut
+- `Reveal in file explorer`, on desktop
+- `Add file to project`, with its keyboard shortcut
+- `Export current part`, with its keyboard shortcut
+- `Make current part`, on desktop
+- `Go to Home`, on desktop and in the browser
+- `New Window`, on desktop when you want a separate workspace
+
+`Export current part` and `Make current part` can show `Awaiting engine connection` when the
+relevant command is not available.
+
+### Undo, Redo, and Reload
+
+They contain:
+
+- `Undo`, which reverts the last modeling or editing action
+- `Redo`, which reapplies the last undone action
+- `Reload`, which refreshes the app or current project state for troubleshooting
+
+### Command Bar
+
+The Command Bar button opens the Command Bar for fast search and execution of commands.
+
+It shows the command shortcut in the button, such as `Cmd+K` on macOS or `Ctrl+K` on Windows and
+Linux.
+
+### Publish Button
+
+The `Publish` button opens the Aquarium submission form for the current project. Add a title,
+description, and at least one category, then select `Submit for review`. Zoo Design Studio uploads
+eligible files from the entire project folder, including subfolders. Files ignored by `.gitignore`,
+version-control metadata, internal metadata, and the generated thumbnail are excluded.
+
+If the project is in a Directory library on desktop, the dialog also discloses that a successful
+submission moves the project into Personal Cloud and starts cloud sync. The Aquarium title is
+currently also used as the project title, so it can rename the project and its desktop working-copy
+folder.
+
+You must be signed in and have a Zoo username before publishing. The button is disabled when the
+current KCL file is empty or contains errors. Existing submissions can be edited and sent again with
+`Update submission`.
+
+See [Aquarium](/docs/zoo-design-studio/features/data-management/aquarium) for the complete publishing
+and review workflow.
+
+### Project Share Links
+
+Zoo Design Studio does not currently create direct project share links. To share a project publicly,
+publish it to Aquarium and use its public Aquarium URL after approval. Aquarium publishing is
+public and does not replace private or organization-restricted sharing.
+
+### User Menu
+
+The right side of the Top Bar is the user menu, opened from the user avatar.
+
+It contains:
+
+- The user name and email at the top
+- `Manage Zoo account`
+- `User settings`, with its keyboard shortcut
+- `Keyboard shortcuts`
+- `Request a feature`
+- `Report a bug`
+- `Ask the community`
+- `Release notes`
+- `Check for updates`, on desktop
+- `Sign out`
+- `Sign out of all environments`, on desktop when multiple environments are active
+
+The menu uses dividers between logical groups of actions.
+
+## Visual Order
+
+The Top Bar typically appears in this order:
+
+1. Project area
+2. Undo, redo, and reload
+3. Command Bar
+4. Publish
+5. User menu
+
+## Platform and Layout Notes
+
+- The exact arrangement changes slightly with screen size and platform
+- The Publish button is hidden in smaller layouts
+- Desktop-only actions such as `Make current part`, `New Window`, and `Check for updates` are not shown in
+  the web version
+
+## What This Page Does Not Cover
+
+This page covers the application bar and session controls, not the full set of modeling
+operations. For modeling features such as `Extrude`, `Revolve`, `Loft`, and `Sweep`, see the
+[3D Design](/docs/zoo-design-studio/features/3d-design) section.

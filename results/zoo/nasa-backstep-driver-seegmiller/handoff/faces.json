@@ -1,0 +1,271 @@
+{
+  "named_faces": {
+    "inlet": {
+      "plane": "x",
+      "at": -1333.5,
+      "normal": "-",
+      "found": 1,
+      "area": 15483.839999999998,
+      "ok": true,
+      "area_expected": 15483.84,
+      "area_ok": true,
+      "center_expected": [
+        76.2,
+        63.5
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        76.2,
+        63.5
+      ]
+    },
+    "outlet": {
+      "plane": "x",
+      "at": 635.0,
+      "normal": "+",
+      "found": 1,
+      "area": 17419.32,
+      "ok": true,
+      "area_expected": 17419.32,
+      "area_ok": true,
+      "center_expected": [
+        76.2,
+        57.15
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        76.2,
+        57.15
+      ]
+    },
+    "roof": {
+      "plane": "z",
+      "at": 114.3,
+      "normal": "+",
+      "found": 1,
+      "area": 299999.4,
+      "ok": true,
+      "area_expected": 299999.4,
+      "area_ok": true,
+      "center_expected": [
+        -349.25,
+        76.2
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        -349.25,
+        76.2
+      ]
+    },
+    "upstreamFloor": {
+      "plane": "z",
+      "at": 12.7,
+      "normal": "-",
+      "found": 1,
+      "area": 203225.4,
+      "ok": true,
+      "area_expected": 203225.4,
+      "area_ok": true,
+      "center_expected": [
+        -666.75,
+        76.2
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        -666.75,
+        76.2
+      ]
+    },
+    "stepFace": {
+      "plane": "x",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 1935.4799999999998,
+      "ok": true,
+      "area_expected": 1935.48,
+      "area_ok": true,
+      "center_expected": [
+        76.2,
+        6.35
+      ],
+      "center_error": 8.881784197001252e-16,
+      "centroid_uv": [
+        76.2,
+        6.3500000000000005
+      ]
+    },
+    "downstreamFloor": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 96773.99999999999,
+      "ok": true,
+      "area_expected": 96774.0,
+      "area_ok": true,
+      "center_expected": [
+        317.5,
+        76.2
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        317.5,
+        76.2
+      ]
+    },
+    "sideWallY0": {
+      "plane": "y",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 208064.09999999998,
+      "ok": true,
+      "area_expected": 208064.1,
+      "area_ok": true,
+      "center_expected": [
+        -323.406976744186,
+        61.2848837209302
+      ],
+      "center_error": 1.1718571004216928e-13,
+      "centroid_uv": [
+        -323.4069767441861,
+        61.28488372093023
+      ]
+    },
+    "sideWallYMax": {
+      "plane": "y",
+      "at": 152.4,
+      "normal": "+",
+      "found": 1,
+      "area": 208064.09999999998,
+      "ok": true,
+      "area_expected": 208064.1,
+      "area_ok": true,
+      "center_expected": [
+        -323.406976744186,
+        61.2848837209302
+      ],
+      "center_error": 1.1718571004216928e-13,
+      "centroid_uv": [
+        -323.4069767441861,
+        61.28488372093023
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "inlet",
+      "plane": "x",
+      "at": -1333.5,
+      "normal": "-",
+      "area": 15483.84,
+      "area_tolerance_rel": 0.002,
+      "tolerance": 0.05,
+      "center": [
+        76.2,
+        63.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "outlet",
+      "plane": "x",
+      "at": 635.0,
+      "normal": "+",
+      "area": 17419.32,
+      "area_tolerance_rel": 0.002,
+      "tolerance": 0.05,
+      "center": [
+        76.2,
+        57.15
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "roof",
+      "plane": "z",
+      "at": 114.3,
+      "normal": "+",
+      "area": 299999.4,
+      "area_tolerance_rel": 0.002,
+      "tolerance": 0.05,
+      "center": [
+        -349.25,
+        76.2
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "upstreamFloor",
+      "plane": "z",
+      "at": 12.7,
+      "normal": "-",
+      "area": 203225.4,
+      "area_tolerance_rel": 0.002,
+      "tolerance": 0.05,
+      "center": [
+        -666.75,
+        76.2
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "stepFace",
+      "plane": "x",
+      "at": 0.0,
+      "normal": "-",
+      "area": 1935.48,
+      "area_tolerance_rel": 0.002,
+      "tolerance": 0.05,
+      "center": [
+        76.2,
+        6.35
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "downstreamFloor",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": 96774.0,
+      "area_tolerance_rel": 0.002,
+      "tolerance": 0.05,
+      "center": [
+        317.5,
+        76.2
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "sideWallY0",
+      "plane": "y",
+      "at": 0.0,
+      "normal": "-",
+      "area": 208064.1,
+      "area_tolerance_rel": 0.002,
+      "tolerance": 0.05,
+      "center": [
+        -323.406976744186,
+        61.2848837209302
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "sideWallYMax",
+      "plane": "y",
+      "at": 152.4,
+      "normal": "+",
+      "area": 208064.1,
+      "area_tolerance_rel": 0.002,
+      "tolerance": 0.05,
+      "center": [
+        -323.406976744186,
+        61.2848837209302
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 8
+}

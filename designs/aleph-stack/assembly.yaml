@@ -1,0 +1,202 @@
+schema_version: 1
+kind: assembly
+name: aleph-stack
+intent: >-
+  Light reference model of the Aleph compute stack in sources/assembled.png, for designing enclosures and mounting
+  points: the Aleph base board at the bottom, the Aleph carrier board 10 mm above it on four M2.5 standoffs, the NVIDIA
+  Jetson Orin Nano module seated in the carrier's SO-DIMM connector, and NVIDIA's heatsink-and-fan block on the module.
+  Each body is simplified to its outline, thickness, every mounting hole and the envelopes of the parts that set its outer
+  extents. base.step, carrier.step (KiCad exports) and orin-nano-module.stp (NVIDIA) are authoritative and measured with
+  OpenCascade; the heatsink-and-fan has no CAD and is estimated from the photos. No motion, fluids or simulations.
+units: {length: mm, angle: deg}
+frame:
+  origin: min-x/min-y bounding corner of the base board outline (its R3 corners rounded away), on the base board bottom face
+  axes: {x: along the 88.0 base board edge (base.step +x), y: along the 52.5 base board edge (base.step +y), z: "normal to the boards, toward the carrier, module and heatsink"}
+  datums:
+    - {name: A, description: base board bottom face z = 0}
+    - {name: B, description: "base board corner mounting hole (3.0, 3.0), the stack's common hole axis"}
+    - {name: C, description: "base board outline edges x = 0 and y = 0 (the carrier outline is coincident in x and y)"}
+envelope: {min: [0.0, -2.5, -1.97], max: [89.31, 52.5, 38.52], tolerance: 0.3}
+datum_part: base
+parts:
+  - name: base
+    kind: modelled
+    design: aleph-stack-base
+    intent: >-
+      Aleph base board (sn0003), measured from sources/base.step with OpenCascade (build123d import_step; base.step
+      coordinates minus (39.501, -91.254, 0)). Own frame = the assembly frame: origin at the outline's min-x/min-y bounding
+      corner on the bottom face, x along the 88.0 edge, z toward the component (top) side. PCB 88.0 x 52.5 x 1.56
+      (z = 0..1.56), four R3.0 outline corners. Four through mounting holes D2.9 (M2.5 clearance) at (3.0, 3.0), (85.0, 3.0),
+      (85.0, 49.5), (3.0, 49.5): an 82.0 x 46.5 pattern, 3.0 from every edge. Top-side envelopes (z from 1.56 up):
+      Samtec ERM5-050-05.0 board-to-board terminal x 6.53..11.48, y 11.10..42.90 to z = 6.50 (its real top is 10.54; the
+      upper 4.04 sits inside the carrier's ERF5 socket and is left out so the mated pair does not overlap); Hirose ix
+      industrial Ethernet IX60G-A-10P x 17.60..28.40, y -2.50..9.90 to z = 7.33 (overhangs the y = 0 edge by 2.50); Molex
+      105430-1202 x 77.58..89.31, y 6.65..15.39 to z = 8.63 (overhangs the x = 88 edge by 1.31); USB-C GCT USB4105
+      x 66.24..75.18, y 0.02..7.73 to z = 4.94 and x 80.29..88.00, y 36.43..45.37 to z = 4.94; JST GH header rows
+      x 31.73..64.15, y 0.37..5.25 and x 8.08..73.33, y 47.29..52.14, both to z = 5.98. Bottom-side envelopes (z down from
+      0): Molex 503398-1892 microSD socket x 49.81..63.47, y 38.07..52.40 to z = -1.35, and the deepest bottom part
+      (3216 capacitor) x 15.10..16.70, y 14.30..17.50 to z = -1.97. Every other component (all below 6 mm tall) is omitted.
+      Interfaces: the top face z = 1.56 carries the four standoffs on the hole axes.
+    material: FR4
+    description: Aleph base board, simplified
+  - name: carrier
+    kind: modelled
+    design: aleph-stack-carrier
+    intent: >-
+      Aleph carrier board (sn0002), measured from sources/carrier.step with OpenCascade (carrier.step coordinates minus
+      (34.501, -76.254, 0)). Own frame: origin at the outline's min-x/min-y bounding corner on the bottom face, x along the
+      88.0 edge, z toward the module side. PCB 88.0 x 52.5 x 1.57 (z = 0..1.57), four R3.0 corners, the same outline and
+      hole pattern as the base board. Four through mounting holes D2.9 at (3.0, 3.0), (85.0, 3.0), (85.0, 49.5),
+      (3.0, 49.5). Module seat: two Wurth 9774065151 SMT spacers (M2.5 internal thread) as cylinders D5.1 on D3.7 holes at
+      (12.2, 4.0) and (75.8, 4.0) (63.6 apart), from z = 1.57 up to z = 8.13; their top faces are the module seat.
+      TE 2309413-1 260-pin SO-DIMM connector to z = 10.86: housing x 5.95..82.05, y 46.00..51.00 and two latch envelopes
+      x 5.95..9.10 and x 78.90..82.05, y 25.15..46.00 (the module fills x 9.2..78.8, y 1.0..46.0 between them). Top-side edge
+      envelopes: Wurth 632723300011 USB-C x 77.14..88.96, y 7.97..16.71 to z = 4.68 (overhangs x = 88 by 0.96); Molex
+      53398-0471 header x 0.88..5.78, y 6.70..17.65 to z = 6.36; Hirose FH55-22S FFC connector x 83.20..87.45,
+      y 17.72..32.12 to z = 3.09. Bottom-side envelopes (z down from 0): Samtec ERF5-050-05.0 board-to-board socket
+      x 6.00..12.00, y 11.10..42.90 to z = -5.06 (aligned with the base's ERM5 terminal); Wurth 632723300011 USB-C
+      x 42.16..50.90, y -0.98..10.85 to z = -3.11 (overhangs y = 0 by 0.98); GCT USB4105 USB-C x 62.31..71.25, y 0.27..7.98
+      to z = -3.37; power inductors x 21.51..26.81, y 5.43..10.93 and x 22.45..27.75, y 24.63..30.13 to z = -2.99. Every
+      other component is omitted (the two M.2 2230 slots under the module stay below z = 5.83).
+    material: FR4
+    description: Aleph carrier board, simplified
+  - name: module
+    kind: modelled
+    design: aleph-stack-module
+    intent: >-
+      NVIDIA Jetson Orin Nano module, measured from sources/orin-nano-module.stp with OpenCascade (file coordinates plus
+      (2.0, 6.0, 0)). Own frame: origin at the outline's min-x/min-y bounding corner on the PCB bottom face, x along the
+      69.6 edge, y from the gold-finger edge (y = 0) toward the mounting-hole edge (y = 45.0), z toward the SoC side. PCB
+      69.6 x 45.0 x 1.2 (z = 0..1.2), R0.6 outline corners. Edge key notch 1.0 wide centred at x = 38.3, from y = 0 to 3.5 with
+      an R0.5 end and R0.25 entry corners; a side notch 1.75 deep at y = 18.0..22.0 on each short edge (x = 0 and x = 69.6)
+      with R0.65 inner corners. Through holes: four D3.2 heatsink holes at (13.2, 10.41), (56.4, 10.41), (13.2, 39.21),
+      (56.4, 39.21) (43.2 x 28.8 pattern centred at (34.8, 24.81)); two D2.75 mounting holes at (3.0, 42.0) and (66.6, 42.0);
+      two D1.8 holes at (2.0, 6.0) and (67.6, 6.0). SoC lid block x 23.7..45.9, y 14.7..34.9, z = 1.2..3.83; its top face
+      z = 3.83 is the heatsink seat. The file's keep-out shells (top-side parts to z = 6.28 under the heatsink, bottom-side
+      parts to z = -1.4) are not modelled. Interfaces: bottom face on the carrier spacers at the D2.75 holes, gold-finger
+      edge y = 0 in the carrier's SO-DIMM connector, SoC top z = 3.83 under the heatsink.
+    material: FR4
+    description: Jetson Orin Nano module (Orin NX/Nano 260-pin SO-DIMM form factor), simplified
+  - name: heatsink
+    kind: modelled
+    design: aleph-stack-heatsink
+    intent: >-
+      NVIDIA Jetson Orin Nano heatsink-and-fan block, estimated from sources/orin-fan.jpg, orin-fan-2.jpg,
+      orin-fan-brackets.webp, orin-fan-profile.png and assembled.png (no CAD; every size is a photo estimate). Own frame:
+      origin at the centre of its four screw holes on the underside contact face, x along the long side (parallel to the
+      module x), z up toward the fan. Envelope block 61.0 (x) x 40.0 (y) x 15.0 (z = 0..15.0), centred on the origin in x and
+      y. Four blind screw holes D2.5 x 5.0 deep up from the underside at (+-21.6, +-14.4), matching the module's D3.2
+      heatsink holes. Fan intake: a D38.5 x 1.0 deep circular recess centred on the top face (marks where the fan draws air).
+      Fin exhaust through both x-end faces and the fan cable exit at the -x end near y = +16.5 are not modelled. The
+      underside z = 0 is the contact face on the module's SoC lid.
+    material: aluminium
+    description: heatsink with 40 mm-class fan, simplified to an envelope block
+  - name: standoff1
+    kind: purchased
+    catalog: {name: standoff, kind: cylinder, point: [0.0, 0.0, 0.0], direction: [0.0, 0.0, 1.0], radius: 2.5, length: 10.0}
+    material: steel
+    description: M2.5 x 10 round female-female standoff between the boards, own frame axis +z from its bottom face
+  - name: standoff2
+    kind: purchased
+    catalog: {name: standoff, kind: cylinder, point: [0.0, 0.0, 0.0], direction: [0.0, 0.0, 1.0], radius: 2.5, length: 10.0}
+    material: steel
+    description: M2.5 x 10 standoff
+  - name: standoff3
+    kind: purchased
+    catalog: {name: standoff, kind: cylinder, point: [0.0, 0.0, 0.0], direction: [0.0, 0.0, 1.0], radius: 2.5, length: 10.0}
+    material: steel
+    description: M2.5 x 10 standoff
+  - name: standoff4
+    kind: purchased
+    catalog: {name: standoff, kind: cylinder, point: [0.0, 0.0, 0.0], direction: [0.0, 0.0, 1.0], radius: 2.5, length: 10.0}
+    material: steel
+    description: M2.5 x 10 standoff
+parameters:
+  - {name: baseBoardThickness, value: 1.56, unit: mm, provenance: measured (reference model), tolerance: 0.02, source: sources/base.step, description: "PCB solid sn0003_PCB z extent (OpenCascade bounding box)"}
+  - {name: carrierBoardThickness, value: 1.57, unit: mm, provenance: measured (reference model), tolerance: 0.02, source: sources/carrier.step, description: "PCB solid sn0002_PCB top face z = 1.572"}
+  - {name: boardStackHeight, value: 10.0, unit: mm, provenance: derived, tolerance: 0.1, source: sources/base.step, formula: "Samtec ERM5 lead style 05.0 + ERF5 lead style 05.0", rationale: "mated stack height of the base's ERM5-050-05.0 and the carrier's ERF5-050-05.0; the models then engage 4.04 mm (ERM5 top 8.98 above the base top, ERF5 bottom 5.06 below the carrier)", description: "base board top face to carrier board bottom face, the standoff length"}
+  - {name: carrierZ, value: 11.56, unit: mm, provenance: derived, tolerance: 0.1, formula: "baseBoardThickness + boardStackHeight", description: carrier bottom face in the assembly frame}
+  - {name: moduleSeatHeight, value: 6.56, unit: mm, provenance: measured (reference model), tolerance: 0.05, source: sources/carrier.step, description: "Wurth 9774065151 spacer top (z = 8.13) above the carrier top face (z = 1.57)"}
+  - {name: moduleBoardThickness, value: 1.2, unit: mm, provenance: measured (reference model), tolerance: 0.02, source: sources/orin-nano-module.stp, description: module PCB z extent}
+  - {name: socLidHeight, value: 2.63, unit: mm, provenance: measured (reference model), tolerance: 0.02, source: sources/orin-nano-module.stp, description: SoC lid top (z = 3.83) above the module top face}
+  - {name: heatsinkLength, value: 61.0, unit: mm, provenance: inferred, tolerance: 2.0, source: sources/orin-fan.jpg, rationale: "414 of 460 px across the 69.6 module outline in the front photo, less about 3 % perspective growth of the nearer fan face"}
+  - {name: heatsinkWidth, value: 40.0, unit: mm, provenance: inferred, tolerance: 2.0, source: sources/orin-fan.jpg, rationale: "274 of 302 px across the 45.0 module outline, less about 3 % perspective; centred on the heatsink hole pattern within 0.5"}
+  - {name: heatsinkHeight, value: 15.0, unit: mm, provenance: inferred, tolerance: 3.0, source: sources/assembled.png, rationale: "side face about 17 mm from the module surface to the fan face in the stack photo (scaled by the heatsink length, corrected for about 40 deg camera elevation), less the 2.63 SoC lid"}
+  - {name: fanIntakeDiameter, value: 38.5, unit: mm, provenance: inferred, tolerance: 1.5, source: sources/orin-fan.jpg, rationale: "262 px fan opening on the 460 px module scale, less about 3 % perspective"}
+  - {name: standoffDiameter, value: 5.0, unit: mm, provenance: inferred, tolerance: 1.0, source: sources/assembled.png, rationale: "round metal M2.5 standoffs; the boards' D6.0 pads around the D2.9 holes bound the seat; common M2.5 round standoff size"}
+joints:
+  - name: carrierMount
+    kind: rigid
+    parent: standoff1
+    child: carrier
+    parent_frame: {origin: [0.0, 0.0, 10.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [3.0, 3.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: "carrier bottom face on standoff1's top face, its (3.0, 3.0) hole on the standoff axis, so the carrier sits at base (0, 0, 11.56) with outline and holes coaxial with the base's; the ERM5/ERF5 pair lines up at board (9.0, 27.0)"
+  - name: moduleMount
+    kind: rigid
+    parent: carrier
+    child: module
+    parent_frame: {origin: [75.8, 4.0, 8.13], axis: [0.0, 0.0, 1.0], ref: [-1.0, 0.0, 0.0]}
+    child_frame: {origin: [3.0, 42.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: "module turned 180 deg about z: its D2.75 hole (3.0, 42.0) on the spacer at carrier (75.8, 4.0), (66.6, 42.0) on (12.2, 4.0), gold-finger edge at carrier y = 46.0"
+  - name: heatsinkMount
+    kind: rigid
+    parent: module
+    child: heatsink
+    parent_frame: {origin: [34.8, 24.81, 3.83], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: heatsink underside on the SoC lid, its screw holes on the module's D3.2 heatsink holes
+  - name: standoff1Mount
+    kind: rigid
+    parent: base
+    child: standoff1
+    parent_frame: {origin: [3.0, 3.0, 1.56], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+  - name: standoff2Mount
+    kind: rigid
+    parent: base
+    child: standoff2
+    parent_frame: {origin: [85.0, 3.0, 1.56], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+  - name: standoff3Mount
+    kind: rigid
+    parent: base
+    child: standoff3
+    parent_frame: {origin: [85.0, 49.5, 1.56], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+  - name: standoff4Mount
+    kind: rigid
+    parent: base
+    child: standoff4
+    parent_frame: {origin: [3.0, 49.5, 1.56], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+acceptance:
+  bbox_tolerance: 0.3
+  solid_count: 8
+  clearances:
+    - {name: boardsClear, a: base, b: carrier, min_gap: 0.0, description: "the ERM5 envelope stops at the ERF5 socket face (z = 6.50, touching); other facing parts are at least 1.2 apart"}
+    - {name: carrierOnStandoff1, a: carrier, b: standoff1, min_gap: 0.0, max_gap: 0.05}
+    - {name: carrierOnStandoff3, a: carrier, b: standoff3, min_gap: 0.0, max_gap: 0.05}
+    - {name: standoffOnBase, a: standoff2, b: base, min_gap: 0.0, max_gap: 0.05}
+    - {name: moduleSeated, a: module, b: carrier, min_gap: 0.0, max_gap: 0.05, description: module bottom face on the two spacer tops}
+    - {name: heatsinkOnSoc, a: heatsink, b: module, min_gap: 0.0, max_gap: 0.05, description: heatsink underside on the SoC lid}
+    - {name: heatsinkClearOfCarrier, a: heatsink, b: carrier, min_gap: 0.5, description: "heatsink underside z = 23.52 over the SO-DIMM connector top z = 22.42"}
+references:
+  - {path: sources/base.step, kind: cad, role: authoritative, sha256: 9534efa45978b0f78d5785622b13e56e8d8b19791f9f8c326e888c79c6fcafaa, units: mm, revision: sn0003, note: "Aleph base board KiCad board-assembly export, every component included"}
+  - {path: sources/carrier.step, kind: cad, role: authoritative, sha256: 722359a37582ddd48f6408bcd018eca6d3010b33d1c6658e20d6371c3a48916e, units: mm, revision: sn0002, note: "Aleph carrier board KiCad board-assembly export, every component included"}
+  - {path: sources/orin-nano-module.stp, kind: cad, role: authoritative, sha256: cfb7faafc64cfbc85fbfadcb932e971cb452b4c38573e4f0db4a2a7e0d2ff7dc, units: mm, note: "NVIDIA Jetson Orin NX/Nano module (Creo export GROGU_BOARD_MEMORY)"}
+  - {path: sources/README.txt, kind: text, role: authoritative, sha256: cee986a2965a7ae13b06508882b4537560c3e2b40b773ace0f48d36eb3b19ea6, note: module model DRAM height matches the tallest device over the modules' life}
+  - {path: sources/assembled.png, kind: image, role: illustrative, sha256: a3e377d0b30e3f399e399a2d6872dfecc8daf164b8b26437fc00b73fb34b3e6d, note: photo of the assembled stack}
+  - {path: sources/orin-fan.jpg, kind: image, role: illustrative, sha256: a8626d6bbfb0cfc80af74c42f1ce5c157d233e610eaf5075a00487d0f749c0bf, note: "module with heatsink-and-fan, front view; heatsink footprint and fan size scale"}
+  - {path: sources/orin-fan-2.jpg, kind: image, role: illustrative, sha256: 8ea2e7804e2ced44436a1d25c80800069f3e840bde2dc6ae296bc82ffce2fc24, note: heatsink-and-fan alone}
+  - {path: sources/orin-fan-brackets.webp, kind: image, role: illustrative, sha256: 28ce624d58d2c497a82f0c5f50d4f8c904e63c5dada1cf06fe373a97ad1f7745, note: heatsink with its X spring bracket and four shoulder screws}
+  - {path: sources/orin-fan-profile.avif, kind: image, role: illustrative, sha256: 2247285bf72f81d879b33d0d5cd570c6258e74219b4c33e569cb7db5151a6b0d, note: original of orin-fan-profile.png (not readable by image readers)}
+  - {path: sources/orin-fan-profile.png, kind: image, role: illustrative, sha256: f29b908bedca8250bb2790f1cbeac16fdd15329135b1adbf5dcb185c7d19641f, note: "module with heatsink-and-fan, perspective"}
+open_questions:
+  - "Heatsink-and-fan size has no CAD: 61.0 x 40.0 x 15.0 (above the SoC lid) and the D38.5 fan intake are photo estimates (+-2, +-2, +-3, +-1.5). Its top (z = 38.52) is the stack's top, so a caliper measurement or NVIDIA's thermal-solution drawing should replace them."
+  - "Heatsink screw thread and depth (modelled D2.5 x 5 blind) and the X spring bracket under the module are not measured; the bracket and the four shoulder screws are not modelled."
+  - "Board stack height 10.0 comes from the Samtec ERM5/ERF5 05.0 + 05.0 lead styles, not from a standoff drawing; confirm the standoff length and diameter (modelled D5.0 round, photo estimate)."
+  - "The four knurled thumbscrews on the carrier's corner holes and the feet under the base board (visible in assembled.png) have no source dimensions and are not modelled; they add height above the carrier corners and set the lowest point of the stack (now z = -1.97, the deepest base bottom part)."
+  - "The fan cable and its connector (to the carrier's Molex 53398-0471 header, presumably) are flexible and not modelled."
+  - "The module's keep-out shells (top-side parts to 5.08 above its PCB, under the heatsink; bottom-side parts to 1.4 below it) are left out; the heatsink block therefore does not carry the pockets the real heatsink needs over them."
+release_status: reconstruction

@@ -1,0 +1,265 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Left cooling duct: closed channel (top mouth → trunk → two nozzle branches)
+// plus the left nozzle-end planes. Applied to the datum prism.
+import ductCount, outletsPerDuct, ductWidth, ductDepth, ductWall, wallMinimum, ductMidCenterX, ductMidCenterY, leftInletCenterX, leftInletWidth, inletDepth, inletCenterY, nozzleEndZ, topZ, backY, frontY, halfWidth from "params.kcl"
+
+assert(ductCount, isGreaterThanOrEqual = 1, error = "Need at least one duct route.")
+assert(outletsPerDuct, isGreaterThanOrEqual = 2, error = "Left duct must fork into two outlets.")
+assert(ductWidth, isGreaterThan = 0mm, error = "Duct width must be positive.")
+assert(ductDepth, isGreaterThan = 0mm, error = "Duct depth must be positive.")
+assert(ductWall, isGreaterThan = 0mm, error = "Duct wall must be positive.")
+assert(
+  wallMinimum,
+  isGreaterThan = 0mm,
+  isLessThanOrEqual = ductWall,
+  error = "Minimum wall must be positive and no greater than the nominal wall.",
+)
+assert(leftInletWidth, isGreaterThan = 0mm, error = "Left inlet width must be positive.")
+assert(inletDepth, isGreaterThan = 0mm, error = "Inlet depth must be positive.")
+assert(leftInletCenterX, isLessThan = 0mm, error = "Left inlet must sit on the negative-x side.")
+assert(ductMidCenterX, isGreaterThan = 0mm, error = "Mirrored mid-duct center magnitude must be positive.")
+assert(topZ, isGreaterThan = nozzleEndZ, error = "Top must be above the nozzle end.")
+assert(backY, isGreaterThan = frontY, error = "Back datum must sit behind the front face.")
+assert(halfWidth, isGreaterThan = ductMidCenterX + ductWidth / 2, error = "Left trunk must fit inside the envelope half-width.")
+
+overrun = 0.04mm
+
+// leftInletTurn (acceptance cylinder): concave r 10, axis +X through (y, z) below.
+inletTurnRadius = 10mm
+inletTurnY = -21.953mm
+inletTurnZ = 54.064mm
+inletTurnX0 = -24.736mm
+inletTurnLength = 13.403mm
+
+fn boxTool(xmin: number(Length), xmax: number(Length), ymin: number(Length), ymax: number(Length), zmin: number(Length), zmax: number(Length)) {
+  sk = sketch(on = offsetPlane(XY, offset = zmin)) {
+    south = line(start = [xmin, ymin], end = [xmax, ymin])
+    east = line(start = [xmax, ymin], end = [xmax, ymax])
+    north = line(start = [xmax, ymax], end = [xmin, ymax])
+    west = line(start = [xmin, ymax], end = [xmin, ymin])
+  }
+  hide(sk)
+  return extrude(region(segments = [sk.south, sk.east]), length = zmax - zmin, method = NEW)
+}
+
+fn planeTool(ox: number(Length), oy: number(Length), oz: number(Length), xx: number(_), xy: number(_), xz: number(_), yx: number(_), yy: number(_), yz: number(_), u0: number(Length), u1: number(Length), v0: number(Length), v1: number(Length), depth: number(Length)) {
+  pl = {
+    origin = { x = ox, y = oy, z = oz },
+    xAxis = { x = xx, y = xy, z = xz },
+    yAxis = { x = yx, y = yy, z = yz }
+  }
+  sk = sketch(on = pl) {
+    south = line(start = [u0, v0], end = [u1, v0])
+    east = line(start = [u1, v0], end = [u1, v1])
+    north = line(start = [u1, v1], end = [u0, v1])
+    west = line(start = [u0, v1], end = [u0, v0])
+  }
+  hide(sk)
+  return extrude(region(segments = [sk.south, sk.east]), length = depth, method = NEW)
+}
+
+fn inletMouth() {
+  // Open through the top face; do not overrun past x = -10 toward the roof keep-out.
+  return boxTool(
+    xmin = leftInletCenterX - (leftInletWidth / 2) - overrun,
+    xmax = leftInletCenterX + leftInletWidth / 2,
+    ymin = inletCenterY - (inletDepth / 2),
+    ymax = inletCenterY + inletDepth / 2,
+    zmin = 48mm,
+    zmax = topZ + overrun,
+  )
+}
+
+fn inletTurn() {
+  // Back hemisphere of Ø20 about the documented X-axis. Front semicircle would
+  // break y = frontY; keep θ in the +y half so the duct stays closed.
+  turnPlane = offsetPlane(YZ, offset = inletTurnX0 - overrun)
+  sk = sketch(on = turnPlane) {
+    rim = arc(
+      start = [
+        inletTurnY,
+        inletTurnZ - inletTurnRadius
+      ],
+      end = [
+        inletTurnY,
+        inletTurnZ + inletTurnRadius
+      ],
+      center = [inletTurnY, inletTurnZ],
+    )
+    diam = line(
+      start = [
+        inletTurnY,
+        inletTurnZ + inletTurnRadius
+      ],
+      end = [
+        inletTurnY,
+        inletTurnZ - inletTurnRadius
+      ],
+    )
+  }
+  hide(sk)
+  return extrude(region(segments = [sk.rim, sk.diam]), length = inletTurnLength + 2 * overrun, method = NEW)
+}
+
+fn upperTrunk() {
+  return boxTool(
+    xmin = -ductMidCenterX - (ductWidth / 2) - overrun,
+    xmax = -ductMidCenterX + ductWidth / 2 + overrun,
+    ymin = ductMidCenterY - (ductDepth / 2),
+    ymax = ductMidCenterY + ductDepth / 2,
+    zmin = 42mm,
+    zmax = 57mm,
+  )
+}
+
+fn midTrunk() {
+  return boxTool(
+    xmin = -28mm,
+    xmax = -18mm,
+    ymin = -24mm,
+    ymax = -7mm,
+    zmin = 26mm,
+    zmax = 46mm,
+  )
+}
+
+fn lowerTrunk() {
+  // Stay forward of the rear plate (y > -6 at x -23..-10) and behind leftOutletReturn.
+  return boxTool(
+    xmin = -31mm,
+    xmax = -21mm,
+    ymin = -20mm,
+    ymax = -6.5mm,
+    zmin = 15mm,
+    zmax = 28mm,
+  )
+}
+
+fn forkJunction() {
+  return boxTool(
+    xmin = -28mm,
+    xmax = -24mm,
+    ymin = -26mm,
+    ymax = -6.5mm,
+    zmin = 12mm,
+    zmax = 17mm,
+  )
+}
+
+fn forkCore() {
+  // Overlaps both branches and the junction; stays ≥2 mm behind leftOutletReturn.
+  return boxTool(
+    xmin = -26mm,
+    xmax = -22mm,
+    ymin = -26mm,
+    ymax = -6.5mm,
+    zmin = 7mm,
+    zmax = 15.5mm,
+  )
+}
+
+fn rearBranch() {
+  // Probe (-22, -8, 7.5).
+  return boxTool(
+    xmin = -26mm,
+    xmax = -21mm,
+    ymin = -12mm,
+    ymax = -5.5mm,
+    zmin = 5.2mm,
+    zmax = 12.5mm,
+  )
+}
+
+fn frontBranch() {
+  // Probe (-22, -22, 8).
+  return boxTool(
+    xmin = -26mm,
+    xmax = -21mm,
+    ymin = -26.2mm,
+    ymax = -17.5mm,
+    zmin = 5.5mm,
+    zmax = 12.5mm,
+  )
+}
+
+fn nozzleBottom() {
+  // leftNozzleBottom: n = [-0.2416, 0, -0.9704] through (-27.948, -27.5, 4.853).
+  return planeTool(
+    ox = -27.948mm,
+    oy = -27.5mm,
+    oz = 4.853mm,
+    xx = 0,
+    xy = 1,
+    xz = 0,
+    yx = 0.9704,
+    yy = 0,
+    yz = -0.2416,
+    u0 = -5mm,
+    u1 = 35mm,
+    v0 = -15mm,
+    v1 = 25mm,
+    depth = 18mm,
+  )
+}
+
+fn innerLip() {
+  // leftOutletInnerLip: 0.971 x - 0.2391 z = -16.401 (n = [0.971, 0, -0.2391] through (-15.756, 0, 4.61)).
+  // Wedge bounded to y -6.3..0.1 and x <= -13.05: a full slab through the hotend pocket wall fill is
+  // silently dropped by the kernel once hotendCavity has been applied.
+  pl = {
+    origin = { x = 0mm, y = -6.3mm, z = 0mm },
+    xAxis = { x = 1, y = 0, z = 0 },
+    yAxis = { x = 0, y = 0, z = 1 }
+  }
+  sk = sketch(on = pl) {
+    slope = line(start = [-16.522mm, 1.5mm], end = [-13.05mm, 15.6mm])
+    drop = line(start = [-13.05mm, 15.6mm], end = [-13.05mm, 1.5mm])
+    base = line(start = [-13.05mm, 1.5mm], end = [-16.522mm, 1.5mm])
+  }
+  hide(sk)
+  return extrude(
+    region(segments = [sk.slope, sk.drop]),
+    length = 6.4mm,
+    direction = [0, 1, 0],
+    method = NEW,
+  )
+}
+
+fn outletReturn() {
+  // leftOutletReturn: n = [0.7527, 0.0698, 0.6547] through (-14.635, -27.433, 9.123).
+  return planeTool(
+    ox = -14.635mm,
+    oy = -27.433mm,
+    oz = 9.123mm,
+    xx = -0.0923,
+    xy = 0.9956,
+    xz = 0,
+    yx = -0.6518,
+    yy = -0.0604,
+    yz = 0.7558,
+    u0 = -2mm,
+    u1 = 18mm,
+    v0 = -3mm,
+    v1 = 6mm,
+    depth = 2.2mm,
+  )
+}
+
+export fn leftDuct(@body) {
+  air = union([
+    inletMouth(),
+    inletTurn(),
+    upperTrunk(),
+    midTrunk(),
+    lowerTrunk(),
+    forkJunction(),
+    forkCore(),
+    rearBranch(),
+    frontBranch()
+  ])
+  channelled = subtract(body, tools = [air])
+  withBottom = subtract(channelled, tools = [nozzleBottom()])
+  withReturn = subtract(withBottom, tools = [outletReturn()])
+  return subtract(withReturn, tools = [innerLip()])
+}

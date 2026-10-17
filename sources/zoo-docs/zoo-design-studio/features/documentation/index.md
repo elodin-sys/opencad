@@ -1,0 +1,13 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/documentation
+Title: Documentation
+
+# Documentation
+
+Documentation and annotation workflows in Zoo Design Studio.
+
+Documentation features help communicate design intent after the geometry exists, with the current
+focus on model-based GD&T workflows in 3D.
+
+Start with
+[GD&T Annotations (MBD)](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd)
+for datum, flatness, profile, position, orientation, distance, and general annotation workflows.

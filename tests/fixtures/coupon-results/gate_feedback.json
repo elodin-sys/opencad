@@ -1,0 +1,497 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; every value carries provenance and a tolerance",
+      "ok": true,
+      "evidence": [
+        "designs/coupon/contract.yaml: 3 parameters {'stated': 3}",
+        "open questions: 0"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources",
+      "details": {
+        "provenance": {
+          "stated": 3
+        },
+        "soft_values": 0,
+        "open_questions": []
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of KCL and STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/coupon/inspect.json bbox.max_error = 0.0 (tol 0.02)",
+        "results/coupon/verify.json bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            60.0,
+            40.0,
+            4.0
+          ],
+          "measured_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            60.0,
+            40.0,
+            4.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.02,
+          "ok": true
+        },
+        "verify": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            60.0,
+            40.0,
+            4.0
+          ],
+          "measured_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            60.0,
+            40.0,
+            4.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.02,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/coupon/inspect.json volume = 9600.0 vs 9600.0",
+        "results/coupon/inspect.json surface_area = 5600.0 vs 5600.0",
+        "results/coupon/inspect.json center_of_mass = [30.0, 20.0, 2.0] vs [30.0, 20.0, 2.0]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 9600.0,
+          "measured": 9600.0,
+          "error": 0.0,
+          "band": 9.6,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 5600.0,
+          "measured": 5600.0,
+          "error": 0.0,
+          "band": 5.6,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            30.0,
+            20.0,
+            2.0
+          ],
+          "measured": [
+            30.0,
+            20.0,
+            2.0
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.02,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section and named face verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/coupon/inspect.json features: 1/1 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": []
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/coupon/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/coupon/inspect.json agreement kcl=9600.00033956021 step=9600.0 stl=9600.0 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 9600.00033956021,
+        "step": 9600.0,
+        "stl": 9600.0,
+        "tolerance_rel": 0.002,
+        "kcl_vs_step_rel": 3.537085528175036e-08,
+        "stl_vs_step_rel": 0.0,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/coupon/edit.json 2/2 edit tests ok; restore.ok = True"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, or the deliverable changed",
+      "knob": "make features derive from the named constants",
+      "details": {
+        "tests": [
+          {
+            "parameter": "width",
+            "delta": 10.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 1600.0,
+                "measured": 1599.999601846017,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  10.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  10.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              }
+            },
+            "error": null
+          },
+          {
+            "parameter": "thickness",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 2400.0,
+                "measured": 2399.999175395351,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              }
+            },
+            "error": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "9bb7eb93d1283453f165f137df4b6f83acd67b9ae5d24501378dd3cce85f2d5a",
+          "re_export_sha256": "9bb7eb93d1283453f165f137df4b6f83acd67b9ae5d24501378dd3cce85f2d5a",
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/coupon/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=3",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 3,
+          "sketch_blocks": 1,
+          "feature_ops": 1,
+          "parameters": {
+            "width": {
+              "found": true,
+              "value": 60.0,
+              "unit": "mm",
+              "expected": 60.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "height": {
+              "found": true,
+              "value": 40.0,
+              "unit": "mm",
+              "expected": 40.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "thickness": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "lines": 42,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight single-component STL",
+      "ok": true,
+      "evidence": [
+        "results/coupon/export.json step.deterministic = True sha256 9bb7eb93d128",
+        "results/coupon/inspect.json valid = True solids = 1 (expected 1)",
+        "results/coupon/inspect.json mesh watertight = True components = 1"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/coupon/export/coupon.step",
+            "sha256": "9bb7eb93d1283453f165f137df4b6f83acd67b9ae5d24501378dd3cce85f2d5a",
+            "bytes": 7060,
+            "deterministic": true,
+            "second_sha256": "9bb7eb93d1283453f165f137df4b6f83acd67b9ae5d24501378dd3cce85f2d5a"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/coupon/export/coupon.stl",
+            "sha256": "88692a18f2683137c56899271da14a1bd4c1aef5ca371dd69d9889d6b4d22a72",
+            "bytes": 1512
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/coupon/export/coupon.glb",
+            "sha256": "62cfd6d7efcf31c1dc3183ede8c186c47ee73f583cf1a62c7ebdc47ee17c732b",
+            "bytes": 6348
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 12,
+          "vertices": 8,
+          "watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "degenerate_faces": 0,
+          "volume": 9600.0,
+          "surface_area": 5600.0,
+          "bbox_min": [
+            0.0,
+            -0.0,
+            0.0
+          ],
+          "bbox_max": [
+            60.0,
+            40.0,
+            4.0
+          ],
+          "center_of_mass": [
+            30.0,
+            20.0,
+            2.0
+          ]
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0a3d2-89f7-7a91-8565-ac4a7b673425; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 13; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 13,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/coupon/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = training-only; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "training-only",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/coupon/verify.json hygiene.forbidden_imports = [] sketch_blocks = 1 feature_ops = 1 lines = 42"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "sketch_blocks": 1,
+        "feature_ops": 1
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

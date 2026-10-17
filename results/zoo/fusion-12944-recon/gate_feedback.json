@@ -1,0 +1,926 @@
+{
+  "ok": false,
+  "summary": {
+    "pass": 9,
+    "fail": 2,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "export_agreement",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [
+    "features",
+    "edit_robustness"
+  ],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [
+    "features"
+  ],
+  "retryable_failed": [
+    "features"
+  ],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/fusion-12944-recon/contract.yaml: 24 parameters {'stated': 16, 'derived': 7, 'inferred': 1}; sources unresolved {}; unanchored 0",
+        "open questions: 11 (blocking []); interfaces 5, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 16,
+          "derived": 7,
+          "inferred": 1
+        },
+        "soft_values": 1,
+        "open_questions": [
+          "Fillet radii at the hub-to-pocket and pocket-to-flange corners are visible in section-x0.png and section-z-0.png but not stated. filletRadius is inferred 3 mm with tolerance 1.5 mm; inner vs outer radii are not resolved. Feature pocketFillets is optional.",
+          "Pocket outer diameter is not in the cylinder table. pocketDiameter 81.174 mm is derived from the 4156.33 mm2 y=3/y=12 faces as an annulus around the hub. Unstated fillets shrink that planar area, so a sharp-corner pocket may be slightly larger.",
+          "Hub \u00d836 is not listed among the sheet cylinders (only the 763.41 mm2 end-face areas). It is a derived construction parameter, not an acceptance cylinder, so the inspector will not score a hub pin axis unless a later revision adds one.",
+          "The sheet gives four \u00d810 holes with axial extent y = 4 .. 15 (length 11), but front.png, iso.png and iso-below.png show four corner openings on both faces. Acceptance cylinders follow the sheet. Whether y = 0 is a 4 mm blind skin or a cylinder-extraction artifact is unresolved; no solid probe was placed in the y = 0 .. 4 boss cores.",
+          "Envelope size x is listed as 126.701 mm while min/max \u00b163.351 imply 126.702 mm. render-notes.md mesh width is 126.682 mm. Contract uses the sheet min/max with envelope.tolerance 0.05.",
+          "Section image captions (y = 7.5 area 12002.30, z = 0 area 1042.53) differ from the sheet (11999.89 and 1041.45). Sheet values are authoritative.",
+          "faceY0Flange area 5188.92 vs faceY15Flange 5892.64 (difference 703.72 mm2) is stated but unexplained. Both values are recorded; no extra cut on y = 0 was invented.",
+          "Centre of mass y = 7.554 vs mid-thickness 7.5 is stated. Consistent with a slight +y mass bias (larger +y flange area, one-sided \u00d810 extents) but no separate asymmetric feature was identified.",
+          "Material, density and process are unknown; mass claims are off-limits.",
+          "Reference lists 27 faces, 8 planar levels (smaller faces omitted). Remaining faces are cylindrical or fillet; no additional named planar levels.",
+          "No reference mesh is in this bundle (held-out evaluator CAD). acceptance.deviation is unset."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "pinBossXnZn",
+          "pinBossXnZp",
+          "pinBossXpZn",
+          "pinBossXpZp",
+          "holeMountXnZn",
+          "holeMountXnZp",
+          "holeMountXpZn",
+          "holeMountXpZp",
+          "holeCentre",
+          "faceY0Flange",
+          "faceY0Hub",
+          "faceY15Flange",
+          "faceY15Hub",
+          "faceZMin",
+          "faceZMax",
+          "dimSpanY",
+          "holeSideXn",
+          "holeSideXp",
+          "faceY3Pocket",
+          "faceY12Pocket",
+          "dimPocketWeb",
+          "dimPocketDepth"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/fusion-12944-recon/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/fusion-12944-recon/verify.json engine bbox.max_error = 1.6625 (engine bbox differs: zoo kcl analyze can include cut-tool extents; disclosed, not gating)"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -63.351,
+            0.0,
+            -54.0
+          ],
+          "expected_max": [
+            63.351,
+            15.0,
+            54.0
+          ],
+          "measured_min": [
+            -63.351,
+            -0.0,
+            -54.0
+          ],
+          "measured_max": [
+            63.351,
+            15.0,
+            54.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -63.351,
+            0.0,
+            -54.0
+          ],
+          "expected_max": [
+            63.351,
+            15.0,
+            54.0
+          ],
+          "measured_min": [
+            -65.0135,
+            -0.5,
+            -54.0
+          ],
+          "measured_max": [
+            65.0135,
+            15.5,
+            54.0
+          ],
+          "max_error": 1.6625,
+          "tolerance": 0.05,
+          "ok": false
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/fusion-12944-recon/inspect.json volume = 148323.2326 vs 148190.98",
+        "results/fusion-12944-recon/inspect.json surface_area = 34727.5371 vs 34691.95",
+        "results/fusion-12944-recon/inspect.json center_of_mass = [0.0009, 7.5535, -0.0] vs [0.0, 7.554, 0.0]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 148190.98,
+          "measured": 148323.2326,
+          "error": 132.2526,
+          "band": 296.382,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 34691.95,
+          "measured": 34727.5371,
+          "error": 35.5871,
+          "band": 173.4597,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            0.0,
+            7.554,
+            0.0
+          ],
+          "measured": [
+            0.0009,
+            7.5535,
+            -0.0
+          ],
+          "errors": [
+            0.0009,
+            0.0005,
+            0.0
+          ],
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall and gear check verified on the STEP",
+      "ok": false,
+      "evidence": [
+        "results/fusion-12944-recon/inspect.json features: 10/10 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior failed: passages ['centreThrough', 'mountXnZn', 'mountXnZp', 'mountXpZn', 'mountXpZp']"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [
+            "centreThrough",
+            "mountXnZn",
+            "mountXnZp",
+            "mountXpZn",
+            "mountXpZp"
+          ],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "cylinders": {
+          "holeSideXn": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": -0.00029000000000678483,
+            "ok": true
+          },
+          "holeSideXp": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": -0.00029000000000678483,
+            "ok": true
+          },
+          "holeCentre": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "holeMountXnZn": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "holeMountXnZp": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "holeMountXpZn": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "holeMountXpZp": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pinBossXnZn": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pinBossXnZp": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pinBossXpZn": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pinBossXpZp": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "pinBossXnZn": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "pinBossXnZp": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "pinBossXpZn": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "pinBossXpZp": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "holeMountXnZn": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "holeMountXnZp": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "holeMountXpZn": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "holeMountXpZp": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "holeCentre": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "faceY0Flange": {
+            "ok": true,
+            "kind": "face"
+          },
+          "faceY0Hub": {
+            "ok": true,
+            "kind": "face"
+          },
+          "faceY15Flange": {
+            "ok": true,
+            "kind": "face"
+          },
+          "faceY15Hub": {
+            "ok": true,
+            "kind": "face"
+          },
+          "faceZMin": {
+            "ok": true,
+            "kind": "face"
+          },
+          "faceZMax": {
+            "ok": true,
+            "kind": "face"
+          },
+          "dimSpanY": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "holeSideXn": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "holeSideXp": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "faceY3Pocket": {
+            "ok": true,
+            "kind": "face"
+          },
+          "faceY12Pocket": {
+            "ok": true,
+            "kind": "face"
+          },
+          "dimPocketWeb": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "dimPocketDepth": {
+            "ok": true,
+            "kind": "dimension"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/fusion-12944-recon/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/fusion-12944-recon/inspect.json agreement kcl=148432.50882469924 step=148323.23261326496 stl=148432.51363688326 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 148432.50882469924,
+        "step": 148323.23261326496,
+        "stl": 148432.51363688326,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "kcl_vs_step_rel": 0.0007367437286052239,
+        "stl_vs_step_rel": 0.0007367761725045238,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": false,
+      "evidence": [
+        "results/fusion-12944-recon/edit.json 0/3 edit tests ok; restore.ok = False",
+        "sweep 0/0 values; infeasible refused 0/0; interfaces pinned 22"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "centerHoleDiameter",
+            "delta": 2.0,
+            "ok": false,
+            "checks": null,
+            "error": "rebuild failed: zoo kcl export step failed (1): | Failed executing KCL on engine, errors: Your account reached its pay-as-you-go collection threshold. Pay the outstanding usage invoice or update your payment details in your account: https://zoo.dev/account/billing",
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "mountHoleDiameter",
+            "delta": 2.0,
+            "ok": false,
+            "checks": null,
+            "error": "rebuild failed: zoo kcl export step failed (1): | Failed executing KCL on engine, errors: Your account reached its pay-as-you-go collection threshold. Pay the outstanding usage invoice or update your payment details in your account: https://zoo.dev/account/billing",
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "pocketDepth",
+            "delta": 1.0,
+            "ok": false,
+            "checks": null,
+            "error": "rebuild failed: zoo kcl export step failed (1): | Failed executing KCL on engine, errors: Your account reached its pay-as-you-go collection threshold. Pay the outstanding usage invoice or update your payment details in your account: https://zoo.dev/account/billing",
+            "sweep": null,
+            "infeasible": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "37c126e7694316fbccb2de1a11839ee52e5145963caa8b1625b9221b90b1e63d",
+          "ok": false,
+          "error": "zoo kcl export step failed (1):\nFailed executing KCL on engine, errors: Your account reached its pay-as-you-go collection threshold. Pay the outstanding usage invoice or update your payment details in your account: https://zoo.dev/account/billing"
+        },
+        "sweep": {
+          "values": 0,
+          "passed": 0
+        },
+        "infeasible": {
+          "declared": 0,
+          "refused": 0
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/fusion-12944-recon/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=33 unused={'pocketFloorY': {'defined_in': 'main.kcl', 'edit_test': False, 'ok': True}, 'pocketCeilY': {'defined_in': 'main.kcl', 'edit_test': False, 'ok': True}}",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 33,
+          "sketch_blocks": 6,
+          "feature_ops": 13,
+          "parameters": {
+            "xMin": {
+              "found": true,
+              "value": -63.351,
+              "unit": "mm",
+              "expected": -63.351,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "yMin": {
+              "found": true,
+              "value": 0.0,
+              "unit": "mm",
+              "expected": 0.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "zMin": {
+              "found": true,
+              "value": -54.0,
+              "unit": "mm",
+              "expected": -54.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "spanX": {
+              "found": true,
+              "value": 126.701,
+              "unit": "mm",
+              "expected": 126.701,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "plateThickness": {
+              "found": true,
+              "value": 15.0,
+              "unit": "mm",
+              "expected": 15.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "spanZ": {
+              "found": true,
+              "value": 108.0,
+              "unit": "mm",
+              "expected": 108.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "centerHoleDiameter": {
+              "found": true,
+              "value": 18.0,
+              "unit": "mm",
+              "expected": 18.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "mountHoleDiameter": {
+              "found": true,
+              "value": 10.0,
+              "unit": "mm",
+              "expected": 10.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "mountHoleLength": {
+              "found": true,
+              "value": 11.0,
+              "unit": "mm",
+              "expected": 11.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "mountHoleY0": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "bossDiameter": {
+              "found": true,
+              "value": 24.0,
+              "unit": "mm",
+              "expected": 24.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "sideCutDiameter": {
+              "found": true,
+              "value": 174.0,
+              "unit": "mm",
+              "expected": 174.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "sideCutCentreX": {
+              "found": true,
+              "value": 141.0,
+              "unit": "mm",
+              "expected": 141.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "mountCentreX": {
+              "found": true,
+              "value": 51.351,
+              "unit": "mm",
+              "expected": 51.351,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "mountCentreZ": {
+              "found": true,
+              "value": 42.0,
+              "unit": "mm",
+              "expected": 42.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pocketDepth": {
+              "found": true,
+              "value": 3.0,
+              "unit": "mm",
+              "expected": 3.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "xMax": {
+              "found": true,
+              "value": 63.351,
+              "unit": "mm",
+              "expected": 63.351,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "yMax": {
+              "found": true,
+              "value": 15.0,
+              "unit": "mm",
+              "expected": 15.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "zMax": {
+              "found": true,
+              "value": 54.0,
+              "unit": "mm",
+              "expected": 54.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pocketFloorY": {
+              "found": true,
+              "value": 3.0,
+              "unit": "mm",
+              "expected": 3.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pocketCeilY": {
+              "found": true,
+              "value": 12.0,
+              "unit": "mm",
+              "expected": 12.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hubDiameter": {
+              "found": true,
+              "value": 36.0,
+              "unit": "mm",
+              "expected": 36.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pocketDiameter": {
+              "found": true,
+              "value": 81.174,
+              "unit": "mm",
+              "expected": 81.174,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "filletRadius": {
+              "found": true,
+              "value": 3.0,
+              "unit": "mm",
+              "expected": 3.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {
+            "pocketFloorY": {
+              "defined_in": "main.kcl",
+              "edit_test": false,
+              "ok": true
+            },
+            "pocketCeilY": {
+              "defined_in": "main.kcl",
+              "edit_test": false,
+              "ok": true
+            }
+          },
+          "lines": 345,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/fusion-12944-recon/export.json step.deterministic = True sha256 37c126e76943; stl=present; glb=present",
+        "results/fusion-12944-recon/inspect.json valid = True solids = 1 (expected 1)",
+        "results/fusion-12944-recon/inspect.json mesh watertight = True components = 1 void_shells = 0"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/fusion-12944-recon/export/fusion-12944-recon.step",
+            "sha256": "37c126e7694316fbccb2de1a11839ee52e5145963caa8b1625b9221b90b1e63d",
+            "bytes": 73459,
+            "deterministic": true,
+            "second_sha256": "37c126e7694316fbccb2de1a11839ee52e5145963caa8b1625b9221b90b1e63d"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/fusion-12944-recon/export/fusion-12944-recon.stl",
+            "sha256": "6eb84f7c48b11457994d5797db01c3a9c1139142a6cbf95012918fdc7d584280",
+            "bytes": 1643184
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/fusion-12944-recon/export/fusion-12944-recon.glb",
+            "sha256": "18abfb4c04a78e1e73d4e763696bb1cb744b3962d10a40034caab2d6ea1b9670",
+            "bytes": 644424
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 8096,
+          "vertices": 4040,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 148432.51363688326,
+          "surface_area": 34725.60806452988,
+          "bbox_min": [
+            -63.328346,
+            -0.0,
+            -54.0
+          ],
+          "bbox_max": [
+            63.328346,
+            15.0,
+            54.0
+          ],
+          "center_of_mass": [
+            0.0007936531712267785,
+            7.553592254005719,
+            -7.097223846251461e-05
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread defd33ab-e26e-438c-9c5c-ca4ed774b15c; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 38; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 38,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/fusion-12944-recon/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/fusion-12944-recon/verify.json hygiene.forbidden_imports = [] sketch_blocks = 6 feature_ops = 13 lines = 345"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "sketch_blocks": 6,
+        "feature_ops": 13
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

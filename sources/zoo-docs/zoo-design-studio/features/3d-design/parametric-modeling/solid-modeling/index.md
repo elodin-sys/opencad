@@ -1,0 +1,41 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling
+Title: Solid Modeling
+
+# Solid Modeling
+
+Solid modeling features in Zoo Design Studio.
+
+Solid modeling tools turn sketches and bodies into manufacturable geometry. Use this section when
+you want a watertight body with volume, not an open surface. Most solid features start from a filled
+sketch region, then add material, remove material, or reshape existing body faces.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/solid-modeling.webp"
+  alt="Sectioned solid model shown in Zoo Design Studio"
+  aspect="1846 / 2422"
+  maxHeightPx={640}
+/>
+
+## Where to Start
+
+### [Create Solids](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids)
+
+Build the core body from sketch regions, paths, axes, or profile sections.
+
+### [Modify Solids](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/modify-solids)
+
+Edit an existing body with features such as
+[Fillet](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/modify-solids/fillet),
+[Chamfer](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/modify-solids/chamfer),
+[Shell](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/modify-solids/shell),
+and [Hole](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/modify-solids/hole).
+
+### [Boolean Operations](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/boolean-operations)
+
+Combine, cut, or intersect separate solid bodies.
+
+## Profile Selection
+
+For sketch-based solid features, select the filled region inside a closed sketch. Do not select the
+individual sketch segments as the profile. Sweep has one extra selection: after selecting the profile
+region, select each path segment one by one in travel order.

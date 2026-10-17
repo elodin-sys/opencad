@@ -1,0 +1,372 @@
+schema_version: 1
+name: compound-train-output
+intent: >-
+  Output spur gear of the compound-train assembly, drafted in its own frame: 45 teeth, module 2,
+  20 deg pressure angle, zero profile shift, addendum 1.0 m and dedendum 1.25 m (pitch radius 45,
+  tip radius 47, root radius 42.5, base radius 42.286 inside the root circle, so the involute runs
+  from the root circle to the tip), every tooth thinned by 0.05 mm at the pitch circle (circular
+  tooth thickness 3.0916 mm), face width 8 (z = 0..8), a tooth centred on +x and a plain D8 (8 mm
+  diameter) bore through along the axis. In the assembly it turns on the plate's D8 hole at
+  (120, 0) with its bottom face at z = 8.5 and meshes with the idler's 15-tooth gear at 60 mm centre
+  distance. Authoritative source: the user intent and sources/compound-train-spec.md.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "on the gear axis in the bottom face: the bore axis meets the plane z = 0"
+  axes:
+    x: "radial, through the centre of one tooth (a tooth is centred on +x; the space opposite it is centred on -x because 45 is odd)"
+    y: "radial, completing a right-handed frame; the gear is mirror-symmetric about y = 0"
+    z: "gear axis, from the bottom face (z = 0) to the top face (z = 8)"
+  datums:
+    - name: A
+      description: "bottom face, z = 0 (sits at z = 8.5 in the assembly)"
+    - name: B
+      description: "bore axis, the z axis through the origin (the outputSpin joint axis)"
+    - name: C
+      description: "tooth-phase plane y = 0 through the centre of the +x tooth"
+
+envelope:
+  min: [-46.9315, -46.9914, 0]
+  max: [47, 46.9914, 8]
+  tolerance: 0.1
+
+parameters:
+  - name: teeth
+    value: 45
+    unit: ""
+    provenance: stated
+    source: "intent; sources/compound-train-spec.md, table row 'Output gear'"
+    tolerance: 0.01
+    description: "tooth count"
+  - name: gearModule
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "intent; sources/compound-train-spec.md, table row 'Module'"
+    tolerance: 0.001
+    description: "module"
+  - name: pressureAngle
+    value: 20
+    unit: deg
+    provenance: stated
+    source: "intent; sources/compound-train-spec.md, table row 'Pressure angle'"
+    tolerance: 0.01
+    description: "pressure angle at the pitch circle"
+  - name: profileShift
+    value: 0
+    unit: ""
+    provenance: stated
+    source: "intent; sources/compound-train-spec.md, table row 'Profile shift'"
+    tolerance: 0.001
+    description: "profile shift coefficient"
+  - name: addendumCoeff
+    value: 1.0
+    unit: ""
+    provenance: stated
+    source: "intent; sources/compound-train-spec.md, table row 'Addendum / dedendum'"
+    tolerance: 0.001
+    description: "addendum in modules"
+  - name: dedendumCoeff
+    value: 1.25
+    unit: ""
+    provenance: stated
+    source: "intent; sources/compound-train-spec.md, table row 'Addendum / dedendum'"
+    tolerance: 0.001
+    description: "dedendum in modules"
+  - name: backlashThinning
+    value: 0.05
+    unit: mm
+    provenance: stated
+    source: "intent; sources/compound-train-spec.md, table row 'Circular backlash'"
+    tolerance: 0.001
+    description: "circular thinning of every tooth at the pitch circle (half the 0.10 mm mesh backlash)"
+    edit_test:
+      delta: 0.05
+      expect:
+        volume_delta: -80.55
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.1
+  - name: faceWidth
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "intent ('bottom face z = 0, top face z = 8'); sources/compound-train-spec.md, row 'Output gear'"
+    tolerance: 0.01
+    description: "face width along z; the bottom face stays at z = 0"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 12508.9
+        direction: increase
+        bbox_delta: [0, 0, 2]
+        tolerance_rel: 0.01
+      sweep:
+        values: [6, 8, 12]
+      infeasible_deltas: [-10]
+  - name: boreDiameter
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "intent ('D8 bore through'); sources/compound-train-spec.md, row 'Output gear' ('bore Ø8')"
+    tolerance: 0.01
+    description: "through-bore diameter on the gear axis"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: -226.2
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.05
+      sweep:
+        values: [6, 8, 10]
+      infeasible_deltas: [80]
+  - name: pitchRadius
+    value: 45
+    unit: mm
+    provenance: derived
+    formula: "gearModule * teeth / 2"
+    tolerance: 0.001
+    description: "pitch circle radius"
+  - name: tipRadius
+    value: 47
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius + (addendumCoeff + profileShift) * gearModule"
+    tolerance: 0.001
+    description: "tip (addendum) circle radius"
+  - name: rootRadius
+    value: 42.5
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius - (dedendumCoeff - profileShift) * gearModule"
+    tolerance: 0.001
+    description: "root (dedendum) circle radius"
+  - name: baseRadius
+    value: 42.2862
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius * cos(pressureAngle)"
+    tolerance: 0.001
+    description: "base circle radius; inside the root circle, so each flank is involute from rootRadius to tipRadius"
+  - name: toothThickness
+    value: 3.0916
+    unit: mm
+    provenance: derived
+    formula: "gearModule * (pi / 2 + 2 * profileShift * tan(pressureAngle)) - backlashThinning"
+    tolerance: 0.001
+    description: "circular tooth thickness at the pitch circle (the intent states 3.0916 mm)"
+  - name: flankPoints
+    value: 14
+    unit: ""
+    provenance: inferred
+    rationale: "the intent and the spec ask for 12-16 points per involute flank; 14 is the middle of that range, and the tolerance admits the whole range"
+    tolerance: 2
+    description: "points per involute flank, from the root circle to the tip circle"
+
+features:
+  - id: gearBody
+    kind: extrude
+    description: "gear outline (45 involute teeth on the root circle, tip arcs on the tip circle) extruded from z = 0 to z = faceWidth as one solid"
+    parameters: [faceWidth, rootRadius, tipRadius]
+    verify:
+      - method: bbox
+      - method: face
+        face: bottomFace
+      - method: face
+        face: topFace
+      - method: dimension
+        dimension: faceWidthZ
+      - method: solid
+        points: [[20, 0, 4]]
+      - method: section
+        section: midZ
+  - id: teeth
+    kind: pattern
+    description: "45 involute teeth, each bounded by two involute flanks of flankPoints points from rootRadius to tipRadius and a tip arc at tipRadius, circular thickness toothThickness at pitchRadius, patterned every 8 deg about +z with a tooth centred on +x"
+    parameters: [teeth, gearModule, pressureAngle, profileShift, addendumCoeff, dedendumCoeff, backlashThinning, pitchRadius, tipRadius, rootRadius, baseRadius, toothThickness, flankPoints]
+    count: 45
+    verify:
+      - method: solid
+        points: [[45.5, 0, 4]]
+      - method: void
+        points: [[45.3892, 3.1739, 4], [45.3892, -3.1739, 4], [-45.5, 0, 4]]
+      - method: section
+        section: phaseY0
+      - method: count
+        section: phaseY0
+        count: 2
+      - method: dimension
+        dimension: tipSpanX
+      - method: dimension
+        dimension: tipSpanY
+  - id: bore
+    kind: hole
+    description: "D8 through bore on the gear axis, z = 0..faceWidth"
+    parameters: [boreDiameter, faceWidth]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: void
+        points: [[0, 0, 4]]
+
+interfaces:
+  - name: outputSpin
+    description: "revolute joint outputSpin: the part attaches at its own-frame origin with axis +z (bore axis, datum B) and its bottom face (datum A) sits at z = 8.5 in the assembly; no edit test moves either"
+    must_not_change: true
+    checks: [bottomFace, phaseY]
+  - name: idlerMesh
+    description: "meshes with the idler's 15-tooth gear at 60 mm centre distance; the assembly turns this part 6.5 deg at rest assuming a tooth centred on +x, so the phase plane (datum C) and the tip spans must survive every edit"
+    must_not_change: true
+    checks: [phaseY, tipSpanX, tipSpanY]
+
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 50035.6
+    tolerance_rel: 0.003
+    provenance: derived
+    note: "faceWidth * (pi * rootRadius^2 + teeth * integral_rootRadius^tipRadius 2 psi(r) r dr - pi * (boreDiameter / 2)^2), psi(r) = toothThickness / (2 pitchRadius) + inv(pressureAngle) - inv(acos(baseRadius / r)); section 6254.445 mm2"
+  surface_area:
+    expected: 17312.9
+    tolerance_rel: 0.01
+    provenance: derived
+    note: "2 * 6254.445 + faceWidth * perimeter 600.498 (45 x (2 flanks of (tipRadius^2 - rootRadius^2) / (2 baseRadius) = 4.762 + tip arc 1.485 + root arc 1.776) + pi * boreDiameter)"
+  center_of_mass:
+    expected: [0, 0, 4]
+    tolerance: 0.05
+    provenance: derived
+    note: "uniform 45-tooth pattern about the z axis; faceWidth / 2 along z"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 4
+      expect:
+        area: 6254.4
+        area_tolerance_rel: 0.003
+        loops: 1
+        holes: 1
+      description: "gear outline with the bore at mid face width"
+    - id: phaseY0
+      plane: y
+      at: 0
+      expect:
+        area: 652
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 0
+      description: "tooth phase: +x strip from the bore (x = 4) to the tooth tip (x = 47), -x strip from the root of the space centred on -x (x = -42.5) to the bore (x = -4); ((47 - 4) + (42.5 - 4)) * 8"
+  faces:
+    - name: bottomFace
+      plane: z
+      at: 0
+      normal: "-"
+      tolerance: 0.02
+      center: [0, 0]
+      mode: one
+    - name: topFace
+      plane: z
+      at: 8
+      normal: "+"
+      area: 6254.4
+      area_tolerance_rel: 0.003
+      tolerance: 0.02
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 8
+      radius_tolerance: 0.02
+      axis_tolerance: 0.02
+      length: 8
+      length_tolerance: 0.05
+      t_range: [0, 8]
+      description: "D8 through bore"
+  dimensions:
+    - name: faceWidthZ
+      axis: z
+      expected: 8
+      tolerance: 0.02
+      between: [bottomFace, topFace]
+      description: "face width between the bottom and top faces"
+    - name: tipSpanX
+      axis: x
+      expected: 93.9315
+      tolerance: 0.05
+      description: "bbox extent along x: tip arc of the +x tooth at x = 47 to the tip corners of the teeth at 176 and 184 deg (x = -46.9315)"
+    - name: tipSpanY
+      axis: y
+      expected: 93.9828
+      tolerance: 0.05
+      description: "bbox extent along y: tip corners of the teeth at 88 and 272 deg (y = +-46.9914)"
+  solids:
+    - name: gear
+      contains_point: [20, 0, 4]
+      description: "the single gear solid"
+  probes:
+    - name: hubSolid
+      state: solid
+      points: [[20, 0, 4]]
+    - name: toothOnX
+      state: solid
+      points: [[45.5, 0, 4]]
+    - name: spacesBesideX
+      state: void
+      points: [[45.3892, 3.1739, 4], [45.3892, -3.1739, 4]]
+    - name: spaceOnMinusX
+      state: void
+      points: [[-45.5, 0, 4]]
+    - name: boreVoid
+      state: void
+      points: [[0, 0, 4]]
+  cylinder_counts:
+    - name: bores
+      diameter: 8
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+  gears:
+    - name: outputGear
+      solid: gear
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      at: 4
+      module: 2
+      teeth: 45
+      description: "45-tooth module-2 spur gear sectioned at mid face width"
+  symmetry:
+    - name: phaseY
+      plane: y
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 53000
+    volume_max: 56500
+
+references:
+  - path: sources/compound-train-spec.md
+    kind: text
+    role: authoritative
+    sha256: e2734c43ae1d2aa36320d0b7680e21616422e902b471b3eb98295e3292296af5
+    units: mm
+    revision: "as supplied"
+    note: "compound-train specification; the output gear row, the gear standards rows and the part-frame paragraph"
+
+open_questions:
+  - "No root fillet is stated; the contract assumes each involute flank meets the root circle at a sharp corner."
+  - "No tip or face edge break is stated; the contract assumes a plain tip arc at the tip radius and sharp face edges."
+  - "'D8' is read as a plain round 8 mm bore (the spec says 'bore Ø8'); no flat, keyway or fit class is stated."
+  - "Material, density and process are not stated, so no mass is claimed."
+  - "The mesh with the idler's 15-tooth gear (zero interference, flank gap at most 0.15 mm) is checked at the assembly level, not by this part contract."

@@ -1,0 +1,156 @@
+{
+  "case": "fusion-12944-assembly",
+  "scored_at": "2026-09-19T15:47:32Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "claude-fable-5-1-thinking-max",
+    "order_id": "001-assemble",
+    "thread_id": "b95a2cc4-4b47-40f4-919d-6a7276131bff",
+    "exit_code": 0,
+    "seconds": 213,
+    "commands": 4,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/fusion-12944-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 4,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-12944-assembly/work/assembly.yaml"
+      ],
+      "incomplete": false,
+      "notes": "Rev15 revolute, flipped, offset 0: body two identity; body one rotated pi about X with origin [0,-14.5,0]. assembly-check PASS first try: axis angle 0, line distance 0, axial offset 0, anti-parallel, interference 0 mm3, gap 0.0365 mm (bore/shank radial clearance). Revolute angle chosen freely (dataset's pi rad not reproducible without the joint's secondary axes).",
+      "engine_ledger_calls": 0,
+      "engine_ledger_seconds": 0
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "claude-fable-5-1-thinking-max",
+    "order_id": "001-assemble",
+    "thread_id": "b95a2cc4-4b47-40f4-919d-6a7276131bff",
+    "exit_code": 0,
+    "seconds": 213,
+    "commands": 4,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/fusion-12944-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 4,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-12944-assembly/work/assembly.yaml"
+      ],
+      "incomplete": false,
+      "notes": "Rev15 revolute, flipped, offset 0: body two identity; body one rotated pi about X with origin [0,-14.5,0]. assembly-check PASS first try: axis angle 0, line distance 0, axial offset 0, anti-parallel, interference 0 mm3, gap 0.0365 mm (bore/shank radial clearance). Revolute angle chosen freely (dataset's pi rad not reproducible without the joint's secondary axes).",
+      "engine_ledger_calls": 0,
+      "engine_ledger_seconds": 0
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": true,
+  "offset_truth_mm": 0.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 0.0,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": 0.0,
+      "expected": 0.0,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 180.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 0.0,
+      "truth_interference": 0.0,
+      "max": 1.0,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.03649999999999952,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "22303_e9723631_0014_1": {
+        "origin": [
+          0.0,
+          -14.5,
+          0.0
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          -1,
+          0
+        ],
+        "z_axis": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "22303_e9723631_0013_1": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          1,
+          0
+        ],
+        "z_axis": [
+          0,
+          0,
+          1
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/fusion-12944-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/fusion-12944-assembly/handoff/assembly.html",
+    "motion": "revolute"
+  }
+}

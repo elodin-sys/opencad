@@ -1,0 +1,156 @@
+{
+  "case": "fusion-16418-assembly",
+  "scored_at": "2026-09-19T15:49:01Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "claude-fable-5-1-thinking-max",
+    "order_id": "001-assemble",
+    "thread_id": "c42d3604-fc2a-449d-a95d-bab6d80aaa90",
+    "exit_code": 0,
+    "seconds": 317,
+    "commands": 4,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/fusion-16418-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 4,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-16418-assembly/work/assembly.yaml"
+      ],
+      "incomplete": false,
+      "notes": "assembly-check PASS first try: angle 0 deg, line distance 0 mm, axial offset -5.0 mm, flip anti-parallel, interference 0.5293 mm3 (two tooth tips clipping the channel walls at the key-point pose, reported not removed), gap 0.0 mm. No hosted engine calls.",
+      "engine_ledger_calls": 0,
+      "engine_ledger_seconds": 0
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "claude-fable-5-1-thinking-max",
+    "order_id": "001-assemble",
+    "thread_id": "c42d3604-fc2a-449d-a95d-bab6d80aaa90",
+    "exit_code": 0,
+    "seconds": 317,
+    "commands": 4,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/fusion-16418-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 4,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-16418-assembly/work/assembly.yaml"
+      ],
+      "incomplete": false,
+      "notes": "assembly-check PASS first try: angle 0 deg, line distance 0 mm, axial offset -5.0 mm, flip anti-parallel, interference 0.5293 mm3 (two tooth tips clipping the channel walls at the key-point pose, reported not removed), gap 0.0 mm. No hosted engine calls.",
+      "engine_ledger_calls": 0,
+      "engine_ledger_seconds": 0
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": true,
+  "offset_truth_mm": -5.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 1.7763568394002505e-15,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": -5.0,
+      "expected": -5.0,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 0.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 0.5293460947886042,
+      "truth_interference": 0.5293460947887276,
+      "max": 1.5293460947887276,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.0,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "23309_76dcf100_0002_1": {
+        "origin": [
+          11.5,
+          3.5,
+          -38.0
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          -1,
+          0
+        ],
+        "z_axis": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "23309_76dcf100_0003_2": {
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          1,
+          0
+        ],
+        "z_axis": [
+          0,
+          0,
+          1
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/fusion-16418-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/fusion-16418-assembly/handoff/assembly.html",
+    "motion": "revolute"
+  }
+}

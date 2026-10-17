@@ -1,0 +1,130 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+stepHeight = 12.7mm
+channelWidth = 152.4mm
+downstreamHeight = 114.3mm
+upstreamHeight = 101.6mm
+roofAngle = 0deg
+upstreamLength = 1333.5mm
+downstreamLength = 635mm
+
+// Driver-Seegmiller backward-facing-step AIR volume, parallel-roof case.
+// Source: https://www.grc.nasa.gov/WWW/wind/valid/backstep/backstep01/backstep01.html
+// Nominal ratios: width = 12 H; downstream height = 9 H; upstream height = 8 H.
+// Domain: -105 H <= x <= 50 H. Reattachment is a CFD target, not geometry.
+// Keep the literal parameters independent for the declared width/length edits.
+assert(stepHeight, isGreaterThan = 0mm)
+assert(channelWidth, isGreaterThan = 0mm)
+assert(downstreamHeight, isGreaterThan = 0mm)
+assert(upstreamHeight, isGreaterThan = 0mm)
+assert(upstreamLength, isGreaterThan = 0mm)
+assert(downstreamLength, isGreaterThan = 0mm)
+assert(downstreamHeight, isGreaterThan = stepHeight)
+assert(abs(roofAngle), isLessThanOrEqual = 0.001deg, error = "This model prescribes the zero-divergence, horizontal roof configuration.")
+
+// Frame: +X downstream, +Y across the full span, +Z up from the lower floor.
+// The sketch local axes are +X and +Z; its normal is -Y.
+spanDatum = {
+  origin = { x = 0mm, y = 0mm, z = 0mm },
+  xAxis = { x = 1, y = 0, z = 0 },
+  yAxis = { x = 0, y = 0, z = 1 }
+}
+downstreamFloorDatum = XY
+upstreamFloorDatum = offsetPlane(XY, offset = stepHeight)
+stepDatum = YZ
+roofDatum = offsetPlane(XY, offset = downstreamHeight)
+inletDatum = offsetPlane(YZ, offset = -upstreamLength)
+outletDatum = offsetPlane(YZ, offset = downstreamLength)
+
+// Redundant upstreamHeight is an explicit reference dimension and QA input.
+// The boundary is driven by stepHeight and downstreamHeight; no height lock.
+upstreamHeightGauge = sketch(on = spanDatum) {
+  height = line(
+    start = [-upstreamLength / 2, stepHeight],
+    end = [
+      -upstreamLength / 2,
+      stepHeight + upstreamHeight
+    ],
+    construction = true,
+  )
+}
+
+// Six exact shared endpoints; one uninterrupted roof and no internal opening face.
+profile = sketch(on = spanDatum) {
+  upstreamFloor = line(start = [-upstreamLength, stepHeight], end = [0mm, stepHeight])
+  stepFace = line(start = [0mm, stepHeight], end = [0mm, 0mm])
+  downstreamFloor = line(start = [0mm, 0mm], end = [downstreamLength, 0mm])
+  outlet = line(start = [downstreamLength, 0mm], end = [downstreamLength, downstreamHeight])
+  roof = line(start = [downstreamLength, downstreamHeight], end = [-upstreamLength, downstreamHeight])
+  inlet = line(start = [-upstreamLength, downstreamHeight], end = [-upstreamLength, stepHeight])
+}
+flowRegion = region(segments = [
+  profile.downstreamFloor,
+  profile.outlet
+])
+flowDomain = extrude(
+  flowRegion,
+  length = channelWidth,
+  direction = [0, 1, 0],
+  tagStart = $sideWallY0,
+  tagEnd = $sideWallYMax,
+)
+
+// The extrusion consumes its region. Do not hide that shared region handle:
+// this engine would also hide flowDomain. The gauge is construction-only.
+
+// Contract meshing boundary names. Tags identify faces in KCL; geometric
+// selectors remain usable if an interchange exporter does not preserve tags.
+// Normals point outward from the AIR solid. At x = 0 only 0 <= z <= H is a face.
+flowBoundaries = {
+  inlet = {
+    face = flowRegion.tags.inlet,
+    axis = "x",
+    at = -upstreamLength,
+    outwardNormal = [-1, 0, 0]
+  },
+  outlet = {
+    face = flowRegion.tags.outlet,
+    axis = "x",
+    at = downstreamLength,
+    outwardNormal = [1, 0, 0]
+  },
+  roof = {
+    face = flowRegion.tags.roof,
+    axis = "z",
+    at = downstreamHeight,
+    outwardNormal = [0, 0, 1]
+  },
+  upstreamFloor = {
+    face = flowRegion.tags.upstreamFloor,
+    axis = "z",
+    at = stepHeight,
+    outwardNormal = [0, 0, -1]
+  },
+  stepFace = {
+    face = flowRegion.tags.stepFace,
+    axis = "x",
+    at = 0mm,
+    outwardNormal = [-1, 0, 0]
+  },
+  downstreamFloor = {
+    face = flowRegion.tags.downstreamFloor,
+    axis = "z",
+    at = 0mm,
+    outwardNormal = [0, 0, -1]
+  },
+  sideWallY0 = {
+    face = sideWallY0,
+    axis = "y",
+    at = 0mm,
+    outwardNormal = [0, -1, 0]
+  },
+  sideWallYMax = {
+    face = sideWallYMax,
+    axis = "y",
+    at = channelWidth,
+    outwardNormal = [0, 1, 0]
+  }
+}
+
+flowDomain

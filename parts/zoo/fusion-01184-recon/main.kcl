@@ -1,0 +1,141 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// fusion-01184-recon: T-shaped pin. Filleted 10 x 10 x 50 head with a Ø5 bore along z,
+// Ø5 shaft along +y. Native Fusion frame: head bbox min [xMin, yMin, zMin].
+
+// Stated parameters
+xMin = 100mm
+yMin = 0mm
+zMin = 70mm
+bodyWidth = 10mm
+bodyDepth = 10mm
+bodyHeight = 50mm
+overallLength = 88mm
+holeDiameter = 5mm
+shaftDiameter = 5mm
+filletRadius = 4mm
+
+// Derived parameters (formulas from the contract)
+xMax = 110mm // xMin + bodyWidth
+yHead = 10mm // yMin + bodyDepth
+zMax = 120mm // zMin + bodyHeight
+holeCenterX = 105mm // xMin + bodyWidth / 2
+holeCenterY = 5mm // yMin + bodyDepth / 2
+shaftCenterZ = 95mm // zMin + bodyHeight / 2
+
+
+// Sanity guards (bounds only, never equality locks between parameters)
+assert(bodyWidth, isGreaterThan = 0mm, error = "bodyWidth must be positive")
+assert(bodyDepth, isGreaterThan = 0mm, error = "bodyDepth must be positive")
+assert(bodyHeight, isGreaterThan = 0mm, error = "bodyHeight must be positive")
+assert(xMax, isGreaterThan = xMin, error = "xMax must be greater than xMin")
+assert(yHead, isGreaterThan = yMin, error = "yHead must be greater than yMin")
+assert(zMax, isGreaterThan = zMin, error = "zMax must be greater than zMin")
+assert(filletRadius, isGreaterThan = 0mm, error = "filletRadius must be positive")
+assert(filletRadius, isLessThan = bodyWidth / 2, error = "filletRadius must leave a flat on the x faces")
+assert(filletRadius, isLessThan = bodyDepth / 2, error = "filletRadius must leave a flat on the y faces")
+assert(holeDiameter, isGreaterThan = 0mm, error = "holeDiameter must be positive")
+assert(holeCenterX - (holeDiameter / 2), isGreaterThan = xMin, error = "bore breaks through the -x wall")
+assert(holeCenterX + holeDiameter / 2, isLessThan = xMax, error = "bore breaks through the +x wall")
+assert(holeCenterY - (holeDiameter / 2), isGreaterThan = yMin, error = "bore breaks through the -y wall")
+assert(holeCenterY + holeDiameter / 2, isLessThan = yHead, error = "bore breaks through the +y wall")
+assert(shaftDiameter, isGreaterThan = 0mm, error = "shaftDiameter must be positive")
+assert(shaftDiameter, isLessThan = bodyWidth, error = "shaftDiameter must fit inside the head width")
+assert(shaftCenterZ - (shaftDiameter / 2), isGreaterThan = zMin, error = "shaft must sit above the head end face")
+assert(shaftCenterZ + shaftDiameter / 2, isLessThan = zMax, error = "shaft must sit below the head top face")
+assert(overallLength, isGreaterThan = bodyDepth, error = "overallLength must exceed bodyDepth so the shaft clears the head")
+
+// Head: rounded square (R filletRadius on the four vertical corners), z = zMin .. zMin + bodyHeight
+headSketch = sketch(on = offsetPlane(XY, offset = zMin)) {
+  front = line(start = [xMin + filletRadius, yMin], end = [xMin + bodyWidth - filletRadius, yMin])
+  arcSe = arc(
+    start = [xMin + bodyWidth - filletRadius, yMin],
+    end = [xMin + bodyWidth, yMin + filletRadius],
+    center = [
+      xMin + bodyWidth - filletRadius,
+      yMin + filletRadius
+    ],
+  )
+  right = line(
+    start = [xMin + bodyWidth, yMin + filletRadius],
+    end = [
+      xMin + bodyWidth,
+      yMin + bodyDepth - filletRadius
+    ],
+  )
+  arcNe = arc(
+    start = [
+      xMin + bodyWidth,
+      yMin + bodyDepth - filletRadius
+    ],
+    end = [
+      xMin + bodyWidth - filletRadius,
+      yMin + bodyDepth
+    ],
+    center = [
+      xMin + bodyWidth - filletRadius,
+      yMin + bodyDepth - filletRadius
+    ],
+  )
+  rear = line(
+    start = [
+      xMin + bodyWidth - filletRadius,
+      yMin + bodyDepth
+    ],
+    end = [xMin + filletRadius, yMin + bodyDepth],
+  )
+  arcNw = arc(
+    start = [xMin + filletRadius, yMin + bodyDepth],
+    end = [xMin, yMin + bodyDepth - filletRadius],
+    center = [
+      xMin + filletRadius,
+      yMin + bodyDepth - filletRadius
+    ],
+  )
+  left = line(start = [xMin, yMin + bodyDepth - filletRadius], end = [xMin, yMin + filletRadius])
+  arcSw = arc(
+    start = [xMin, yMin + filletRadius],
+    end = [xMin + filletRadius, yMin],
+    center = [
+      xMin + filletRadius,
+      yMin + filletRadius
+    ],
+  )
+}
+headRegion = region(segments = [headSketch.front, headSketch.arcSe])
+head = extrude(headRegion, length = bodyHeight)
+hide(headSketch)
+
+// Bore: Ø holeDiameter through the head along z; tool overruns both caps so no faces are coplanar
+boreOverrun = 0.5mm
+boreSketch = sketch(on = offsetPlane(XY, offset = zMin - boreOverrun)) {
+  bore = circle(
+    start = [
+      holeCenterX + holeDiameter / 2,
+      holeCenterY
+    ],
+    center = [holeCenterX, holeCenterY],
+  )
+}
+boreTool = extrude(region(segments = [boreSketch.bore]), length = bodyHeight + 2 * boreOverrun)
+hide(boreSketch)
+boredHead = subtract(head, tools = [boreTool])
+
+// Shaft: Ø shaftDiameter along +y to yMin + overallLength. It starts buried in the +y wall, midway between
+// the bore and yHead, so the equal-radius shaft and bore never touch; the exposed pin begins at the R4 tangent.
+shaftStartY = (holeCenterY + holeDiameter / 2 + yMin + bodyDepth) / 2
+assert(shaftStartY, isLessThan = yMin + bodyDepth, error = "shaft start must be inside the head")
+shaftSketch = sketch(on = offsetPlane(XZ, offset = -shaftStartY)) {
+  shaftCircle = circle(
+    start = [
+      holeCenterX + shaftDiameter / 2,
+      shaftCenterZ
+    ],
+    center = [holeCenterX, shaftCenterZ],
+  )
+}
+// XZ normal is -y: a negative length extrudes toward +y
+shaft = extrude(region(segments = [shaftSketch.shaftCircle]), length = -(yMin + overallLength - shaftStartY))
+hide(shaftSketch)
+
+body = union([boredHead, shaft])

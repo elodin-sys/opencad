@@ -1,0 +1,390 @@
+id: nottingham-bearing
+title: 'University of Nottingham highly loaded half-journal bearing: shaft, 180-degree bush and oil film;
+  film pressure, heating and operating film'
+kind: machine
+truth_class: A
+role: validation
+source:
+  citation: Layton J. et al. (2026) Experimental Investigation of a Highly Loaded Half-Journal Bearing,
+    Lubricants 14(2):76; dataset Zenodo 10.5281/zenodo.18375341
+  urls:
+  - https://doi.org/10.3390/lubricants14020076
+  - https://zenodo.org/records/18375341
+  accessed: '2026-09-25'
+  revision: dataset v1 (2026-01-26)
+  license: CC-BY-4.0
+intent: 'Reconstruct the half-journal bearing test section of the attached packet as a machine: the EN24T
+  shaft (100.0 mm journal) turning on a revolute joint in the stationary 180-degree bush (100.2 mm bore,
+  75 mm long), with the oil film between them as a derived fluid body at rest (concentric). Case frame:
+  the bearing axis is +z with the bush spanning z = 0..75 mm; bottom dead centre (BDC) points toward -y
+  (the bush below the shaft); the shaft turns positively about +z so its surface at BDC moves toward +x
+  (inlet edge of the arc at -x, outlet edge at +x). Declare the operating conditions named in the checks
+  (speed in rpm, load in kN) and the lubricant, and predict the film pressure at the tappings, the minimum
+  operating film and its angle, and the heating ratio with the reduced Reynolds film analysis.'
+inputs:
+- path: inputs/bearing-packet.md
+  kind: text
+  sha256: 59abf634a3867c0c21ea6118b6bf08e72e4cfdfc5d0eb56ceacbfd8c8d944c4b
+  note: geometry, lubricant, supply, instrumentation and test matrix (Section 2 of the paper)
+truth:
+- path: truth/raw/Fig11_Tmax_Tinlet_Ratio_10kN.csv
+  kind: table
+  sha256: 8b18b34fc50438f525a829d8ca09d58203b3801a7ff14a9ffd070c0ebc48144f
+  note: Zenodo dataset file
+- path: truth/raw/Fig14c_Film_Thickness_3000rpm_10kN.csv
+  kind: table
+  sha256: 16485c713759aa3b253043e9fd3c3c4d2238a152531870dee86901bd42d021d8
+  note: Zenodo dataset file
+- path: truth/raw/Fig15_Min_Film_Thickness.csv
+  kind: table
+  sha256: 81a36695247d4049b7520672157ac806d165c64ccfe75f6b32040868a405860b
+  note: Zenodo dataset file
+- path: truth/raw/Fig7a_Axial_Pressure_1000rpm_10kN_-20deg.csv
+  kind: table
+  sha256: f1ec497717795c2b65101f01bcafef33fd2d071fc5eb039a0da540dd14740dde
+  note: Zenodo dataset file
+- path: truth/raw/Fig7c_Axial_Pressure_3000rpm_10kN_-20deg.csv
+  kind: table
+  sha256: 4da93b1f55a5a02b1cce8151f3f7dc9098c6efd9b12c4ba477919a465c6e7192
+  note: Zenodo dataset file
+- path: truth/raw/Fig7c_Axial_Pressure_3000rpm_10kN_-45deg.csv
+  kind: table
+  sha256: 5abe6e5a93c238d8312cc820dfaa211446d093ea08f7e37d0ab67e456c3904e9
+  note: Zenodo dataset file
+- path: truth/raw/Fig7c_Axial_Pressure_3000rpm_15kN_-20deg.csv
+  kind: table
+  sha256: 53d32415354939ae9fdb21e5576d9329e3c7ca67e729da3d0ffa1b2707106e41
+  note: Zenodo dataset file
+- path: truth/raw/Fig7d_Axial_Pressure_4000rpm_10kN_-20deg.csv
+  kind: table
+  sha256: 6ad47309aa180353a9a610c322de30bbe2b0bd7ed14703996601e4d8887d8bba
+  note: Zenodo dataset file
+- path: truth/raw/Fig9b_Centreline_Temperature_10kN_1000rpm.csv
+  kind: table
+  sha256: e81fd08ed02989acce1dca584482a54a48188ea72f9284f9645248a2f137268b
+  note: Zenodo dataset file
+- path: truth/raw/Fig9b_Centreline_Temperature_10kN_3000rpm.csv
+  kind: table
+  sha256: d7b42cb367529d891a471e0d8cd759ab60b1f388498105e4c7dce5aec134e72a
+  note: Zenodo dataset file
+- path: truth/raw/Fig9b_Centreline_Temperature_10kN_4000rpm.csv
+  kind: table
+  sha256: c05300a31027b2672838c52ea28877f151d86cb08359657da00fd0ae39444471
+  note: Zenodo dataset file
+arms:
+- id: paper-text
+  design: nottingham-bearing
+  mode: reconstruction
+  inputs:
+  - inputs/bearing-packet.md
+  images: []
+  notes: Text packet only (no CAD exists); the reference geometry is the stated dimensions.
+observables:
+- id: bore
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 0.0
+  - 0.0
+  - 0.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 50.1
+  radius_tolerance: 0.005
+  tolerance: 0.05
+  length: 75.0
+  length_tolerance: 0.1
+  note: the 100.2 mm half-journal bore, z 0..75
+- id: journal
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 0.0
+  - 0.0
+  - 0.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 50.0
+  radius_tolerance: 0.005
+  tolerance: 0.05
+  note: the 100.0 mm shaft journal on the same axis
+performance:
+- id: p20c_n1000w10
+  quantity: pressure
+  unit: MPa
+  case: n1000w10
+  evidence: A
+  value: 2.0585
+  uncertainty: 0.0486
+  z_max: 2.0
+  split: held_out
+  where: 'film pressure at the -20 deg tap, axial position 37.5 mm: location [-17.135, -47.079, 37.5]
+    in the case frame'
+  source: Layton 2026 Fig. 7 (Zenodo 18375341 CSV)
+  note: 'Stage A: film pressure at a bush tapping; u from the stated 95 % sensor band'
+- id: p20c_n3000w10
+  quantity: pressure
+  unit: MPa
+  case: n3000w10
+  evidence: A
+  value: 2.1408
+  uncertainty: 0.0486
+  z_max: 2.0
+  split: development
+  where: 'film pressure at the -20 deg tap, axial position 37.5 mm: location [-17.135, -47.079, 37.5]
+    in the case frame'
+  source: Layton 2026 Fig. 7 (Zenodo 18375341 CSV)
+  note: 'Stage A: film pressure at a bush tapping; u from the stated 95 % sensor band'
+- id: p20s_n3000w10
+  quantity: pressure
+  unit: MPa
+  case: n3000w10
+  evidence: A
+  value: 1.5999
+  uncertainty: 0.0486
+  z_max: 2.0
+  split: development
+  where: 'film pressure at the -20 deg tap, axial position 18.5 mm: location [-17.135, -47.079, 18.5]
+    in the case frame'
+  source: Layton 2026 Fig. 7 (Zenodo 18375341 CSV)
+  note: 'Stage A: film pressure at a bush tapping; u from the stated 95 % sensor band'
+- id: p45c_n3000w10
+  quantity: pressure
+  unit: MPa
+  case: n3000w10
+  evidence: A
+  value: 1.1277
+  uncertainty: 0.0486
+  z_max: 2.0
+  split: development
+  where: 'film pressure at the -45 deg tap, axial position 37.5 mm: location [-35.426, -35.426, 37.5]
+    in the case frame'
+  source: Layton 2026 Fig. 7 (Zenodo 18375341 CSV)
+  note: 'Stage A: film pressure at a bush tapping; u from the stated 95 % sensor band'
+- id: p20c_n3000w15
+  quantity: pressure
+  unit: MPa
+  case: n3000w15
+  evidence: A
+  value: 3.1561
+  uncertainty: 0.0486
+  z_max: 2.0
+  split: held_out
+  where: 'film pressure at the -20 deg tap, axial position 37.5 mm: location [-17.135, -47.079, 37.5]
+    in the case frame'
+  source: Layton 2026 Fig. 7 (Zenodo 18375341 CSV)
+  note: 'Stage A: film pressure at a bush tapping; u from the stated 95 % sensor band'
+- id: p20c_n4000w10
+  quantity: pressure
+  unit: MPa
+  case: n4000w10
+  evidence: A
+  value: 2.2174
+  uncertainty: 0.0486
+  z_max: 2.0
+  split: held_out
+  where: 'film pressure at the -20 deg tap, axial position 37.5 mm: location [-17.135, -47.079, 37.5]
+    in the case frame'
+  source: Layton 2026 Fig. 7 (Zenodo 18375341 CSV)
+  note: 'Stage A: film pressure at a bush tapping; u from the stated 95 % sensor band'
+- id: hmin_n1000w10
+  quantity: min_film_thickness
+  unit: um
+  case: n1000w10
+  evidence: A
+  value: 20.57
+  uncertainty: 3.0
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: minimum operating film (ultrasonic); u combines the 2.1 um calibration and the profile
+    scatter'
+- id: hminAngle_n1000w10
+  quantity: min_film_angle
+  unit: deg
+  case: n1000w10
+  evidence: A
+  value: 9.44
+  uncertainty: 5.0
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: angle of the minimum film from BDC; u reflects the flat minimum of the measured profile'
+- id: hmin_n3000w10
+  quantity: min_film_thickness
+  unit: um
+  case: n3000w10
+  evidence: A
+  value: 32.28
+  uncertainty: 3.0
+  z_max: 2.0
+  split: development
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: minimum operating film (ultrasonic); u combines the 2.1 um calibration and the profile
+    scatter'
+- id: hminAngle_n3000w10
+  quantity: min_film_angle
+  unit: deg
+  case: n3000w10
+  evidence: A
+  value: 39.53
+  uncertainty: 5.0
+  z_max: 2.0
+  split: development
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: angle of the minimum film from BDC; u reflects the flat minimum of the measured profile'
+- id: hmin_n4000w10
+  quantity: min_film_thickness
+  unit: um
+  case: n4000w10
+  evidence: A
+  value: 33.04
+  uncertainty: 3.0
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: minimum operating film (ultrasonic); u combines the 2.1 um calibration and the profile
+    scatter'
+- id: hminAngle_n4000w10
+  quantity: min_film_angle
+  unit: deg
+  case: n4000w10
+  evidence: A
+  value: 53.41
+  uncertainty: 5.0
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: angle of the minimum film from BDC; u reflects the flat minimum of the measured profile'
+- id: hmin_n3000w15
+  quantity: min_film_thickness
+  unit: um
+  case: n3000w15
+  evidence: A
+  value: 25.38
+  uncertainty: 3.0
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: minimum operating film (ultrasonic); u combines the 2.1 um calibration and the profile
+    scatter'
+- id: hminAngle_n3000w15
+  quantity: min_film_angle
+  unit: deg
+  case: n3000w15
+  evidence: A
+  value: 31.96
+  uncertainty: 5.0
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: angle of the minimum film from BDC; u reflects the flat minimum of the measured profile'
+- id: hmin_n2000w15
+  quantity: min_film_thickness
+  unit: um
+  case: n2000w15
+  evidence: A
+  value: 24.1
+  uncertainty: 3.0
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: minimum operating film (ultrasonic); u combines the 2.1 um calibration and the profile
+    scatter'
+- id: hminAngle_n2000w15
+  quantity: min_film_angle
+  unit: deg
+  case: n2000w15
+  evidence: A
+  value: 18.94
+  uncertainty: 5.0
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: angle of the minimum film from BDC; u reflects the flat minimum of the measured profile'
+- id: hmin_n4000w20
+  quantity: min_film_thickness
+  unit: um
+  case: n4000w20
+  evidence: A
+  value: 25.81
+  uncertainty: 3.0
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: minimum operating film (ultrasonic); u combines the 2.1 um calibration and the profile
+    scatter'
+- id: hminAngle_n4000w20
+  quantity: min_film_angle
+  unit: deg
+  case: n4000w20
+  evidence: A
+  value: 40.15
+  uncertainty: 5.0
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 15 (Zenodo CSV)
+  note: 'Stage C: angle of the minimum film from BDC; u reflects the flat minimum of the measured profile'
+- id: tRatio_n1000w10
+  quantity: max_temperature_ratio
+  unit: ''
+  case: n1000w10
+  evidence: A
+  value: 1.3211
+  uncertainty: 0.086
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 11 (Zenodo CSV)
+  where: maximum bush-centreline temperature over the temperature nearest the inlet (-85 deg), both in
+    degC
+  note: 'Stage B: viscous heating; u from the class-2 thermocouple tolerance on both temperatures'
+- id: tRatio_n3000w10
+  quantity: max_temperature_ratio
+  unit: ''
+  case: n3000w10
+  evidence: A
+  value: 1.7361
+  uncertainty: 0.086
+  z_max: 2.0
+  split: development
+  required: false
+  source: Layton 2026 Fig. 11 (Zenodo CSV)
+  where: maximum bush-centreline temperature over the temperature nearest the inlet (-85 deg), both in
+    degC
+  note: 'Stage B: viscous heating; u from the class-2 thermocouple tolerance on both temperatures'
+- id: tRatio_n4000w10
+  quantity: max_temperature_ratio
+  unit: ''
+  case: n4000w10
+  evidence: A
+  value: 1.855
+  uncertainty: 0.086
+  z_max: 2.0
+  split: held_out
+  required: false
+  source: Layton 2026 Fig. 11 (Zenodo CSV)
+  where: maximum bush-centreline temperature over the temperature nearest the inlet (-85 deg), both in
+    degC
+  note: 'Stage B: viscous heating; u from the class-2 thermocouple tolerance on both temperatures'
+notes:
+- Development case n3000w10 (3000 rpm, 10 kN); every other case is held out.
+- Stage A (film pressure) gates the verdict; Stage B (heating) and Stage C (operating film) are scored
+  and reported but not required until a thermo-elasto-hydrodynamic model qualifies (calibration log, nottingham-bearing
+  Run A).

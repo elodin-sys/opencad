@@ -1,0 +1,468 @@
+id: voron-sb-duct
+title: 'Voron Stealthburner printhead front (Rapido V2): two part-cooling ducts, hotend cavity, fan opening;
+  interior connectivity, passage volumes, sections and wall minimum'
+truth_class: B
+role: validation
+source:
+  citation: VoronDesign, Voron-Stealthburner, CAD/Printheads/Stealthburner_Printhead_Rapido_V2.step (front
+    body, solid 0)
+  urls:
+  - https://github.com/VoronDesign/Voron-Stealthburner/tree/main/CAD
+  - https://raw.githubusercontent.com/VoronDesign/Voron-Stealthburner/main/CAD/Printheads/Stealthburner_Printhead_Rapido_V2.step
+  accessed: '2026-09-17'
+  revision: main as of 2026-09-17 (release 1.0, 2024-07-04)
+  license: GNU GPL v3.0
+intent: 'Reconstruct the Voron Stealthburner printhead front housing (Rapido V2 variant) as editable,
+  parameterized KCL from the attached renders, section drawings and dimension sheet, in the reference
+  frame (x symmetric about 0, back mating face y = 0 with the part extending to y = -27.4, z from 2.37
+  at the nozzle end to 61.5 at the top). The interior matters most: two mirrored closed part-cooling ducts
+  from the top fan inlets down to the forked nozzle outlets (about 8 x 19 mm channels with ~1 mm walls,
+  never connected to each other), the hotend cavity (about 26 x 35 mm, open to the back and the nozzle
+  end) with the round hotend-fan opening on the front, and the screw holes. Declare the duct probe points
+  as void probes, the sections as acceptance sections, the ducts as passages and the wall minimum as a
+  thickness check. Cosmetic styling, text and grille are optional. One solid; export STEP and STL. Reference
+  CAD is evaluator-only.'
+inputs:
+- path: inputs/voron-duct-description.md
+  kind: text
+  sha256: 6393278735f162422209a12eb2ac58b40a8446fd7ebd46f9d419992a8b322623
+  note: part identity, frame, interior description, what is scored
+- path: inputs/dimension-sheet.md
+  kind: text
+  sha256: 3d150ee78d7c71e164535fe895088ffa4d6d75114b58edd6328fff4c47c695bf
+  note: evaluator-prepared dimension sheet
+- path: inputs/renders/back.png
+  kind: image
+  sha256: d9993a7951305125b17849520dc3e4c593395cd32e33913a96e816f8ad86d78b
+  units: mm
+  note: evaluator render
+- path: inputs/renders/bottom.png
+  kind: image
+  sha256: 99a231fa19ee41312e13e5235b253b6171240a53631fbf94471c4e645c9f3465
+  units: mm
+  note: evaluator render
+- path: inputs/renders/front.png
+  kind: image
+  sha256: 545e3b87263e28c5d3ec34276955fb4796248332983d2cb49684c082202dbfb3
+  units: mm
+  note: evaluator render
+- path: inputs/renders/iso-below.png
+  kind: image
+  sha256: 5414dfaf4b3c5fb32a2a42897ff413d0507e7cb5ee2320238c5b55c837b3bd92
+  units: mm
+  note: evaluator render
+- path: inputs/renders/iso.png
+  kind: image
+  sha256: a53d5ef420cd2e45ef1942b8cfd74e9eaeed82b33961f3292e4cd0e1f0478436
+  units: mm
+  note: evaluator render
+- path: inputs/renders/iso2.png
+  kind: image
+  sha256: cfb622b1cf2de0621babf230fe4f377a990ef9946d58e5d955b758c9f5ebf12e
+  units: mm
+  note: evaluator render
+- path: inputs/renders/left.png
+  kind: image
+  sha256: a83a406028cfd1bc310776c2f0dbc4673dbb2ba88ebff0e472b53ad421a0640d
+  units: mm
+  note: evaluator render
+- path: inputs/renders/right.png
+  kind: image
+  sha256: 1f14cfe9a9de8a8327a3bc12b991464d85c6adef10c453a56161a6b650cf8b8d
+  units: mm
+  note: evaluator render
+- path: inputs/renders/section-x-22.png
+  kind: image
+  sha256: 906479b97107a387f93734009e482a1acc4d75a5cb6248f771ca3f3c21a88b61
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/section-x0.png
+  kind: image
+  sha256: 30db4695d01c4e2003cbb782debc4a2b3d23ef76c3c16dd9e909edcc7d102059
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/section-x22.png
+  kind: image
+  sha256: 79b4f1c7e3912577c067c94093f09d39c34c00614892ee0feeb0a53d7e7ae26c
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/section-y-12.png
+  kind: image
+  sha256: 74706b6b2d6db03fda484965c3f4d48bb5b989228adb13b016f3c05e12c11b72
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/section-y-20.png
+  kind: image
+  sha256: e781d9072805478672deecc52820cbd86e53bd009b9fbd069821bc956731ef7e
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/section-y-5.png
+  kind: image
+  sha256: 7bea7ed7c698ff28593792036b35fbc018c616541aab1781bf97c073385a3869
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/section-z10.png
+  kind: image
+  sha256: 8db2da999a0d047e26f34a264313a178cc6239c3dff22ee2cc55c055fa433c96
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/section-z20.png
+  kind: image
+  sha256: 7b13af9a25b7bc409aaae9b72f126ee1fe5588f789c46445f3b6cdfdc88962c9
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/section-z30.png
+  kind: image
+  sha256: 9553a783bcec14250054a90b8a863b43302fb9944fc146c2cbc73f185aabf918
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/section-z45.png
+  kind: image
+  sha256: b72331aead4d9c114de497d1bd77f6ad435396d064b488b73603c04d3c7ca4c8
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/section-z55.png
+  kind: image
+  sha256: 8176c82680b60fd3ad92c5b3478a21a6268b169ad22d2f45f0461cf20f413e6b
+  units: mm
+  note: evaluator section drawing (reveals the passages)
+- path: inputs/renders/top.png
+  kind: image
+  sha256: c035e03a2df785aafcdb61474a38934d50799a6c09d2ce653e8936d1dadd20cc
+  units: mm
+  note: evaluator render
+- path: inputs/renders/render-notes.md
+  kind: text
+  sha256: 8e01aeb577033da71d8a610d78928238f48355dce9e0971edbc621f990ca0b6b
+  note: what each render shows
+truth:
+- path: truth/sb-printhead-front.step
+  kind: cad
+  sha256: 7739f3c78e67a49da8a58fb7c4139b395fb7d9b49fbe879a345ab46386595359
+  units: mm
+  note: front duct body extracted from the printhead STEP
+- path: truth/sb-printhead-front.stl
+  kind: mesh
+  sha256: 6670543c94844598150c628b20405327e47ac5a4a740db5a13f972d69ea2509b
+  units: mm
+  note: OpenCascade tessellation (0.02 mm) for passages, thickness and deviation
+- path: truth/LICENSE-GPL-3.0.txt
+  kind: text
+  sha256: 3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986
+  note: repository license
+arms:
+- id: renders-sections-sheet
+  design: voron-sb-duct
+  inputs:
+  - inputs/voron-duct-description.md
+  - inputs/dimension-sheet.md
+  - inputs/renders/back.png
+  - inputs/renders/bottom.png
+  - inputs/renders/front.png
+  - inputs/renders/iso-below.png
+  - inputs/renders/iso.png
+  - inputs/renders/iso2.png
+  - inputs/renders/left.png
+  - inputs/renders/right.png
+  - inputs/renders/section-x-22.png
+  - inputs/renders/section-x0.png
+  - inputs/renders/section-x22.png
+  - inputs/renders/section-y-12.png
+  - inputs/renders/section-y-20.png
+  - inputs/renders/section-y-5.png
+  - inputs/renders/section-z10.png
+  - inputs/renders/section-z20.png
+  - inputs/renders/section-z30.png
+  - inputs/renders/section-z45.png
+  - inputs/renders/section-z55.png
+  - inputs/renders/top.png
+  - inputs/renders/render-notes.md
+  images:
+  - inputs/renders/back.png
+  - inputs/renders/bottom.png
+  - inputs/renders/front.png
+  - inputs/renders/iso-below.png
+  - inputs/renders/iso.png
+  - inputs/renders/iso2.png
+  - inputs/renders/left.png
+  - inputs/renders/right.png
+  - inputs/renders/section-x-22.png
+  - inputs/renders/section-x0.png
+  - inputs/renders/section-x22.png
+  - inputs/renders/section-y-12.png
+  - inputs/renders/section-y-20.png
+  - inputs/renders/section-y-5.png
+  - inputs/renders/section-z10.png
+  - inputs/renders/section-z20.png
+  - inputs/renders/section-z30.png
+  - inputs/renders/section-z45.png
+  - inputs/renders/section-z55.png
+  - inputs/renders/top.png
+  notes: Exterior renders plus section drawings that reveal the passages; hidden geometry the inputs do
+    not show is not penalised.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 71.068
+  - 27.4
+  - 59.133
+  tolerance: 0.3
+- id: solid_count
+  kind: solid_count
+  expected: 1
+- id: volume
+  kind: volume
+  required: false
+  from:
+    file: truth/sb-printhead-front.step
+    measure: volume
+  tolerance_rel: 0.06
+  note: 'diagnostic: styling surfaces are cosmetic'
+- id: passage_left_duct
+  kind: passage
+  point: &id001
+  - -21.2
+  - -14.4
+  - 50.8
+  point_b:
+  - -26.0
+  - -10.0
+  - 10.0
+  pitch: 0.4
+  seal_radius: 3.2
+  volume_min: 3474.3
+  volume_max: 5211.4
+  note: air path left_duct; reference passage volume 4343 mm3
+- id: passage_right_duct
+  kind: passage
+  point: &id002
+  - 22.0
+  - -11.2
+  - 43.6
+  point_b:
+  - 26.0
+  - -10.0
+  - 10.0
+  pitch: 0.4
+  seal_radius: 3.2
+  volume_min: 3440.4
+  volume_max: 5160.7
+  note: air path right_duct; reference passage volume 4301 mm3
+- id: ducts_separate
+  kind: passage
+  point: *id001
+  point_b: *id002
+  pitch: 0.4
+  seal_radius: 3.2
+  expect_connected: false
+  note: the two part-cooling ducts must not share air
+- id: section_ym12
+  kind: section
+  plane: y
+  at: -12.0
+  expected:
+    area: 1412.07
+    holes: 5
+  area_tolerance_rel: 0.06
+  note: 'material at the station: 1 loops, 5 holes in the reference'
+- id: section_ym20
+  kind: section
+  plane: y
+  at: -20.0
+  expected:
+    area: 1459.74
+  area_tolerance_rel: 0.08
+  note: 'material at the station: 3 loops, 6 holes in the reference'
+- id: section_z10
+  kind: section
+  plane: z
+  at: 10.0
+  expected:
+    area: 435.42
+  area_tolerance_rel: 0.08
+  note: 'material at the station: 3 loops, 4 holes in the reference'
+- id: section_z30
+  kind: section
+  plane: z
+  at: 30.0
+  expected:
+    area: 739.16
+  area_tolerance_rel: 0.08
+  note: 'material at the station: 2 loops, 2 holes in the reference'
+- id: section_z45
+  kind: section
+  plane: z
+  at: 45.0
+  expected:
+    area: 565.96
+  area_tolerance_rel: 0.08
+  note: 'material at the station: 3 loops, 2 holes in the reference'
+- id: wall_min
+  kind: thickness
+  stat: p05
+  min: 0.75
+  samples: 8000
+  max_thickness: 8.0
+  note: reference p05 0.87 mm, p50 2.98 mm
+- id: hole_d5_m7p0_m3p9_59p4
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -6.963
+  - -3.939
+  - 59.45
+  direction:
+  - -0.0
+  - 0.0
+  - 1.0
+  radius: 2.5
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø5, 2.9 long
+- id: hole_d5_3p9_m7p0_59p4
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 3.939
+  - -6.963
+  - 59.45
+  direction:
+  - -0.0
+  - 0.0
+  - 1.0
+  radius: 2.5
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø5, 2.9 long
+- id: hole_d4p7_m28p0_m2p3_19p0
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -28.0
+  - -2.3
+  - 19.0
+  direction:
+  - 0.0
+  - 1.0
+  - -0.0
+  radius: 2.35
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø4.7, 3.8 long
+- id: hole_d4p7_m25p0_m2p3_35p0
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -25.0
+  - -2.329
+  - 35.0
+  direction:
+  - 0.0
+  - 1.0
+  - -0.0
+  radius: 2.35
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø4.7, 3.86 long
+- id: hole_d4p6_m12p7_m3p2_55p4
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -12.7
+  - -3.2
+  - 55.424
+  direction:
+  - -0.0
+  - 1.0
+  - -0.0
+  radius: 2.3
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø4.6, 5.6 long
+- id: hole_d4p6_12p7_m3p1_55p4
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 12.7
+  - -3.131
+  - 55.424
+  direction:
+  - -0.0
+  - 1.0
+  - -0.0
+  radius: 2.3
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø4.6, 5.46 long
+- id: hole_d3p4_m16p2_m3p7_19p3
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -16.25
+  - -3.75
+  - 19.301
+  direction:
+  - 0.0
+  - 1.0
+  - -0.0
+  radius: 1.7
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø3.4, 7.5 long
+- id: hole_d3p4_16p3_m3p7_19p3
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 16.25
+  - -3.75
+  - 19.301
+  direction:
+  - 0.0
+  - 1.0
+  - -0.0
+  radius: 1.7
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø3.4, 7.5 long
+- id: hole_d2p7_m7p0_m3p9_56p0
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -6.963
+  - -3.939
+  - 56.0
+  direction:
+  - -0.0
+  - 0.0
+  - 1.0
+  radius: 1.35
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø2.7, 4 long
+- id: hole_d2p7_3p9_m7p0_56p0
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 3.939
+  - -6.963
+  - 56.0
+  direction:
+  - -0.0
+  - 0.0
+  - 1.0
+  radius: 1.35
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  note: hole Ø2.7, 4 long
+- id: deviation_vs_voron
+  kind: deviation
+  required: false
+  reference: truth/sb-printhead-front.stl
+  p95_max: 1.0
+  hausdorff_max: 5.0
+  silhouette_iou_min: 0.9
+notes:
+- 'Interior-first benchmark: passages are checked by voxel flood fill on the exported STL with ports sealed
+  by morphological closing (radius 3.2 mm).'
+- Exterior styling is diagnostic (optional volume and deviation).

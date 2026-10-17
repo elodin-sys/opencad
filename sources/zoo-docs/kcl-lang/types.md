@@ -1,0 +1,122 @@
+Source URL: https://zoo.dev/docs/kcl-lang/types
+Title: Values and types
+
+# Values and types
+
+Documentation of the KCL language for the Zoo Design Studio.
+
+`KCL` defines the following types and keywords the language.
+
+All these types can be nested in various forms where nesting applies. Like
+arrays can hold objects and vice versa.
+
+## Constant declaration
+
+Constants are defined with a name and a value, like so:
+
+```kcl
+myBool = false
+```
+
+Currently you cannot redeclare a constant.
+
+
+## Objects
+
+An object is defined with `{}` braces. Here is an example object:
+
+```kcl
+myObj = { a = 0, b = "thing" }
+```
+
+To get the property of an object, you can call `myObj.a`, which in the above
+example returns 0.
+
+## `ImportedGeometry`
+
+Using `import` you can import geometry defined using other CAD software. In KCL,
+these objects have type `ImportedGeometry`, which is distinct from `Solid`: there
+is no access to their internal components, and no conversion between the two
+types.
+
+```
+The input argument of `subtract` requires one or more `Solid`s (`[Solid; 1+]`),
+but found an array of `ImportedGeometry`
+```
+
+To model against imported geometry, either recreate the shape natively in KCL and
+operate on that, or leave the import in place as a reference and build a separate
+part around it. See the [foreign imports docs](foreign-imports) for supported
+formats and [known issues](known-issues) for the engine limitation behind this.
+
+
+## Tags
+
+Tags are used to give a name (tag) to a specific path.
+
+### Tag declarations - `TagDecl`
+
+
+The syntax for declaring a tag is `$myTag`. Tags are used for bodies (such as extrude cap faces). For sketches, reference segment names directly.
+
+**Example: Referencing sketch segments and tagging cap faces**
+
+```kcl
+@settings(kclVersion = 2.0)
+
+sketch001 = sketch(on = XZ) {
+  line1 = line(start = [var -2.17mm, var -0.91mm], end = [var 3.01mm, var -1.57mm])
+  line2 = line(start = [var 3.01mm, var -1.57mm], end = [var 3.13mm, var 3.12mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 3.13mm, var 3.12mm], end = [var -2.26mm, var 2.4mm])
+  coincident([line2.end, line3.start])
+  line4 = line(start = [var -2.26mm, var 2.4mm], end = [var -2.17mm, var -0.91mm])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+}
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 5, tagEnd = $capEnd001)
+fillet001 = fillet(extrude001, tags = getCommonEdge(faces = [region001.tags.line4, capEnd001]), radius = 1)
+```
+
+
+In this example, you reference sketch segments from sketch blocks by their names, using dot notation on the sketch (e.g. `sketch001.line4`). Sketches from KCL 1.0 (using `startSketchOn()`) and regions are scoped to tags, as in `region001.tags.line4`. Tags (using `$`) are only needed for cap faces or other body features.
+
+When a function requires declaring a new tag (using the `$` syntax), the argument has type [`TagDecl`](/docs/kcl-std/types/std-types-TagDecl).
+
+### Tag identifiers
+
+A tag created using a tag declarator can be used by writing its name without the `$`, e.g., `myTag`.
+Where necessary to disambiguate from tag declarations, we call these tag identifiers.
+
+In the example above we use the tag identifier `capEnd001` to get the edge in common
+using `getCommonEdge(capEnd001)`.
+
+
+Tags can identify an edge or face of a solid. Functions that take a tag identifier as an argument will use either [`TaggedEdge`](/docs/kcl-std/types/std-types-TaggedEdge) (for the edge of a solid) or [`TaggedFace`](/docs/kcl-std/types/std-types-TaggedFace).
+
+#### `START` and `END` vs. `body.faces`
+
+[`START`](/docs/kcl-std/consts/std-START) and [`END`](/docs/kcl-std/consts/std-END) are special tags
+for identifying the starting and ending faces of an extruded solid.
+
+Using `START` and `END` can be convenient sometimes, but they are generally discouraged since they're ambiguous. It's not clear what face is being referred to without also specifying the body.
+
+When you tag a face in an extrusion, it becomes one of that body's named faces. In the example above, `extrude001.faces.capEnd001` refers to the end-cap face.
+
+This is also useful when you create the body in a function and need to refer to one of its faces in the calling scope. You can simply return the body, and callers can access all of the body's named faces.
+
+
+### Tag Scope
+
+Tags are scoped globally if declared in the root context. For bodies, you can use the tag anywhere in the file. For sketches, always use the segment name directly.
+
+For backward compatibility reasons, tags may leak outside of function scopes and be updated (i.e. re-bound to the face of a different body), which can be confusing about which geometry you're trying to refer to.
+
+For this reason, it's strongly preferred to use dot notation on the body, as in `extrude001.faces.capEnd001` for an end-cap face or `region001.tags.line4` for a wall face.
+
+---
+
+If you find any issues using any of the above expressions or syntax,
+please file an issue with the `ast` label on the [modeling-app
+repo](https://github.com/KittyCAD/modeling-app/issues/new).

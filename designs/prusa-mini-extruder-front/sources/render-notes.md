@@ -1,0 +1,18 @@
+Renders of the reference (MINI-extruder-front.stp): 8488 triangles, extents 53.000 x 14.000 x 63.720 mm, bbox min [-26.5, -0.0, -30.0] max [26.5, 14.0, 33.72]. Orthographic views with a mm grid; sections show the material outline.
+- top.png
+- bottom.png
+- front.png
+- back.png
+- right.png
+- left.png
+- iso.png
+- iso2.png
+- iso-below.png
+- section-y7.png
+- section-y1.5.png
+- section-y12.png
+- section-x0.png
+- section-x-18.5.png
+- section-z0.png
+- section-z17.png
+- section-z-20.png

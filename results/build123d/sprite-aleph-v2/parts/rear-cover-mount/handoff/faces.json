@@ -1,0 +1,109 @@
+{
+  "named_faces": {
+    "topCoverSeat": {
+      "plane": "y",
+      "at": 35.5,
+      "normal": "+",
+      "found": 1,
+      "area": 117.94203281328508,
+      "ok": true,
+      "position": 35.5,
+      "centroid_uv": [
+        5.551115123125783e-17,
+        29.823811971368915
+      ]
+    },
+    "underFace": {
+      "plane": "y",
+      "at": 31.5,
+      "normal": "-",
+      "found": 1,
+      "area": 74.09247689174632,
+      "ok": true,
+      "position": 31.499999999999996,
+      "area_expected": 74.092,
+      "area_ok": true,
+      "centroid_uv": [
+        -5.551115123125783e-17,
+        29.571584531033054
+      ]
+    },
+    "flankPlusX": {
+      "plane": "x",
+      "at": 3.5,
+      "normal": "+",
+      "found": 1,
+      "area": 37.5,
+      "ok": true,
+      "position": 3.5,
+      "area_expected": 37.5,
+      "area_ok": true,
+      "centroid_uv": [
+        34.0,
+        30.25
+      ]
+    },
+    "flankMinusX": {
+      "plane": "x",
+      "at": -3.5,
+      "normal": "-",
+      "found": 1,
+      "area": 37.5,
+      "ok": true,
+      "position": -3.5,
+      "area_expected": 37.5,
+      "area_ok": true,
+      "centroid_uv": [
+        34.0,
+        30.25
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "topCoverSeat",
+      "plane": "y",
+      "at": 35.5,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "underFace",
+      "plane": "y",
+      "at": 31.5,
+      "normal": "-",
+      "area": 74.092,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "flankPlusX",
+      "plane": "x",
+      "at": 3.5,
+      "normal": "+",
+      "area": 37.5,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "flankMinusX",
+      "plane": "x",
+      "at": -3.5,
+      "normal": "-",
+      "area": 37.5,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 4
+}

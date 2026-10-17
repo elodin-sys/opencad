@@ -1,0 +1,337 @@
+{
+  "case": "nasa-atb-axisymmetric-bump",
+  "arm": "text-and-points",
+  "design": "nasa-atb-axisymmetric-bump",
+  "truth_class": "C",
+  "role": "validation",
+  "scored_at": "2026-09-16T10:28:34Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 11,
+    "required_total": 11,
+    "optional_pass": 0,
+    "optional_total": 0
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        1550.010234,
+        190.5,
+        190.5
+      ],
+      "measured": [
+        1550.0102302,
+        190.50000088116326,
+        190.50000088116326
+      ],
+      "error": 3.800000058618025e-06,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "band also covers the R2 = 203.2 mm alternate (volume +3726 mm3, 0.013 %)",
+      "expected": 29664339.610171862,
+      "measured": 29664258.086577885,
+      "error": 81.5235939770937,
+      "band": 59328.67922034372,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "center_of_mass",
+      "kind": "center_of_mass",
+      "required": true,
+      "note": "",
+      "expected": [
+        123.82900362633464,
+        -0.050850250495143745,
+        -7.327277394486154e-15
+      ],
+      "measured": [
+        123.8290542571531,
+        -1.5095097794676802e-07,
+        6.776157998050443e-15
+      ],
+      "error": 0.0508500995441658,
+      "ok": true
+    },
+    {
+      "id": "upstream_disk",
+      "kind": "section",
+      "required": true,
+      "note": "pi (d/2)^2 on the cylinder",
+      "plane": "x",
+      "at": -630.0,
+      "measured": {
+        "area": 18241.46924750992,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 18241.47,
+          "measured": 18241.46924750992,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "crest_disk",
+      "kind": "section",
+      "required": true,
+      "note": "pi (d/2 + t)^2 at mid-chord",
+      "plane": "x",
+      "at": 101.6,
+      "measured": {
+        "area": 28502.23154192908,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 28502.3,
+          "measured": 28502.23154192908,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "downstream_disk",
+      "kind": "section",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": 223.2,
+      "measured": {
+        "area": 18241.46924750992,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 18241.47,
+          "measured": 18241.46924750992,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "inlet_cap",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": -650.00732,
+      "normal": "-",
+      "found": 1,
+      "area": 18241.46924750992,
+      "expected_area": 18241.47,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        0.0,
+        -3.759252285832675e-15
+      ],
+      "ok": true
+    },
+    {
+      "id": "outlet_cap",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": 900.00291,
+      "normal": "+",
+      "found": 1,
+      "area": 18241.46924750992,
+      "expected_area": 18241.47,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        0.0,
+        -3.759252285832675e-15
+      ],
+      "ok": true
+    },
+    {
+      "id": "meridian",
+      "kind": "profile2d",
+      "required": true,
+      "note": "open-polyline one-way (published meridian onto the diametral section). TE of the NASA grid has a tiny fillet the analytic truth omits (max ~0.36 mm).",
+      "plane": "z",
+      "at": 0.0,
+      "reference_points": 181,
+      "candidate_samples": 68277,
+      "chord_definition": "farthest_pair",
+      "reference_closed": false,
+      "reference": {
+        "area": 2643.901328066364,
+        "chord": 1550.0102339839998,
+        "stagger_deg": 0.0,
+        "landmark_chord": 1550.0102339839998,
+        "landmark_stagger_deg": 0.0,
+        "max_thickness": 17.269603601439997,
+        "bbox_min": [
+          -650.0073203535999,
+          76.19999999999999
+        ],
+        "bbox_max": [
+          900.0029136303999,
+          95.24992128032
+        ]
+      },
+      "measured": {
+        "area": 241504.06947132983,
+        "chord": null,
+        "stagger_deg": null,
+        "bbox_min": [
+          -650.0073200000002,
+          -95.2499867685382
+        ],
+        "bbox_max": [
+          900.00291,
+          95.24999995200734
+        ],
+        "d_c2r_max": 190.49736076763725,
+        "d_r2c_max": 0.33654656203511774,
+        "section_iou": null
+      },
+      "checks": {
+        "p95": {
+          "max": 0.5,
+          "measured": 0.024734618680735163,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "deviation_vs_truth",
+      "kind": "deviation",
+      "required": true,
+      "note": "",
+      "measured": {
+        "p95": 0.13471300077622153,
+        "hausdorff_estimate": 0.5162131592012088,
+        "silhouette_iou_min": 0.9959641957907165,
+        "volume_ratio": 0.9986772359743457
+      },
+      "checks": {
+        "p95": {
+          "max": 0.2,
+          "measured": 0.13471300077622153,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 1.0,
+          "measured": 0.5162131592012088,
+          "ok": true
+        },
+        "silhouette_iou": {
+          "min": 0.98,
+          "measured": 0.9959641957907165,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "287052dbb9eb5fb624bb6006703301e17f9756c681b8976b8df226c09a209d57",
+    "truth_files": {
+      "truth/bump.step": "ec625b869a13a301ebe46f2e8093613e935cd3b438dafa78e16b241d08b229f7",
+      "truth/bump.stl": "3efa69d46411228aa10c6081eaf1c97b316f6b242e0aedd3f7cd5cb45c95f6c1",
+      "truth/bumpgrd.surfpts_orig.dat": "46f028810ad0e6e68e20520452edb44c2dfe77b42ceefa59229733d92bb15b1f"
+    },
+    "input_files": {
+      "inputs/nasa-atb-bump-spec.md": "f773288693cfbcd96bc113422d051fd3f47b86791ad0c254f7c704e99ce86165",
+      "inputs/bumpgrd.surfpts_orig.dat": "46f028810ad0e6e68e20520452edb44c2dfe77b42ceefa59229733d92bb15b1f"
+    },
+    "kcl": {
+      "main.kcl": "ff85498e7f6fdd7e2905e00b17c48782efa8552577a25fe3e0385c4c4c46e4f2"
+    },
+    "step_sha256": "4e9a8107d2974bdfb03389e3c27bb24a6f6836a96fdcf556f4f30bd547494f13",
+    "design_bundle": {
+      "brief.md": "331dac44017c7c33e6a94af135ea3cdca74c68178bef05101c23c453bcd30b97",
+      "contract.yaml": "f25bfd4c9d67af38cf784b28bb4d4b92792e6bae1eacbb82c869cd5b04287944",
+      "reference/profile.json": "32b04d48e80559b1e61f02b364213768d9fdee0f03423e0b29ee5bb8ca900b1c",
+      "reference/profile.png": "4a9d293999dd4fa5f207270b279a6237aa144e62610cd43bee6d6b48e9a67f91",
+      "sources/bumpgrd.surfpts_orig.dat": "46f028810ad0e6e68e20520452edb44c2dfe77b42ceefa59229733d92bb15b1f",
+      "sources/nasa-atb-bump-spec.md": "f773288693cfbcd96bc113422d051fd3f47b86791ad0c254f7c704e99ce86165"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "2",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-16T10:28:34Z",
+    "skillkat_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "b69def70d78d68384e06aa772ba77397c10dc6c2",
+      "dirty": true
+    }
+  }
+}

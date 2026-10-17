@@ -1,0 +1,38 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio
+Title: Zoo Design Studio
+
+# Zoo Design Studio
+
+Guide to the Zoo Design Studio.
+
+## Introduction
+
+Zoo Design Studio is a unified CAD suite for engineering and manufacturing companies.
+Like traditional CAD applications, Zoo Design Studio allows users to create and edit 3D
+models of parts and assemblies.
+
+However, unlike traditional CAD applications, Zoo Design Studio offers more than one approach
+to geometry creation. It also includes **Zookeeper**, a conversational CAD agent that enables
+design engineers to use AI to create and iterate on complex designs.
+
+By supporting traditional point-and-click interactions, programmatic
+geometry creation with code, and natural-language interactions via Zookeeper, Zoo Design Studio
+allows users to flexibly weave edits to their designs between these three approaches.
+
+Zoo Design Studio is built using a proprietary geometry engine, and is GPU-based,
+cloud-implemented, API-accessible, and dynamically scalable.
+
+This guide will help you get started with Zoo Design Studio, and is intended for
+first-time users. It covers the following topics:
+
+- [Getting started](/docs/zoo-design-studio/getting-started#getting-started)
+- [Point-and-click tutorials](/docs/zoo-design-studio/point-and-click-tutorials)
+- [Creating a new project](/docs/zoo-design-studio/getting-started#creating-a-new-project)
+- [Zookeeper basics](/docs/zoo-design-studio/getting-started#zookeeper-basics)
+- [Sketch basics](/docs/zoo-design-studio/getting-started#sketch-basics)
+- [KCL basics](/docs/zoo-design-studio/getting-started#kcl-basics)
+- [Importing and exporting files](/docs/zoo-design-studio/getting-started#importing-and-exporting-files)
+
+For a guided introduction to modeling with the visual tools, follow the
+[Point-and-Click Tutorials](/docs/zoo-design-studio/point-and-click-tutorials). For more tips and
+deeper dives, visit our <a href="https://www.youtube.com/@zoodotdev" target="_blank">YouTube channel</a>.

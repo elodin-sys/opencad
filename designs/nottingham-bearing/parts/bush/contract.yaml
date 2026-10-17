@@ -1,0 +1,372 @@
+schema_version: 1
+name: nottingham-bearing-bush
+intent: >-
+  Stationary 180-degree half-journal bush of the University of Nottingham highly loaded half-journal
+  bearing rig (Layton et al. 2026, Lubricants 14(2) 76, section 2; sources/bearing-packet.md is the only
+  and authoritative source, text only). EN24T steel, Ra 0.1 um bore. The body is the half annulus
+  50.1 <= r <= 75, y <= 0, 0 <= z <= 75 in the assembly frame: a D100.2 bore about +z spanning 180 deg
+  below the axis from t = -90 deg (inlet edge, x = -50.1) through BDC (t = 0, -y) to t = +90 deg (outlet
+  edge, x = +50.1), split faces in y = 0, end faces z = 0 and z = 75, and an inferred D150 concentric
+  outside. The bore is the outer wall of the oil film facing the D100.0 shaft journal across a 0.1 mm
+  radial clearance. Pressure tappings and thermocouples are measurement locations only: no holes,
+  grooves, chamfers or feed ports.
+units:
+  length: mm
+  angle: deg
+material: "EN24T steel (BS 970 817M40)"
+density_kg_m3: 7850
+process: "machined half-journal bush (process not stated), bore Ra 0.1 um"
+release_status: reconstruction
+
+frame:
+  origin: >-
+    on the bearing axis in the plane of the end face z = 0 (the bore centre of that end face); this is
+    the assembly frame of nottingham-bearing
+  axes:
+    x: >-
+      horizontal, in the split plane, toward the outlet edge (t = +90 deg, x = +50.1); the inlet edge
+      (t = -90 deg) is at x = -50.1
+    y: >-
+      vertical, from bottom dead centre toward the axis: BDC is the -y direction, the bush material lies
+      in y <= 0 and both split faces lie in y = 0
+    z: >-
+      bearing axis, from end face z = 0 to end face z = 75 (axial centreline z = 37.5); the shaft turns
+      positively about +z, so its surface moves from the inlet edge through BDC to the outlet edge.
+      Angle t is measured from BDC toward +x: a bore point is (50.1 sin t, -50.1 cos t, z)
+  datums:
+    - name: A
+      description: "end face z = 0, outward normal -z (film edge, oilFixed joint origin [0, 0, 0])"
+    - name: B
+      description: "split plane y = 0 holding both split faces, outward normal +y"
+    - name: C
+      description: "bore axis x = y = 0 along +z (journal revolute joint axis)"
+    - name: D
+      description: "axial centreline plane z = 37.5 (journal joint point [0, 0, 37.5])"
+
+envelope:
+  min: [-75, -75, 0]
+  max: [75, 0, 75]
+  tolerance: 0.05
+
+parameters:
+  - name: boreDiameter
+    value: 100.2
+    unit: mm
+    provenance: stated
+    source: "sources/bearing-packet.md, Unit under test: half journal (bush bore) 100.2 mm diameter, tolerance 0.01 mm"
+    tolerance: 0.01
+    description: "bush bore diameter (radius 50.1) about the z axis; 0.1 mm radial clearance to the D100.0 shaft"
+  - name: outerDiameter
+    value: 150
+    unit: mm
+    provenance: inferred
+    rationale: >-
+      the packet gives no outside dimension; a concentric D150 half cylinder (24.9 mm radial wall) is
+      taken from the user intent so the bush can be built; it does not touch any interface
+    tolerance: 1.0
+    description: "outside half-cylinder diameter (radius 75), concentric with the bore"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 91302.5
+        direction: increase
+        bbox_delta: [10, 5, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [120, 150, 180]
+      infeasible_deltas: [-50]
+  - name: bushLength
+    value: 75
+    unit: mm
+    provenance: stated
+    source: "sources/bearing-packet.md, Unit under test: the bearing (bush) is 75 mm long; axial centreline at 37.5 mm"
+    tolerance: 0.01
+    description: "axial length from end face z = 0 to end face z = bushLength"
+    edit_test:
+      delta: 5
+      expect:
+        volume_delta: 24465.1
+        direction: increase
+        bbox_delta: [0, 0, 5]
+        tolerance_rel: 0.02
+      sweep:
+        values: [50, 75, 100]
+      infeasible_deltas: [-75]
+  - name: arcSpan
+    value: 180
+    unit: deg
+    provenance: stated
+    source: "sources/bearing-packet.md, Unit under test: a bush that spans 180 degrees of the circumference; arc -90 to +90 deg from BDC"
+    tolerance: 0.01
+    description: "angular span of the bore, centred on BDC (-y), so both split faces lie in y = 0"
+
+features:
+  - id: halfShell
+    kind: extrude
+    description: >-
+      half annulus outerDiameter / boreDiameter spanning arcSpan below the axis (y <= 0), extruded
+      bushLength along +z from z = 0; one solid
+    parameters: [outerDiameter, boreDiameter, arcSpan, bushLength]
+    verify:
+      - method: bbox
+      - method: section
+        section: midZ
+      - method: section
+        section: bdcX
+      - method: cylinder
+        cylinder: outer
+      - method: face
+        face: endFront
+      - method: face
+        face: endBack
+      - method: dimension
+        dimension: length
+      - method: solid
+        points: [[0, -62.55, 37.5], [-44.23, -44.23, 18.5], [44.23, -44.23, 56]]
+  - id: bore
+    kind: cut
+    description: "D100.2 half bore about the z axis through the full length, t = -90 to +90 deg through BDC"
+    parameters: [boreDiameter, arcSpan]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: count
+        section: tapY
+        count: 2
+      - method: void
+        points: [[0, -40, 37.5], [0, -49, 37.5], [-30, -30, 10], [30, -30, 65]]
+  - id: splitFaces
+    kind: profile
+    description: "inlet (x < 0) and outlet (x > 0) split faces in the plane y = 0, each 24.9 x 75 mm; nothing above y = 0"
+    parameters: [arcSpan, outerDiameter, boreDiameter, bushLength]
+    verify:
+      - method: face
+        face: splitInlet
+      - method: face
+        face: splitOutlet
+      - method: plane
+        plane: splitPlaneInlet
+      - method: plane
+        plane: splitPlaneOutlet
+      - method: void
+        points: [[0, 20, 37.5], [-62.55, 5, 37.5], [62.55, 5, 37.5]]
+  - id: instrumentStations
+    kind: other
+    description: >-
+      the six pressure tappings (t = -20 and -45 deg at z = 18.5, 37.5, 56) and the centreline thermocouple
+      row (t = -85..+90 deg, 1 mm below the bore) are measurement locations only: the wall stays solid there
+      and no hole, groove, chamfer or feed port is modelled
+    verify:
+      - method: solid
+        points:
+          - [-18.811, -51.683, 18.5]
+          - [-18.811, -51.683, 37.5]
+          - [-18.811, -51.683, 56]
+          - [-38.891, -38.891, 18.5]
+          - [-38.891, -38.891, 37.5]
+          - [-38.891, -38.891, 56]
+      - method: solid
+        points: [[-50.906, -4.454, 37.5], [-36.133, -36.133, 37.5], [0, -51.1, 37.5], [36.133, -36.133, 37.5], [50.906, -4.454, 37.5]]
+
+interfaces:
+  - name: journalBore
+    description: >-
+      the D100.2 bore about the z axis faces the D100.0 shaft journal (revolute joint `journal` at
+      [0, 0, 37.5], axis +z) across the 0.1 mm radial clearance and is the outer wall of the oil film;
+      neither edit test moves or resizes it, and both keep the mirror plane x = 0
+    must_not_change: true
+    checks: [bore, mirrorX]
+  - name: filmEdges
+    description: >-
+      end face z = 0 (datum A, rigid joint `oilFixed` at [0, 0, 0]) and the split plane y = 0 (datum B)
+      bound the oil film edges and place the bush in the assembly frame; the far end face z = bushLength
+      also bounds the film but moves with the bushLength edit, so it is checked by `endBack` and `length`
+    must_not_change: true
+    checks: [endFront, splitPlaneInlet, splitPlaneOutlet]
+
+acceptance:
+  volume:
+    expected: 366976.1
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "(pi / 2) * (75^2 - 50.1^2) * 75 = 4893.015 * 75"
+  surface_area:
+    expected: 42997.0
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "bore pi*50.1*75 = 11804.5 + outside pi*75*75 = 17671.5 + two ends 2*4893.0 + two split faces 2*24.9*75 = 3735"
+  center_of_mass:
+    expected: [0, -40.346, 37.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "y = -(4 / (3 pi)) * (75^3 - 50.1^3) / (75^2 - 50.1^2); x = 0 and z = 37.5 by symmetry"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 37.5
+      expect:
+        area: 4893.0
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "half annulus at the axial centreline: (pi / 2) * (75^2 - 50.1^2)"
+    - id: bdcX
+      plane: x
+      at: 0
+      expect:
+        area: 1867.5
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "wall at BDC: y from -75 to -50.1 over z 0..75, 24.9 * 75"
+    - id: tapY
+      plane: y
+      at: -20
+      expect:
+        area: 3952.4
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 0
+      description: "two strips 45.935 <= |x| <= 72.284 over z 0..75: 2 * (sqrt(75^2 - 20^2) - sqrt(50.1^2 - 20^2)) * 75"
+  faces:
+    - name: endFront
+      plane: z
+      at: 0
+      normal: "-"
+      mode: one
+    - name: endBack
+      plane: z
+      at: 75
+      normal: "+"
+      area: 4893.0
+      area_tolerance_rel: 0.005
+      center: [0, -40.346]
+      mode: one
+    - name: splitInlet
+      plane: y
+      at: 0
+      normal: "+"
+      area: 1867.5
+      area_tolerance_rel: 0.005
+      center: [-62.55, 37.5]
+      mode: one
+    - name: splitOutlet
+      plane: y
+      at: 0
+      normal: "+"
+      area: 1867.5
+      area_tolerance_rel: 0.005
+      center: [62.55, 37.5]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 100.2
+      radius_tolerance: 0.005
+      description: "D100.2 half bore (radius 50.1), 180 deg below the axis; outer wall of the oil film"
+    - name: outer
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 150
+      radius_tolerance: 0.05
+      description: "inferred D150 outside half cylinder, concentric with the bore"
+  planes:
+    - name: splitPlaneInlet
+      point: [-62.55, 0, 37.5]
+      normal: [0, 1, 0]
+      description: "inlet split face (t = -90 deg side) lies in y = 0"
+    - name: splitPlaneOutlet
+      point: [62.55, 0, 37.5]
+      normal: [0, 1, 0]
+      description: "outlet split face (t = +90 deg side) lies in y = 0"
+  dimensions:
+    - name: length
+      axis: z
+      expected: 75
+      tolerance: 0.02
+      between: [endFront, endBack]
+      description: "stated bush length between the end faces"
+    - name: spanX
+      axis: x
+      expected: 150
+      tolerance: 0.1
+      description: "bbox extent along x, set by the inferred outside diameter"
+    - name: spanY
+      axis: y
+      expected: 75
+      tolerance: 0.1
+      description: "bbox extent along y: outside radius below the split plane"
+  solids:
+    - name: body
+      contains_point: [0, -62.55, 37.5]
+      description: "the single bush solid, mid-wall at BDC"
+  probes:
+    - name: wallSolid
+      state: solid
+      points: [[0, -62.55, 37.5], [-44.23, -44.23, 18.5], [44.23, -44.23, 56], [-62.312, -5.452, 37.5], [62.312, -5.452, 37.5]]
+      description: "mid-wall (r = 62.55) around the arc"
+    - name: tappingsSolid
+      state: solid
+      points:
+        - [-18.811, -51.683, 18.5]
+        - [-18.811, -51.683, 37.5]
+        - [-18.811, -51.683, 56]
+        - [-38.891, -38.891, 18.5]
+        - [-38.891, -38.891, 37.5]
+        - [-38.891, -38.891, 56]
+      description: "r = 55 on the six pressure-tapping stations (t = -20, -45 deg; z = 18.5, 37.5, 56): no tapping holes"
+    - name: thermocoupleRowSolid
+      state: solid
+      points: [[-50.906, -4.454, 37.5], [-36.133, -36.133, 37.5], [0, -51.1, 37.5], [36.133, -36.133, 37.5], [50.906, -4.454, 37.5]]
+      description: "r = 51.1 (1 mm below the bore) on the centreline row at t = -85, -45, 0, 45, 85 deg: no thermocouple holes"
+    - name: boreVoid
+      state: void
+      points: [[0, -40, 37.5], [0, -49, 37.5], [-30, -30, 10], [30, -30, 65]]
+      description: "inside the bore (journal side), at least 1.1 mm from the bore surface"
+    - name: aboveSplitVoid
+      state: void
+      points: [[0, 20, 37.5], [-62.55, 5, 37.5], [62.55, 5, 37.5]]
+      description: "above the split plane: the bush spans only 180 deg"
+  cylinder_counts:
+    - name: boreCount
+      diameter: 100.2
+      radius_tolerance: 0.005
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+      description: "one D100.2 bore about the z axis"
+  symmetry:
+    - name: mirrorX
+      plane: x
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+    - name: mirrorZ
+      plane: z
+      at: 37.5
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 355000
+    volume_max: 380000
+
+references:
+  - path: sources/bearing-packet.md
+    kind: text
+    role: authoritative
+    sha256: 59abf634a3867c0c21ea6118b6bf08e72e4cfdfc5d0eb56ceacbfd8c8d944c4b
+    units: mm
+    revision: "Layton et al. 2026, Lubricants 14(2) 76, doi:10.3390/lubricants14020076, section 2 transcription"
+    note: "the only source; text only, no drawing or CAD"
+
+open_questions:
+  - "The packet gives no outside dimension of the bush; the D150 concentric half cylinder (24.9 mm wall) is inferred from the user intent."
+  - "No end-face or bore-edge chamfers, fillets, feed grooves or mounting features are stated; the bush is modelled as a plain half annulus."
+  - "The +90 deg thermocouple (1 mm below the bore) lies in the split plane y = 0, so it cannot be probed as inside material; the row is probed from -85 to +85 deg."
+  - "The inlet film generator at the inlet edge is not modelled; how it seals against the inlet split face is not stated."
+  - "EN24T density is not stated in the paper; 7850 kg/m3 is the handbook value for 817M40 steel."
+  - "The pressure tappings are asymmetric about the centreline (z = 18.5 and 56 around 37.5); they are measurement stations only and do not break the modelled z = 37.5 symmetry."

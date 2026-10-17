@@ -1,0 +1,454 @@
+{
+  "case": "spleen-c1-blade",
+  "arm": "table-and-notes",
+  "design": "spleen-c1-blade",
+  "truth_class": "B",
+  "role": "validation",
+  "scored_at": "2026-09-16T10:32:19Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 12,
+    "required_total": 12,
+    "optional_pass": 0,
+    "optional_total": 0
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        47.9727,
+        31.2123,
+        165.0
+      ],
+      "measured": [
+        47.97269,
+        31.212320329052318,
+        165.0
+      ],
+      "error": 2.0329052318857066e-05,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "38055.5 mm3 = 230.64 mm2 x 165 mm; 0.4 % allows for curve fitting through the published points and the 0.435 mm TE radius",
+      "expected": 38055.54277899529,
+      "measured": 38055.12510178579,
+      "error": 0.4176772095015622,
+      "band": 152.22217111598115,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "center_of_mass",
+      "kind": "center_of_mass",
+      "required": true,
+      "note": "",
+      "expected": [
+        20.619763426241885,
+        1.0447954300575213,
+        82.50000000000004
+      ],
+      "measured": [
+        20.61965762118676,
+        1.0449258448734555,
+        82.50000000000001
+      ],
+      "error": 0.0001304148159342322,
+      "ok": true
+    },
+    {
+      "id": "midspan_profile",
+      "kind": "profile2d",
+      "required": true,
+      "note": "section of the blade at mid-span against the published closed profile: p95 distance, area, farthest-pair chord and its angle",
+      "plane": "z",
+      "at": 82.5,
+      "reference_points": 2000,
+      "candidate_samples": 6000,
+      "chord_definition": "farthest_pair",
+      "reference_closed": true,
+      "reference": {
+        "area": 230.63711778179277,
+        "chord": 52.987829613124575,
+        "stagger_deg": -26.18651302333979,
+        "landmark_chord": 52.284640202739865,
+        "landmark_stagger_deg": -24.40085023652175,
+        "max_thickness": 11.156875639227488,
+        "bbox_min": [
+          -0.19685863578579998,
+          -21.6984059788506
+        ],
+        "bbox_max": [
+          47.77582706417,
+          9.51390836469706
+        ]
+      },
+      "measured": {
+        "area": 230.63710614368813,
+        "chord": 52.987830613228574,
+        "stagger_deg": -26.115052727217105,
+        "bbox_min": [
+          -0.19686146636047067,
+          -21.698408141837277
+        ],
+        "bbox_max": [
+          47.77583216138737,
+          9.513905772813354
+        ],
+        "d_c2r_max": 6.7284823479888945e-06,
+        "d_r2c_max": 7.774720413944166e-06,
+        "section_iou": 0.9977627673651867
+      },
+      "checks": {
+        "p95": {
+          "max": 0.05,
+          "measured": 5.716100475974435e-06,
+          "ok": true
+        },
+        "area": {
+          "expected": 230.63711778179277,
+          "measured": 230.63710614368813,
+          "ok": true
+        },
+        "chord": {
+          "expected": 52.987829613124575,
+          "measured": 52.987830613228574,
+          "ok": true
+        },
+        "stagger_deg": {
+          "expected": -26.18651302333979,
+          "measured": -26.115052727217105,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "midspan_landmarks",
+      "kind": "profile2d",
+      "required": true,
+      "note": "LE-to-TE of side 1: documented chord 52.2846 mm at -24.4009 deg. Farthest-pair is not the documented stagger.",
+      "plane": "z",
+      "at": 82.5,
+      "reference_points": 2000,
+      "candidate_samples": 6000,
+      "chord_definition": "landmarks",
+      "reference_closed": true,
+      "reference": {
+        "area": 230.63711778179277,
+        "chord": 52.987829613124575,
+        "stagger_deg": -26.18651302333979,
+        "landmark_chord": 52.284640202739865,
+        "landmark_stagger_deg": -24.40085023652175,
+        "max_thickness": 11.156875639227488,
+        "bbox_min": [
+          -0.19685863578579998,
+          -21.6984059788506
+        ],
+        "bbox_max": [
+          47.77582706417,
+          9.51390836469706
+        ]
+      },
+      "measured": {
+        "area": 230.63710614368813,
+        "chord": 52.28463912820498,
+        "stagger_deg": -24.400844382889748,
+        "bbox_min": [
+          -0.19686146636047067,
+          -21.698408141837277
+        ],
+        "bbox_max": [
+          47.77583216138737,
+          9.513905772813354
+        ],
+        "d_c2r_max": 6.7284823479888945e-06,
+        "d_r2c_max": 7.774720413944166e-06,
+        "section_iou": 0.9977627673651867
+      },
+      "checks": {
+        "p95": {
+          "max": 0.05,
+          "measured": 5.716100475974435e-06,
+          "ok": true
+        },
+        "area": {
+          "expected": 230.63711778179277,
+          "measured": 230.63710614368813,
+          "ok": true
+        },
+        "chord": {
+          "expected": 52.284640202739865,
+          "measured": 52.28463912820498,
+          "ok": true
+        },
+        "stagger_deg": {
+          "expected": -24.40085023652175,
+          "measured": -24.400844382889748,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "root_profile",
+      "kind": "profile2d",
+      "required": true,
+      "note": "a straight extrusion has the same profile at every station",
+      "plane": "z",
+      "at": 5.0,
+      "reference_points": 2000,
+      "candidate_samples": 6000,
+      "chord_definition": "farthest_pair",
+      "reference_closed": true,
+      "reference": {
+        "area": 230.63711778179277,
+        "chord": 52.987829613124575,
+        "stagger_deg": -26.18651302333979,
+        "landmark_chord": 52.284640202739865,
+        "landmark_stagger_deg": -24.40085023652175,
+        "max_thickness": 11.156875639227488,
+        "bbox_min": [
+          -0.19685863578579998,
+          -21.6984059788506
+        ],
+        "bbox_max": [
+          47.77582706417,
+          9.51390836469706
+        ]
+      },
+      "measured": {
+        "area": 230.63710614368813,
+        "chord": 52.987830613228574,
+        "stagger_deg": -26.115052727217105,
+        "bbox_min": [
+          -0.19686146636047067,
+          -21.698408141837277
+        ],
+        "bbox_max": [
+          47.77583216138737,
+          9.513905772813354
+        ],
+        "d_c2r_max": 6.7284823479888945e-06,
+        "d_r2c_max": 7.774720413944166e-06,
+        "section_iou": 0.9977627673651867
+      },
+      "checks": {
+        "p95": {
+          "max": 0.05,
+          "measured": 5.716100475974435e-06,
+          "ok": true
+        },
+        "area": {
+          "expected": 230.63711778179277,
+          "measured": 230.63710614368813,
+          "ok": true
+        },
+        "chord": {
+          "expected": 52.987829613124575,
+          "measured": 52.987830613228574,
+          "ok": true
+        },
+        "stagger_deg": {
+          "expected": -26.18651302333979,
+          "measured": -26.115052727217105,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "midspan_section",
+      "kind": "section",
+      "required": true,
+      "note": "OpenCascade planar sections of B-spline solids carry about 0.2 % area bias; tolerance widened accordingly",
+      "plane": "z",
+      "at": 82.5,
+      "measured": {
+        "area": 230.63710614368813,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 230.64,
+          "measured": 230.63710614368813,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "root_face",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 230.63710671495562,
+      "expected_area": 230.64,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        20.619658227527296,
+        1.0449270636349821
+      ],
+      "ok": true
+    },
+    {
+      "id": "tip_face",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 165.0,
+      "normal": "+",
+      "found": 1,
+      "area": 230.63710671495704,
+      "expected_area": 230.64,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        20.619658227527363,
+        1.0449270636349586
+      ],
+      "ok": true
+    },
+    {
+      "id": "deviation_vs_v2_blade",
+      "kind": "deviation",
+      "required": true,
+      "note": "the v2 CAD blade differs from the point table only by its curve fit and rounded trailing edge",
+      "measured": {
+        "p95": 0.00595006240214695,
+        "hausdorff_estimate": 0.025891907431774414,
+        "silhouette_iou_min": 0.9940339230022935,
+        "volume_ratio": 1.000152440797193
+      },
+      "checks": {
+        "p95": {
+          "max": 0.05,
+          "measured": 0.00595006240214695,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 0.5,
+          "measured": 0.025891907431774414,
+          "ok": true
+        },
+        "silhouette_iou": {
+          "min": 0.99,
+          "measured": 0.9940339230022935,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "not_matching_v1_wrong_stagger",
+      "kind": "not_matching",
+      "required": true,
+      "note": "v1 CAD (Zenodo 7264762, 2022-10-30) has the documented wrong stagger; measured p95 between the derived v1 and v2 blades is 0.568 mm, so min_distance is half of that. A reconstruction of the table/v2 geometry must sit farther than this from the v1 blade.",
+      "measured": {
+        "p95": 0.5757238651123686,
+        "hausdorff_estimate": 1.0020323601630035,
+        "silhouette_iou_min": 0.8642086709091419,
+        "volume_ratio": 1.0161243674993226
+      },
+      "checks": {
+        "p95_exceeds": {
+          "min": 0.28,
+          "measured": 0.5757238651123686,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [
+    {
+      "name": "blade_pressure_distribution_steady_inlet",
+      "value": 0.0,
+      "uncertainty": null,
+      "units": "Mach / Cp along the blade at midspan",
+      "note": "measured in the cascade (periodic passage, documented inlet conditions); a later CFD comparison, never a CAD input"
+    }
+  ],
+  "hash_binding": {
+    "manifest_sha256": "200fb44a3b41e190b33c6f565badf54c8da4715415bc4e235d53c65526b0b9e3",
+    "truth_files": {
+      "truth/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx": "eb02e45c1ff8b6f94fcb7a91209f5b0113c96b1ffa27f9cbaff18133cb37a4f2",
+      "truth/spleen-c1-blade3-from-v2.step": "9d20056c7dee245e991584d5fca0d2031e39d84071327e8fc179e7f12b1abbf5",
+      "truth/spleen-c1-blade3-from-v2.stl": "55c8bd35f69ca52972cfe883a56991039fac1c6ad6a3ab7dc5f500c0d6891f28",
+      "truth/spleen-c1-blade3-from-v1.step": "8c8c4401d63167c437193a314b7da9728b3e2483d254994cffda26a8149533bd",
+      "truth/spleen-c1-blade3-from-v1.stl": "c5d51731904b066f9cce72008c2589fe9bbcf1dee06c3ff7f42f5c9f8eaa2e0c"
+    },
+    "input_files": {
+      "inputs/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx": "eb02e45c1ff8b6f94fcb7a91209f5b0113c96b1ffa27f9cbaff18133cb37a4f2",
+      "inputs/spleen-c1-geometry-excerpt.md": "f3e30892ac891e29e7b6483e6456b6d7e2364fdf719a08a28e0f13ada6fc18e8"
+    },
+    "kcl": {
+      "main.kcl": "7f65e01f4caa6483a68a87260c3060047017fb6bf91035136b13e3a48c070d5b"
+    },
+    "step_sha256": "d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532",
+    "design_bundle": {
+      "brief.md": "a423091b8f2e3559d0e4a21adb905d8bf5d4e1c1bdae8bcbd18e950da45da51a",
+      "contract.yaml": "5fda62a56777fd20c8ea8983e8dcec17c3a6a2fab492f2c0c3edac8f6b4e3e8a",
+      "reference/profile.json": "0566d60bccac41d4dcbb77698128b45c40ce94b7256b153278998cc265e371e7",
+      "reference/profile.png": "882cb4e073a2d8c3fb8beab93ed9095e96565fffff2ad9ef81c1596dde6d75dd",
+      "sources/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx": "eb02e45c1ff8b6f94fcb7a91209f5b0113c96b1ffa27f9cbaff18133cb37a4f2",
+      "sources/spleen-c1-geometry-excerpt.md": "f3e30892ac891e29e7b6483e6456b6d7e2364fdf719a08a28e0f13ada6fc18e8"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "2",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-16T10:32:19Z",
+    "skillkat_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "b69def70d78d68384e06aa772ba77397c10dc6c2",
+      "dirty": true
+    }
+  }
+}

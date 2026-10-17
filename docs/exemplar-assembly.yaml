@@ -1,0 +1,161 @@
+# Filled exemplar of an AssemblyContract (a fictitious geared blower). Copy the shape, not the machine.
+schema_version: 1
+kind: assembly
+name: demo-blower
+intent: >-
+  Geared centrifugal blower from sources/spec.md: a volute housing with a D40 inlet and a 20 x 16 outlet, a six-blade
+  D36 impeller whose hub carries a 40-tooth wheel, driven by a 20-tooth pinion on a purchased D24 x 30 motor; predict
+  the static pressure rise at the design and high-speed cases.
+units: {length: mm, angle: deg}
+frame:
+  origin: impeller axis on the housing back face
+  axes: {x: from the impeller axis toward the outlet, y: completes a right-handed frame, z: "impeller axis, toward the inlet"}
+  datums:
+    - {name: A, description: housing back face z = 0}
+    - {name: B, description: impeller axis x = y = 0}
+envelope: {min: [-45.0, -40.0, -30.0], max: [60.0, 40.0, 25.0], tolerance: 0.1}
+datum_part: housing
+parts:
+  - name: housing
+    kind: modelled
+    design: demo-blower-housing
+    intent: >-
+      Volute housing in its own frame, which is the assembly frame: back plate z = 0..3, spiral wall 2 thick from r = 22 at
+      the cutwater to r = 38, top plate z = 20..23 with a D40 inlet bore on the axis, outlet duct 20 wide (y) x 16 high (z)
+      ending at the plane x = 60; D8 bearing boss on the axis at z = 0..3; motor seat D24 at (0, -30, -30..0).
+    material: polycarbonate
+    density_kg_m3: 1200
+  - name: impeller
+    kind: modelled
+    design: demo-blower-impeller
+    intent: >-
+      Impeller in its own frame: axis +z through the origin, hub back face z = 0. D36 x 2 backplate, six radial blades
+      1.5 thick and 12 tall from r = 6 to r = 18, a 40-tooth m0.5 spur wheel (face 4, z = -4..0) under the backplate,
+      D8 bore through.
+    material: nylon
+    density_kg_m3: 1140
+  - name: pinion
+    kind: modelled
+    design: demo-blower-pinion
+    intent: Pinion in its own frame, axis +z through the origin, 20 teeth m0.5, face 4 (z = 0..4), D2 bore.
+  - name: motor
+    kind: purchased
+    catalog: {name: motor, kind: cylinder, point: [0.0, 0.0, -30.0], direction: [0.0, 0.0, 1.0], radius: 12.0, length: 30.0}
+    description: purchased DC motor body in its own frame, shaft axis +z through the origin, face z = 0
+  - name: air
+    kind: derived
+    role: fluid
+    description: the air inside the housing minus the impeller, capped at the inlet and outlet planes (built in the assembly source)
+parameters:
+  - {name: centreDistance, value: 15.0, unit: mm, provenance: derived, tolerance: 0.01, formula: "gearModule * (20 + 40) / 2", description: pinion to wheel axis distance}
+joints:
+  - name: motorMount
+    kind: rigid
+    parent: housing
+    child: motor
+    parent_frame: {origin: [0.0, -15.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+  - name: pinionSpin
+    kind: revolute
+    parent: motor
+    child: pinion
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0]}
+    offset: -4.0
+    drive: {kind: motor, case_value: motorRpm}
+  - name: impellerSpin
+    kind: revolute
+    parent: housing
+    child: impeller
+    parent_frame: {origin: [0.0, 0.0, 4.0], axis: [0.0, 0.0, 1.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0]}
+    drive: {kind: free, description: driven through gearPair}
+  - name: airFixed
+    kind: rigid
+    parent: housing
+    child: air
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+transmissions:
+  - name: gearPair
+    kind: gear
+    driver: pinionSpin
+    driven: impellerSpin
+    ratio: -0.5
+    mesh: {pitch_deg: 18.0, steps: 12, backlash_max: 0.15}
+    description: 20 -> 40 teeth, opposite sense
+fluid_volumes:
+  - name: air
+    body: air
+    walls: [housing]
+    minus: [impeller]
+    caps:
+      - {name: inletCap, point: [0.0, 0.0, 23.0], normal: [0.0, 0.0, 1.0]}
+      - {name: outletCap, point: [60.0, 0.0, 12.0], normal: [1.0, 0.0, 0.0]}
+    seed: [28.0, 0.0, 12.0]
+    volume: {expected: 38000.0, tolerance_rel: 0.1, provenance: derived, note: "housing cavity minus impeller, from the section areas in brief section 5"}
+boundaries:
+  - {name: inlet, role: inlet, body: air, select: plane, point: [0.0, 0.0, 23.0], normal: [0.0, 0.0, 1.0]}
+  - {name: outlet, role: outlet, body: air, select: plane, point: [60.0, 0.0, 12.0], normal: [1.0, 0.0, 0.0]}
+  - {name: impellerWall, role: rotating_wall, body: air, select: touching, touching: impeller}
+  - {name: housingWall, role: wall, body: air, select: rest}
+operating_cases:
+  - {id: design, values: {motorRpm: 12000.0, impellerRpm: 6000.0, flowLMin: 150.0}, units: {motorRpm: rpm, impellerRpm: rpm, flowLMin: L/min}, split: development, source: sources/spec.md table 2, description: impellerRpm = motorRpm x 0.5 (gearPair)}
+  - {id: high, values: {motorRpm: 14000.0, impellerRpm: 7000.0, flowLMin: 200.0}, units: {motorRpm: rpm, impellerRpm: rpm, flowLMin: L/min}, split: held_out, source: sources/spec.md table 2}
+observables:
+  - {id: pressureRise, quantity: pressure_rise, unit: Pa, simulation: euler, case: design, averaging: steady, min: 150.0, description: static pressure outlet minus inlet; the spec requires at least 150 Pa}
+  - {id: pressureRiseHigh, quantity: pressure_rise, unit: Pa, simulation: euler, case: high, averaging: steady}
+  - {id: pressureRiseCfd, quantity: pressure_rise, unit: Pa, simulation: cfd, case: design, averaging: steady, min: 150.0}
+  - {id: impellerTorque, quantity: torque, unit: N m, simulation: cfd, case: design, averaging: steady}
+  - {id: impellerTipDeflection, quantity: max_displacement, unit: mm, simulation: impellerStress, case: high, body: impeller, averaging: maximum, max: 0.2}
+  - {id: gearRatio, quantity: transmission_ratio, unit: "", expected: {expected: -0.5, tolerance: 1.0e-5, provenance: derived, note: "20/40, opposite sense"}}
+  - {id: impellerAtTwoPitches, quantity: joint_value, unit: deg, joint: impellerSpin, at: 36.0, expected: {expected: -18.0, tolerance: 1.0e-3, provenance: derived, note: "36 deg x -0.5"}, description: impeller angle from rest after two pinion pitches}
+simulations:
+  - id: euler
+    physics: reduced
+    solver: reduced:fan_euler
+    cases: [design, high]
+    bodies: [impeller, air]
+    inputs:
+      airDensity: {value: 1.2, unit: kg/m3, provenance: stated, source: sources/spec.md table 3}
+      slipFactor: {value: 0.8, unit: "", provenance: inferred, rationale: "Stodola slip for six radial blades, stated in brief section 6", uncertainty: 0.05}
+    outputs: [pressureRise, pressureRiseHigh]
+  - id: cfd
+    physics: cfd_steady
+    solver: openfoam
+    cases: [design]
+    bodies: [air, impeller]
+    inputs:
+      fluidDensity: {value: 1.2, unit: kg/m3, provenance: stated, source: sources/spec.md table 3}
+      fluidViscosity: {value: 1.8e-5, unit: Pa s, provenance: inferred, rationale: "air at 20 degC; the spec states no viscosity", uncertainty: 3.0e-7}
+    settings: {flow_key: flowLMin, speed_key: impellerRpm, inlet_diameter_mm: 40.0, cell_mm: 1.0, surface_level: 1, iterations: 1500, processes: 8, timeout_s: 7200}
+    regions:
+      - {name: tipGap, shape: rotor_tip, inside_mm: 1.0, outside_mm: 2.0, axial_margin_mm: 1.0, description: the blade tips and the gap to the volute}
+    refinement:
+      - {factor: 1.0, regions: {tipGap: 1}}
+      - {factor: 0.7, regions: {tipGap: 1}}
+      - {factor: 0.5, regions: {tipGap: 1}, iterations: 2000}
+    outputs: [pressureRiseCfd, impellerTorque]
+    description: steady MRF on a three-level ladder (the grid-convergence index); the tip region is refined on every level so each step refines everywhere
+  - id: impellerStress
+    physics: structural_static
+    solver: calculix
+    cases: [high]
+    bodies: [impeller]
+    inputs:
+      impeller.youngsModulus: {value: 2.7e9, unit: Pa, provenance: stated, source: sources/spec.md table 3}
+      impeller.poissonRatio: {value: 0.39, unit: "", provenance: stated, source: sources/spec.md table 3}
+      impeller.density: {value: 1140.0, unit: kg/m3, provenance: stated, source: sources/spec.md table 3}
+    settings: {mesh_size_mm: 1.5, fixed_boundary: impellerBore}
+    outputs: [impellerTipDeflection]
+    refinement: [1.0, 0.7, 0.5]
+acceptance:
+  clearances:
+    - {name: impellerInHousing, a: impeller, b: housing, min_gap: 0.5}
+    - {name: gearsSeparate, a: pinion, b: impeller, min_gap: 0.0, max_gap: 0.15}
+  motions:
+    - {name: spin, drive: pinionSpin, range: [0.0, 36.0], steps: 24, description: two pinion pitches; the impeller follows through gearPair}
+references:
+  - {path: sources/spec.md, kind: text, role: authoritative, sha256: "<sha256 of sources/spec.md>"}
+open_questions:
+  - The spec gives no motor mounting screws; the motor is fixed rigidly on its seat.

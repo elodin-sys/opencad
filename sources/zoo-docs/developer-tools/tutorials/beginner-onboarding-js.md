@@ -1,0 +1,302 @@
+Source URL: https://zoo.dev/docs/developer-tools/tutorials/beginner-onboarding-js
+Title: Create Your First CAD Model with TypeScript
+
+# Create Your First CAD Model with TypeScript
+
+Use TypeScript to create and export a green cube with the Engine API.
+
+This quickstart shows you how to create your first CAD model from TypeScript
+with the Engine API. You will open a Modeling WebSocket, send commands
+that create a cube, color it green, and save the model as a STEP file.
+
+The Engine API is the low-level modeling API behind Zoo Design Studio.
+It accepts typed modeling commands over a WebSocket and returns structured
+responses that you can use to build geometry, inspect results, and export files.
+
+**Note**: There is an even easier way to connect to the Engine API:
+[`@kittycad/web-view`](https://github.com/KittyCAD/web-view). It lets you submit
+KCL directly and attach the live engine view to a `<video>` element with very
+little code. The rest of this quickstart uses the lower-level Modeling WebSocket
+so you can understand the fundamentals of what the helper library is doing.
+
+## What you will build
+
+You will run a TypeScript script that creates a 20 mm cube, applies a green PBR
+material, and writes the exported model to `green-cube.step`.
+
+## Prerequisites
+
+Before you start, make sure you have:
+
+- A [Zoo account](/account)
+- [Node.js 22 or newer](https://nodejs.org/en/download) installed on your computer
+- A terminal app, such as Terminal on macOS or Linux, or PowerShell on Windows
+
+## Get an API token
+
+We will need an API token in order to use Zoo's services.
+
+<DocCardGrid>
+  <DocCard
+    title="Generate an API token"
+    href="/account/developer"
+  >
+    Zoo uses an API token to verify that requests come from a particular account.
+  </DocCard>
+</DocCardGrid>
+
+**Keep your token private**. Do not share it or commit it to source control.
+
+## Set your API token
+
+Set your API token as the `ZOO_API_TOKEN` environment variable. The script reads
+this value and passes it to `@kittycad/lib`, which authenticates the Modeling
+WebSocket session.
+
+On macOS or Linux, run:
+
+```bash
+export ZOO_API_TOKEN="YOUR-API-TOKEN"
+```
+
+On Windows PowerShell, run:
+
+```powershell
+$env:ZOO_API_TOKEN = "YOUR-API-TOKEN"
+```
+
+## Create a TypeScript project
+
+Create a folder for the quickstart and move into it.
+
+On Windows PowerShell, macOS, or Linux, run:
+
+```bash
+mkdir engine-typescript-quickstart
+cd engine-typescript-quickstart
+npm init -y
+npm pkg set type=module
+npm install @kittycad/lib @msgpack/msgpack
+npm install --save-dev @types/node tsx typescript
+```
+
+This guide uses `@kittycad/lib` to create the API client, build the Modeling
+WebSocket URL, authenticate the session, serialize commands, parse responses,
+send modeling commands, and provide TypeScript types. Export responses are
+binary MsgPack messages, so the script uses `@msgpack/msgpack` to decode the
+exported STEP file. Node.js provides the native WebSocket runtime.
+
+## Write the script
+
+Create a file named `create_green_cube.ts` and paste in this script:
+
+```ts
+import { writeFile } from 'node:fs/promises'
+import { randomUUID } from 'node:crypto'
+
+import { Client, modeling } from '@kittycad/lib'
+import { decode } from '@msgpack/msgpack'
+import type {
+  ModelingCmd,
+  OkModelingCmdResponse,
+  WebSocketRequest,
+  WebSocketResponse,
+} from '@kittycad/lib'
+
+const OUTPUT_FILE = 'green-cube.step'
+const CUBE_SIZE_MM = 20
+
+const client = new Client(process.env.ZOO_API_TOKEN)
+const ModelingWs = modeling.modeling_commands_ws
+const url = ModelingWs.urlConstructFrom({ client, webrtc: false })
+
+async function sendCommand(
+  ws: WebSocket,
+  cmd: ModelingCmd,
+  cmdId = randomUUID()
+): Promise<WebSocketResponse> {
+  const request: WebSocketRequest = {
+    type: 'modeling_cmd_req',
+    cmd_id: cmdId,
+    cmd,
+  }
+
+  return new Promise((resolve) => {
+    const onMessage = (event: MessageEvent) => {
+      const response =
+        event.data instanceof ArrayBuffer
+          ? (decode(event.data) as WebSocketResponse)
+          : (ModelingWs.parseMessage(event) as WebSocketResponse)
+
+      if (!('resp' in response)) {
+        return
+      }
+
+      if (response.resp.type !== 'modeling' && response.resp.type !== 'export') {
+        return
+      }
+
+      ws.removeEventListener('message', onMessage)
+      resolve(response)
+    }
+
+    ws.addEventListener('message', onMessage)
+    ws.send(ModelingWs.toBSON(request))
+  })
+}
+
+async function main() {
+  const ws = new WebSocket(url)
+  ws.binaryType = 'arraybuffer'
+
+  await new Promise<void>((resolve) => {
+    ws.addEventListener('open', () => resolve(), { once: true })
+  })
+
+  ModelingWs.authenticate({ client }, ws)
+
+  const pathId = randomUUID()
+
+  await sendCommand(ws, { type: 'start_path' }, pathId)
+  await sendCommand(ws, {
+    type: 'move_path_pen',
+    path: pathId,
+    to: { x: 0, y: 0, z: 0 },
+  })
+  await sendCommand(ws, {
+    type: 'extend_path',
+    path: pathId,
+    segment: {
+      type: 'line',
+      end: { x: CUBE_SIZE_MM, y: 0, z: 0 },
+      relative: false,
+    },
+  })
+  await sendCommand(ws, {
+    type: 'extend_path',
+    path: pathId,
+    segment: {
+      type: 'line',
+      end: { x: CUBE_SIZE_MM, y: CUBE_SIZE_MM, z: 0 },
+      relative: false,
+    },
+  })
+  await sendCommand(ws, {
+    type: 'extend_path',
+    path: pathId,
+    segment: {
+      type: 'line',
+      end: { x: 0, y: CUBE_SIZE_MM, z: 0 },
+      relative: false,
+    },
+  })
+  await sendCommand(ws, { type: 'close_path', path_id: pathId })
+
+  await sendCommand(ws, {
+    type: 'extrude',
+    target: pathId,
+    distance: CUBE_SIZE_MM,
+    extrude_method: 'new',
+  })
+
+  const sceneResponse = (await sendCommand(ws, {
+    type: 'scene_get_entity_ids',
+    filter: ['solid3d'],
+    skip: 0,
+    take: 1,
+  })) as { resp: { data: { modeling_response: OkModelingCmdResponse } } }
+  const scene = sceneResponse.resp.data
+    .modeling_response as Extract<
+    OkModelingCmdResponse,
+    { type: 'scene_get_entity_ids' }
+  >
+
+  const cubeId = scene.data.entity_ids[0]![0]!
+
+  await sendCommand(ws, {
+    type: 'object_set_material_params_pbr',
+    object_id: cubeId,
+    color: { r: 0.1, g: 0.85, b: 0.2, a: 1 },
+    metalness: 0,
+    roughness: 0.5,
+    ambient_occlusion: 1,
+  })
+
+  const exportedResponse = (await sendCommand(ws, {
+    type: 'export',
+    entity_ids: [cubeId],
+    format: { type: 'step', units: 'mm' },
+  })) as { resp: { data: { files: { contents: number[] }[] } } }
+
+  const stepFile = exportedResponse.resp.data.files[0]
+
+  await writeFile(OUTPUT_FILE, Buffer.from(stepFile.contents))
+  ws.close()
+
+  console.log(`Saved ${OUTPUT_FILE}`)
+}
+
+await main()
+```
+
+## Create and export the cube
+
+Run the script:
+
+```bash
+npx tsx create_green_cube.ts
+```
+
+The script opens a WebSocket to the Engine API, authenticates it with
+your API token, and sends modeling commands one at a time.
+
+First, it creates a closed square path in the XY plane. Then it extrudes that
+path by the same distance as the square's side length, which creates a cube. The
+script reads the created body ID from the `extrude` response, uses that ID to
+set the cube's material color to green, and exports the body as STEP.
+
+You should see output similar to:
+
+```bash
+Saved green-cube.step
+```
+
+Open the generated STEP file in Zoo Design Studio or another CAD tool to inspect
+the model.
+
+## Modeling command shape
+
+The client sends each modeling command as a WebSocket request. For example, the
+STEP export command has this shape:
+
+```json
+{
+  "type": "modeling_cmd_req",
+  "cmd_id": "<random-uuid>",
+  "cmd": {
+    "type": "export",
+    "entity_ids": ["<cube-body-id>"],
+    "format": {
+      "type": "step",
+      "units": "mm"
+    }
+  }
+}
+```
+
+Each response includes the original `cmd_id` as `request_id`. The script uses
+that ID to match every response to the command that produced it. Most modeling
+responses are JSON text messages, while export responses are binary MsgPack
+messages that contain the exported file bytes.
+
+## Next steps
+
+Now that you have sent your first Engine API commands, try changing the
+script:
+
+- Change `CUBE_SIZE_MM` to create a larger or smaller cube
+- Change the `color` values to apply a different material color
+- Add more path segments before the `extrude` command to create a new profile
+
+For the full list of available modeling commands, see the
+[Engine API reference](/docs/developer-tools/api/modeling/open-a-websocket-which-accepts-modeling-commands).

@@ -1,0 +1,477 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Sketch on face - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/sketch_on_face.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="sketch-on-face"><a class="header" href="#sketch-on-face">Sketch on face</a></h1>
+<ul>
+<li><a href="#side-faces">Side faces</a></li>
+<li><a href="#standard-faces">Standard faces</a></li>
+<li><a href="#tags">Tags</a></li>
+<li><a href="#sketch-on-chamfer">Sketch on chamfer</a></li>
+<li><a href="#updating-bodies-or-creating-new-bodies">Updating bodies, or creating new bodies?</a></li>
+</ul>
+<p>In the previous chapter, we looked at how leveraging KCL tags lets you query your edges (to find their length, or angle with the previous edge), or apply an edge cut (like a fillet or chamfer). But you can also tag more than just edges! In this chapter, we'll learn how to tag faces, and how that lets you build more complicated 3D models.</p>
+<h2 id="side-faces"><a class="header" href="#side-faces">Side faces</a></h2>
+<p>Let's start with a simple example. First, we'll sketch and extrude a triangle.</p>
+<pre><code class="language-kcl=triangle_for_sketching">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Make a triangle
+sketch001 = sketch(on = YZ) {
+  line1 = line(start = [var 5.29mm, var -4.11mm], end = [var -4.31mm, var -4.11mm])
+  line2 = line(start = [var -4.31mm, var -4.11mm], end = [var 0.49mm, var 5.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.49mm, var 5.14mm], end = [var 5.29mm, var -4.11mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+  equalLength([line2, line3])
+  horizontal(line1)
+}
+
+// Extrude it
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 1)
+</code></pre>
+<p><model-viewer
+            alt="An extruded triangle"
+            src="gltf/triangle_for_sketching/output.gltf"
+            poster="images/dynamic/triangle_for_sketching.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+When our triangle is extruded, its 3 edges create 3 new side faces, one for each original edge. I like to imagine extrusion like an invisible hand grabbing the flat sketch and pulling it upwards into the third dimension, slowly stretching each edge until they expand to become faces (surfaces). So, each new side face corresponds to an existing edge. And crucially, the faces are linked back to their parent edge. This means the face which grew out of the <code>line1</code> can be referred to via <code>extrude001.sketch.tags.line1</code>. We can use this to reference this face in our 3D model.</p>
+<p>Now, if we want to start a new sketch <em>on that face</em>, we can do so, with the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-faceOf"><code>faceOf</code></a> function!</p>
+<pre><code class="language-kcl">myFace = faceOf(extrude001, face = region001.tags.line3)
+sketch003 = sketch(on = myFace) {
+  // We'll add lines to this sketch later.
+}
+</code></pre>
+<p>In all the previous example sketches, we've sketched on a <em>plane</em> (like XY or YZ). But now, we're passing a solid face (of our extruded triangle) instead. The solid has five faces (three side faces, a bottom, and a top), so we use <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-faceOf"><code>faceOf</code></a> to say which face in particular we want to sketch on. As we discussed above, the face can be referenced via <code>line1</code> (the line that it was extruded from). Now we can start sketching on this face, and even extrude that sketch too.</p>
+<pre><code class="language-kcl=triangle_with_cylinder_sketched">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Make a triangle
+sketch001 = sketch(on = YZ) {
+  line1 = line(start = [var 5.29mm, var -4.11mm], end = [var -4.31mm, var -4.11mm])
+  line2 = line(start = [var -4.31mm, var -4.11mm], end = [var 0.49mm, var 5.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.49mm, var 5.14mm], end = [var 5.29mm, var -4.11mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+  equalLength([line2, line3])
+  horizontal(line1)
+}
+
+// Extrude it
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 1)
+
+// Sketch on a face of the triangle.
+face002 = faceOf(extrude001, face = region001.tags.line2)
+sketch003 = sketch(on = face002) {
+  line1 = line(start = [var -3.21mm, var 0mm], end = [var -2.7mm, var 0.65mm])
+  horizontal([line1.start, ORIGIN])
+  line2 = line(start = [var -2.7mm, var 0.65mm], end = [var -2.45mm, var 0.35mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var -2.45mm, var 0.35mm], end = [var -3.21mm, var 0mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+}
+
+// Extrude that sketch
+region002 = region(segments = [sketch003.line1, sketch003.line2])
+extrude002 = extrude(region002, length = 2)
+</code></pre>
+<p><model-viewer
+            alt="Previous triangle now has another triangular prism sketched on one side face"
+            src="gltf/triangle_with_cylinder_sketched/output.gltf"
+            poster="images/dynamic/triangle_with_cylinder_sketched.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Great! We extruded a solid (the triangle), and could sketch on one of its faces, even extruding that sketch.</p>
+<blockquote>
+<p><strong>Note</strong>: When you sketch on a face, the sketch uses the <em>global coordinate system</em>. This means when you use 2D points in your sketches, they're relative to the overall global scene, and <em>not</em> the face you're sketching on.</p>
+</blockquote>
+<p>Sketching on faces is a really common pattern when designing real-world objects. A LEGO brick is a good example -- first you'd sketch the rectangular brick, then you'd sketch on its top face, adding the little bumps on top. But wait a second. How would we specify the top face of the brick? That face isn't created from any particular edge. So we can't tag its <code>line</code> call and then reuse that tag for the face. What should we do?</p>
+<h2 id="standard-faces"><a class="header" href="#standard-faces">Standard faces</a></h2>
+<p>There's a simple solution to sketching on the top face. KCL has some built-in identifiers for the top and bottom face, <a href="https://zoo.dev/docs/kcl-std/consts/std-END"><code>END</code></a> and <a href="https://zoo.dev/docs/kcl-std/consts/std-START"><code>START</code></a>. We prefer the terms "start" and "end" to "top" and "bottom" because the latter depend on your camera angle, so they can be ambiguous. "Start" always refers to the original face from your 2D sketch. "End" always refers to the new face created at the end of the extrusion. Let's use them!</p>
+<pre><code class="language-kcl=triangle_top_and_bottom_sketches">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Same as previous example
+sketch001 = sketch(on = YZ) {
+  line1 = line(start = [var 5.29mm, var -4.11mm], end = [var -4.31mm, var -4.11mm])
+  line2 = line(start = [var -4.31mm, var -4.11mm], end = [var 0.49mm, var 5.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.49mm, var 5.14mm], end = [var 5.29mm, var -4.11mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+  equalLength([line2, line3])
+  horizontal(line1)
+}
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 1)
+
+// Changed: We're using `face = END` here, which is a built-in
+// identifier for the end of an extrusion.
+face002 = faceOf(extrude001, face = END)
+sketch003 = sketch(on = face002) {
+  line1 = line(start = [var -0.3mm, var 0.76mm], end = [var -1.26mm, var -1.25mm])
+  line2 = line(start = [var -1.26mm, var -1.25mm], end = [var 1.68mm, var -1.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 1.68mm, var -1.14mm], end = [var -0.3mm, var 0.76mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+}
+
+// Extrude that sketch
+region002 = region(segments = [sketch003.line1, sketch003.line2])
+extrude002 = extrude(region002, length = 1)
+
+</code></pre>
+<p><model-viewer
+            alt="Solid with another triangle extruded from it"
+            src="gltf/triangle_top_and_bottom_sketches/output.gltf"
+            poster="images/dynamic/triangle_top_and_bottom_sketches.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Great! These built-in face identifiers are always available on solids. We've learned how to sketch on the top, bottom and side faces. That covers all possible faces, right? Right? Not exactly! There's one more kind of face we haven't talked about yet.</p>
+<h2 id="tags"><a class="header" href="#tags">Tags</a></h2>
+<p>When you <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-chamfer"><code>chamfer</code></a> an edge, it creates a new face, which can also be sketched on! But before we do, we've got to take a quick detour and talk about tags.</p>
+<p>When Zoo launched, tags were used a lot. These days, you probably won't ever need to use tags very much, if at all, because they've been mostly replaced by variables. There are still a <em>few</em> cases where you'll need tags, and sketching on a chamfered face is one of them. We're trying to phase them out, but we haven't finished that job yet.</p>
+<p>So far, we've been able to refer to geometric features (like edges and faces) by using variables. But tags let you refer to geometry that isn't assigned to a variable. For example, take the chamfered face created by a <code>chamfer(myRegion)</code> call. When we call <code>mySolid = chamfer(myRegion, length = 1)</code> the variable <code>mySolid</code> refers to the <em>entire</em> solid, including the chamfered face. How do we refer to some specific face, like the chamfered face?</p>
+<p>The solution: we use <code>mySolid = chamfer(myRegion, length = 1, tag = $myFace)</code>. That tags the face, so we can refer to it later as <code>myFace</code>. You can think of this like declaring a variable inside the function, when it executes. The <code>$</code> means you're declaring a tag. So, <code>$myFace</code> <em>declares</em> a tag called <code>myFace</code>. If you later use just <code>myFace</code>, you're <em>referring</em> to a tag that already exists.</p>
+<p>Here's another example. Say you extrude a square into a cube. As discussed above, the top of the cube can be referred to with the standard face <code>END</code>. You can sketch on that top face via <code>sketch(on = faceOf(extrude001, face = END))</code>. Say you extrude a cylinder from the cube. How do you sketch on the top face of the cylinder? Does <code>END</code> refer to the cylinder, or the cube?</p>
+<p>You can use <code>extrude(mySketch, tagEnd = $endOfCylinder)</code> to disambiguate these. Again, this defines a tag as part of the extrude, which refers to a particular face. Then you can use that tag later when you need to use the face.</p>
+<p>Generally you won't need to use this method, but there are some niches where it's helpful.</p>
+<h2 id="sketch-on-chamfer"><a class="header" href="#sketch-on-chamfer">Sketch on chamfer</a></h2>
+<p>Now that we understand tags, we can use them to sketch on a chamfer! When you <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-chamfer"><code>chamfer</code></a> an edge, it creates a new face, which can also be sketched on! Consider this chamfered cube from the previous chapter:</p>
+<pre><code class="language-kcl=chamfered_cube">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Same as previous examples
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Apply a chamfer
+chamferedCube = chamfer(
+  extrudeCube,
+  tags = [getOppositeEdge(extrudeCube.sketch.tags.line1)],
+  length = 0.2,
+)
+</code></pre>
+<p><model-viewer
+            alt="A chamfered cube"
+            src="gltf/chamfered_cube/output.gltf"
+            poster="images/dynamic/chamfered_cube.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+The chamfer produced a new face, and we can sketch on it too. Firstly, we add a tag to the <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-chamfer"><code>chamfer</code></a> call. Then we can use it in <code>faceOf</code>, and then we can sketch on it like any other  face.</p>
+<pre><code class="language-kcl=sketch_on_chamfered_cube">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Same as previous examples
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Apply a chamfer
+chamferedCube = chamfer(
+  extrudeCube,
+  tags = [getOppositeEdge(extrudeCube.sketch.tags.line1)],
+  length = 0.2,
+  // Add a tag to the chamfered face:
+  tag = $myChamferedFace,
+)
+
+// Refer back to the tagged face
+faceToSketchOn = faceOf(extrudeCube, face = myChamferedFace)
+
+// Start sketching on that face.
+triangle = sketch(on = faceToSketchOn) {
+  line1 = line(start = [var -0.37mm, var 0.33mm], end = [var -0.2mm, var 0.47mm])
+  line2 = line(start = [var -0.2mm, var 0.47mm], end = [var 0.26mm, var 0.29mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.26mm, var 0.29mm], end = [var -0.37mm, var 0.33mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+}
+region001 = region(segments = [triangle.line1, triangle.line2])
+extrude001 = extrude(region001, length = 0.4)
+</code></pre>
+<p><model-viewer
+            alt="Chamfered cube with cylinder sketched on the chamfered face"
+            src="gltf/sketch_on_chamfered_cube/output.gltf"
+            poster="images/dynamic/sketch_on_chamfered_cube.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer></p>
+<h2 id="updating-bodies-or-creating-new-bodies"><a class="header" href="#updating-bodies-or-creating-new-bodies">Updating bodies, or creating new bodies?</a></h2>
+<p>When you extrude a sketch from a face, you could be trying to do one of two things:</p>
+<ul>
+<li>Mutating the original body, by adding a new extrusion to it</li>
+<li>Creating a totally new body, which just happens to be touching the previous body.</li>
+</ul>
+<p>Here's an example. Say you extrude a square into a cube, and then you extrude a cylinder out of the cube. Should the cylinder be its own separate body? Or should there be a single body, with a cube volume and a cylindrical volume? Here's a visual:</p>
+<p><img src="images/static/extrude_method.png" alt="The two kinds of extruded sketch-on-face" /></p>
+<p>By default, extruding a sketch which was sketched on a face will <em>merge</em> the extrusion into the original body. In other words, the example on the left. But you can choose to make a <em>new</em> body instead (the example on the right). You can choose between this by setting the <em>extrude method</em>.</p>
+<ul>
+<li>Use <code>extrude(method = MERGE)</code> (the default) to update the original solid.</li>
+<li>Use <code>extrude(method = NEW)</code> (an optional override) to create a new solid instead.</li>
+</ul>
+<p>What's the practical difference between these? If you use <code>MERGE</code>, you've got one body. That means the single unified body will be translated, or rotated, or have its color changed, as one cohesive whole. With <code>NEW</code>, you've got two bodies, so you can reposition them independently, color them differently, etc. You'll learn how to move, rotate and recolor solids in the chapter on <a href="transform_3d.html">transforms</a>.</p>
+<p>OK! Now we've learned how to sketch on all sorts of things:</p>
+<ul>
+<li>Standard planes like XY or -XZ</li>
+<li>Tagged faces of existing solids</li>
+<li>Top or bottom faces of solids, using <a href="https://zoo.dev/docs/kcl-std/consts/std-START"><code>START</code></a> and <a href="https://zoo.dev/docs/kcl-std/consts/std-END"><code>END</code></a></li>
+<li>Chamfered faces cut out of solids, by tagging the <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-chamfer"><code>chamfer</code></a> call</li>
+</ul>
+<p>There's one more thing we can sketch on: custom planes. Let's learn more about planes in the next chapter.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="fillets.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="planes.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="fillets.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="planes.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

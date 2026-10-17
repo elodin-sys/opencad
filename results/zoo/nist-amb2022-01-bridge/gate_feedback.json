@@ -1,0 +1,800 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/nist-amb2022-01-bridge/contract.yaml: 40 parameters {'stated': 25, 'derived': 9, 'measured': 4, 'inferred': 2}; sources unresolved {}; unanchored 0",
+        "open questions: 3 (blocking []); interfaces 4, unenforced ['buildPlateContacts', 'displacementTabTops', 'frameSideAndEndFaces', 'editableDeliverables'] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 25,
+          "derived": 9,
+          "measured": 4,
+          "inferred": 2
+        },
+        "soft_values": 2,
+        "open_questions": [
+          "What are the nominal finished CAD widths of the single-track and double-track internal walls? They are not dimensioned. Pending documentation, singleWallWidth=0.10 mm (tolerance 0.075 mm) and doubleWallWidth=0.20 mm (tolerance 0.15 mm) are inferred rectangular merged-wall equivalents; laser spot diameter does not establish wall thickness.",
+          "Can NIST provide the exact transverse centerlines and end-junction profiles of the four L10 walls? Figure 4 gives approximate +y order single, double, single, double at y=1.30, 2.05, 2.90, 3.65 mm (each tolerance 0.15 mm). The scan schematic does not fix finished bead or junction profiles.",
+          "Which alloy and density apply to this individual artifact if a mass result is required? The supplied geometry excerpt gives neither; material and density remain null."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [
+          "buildPlateContacts",
+          "displacementTabTops",
+          "frameSideAndEndFaces",
+          "editableDeliverables"
+        ],
+        "interface_checks": []
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge/inspect.json bbox.max_error = 0.0 (tol 0.02)",
+        "results/nist-amb2022-01-bridge/verify.json engine bbox.max_error = 7.5 (engine bbox differs: zoo kcl analyze can include cut-tool extents; disclosed, not gating)"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            75.0,
+            5.0,
+            12.5
+          ],
+          "measured_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            75.0,
+            5.0,
+            12.5
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.02,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            75.0,
+            5.0,
+            12.5
+          ],
+          "measured_min": [
+            -7.5,
+            -0.5,
+            -0.0005
+          ],
+          "measured_max": [
+            82.5,
+            7.0,
+            12.5005
+          ],
+          "max_error": 7.5,
+          "tolerance": 0.02,
+          "ok": false
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge/inspect.json volume = 3678.1 vs 3678.1",
+        "results/nist-amb2022-01-bridge/inspect.json surface_area = 3384.4584 vs 3384.458441227",
+        "results/nist-amb2022-01-bridge/inspect.json center_of_mass = [36.9198, 2.5003, 6.6729] vs [36.919754765, 2.500261004, 6.672922161]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 3678.1,
+          "measured": 3678.1,
+          "error": 0.0,
+          "band": 11.0343,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 3384.458441227,
+          "measured": 3384.4584,
+          "error": 0.0,
+          "band": 16.9223,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            36.919754765,
+            2.500261004,
+            6.672922161
+          ],
+          "measured": [
+            36.9198,
+            2.5003,
+            6.6729
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane and dimension verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge/inspect.json features: 15/15 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "cylinders": {},
+        "interfaces": {}
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/nist-amb2022-01-bridge/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge/inspect.json agreement kcl=3678.1006788796 step=3678.0999999999976 stl=3678.1 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 3678.1006788796,
+        "step": 3678.0999999999976,
+        "stl": 3678.1,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": null,
+        "kcl_vs_step_rel": 1.845734488511026e-07,
+        "stl_vs_step_rel": 6.181824187575982e-16,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge/edit.json 3/3 edit tests ok; restore.ok = True"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, or the deliverable changed",
+      "knob": "make features derive from the named constants",
+      "details": {
+        "tests": [
+          {
+            "parameter": "bodyHeight",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          },
+          {
+            "parameter": "tabHeight",
+            "delta": 0.25,
+            "ok": true,
+            "checks": {
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          },
+          {
+            "parameter": "singleWallWidth",
+            "delta": 0.05,
+            "ok": true,
+            "checks": {
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127",
+          "re_export_sha256": "a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127",
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=42",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 42,
+          "sketch_blocks": 13,
+          "feature_ops": 18,
+          "parameters": {
+            "overallLength": {
+              "found": true,
+              "value": 75.0,
+              "unit": "mm",
+              "expected": 75.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "bodyWidth": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "bodyHeight": {
+              "found": true,
+              "value": 12.0,
+              "unit": "mm",
+              "expected": 12.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "noseLength": {
+              "found": true,
+              "value": 2.5,
+              "unit": "mm",
+              "expected": 2.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "legStraightHeight": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "overhangRise": {
+              "found": true,
+              "value": 2.0,
+              "unit": "mm",
+              "expected": 2.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "gapWidth": {
+              "found": true,
+              "value": 2.0,
+              "unit": "mm",
+              "expected": 2.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "wideLegWidth": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "mediumLegWidth": {
+              "found": true,
+              "value": 2.5,
+              "unit": "mm",
+              "expected": 2.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "thinLegWidth": {
+              "found": true,
+              "value": 0.5,
+              "unit": "mm",
+              "expected": 0.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "legPatternPitch": {
+              "found": true,
+              "value": 14.0,
+              "unit": "mm",
+              "expected": 14.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "tabWidth": {
+              "found": true,
+              "value": 1.0,
+              "unit": "mm",
+              "expected": 1.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "tabPitch": {
+              "found": true,
+              "value": 7.0,
+              "unit": "mm",
+              "expected": 7.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "tabHeight": {
+              "found": true,
+              "value": 0.5,
+              "unit": "mm",
+              "expected": 0.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "cavityLength": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "baseThickness": {
+              "found": true,
+              "value": 1.0,
+              "unit": "mm",
+              "expected": 1.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "thinWallHeight": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "noseAngle": {
+              "found": true,
+              "value": 45.0,
+              "unit": "deg",
+              "expected": 45.0,
+              "expected_unit": "deg",
+              "ok": true
+            },
+            "overhangAngle": {
+              "found": true,
+              "value": 45.0,
+              "unit": "deg",
+              "expected": 45.0,
+              "expected_unit": "deg",
+              "ok": true
+            },
+            "legCount": {
+              "found": true,
+              "value": 12.0,
+              "unit": "",
+              "expected": 12.0,
+              "expected_unit": "",
+              "ok": true
+            },
+            "tabCount": {
+              "found": true,
+              "value": 11.0,
+              "unit": "",
+              "expected": 11.0,
+              "expected_unit": "",
+              "ok": true
+            },
+            "outerWallThickness": {
+              "found": true,
+              "value": 0.5,
+              "unit": "mm",
+              "expected": 0.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "thinWallCount": {
+              "found": true,
+              "value": 4.0,
+              "unit": "",
+              "expected": 4.0,
+              "expected_unit": "",
+              "ok": true
+            },
+            "singleWallCount": {
+              "found": true,
+              "value": 2.0,
+              "unit": "",
+              "expected": 2.0,
+              "expected_unit": "",
+              "ok": true
+            },
+            "doubleWallCount": {
+              "found": true,
+              "value": 2.0,
+              "unit": "",
+              "expected": 2.0,
+              "expected_unit": "",
+              "ok": true
+            },
+            "overallHeight": {
+              "found": true,
+              "value": 12.5,
+              "unit": "mm",
+              "expected": 12.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "legMergeHeight": {
+              "found": true,
+              "value": 7.0,
+              "unit": "mm",
+              "expected": 7.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "legPatternCount": {
+              "found": true,
+              "value": 4.0,
+              "unit": "",
+              "expected": 4.0,
+              "expected_unit": "",
+              "ok": true
+            },
+            "endBlockLength": {
+              "found": true,
+              "value": 19.0,
+              "unit": "mm",
+              "expected": 19.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "firstTabX": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "l10StartX": {
+              "found": true,
+              "value": 28.0,
+              "unit": "mm",
+              "expected": 28.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "cavityStartX": {
+              "found": true,
+              "value": 28.5,
+              "unit": "mm",
+              "expected": 28.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "cavityWidth": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "cavityCeilingZ": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "singleWall1Y": {
+              "found": true,
+              "value": 1.3,
+              "unit": "mm",
+              "expected": 1.3,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "doubleWall1Y": {
+              "found": true,
+              "value": 2.05,
+              "unit": "mm",
+              "expected": 2.05,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "singleWall2Y": {
+              "found": true,
+              "value": 2.9,
+              "unit": "mm",
+              "expected": 2.9,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "doubleWall2Y": {
+              "found": true,
+              "value": 3.65,
+              "unit": "mm",
+              "expected": 3.65,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "singleWallWidth": {
+              "found": true,
+              "value": 0.1,
+              "unit": "mm",
+              "expected": 0.1,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "doubleWallWidth": {
+              "found": true,
+              "value": 0.2,
+              "unit": "mm",
+              "expected": 0.2,
+              "expected_unit": "mm",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "lines": 613,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge/export.json step.deterministic = True sha256 a8c18da5c06f; stl=present; glb=present",
+        "results/nist-amb2022-01-bridge/inspect.json valid = True solids = 1 (expected 1)",
+        "results/nist-amb2022-01-bridge/inspect.json mesh watertight = True components = 6 void_shells = 5"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nist-amb2022-01-bridge/export/nist-amb2022-01-bridge.step",
+            "sha256": "a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127",
+            "bytes": 156913,
+            "deterministic": true,
+            "second_sha256": "a8c18da5c06f5d1b4b9c67e03d4b65093c18202a82b5109d4bf2ea88b42f6127"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nist-amb2022-01-bridge/export/nist-amb2022-01-bridge.stl",
+            "sha256": "0bbf0b2e58cfe6fe4b15a087be11745fa6f56b34c4b3a731ca33c3e49170ad33",
+            "bytes": 74748
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nist-amb2022-01-bridge/export/nist-amb2022-01-bridge.glb",
+            "sha256": "58410dd27fab94caf0873a8143f57ac9278f24c96b9f5fe5a0d45f9680760566",
+            "bytes": 170760
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 572,
+          "vertices": 298,
+          "watertight": true,
+          "winding_consistent": true,
+          "components": 6,
+          "void_shells": 5,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 3678.1,
+          "surface_area": 3384.458441227157,
+          "bbox_min": [
+            0.0,
+            -0.0,
+            0.0
+          ],
+          "bbox_max": [
+            75.0,
+            5.0,
+            12.5
+          ],
+          "center_of_mass": [
+            36.91975476468829,
+            2.5002610039313775,
+            6.67292216089829
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0a5d1-ea32-71c0-95a7-61defa5e1ad3; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 14; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 14,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge/verify.json hygiene.forbidden_imports = [] sketch_blocks = 13 feature_ops = 18 lines = 613"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "sketch_blocks": 13,
+        "feature_ops": 18
+      }
+    }
+  ]
+}

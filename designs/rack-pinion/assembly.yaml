@@ -1,0 +1,139 @@
+schema_version: 1
+kind: assembly
+name: rack-pinion
+intent: >-
+  Rack and pinion on a base plate from sources/rack-pinion-spec.md (the only source, text, authoritative): three separate
+  solids with no fused bodies. A 240 x 80 x 5 base plate carries a 20-tooth module-2 involute spur pinion (pitch radius 20,
+  face 8, D6 bore) on a revolute joint about +z at the origin and a 32-tooth module-2 straight-flank rack (200 long, 8 thick)
+  on a slider joint along +x with its pitch line on y = -20, tangent to the pinion pitch circle, phased so the pinion tooth
+  at -90 deg sits in the rack's tooth space at x = 0. The pinion is motor-driven through one full revolution and the rack
+  follows through the mesh by the pitch circle's arc per degree (20 pi / 180 mm/deg; positive about +z moves the rack
+  toward +x) with zero interference. Predict the rack ratio and the rack travel over one revolution from the placed geometry.
+units: {length: mm, angle: deg}
+frame:
+  origin: pinion axis on the base plate's top face (plate top z = 0)
+  axes:
+    x: along the rack pitch line, the rack's travel direction
+    y: from the rack toward the pinion axis (completes a right-handed frame)
+    z: pinion axis, up (normal to the plate top)
+  datums:
+    - {name: A, description: "base plate top face z = 0, on which the pinion and the rack stand"}
+    - {name: B, description: "pinion axis x = y = 0"}
+    - {name: C, description: "rack pitch line y = -20 (tangent to the pinion pitch circle), along +x"}
+envelope: {min: [-120.0, -50.0, -5.0], max: [120.0, 30.0, 8.0], tolerance: 0.1}
+datum_part: base
+parts:
+  - name: base
+    kind: modelled
+    design: rack-pinion-base
+    intent: >-
+      Base plate in its own frame, which is the assembly frame (origin on the pinion axis at the plate top, x along the
+      rack's travel, y from the rack toward the pinion, z up): a 240 x 80 x 5 box from corner (-120, -50, -5) to
+      (120, 30, 0) with a D6 clearance hole through its thickness on the pinion axis at (0, 0). Interfaces: the flat top
+      face z = 0, on which the pinion stands (its bottom face centred on the origin) and the rack slides (its footprint
+      y = -32 to -18); the D6 hole is coaxial with the pinion's D6 bore.
+  - name: pinion
+    kind: modelled
+    design: rack-pinion-pinion
+    intent: >-
+      Spur pinion in its own frame: axis +z through the origin, bottom face z = 0, face width 8 (z = 0 to 8), a tooth
+      centred on +x. 20 teeth, module 2, pressure angle 20 deg, pitch radius 20, tip radius 22, root radius 17.5 (base
+      circle 20 cos 20 deg = 18.794); involute flanks with 12-16 points per flank from the base circle to the tip, or a
+      library gear that honours the module, tooth count, pressure angle and backlash; every tooth thinned by 0.05 mm at
+      the pitch circle (circular tooth thickness p/2 - 0.05 = 3.091593 mm, p = 2 pi = 6.283185); a D6 bore through on the
+      axis. Interfaces: the bottom face stands on the plate top; the bore is coaxial with the plate's D6 hole; the tooth
+      centred on +x is the revolute joint's phase reference (with 20 teeth a tooth also sits at -90 deg, and at rest it
+      points into the rack's tooth space at x = 0); the flanks mesh with the rack.
+  - name: rack
+    kind: modelled
+    design: rack-pinion-rack
+    intent: >-
+      Straight rack in its own frame: origin on the pitch line at the middle of its length, +x along the pitch line, +y
+      toward the tooth tips, bottom face z = 0, thickness 8 (z = 0 to 8). Body x = -100 to 100 with its back face at
+      y = -12, 9.5 deep below the root line y = -2.5. 32 teeth, module 2 (pitch p = 2 pi = 6.283185), centred at
+      x = (k + 1/2) p for k = -16 to 15 so a tooth space is centred on x = 0; addendum 2 (tip line y = 2), dedendum 2.5;
+      straight flanks at 20 deg from the normal to the pitch line; tooth thickness on the pitch line p/2 - 0.05 =
+      3.091593 (tip width 1.635712, root width 4.911444). Interfaces: the bottom face slides on the plate top; the flanks
+      mesh with the pinion; the tooth space at x = 0 receives the pinion's tooth at rest.
+parameters:
+  - {name: gearModule, value: 2.0, unit: mm, provenance: stated, tolerance: 0.01, source: sources/rack-pinion-spec.md parameter table (Module), description: module of the pinion and the rack}
+  - {name: pressureAngle, value: 20.0, unit: deg, provenance: stated, tolerance: 0.01, source: sources/rack-pinion-spec.md parameter table (Pressure angle), description: pressure angle of the pinion involutes and the rack flanks}
+  - {name: circularPitch, value: 6.283185307179586, unit: mm, provenance: derived, tolerance: 1.0e-6, formula: "pi * gearModule", description: "rack tooth pitch p on the pitch line (the spec's 6.283185)"}
+  - {name: pinionPitchRadius, value: 20.0, unit: mm, provenance: stated, tolerance: 0.01, source: sources/rack-pinion-spec.md parameter table (Pinion), formula: "gearModule * 20 / 2", description: pinion pitch radius for 20 teeth}
+  - {name: pitchLineOffset, value: 20.0, unit: mm, provenance: stated, tolerance: 0.01, source: sources/rack-pinion-spec.md frame paragraph, description: "pinion axis to rack pitch line (y = -20), equal to the pitch radius: the rack's origin sits at (0, -20, 0)"}
+  - {name: backlashPerMesh, value: 0.1, unit: mm, provenance: stated, tolerance: 0.01, source: sources/rack-pinion-spec.md parameter table (Backlash), description: "tangential backlash on the pitch line: 0.05 thinning of every rack tooth and every pinion tooth"}
+  - {name: rackTransmissionRatio, value: 0.3490658503988659, unit: mm/deg, provenance: derived, tolerance: 1.0e-9, formula: "pinionPitchRadius * pi / 180", description: "rack travel per degree of pinion rotation, the rackDrive ratio (the pitch circle's arc per degree)"}
+joints:
+  - name: pinionSpin
+    kind: revolute
+    parent: base
+    child: pinion
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 0.0
+    angle: 0.0
+    drive: {kind: motor, speed: 10.0, description: "motor-driven through one full revolution; the spec states no speed, so 10 rpm (one revolution in 6 s) is a default that paces the animation only"}
+    description: >-
+      pinion on its axis at the origin, bottom face on the plate top; at rest its +x tooth lies on the base +x, so its
+      -90 deg tooth points into the rack's tooth space at x = 0
+  - name: rackSlide
+    kind: slider
+    parent: base
+    child: rack
+    parent_frame: {origin: [0.0, -20.0, 0.0], axis: [1.0, 0.0, 0.0], ref: [0.0, 1.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [1.0, 0.0, 0.0], ref: [0.0, 1.0, 0.0]}
+    offset: 0.0
+    angle: 0.0
+    drive: {kind: free, description: driven by the pinion through rackDrive}
+    description: >-
+      rack on the plate top with its pitch line on y = -20, sliding along +x; its +y (tooth tips) toward the pinion; at
+      rest its origin is at (0, -20, 0)
+transmissions:
+  - name: rackDrive
+    kind: gear
+    driver: pinionSpin
+    driven: rackSlide
+    ratio: 0.3490658503988659
+    description: >-
+      20-tooth pinion on a 32-tooth rack, module 2: the pitch point carries the rack by 20 pi / 180 mm per degree,
+      positive rotation about +z moving the rack toward +x; one pinion pitch is 360 / 20 = 18 deg, and the mesh is
+      checked for interference by the pinionTurn sweep (a mesh check needs two rotating joints)
+observables:
+  - id: rackRatio
+    quantity: transmission_ratio
+    unit: mm/deg
+    body: rack
+    expected: {expected: 0.3490658503988659, tolerance_rel: 1.0e-4, provenance: derived, note: "pitch radius 20 x pi / 180, the pitch circle's arc per degree the spec states"}
+    description: rack travel along +x per degree of pinion rotation about +z, measured by the evaluator from the placed geometry
+  - id: rackTravel
+    quantity: joint_range
+    unit: mm
+    joint: rackSlide
+    motion: pinionTurn
+    expected: {expected: 125.66370614359172, tolerance_rel: 1.0e-4, provenance: derived, note: "2 pi x 20, one pitch-circle circumference (360 deg x rackRatio)"}
+    description: range of the rack's slider displacement over the one-revolution pinion motion (0 to 360 deg), measured by the evaluator
+acceptance:
+  solid_count: 3
+  clearances:
+    - {name: pinionRackMesh, a: pinion, b: rack, min_gap: 0.0, max_gap: 0.15, description: "meshed at rest with 0.10 mm tangential backlash (about 0.047 mm normal gap per flank): no interference and no stand-off"}
+    - {name: pinionOnBase, a: pinion, b: base, min_gap: 0.0, max_gap: 0.01, description: "the pinion's bottom face stands on the plate top z = 0"}
+    - {name: rackOnBase, a: rack, b: base, min_gap: 0.0, max_gap: 0.01, description: "the rack's bottom face stands on the plate top z = 0"}
+  motions:
+    - name: pinionTurn
+      drive: pinionSpin
+      range: [0.0, 360.0]
+      steps: 72
+      description: >-
+        one full pinion revolution as the spec states, in 5 deg steps (all 18 whole-degree phases of the 18 deg tooth
+        pitch); the rack follows through rackDrive by 125.66 mm along +x and every pair in relative motion stays free of
+        interference
+references:
+  - {path: sources/rack-pinion-spec.md, kind: text, role: authoritative, sha256: 87f6a8bbc15c559e23899017105cd36ee8b503a6238b00213d3b99103d903561}
+open_questions:
+  - "The spec states no motor speed and no operating case; both predictions are kinematic and speed-independent, so pinionSpin's motor drive carries a defaulted 10 rpm (one revolution in 6 s, rack speed 20.94 mm/s) that only paces the animation, and the contract declares no operating cases or simulations."
+  - "No shaft, bearing or guide is specified: the pinion's D6 bore and the plate's D6 clearance hole are coaxial but no pin is modelled, and the rack only stands on the plate top; both joints are idealised."
+  - "One revolution moves the rack 125.66 mm, more than its 100 mm half-length: its last tooth (x = -97.39 at rest) leaves the mesh at about 280-295 deg, so the pinion turns the rest of the revolution out of mesh (its tips 0.5 mm above the rack's root line), and the rack's right end reaches x = 225.7, past the plate end at x = 120. The motion stays one revolution as the spec and the task state."
+  - "No material or density is given, so there is no mass or centre-of-mass check."
+  - "max_gap 0.15 mm (pinionRackMesh) is an inferred band above the stated 0.10 mm backlash per mesh; the seat max_gap 0.01 mm (pinionOnBase, rackOnBase) is a defaulted numerical band for faces that touch. A rack drive takes no gear mesh check (it needs two rotating joints), so the backlash is bounded only at rest by pinionRackMesh and the interference over the mesh by the pinionTurn sweep."
+  - "No joint limits are stated: the revolute is continuous and the slider is unlimited (the one-revolution motion needs 0 to 125.66 mm)."
+  - "The spec does not define the pinion flank between the root circle (r 17.5) and the base circle (r 18.794); the part drafter chooses it (a radial line or a fillet) and the pinionTurn sweep checks that it clears the rack's tip corners (the rack tip line y = -18 passes 0.5 mm outside the root circle)."

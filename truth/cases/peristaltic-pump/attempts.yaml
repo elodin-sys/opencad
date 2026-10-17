@@ -1,0 +1,65 @@
+attempts:
+- started: '2026-09-25T08:30:13Z'
+  arm: published-parts
+  design: peristaltic-pump
+  backend: build123d
+  kind: machine
+  mode: analysis
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/peristaltic-pump
+  stage_reached: scored
+  pipeline:
+    code: 1
+    gates:
+      pass: 6
+      fail: 4
+    failed:
+    - clearances
+    - motion_clear
+    - export_agreement
+    - performance
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 0
+      required_total: 0
+      optional_pass: 0
+      optional_total: 0
+      performance_pass: 0
+      performance_scored: 1
+      performance_total: 2
+    accuracy_score: null
+    failed:
+    - flowRate
+    - driveRatio
+  seconds: 2549
+  finished: '2026-09-25T09:12:42Z'
+- started: '2026-09-25T09:35:52Z'
+  arm: published-parts
+  design: peristaltic-pump
+  backend: build123d
+  kind: machine
+  mode: analysis
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/peristaltic-pump
+  amended: true
+  stage_reached: scored
+  pipeline:
+    code: 0
+    gates:
+      pass: 10
+      fail: 0
+    failed: []
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 0
+      required_total: 0
+      optional_pass: 0
+      optional_total: 0
+      performance_pass: 1
+      performance_scored: 2
+      performance_total: 2
+    accuracy_score: null
+    failed:
+    - flowRate
+  seconds: 598
+  finished: '2026-09-25T09:45:50Z'

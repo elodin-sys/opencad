@@ -1,0 +1,636 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import plateWidth, plateThickness, bottomZ, bodyTopZ, halfWidth, clampCornerOuterDiameter, clampCornerAxisX, clampCenterY, clampCornerAxisZ, clampCornerStart, clampCornerEnd, clampOuterDiameter, clampAxisX, clampStartZ, clampEndZ, clampReliefDiameter, clampTiltAxisX, clampTiltAxisZ, clampTiltDirX, clampTiltDirZ, clampTiltStart, clampTiltEnd, clampUpperReliefX, clampUpperReliefEnd, clampOffsetDiameter, clampOffsetX, clampNearY, clampFarY, clampCornerOffsetDiameter, clampCornerOffsetX, clampCornerNearY, clampCornerOffsetZ, clampCornerFarY, clampInnerDiameter, clampTiltInnerX, clampTiltInnerZ, clampTiltNearStart, clampTiltNearEnd, clampTiltFarStart, clampTiltFarEnd, clampUpperInnerX, clampUpperNearEnd, clampUpperFarEnd, counterboreDiameter, rightPivotX, upperRightScrewX, upperRightScrewZ, sideScallopDiameter, sideScallopX, sideScallopZ, sideScallopEnd, clampCornerLipDiameter, clampAxialLipDiameter, clampFarLipDiameter, clampFarLipStart, clampCornerOffsetLipDiameter from "params.kcl"
+
+// A 0.005 mm radial construction allowance on the axial lip prevents
+// a degenerate cap at the bend. The upper back step retains clearance.
+// All nominal parameters remain in params.kcl; STEP checks verify the tolerances.
+// Axial, tilted and corner channels with retaining lips, back steps,
+// a ruled connecting bend and an unblended near-side fan relief.
+// Contract constants and individual edit guards are in shared params.kcl.
+// Cylinders at the two horizontal slots are separate patches of the same
+// supporting cylinder; their stated -9..24 extent is not a continuous bore.
+toolOverrun = 0.02mm
+toolTolerance = 0.001mm
+regionLeftX = 15.5mm
+regionTopZ = 27.6mm
+slotHeight = 3mm
+backStepExtra = 1.375mm
+backStepX = halfWidth - 2.5mm
+backStepY = clampCenterY - legLen(hypotenuse = clampAxialLipDiameter / 2, leg = clampAxisX - backStepX) - 0.01mm
+tiltMagnitude = sqrt(clampTiltDirX ^ 2 + clampTiltDirZ ^ 2): number(_)
+tiltSin = (clampTiltDirX / tiltMagnitude): number(_)
+tiltCos = (clampTiltDirZ / tiltMagnitude): number(_)
+tiltAngle = atan2(y = clampTiltDirX: mm, x = clampTiltDirZ: mm)
+cornerSin = sqrt(0.5_): number(_)
+cornerRadialX = ((clampCornerAxisX - clampCornerAxisZ) * cornerSin): mm
+cornerRadialOffsetX = ((clampCornerOffsetX - clampCornerOffsetZ) * cornerSin): mm
+cornerAxialOrigin = ((clampCornerAxisX + clampCornerAxisZ) * cornerSin): mm
+cornerBackRadial = ((21.107mm + 24.608mm) * cornerSin): mm
+channelBendX = ((clampUpperReliefX - (clampTiltAxisX * tiltCos - (clampTiltAxisZ * tiltSin))) / (1 - tiltCos)): mm
+scallopSideX = 23.14mm
+// Unblended fan relief; the right-view transition leaves this near-side rim.
+fanReliefNearY = 1.95mm
+assert(
+  fanReliefNearY,
+  isGreaterThan = 0mm,
+  isLessThan = clampNearY,
+  error = "Fan relief must retain the near-side contact rim",
+)
+
+assert(plateWidth / 2, isGreaterThan = regionLeftX, error = "Clamp region must fit the plate")
+assert(clampCornerStart, isLessThan = clampCornerEnd, error = "Corner slot requires positive axial length")
+assert(clampStartZ + slotHeight, isLessThan = clampEndZ - slotHeight, error = "The two clamp slots must remain separate")
+assert(clampOuterDiameter, isGreaterThan = clampAxialLipDiameter + 0.01mm, error = "Axial retaining slot needs a positive radial gap")
+assert(clampCornerOuterDiameter, isGreaterThan = clampCornerLipDiameter, error = "Corner retaining slot needs a positive radial gap")
+assert(clampOffsetDiameter, isGreaterThan = clampFarLipDiameter, error = "Offset retaining slot needs a positive radial gap")
+assert(clampCornerOffsetDiameter, isGreaterThan = clampCornerOffsetLipDiameter, error = "Corner offset gap must remain positive")
+assert(
+  backStepY,
+  isGreaterThan = 0mm,
+  isLessThan = clampNearY,
+  error = "Back step must stop before the channel centre",
+)
+assert(clampReliefDiameter, isGreaterThan = clampInnerDiameter, error = "Main channel requires a wider central arc")
+assert(
+  tiltSin,
+  isGreaterThan = 0_,
+  isLessThan = 0.5_,
+  error = "Tilt must point upward and toward the clamp side",
+)
+assert(channelBendX, isLessThan = regionLeftX, error = "Bend centre must lie to the left of the channel")
+assert(clampAxisX - (clampOuterDiameter / 2), isGreaterThan = regionLeftX, error = "Axial slot must stay in the clamp region")
+assert(clampUpperReliefX - (clampReliefDiameter / 2), isGreaterThan = rightPivotX, error = "Retain pivot-side stock")
+assert(clampUpperReliefEnd, isLessThan = bodyTopZ, error = "Upper channel must stop below the top ledge")
+assert(sideScallopX - (sideScallopDiameter / 2), isGreaterThan = regionLeftX, error = "Scallop must stay inside the clamp region")
+
+// A rounded open channel: a central arc and two internally tangent offset
+// arcs. Published centres are rounded to 0.001 mm; project their offsets onto
+// the tangent condition (default correction below 0.001 mm), retaining radii.
+// The right closure is in air and never becomes part of the finished body.
+fn channelProfile(@cx, cy, nearX, nearY, farY, radiusBig, radiusSmall, flare, planeZ, airExtension) {
+  dx = nearX - cx
+  dyNear = nearY - cy
+  dyFar = farY - cy
+  nearDistance = sqrt(dx ^ 2 + dyNear ^ 2): mm
+  farDistance = sqrt(dx ^ 2 + dyFar ^ 2): mm
+  assert(radiusBig, isGreaterThan = radiusSmall, error = "Channel central radius must exceed its offset radius")
+  assert(nearDistance, isGreaterThan = 0mm, error = "Near channel centre must be distinct")
+  assert(farDistance, isGreaterThan = 0mm, error = "Far channel centre must be distinct")
+  nx = (dx / nearDistance): number(_)
+  ny = (dyNear / nearDistance): number(_)
+  fx = (dx / farDistance): number(_)
+  fy = (dyFar / farDistance): number(_)
+  nearCx = (cx + (radiusBig - radiusSmall) * nx): mm
+  nearCy = (cy + (radiusBig - radiusSmall) * ny): mm
+  farCx = (cx + (radiusBig - radiusSmall) * fx): mm
+  farCy = (cy + (radiusBig - radiusSmall) * fy): mm
+  joinNear = [
+    (cx + radiusBig * nx): mm,
+    (cy + radiusBig * ny): mm
+  ]
+  joinFar = [
+    (cx + radiusBig * fx): mm,
+    (cy + radiusBig * fy): mm
+  ]
+  endNear = [
+    (nearCx - (radiusSmall * sin(flare))): mm,
+    (nearCy - (radiusSmall * cos(flare))): mm
+  ]
+  endFar = [
+    (farCx - (radiusSmall * sin(flare))): mm,
+    (farCy + radiusSmall * cos(flare)): mm
+  ]
+  airX = cx + radiusBig + 8mm + airExtension
+  airNear = [
+    airX,
+    (endNear[1] - ((airX - endNear[0]) * tan(flare))): mm
+  ]
+  airFar = [
+    airX,
+    (endFar[1] + (airX - endFar[0]) * tan(flare)): mm
+  ]
+  profile = sketch(on = offsetPlane(XY, offset = planeZ)) {
+    a = line(start = airNear, end = endNear)
+    b = arc(
+      start = endNear,
+      end = joinNear,
+      center = [nearCx, nearCy],
+      direction = CW,
+    )
+    c = arc(
+      start = joinNear,
+      end = joinFar,
+      center = [cx, cy],
+      direction = CW,
+    )
+    d = arc(
+      start = joinFar,
+      end = endFar,
+      center = [farCx, farCy],
+      direction = CW,
+    )
+    e = line(start = endFar, end = airFar)
+    f = line(start = airFar, end = airNear)
+  }
+  r = region(segments = [profile.a, profile.b])
+  hide(r)
+  return r
+}
+
+fn bendSection(@cx, cy, nearX, nearY, farY, radiusBig, radiusSmall, flare, sectionAngle, airExtension) {
+  dx = nearX - cx
+  dyNear = nearY - cy
+  dyFar = farY - cy
+  nearDistance = sqrt(dx ^ 2 + dyNear ^ 2): mm
+  farDistance = sqrt(dx ^ 2 + dyFar ^ 2): mm
+  assert(radiusBig, isGreaterThan = radiusSmall, error = "Channel central radius must exceed its offset radius")
+  assert(nearDistance, isGreaterThan = 0mm, error = "Near channel centre must be distinct")
+  assert(farDistance, isGreaterThan = 0mm, error = "Far channel centre must be distinct")
+  nx = (dx / nearDistance): number(_)
+  ny = (dyNear / nearDistance): number(_)
+  fx = (dx / farDistance): number(_)
+  fy = (dyFar / farDistance): number(_)
+  nearCx = (cx + (radiusBig - radiusSmall) * nx): mm
+  nearCy = (cy + (radiusBig - radiusSmall) * ny): mm
+  farCx = (cx + (radiusBig - radiusSmall) * fx): mm
+  farCy = (cy + (radiusBig - radiusSmall) * fy): mm
+  joinNear = [
+    (cx + radiusBig * nx): mm,
+    (cy + radiusBig * ny): mm
+  ]
+  joinFar = [
+    (cx + radiusBig * fx): mm,
+    (cy + radiusBig * fy): mm
+  ]
+  endNear = [
+    (nearCx - (radiusSmall * sin(flare))): mm,
+    (nearCy - (radiusSmall * cos(flare))): mm
+  ]
+  endFar = [
+    (farCx - (radiusSmall * sin(flare))): mm,
+    (farCy + radiusSmall * cos(flare)): mm
+  ]
+  airX = cx + radiusBig + 8mm + airExtension
+  airNear = [
+    airX,
+    (endNear[1] - ((airX - endNear[0]) * tan(flare))): mm
+  ]
+  airFar = [
+    airX,
+    (endFar[1] + (airX - endFar[0]) * tan(flare)): mm
+  ]
+  profile = sketch(on = {
+    origin = {
+      x = channelBendX - 0.015mm,
+      y = 0mm,
+      z = -0.02mm
+    },
+    xAxis = {
+      x = cos(sectionAngle),
+      y = 0_,
+      z = -sin(sectionAngle)
+    },
+    yAxis = { x = 0_, y = 1_, z = 0_ }
+  }) {
+    a = line(start = airNear, end = endNear)
+    b = arc(
+      start = endNear,
+      end = joinNear,
+      center = [nearCx, nearCy],
+      direction = CW,
+    )
+    c = arc(
+      start = joinNear,
+      end = joinFar,
+      center = [cx, cy],
+      direction = CW,
+    )
+    d = arc(
+      start = joinFar,
+      end = endFar,
+      center = [farCx, farCy],
+      direction = CW,
+    )
+    e = line(start = endFar, end = airFar)
+    f = line(start = airFar, end = airNear)
+  }
+  r = region(segments = [profile.a, profile.b])
+  hide(r)
+  return r
+}
+
+fn annularSlot(@cx, nearX, nearY, farY, outerDiameter, innerDiameter, offsetOuterDiameter, offsetInnerDiameter, low, high) {
+  dx = nearX - cx
+  nd = sqrt(dx ^ 2 + (nearY - clampCenterY) ^ 2): mm
+  fd = sqrt(dx ^ 2 + (farY - clampCenterY) ^ 2): mm
+  nx = (dx / nd): number(_)
+  ny = ((nearY - clampCenterY) / nd): number(_)
+  fx = (dx / fd): number(_)
+  fy = ((farY - clampCenterY) / fd): number(_)
+  air = cx + outerDiameter + 8mm
+  oR = outerDiameter / 2
+  outerSmallRadius = offsetOuterDiameter / 2
+  onc = [
+    (cx + (oR - outerSmallRadius) * nx): mm,
+    (clampCenterY + (oR - outerSmallRadius) * ny): mm
+  ]
+  ofc = [
+    (cx + (oR - outerSmallRadius) * fx): mm,
+    (clampCenterY + (oR - outerSmallRadius) * fy): mm
+  ]
+  onj = [
+    (cx + oR * nx): mm,
+    (clampCenterY + oR * ny): mm
+  ]
+  ofj = [
+    (cx + oR * fx): mm,
+    (clampCenterY + oR * fy): mm
+  ]
+  one = [onc[0], onc[1] - outerSmallRadius]
+  ofe = [ofc[0], ofc[1] + outerSmallRadius]
+  iR = innerDiameter / 2
+  innerSmallRadius = offsetInnerDiameter / 2
+  inc = [
+    (cx + (iR - innerSmallRadius) * nx): mm,
+    (clampCenterY + (iR - innerSmallRadius) * ny): mm
+  ]
+  ifc = [
+    (cx + (iR - innerSmallRadius) * fx): mm,
+    (clampCenterY + (iR - innerSmallRadius) * fy): mm
+  ]
+  inj = [
+    (cx + iR * nx): mm,
+    (clampCenterY + iR * ny): mm
+  ]
+  ifj = [
+    (cx + iR * fx): mm,
+    (clampCenterY + iR * fy): mm
+  ]
+  ine = [inc[0], inc[1] - innerSmallRadius]
+  ife = [ifc[0], ifc[1] + innerSmallRadius]
+  profile = sketch(on = offsetPlane(XY, offset = low)) {
+    a = line(start = [air, one[1]], end = one)
+    b = arc(
+      start = one,
+      end = onj,
+      center = onc,
+      direction = CW,
+    )
+    c = arc(
+      start = onj,
+      end = ofj,
+      center = [cx, clampCenterY],
+      direction = CW,
+    )
+    d = arc(
+      start = ofj,
+      end = ofe,
+      center = ofc,
+      direction = CW,
+    )
+    e = line(start = ofe, end = [air, ofe[1]])
+    f = line(start = [air, ofe[1]], end = [air, ife[1]])
+    g = line(start = [air, ife[1]], end = ife)
+    h = arc(start = ife, end = ifj, center = ifc)
+    i = arc(start = ifj, end = inj, center = [cx, clampCenterY])
+    j = arc(start = inj, end = ine, center = inc)
+    k = line(start = ine, end = [air, ine[1]])
+    l = line(start = [air, ine[1]], end = [air, one[1]])
+  }
+  r = region(segments = [profile.a, profile.b])
+  result = extrude(r, length = high - low, method = NEW)
+  hide(r)
+  return result
+}
+
+fn blockTool(@left, right, near, far, low, high) {
+  profile = sketch(on = offsetPlane(XY, offset = low)) {
+    a = line(start = [left, near], end = [right, near])
+    b = line(start = [right, near], end = [right, far])
+    c = line(start = [right, far], end = [left, far])
+    d = line(start = [left, far], end = [left, near])
+  }
+  r = region(segments = [profile.a, profile.b])
+  result = extrude(r, length = high - low, method = NEW)
+  hide(r)
+  return result
+}
+
+export fn clamp(@body) {
+  lowerSlot = annularSlot(
+    clampAxisX,
+    nearX = clampOffsetX,
+    nearY = clampNearY,
+    farY = clampFarY,
+    outerDiameter = clampOuterDiameter,
+    innerDiameter = clampAxialLipDiameter + 0.01mm,
+    offsetOuterDiameter = clampOffsetDiameter,
+    offsetInnerDiameter = clampFarLipDiameter,
+    low = clampStartZ,
+    high = clampStartZ + slotHeight,
+  )
+  upperSlot = annularSlot(
+    clampAxisX,
+    nearX = clampOffsetX,
+    nearY = clampNearY,
+    farY = clampFarY,
+    outerDiameter = clampOuterDiameter,
+    innerDiameter = clampAxialLipDiameter + 0.01mm,
+    offsetOuterDiameter = clampOffsetDiameter,
+    offsetInnerDiameter = clampFarLipDiameter,
+    low = clampEndZ - slotHeight,
+    high = clampEndZ,
+  )
+  cornerSlotRaw = annularSlot(
+    cornerRadialX,
+    nearX = cornerRadialOffsetX,
+    nearY = clampCornerNearY,
+    farY = clampCornerFarY,
+    outerDiameter = clampCornerOuterDiameter,
+    innerDiameter = clampCornerLipDiameter,
+    offsetOuterDiameter = clampCornerOffsetDiameter,
+    offsetInnerDiameter = clampCornerOffsetLipDiameter,
+    low = cornerAxialOrigin + clampCornerStart,
+    high = cornerAxialOrigin + clampCornerEnd,
+  )
+  cornerSlot = rotate(cornerSlotRaw, pitch = 45deg, global = true)
+
+  upperProfile = channelProfile(
+    clampUpperReliefX,
+    cy = clampCenterY,
+    nearX = clampUpperInnerX,
+    nearY = clampNearY,
+    farY = clampFarY,
+    radiusBig = clampReliefDiameter / 2,
+    radiusSmall = clampInnerDiameter / 2,
+    flare = 20deg,
+    planeZ = -toolOverrun,
+    airExtension = 0mm,
+  )
+  upperChannel = extrude(upperProfile, length = regionTopZ + toolOverrun, method = NEW)
+    |> translate(x = 0.02mm, global = true)
+  bendProfile0 = bendSection(
+    clampUpperReliefX - channelBendX,
+    cy = clampCenterY,
+    nearX = clampUpperInnerX - channelBendX,
+    nearY = clampNearY,
+    farY = clampFarY,
+    radiusBig = clampReliefDiameter / 2,
+    radiusSmall = clampInnerDiameter / 2,
+    flare = 20deg,
+    sectionAngle = -0.025deg,
+    airExtension = 0mm,
+  )
+  bendProfile1 = bendSection(
+    clampUpperReliefX - channelBendX,
+    cy = clampCenterY,
+    nearX = clampUpperInnerX - channelBendX,
+    nearY = clampNearY,
+    farY = clampFarY,
+    radiusBig = clampReliefDiameter / 2,
+    radiusSmall = clampInnerDiameter / 2,
+    flare = 20deg,
+    sectionAngle = tiltAngle / 4,
+    airExtension = 0mm,
+  )
+  bendProfile2 = bendSection(
+    clampUpperReliefX - channelBendX,
+    cy = clampCenterY,
+    nearX = clampUpperInnerX - channelBendX,
+    nearY = clampNearY,
+    farY = clampFarY,
+    radiusBig = clampReliefDiameter / 2,
+    radiusSmall = clampInnerDiameter / 2,
+    flare = 20deg,
+    sectionAngle = tiltAngle / 2,
+    airExtension = 0mm,
+  )
+  bendProfile3 = bendSection(
+    clampUpperReliefX - channelBendX,
+    cy = clampCenterY,
+    nearX = clampUpperInnerX - channelBendX,
+    nearY = clampNearY,
+    farY = clampFarY,
+    radiusBig = clampReliefDiameter / 2,
+    radiusSmall = clampInnerDiameter / 2,
+    flare = 20deg,
+    sectionAngle = 3 * tiltAngle / 4,
+    airExtension = 0mm,
+  )
+  bendProfile4 = bendSection(
+    clampUpperReliefX - channelBendX,
+    cy = clampCenterY,
+    nearX = clampUpperInnerX - channelBendX,
+    nearY = clampNearY,
+    farY = clampFarY,
+    radiusBig = clampReliefDiameter / 2,
+    radiusSmall = clampInnerDiameter / 2,
+    flare = 20deg,
+    sectionAngle = tiltAngle + 0.025deg,
+    airExtension = 0mm,
+  )
+  bend = loft(
+    [
+      bendProfile0,
+      bendProfile1,
+      bendProfile2,
+      bendProfile3,
+      bendProfile4
+    ],
+    vDegree = 3,
+  )
+  tiltProfile = channelProfile(
+    clampUpperReliefX,
+    cy = clampCenterY,
+    nearX = clampUpperInnerX,
+    nearY = clampNearY,
+    farY = clampFarY,
+    radiusBig = clampReliefDiameter / 2,
+    radiusSmall = clampInnerDiameter / 2,
+    flare = 20deg,
+    planeZ = toolOverrun,
+    airExtension = 0mm,
+  )
+  tiltRaw = extrude(tiltProfile, length = bottomZ - clampUpperReliefEnd, method = NEW)
+  tiltedChannel = rotate(tiltRaw, pitch = tiltAngle, global = true)
+    |> translate(x = channelBendX * (1 - tiltCos), z = channelBendX * tiltSin, global = true)
+
+  upperStep = blockTool(
+    backStepX,
+    right = halfWidth + 2mm,
+    near = -toolOverrun,
+    far = backStepY - 0.03mm,
+    low = clampEndZ - slotHeight - backStepExtra,
+    high = clampEndZ + backStepExtra,
+  )
+  lowerStep = blockTool(
+    backStepX - 0.02mm,
+    right = halfWidth + 2mm,
+    near = -toolOverrun,
+    far = backStepY + 0.0075mm,
+    low = clampStartZ - (2 * backStepExtra),
+    high = clampStartZ + slotHeight + backStepExtra,
+  )
+  cornerStepRaw = blockTool(
+    cornerBackRadial,
+    right = cornerBackRadial + 8mm,
+    near = -toolOverrun,
+    far = 2.49mm,
+    low = cornerAxialOrigin + clampCornerStart - backStepExtra,
+    high = cornerAxialOrigin + clampCornerEnd + backStepExtra,
+  )
+  cornerStep = rotate(cornerStepRaw, pitch = 45deg, global = true)
+
+  scallopProfile = sketch(on = XY) {
+    c = circle(
+      center = [sideScallopX, sideScallopZ],
+      start = [
+        sideScallopX + sideScallopDiameter / 2,
+        sideScallopZ
+      ],
+    )
+  }
+  scallopRegion = region(segments = [scallopProfile.c])
+  scallopRaw = extrude(scallopRegion, length = sideScallopEnd + toolOverrun, method = NEW)
+  scallop = rotate(scallopRaw, roll = 90deg, global = true)
+    |> translate(y = sideScallopEnd, global = true)
+
+  // Near-side opening below the tilted channel. The fan-duct connecting
+  // contour is deliberately unblended under Q6; all changes stay in region.
+  nearOpeningProfile = sketch(on = XY) {
+    a = line(
+      start = [scallopSideX, bottomZ - 1mm],
+      end = [
+        scallopSideX,
+        sideScallopZ - (sideScallopDiameter / 2) - 1mm
+      ],
+    )
+    b = line(
+      start = [
+        scallopSideX,
+        sideScallopZ - (sideScallopDiameter / 2) - 1mm
+      ],
+      end = [
+        sideScallopX + 0.03mm,
+        sideScallopZ - (sideScallopDiameter / 2)
+      ],
+    )
+    c = line(
+      start = [
+        sideScallopX + 0.03mm,
+        sideScallopZ - (sideScallopDiameter / 2)
+      ],
+      end = [
+        sideScallopX + 0.03mm,
+        sideScallopZ + sideScallopDiameter / 2
+      ],
+    )
+    d = line(
+      start = [
+        sideScallopX + 0.03mm,
+        sideScallopZ + sideScallopDiameter / 2
+      ],
+      end = [
+        backStepX - 0.01mm,
+        clampStartZ - (2 * backStepExtra) + 0.25mm
+      ],
+    )
+    e = line(
+      start = [
+        backStepX - 0.01mm,
+        clampStartZ - (2 * backStepExtra) + 0.25mm
+      ],
+      end = [
+        halfWidth + 3mm,
+        clampStartZ - (2 * backStepExtra) + 0.25mm
+      ],
+    )
+    f = line(
+      start = [
+        halfWidth + 3mm,
+        clampStartZ - (2 * backStepExtra) + 0.25mm
+      ],
+      end = [halfWidth + 3mm, bottomZ - 1mm],
+    )
+    g = line(start = [halfWidth + 3mm, bottomZ - 1mm], end = [scallopSideX, bottomZ - 1mm])
+  }
+  nearOpeningRegion = region(segments = [
+    nearOpeningProfile.a,
+    nearOpeningProfile.b
+  ])
+  nearOpeningRaw = extrude(nearOpeningRegion, length = 2.48mm + toolOverrun, method = NEW)
+  nearOpening = rotate(nearOpeningRaw, roll = 90deg, global = true)
+    |> translate(y = 2.48mm, global = true)
+
+  allTools = union(
+    [
+      lowerSlot,
+      upperSlot,
+      cornerSlot,
+      upperChannel,
+      tiltedChannel,
+      scallop
+    ],
+    tolerance = toolTolerance,
+  )
+  bentBody = subtract(body, tools = [bend], tolerance = toolTolerance)
+  cut = subtract(bentBody, tools = [allTools], tolerance = toolTolerance)
+  stepped1 = subtract(cut, tools = [upperStep], tolerance = toolTolerance)
+  stepped2 = subtract(stepped1, tools = [lowerStep], tolerance = toolTolerance)
+  stepped3 = subtract(stepped2, tools = [cornerStep], tolerance = toolTolerance)
+  opened = subtract(stepped3, tools = [nearOpening], tolerance = toolTolerance)
+  // End the short near-side cylindrical patch at its documented t station.
+  // A planar continuation represents the optional, underdetermined fan blend.
+  fanReliefRaw = blockTool(
+    -clampInnerDiameter / 2 - 0.05mm,
+    right = -(clampFarY - clampNearY) / 2,
+    near = fanReliefNearY,
+    far = clampNearY,
+    low = 0mm,
+    high = clampInnerDiameter * 0.75,
+  )
+  fanRelief = rotate(fanReliefRaw, pitch = tiltAngle, global = true)
+    |> translate(x = clampTiltInnerX + tiltSin * clampTiltNearEnd, z = clampTiltInnerZ + tiltCos * clampTiltNearEnd, global = true)
+  relieved = subtract(opened, tools = [fanRelief], tolerance = toolTolerance)
+  finished = clone(relieved)
+  hide([fanReliefRaw, fanRelief, relieved])
+  hide([
+    upperProfile,
+    bendProfile0,
+    bendProfile1,
+    bendProfile2,
+    bendProfile3,
+    bendProfile4,
+    tiltProfile,
+    scallopRegion,
+    nearOpeningRegion
+  ])
+  hide([
+    body,
+    bend,
+    bentBody,
+    upperStep,
+    lowerStep,
+    cornerStepRaw,
+    cornerStep,
+    stepped1,
+    stepped2,
+    stepped3,
+    nearOpening,
+    nearOpeningRaw,
+    opened,
+    lowerSlot,
+    upperSlot,
+    cornerSlotRaw,
+    cornerSlot,
+    upperChannel,
+    tiltRaw,
+    tiltedChannel,
+    scallopRaw,
+    scallop,
+    allTools,
+    cut
+  ])
+  return finished
+}

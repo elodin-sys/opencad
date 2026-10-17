@@ -1,0 +1,188 @@
+schema_version: 1
+name: pedestal
+intent: >-
+  Fictitious 40 x 30 x 20 mm block with one vertical bore and a short boss, used only as a
+  shape exemplar. Copy the fields; do not copy the part.
+units:
+  length: mm
+  angle: deg
+material: "aluminium 6061"
+density_kg_m3: 2700
+process: "CNC milling (nominal)"
+release_status: training-only
+
+frame:
+  origin: "minimum corner of the block: x = y = z = 0"
+  axes:
+    x: "along the 40 mm length"
+    y: "along the 30 mm width, mirror plane at y = 15"
+    z: "up through the 20 mm height"
+  datums:
+    - name: A
+      description: "bottom face, z = 0"
+
+envelope:
+  min: [0, 0, 0]
+  max: [40, 30, 28]
+  tolerance: 0.05
+
+parameters:
+  - name: height
+    value: 20
+    unit: mm
+    provenance: stated
+    source: "pedestal sketch, height callout"
+    tolerance: 0.01
+    description: "block height along z, below the boss"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 1171.7
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.02
+      sweep:
+        values: [18, 20, 22]
+      infeasible_deltas: [-30]
+  - name: boreRadius
+    value: 3
+    unit: mm
+    provenance: stated
+    source: "pedestal sketch, bore callout"
+    tolerance: 0.01
+    description: "through-bore radius"
+
+features:
+  - id: block
+    kind: extrude
+    description: "40 x 30 mm rectangle extruded by height"
+    parameters: [height]
+  - id: bore
+    kind: hole
+    description: "vertical through bore"
+    parameters: [boreRadius]
+    verify:
+      - method: cylinder
+        cylinder: bore
+
+interfaces:
+  - name: mount
+    description: "the floor face and the mirror plane that locate the mating part; the height edit moves neither"
+    must_not_change: true
+    checks: [floor, mirrorY]
+
+acceptance:
+  volume:
+    expected: 23836
+    tolerance: 80
+    provenance: derived
+    note: "block minus bore plus boss"
+  surface_area:
+    expected: 5600
+    tolerance_rel: 0.05
+    provenance: derived
+  center_of_mass:
+    expected: [20, 15, 10.2]
+    tolerance: 0.5
+    provenance: derived
+  sections:
+    - id: mid
+      plane: z
+      at: 10
+      expect:
+        area: 1171.73
+        loops: 1
+        holes: 1
+      description: "block cross-section through the bore"
+  faces:
+    - name: deck
+      plane: z
+      at: 20
+      normal: "+"
+      area: 1171.73
+      center: [20, 15]
+      mode: one
+    - name: floor
+      plane: z
+      at: 0
+      normal: "-"
+      area: 1171.73
+      center: [20, 15]
+      mode: one
+    - name: tabs
+      plane: y
+      at: 0
+      normal: "-"
+      area: 800
+      center: [20, 10]
+      mode: sum
+  cylinders:
+    - name: bore
+      point: [10, 15, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 3
+      length: 20
+      t_range: [0, 20]
+      description: "through bore"
+    - name: boss
+      point: [30, 15, 20]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 4
+      length: 8
+      t_range: [0, 8]
+      description: "boss standing on the deck"
+  planes:
+    - name: ramp
+      point: [40, 15, 16]
+      normal: [1, 0, 1]
+      area: 40
+      description: "inclined face on the +x end"
+  dimensions:
+    - name: spanZ
+      axis: z
+      expected: 20
+      tolerance: 0.05
+      between: [floor, deck]
+      description: "block height between floor and deck"
+  solids:
+    - name: body
+      contains_point: [20, 8, 10]
+      description: "the single solid"
+  thickness:
+    - name: wall
+      min: 3
+      stat: p05
+      description: "thinnest wall, 5th percentile"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[4, 4, 4]]
+    - name: inBore
+      state: void
+      points: [[10, 15, 10]]
+  cylinder_counts:
+    - name: bores
+      radius: 3
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+  symmetry:
+    - name: mirrorY
+      plane: y
+      at: 15
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 23000
+    volume_max: 25000
+
+references:
+  - path: sources/pedestal-sketch.md
+    kind: text
+    role: illustrative
+    note: "the sketch the numbers were read from"
+
+open_questions:
+  - "Boss height is taken from the sketch; no second view confirms it."

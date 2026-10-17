@@ -1,0 +1,109 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import holeMajorDia, holeMinorDia, holeY, holeZ, holeMajorPosY, holeMajorPosZ, xFace, flangeRadius, slotHalf, slotY, flangeYMax from "params.kcl"
+
+assert(holeMajorDia, isGreaterThan = holeMinorDia, error = "major bore must exceed minor")
+assert(xFace, isGreaterThan = slotHalf, error = "bore shoulder must sit outboard of the slot wall")
+assert(xFace, isLessThan = flangeRadius, error = "bore shoulder must sit inside the flange OD")
+assert(slotHalf, isGreaterThan = 0mm, error = "slot half-width must be positive")
+assert(holeZ, isGreaterThan = 0mm, error = "bore z station must be positive")
+assert(holeY, isGreaterThan = slotY, error = "bore axis must sit above the slot floor")
+assert(holeY + holeMajorDia / 2, isLessThan = flangeYMax, error = "bore must not break the arm tops")
+assert(holeZ + holeMajorDia / 2, isLessThan = flangeRadius, error = "bore must not break the flange OD")
+
+// Sheet-inferred 3/8 in land: midpoint of the two stated diameters. 45 deg → axial = radial.
+midDia = (holeMinorDia + holeMajorDia) / 2
+rMin = holeMinorDia / 2
+rMid = midDia / 2
+rMaj = holeMajorDia / 2
+chamfer = rMid - rMin
+inset = 0.5mm
+rPeak = rMid + inset
+peakX = slotHalf - inset
+innerBaseX = peakX - (rPeak - rMin)
+overrun = 0.05mm
+endX = xFace + overrun
+outerConeX = xFace - chamfer
+innerConeX = slotHalf + chamfer
+majorLen = flangeRadius - xFace + 3mm
+
+assert(chamfer, isGreaterThan = 0mm, error = "45 deg land must be thicker than the minor bore")
+assert(innerBaseX, isGreaterThan = 0mm, error = "inner chamfer must sit off the midplane")
+assert(majorLen, isGreaterThan = 0mm, error = "counterbore must reach past the shoulder to the skin")
+
+fn coaxialCutter(@y0, z0) {
+  profile = sketch(on = XY) {
+    s01 = line(start = [-endX, 0mm], end = [endX, 0mm])
+    s02 = line(start = [endX, 0mm], end = [endX, rMid])
+    s03 = line(start = [endX, rMid], end = [xFace, rMid])
+    s04 = line(start = [xFace, rMid], end = [outerConeX, rMin])
+    s05 = line(start = [outerConeX, rMin], end = [innerConeX, rMin])
+    s06 = line(start = [innerConeX, rMin], end = [peakX, rPeak])
+    s07 = line(start = [peakX, rPeak], end = [innerBaseX, rMin])
+    s08 = line(start = [innerBaseX, rMin], end = [-innerBaseX, rMin])
+    s09 = line(start = [-innerBaseX, rMin], end = [-peakX, rPeak])
+    s10 = line(start = [-peakX, rPeak], end = [-innerConeX, rMin])
+    s11 = line(start = [-innerConeX, rMin], end = [-outerConeX, rMin])
+    s12 = line(start = [-outerConeX, rMin], end = [-xFace, rMid])
+    s13 = line(start = [-xFace, rMid], end = [-endX, rMid])
+    s14 = line(start = [-endX, rMid], end = [-endX, 0mm])
+  }
+  cutter = revolve(region(segments = [profile.s01, profile.s02]), axis = X, angle = 360deg)
+  hide(profile)
+  return translate(
+    cutter,
+    y = y0,
+    z = z0,
+    global = true,
+  )
+}
+
+fn majorCutter(@x0, length, y0, z0) {
+  plane = offsetPlane(YZ, offset = x0)
+  sk = sketch(on = plane) {
+    rim = circle(center = [y0, z0], start = [y0 + rMaj, z0])
+  }
+  cut = extrude(region(segments = [sk.rim]), length = length, method = NEW)
+  hide(sk)
+  return cut
+}
+
+export fn armBores(@body) {
+  coaxPos = coaxialCutter(holeY, z0 = holeZ)
+  coaxNeg = coaxialCutter(holeY, z0 = -holeZ)
+  majPosOut = majorCutter(
+    xFace,
+    length = majorLen,
+    y0 = holeMajorPosY,
+    z0 = holeMajorPosZ,
+  )
+  majPosIn = majorCutter(
+    -xFace,
+    length = -majorLen,
+    y0 = holeMajorPosY,
+    z0 = holeMajorPosZ,
+  )
+  majNegOut = majorCutter(
+    xFace,
+    length = majorLen,
+    y0 = holeY,
+    z0 = -holeZ,
+  )
+  majNegIn = majorCutter(
+    -xFace,
+    length = -majorLen,
+    y0 = holeY,
+    z0 = -holeZ,
+  )
+  return subtract(
+    body,
+    tools = [
+      coaxPos,
+      coaxNeg,
+      majPosOut,
+      majPosIn,
+      majNegOut,
+      majNegIn
+    ],
+  )
+}

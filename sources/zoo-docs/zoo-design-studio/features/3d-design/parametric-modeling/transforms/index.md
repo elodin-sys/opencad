@@ -1,0 +1,44 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms
+Title: Transforms
+
+# Transforms
+
+Transform geometry in Zoo Design Studio.
+
+Transform tools reposition, resize, and repeat geometry without rebuilding it from scratch. They are
+central to layout, reuse, and pattern-driven modeling workflows.
+
+This section covers
+[Translate](/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms/translate),
+[Rotate](/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms/rotate),
+[Scale](/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms/scale),
+[Mirror](/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms/mirror),
+[Clone](/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms/clone),
+and [Patterns](/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms/patterns) for
+[Circular Pattern](/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms/patterns/circular-pattern)
+and [Linear Pattern](/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms/patterns/linear-pattern).
+
+## Video Walkthrough
+
+See how to translate, rotate, scale, clone, and mirror geometry in Design Studio.
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/psq2Dd15mGs"
+            title="Translate, Rotate, Scale, Clone, and Mirror in Zoo Design Studio"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>

@@ -1,0 +1,346 @@
+schema_version: 1
+name: planetary-set-ring
+intent: >-
+  Internal ring gear of the planetary-set assembly, drafted in its own frame: an annulus of outside radius 58,
+  face width 10 (z 0..10), with 48 internal involute teeth (module 2, pressure angle 20 deg, zero profile shift,
+  pitch radius 48, internal tip radius 46, root radius 50.5, base radius 45.105). Every tooth space is widened by
+  0.05 mm at the pitch circle (space 3.1916, tooth 3.0916) for 0.15 mm circular backlash with each planet. A tooth
+  is centred on +x. The bottom face stands on the base plate, rigidly fixed and concentric with the plate hole; three
+  planets mesh inside on radius 36. Authoritative source: sources/planetary-set-spec.md.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "on the ring axis in the plane of the bottom face (z = 0)"
+  axes:
+    x: "radial, through the centre of one internal tooth (tooth centres at k x 7.5 deg)"
+    y: "radial, completing a right-handed frame (tooth centre at +y since 90 deg = 12 x 7.5 deg)"
+    z: "along the ring axis, from the bottom face (z = 0) to the top face (z = 10)"
+  datums:
+    - name: A
+      description: "bottom face z = 0, seated on the base plate top (joint ringFixed, rigid)"
+    - name: B
+      description: "ring axis: the z axis through the origin, concentric with the plate centre hole"
+
+envelope:
+  min: [-58, -58, 0]
+  max: [58, 58, 10]
+  tolerance: 0.05
+
+parameters:
+  - name: faceWidth
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "planetary-set-spec.md, Ring row / part frames: face width 10 (z 0..10)"
+    tolerance: 0.01
+    description: "axial thickness of the ring"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 6588.15
+        direction: increase
+        bbox_delta: [0, 0, 2]
+        tolerance_rel: 0.02
+      sweep:
+        values: [6, 10, 14]
+      infeasible_deltas: [-10]
+  - name: outerRadius
+    value: 58
+    unit: mm
+    provenance: stated
+    source: "planetary-set-spec.md, Ring row: outside radius 58"
+    tolerance: 0.01
+    description: "outside radius of the rim"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 7414.16
+        direction: increase
+        bbox_delta: [4, 4, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [54, 58, 64]
+      infeasible_deltas: [-8]
+  - name: toothCount
+    value: 48
+    unit: ""
+    provenance: stated
+    source: "planetary-set-spec.md, Ring row: 48 internal teeth"
+    tolerance: 0.001
+  - name: gearModule
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "planetary-set-spec.md, Module row"
+    tolerance: 0.001
+  - name: pressureAngle
+    value: 20
+    unit: deg
+    provenance: stated
+    source: "planetary-set-spec.md, Pressure angle row"
+    tolerance: 0.01
+  - name: profileShift
+    value: 0
+    unit: ""
+    provenance: stated
+    source: "planetary-set-spec.md, Profile shift row"
+    tolerance: 0.001
+  - name: pitchRadius
+    value: 48
+    unit: mm
+    provenance: derived
+    formula: "gearModule * toothCount / 2"
+    source: "planetary-set-spec.md, Ring row: pitch radius 48"
+    tolerance: 0.01
+  - name: tipRadius
+    value: 46
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius - gearModule (internal addendum points inward)"
+    source: "planetary-set-spec.md, Ring row: internal tip radius 46"
+    tolerance: 0.01
+  - name: rootRadius
+    value: 50.5
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius + 1.25 * gearModule"
+    source: "planetary-set-spec.md, Ring row: root radius 50.5"
+    tolerance: 0.01
+  - name: baseRadius
+    value: 45.1052
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius * cos(pressureAngle)"
+    source: "planetary-set-spec.md: base circle 48 x 2 x cos 20 deg / 2 = 45.105"
+    tolerance: 0.01
+  - name: spaceWidening
+    value: 0.05
+    unit: mm
+    provenance: stated
+    source: "planetary-set-spec.md, Circular backlash row: widen every ring tooth space by 0.05 mm"
+    tolerance: 0.001
+  - name: spaceWidth
+    value: 3.1916
+    unit: mm
+    provenance: derived
+    formula: "pi * gearModule / 2 + spaceWidening"
+    tolerance: 0.001
+    description: "ring tooth-space arc width at the pitch circle (= cutter tooth thickness)"
+  - name: toothThickness
+    value: 3.0916
+    unit: mm
+    provenance: derived
+    formula: "pi * gearModule / 2 - spaceWidening"
+    tolerance: 0.001
+  - name: pitchAngle
+    value: 7.5
+    unit: deg
+    provenance: derived
+    formula: "360 / toothCount"
+    tolerance: 0.001
+  - name: toothPhase
+    value: 0
+    unit: deg
+    provenance: stated
+    source: "planetary-set-spec.md, part frames: the ring has an internal tooth centred on +x"
+    tolerance: 0.01
+  - name: flankPoints
+    value: 14
+    unit: ""
+    provenance: stated
+    source: "planetary-set-spec.md: 12-16 points per flank (any value in the range passes)"
+    tolerance: 2
+
+features:
+  - id: annulus
+    kind: extrude
+    description: "annulus tipRadius..outerRadius extruded faceWidth along +z from z = 0"
+    parameters: [tipRadius, outerRadius, faceWidth]
+    verify:
+      - method: bbox
+      - method: cylinder
+        cylinder: rimOuter
+      - method: face
+        face: floor
+      - method: face
+        face: top
+      - method: dimension
+        dimension: height
+      - method: section
+        section: mid
+      - method: solid
+        points: [[54, 0, 5]]
+      - method: void
+        points: [[0, 0, 5]]
+  - id: internalTeeth
+    kind: cut
+    count: 48
+    description: >-
+      48 tooth spaces cut by an external 48-tooth involute gear of module 2 whose tips reach rootRadius and whose
+      tooth thickness at the pitch circle is spaceWidth; flanks are involutes of baseRadius (flankPoints per flank),
+      tip lands stay arcs of the tipRadius circle; spaces centred at 3.75 + k x 7.5 deg, teeth at k x 7.5 deg
+    parameters: [toothCount, gearModule, pressureAngle, profileShift, pitchRadius, rootRadius, baseRadius, spaceWidening, spaceWidth, toothThickness, pitchAngle, toothPhase, flankPoints]
+    verify:
+      - method: section
+        section: teethY0
+      - method: section
+        section: teethX0
+      - method: cylinder
+        cylinder: tipLands
+      - method: solid
+        points: [[48, 0, 5], [0, 48, 5], [-48, 0, 5], [0, -48, 5]]
+      - method: void
+        points: [[47.8972, 3.1394, 5], [-3.1394, 47.8972, 5], [-47.8972, -3.1394, 5], [3.1394, -47.8972, 5]]
+
+interfaces:
+  - name: ringFixed
+    description: "rigid joint at the own-frame origin, axis +z: bottom face on the plate top, ring axis on the plate hole axis"
+    must_not_change: true
+    checks: [floor, tipLands]
+  - name: ringMesh
+    description: "internal tooth tips on radius 46 about the ring axis, where the three planets on radius 36 mesh"
+    must_not_change: true
+    checks: [tipLands]
+
+acceptance:
+  volume:
+    expected: 32940.75
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "faceWidth * (pi (58^2 - 46^2) - 48 x tooth-space area 13.0548 between r 46 and 50.5) = 10 * 3294.075"
+  surface_area:
+    expected: 16270.67
+    tolerance_rel: 0.01
+    provenance: derived
+    note: "2 x 3294.075 + 2 pi 58 x 10 + 10 x 48 x (2 x 4.8137 flank + 1.8318 tip land + 1.1205 root land)"
+  center_of_mass:
+    expected: [0, 0, 5]
+    tolerance: 0.05
+    provenance: derived
+    note: "48-fold pattern about the z axis, mid face width"
+  solid_count: 1
+  solids:
+    - name: ring
+      contains_point: [54, 0, 5]
+      description: "the single ring solid"
+  sections:
+    - id: mid
+      plane: z
+      at: 5
+      expect:
+        area: 3294.075
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 1
+      description: "annulus minus the 48 tooth spaces; the toothed bore is the one hole"
+    - id: teethY0
+      plane: y
+      at: 0
+      expect:
+        area: 240
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 0
+      description: "through the tooth centres at 0 and 180 deg: 2 x (58 - 46) x 10"
+    - id: teethX0
+      plane: x
+      at: 0
+      expect:
+        area: 240
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 0
+      description: "through the tooth centres at 90 and 270 deg: 2 x (58 - 46) x 10"
+  faces:
+    - name: floor
+      plane: z
+      at: 0
+      normal: "-"
+      center: [0, 0]
+      mode: one
+    - name: top
+      plane: z
+      at: 10
+      normal: "+"
+      area: 3294.075
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: rimOuter
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 58
+      radius_tolerance: 0.02
+      length: 10
+      t_range: [0, 10]
+      description: "outside of the rim"
+    - name: tipLands
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 46
+      radius_tolerance: 0.02
+      description: "internal tooth tip lands, arcs of the r 46 circle"
+  dimensions:
+    - name: height
+      axis: z
+      expected: 10
+      tolerance: 0.05
+      between: [floor, top]
+    - name: spanX
+      axis: x
+      expected: 116
+      tolerance: 0.05
+    - name: spanY
+      axis: y
+      expected: 116
+      tolerance: 0.05
+  probes:
+    - name: toothCentres
+      state: solid
+      points: [[48.0000, 0.0000, 5], [47.5894, 6.2653, 5], [46.3644, 12.4233, 5], [44.3462, 18.3688, 5], [41.5692, 24.0000, 5], [38.0810, 29.2205, 5], [33.9411, 33.9411, 5], [29.2205, 38.0810, 5], [24.0000, 41.5692, 5], [18.3688, 44.3462, 5], [12.4233, 46.3644, 5], [6.2653, 47.5894, 5], [0.0000, 48.0000, 5], [-6.2653, 47.5894, 5], [-12.4233, 46.3644, 5], [-18.3688, 44.3462, 5], [-24.0000, 41.5692, 5], [-29.2205, 38.0810, 5], [-33.9411, 33.9411, 5], [-38.0810, 29.2205, 5], [-41.5692, 24.0000, 5], [-44.3462, 18.3688, 5], [-46.3644, 12.4233, 5], [-47.5894, 6.2653, 5], [-48.0000, 0.0000, 5], [-47.5894, -6.2653, 5], [-46.3644, -12.4233, 5], [-44.3462, -18.3688, 5], [-41.5692, -24.0000, 5], [-38.0810, -29.2205, 5], [-33.9411, -33.9411, 5], [-29.2205, -38.0810, 5], [-24.0000, -41.5692, 5], [-18.3688, -44.3462, 5], [-12.4233, -46.3644, 5], [-6.2653, -47.5894, 5], [0.0000, -48.0000, 5], [6.2653, -47.5894, 5], [12.4233, -46.3644, 5], [18.3688, -44.3462, 5], [24.0000, -41.5692, 5], [29.2205, -38.0810, 5], [33.9411, -33.9411, 5], [38.0810, -29.2205, 5], [41.5692, -24.0000, 5], [44.3462, -18.3688, 5], [46.3644, -12.4233, 5], [47.5894, -6.2653, 5]]
+      description: "tooth centres on the pitch circle at k x 7.5 deg (1.45 mm from each flank)"
+    - name: spaceCentres
+      state: void
+      points: [[47.8972, 3.1394, 5], [47.0777, 9.3643, 5], [45.4526, 15.4291, 5], [43.0499, 21.2299, 5], [39.9105, 26.6674, 5], [36.0883, 31.6486, 5], [31.6486, 36.0883, 5], [26.6674, 39.9105, 5], [21.2299, 43.0499, 5], [15.4291, 45.4526, 5], [9.3643, 47.0777, 5], [3.1394, 47.8972, 5], [-3.1394, 47.8972, 5], [-9.3643, 47.0777, 5], [-15.4291, 45.4526, 5], [-21.2299, 43.0499, 5], [-26.6674, 39.9105, 5], [-31.6486, 36.0883, 5], [-36.0883, 31.6486, 5], [-39.9105, 26.6674, 5], [-43.0499, 21.2299, 5], [-45.4526, 15.4291, 5], [-47.0777, 9.3643, 5], [-47.8972, 3.1394, 5], [-47.8972, -3.1394, 5], [-47.0777, -9.3643, 5], [-45.4526, -15.4291, 5], [-43.0499, -21.2299, 5], [-39.9105, -26.6674, 5], [-36.0883, -31.6486, 5], [-31.6486, -36.0883, 5], [-26.6674, -39.9105, 5], [-21.2299, -43.0499, 5], [-15.4291, -45.4526, 5], [-9.3643, -47.0777, 5], [-3.1394, -47.8972, 5], [3.1394, -47.8972, 5], [9.3643, -47.0777, 5], [15.4291, -45.4526, 5], [21.2299, -43.0499, 5], [26.6674, -39.9105, 5], [31.6486, -36.0883, 5], [36.0883, -31.6486, 5], [39.9105, -26.6674, 5], [43.0499, -21.2299, 5], [45.4526, -15.4291, 5], [47.0777, -9.3643, 5], [47.8972, -3.1394, 5]]
+      description: "tooth-space centres on the pitch circle at 3.75 + k x 7.5 deg (1.5 mm from each flank, 2.5 from the root)"
+    - name: boreClear
+      state: void
+      points: [[0, 0, 5], [44.5, 0, 5], [0, 44.5, 5], [-44.5, 0, 5], [0, -44.5, 5]]
+      description: "inside the tip circle, 1.5 mm in from the tooth tips"
+    - name: rimBehindRoot
+      state: solid
+      points: [[51.8887, 3.4010, 5], [-3.4010, 51.8887, 5], [-51.8887, -3.4010, 5], [3.4010, -51.8887, 5]]
+      description: "rim material 1.5 mm beyond the root circle behind a tooth space"
+  gears:
+    - name: ringTeeth
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      at: 5
+      module: 2
+      teeth: 48
+      description: "internal teeth on the bore loop of the mid section"
+  blockout:
+    volume_min: 25000
+    volume_max: 39700
+
+references:
+  - path: sources/planetary-set-spec.md
+    kind: text
+    role: authoritative
+    sha256: 2a8bca0f4ffa01692bc1a5879aeb8b02a1d728b2cbe39448f181197d86ca14ca
+    units: mm
+    revision: "as staged 2026-09-27"
+    note: "planetary set design specification; Ring row, part frames and involute construction"
+
+open_questions:
+  - "The gear inspector must read the ring's teeth on the internal (hole) loop; if it only reads the outer loop, the toothCentres/spaceCentres probes and the teethY0/teethX0 sections carry the tooth count and phase."
+  - "No material, density or process is stated; no mass claim is made."

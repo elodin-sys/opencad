@@ -1,0 +1,10 @@
+Source URL: https://zoo.dev/docs/glossary/view
+Title: View
+
+# View
+
+A visual perspective of the model
+
+In [modeling](/docs/glossary/modeling), a view is a perspective of the model. There are several view types, like a section view, cut-out view, exploaded view, etc.
+
+Similar to modeling, a [drawing](/docs/glossary/drawing) view is a perspective of the modeling, but in 2D. In drawings, views are used to assist the manufacturer with understanding the model or details in the drawing. Example of drawing views can be top view, side view, isometric view, detail view, etc. Each view can have its own [scale](/docs/glossary/scale).

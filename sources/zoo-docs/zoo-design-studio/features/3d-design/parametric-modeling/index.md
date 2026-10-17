@@ -1,0 +1,50 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling
+Title: Parametric Modeling
+
+# Parametric Modeling
+
+Parametric modeling workflows in Zoo Design Studio.
+
+Parametric modeling in Zoo Design Studio captures design intent as editable steps. Sketches, feature
+operations, transforms, construction references, and downstream dependencies stay connected so later
+changes regenerate predictably.
+
+Most part-modeling workflows begin in
+[Sketching](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching), where 2D
+profiles, dimensions, and geometric relationships are defined. Those sketches can then drive
+[Solid Modeling](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling)
+features such as extrudes, revolves, booleans, and edge treatments, or
+[Surface Modeling](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling)
+operations when open surfaces are needed instead of closed solids.
+
+[Transforms](/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms) control how
+geometry is positioned, patterned, rotated, or scaled without redefining the source features, while
+[Construction Geometry](/docs/zoo-design-studio/features/3d-design/parametric-modeling/construction-geometry)
+provides the reference planes and related setup geometry needed for more complex feature placement.
+Together, these tools define a feature history that can be edited and regenerated as the design
+evolves.
+
+
+<FramedImage
+    src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketch.webp"
+    alt="Sketch with constraints and solver in Zoo Design Studio"
+    aspect="1962 / 2216"
+    maxHeightPx={420}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+    Example: Sketch with constraints and solver
+</div>
+
+<FramedImage
+    src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/reolve.webp"
+    alt="Revolve operation in Zoo Design Studio"
+    aspect="1962 / 2216"
+    maxHeightPx={420}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+    Example: Revolve feature applied to a sketch
+</div>
+
+To create the model shown above, we used a sketch with solver-driven constraints, and then applied a sequence of parametric operations: <b>extrude</b>, <b>revolve</b>, <b>translate</b>, <b>patterns</b>, and <b>boolean operations</b>. This workflow demonstrates the power of parametric modeling—each step is editable and updates propagate automatically.
+
+Want to learn how these features work? <b>Check out the rest of this section</b> for detailed guides on each operation. Start by learning about <a href="/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching">Sketches</a>—the foundation of every parametric model. Once you're comfortable with sketches, try creating your first solid or surface using <a href="/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/extrude">Solid Extrude</a> or <a href="/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude">Surface Extrude</a>.

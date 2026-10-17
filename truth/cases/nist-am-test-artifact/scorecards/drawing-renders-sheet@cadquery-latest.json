@@ -1,0 +1,4297 @@
+{
+  "case": "nist-am-test-artifact",
+  "arm": "drawing-renders-sheet",
+  "design": "nist-am-test-artifact",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/nist-am-test-artifact",
+  "truth_class": "B",
+  "role": "validation",
+  "scored_at": "2026-09-20T07:26:26Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 69,
+    "required_total": 69,
+    "optional_pass": 0,
+    "optional_total": 0
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        141.4214,
+        141.4214,
+        17.0
+      ],
+      "measured": [
+        141.42135623730752,
+        141.421356237305,
+        17.0
+      ],
+      "error": 4.376269501449315e-05,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "paper: approximately 101 000 mm3; reference STEP 100987.06",
+      "expected": 100987.06165341612,
+      "measured": 100987.08416996199,
+      "error": 0.022516545868711546,
+      "band": 302.9611849602484,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "center_of_mass",
+      "kind": "center_of_mass",
+      "required": true,
+      "note": "",
+      "expected": [
+        0.26125675155433825,
+        0.8671615291514636,
+        -4.636979473010583
+      ],
+      "measured": [
+        0.26125689536717567,
+        0.8671612027412325,
+        -4.636976961313259
+      ],
+      "error": 2.511697323903661e-06,
+      "ok": true
+    },
+    {
+      "id": "hole_d10_0_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d810, 17 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          -1.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          -1.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "length": 17.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 17.0,
+          "measured": 17.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d6_m26p52_40p66",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d86, 5 long along [0.707, -0.707, -0.0]",
+      "expected": {
+        "point": [
+          -26.5165,
+          40.6586,
+          -5.0
+        ],
+        "direction": [
+          0.7071,
+          -0.7071,
+          -0.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -26.51650429449234,
+          40.65863991822434,
+          -5.0
+        ],
+        "direction": [
+          0.7071067811865476,
+          -0.7071067811865476,
+          0.0
+        ],
+        "radius": 3.0,
+        "length": 5.0000000000055564,
+        "kind": "hole"
+      },
+      "axis_offset": 2.5189782470767164e-05,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 2.5189782470767164e-05,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0000000000055564,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d4_m60_m0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d84, 10 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          -60.0,
+          -0.0,
+          -5.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -60.0,
+          0.0,
+          -5.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 10.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 10.0,
+          "measured": 10.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d4_60_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d84, 10 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          60.0,
+          0.0,
+          -5.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          60.0,
+          0.0,
+          -5.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 10.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 10.0,
+          "measured": 10.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d4_0_m60",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d84, 10 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          -60.0,
+          -5.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          -60.0,
+          -5.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 10.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 10.0,
+          "measured": 10.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d4_0_60",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d84, 10 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          60.0,
+          -5.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          60.0,
+          -5.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 10.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 10.0,
+          "measured": 10.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3_m6p01_62p58",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83, 3 long along [0.707, -0.707, -0.0]",
+      "expected": {
+        "point": [
+          -6.0104,
+          62.579,
+          -5.0
+        ],
+        "direction": [
+          0.7071,
+          -0.7071,
+          -0.0
+        ],
+        "radius": 1.5,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -6.0104076400860045,
+          62.578950135010004,
+          -5.0
+        ],
+        "direction": [
+          0.7071067811865476,
+          -0.7071067811865476,
+          0.0
+        ],
+        "radius": 1.5,
+        "length": 3.0000000000005045,
+        "kind": "hole"
+      },
+      "axis_offset": 4.066222919263842e-05,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 4.066222919263842e-05,
+          "ok": true
+        },
+        "length": {
+          "expected": 3.0,
+          "measured": 3.0000000000005045,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d2_21p21_28p28",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d82, 2 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          21.2132,
+          28.2843,
+          -1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          21.213,
+          28.284,
+          -1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.0,
+        "length": 2.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0003605551275485147,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0003605551275485147,
+          "ok": true
+        },
+        "length": {
+          "expected": 2.0,
+          "measured": 2.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d1p5_17p68_31p82",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d81.5, 2 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          17.6777,
+          31.8198,
+          -1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.75,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          17.677466094067,
+          31.819533905933,
+          -1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.75,
+        "length": 2.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0003542852494620593,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0003542852494620593,
+          "ok": true
+        },
+        "length": {
+          "expected": 2.0,
+          "measured": 2.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d1_14p14_35p36",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d81, 2 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          14.1421,
+          35.3553,
+          -1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.5,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          14.141932188135,
+          35.355067811865,
+          -1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.5,
+        "length": 2.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.00028648237654350673,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.00028648237654350673,
+          "ok": true
+        },
+        "length": {
+          "expected": 2.0,
+          "measured": 2.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d0p5_10p61_38p89",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d80.5, 2 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          10.6066,
+          38.8909,
+          -1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          10.606398282202,
+          38.890601717798,
+          -1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.25,
+        "length": 2.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0003600865757862709,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0003600865757862709,
+          "ok": true
+        },
+        "length": {
+          "expected": 2.0,
+          "measured": 2.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d0p25_7p07_42p43",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d80.25, 2 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          7.0711,
+          42.4264,
+          -1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.125,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          7.070864376269,
+          42.426135623731,
+          -1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.125,
+        "length": 2.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0003541374792668856,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0003541374792668856,
+          "ok": true
+        },
+        "length": {
+          "expected": 2.0,
+          "measured": 2.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d20_0_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d820, 4 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          2.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 10.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          2.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 10.0,
+        "length": 4.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 4.0,
+          "measured": 4.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d15_0_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d815, 3 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          5.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 7.5,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          5.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 7.5,
+        "length": 3.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 3.0,
+          "measured": 3.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_m50_m0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          -50.0,
+          -0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          -50.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_m40_m0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          -40.0,
+          -0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          -40.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_m30_m0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          -30.0,
+          -0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          -30.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_m20_m0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          -20.0,
+          -0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          -20.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_20_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          20.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          20.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_30_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          30.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          30.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_40_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          40.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          40.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_50_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          50.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          50.0,
+          0.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_0_m50",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          -50.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          -50.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_0_m40",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          -40.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          -40.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_0_m30",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          -30.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          -30.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_0_m20",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          -20.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          -20.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_0_20",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          20.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          20.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_0_30",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          30.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          30.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_0_40",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          40.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          40.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d4_0_50",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d84, 7 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          0.0,
+          50.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          50.0,
+          3.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 7.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.0,
+          "measured": 7.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d2_28p28_21p21",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d82, 2 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          28.2843,
+          21.2132,
+          1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          28.284,
+          21.213,
+          0.9999999999999999
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.0,
+        "length": 1.9999999999999998,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0003605551275485147,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0003605551275485147,
+          "ok": true
+        },
+        "length": {
+          "expected": 2.0,
+          "measured": 1.9999999999999998,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d1p5_31p82_17p68",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d81.5, 2 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          31.8198,
+          17.6777,
+          1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.75,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          31.819533905933,
+          17.677466094067,
+          0.9999999999999999
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.75,
+        "length": 1.9999999999999998,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0003542852494620593,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0003542852494620593,
+          "ok": true
+        },
+        "length": {
+          "expected": 2.0,
+          "measured": 1.9999999999999998,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d1_35p36_14p14",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d81, 2 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          35.3553,
+          14.1421,
+          1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.5,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          35.355067811865,
+          14.141932188135,
+          0.9999999999999999
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.5,
+        "length": 1.9999999999999998,
+        "kind": "pin"
+      },
+      "axis_offset": 0.00028648237654350673,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.00028648237654350673,
+          "ok": true
+        },
+        "length": {
+          "expected": 2.0,
+          "measured": 1.9999999999999998,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d0p5_38p89_10p61",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d80.5, 2 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          38.8909,
+          10.6066,
+          1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.25,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          38.890601717798,
+          10.606398282202,
+          0.9999999999999999
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.25,
+        "length": 1.9999999999999998,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0003600865757862709,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0003600865757862709,
+          "ok": true
+        },
+        "length": {
+          "expected": 2.0,
+          "measured": 1.9999999999999998,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d0p25_42p43_7p07",
+      "kind": "cylinder",
+      "required": true,
+      "note": "pin \u00d80.25, 2 long along [0.0, 0.0, 1.0]",
+      "expected": {
+        "point": [
+          42.4264,
+          7.0711,
+          1.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.125,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          42.426135623731,
+          7.070864376269,
+          0.9999999999999999
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 0.125,
+        "length": 1.9999999999999998,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0003541374792668856,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0003541374792668856,
+          "ok": true
+        },
+        "length": {
+          "expected": 2.0,
+          "measured": 1.9999999999999998,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "count_pins_d4",
+      "kind": "cylinder_count",
+      "required": true,
+      "note": "",
+      "expected": 16,
+      "expected_min": null,
+      "measured": 16,
+      "centers": [
+        [
+          -50.0,
+          0.0,
+          3.5
+        ],
+        [
+          -40.0,
+          0.0,
+          3.5
+        ],
+        [
+          -30.0,
+          0.0,
+          3.5
+        ],
+        [
+          -20.0,
+          0.0,
+          3.5
+        ],
+        [
+          0.0,
+          -50.0,
+          3.5
+        ],
+        [
+          0.0,
+          -40.0,
+          3.5
+        ],
+        [
+          0.0,
+          -30.0,
+          3.5
+        ],
+        [
+          0.0,
+          -20.0,
+          3.5
+        ],
+        [
+          0.0,
+          20.0,
+          3.5
+        ],
+        [
+          0.0,
+          30.0,
+          3.5
+        ],
+        [
+          0.0,
+          40.0,
+          3.5
+        ],
+        [
+          0.0,
+          50.0,
+          3.5
+        ],
+        [
+          20.0,
+          0.0,
+          3.5
+        ],
+        [
+          30.0,
+          0.0,
+          3.5
+        ],
+        [
+          40.0,
+          0.0,
+          3.5
+        ],
+        [
+          50.0,
+          0.0,
+          3.5
+        ]
+      ],
+      "region": null,
+      "ok": true
+    },
+    {
+      "id": "count_holes_d4",
+      "kind": "cylinder_count",
+      "required": true,
+      "note": "",
+      "expected": 4,
+      "expected_min": null,
+      "measured": 4,
+      "centers": [
+        [
+          -60.0,
+          0.0,
+          -5.0
+        ],
+        [
+          0.0,
+          -60.0,
+          -5.0
+        ],
+        [
+          0.0,
+          60.0,
+          -5.0
+        ],
+        [
+          60.0,
+          0.0,
+          -5.0
+        ]
+      ],
+      "region": null,
+      "ok": true
+    },
+    {
+      "id": "count_fine_pins",
+      "kind": "cylinder_count",
+      "required": true,
+      "note": "the smallest pin, \u00d80.25",
+      "expected": 1,
+      "expected_min": null,
+      "measured": 1,
+      "centers": [
+        [
+          42.426135623731,
+          7.070864376269,
+          0.9999999999999999
+        ]
+      ],
+      "region": null,
+      "ok": true
+    },
+    {
+      "id": "count_fine_holes",
+      "kind": "cylinder_count",
+      "required": true,
+      "note": "the smallest hole, \u00d80.25",
+      "expected": 1,
+      "expected_min": null,
+      "measured": 1,
+      "centers": [
+        [
+          7.070864376269,
+          42.426135623731,
+          -1.0
+        ]
+      ],
+      "region": null,
+      "ok": true
+    },
+    {
+      "id": "ramp_plane",
+      "kind": "plane",
+      "required": true,
+      "note": "1 mm rise over 25 mm run; the 2.5 mm landings are separate faces",
+      "expected": 125.1,
+      "found": 1,
+      "measured": 125.09996003212463,
+      "ok": true
+    },
+    {
+      "id": "side_mxmy",
+      "kind": "plane",
+      "required": true,
+      "note": "diamond side; the (-x,+y) side carries the lateral features so its plain area is smaller",
+      "expected": 1000.0,
+      "found": 1,
+      "measured": 999.9999999999327,
+      "ok": true
+    },
+    {
+      "id": "side_mxpy",
+      "kind": "plane",
+      "required": true,
+      "note": "diamond side; the (-x,+y) side carries the lateral features so its plain area is smaller",
+      "expected": 872.91,
+      "found": 1,
+      "measured": 872.9083713407472,
+      "ok": true
+    },
+    {
+      "id": "side_pxmy",
+      "kind": "plane",
+      "required": true,
+      "note": "diamond side; the (-x,+y) side carries the lateral features so its plain area is smaller",
+      "expected": 1000.0,
+      "found": 1,
+      "measured": 999.9999999999682,
+      "ok": true
+    },
+    {
+      "id": "side_pxpy",
+      "kind": "plane",
+      "required": true,
+      "note": "diamond side; the (-x,+y) side carries the lateral features so its plain area is smaller",
+      "expected": 1000.0,
+      "found": 1,
+      "measured": 1000.0000000000034,
+      "ok": true
+    },
+    {
+      "id": "top_surface",
+      "kind": "face",
+      "required": true,
+      "note": "primary datum; area is not scored (a split top face is fine), only its presence",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "found": 1,
+      "area": 8181.884175132315,
+      "expected_area": null,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "bottom_face",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": -10.0,
+      "normal": "-",
+      "found": 1,
+      "area": 9871.194701202538,
+      "expected_area": 9871.19,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "step_up_z3",
+      "kind": "face",
+      "required": true,
+      "note": "staircase tread, 10 x 10",
+      "plane": "z",
+      "at": 3.0,
+      "normal": "+",
+      "found": 1,
+      "area": 99.99999999999999,
+      "expected_area": 100.0,
+      "mode": "one",
+      "center": [
+        -37.0,
+        17.0
+      ],
+      "centroid_uv": [
+        -37.0,
+        17.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "step_down_zm7",
+      "kind": "face",
+      "required": true,
+      "note": "staircase tread, 10 x 10",
+      "plane": "z",
+      "at": -7.0,
+      "normal": "+",
+      "found": 1,
+      "area": 99.99999999999999,
+      "expected_area": 100.0,
+      "mode": "one",
+      "center": [
+        -17.0,
+        -17.0
+      ],
+      "centroid_uv": [
+        -17.0,
+        -17.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "step_down_zm3",
+      "kind": "face",
+      "required": true,
+      "note": "staircase tread, 10 x 10",
+      "plane": "z",
+      "at": -3.0,
+      "normal": "+",
+      "found": 1,
+      "area": 99.99999999999999,
+      "expected_area": 100.0,
+      "mode": "one",
+      "center": [
+        -37.0,
+        -17.0
+      ],
+      "centroid_uv": [
+        -37.0,
+        -17.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "step_down_zm5",
+      "kind": "face",
+      "required": true,
+      "note": "staircase tread, 10 x 10",
+      "plane": "z",
+      "at": -5.0,
+      "normal": "+",
+      "found": 1,
+      "area": 99.99999999999999,
+      "expected_area": 100.0,
+      "mode": "one",
+      "center": [
+        -27.0,
+        -17.0
+      ],
+      "centroid_uv": [
+        -27.0,
+        -17.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "step_down_zm6",
+      "kind": "face",
+      "required": true,
+      "note": "staircase tread, 10 x 10",
+      "plane": "z",
+      "at": -6.0,
+      "normal": "+",
+      "found": 1,
+      "area": 99.99999999999999,
+      "expected_area": 100.0,
+      "mode": "one",
+      "center": [
+        -17.0,
+        -27.0
+      ],
+      "centroid_uv": [
+        -17.0,
+        -27.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "step_down_zm4",
+      "kind": "face",
+      "required": true,
+      "note": "staircase tread, 10 x 10",
+      "plane": "z",
+      "at": -4.0,
+      "normal": "+",
+      "found": 1,
+      "area": 99.99999999999999,
+      "expected_area": 100.0,
+      "mode": "one",
+      "center": [
+        -17.0,
+        -37.0
+      ],
+      "centroid_uv": [
+        -17.0,
+        -37.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "step_up_z7",
+      "kind": "face",
+      "required": true,
+      "note": "staircase tread, 10 x 10",
+      "plane": "z",
+      "at": 7.0,
+      "normal": "+",
+      "found": 1,
+      "area": 99.99999999999999,
+      "expected_area": 100.0,
+      "mode": "one",
+      "center": [
+        -17.0,
+        17.0
+      ],
+      "centroid_uv": [
+        -17.0,
+        17.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "step_up_z5",
+      "kind": "face",
+      "required": true,
+      "note": "staircase tread, 10 x 10",
+      "plane": "z",
+      "at": 5.0,
+      "normal": "+",
+      "found": 1,
+      "area": 99.99999999999999,
+      "expected_area": 100.0,
+      "mode": "one",
+      "center": [
+        -27.0,
+        17.0
+      ],
+      "centroid_uv": [
+        -27.0,
+        17.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "step_up_z6",
+      "kind": "face",
+      "required": true,
+      "note": "staircase tread, 10 x 10",
+      "plane": "z",
+      "at": 6.0,
+      "normal": "+",
+      "found": 1,
+      "area": 99.99999999999999,
+      "expected_area": 100.0,
+      "mode": "one",
+      "center": [
+        -17.0,
+        27.0
+      ],
+      "centroid_uv": [
+        -17.0,
+        27.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "step_up_z4",
+      "kind": "face",
+      "required": true,
+      "note": "staircase tread, 10 x 10",
+      "plane": "z",
+      "at": 4.0,
+      "normal": "+",
+      "found": 1,
+      "area": 99.99999999999999,
+      "expected_area": 100.0,
+      "mode": "one",
+      "center": [
+        -17.0,
+        37.0
+      ],
+      "centroid_uv": [
+        -17.0,
+        37.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "ramp_landing_z2",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 2.0,
+      "normal": "+",
+      "found": 1,
+      "area": 12.499999999961197,
+      "expected_area": 12.5,
+      "mode": "one",
+      "center": [
+        11.49,
+        -11.49
+      ],
+      "centroid_uv": [
+        11.49048519428075,
+        -11.49048519427825
+      ],
+      "ok": true
+    },
+    {
+      "id": "ramp_landing_z1",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 1.0,
+      "normal": "+",
+      "found": 1,
+      "area": 12.49999999997181,
+      "expected_area": 12.5,
+      "mode": "one",
+      "center": [
+        30.936,
+        -30.936
+      ],
+      "centroid_uv": [
+        30.93592167691075,
+        -30.935921676907252
+      ],
+      "ok": true
+    },
+    {
+      "id": "section_z1",
+      "kind": "section",
+      "required": true,
+      "note": "fine pins, \u00d84 pins, up-staircase, central cylinder, ramp",
+      "plane": "z",
+      "at": 1.0,
+      "measured": {
+        "area": 1137.995952459722,
+        "loops": 35,
+        "holes": 1
+      },
+      "checks": {
+        "area": {
+          "expected": 1137.996,
+          "measured": 1137.995952459722,
+          "ok": true
+        },
+        "loops": {
+          "expected": 35,
+          "measured": 35,
+          "ok": true
+        },
+        "holes": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "regions": {
+          "expected_count": 35,
+          "measured_count": 35,
+          "rows": [
+            {
+              "expected": {
+                "center": [
+                  -50.0,
+                  -0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -50.0,
+                  6.132247487578011e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359176
+              },
+              "center_error": 6.132247487578011e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -40.0,
+                  -0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -40.0,
+                  6.132247487578011e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359176
+              },
+              "center_error": 6.132247487578011e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -30.0,
+                  -0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -30.0,
+                  3.5648567431323396e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 3.5648567431323396e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -23.0,
+                  23.0
+                ],
+                "size": [
+                  30.0,
+                  30.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -23.0,
+                  23.0
+                ],
+                "size": [
+                  30.0,
+                  30.0
+                ],
+                "area": 500.00000000000006
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -20.0,
+                  -0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -20.0,
+                  3.5648567431323396e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 3.5648567431323396e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  -50.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  -50.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  -40.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  -40.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  -30.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  -30.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  -20.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  -20.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -0.0,
+                  -0.0
+                ],
+                "size": [
+                  20.0,
+                  20.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  5.329070518200752e-15,
+                  9.947598300641396e-16
+                ],
+                "size": [
+                  20.0,
+                  20.0
+                ],
+                "area": 235.61944901923454
+              },
+              "center_error": 5.4211197835378685e-15,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  20.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  20.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  30.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  30.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  40.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  40.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  50.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  50.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  20.0,
+                  0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  20.0,
+                  3.5648567431323396e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 3.5648567431323396e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  20.329,
+                  -20.329
+                ],
+                "size": [
+                  22.981,
+                  22.981
+                ]
+              },
+              "measured": {
+                "center": [
+                  20.329319959114127,
+                  -20.329319959105263
+                ],
+                "size": [
+                  22.980970388568004,
+                  22.980970388564003
+                ],
+                "area": 137.5000000000743
+              },
+              "center_error": 0.0004524905123341717,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  28.284,
+                  21.213
+                ],
+                "size": [
+                  2.0,
+                  2.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  28.284,
+                  21.213000000000005
+                ],
+                "size": [
+                  2.0,
+                  2.0
+                ],
+                "area": 3.141592653589794
+              },
+              "center_error": 3.552713678800501e-15,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  30.0,
+                  0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  30.0,
+                  3.5648567431323396e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 3.5648567431323396e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  30.936,
+                  -30.936
+                ],
+                "size": [
+                  5.303,
+                  5.303
+                ]
+              },
+              "measured": {
+                "center": [
+                  30.93592167691075,
+                  -30.935921676907252
+                ],
+                "size": [
+                  5.303300858901,
+                  5.303300858903
+                ],
+                "area": 12.49999999997181
+              },
+              "center_error": 0.00011076557753852098,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  31.82,
+                  17.678
+                ],
+                "size": [
+                  1.5,
+                  1.5
+                ]
+              },
+              "measured": {
+                "center": [
+                  31.819533905933,
+                  17.677466094067
+                ],
+                "size": [
+                  1.5,
+                  1.5
+                ],
+                "area": 1.7671458676442573
+              },
+              "center_error": 0.000708730713731534,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  34.648,
+                  30.406
+                ],
+                "size": [
+                  5.657,
+                  5.657
+                ]
+              },
+              "measured": {
+                "center": [
+                  34.648232278141,
+                  30.405591591021167
+                ],
+                "size": [
+                  5.656854249493005,
+                  5.656854249493001
+                ],
+                "area": 12.000000000001238
+              },
+              "center_error": 0.0004698414932463275,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  35.355,
+                  14.142
+                ],
+                "size": [
+                  1.0,
+                  1.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  35.355067811865,
+                  14.141932188135
+                ],
+                "size": [
+                  1.0,
+                  1.0
+                ],
+                "area": 0.7853981633974507
+              },
+              "center_error": 9.590045917366175e-05,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  37.477,
+                  27.577
+                ],
+                "size": [
+                  5.657,
+                  5.657
+                ]
+              },
+              "measured": {
+                "center": [
+                  37.47665940288688,
+                  27.577164466274755
+                ],
+                "size": [
+                  5.656854249492504,
+                  5.656854249493001
+                ],
+                "area": 12.000000000000522
+              },
+              "center_error": 0.00037822684858987156,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  38.891,
+                  10.607
+                ],
+                "size": [
+                  0.5,
+                  0.5
+                ]
+              },
+              "measured": {
+                "center": [
+                  38.890601717798,
+                  10.606398282202
+                ],
+                "size": [
+                  0.5,
+                  0.5
+                ],
+                "area": 0.19634954084936299
+              },
+              "center_error": 0.000721590618604101,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  40.0,
+                  0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  40.0,
+                  6.132247487578011e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359176
+              },
+              "center_error": 6.132247487578011e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  41.366,
+                  24.749
+                ],
+                "size": [
+                  4.243,
+                  4.243
+                ]
+              },
+              "measured": {
+                "center": [
+                  41.36574669941288,
+                  24.74873734152975
+                ],
+                "size": [
+                  4.242640687120009,
+                  4.242640687119508
+                ],
+                "area": 6.750000000000693
+              },
+              "center_error": 0.00036489814938939387,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  42.426,
+                  7.071
+                ],
+                "size": [
+                  0.25,
+                  0.25
+                ]
+              },
+              "measured": {
+                "center": [
+                  42.426135623731,
+                  7.070864376269001
+                ],
+                "size": [
+                  0.25,
+                  0.25
+                ],
+                "area": 0.04908738521234017
+              },
+              "center_error": 0.00019180091975726655,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  43.487,
+                  22.627
+                ],
+                "size": [
+                  4.243,
+                  4.243
+                ]
+              },
+              "measured": {
+                "center": [
+                  43.487067042972505,
+                  22.62741699796951
+                ],
+                "size": [
+                  4.242640687119007,
+                  4.242640687119
+                ],
+                "area": 6.750000000000167
+              },
+              "center_error": 0.00042235301199336516,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  46.315,
+                  20.86
+                ],
+                "size": [
+                  2.828,
+                  2.828
+                ]
+              },
+              "measured": {
+                "center": [
+                  46.315494167718754,
+                  20.859650045003846
+                ],
+                "size": [
+                  2.828427124746007,
+                  2.8284271247465007
+                ],
+                "area": 3.0000000000010303
+              },
+              "center_error": 0.0006055330161048902,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  47.73,
+                  19.445
+                ],
+                "size": [
+                  2.828,
+                  2.828
+                ]
+              },
+              "measured": {
+                "center": [
+                  47.72970773009214,
+                  19.44543648263009
+                ],
+                "size": [
+                  2.8284271247459998,
+                  2.8284271247460033
+                ],
+                "area": 2.9999999999978364
+              },
+              "center_error": 0.0005252987582413882,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  49.851,
+                  18.385
+                ],
+                "size": [
+                  1.414,
+                  1.414
+                ]
+              },
+              "measured": {
+                "center": [
+                  49.851028073651506,
+                  18.384776310850498
+                ],
+                "size": [
+                  1.414213562373007,
+                  1.414213562373007
+                ],
+                "area": 0.7499999999995448
+              },
+              "center_error": 0.00022544392986867745,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  50.0,
+                  0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  50.0,
+                  6.132247487578011e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359176
+              },
+              "center_error": 6.132247487578011e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  50.558,
+                  17.678
+                ],
+                "size": [
+                  1.414,
+                  1.414
+                ]
+              },
+              "measured": {
+                "center": [
+                  50.55813485483813,
+                  17.677669529664254
+                ],
+                "size": [
+                  1.4142135623735044,
+                  1.4142135623735115
+                ],
+                "area": 0.7500000000011438
+              },
+              "center_error": 0.00035692642123546885,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  51.796,
+                  16.971
+                ],
+                "size": [
+                  0.707,
+                  0.707
+                ]
+              },
+              "measured": {
+                "center": [
+                  51.795571721914506,
+                  16.97056274847767
+                ],
+                "size": [
+                  0.707106781187008,
+                  0.7071067811870044
+                ],
+                "area": 0.18750000000024133
+              },
+              "center_error": 0.0006120547461587261,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  52.149,
+                  16.617
+                ],
+                "size": [
+                  0.707,
+                  0.707
+                ]
+              },
+              "measured": {
+                "center": [
+                  52.14912511250788,
+                  16.617009357883585
+                ],
+                "size": [
+                  0.7071067811860061,
+                  0.7071067811860026
+                ],
+                "area": 0.1874999999992682
+              },
+              "center_error": 0.000125461984734179,
+              "ok": true
+            }
+          ],
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_zm1",
+      "kind": "section",
+      "required": true,
+      "note": "fine holes, centre hole, down-staircase, lateral features",
+      "plane": "z",
+      "at": -1.0,
+      "measured": {
+        "area": 9319.880127591921,
+        "loops": 1,
+        "holes": 21
+      },
+      "checks": {
+        "area": {
+          "expected": 9319.88,
+          "measured": 9319.880127591921,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 21,
+          "measured": 21,
+          "ok": true
+        },
+        "regions": {
+          "expected_count": 1,
+          "measured_count": 1,
+          "rows": [
+            {
+              "expected": {
+                "center": [
+                  1.096,
+                  1.02
+                ],
+                "size": [
+                  141.421,
+                  141.421
+                ]
+              },
+              "measured": {
+                "center": [
+                  1.0964454495685132,
+                  1.0195667174702088
+                ],
+                "size": [
+                  141.42135623730752,
+                  141.421356237305
+                ],
+                "area": 9319.880127591921
+              },
+              "center_error": 0.0006214169845689925,
+              "ok": true
+            }
+          ],
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_z5",
+      "kind": "section",
+      "required": true,
+      "note": "up-staircase upper treads, \u00d84 pins, \u00d815 boss",
+      "plane": "z",
+      "at": 5.0,
+      "measured": {
+        "area": 599.236700254428,
+        "loops": 19,
+        "holes": 1
+      },
+      "checks": {
+        "area": {
+          "expected": 599.237,
+          "measured": 599.236700254428,
+          "ok": true
+        },
+        "loops": {
+          "expected": 19,
+          "measured": 19,
+          "ok": true
+        },
+        "holes": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "regions": {
+          "expected_count": 19,
+          "measured_count": 19,
+          "rows": [
+            {
+              "expected": {
+                "center": [
+                  -50.0,
+                  -0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -50.0,
+                  6.132247487578011e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359176
+              },
+              "center_error": 6.132247487578011e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -40.0,
+                  -0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -40.0,
+                  6.132247487578011e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359176
+              },
+              "center_error": 6.132247487578011e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -30.0,
+                  -0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -30.0,
+                  3.5648567431323396e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 3.5648567431323396e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -27.0,
+                  17.0
+                ],
+                "size": [
+                  10.0,
+                  10.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -27.0,
+                  17.0
+                ],
+                "size": [
+                  10.0,
+                  10.0
+                ],
+                "area": 99.99999999999999
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -20.0,
+                  -0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -20.0,
+                  3.5648567431323396e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 3.5648567431323396e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -17.0,
+                  22.0
+                ],
+                "size": [
+                  10.0,
+                  20.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -17.0,
+                  22.0
+                ],
+                "size": [
+                  10.0,
+                  20.0
+                ],
+                "area": 199.99999999999997
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  -50.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  -50.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  -40.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  -40.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  -30.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  -30.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  -20.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  -20.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -0.0,
+                  -0.0
+                ],
+                "size": [
+                  15.0,
+                  15.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  0.0,
+                  1.332267629550187e-15
+                ],
+                "size": [
+                  15.0,
+                  15.0
+                ],
+                "area": 98.17477042468109
+              },
+              "center_error": 1.332267629550187e-15,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  20.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  20.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  30.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  30.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  40.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  40.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  50.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  2.220446049250313e-16,
+                  50.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 2.220446049250313e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  20.0,
+                  0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  20.0,
+                  3.5648567431323396e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 3.5648567431323396e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  30.0,
+                  0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  30.0,
+                  3.5648567431323396e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359169
+              },
+              "center_error": 3.5648567431323396e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  40.0,
+                  0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  40.0,
+                  6.132247487578011e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359176
+              },
+              "center_error": 6.132247487578011e-16,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  50.0,
+                  0.0
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  50.0,
+                  6.132247487578011e-16
+                ],
+                "size": [
+                  4.0,
+                  4.0
+                ],
+                "area": 12.566370614359176
+              },
+              "center_error": 6.132247487578011e-16,
+              "ok": true
+            }
+          ],
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_zm5",
+      "kind": "section",
+      "required": true,
+      "note": "down-staircase, \u00d84 holes, lateral cavities",
+      "plane": "z",
+      "at": -5.0,
+      "measured": {
+        "area": 9502.233176975618,
+        "loops": 2,
+        "holes": 6
+      },
+      "checks": {
+        "area": {
+          "expected": 9502.233,
+          "measured": 9502.233176975618,
+          "ok": true
+        },
+        "loops": {
+          "expected": 2,
+          "measured": 2,
+          "ok": true
+        },
+        "holes": {
+          "expected": 6,
+          "measured": 6,
+          "ok": true
+        },
+        "regions": {
+          "expected_count": 2,
+          "measured_count": 2,
+          "rows": [
+            {
+              "expected": {
+                "center": [
+                  -27.0,
+                  -17.0
+                ],
+                "size": [
+                  10.0,
+                  10.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -27.0,
+                  -17.0
+                ],
+                "size": [
+                  10.0,
+                  10.0
+                ],
+                "area": 99.99999999999999
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  1.298,
+                  0.086
+                ],
+                "size": [
+                  141.421,
+                  141.421
+                ]
+              },
+              "measured": {
+                "center": [
+                  1.2976851813769485,
+                  0.08646245288878873
+                ],
+                "size": [
+                  141.42135623730752,
+                  141.421356237305
+                ],
+                "area": 9402.233176975618
+              },
+              "center_error": 0.0005594402915138384,
+              "ok": true
+            }
+          ],
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_x0",
+      "kind": "section",
+      "required": true,
+      "note": "centre hole and y-row pins",
+      "plane": "x",
+      "at": 0.0,
+      "measured": {
+        "area": 1513.2135623730499,
+        "loops": 4,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 1513.214,
+          "measured": 1513.2135623730499,
+          "ok": true
+        },
+        "loops": {
+          "expected": 4,
+          "measured": 4,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        },
+        "regions": {
+          "expected_count": 4,
+          "measured_count": 4,
+          "rows": [
+            {
+              "expected": {
+                "center": [
+                  -66.355,
+                  -5.0
+                ],
+                "size": [
+                  8.711,
+                  10.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -66.355339059325,
+                  -5.0
+                ],
+                "size": [
+                  8.710678118650009,
+                  10.0
+                ],
+                "area": 87.10678118650007
+              },
+              "center_error": 0.00033905932500033487,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -31.086,
+                  -3.251
+                ],
+                "size": [
+                  53.0,
+                  17.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -31.085698282300225,
+                  -3.2513069454817045
+                ],
+                "size": [
+                  53.0,
+                  17.0
+                ],
+                "area": 669.4999999999999
+              },
+              "center_error": 0.0004304057377587186,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  31.086,
+                  -3.251
+                ],
+                "size": [
+                  53.0,
+                  17.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  31.085698282300225,
+                  -3.2513069454817027
+                ],
+                "size": [
+                  53.0,
+                  17.0
+                ],
+                "area": 669.5
+              },
+              "center_error": 0.00043040573775745183,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  66.355,
+                  -5.0
+                ],
+                "size": [
+                  8.711,
+                  10.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  66.35533905932749,
+                  -5.0
+                ],
+                "size": [
+                  8.710678118654997,
+                  10.0
+                ],
+                "area": 87.10678118654995
+              },
+              "center_error": 0.00033905932748723444,
+              "ok": true
+            }
+          ],
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_y0",
+      "kind": "section",
+      "required": true,
+      "note": "centre hole and x-row pins",
+      "plane": "y",
+      "at": 0.0,
+      "measured": {
+        "area": 1513.21356237305,
+        "loops": 4,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 1513.214,
+          "measured": 1513.21356237305,
+          "ok": true
+        },
+        "loops": {
+          "expected": 4,
+          "measured": 4,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        },
+        "regions": {
+          "expected_count": 4,
+          "measured_count": 4,
+          "rows": [
+            {
+              "expected": {
+                "center": [
+                  -66.355,
+                  -5.0
+                ],
+                "size": [
+                  8.711,
+                  10.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -66.355339059325,
+                  -5.0
+                ],
+                "size": [
+                  8.710678118650009,
+                  10.0
+                ],
+                "area": 87.10678118650007
+              },
+              "center_error": 0.00033905932500033487,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  -31.086,
+                  -3.251
+                ],
+                "size": [
+                  53.0,
+                  17.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  -31.085698282300225,
+                  -3.2513069454817027
+                ],
+                "size": [
+                  53.0,
+                  17.0
+                ],
+                "area": 669.4999999999999
+              },
+              "center_error": 0.00043040573775745183,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  31.086,
+                  -3.251
+                ],
+                "size": [
+                  53.0,
+                  17.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  31.085698282300225,
+                  -3.2513069454817045
+                ],
+                "size": [
+                  53.0,
+                  17.0
+                ],
+                "area": 669.4999999999999
+              },
+              "center_error": 0.0004304057377587186,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  66.355,
+                  -5.0
+                ],
+                "size": [
+                  8.711,
+                  10.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  66.35533905932752,
+                  -5.0
+                ],
+                "size": [
+                  8.710678118655025,
+                  10.0
+                ],
+                "area": 87.10678118655024
+              },
+              "center_error": 0.00033905932751565615,
+              "ok": true
+            }
+          ],
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "deviation_vs_nist",
+      "kind": "deviation",
+      "required": true,
+      "note": "NIST online STL translated into the STEP frame (matches the STEP to p95 0.005)",
+      "measured": {
+        "p95": 0.003751926762751124,
+        "hausdorff_estimate": 0.19662841029045822,
+        "silhouette_iou_min": 0.9991744859487546,
+        "volume_ratio": 1.0000220753173301
+      },
+      "checks": {
+        "p95": {
+          "max": 0.1,
+          "measured": 0.003751926762751124,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 0.6,
+          "measured": 0.19662841029045822,
+          "ok": true
+        },
+        "silhouette_iou": {
+          "min": 0.985,
+          "measured": 0.9991744859487546,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "57e1dc3b1f732dc70c2744bd5bad174ae680bc329e1f7c13c2f042833674f982",
+    "truth_files": {
+      "truth/nist-am-test-artifact.step": "74e88ac8e49031a8708bf201447b9a2f68223afae807d38614b9938cc967f97e",
+      "truth/nist-am-test-artifact-centred.stl": "77612a57fa337f98f5eabe09a4debb3aa8ad229ded69ce78ebea56a60da79c5c",
+      "truth/test-artifact-inspection-sheet.xlsx": "de6bf43aa3ec3b58f75916b4965d770b73a341b08d7beeaab059b0c98a36b398"
+    },
+    "input_files": {
+      "inputs/nist-am-artifact-description.md": "1e10b2e09e840f8749668fd84c61cd15e4aed51dbb5f362ae3df49ad7e8a94e0",
+      "inputs/drawing-01.png": "3182a3cc45c1744cd958d468f37e86a19659dd9fe65b72d5443a45663766460d",
+      "inputs/drawing-02.png": "bded7754aafa4bd02d41c7c6a3cf2d44564dd776a3849b4631550a78b7966266",
+      "inputs/dimension-sheet.md": "d1b8dbd3cd46b0d46b810689e5733a61618acb6adecb7db69d85bfba65bd7e8f",
+      "inputs/renders/bottom.png": "ceb5cdd1206fb513dce32d2ad6a0cb9726362b0504ac337b413cfe832d80194e",
+      "inputs/renders/front.png": "038b4d1d2f98a39efa54b4510737a981040f10f2e785d9e775170385f9394f44",
+      "inputs/renders/iso-below.png": "f126217d09341105dbfda7789291939dbb44303e425fd545fb07ef767a67cdec",
+      "inputs/renders/iso.png": "fd1a1925f86e9141c26bcb4ae3fc7db93f5b06ffabafba854b6b8f2fe5d62b14",
+      "inputs/renders/iso2.png": "ad5fc1ef468fa300e27cc9779d73aef3bac447c0e7675d43c47b421cc238bcd9",
+      "inputs/renders/right.png": "cc85285ba084e23beab536aaf406127648712889281f4b3c6ce3500c5061a329",
+      "inputs/renders/section-x0.png": "42907681cc27f37d3ec993270ba52a02512bcfcd1c50379ff8c1e5a82f6b4ab0",
+      "inputs/renders/section-y0.png": "ce3ec33a6f3d6e2e3e4acd471ef9e44789bb65a828ec22dae405ea7128544fc1",
+      "inputs/renders/section-z-1.png": "c6ff32ad0cc2ac247168af91278b9e4795740f179ee286f6e2dad39f3c6738fe",
+      "inputs/renders/section-z-5.png": "8fb3dcded9d28b5ad432ef6f8318fd16142b9cc0132481030d1f6a4978c048da",
+      "inputs/renders/section-z1.png": "a28c0e6ed943fc71a5316b535257f83a7b5bc6106dc44fef5697ac28961ae749",
+      "inputs/renders/section-z5.png": "5f955f4a0a805278d61e7d006633a1145b08819cd6f1aa6f835ed2150a46bb45",
+      "inputs/renders/top.png": "dca24515a54a5c2508e3047778d7fe087437fa4aaf305b9ec5af65a189df5713",
+      "inputs/renders/render-notes.md": "7b26cf394c9cc12942de018502fe780bb9fc3f296dd18e2036bd2430cfc828ef"
+    },
+    "source": {
+      "main.py": "fb35f6304645dcb3a38316b30305e586ed125c79037049ad538681fa2d40b79a"
+    },
+    "kcl": {},
+    "step_sha256": "397838226f95c157ad23ee18050379a15dc20654640a56b623c95c1601773d52",
+    "design_bundle": {
+      "brief.md": "cc10ece3765f0eeab5f1b5d9e006b2468d34a1c753e82347a0ac2c28a6683a93",
+      "contract.yaml": "3c28c4a7fb8a4c42dde25ab604932d9897de1cfabfa9a3e1983cdc7893ec9235",
+      "sources/bottom.png": "ceb5cdd1206fb513dce32d2ad6a0cb9726362b0504ac337b413cfe832d80194e",
+      "sources/dimension-sheet.md": "d1b8dbd3cd46b0d46b810689e5733a61618acb6adecb7db69d85bfba65bd7e8f",
+      "sources/drawing-01.png": "3182a3cc45c1744cd958d468f37e86a19659dd9fe65b72d5443a45663766460d",
+      "sources/drawing-02.png": "bded7754aafa4bd02d41c7c6a3cf2d44564dd776a3849b4631550a78b7966266",
+      "sources/front.png": "038b4d1d2f98a39efa54b4510737a981040f10f2e785d9e775170385f9394f44",
+      "sources/iso-below.png": "f126217d09341105dbfda7789291939dbb44303e425fd545fb07ef767a67cdec",
+      "sources/iso.png": "fd1a1925f86e9141c26bcb4ae3fc7db93f5b06ffabafba854b6b8f2fe5d62b14",
+      "sources/iso2.png": "ad5fc1ef468fa300e27cc9779d73aef3bac447c0e7675d43c47b421cc238bcd9",
+      "sources/nist-am-artifact-description.md": "1e10b2e09e840f8749668fd84c61cd15e4aed51dbb5f362ae3df49ad7e8a94e0",
+      "sources/render-notes.md": "7b26cf394c9cc12942de018502fe780bb9fc3f296dd18e2036bd2430cfc828ef",
+      "sources/right.png": "cc85285ba084e23beab536aaf406127648712889281f4b3c6ce3500c5061a329",
+      "sources/section-x0.png": "42907681cc27f37d3ec993270ba52a02512bcfcd1c50379ff8c1e5a82f6b4ab0",
+      "sources/section-y0.png": "ce3ec33a6f3d6e2e3e4acd471ef9e44789bb65a828ec22dae405ea7128544fc1",
+      "sources/section-z-1.png": "c6ff32ad0cc2ac247168af91278b9e4795740f179ee286f6e2dad39f3c6738fe",
+      "sources/section-z-5.png": "8fb3dcded9d28b5ad432ef6f8318fd16142b9cc0132481030d1f6a4978c048da",
+      "sources/section-z1.png": "a28c0e6ed943fc71a5316b535257f83a7b5bc6106dc44fef5697ac28961ae749",
+      "sources/section-z5.png": "5f955f4a0a805278d61e7d006633a1145b08819cd6f1aa6f835ed2150a46bb45",
+      "sources/top.png": "dca24515a54a5c2508e3047778d7fe087437fa4aaf305b9ec5af65a189df5713"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-20T07:26:28Z",
+    "skillkat_version": "0.1.0",
+    "backend": "cadquery",
+    "engine_version": "2.8.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2750651461ce329095e189d2b6e635ac797b95cd",
+      "dirty": true
+    }
+  },
+  "backend": "cadquery"
+}

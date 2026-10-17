@@ -1,0 +1,190 @@
+{
+  "named_faces": {
+    "top": {
+      "plane": "z",
+      "at": -6.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1719.285791350652,
+      "ok": true,
+      "position": -6.0,
+      "area_expected": 1719.38,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        1.7
+      ],
+      "center_error": 0.011655018875716964,
+      "centroid_uv": [
+        -0.00018763584036053313,
+        1.688346491610475
+      ]
+    },
+    "plateUnderside": {
+      "plane": "z",
+      "at": -7.2,
+      "normal": "-",
+      "found": 32,
+      "area": 1285.5028684807062,
+      "mode": "sum",
+      "ok": true,
+      "position": -7.200273297323352,
+      "area_expected": 1231.49,
+      "area_ok": true
+    },
+    "sideRight": {
+      "plane": "x",
+      "at": 25.0,
+      "normal": "+",
+      "found": 1,
+      "area": 56.43316033208399,
+      "ok": true,
+      "position": 25.0,
+      "area_expected": 55.8,
+      "area_ok": true,
+      "center_expected": [
+        0.08,
+        -7.49
+      ],
+      "center_error": 0.01052089829259382,
+      "centroid_uv": [
+        0.0832694496300001,
+        -7.5
+      ]
+    },
+    "sideLeft": {
+      "plane": "x",
+      "at": -25.0,
+      "normal": "-",
+      "found": 1,
+      "area": 56.43316033208399,
+      "ok": true,
+      "position": -25.0,
+      "area_expected": 55.8,
+      "area_ok": true,
+      "center_expected": [
+        0.08,
+        -7.49
+      ],
+      "center_error": 0.01052089829259344,
+      "centroid_uv": [
+        0.08326944962999888,
+        -7.5
+      ]
+    },
+    "ringBottom": {
+      "plane": "z",
+      "at": -13.0,
+      "normal": "-",
+      "found": 5,
+      "area": 145.4621044037119,
+      "mode": "sum",
+      "ok": true,
+      "position": -13.000000000000002
+    },
+    "bossCapBottom": {
+      "plane": "z",
+      "at": -13.33,
+      "normal": "-",
+      "found": 1,
+      "area": 81.0,
+      "ok": true,
+      "position": -13.33,
+      "area_expected": 81.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        27.75
+      ],
+      "center_error": 2.0816681711721685e-17,
+      "centroid_uv": [
+        -2.0816681711721685e-17,
+        27.75
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "top",
+      "plane": "z",
+      "at": -6.0,
+      "normal": "+",
+      "area": 1719.38,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        0.0,
+        1.7
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "plateUnderside",
+      "plane": "z",
+      "at": -7.2,
+      "normal": "-",
+      "area": 1231.49,
+      "area_tolerance_rel": 0.05,
+      "tolerance": null,
+      "center": [
+        0.0,
+        -0.29
+      ],
+      "mode": "sum"
+    },
+    {
+      "name": "sideRight",
+      "plane": "x",
+      "at": 25.0,
+      "normal": "+",
+      "area": 55.8,
+      "area_tolerance_rel": 0.04,
+      "tolerance": null,
+      "center": [
+        0.08,
+        -7.49
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "sideLeft",
+      "plane": "x",
+      "at": -25.0,
+      "normal": "-",
+      "area": 55.8,
+      "area_tolerance_rel": 0.04,
+      "tolerance": null,
+      "center": [
+        0.08,
+        -7.49
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "ringBottom",
+      "plane": "z",
+      "at": -13.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "bossCapBottom",
+      "plane": "z",
+      "at": -13.33,
+      "normal": "-",
+      "area": 81.0,
+      "area_tolerance_rel": 0.05,
+      "tolerance": 0.05,
+      "center": [
+        0.0,
+        27.75
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 315
+}

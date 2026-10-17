@@ -1,0 +1,327 @@
+schema_version: 1
+name: four-bar-crank
+intent: >-
+  Crank link (O2 to A, 40 between hole centres) of the planar crank-rocker four-bar linkage in
+  sources/four-bar-spec.md (the only source, authoritative, text), drafted in its own frame: a
+  stadium plate 5 thick and 16 wide, the tangent hull of two R8 circles centred on hole O2 at the
+  origin and hole A at (40, 0, 0), extruded z = 0..5 (overall x -8..48, y -8..8), with two Ø6
+  through holes along z at (0, 0) and (40, 0). The bottom face around O2 seats on the ground's top
+  face (pivot O2, the motor-driven revolute joint); the top face z = 5 around A seats the coupler's
+  first hole (pin A). No other features; one solid.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of hole O2 on the bottom face (z = 0); the pinO2 joint point of the assembly"
+  axes:
+    x: "from hole O2 toward hole A along the link centreline; hole A centre at x = 40"
+    y: "across the 16 mm width; straight sides at y = -8 and y = 8, mirror plane y = 0"
+    z: "up along the hole (pin) axes, from the bottom face z = 0 to the top face z = 5"
+  datums:
+    - name: A
+      description: "bottom face, z = 0; seats on the ground plate's top face around pivot O2"
+    - name: B
+      description: "hole O2 axis: x = 0, y = 0, along +z (revolute joint pinO2, the motor)"
+    - name: C
+      description: "hole A axis: x = 40, y = 0, along +z (revolute joint pinA)"
+    - name: D
+      description: "top face, z = 5; seat for the coupler's first hole around pin A (joint point (40, 0, 5))"
+
+envelope:
+  min: [-8, -8, 0]
+  max: [48, 8, 5]
+  tolerance: 0.05
+
+parameters:
+  - name: linkLength
+    value: 40
+    unit: mm
+    provenance: stated
+    source: "sources/four-bar-spec.md link table (Crank: O2 to A: 40); intent 'second hole A at (40, 0, 0)'"
+    tolerance: 0.01
+    description: "distance between the hole centres O2 and A along +x"
+  - name: linkWidth
+    value: 16
+    unit: mm
+    provenance: stated
+    source: "sources/four-bar-spec.md link table ('stadium plate 5 thick, 16 wide'); intent 'straight sides y = -8 and y = 8'"
+    tolerance: 0.01
+    description: "stadium width across y; the straight sides sit at y = +-linkWidth / 2"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 667.035
+        direction: increase
+        bbox_delta: [2, 2, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [12, 16, 20]
+      infeasible_deltas: [-11]
+  - name: endRadius
+    value: 8
+    unit: mm
+    provenance: derived
+    formula: "linkWidth / 2"
+    source: "sources/four-bar-spec.md ('semicircular ends of radius 8 centred on its two holes'); intent 'two R8 circles'"
+    tolerance: 0.01
+    description: "radius of the semicircular ends, centred on the hole axes (tangent hull of two circles)"
+  - name: plateThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "sources/four-bar-spec.md link table ('5 thick') and layer stack ('crank z 0..5'); intent 'bottom face z = 0, top face z = 5'"
+    tolerance: 0.01
+    description: "plate thickness along z; bottom face z = 0, top face z = plateThickness"
+  - name: holeDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "sources/four-bar-spec.md link table ('Ø6 holes'); intent 'Two Ø6 through holes along z'"
+    tolerance: 0.01
+    description: "diameter of the two through holes O2 and A"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: -102.102
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [4, 6, 8]
+      infeasible_deltas: [11]
+
+features:
+  - id: plate
+    kind: extrude
+    description: >-
+      stadium plate: tangent hull of two circles of radius endRadius centred at (0, 0) and
+      (linkLength, 0) (straight sides y = +-linkWidth / 2 from x = 0 to x = linkLength,
+      semicircular ends), extruded z = 0..plateThickness; overall x -8..48, y -8..8, z 0..5
+    parameters: [linkLength, linkWidth, endRadius, plateThickness]
+    verify:
+      - method: bbox
+      - method: section
+        section: webX
+      - method: face
+        face: bottom
+      - method: face
+        face: top
+      - method: face
+        face: sideNegY
+      - method: face
+        face: sidePosY
+      - method: cylinder
+        cylinder: endO2
+      - method: cylinder
+        cylinder: endA
+      - method: dimension
+        dimension: thicknessZ
+      - method: dimension
+        dimension: widthY
+      - method: dimension
+        dimension: lengthX
+      - method: solid
+        points: [[20, 0, 2.5], [20, 4, 2.5], [-5.5, 0, 2.5], [45.5, 0, 2.5]]
+      - method: void
+        points: [[-6.5, 6.5, 2.5], [-6.5, -6.5, 2.5], [46.5, 6.5, 2.5], [46.5, -6.5, 2.5]]
+        note: "outside the R8 ends, inside the bounding-box corners: the ends are round, not square"
+  - id: holes
+    kind: hole
+    description: >-
+      two Ø holeDiameter through holes along +z, centred at O2 (0, 0) and A (linkLength, 0),
+      through the full thickness z = 0..plateThickness
+    parameters: [holeDiameter, linkLength, plateThickness]
+    count: 2
+    verify:
+      - method: cylinder
+        cylinder: holeO2
+      - method: cylinder
+        cylinder: holeA
+      - method: section
+        section: midZ
+      - method: void
+        points: [[1.5, 0, 2.5], [38.5, 0, 2.5]]
+      - method: solid
+        points: [[0, 5.5, 2.5], [40, -5.5, 2.5]]
+
+interfaces:
+  - name: pivotO2
+    description: >-
+      pivot O2, the motor-driven revolute joint pinO2 at own-frame point (0, 0, 0), axis +z: the
+      bottom face z = 0 around hole O2 seats on the ground plate's top face and the O2 bore axis is
+      the joint axis (verified by holeO2, left unpinned because the holeDiameter edit resizes it).
+      The pinned bottom face carries no area, so neither edit test moves or resizes it.
+    must_not_change: true
+    checks: [bottom, mirrorY]
+  - name: pinA
+    description: >-
+      pin A, the revolute joint pinA at own-frame point (40, 0, 5), axis +z: the top face z = 5
+      around hole A seats the coupler's first hole and the A bore axis, 40 from O2 along +x, is the
+      joint axis (verified by holeA, unpinned for the same reason). The seat height is pinned by
+      the bottom-to-top thickness.
+    must_not_change: true
+    checks: [top, thicknessZ, mirrorY]
+
+acceptance:
+  volume:
+    expected: 3922.566
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "plateThickness * (linkWidth * linkLength + pi * endRadius^2 - 2 * pi * (holeDiameter / 2)^2) = 5 * (640 + 46 pi) = 3200 + 230 pi"
+  surface_area:
+    expected: 2408.850
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "2 * (640 + 46 pi) top and bottom + 5 * (2 * 40 + 2 pi * 8) outer wall + 2 * 5 * pi * 6 bores = 1680 + 232 pi"
+  center_of_mass:
+    expected: [20, 0, 2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "the part is symmetric about x = linkLength / 2 = 20 (identical holes and ends) and about y = 0; z = plateThickness / 2"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 2.5
+      expect:
+        area: 784.513
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 2
+      description: "planform at mid-thickness through both bores: stadium 640 + 64 pi minus two Ø6 holes 18 pi = 640 + 46 pi"
+    - id: webX
+      plane: x
+      at: 20
+      expect:
+        area: 80
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 0
+      description: "web cross-section at mid-length: linkWidth x plateThickness = 16 x 5"
+  faces:
+    - name: bottom
+      plane: z
+      at: 0
+      normal: "-"
+      center: [20, 0]
+      mode: one
+    - name: top
+      plane: z
+      at: 5
+      normal: "+"
+      center: [20, 0]
+      mode: one
+    - name: sideNegY
+      plane: y
+      at: -8
+      normal: "-"
+      area: 200
+      area_tolerance_rel: 0.01
+      mode: one
+    - name: sidePosY
+      plane: y
+      at: 8
+      normal: "+"
+      area: 200
+      area_tolerance_rel: 0.01
+      mode: one
+  cylinders:
+    - name: holeO2
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      length: 5
+      t_range: [0, 5]
+      description: "Ø6 through hole at pivot O2"
+    - name: holeA
+      point: [40, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      length: 5
+      t_range: [0, 5]
+      description: "Ø6 through hole at pin A"
+    - name: endO2
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 8
+      length: 5
+      t_range: [0, 5]
+      description: "semicircular R8 end around O2 (convex half cylinder, x <= 0)"
+    - name: endA
+      point: [40, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 8
+      length: 5
+      t_range: [0, 5]
+      description: "semicircular R8 end around A (convex half cylinder, x >= 40)"
+  dimensions:
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "plate thickness between the bottom and top faces"
+    - name: widthY
+      axis: y
+      expected: 16
+      tolerance: 0.05
+      between: [sideNegY, sidePosY]
+      description: "stadium width between the straight sides"
+    - name: lengthX
+      axis: x
+      expected: 56
+      tolerance: 0.05
+      description: "overall length along x: linkLength + 2 * endRadius (bbox extent)"
+  solids:
+    - name: link
+      contains_point: [20, 0, 2.5]
+      description: "the single crank solid"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[20, 0, 2.5], [20, 4, 2.5], [-5.5, 0, 2.5], [45.5, 0, 2.5], [0, 5.5, 2.5], [40, -5.5, 2.5]]
+    - name: inBores
+      state: void
+      points: [[1.5, 0, 2.5], [38.5, 0, 2.5]]
+    - name: roundEnds
+      state: void
+      points: [[-6.5, 6.5, 2.5], [-6.5, -6.5, 2.5], [46.5, 6.5, 2.5], [46.5, -6.5, 2.5]]
+  cylinder_counts:
+    - name: bores
+      diameter: 6
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 2
+      description: "exactly two Ø6 bores along z"
+  symmetry:
+    - name: mirrorY
+      plane: y
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 3850
+    volume_max: 4300
+
+references:
+  - path: sources/four-bar-spec.md
+    kind: text
+    role: authoritative
+    sha256: aececd85a2ba8a2e020775f05a44f1bd1c3a505c8c8c5ed634606d975490bf17
+    units: mm
+    revision: "none stated"
+    note: "four-bar linkage specification: crank row of the link table, part-frame rule, layer stack z 0..5"
+
+open_questions:
+  - "Material, density and process are not stated; mass properties use unit density until they are given."
+  - "No fit or tolerance class is stated for the Ø6 pin holes; the nominal Ø6 is modelled with no clearance allowance."
+  - "No edge breaks (chamfers, fillets) are stated; all edges are modelled sharp."

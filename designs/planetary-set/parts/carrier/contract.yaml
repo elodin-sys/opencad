@@ -1,0 +1,353 @@
+schema_version: 1
+name: planetary-set-carrier
+intent: >-
+  Planet carrier (the output member) of the fixed-ring planetary set in sources/planetary-set-spec.md
+  (authoritative, text only), drafted in its own frame: axis +z through the origin, bottom face z = 0.
+  A D88 x 5 disc (z 0..5) with a D10 centre hole on the axis and three D8 through holes on radius 36 at
+  0, 120 and 240 deg, centred at (36, 0), (-18, 31.176915) and (-18, -31.176915); a planet hole is
+  centred on +x. The bottom face z = 0 lies on the top faces of the sun and the three planets
+  (assembly z = 10); each planet hole is coaxial with a planet's D8 bore and is the axis that planet
+  turns on. Its rim (r 44) stays 2 mm inside the ring's tip circle (r 46).
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of the bottom face: the carrier axis (common sun / ring / carrier axis) meets the bottom face z = 0"
+  axes:
+    x: "from the carrier axis toward the centre of planet hole 1 at (36, 0); planet holes 2 and 3 follow at +120 and +240 deg about +z"
+    y: "completes the right-handed frame (+z cross +x); planet hole 2 sits at (-18, +31.176915)"
+    z: "along the carrier axis, up from the bottom face (z = 0) to the top face (z = 5); in the assembly the carrier occupies z 10..15, on top of the gears"
+  datums:
+    - name: A
+      description: "bottom face z = 0; lies on the top faces of the sun and the three planets (assembly z = 10)"
+    - name: B
+      description: "carrier axis: the z axis through the origin, axis of the D10 centre hole and of the carrierSpin joint"
+    - name: C
+      description: "axis of planet hole 1 at (36, 0), parallel to +z; fixes the angular orientation of the hole pattern (+x)"
+
+envelope:
+  min: [-44, -44, 0]
+  max: [44, 44, 5]
+  tolerance: 0.05
+
+parameters:
+  - name: carrierDiameter
+    value: 88
+    unit: mm
+    provenance: stated
+    source: "planetary-set-spec.md, Carrier row: 'disc Ø88 x 5'; intent: 'D88 x 5 disc', 'Its rim (r 44)'"
+    tolerance: 0.01
+    description: "outside diameter of the carrier disc (rim r 44, 2 mm inside the ring tip circle r 46)"
+    edit_test:
+      delta: -2
+      expect:
+        volume_delta: -1366.593
+        direction: decrease
+        bbox_delta: [-2, -2, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [84, 86, 88]
+      infeasible_deltas: [-10]
+  - name: carrierThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "planetary-set-spec.md, Carrier row: 'disc Ø88 x 5 over the gears (z 10..15)'; intent: 'D88 x 5 disc (z 0..5)'"
+    tolerance: 0.01
+    description: "disc thickness along z, from the bottom face z = 0 up"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 5852.787
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.02
+      sweep:
+        values: [4, 5, 6]
+      infeasible_deltas: [-5]
+  - name: centreHoleDiameter
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "planetary-set-spec.md, Carrier row: 'centre hole Ø10'; intent: 'a D10 centre hole on the axis'"
+    tolerance: 0.01
+    description: "through hole on the carrier axis"
+  - name: planetHoleDiameter
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "planetary-set-spec.md, Carrier row: 'three Ø8 holes'; intent: 'three D8 through holes'"
+    tolerance: 0.01
+    description: "planet-axis through holes, coaxial with the planets' D8 bores"
+  - name: planetOrbitRadius
+    value: 36
+    unit: mm
+    provenance: stated
+    source: "planetary-set-spec.md, Carrier row: 'on radius 36'; Planet orbit row: 'radius 36 = 24 + 12 (sun + planet) = 48 - 12 (ring - planet)'"
+    tolerance: 0.01
+    description: "radius of the planet-hole pitch circle about the carrier axis"
+  - name: planetHoleCount
+    value: 3
+    unit: ""
+    provenance: stated
+    source: "planetary-set-spec.md, Carrier row: 'three Ø8 holes ... at 0, 120 and 240 deg'"
+    tolerance: 0.01
+    description: "number of planet holes, equally spaced (pitch 360 / planetHoleCount = 120 deg)"
+  - name: planetHoleStartAngle
+    value: 0
+    unit: deg
+    provenance: stated
+    source: "planetary-set-spec.md, Part frames: 'the carrier has a planet hole centred on +x (at (36, 0))'; intent: 'a planet hole is centred on +x'"
+    tolerance: 0.01
+    description: "polar angle of planet hole 1 about +z, measured from +x"
+
+features:
+  - id: disc
+    kind: extrude
+    description: "circle of diameter carrierDiameter centred on the axis at z = 0, extruded +z by carrierThickness (z 0..5)"
+    parameters: [carrierDiameter, carrierThickness]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[20, 0, 2.5], [-36, 0, 2.5], [0, 36, 2.5]]
+      - method: face
+        face: seat
+      - method: face
+        face: top
+      - method: cylinder
+        cylinder: rim
+      - method: dimension
+        dimension: thickness
+      - method: dimension
+        dimension: spanX
+      - method: dimension
+        dimension: spanY
+      - method: section
+        section: midZ
+  - id: centreHole
+    kind: hole
+    description: "D10 (centreHoleDiameter) through hole on the carrier axis, z 0..5"
+    parameters: [centreHoleDiameter, carrierThickness]
+    verify:
+      - method: cylinder
+        cylinder: centreHole
+      - method: void
+        points: [[0, 0, 2.5]]
+      - method: section
+        section: cutX0
+  - id: planetHoles
+    kind: hole
+    description: >-
+      three D8 (planetHoleDiameter) through holes, z 0..5, on radius planetOrbitRadius at
+      planetHoleStartAngle + k * 360 / planetHoleCount (0, 120, 240 deg): centres (36, 0),
+      (-18, 31.176915), (-18, -31.176915)
+    parameters: [planetHoleDiameter, planetOrbitRadius, planetHoleCount, planetHoleStartAngle, carrierThickness]
+    count: 3
+    verify:
+      - method: cylinder
+        cylinder: planetHole1
+      - method: cylinder
+        cylinder: planetHole2
+      - method: cylinder
+        cylinder: planetHole3
+      - method: void
+        points: [[36, 0, 2.5], [-18, 31.176915, 2.5], [-18, -31.176915, 2.5]]
+      - method: solid
+        points: [[42, 0, 2.5], [-21, 36.373067, 2.5], [-21, -36.373067, 2.5]]
+      - method: section
+        section: cutX36
+      - method: section
+        section: cutXm18
+
+interfaces:
+  - name: seat
+    description: >-
+      bottom face z = 0 (datum A): lies on the top faces of the sun and the three planets at
+      assembly z = 10 and carries the carrierSpin joint origin; neither edit test moves it
+    must_not_change: true
+    checks: [seat]
+  - name: carrierAxis
+    description: >-
+      D10 centre hole on the z axis (datum B); the carrier turns about it (joint carrierSpin at
+      own-frame [0, 0, 0], axis +z)
+    must_not_change: true
+    checks: [centreHole]
+  - name: planetAxes
+    description: >-
+      three D8 planet holes, each coaxial with a planet's D8 bore and the axis that planet turns on
+      (joints planet1Spin, planet2Spin, planet3Spin at own-frame (36, 0, -10), (-18, 31.176915, -10),
+      (-18, -31.176915, -10), axis +z)
+    must_not_change: true
+    checks: [planetHole1, planetHole2, planetHole3]
+
+acceptance:
+  volume:
+    expected: 29263.936
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "pi * (44^2 - 5^2 - 3 * 4^2) * 5 = 9315 * pi: D88 x 5 disc minus the D10 centre hole and three D8 holes"
+  surface_area:
+    expected: 13621.946
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "2 * 1863 * pi (top + bottom) + 2 * pi * 44 * 5 (rim) + 2 * pi * 5 * 5 (centre hole) + 3 * 2 * pi * 4 * 5 (planet holes) = 4336 * pi"
+  center_of_mass:
+    expected: [0, 0, 2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "the three planet holes are equally spaced on one circle and the centre hole is on the axis, so the plan centroid is the axis; z = carrierThickness / 2"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 2.5
+      expect:
+        area: 5852.787
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 4
+      description: "mid-thickness plan section: pi * (44^2 - 5^2 - 3 * 4^2) = 1863 * pi, the disc with the centre hole and three planet holes"
+    - id: cutX0
+      plane: x
+      at: 0
+      expect:
+        area: 390
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 0
+      description: "through the carrier axis: (88 - 10) * 5; two full-thickness rectangles only when the centre hole runs through"
+    - id: cutX36
+      plane: x
+      at: 36
+      expect:
+        area: 212.982
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 0
+      description: "through the planet hole 1 axis: (2 * sqrt(44^2 - 36^2) - 8) * 5; two loops only when hole 1 runs through"
+    - id: cutXm18
+      plane: x
+      at: -18
+      expect:
+        area: 321.497
+        area_tolerance_rel: 0.005
+        loops: 3
+        holes: 0
+      description: "through the planet hole 2 and 3 axes: (2 * sqrt(44^2 - 18^2) - 2 * 8) * 5; three loops only when both holes run through"
+  faces:
+    - name: seat
+      plane: z
+      at: 0
+      normal: "-"
+      center: [0, 0]
+      mode: one
+    - name: top
+      plane: z
+      at: 5
+      normal: "+"
+      area: 5852.787
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: centreHole
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 10
+      description: "D10 centre hole on the carrier axis (datum B)"
+    - name: planetHole1
+      point: [36, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 8
+      description: "planet hole 1 at 0 deg, on +x (datum C)"
+    - name: planetHole2
+      point: [-18, 31.176915, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 8
+      description: "planet hole 2 at 120 deg"
+    - name: planetHole3
+      point: [-18, -31.176915, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 8
+      description: "planet hole 3 at 240 deg"
+    - name: rim
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 88
+      length: 5
+      t_range: [0, 5]
+      description: "D88 rim (r 44), 2 mm inside the ring's tip circle (r 46)"
+  dimensions:
+    - name: thickness
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [seat, top]
+      description: "disc thickness between the seat and the top face"
+    - name: spanX
+      axis: x
+      expected: 88
+      tolerance: 0.05
+      description: "bbox extent along x = carrier diameter"
+    - name: spanY
+      axis: y
+      expected: 88
+      tolerance: 0.05
+      description: "bbox extent along y = carrier diameter"
+  solids:
+    - name: carrier
+      contains_point: [20, 0, 2.5]
+      description: "the single carrier solid"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[20, 0, 2.5], [-36, 0, 2.5], [0, 36, 2.5], [42, 0, 2.5], [-21, 36.373067, 2.5], [-21, -36.373067, 2.5]]
+      description: "web between the holes, the unholed 180 deg position on the planet circle, and the 4 mm rim land outboard of each planet hole (r 42)"
+    - name: inHoles
+      state: void
+      points: [[0, 0, 2.5], [36, 0, 2.5], [-18, 31.176915, 2.5], [-18, -31.176915, 2.5]]
+      description: "on the axis of the centre hole and of each planet hole, mid-thickness"
+    - name: insideRingTip
+      state: void
+      points: [[32.17, 32.17, 2.5], [-32.17, 32.17, 2.5], [-32.17, -32.17, 2.5], [32.17, -32.17, 2.5]]
+      description: "r 45.5 at 45, 135, 225 and 315 deg: air between the round rim (r 44) and the ring tip circle (r 46)"
+  cylinder_counts:
+    - name: planetHoles
+      diameter: 8
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 3
+      description: "exactly three D8 planet holes"
+    - name: centreHoles
+      diameter: 10
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+      description: "exactly one D10 centre hole"
+  blockout:
+    volume_min: 29000
+    volume_max: 31000
+
+references:
+  - path: sources/planetary-set-spec.md
+    kind: text
+    role: authoritative
+    sha256: 2a8bca0f4ffa01692bc1a5879aeb8b02a1d728b2cbe39448f181197d86ca14ca
+    units: mm
+    revision: "as supplied (2026-09-25)"
+    note: "planetary set specification; Carrier row, Part frames and Planet orbit rows fix every carrier dimension"
+
+open_questions:
+  - "Material, density and process are not stated; no mass claim is made."
+  - "Fits of the D10 centre hole and the D8 planet holes are not stated (no pins, axles or bearings are specified); the holes are modelled at nominal size."
+  - "No edge breaks (chamfers or fillets) are stated; all edges are modelled sharp."

@@ -1,0 +1,442 @@
+schema_version: 1
+name: benchy
+intent: "Create a CAD model for a standard benchy the tugboat, used by 3D printers for calibration checking. Once complete, I will print it and physically measure the features against a control I already have."
+units: {length: mm, angle: deg}
+material: null
+density_kg_m3: null
+process: "FFF calibration print at 1:1, intended without supports. Digital tolerances are not physical print tolerances."
+release_status: reconstruction
+
+frame:
+  origin: "Intersection of the finished sternmost bounding plane x=0, symmetry plane y=0, and keel contact plane z=0; this datum intersection need not lie on material."
+  axes:
+    x: "Positive from stern toward bow; finished stern x=0, bow x=60 mm."
+    y: "Positive toward port when facing the bow; starboard negative, beam centred on y=0."
+    z: "Positive from the keel toward the chimney top; right-handed with x and y."
+  datums:
+    - {name: keel, description: "Horizontal bottom contact plane z=0, excluding recessed lettering."}
+    - {name: centreline, description: "Port-starboard mirror plane y=0, midway between beam extrema +/-15.5 mm."}
+    - {name: sternStation, description: "Plane normal to x at the sternmost finished material, including any optional nameplate; x=0."}
+    - {name: cargoTop, description: "Horizontal cargo rim z=cargoBoxTopHeight=15.50 mm."}
+    - {name: chimneyTop, description: "Horizontal chimney top z=overallHeight=48.00 mm."}
+
+envelope:
+  min: [0, -15.5, 0]
+  max: [60, 15.5, 48]
+  tolerance: 0.05
+
+parameters:
+  - name: overallLength
+    value: 60.00
+    unit: mm
+    tolerance: 0.01
+    provenance: stated
+    source: "sources/3dbenchy-spec.md B.3; sources/Dimension_3DBenchy_Length.png"
+    description: "Finished x span. Edit estimate: approximately 11000 mm3 hull material / 60 mm * 3 mm = 550 mm3; no analytic hull formula. Extend hull while retaining bow tangent angle and other independent caliper dimensions."
+    edit_test:
+      delta: 3
+      expect: {volume_delta: 550, direction: increase, tolerance_rel: 0.10, bbox_delta: [3, 0, 0]}
+  - {name: overallWidth, value: 31.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.4; sources/Dimension_3DBenchy_Width.png",
+     description: "Finished beam along y, centred on y=0."}
+  - name: overallHeight
+    value: 48.00
+    unit: mm
+    tolerance: 0.01
+    provenance: stated
+    source: "sources/3dbenchy-spec.md B.5; sources/Dimension_3DBenchy_Height.png"
+    description: "Keel-to-chimney-top span. A +2 edit raises roof/chimney together and extends cabin walls; hold chimneyHeightAboveRoof and window positions fixed. Wall estimate 2*(20*18-(20-4)*(18-4))=272 mm3, rounded to 270 with 10% reconstruction uncertainty."
+    edit_test:
+      delta: 2
+      expect: {volume_delta: 270, direction: increase, tolerance_rel: 0.10, bbox_delta: [0, 0, 2]}
+  - {name: bridgeRoofLength, value: 23.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.1; sources/Dimension_3DBenchy_Bridge_Roof.png",
+     description: "Parallel front/rear roof face separation along x; centred at cabinCenterX."}
+  - {name: chimneyInnerDiameter, value: 3.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.2; sources/Dimension_3DBenchy_Chimney.png",
+     description: "Concentric vertical blind-bore diameter."}
+  - {name: chimneyOuterDiameter, value: 7.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.2; sources/Dimension_3DBenchy_Chimney.png",
+     description: "Upper collar outside diameter; lower stem diameter is unstated."}
+  - {name: chimneyHoleDepth, value: 11.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.2; sources/Dimension_3DBenchy_Chimney.png",
+     description: "Blind depth from top; floor z=overallHeight-chimneyHoleDepth=37 mm."}
+  - {name: cargoBoxTopHeight, value: 15.50, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.5; sources/Dimension_3DBenchy_Height.png",
+     description: "Rim height above keel; not deck height."}
+  - {name: cargoBoxOuterA, value: 12.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.6; sources/Dimension_3DBenchy_Box.png",
+     description: "Outside beam along y. The 12/8 dimension lines share the beam direction; the top-view Width drawing confirms orientation."}
+  - {name: cargoBoxOuterB, value: 10.81, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.6; sources/Dimension_3DBenchy_Box.png",
+     description: "Outside length along x, paired with the inside 7 mm direction."}
+  - {name: cargoBoxInnerA, value: 8.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.6; sources/Dimension_3DBenchy_Box.png",
+     description: "Inside beam along y, paired with outside A=12 mm."}
+  - {name: cargoBoxInnerB, value: 7.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.6; sources/Dimension_3DBenchy_Box.png",
+     description: "Inside length along x, paired with outside B=10.81 mm."}
+  - name: cargoBoxDepth
+    value: 9.00
+    unit: mm
+    tolerance: 0.01
+    provenance: stated
+    source: "sources/3dbenchy-spec.md B.6; sources/Dimension_3DBenchy_Box.png"
+    description: "Rectangular blind-pocket depth from rim; floor z=15.50-9.00=6.50 mm, below the provisional deck. Edit holds rim/footprint fixed: volume_delta=-cargoBoxInnerA*cargoBoxInnerB*1=-56 mm3; recompute floor."
+    edit_test:
+      delta: 1
+      expect: {volume_delta: -56, direction: decrease, tolerance_rel: 0.02, bbox_delta: [0, 0, 0]}
+  - {name: hawsepipeInnerDiameter, value: 4.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.7; sources/Dimension_3DBenchy_Hawsepipe.png",
+     description: "Horizontal clear diameter; transverse reconstruction creates two mirrored wall mouths."}
+  - {name: hawsepipeFlangeDepth, value: 0.30, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.7; sources/Dimension_3DBenchy_Hawsepipe.png",
+     description: "Projection against adjacent hull; provisionally measured along bore axis."}
+  - {name: frontWindowWidth, value: 10.50, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.8; sources/Dimension_3DBenchy_Bridge_Window.png",
+     description: "Rectangular front opening width along y; horizontal through-cut along x."}
+  - {name: frontWindowHeight, value: 9.50, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.8; sources/Dimension_3DBenchy_Bridge_Window.png",
+     description: "Rectangular front opening height along z."}
+  - {name: rearWindowInnerDiameter, value: 9.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.9; sources/Dimension_3DBenchy_Bridge_Rear_Window.png",
+     description: "Stern window clear diameter; horizontal axis parallel to x."}
+  - {name: rearWindowOuterDiameter, value: 12.00, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.9; sources/Dimension_3DBenchy_Bridge_Rear_Window.png",
+     description: "Concentric rear-window flange outside diameter."}
+  - {name: rearWindowFlangeDepth, value: 0.30, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.9; sources/Dimension_3DBenchy_Bridge_Rear_Window.png",
+     description: "Rear flange projection toward stern from cabin wall."}
+  - {name: bowOverhangAngle, value: 40, unit: deg, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.10; sources/Dimension_3DBenchy_Hull_Angle.png",
+     description: "Illustrated lower-bow inclination to horizontal; not a complete bow-curve definition."}
+  - {name: bridgeRoofAngle, value: 5.5, unit: deg, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.11; sources/Dimension_3DBenchy_Bridge_Roof_Angle.png",
+     description: "Roof rises toward bow (+x) relative to horizontal as illustrated."}
+  - {name: nameplateThickness, value: 0.10, unit: mm, tolerance: 0.01, provenance: stated,
+     source: "sources/3dbenchy-spec.md B.12 and C; sources/Dimension_3DBenchy_Nameplate.png",
+     description: "Retained official sign/letter extrusion; optional cosmetic geometry deferred without invented outline/font."}
+
+  # Build-critical choices, not measurements from the photograph.
+  - {name: hullKeelLength, value: 40, unit: mm, tolerance: 4, provenance: inferred,
+     rationale: "A finite bottom footprint is needed for the hull loft; provisional span within the 60 mm envelope.",
+     description: "Flat keel footprint length centred at hullKeelCenterX."}
+  - {name: hullKeelWidth, value: 20, unit: mm, tolerance: 3, provenance: inferred,
+     rationale: "Bottom beam is needed to construct flare; choose a stable footprint narrower than maximum beam.",
+     description: "Maximum keel-footprint beam, symmetric about y=0."}
+  - {name: hullKeelCenterX, value: 25, unit: mm, tolerance: 3, provenance: inferred,
+     rationale: "Keel needs a station; an aft-biased centre leaves room for the rising spoon bow.",
+     description: "Nominal keel extent x=5..45 mm; detailed outline unresolved."}
+  - {name: hullSternWidth, value: 22, unit: mm, tolerance: 3, provenance: inferred,
+     rationale: "Transom beam is needed to close the loft; choose a stern narrower than maximum beam.",
+     description: "Transom beam at the aft gunwale."}
+  - {name: deckHeight, value: 10, unit: mm, tolerance: 1, provenance: inferred,
+     rationale: "Horizontal deck elevation is unstated; this choice exposes the box and retains its floor below deck.",
+     description: "Deck/cabin-floor elevation; hull below filled except explicit pockets."}
+  - {name: sternGunwaleHeight, value: 11.5, unit: mm, tolerance: 1, provenance: inferred,
+     rationale: "A low aft sheer endpoint is required above deck.",
+     description: "Aft rim elevation; smoothly interpolate toward raised bow."}
+  - {name: bowGunwaleHeight, value: 24, unit: mm, tolerance: 2, provenance: inferred,
+     rationale: "Raised bow needs an endpoint below roof; no official elevation is given.",
+     description: "Forward sheer height; preserve independently stated lower-bow angle."}
+  - {name: hullWallThickness, value: 1.6, unit: mm, tolerance: 0.5, provenance: inferred,
+     rationale: "Finite walls are needed around the open deck/bow well; official thickness unspecified.",
+     description: "Bulwark thickness above deck; decorative bead/radii unresolved."}
+  - {name: cabinCenterX, value: 31, unit: mm, tolerance: 1.5, provenance: inferred,
+     rationale: "Cabin/roof need a station leaving an aft box region and forward well.",
+     description: "Shared cabin/roof/side-opening x centre; all centred on y=0."}
+  - {name: cabinLength, value: 20, unit: mm, tolerance: 2, provenance: inferred,
+     rationale: "Outer footprint is required; choose less than 23 mm roof length to leave overhangs.",
+     description: "Provisional rectangular length; rear/front at x=21/41 mm."}
+  - {name: cabinWidth, value: 18, unit: mm, tolerance: 2, provenance: inferred,
+     rationale: "Outer cabin beam must accommodate the stated 12 mm rear flange.",
+     description: "Provisional vertical side planes y=+/-9 mm; taper unresolved."}
+  - {name: cabinWallThickness, value: 2, unit: mm, tolerance: 0.5, provenance: inferred,
+     rationale: "Finite walls/through-depths are necessary for cabin openings.",
+     description: "Nominal interior footprint 16 by 14 mm, deck to roof underside."}
+  - {name: bridgeRoofWidth, value: 20, unit: mm, tolerance: 2, provenance: inferred,
+     rationale: "Roof requires a transverse span with a small cabin-side overhang.",
+     description: "Roof beam; no slats inferred from print layers."}
+  - {name: bridgeRoofThickness, value: 2.5, unit: mm, tolerance: 0.5, provenance: inferred,
+     rationale: "Closed roof and support beneath the blind chimney bore require thickness.",
+     description: "Vertical separation of sloping roof planes; walls meet underside."}
+  - {name: chimneyCenterX, value: 25, unit: mm, tolerance: 1, provenance: inferred,
+     rationale: "Chimney needs a station on the aft roof; no official position.",
+     description: "Vertical chimney axis x=25, y=0 mm."}
+  - {name: chimneyHeightAboveRoof, value: 10, unit: mm, tolerance: 1.5, provenance: inferred,
+     rationale: "An above-roof height is needed to locate roof below the stated chimney top.",
+     description: "Roof top at chimney axis is overallHeight-chimneyHeightAboveRoof=38 mm; elsewhere add (x-chimneyCenterX)*tan(bridgeRoofAngle)."}
+  - {name: chimneyStemDiameter, value: 5.5, unit: mm, tolerance: 0.5, provenance: inferred,
+     rationale: "Illustrations show a narrower stem; a diameter is needed to join collar and roof.",
+     description: "Lower concentric stem diameter, distinct from stated collar diameter."}
+  - {name: chimneyCollarHeight, value: 2, unit: mm, tolerance: 0.5, provenance: inferred,
+     rationale: "Diameter-7 collar needs an unstated axial extent.",
+     description: "Nominal collar z=46..48 mm; section z=47 is in its cylindrical interior."}
+  - {name: cargoBoxCenterX, value: 15, unit: mm, tolerance: 1, provenance: inferred,
+     rationale: "Box needs an aft station clear of nominal cabin rear wall.",
+     description: "Box/pocket centre x=15, y=0; outer x=9.595..20.405 mm."}
+  - {name: hawsepipeCenterX, value: 52, unit: mm, tolerance: 1, provenance: inferred,
+     rationale: "Bore/flanges need a forward station; only bore size is stated.",
+     description: "Transverse axis x=52; local hull intersections locate both mouths."}
+  - {name: hawsepipeCenterZ, value: 18, unit: mm, tolerance: 1, provenance: inferred,
+     rationale: "Bore needs an elevation above deck and below raised bow rim.",
+     description: "Axis z=18 mm, parallel to y as a reconstruction assumption."}
+  - {name: hawsepipeOuterDiameter, value: 6, unit: mm, tolerance: 1, provenance: inferred,
+     rationale: "Annular flange needs an outer diameter; only bore/projection are stated.",
+     description: "Mirrored flange OD; thin-flange solid probes deferred."}
+  - {name: windowCenterHeight, value: 27, unit: mm, tolerance: 1, provenance: inferred,
+     rationale: "End windows need elevations; aligning centres is a minimal provisional rule.",
+     description: "Front/rear centres y=0, z=27; official clear sizes independent."}
+  - {name: sideOpeningWidth, value: 9, unit: mm, tolerance: 1, provenance: inferred,
+     rationale: "Two side openings require an unstated longitudinal clear span.",
+     description: "Centred at cabinCenterX; straight jambs, provisional semicircular head radius width/2."}
+  - {name: sideOpeningHeight, value: 22, unit: mm, tolerance: 2, provenance: inferred,
+     rationale: "Side openings need height from deck leaving material beneath roof.",
+     description: "Deck-to-crown height; nominal crown z=32. Arch follows illustrations, not print layers."}
+
+features:
+  - id: hull
+    kind: loft
+    description: "One smooth flared symmetric spoon hull with flat keel, transom and raised bow; reconstructed curves retain the illustrated 40 degree lower-bow tangent."
+    parameters: [overallLength, overallWidth, hullKeelLength, hullKeelWidth, hullKeelCenterX, hullSternWidth, deckHeight, sternGunwaleHeight, bowGunwaleHeight, bowOverhangAngle]
+    count: 1
+    verify:
+      - {method: bbox}
+      - {method: face, face: keelBottom}
+      - {method: solid, points: [[31, 0, 3]], note: "Deep central hull, clear of pocket and uncertain keel perimeter."}
+      - {method: section, section: centreline, note: "Review bow silhouette/tangent without inventing section area."}
+  - id: deck
+    kind: extrude
+    description: "Horizontal deck parallel to keel; hull beneath filled except cargo pocket."
+    parameters: [deckHeight]
+    verify:
+      - {method: solid, points: [[31, 0, 8]], note: "2 mm below nominal deck exceeds its 1 mm uncertainty."}
+      - {method: section, section: cargoCavity}
+  - id: gunwale
+    kind: shell
+    description: "Continuous low aft rim rising to bow bulwarks around open deck; bead/radii unresolved."
+    parameters: [hullWallThickness, sternGunwaleHeight, bowGunwaleHeight]
+    verify:
+      - {method: section, section: hawsepipeStation, note: "Inspect both bulwarks/rims; no unsafe thin-wall probes."}
+      - {method: section, section: centreline}
+  - id: cabin
+    kind: shell
+    description: "Hollow bridge joined to deck/roof: one front window, one rear window, two opposed side openings."
+    parameters: [cabinCenterX, cabinLength, cabinWidth, cabinWallThickness, deckHeight, overallHeight, chimneyHeightAboveRoof, bridgeRoofThickness]
+    count: 1
+    verify:
+      - {method: void, points: [[31, 0, 20]], note: "At least 7 mm nominal wall clearance exceeds placement/thickness tolerances."}
+      - {method: section, section: frontWindow}
+      - {method: section, section: rearWindow}
+  - id: roof
+    kind: extrude
+    description: "Overhanging roof 23 mm front-to-rear, rising 5.5 degrees toward bow; parallel underside."
+    parameters: [bridgeRoofLength, bridgeRoofAngle, bridgeRoofWidth, bridgeRoofThickness, cabinCenterX, chimneyCenterX, chimneyHeightAboveRoof, overallHeight]
+    verify:
+      - {method: section, section: centreline, note: "Review spacing/slope; slab too thin for a robust solid probe."}
+  - id: chimney
+    kind: hole
+    description: "Concentric stem/collar and one vertical diameter-3 blind hole, 11 mm deep from z=48."
+    parameters: [overallHeight, chimneyInnerDiameter, chimneyOuterDiameter, chimneyHoleDepth, chimneyCenterX, chimneyHeightAboveRoof, chimneyStemDiameter, chimneyCollarHeight]
+    count: 1
+    verify:
+      - {method: face, face: chimneyTop}
+      - {method: section, section: chimneyCollar}
+      - {method: count, section: chimneyCollar, count: 1, note: "One outer region; section checks its one inner hole."}
+      - {method: section, section: chimneyAxial, note: "Inspect blind floor z=37; must not open into cabin."}
+      - {method: void, points: [[25, 0, 43]], note: "Bore radius 1.5 exceeds axis tolerance 1; floor clearance 6 mm."}
+  - id: cargoBox
+    kind: pocket
+    description: "Open aft box; A/B along y/x, centred 8 by 7 rectangular pocket; rim z=15.5, floor z=6.5."
+    parameters: [cargoBoxTopHeight, cargoBoxOuterA, cargoBoxOuterB, cargoBoxInnerA, cargoBoxInnerB, cargoBoxDepth, cargoBoxCenterX, deckHeight]
+    count: 1
+    verify:
+      - {method: face, face: cargoBoxTop}
+      - {method: section, section: cargoCavity}
+      - {method: void, points: [[15, 0, 11]], note: "3.5 mm side and 4.5 mm floor/rim clearances exceed station tolerance 1."}
+      - {method: solid, points: [[15, 0, 5]], note: "1.5 mm below stated-derived pocket floor, well inside provisional keel."}
+  - id: hawsepipe
+    kind: hole
+    description: "One transverse horizontal bore creates two mirrored diameter-4 wall mouths with 0.30 projecting flanges."
+    parameters: [hawsepipeInnerDiameter, hawsepipeFlangeDepth, hawsepipeCenterX, hawsepipeCenterZ, hawsepipeOuterDiameter]
+    count: 2
+    verify:
+      - {method: section, section: hawsepipeStation}
+      - {method: void, points: [[52, -12, 18], [52, -8, 18], [52, 8, 18], [52, 12, 18]], note: "Axis clearance 2 mm exceeds combined station uncertainty sqrt(1^2+1^2). Section must establish actual wall penetration."}
+  - id: frontWindow
+    kind: cut
+    description: "One bow-facing 10.50 by 9.50 rectangular clear opening cut horizontally through cabin wall."
+    parameters: [frontWindowWidth, frontWindowHeight, windowCenterHeight, cabinCenterX, cabinLength, cabinWallThickness]
+    count: 1
+    verify:
+      - {method: section, section: frontWindow}
+      - {method: void, points: [[40, 0, 27]], note: "Aperture-edge clearance at least 4.75 mm exceeds inferred placement/wall tolerances."}
+  - id: rearWindow
+    kind: hole
+    description: "One stern-facing diameter-9 opening with diameter-12 flange projecting 0.30 mm."
+    parameters: [rearWindowInnerDiameter, rearWindowOuterDiameter, rearWindowFlangeDepth, windowCenterHeight, cabinCenterX, cabinLength, cabinWallThickness]
+    count: 1
+    verify:
+      - {method: section, section: rearWindow}
+      - {method: void, points: [[22, 0, 27]], note: "4.5 mm aperture clearance exceeds inferred station/wall/elevation tolerances."}
+  - id: sideOpenings
+    kind: cut
+    description: "Two opposed tall side door/window openings with straight jambs and arched heads; near opening visible in photo, arch shown in official side drawings."
+    parameters: [sideOpeningWidth, sideOpeningHeight, cabinCenterX, cabinWidth, cabinWallThickness, deckHeight]
+    count: 2
+    verify:
+      - {method: void, points: [[31, -8, 20], [31, 8, 20]], note: "4.5 mm jamb and 10 mm deck clearance exceed inferred opening/cabin tolerances."}
+      - {method: section, section: portSide}
+      - {method: section, section: starboardSide}
+
+interfaces:
+  - {name: printDatum, description: "Keel z=0 supports upright 1:1 printing; no CAD shrinkage compensation."}
+  - {name: bilateralSymmetry, description: "Official mirror symmetry about y=0; compare paired sections and hull surfaces during STEP review.", checks: [mirrorY]}
+  - {name: caliperSet, description: "Keep 23 stated caliper constants independent. Edits must not rescale unrelated stated openings. Later cosmetic details must stay inside the finished envelope."}
+
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 15550
+    tolerance_rel: 0.10
+    provenance: stated
+    note: "Sources: sources/3dbenchy-spec.md C (official about/features); sources/3DBenchy_Broschure_3DBenchy.com_.pdf p.3 Features. 15.55 cm3*1000=15550 mm3. Band 13995..17105 allows unstated hull/small details; no analytic hull-volume claim."
+  surface_area: null
+  center_of_mass: null
+  solid_count: 1
+  sections:
+    - id: chimneyCollar
+      plane: z
+      at: 47
+      expect: {area: 31.4159265359, area_tolerance_rel: 0.02, loops: 1, holes: 1}
+      description: "Provisional collar interior; derived annulus area pi/4*(chimneyOuterDiameter^2-chimneyInnerDiameter^2)=10*pi mm2."
+    - id: chimneyAxial
+      plane: x
+      at: 25
+      expect: {islands_min: 1}
+      description: "Nominal axis plane exposes blind floor z=37 and roof connection; inspect termination, without global area/loop targets."
+    - id: cargoCavity
+      plane: z
+      at: 9
+      expect: {loops: 1, holes: 1}
+      description: "Below deck, above floor: connected hull with cargo pocket as sole hole. Pocket area 8*7=56 mm2 is not total solid section area."
+    - id: hawsepipeStation
+      plane: x
+      at: 52
+      expect: {islands_min: 1}
+      description: "Transverse section along bore at z=18 exposes both wall penetrations/rims; global areas/counts depend on unstated hull."
+    - id: frontWindow
+      plane: x
+      at: 40
+      expect: {holes: 1, islands_min: 1}
+      description: "Nominal front-wall middle; one closed rectangular aperture. Clear area 10.50*9.50=99.75 mm2 is not total solid section area."
+    - id: rearWindow
+      plane: x
+      at: 22
+      expect: {holes: 1, islands_min: 1}
+      description: "Nominal rear-wall middle; circular aperture pi*9^2/4=63.6172512352 mm2. Collar can add an outer section island, so no exact loop count."
+    - id: portSide
+      plane: y
+      at: 8
+      expect: {islands_min: 1}
+      description: "Port wall through arch; compare mirrored starboardSide. Hawsepipe intersection makes global hole count uncertain."
+    - id: starboardSide
+      plane: y
+      at: -8
+      expect: {islands_min: 1}
+      description: "Starboard counterpart of portSide; no invented area."
+    - id: centreline
+      plane: y
+      at: 0
+      expect: {islands_min: 1}
+      description: "Symmetry-plane profile exposes hull, deck, box, cabin, roof and blind chimney; one section alone cannot prove bilateral symmetry."
+  # Each datum level specifies one connected face; no repeated coplanar faces are prescribed.
+  faces:
+    - {name: keelBottom, plane: z, at: 0, normal: "-", tolerance: 0.01, mode: one}
+    - {name: cargoBoxTop, plane: z, at: 15.5, normal: "+", tolerance: 0.01, mode: one}
+    - {name: chimneyTop, plane: z, at: 48, normal: "+", tolerance: 0.01, mode: one}
+  deviation: null
+  symmetry:
+    - {name: mirrorY, plane: y, at: 0, max_deviation: 0.1, p95_deviation: 0.05}
+  # Filled hull/deck/bulwark, cabin/roof, chimney and box; fill all cavities, omit cosmetics.
+  # Known voids: cargo 8*7*9=504; chimney pi*3^2*11/4=77.7544 mm3.
+  # Other omitted voids estimated 6000..12000 mm3, excluding those two:
+  # cabin interior about 16*14*26=5824, plus hull well and wall apertures.
+  # Count the union of voids; do not double-count intersecting window/interior cuts.
+  # 13995+581.7544+6000=20576.7544; 17105+581.7544+12000=29686.7544.
+  # Round outward for hull/overlap/cosmetic uncertainty; bbox prism 89280 is not a blockout.
+  blockout: {volume_min: 20000, volume_max: 31000}
+  # Export-format agreement only, not accuracy against the official boat.
+  export_volume_tolerance_rel: 0.002
+
+references:
+  - {path: sources/prompt.md, kind: text, role: illustrative, units: mm, revision: "supplied 2026-09-16",
+     sha256: 12d7b59cdbd0098cf651597ab3cb1f544e38fd288f24a9719293280d614e6bfc,
+     note: "Verbatim intent and quoted subset of caliper dimensions."}
+  - {path: sources/3dbenchy-spec.md, kind: text, role: authoritative, units: "mm, deg", revision: "retrieved 2026-09-16",
+     sha256: 8ad17ab0866082cc9fbd896869f8f70a53096b5aead5e8a16fb55043033d4da4,
+     note: "Controlling transcription: B dimensions, C volume/features, E unstated details, F frame."}
+  - {path: sources/3DBenchy_Broschure_3DBenchy.com_.pdf, kind: other, role: authoritative, units: "mm, deg", revision: "supplied 2026-09-16; edition unspecified",
+     sha256: 158913e9c9c4953dd6185a3892b5e88e78020d2e26e2fc32eb052970a87919d4,
+     note: "Creative Tools brochure: PDF p.3 Features, p.4 Measure and calibrate."}
+  - {path: sources/image.png, kind: image, role: illustrative, units: mm, revision: "supplied photograph; capture date unspecified",
+     sha256: 8e1e2797e343c851a5a67402a2fab0ebb83f8cd42f572c0ef7ebae300f9ff8ad,
+     note: "Nominal 1:1 FFF print: near side opening, front window, hawsepipe mouth, chimney bore, aft box visible. Rear window from official drawing. No photo sizes measured; layers excluded."}
+  - {path: sources/3DBenchy_page_measure_main_image.png, kind: drawing, role: illustrative, units: mm, revision: "supplied 2026-09-16",
+     sha256: 434af3f5c2cb7dde33a0069645383a0391df5bb825b91ce06521f5b690abe589,
+     note: "Small caliper overview without numerical dimensions; not a scale reference."}
+  - {path: sources/Dimension_3DBenchy_Box.png, kind: drawing, role: authoritative, units: mm, revision: "supplied 2026-09-16",
+     sha256: 602aa159e8848d5a2960b524a890296317130f8fe6030bc56c36a09cc8b73888,
+     note: "Beam y: outside 12, inside 8. Length x: outside 10.81, inside 7. Vertical depth 9."}
+  - {path: sources/Dimension_3DBenchy_Bridge_Rear_Window.png, kind: drawing, role: authoritative, units: mm, revision: "supplied 2026-09-16",
+     sha256: e2bd8ebe0fa152c324266b06580d803530cea2b8f34f7b1f14b865866706724f,
+     note: "Inner diameter 9, outer diameter 12, flange projection 0.30."}
+  - {path: sources/Dimension_3DBenchy_Bridge_Roof.png, kind: drawing, role: authoritative, units: mm, revision: "supplied 2026-09-16",
+     sha256: cba450ed197bd0cc479c70571c1ad4a467436690f5460356d516b6c40a1b540c,
+     note: "Parallel front/rear face separation 23, not roof beam."}
+  - {path: sources/Dimension_3DBenchy_Bridge_Roof_Angle.png, kind: drawing, role: authoritative, units: deg, revision: "supplied 2026-09-16",
+     sha256: 86fe2ff3839e0fe1073380d5a4fa0eb33d32ee12f6382696bc749bde5c23e0af,
+     note: "Roof slope 5.5 degrees to horizontal."}
+  - {path: sources/Dimension_3DBenchy_Bridge_Window.png, kind: drawing, role: authoritative, units: mm, revision: "supplied 2026-09-16",
+     sha256: da57e562c3371d0b1015d522152f27700b53f7d08145dacfcfe6bd6cbc215dc6,
+     note: "Front clear width 10.50 and height 9.50; horizontal cut."}
+  - {path: sources/Dimension_3DBenchy_Chimney.png, kind: drawing, role: authoritative, units: mm, revision: "supplied 2026-09-16",
+     sha256: 070b0a9542ecd5108d7d7da0e38ef562c6cf7c7fc4524e6c5f3bce856dd4507b,
+     note: "Bore diameter 3, top collar diameter 7, blind depth 11; no above-roof height."}
+  - {path: sources/Dimension_3DBenchy_Hawsepipe.png, kind: drawing, role: authoritative, units: mm, revision: "supplied 2026-09-16",
+     sha256: c892cf56e2cec6f9ec4367532f56cce5d7db822601518d5c04346fc69315e16f,
+     note: "Bore diameter 4; flange projection 0.30; OD and station unstated."}
+  - {path: sources/Dimension_3DBenchy_Height.png, kind: drawing, role: authoritative, units: mm, revision: "supplied 2026-09-16",
+     sha256: 91d7483fd6dbbe40181f0fe30e5dae876ac3b660134fe5cc4036fca483b8a2f3,
+     note: "Overall height 48; box rim z=15.50, not deck elevation."}
+  - {path: sources/Dimension_3DBenchy_Hull_Angle.png, kind: drawing, role: authoritative, units: deg, revision: "supplied 2026-09-16",
+     sha256: ccd2e256d1345ff8d10fcd00d0c86bd6ea189bb1906a522df19d795ba45a2db9,
+     note: "Illustrated bow overhang 40 degrees to horizontal."}
+  - {path: sources/Dimension_3DBenchy_Length.png, kind: drawing, role: authoritative, units: mm, revision: "supplied 2026-09-16",
+     sha256: 44c31ba74acec27bd044728eaf9992e319b4d76437b11195ef417606e02d405b,
+     note: "Overall horizontal bow-to-stern length 60."}
+  - {path: sources/Dimension_3DBenchy_Nameplate.png, kind: drawing, role: authoritative, units: mm, revision: "supplied 2026-09-16",
+     sha256: a476deae31a86a9f4f832e1fcc5c092b8f46fb3b8aab36c04e0e75b98b14b516,
+     note: "Sign/letter extrusion 0.10; outline/font unspecified."}
+  - {path: sources/Dimension_3DBenchy_Width.png, kind: drawing, role: authoritative, units: mm, revision: "supplied 2026-09-16",
+     sha256: 4924ad2d84ac77dbe2f3aea479f6329afe4861c50694877ec5c5ff3429044aa6,
+     note: "Overall beam 31; top view resolves cargo-box directions."}
+
+open_questions:
+  - "Exact hull outer mould line, keel outline, transom rake, waterlines, sheer and NURBS/control points are unavailable. Provisional endpoints do not uniquely define the spoon hull or locate its 40 degree tangent."
+  - "Deck height, gunwale section/radii and inner bow-well shape are unstated. Adopted heights/thickness are assumptions; no thin-gunwale solid probe has sufficient uncertainty clearance."
+  - "Cabin outer envelope, taper, walls/interior and roof beam/thickness/overhangs are unspecified. Rectangular shell is provisional; roof solid probes lack clearance from uncertain slab placement."
+  - "Side-opening sizes, exact arch, trim and positions are unstated. Two mirrored openings use inferred dimensions; the photograph provides no calibrated measurements."
+  - "Front/rear window elevations, wall through-depths and front trim are unstated. Official clear sizes are retained; common height and wall stations are provisional."
+  - "Chimney height above roof, station, stem diameter, collar height and fillets are unstated. The 11 mm bore must remain blind at z=37; section review is required because no robust floor/rim solid probe follows from stated dimensions."
+  - "Hawsepipe station/elevation/direction, flange OD and projection convention against curved hull are unstated. A transverse mirrored pair is assumed; thin flanges lack safe solid-probe clearance."
+  - "Cargo-box station and corner radii are unspecified. A centred rectangular pocket is adopted; clear dimensions and floor z=6.50 are constrained, rounded exterior unresolved."
+  - "Stern nameplate outline, font, letterforms, placement and exact letter height (only less than 2 mm stated) are unresolved. Cosmetic geometry deferred; retain 0.10 mm extrusion if later specified, inside the finished envelope."
+  - "Boat-wheel geometry, size and position are unspecified; cosmetic feature deferred."
+  - "Fishing-rod-holder diameter, blind depth, slant and position, plus identities/counts of photographed deck fittings, are unresolved; cosmetic features deferred."
+  - "Bottom lettering content, font, outlines and depth are unspecified; cosmetic first-layer details deferred. Print layer lines/apparent roof slats are not CAD geometry."
+  - "Material, density and physical print tolerances are unknown; no mass, shrinkage compensation or guaranteed control-print match is claimed."
+  - "Confirm whether 15.55 cm3 includes every cavity, wheel, holder, flange and letter as modelled. The 10% finished-volume and 20000..31000 mm3 filled-blockout bands allow reconstruction uncertainty, not shape identity."
+  - "No reference mesh/coordinate table was ingested; surface area, centre of mass and deviation cannot be assigned. Official STL triangulation deviation 0.001 mm is not a reconstruction tolerance."
+  - "Probes/sections establish selected topology only. Caliper spans/diameters, angles, flange projections and full mirrored surface symmetry require STEP review. Thin annular features lack safe solid probes. Add centres if later specifying repeated coplanar datum faces."
+  - "The length edit's approximately +550 mm3 is a first-order hull estimate with 10% tolerance, not an analytic derivative. The height estimate depends on the provisional cabin; both await native-model verification."

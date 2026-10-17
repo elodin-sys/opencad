@@ -1,0 +1,20 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import datum from "datum.kcl"
+import exterior from "exterior.kcl"
+import clamp from "clamp.kcl"
+import filament from "filament.kcl"
+import keyhole from "keyhole.kcl"
+import fasteners from "fasteners.kcl"
+
+// Native STL integrity is verified on the composed clamp construction.
+// Shared contract parameters and their edit guards remain in params.kcl.
+// Numerical datums: A y=0, B y=14, C z=-30, D x=-26.5.
+finished = datum
+  |> exterior()
+  |> clamp()
+  |> filament()
+  |> keyhole()
+  |> fasteners()
+
+finished

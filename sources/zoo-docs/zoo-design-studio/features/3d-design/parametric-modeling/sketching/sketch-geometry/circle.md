@@ -1,0 +1,19 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/circle
+Title: Circle
+
+# Circle
+
+Create circular sketch geometry in Zoo Design Studio.
+
+Use Circle to create circular profiles for holes, bosses, revolved parts, and reference geometry
+that depends on a center point and radius.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/circle/circle.gif"
+  alt="Creating a circle in Zoo Design Studio"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Place the center, then set the circle radius
+</div>

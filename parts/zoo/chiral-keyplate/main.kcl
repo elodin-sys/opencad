@@ -1,0 +1,236 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+plateWidth = 80mm
+plateHeight = 80mm
+plateThickness = 8mm
+slotLength = 16mm
+slotWidth = 6mm
+slotDepth = 4mm
+slotCentreX = 20mm
+slotCentreY = 8mm
+
+// Independent dimensions; guards preserve blind pockets and this handedness.
+assert(plateWidth, isGreaterThan = 0mm)
+assert(plateHeight, isGreaterThan = 0mm)
+assert(plateThickness, isGreaterThan = 0mm)
+assert(slotLength, isGreaterThan = 0mm)
+assert(slotWidth, isGreaterThan = 0mm)
+assert(slotDepth, isGreaterThan = 0mm)
+assert(slotDepth, isLessThan = plateThickness)
+assert(slotLength, isGreaterThan = slotWidth)
+assert(slotCentreX, isGreaterThan = slotLength / 2)
+assert(slotCentreY, isGreaterThan = slotWidth / 2)
+outerSlotExtent = max([
+  slotCentreX + slotLength / 2,
+  slotCentreY + slotWidth / 2
+])
+assert(outerSlotExtent, isLessThan = plateWidth / 2)
+assert(outerSlotExtent, isLessThan = plateHeight / 2)
+
+// Right-handed world frame: bottom z = 0, +x right, +y up in top view.
+bottomReference = -XY
+xCentreDatum = YZ
+yCentreDatum = XZ
+topReference = offsetPlane(XY, offset = plateThickness)
+floorZ = plateThickness - slotDepth
+overrun = slotDepth / 4
+cutPlane = offsetPlane(XY, offset = plateThickness + overrun)
+
+plateSketch = sketch(on = XY) {
+  bottom = line(start = [var -40mm, var -40mm], end = [var 40mm, var -40mm])
+  right = line(start = [var 40mm, var -40mm], end = [var 40mm, var 40mm])
+  top = line(start = [var 40mm, var 40mm], end = [var -40mm, var 40mm])
+  left = line(start = [var -40mm, var 40mm], end = [var -40mm, var -40mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  fixed([
+    bottom.start,
+    [-plateWidth / 2, -plateHeight / 2]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == plateWidth
+  verticalDistance([right.start, right.end]) == plateHeight
+}
+plateRegion = region(segments = [plateSketch.bottom, plateSketch.right])
+plateBlank = extrude(
+  plateRegion,
+  length = plateThickness,
+  tagStart = $bottomDatum,
+  tagEnd = $topDatum,
+)
+
+// chiralPinwheel: positive quarter turns R(x, y) = (-y, x).
+// Each separate cutter starts above the top and ends at floorZ.
+// Slot A: 0deg, centre (u, v), long side along x.
+slotASketch = sketch(on = cutPlane) {
+  bottom = line(start = [var 12mm, var 5mm], end = [var 28mm, var 5mm])
+  right = line(start = [var 28mm, var 5mm], end = [var 28mm, var 11mm])
+  top = line(start = [var 28mm, var 11mm], end = [var 12mm, var 11mm])
+  left = line(start = [var 12mm, var 11mm], end = [var 12mm, var 5mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  fixed([
+    bottom.start,
+    [
+      slotCentreX - (slotLength / 2),
+      slotCentreY - (slotWidth / 2)
+    ]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == slotLength
+  verticalDistance([right.start, right.end]) == slotWidth
+}
+slotARegion = region(segments = [slotASketch.bottom, slotASketch.right])
+slotACutter = extrude(
+  slotARegion,
+  length = -(slotDepth + overrun),
+  method = NEW,
+  tagEnd = $slotACutterCap,
+)
+
+// Slot B: +90deg, centre (-v, u), long side along y.
+slotBSketch = sketch(on = cutPlane) {
+  bottom = line(start = [var -11mm, var 12mm], end = [var -5mm, var 12mm])
+  right = line(start = [var -5mm, var 12mm], end = [var -5mm, var 28mm])
+  top = line(start = [var -5mm, var 28mm], end = [var -11mm, var 28mm])
+  left = line(start = [var -11mm, var 28mm], end = [var -11mm, var 12mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  fixed([
+    bottom.start,
+    [
+      -slotCentreY - (slotWidth / 2),
+      slotCentreX - (slotLength / 2)
+    ]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == slotWidth
+  verticalDistance([right.start, right.end]) == slotLength
+}
+slotBRegion = region(segments = [slotBSketch.bottom, slotBSketch.right])
+slotBCutter = extrude(
+  slotBRegion,
+  length = -(slotDepth + overrun),
+  method = NEW,
+  tagEnd = $slotBCutterCap,
+)
+
+// Slot C: +180deg, centre (-u, -v), long side along x.
+slotCSketch = sketch(on = cutPlane) {
+  bottom = line(start = [var -28mm, var -11mm], end = [var -12mm, var -11mm])
+  right = line(start = [var -12mm, var -11mm], end = [var -12mm, var -5mm])
+  top = line(start = [var -12mm, var -5mm], end = [var -28mm, var -5mm])
+  left = line(start = [var -28mm, var -5mm], end = [var -28mm, var -11mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  fixed([
+    bottom.start,
+    [
+      -slotCentreX - (slotLength / 2),
+      -slotCentreY - (slotWidth / 2)
+    ]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == slotLength
+  verticalDistance([right.start, right.end]) == slotWidth
+}
+slotCRegion = region(segments = [slotCSketch.bottom, slotCSketch.right])
+slotCCutter = extrude(
+  slotCRegion,
+  length = -(slotDepth + overrun),
+  method = NEW,
+  tagEnd = $slotCCutterCap,
+)
+
+// Slot D: +270deg, centre (v, -u), long side along y.
+slotDSketch = sketch(on = cutPlane) {
+  bottom = line(start = [var 5mm, var -28mm], end = [var 11mm, var -28mm])
+  right = line(start = [var 11mm, var -28mm], end = [var 11mm, var -12mm])
+  top = line(start = [var 11mm, var -12mm], end = [var 5mm, var -12mm])
+  left = line(start = [var 5mm, var -12mm], end = [var 5mm, var -28mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  fixed([
+    bottom.start,
+    [
+      slotCentreY - (slotWidth / 2),
+      -slotCentreX - (slotLength / 2)
+    ]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == slotWidth
+  verticalDistance([right.start, right.end]) == slotLength
+}
+slotDRegion = region(segments = [slotDSketch.bottom, slotDSketch.right])
+slotDCutter = extrude(
+  slotDRegion,
+  length = -(slotDepth + overrun),
+  method = NEW,
+  tagEnd = $slotDCutterCap,
+)
+
+// This consumes the blank and all four cutters, leaving one connected solid.
+keyPlate = subtract(
+  plateBlank,
+  tools = [
+    slotACutter,
+    slotBCutter,
+    slotCCutter,
+    slotDCutter
+  ],
+)
+
+// Subtract rebuilds cutter faces, so their cap tags cannot name live floors.
+// Bind the surviving faces in the stable final-body face ordering instead.
+// Six blank faces, then four walls and one floor per cutter, in A/B/C/D order.
+// These indices are checked against the exported STEP, including both edits.
+pocketFloorA = faceId(keyPlate, index = 10)
+pocketFloorB = faceId(keyPlate, index = 15)
+pocketFloorC = faceId(keyPlate, index = 20)
+pocketFloorD = faceId(keyPlate, index = 25)
+
+floorFaceA = faceOf(keyPlate, face = pocketFloorA)
+floorFaceB = faceOf(keyPlate, face = pocketFloorB)
+floorFaceC = faceOf(keyPlate, face = pocketFloorC)
+floorFaceD = faceOf(keyPlate, face = pocketFloorD)
+
+hide([
+  plateSketch,
+  slotASketch,
+  slotBSketch,
+  slotCSketch,
+  slotDSketch
+])
+hide([
+  bottomReference,
+  xCentreDatum,
+  yCentreDatum,
+  topReference,
+  cutPlane
+])
+keyPlate

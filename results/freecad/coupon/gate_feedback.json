@@ -1,0 +1,590 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/coupon/contract.yaml: 3 parameters {'stated': 3}; sources unresolved {}; unanchored 2",
+        "open questions: 0 (blocking []); interfaces 0, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 3
+        },
+        "soft_values": 0,
+        "open_questions": [],
+        "unresolved_sources": {},
+        "unanchored_sources": [
+          "height",
+          "thickness"
+        ],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": []
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/freecad/coupon/inspect.json bbox.max_error = 0.0 (tol 0.02)",
+        "results/freecad/coupon/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            60.0,
+            40.0,
+            4.0
+          ],
+          "measured_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            60.0,
+            40.0,
+            4.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.02,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            60.0,
+            40.0,
+            4.0
+          ],
+          "measured_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            60.0,
+            40.0,
+            4.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.02,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/freecad/coupon/inspect.json volume = 9600.0 vs 9600.0",
+        "results/freecad/coupon/inspect.json surface_area = 5600.0 vs 5600.0",
+        "results/freecad/coupon/inspect.json center_of_mass = [30.0, 20.0, 2.0] vs [30.0, 20.0, 2.0]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 9600.0,
+          "measured": 9600.0,
+          "error": 0.0,
+          "band": 9.6,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 5600.0,
+          "measured": 5600.0,
+          "error": 0.0,
+          "band": 5.6,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            30.0,
+            20.0,
+            2.0
+          ],
+          "measured": [
+            30.0,
+            20.0,
+            2.0
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.02,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/freecad/coupon/inspect.json features: 1/1 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {},
+        "interfaces": {}
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/freecad/coupon/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/freecad/coupon/inspect.json agreement engine=9600.0 step=9599.999999999998 stl=9600.0 (rel tol 0.002; independent=False)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 9600.0,
+        "kcl": 9600.0,
+        "step": 9599.999999999998,
+        "stl": 9600.0,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "engine_vs_step_rel": 1.8947806286936009e-16,
+        "kcl_vs_step_rel": 1.8947806286936009e-16,
+        "stl_vs_step_rel": 1.8947806286936009e-16,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/freecad/coupon/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 0/0 values; infeasible refused 0/0; interfaces pinned 0"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "width",
+            "delta": 10.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 1600.0,
+                "measured": 1600.0000000000018,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  10.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  10.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "thickness",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 2400.0,
+                "measured": 2400.0,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "21c2b113fb69631e86276b34892ebb4f5359a4ff08b8d7b5e999aa0921143425",
+          "re_export_sha256": "21c2b113fb69631e86276b34892ebb4f5359a4ff08b8d7b5e999aa0921143425",
+          "ok": true
+        },
+        "sweep": {
+          "values": 0,
+          "passed": 0
+        },
+        "infeasible": {
+          "declared": 0,
+          "refused": 0
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/freecad/coupon/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=4",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "PartDesign",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "FreeCAD",
+            "Part",
+            "Sketcher"
+          ],
+          "forbidden_imports": [],
+          "asserts": 4,
+          "sketch_blocks": 28,
+          "feature_ops": 28,
+          "construction_ops": {
+            "calls": 28,
+            "has_result": true
+          },
+          "parameters": {
+            "width": {
+              "found": true,
+              "value": 60.0,
+              "expected": 60.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "height": {
+              "found": true,
+              "value": 40.0,
+              "expected": 40.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "thickness": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "main.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 47,
+          "ok": true,
+          "partdesign_tree": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/freecad/coupon/export.json step.deterministic = True sha256 21c2b113fb69; stl=present; glb=present",
+        "results/freecad/coupon/inspect.json valid = True solids = 1 (expected 1)",
+        "results/freecad/coupon/inspect.json mesh watertight = True components = 1 void_shells = 0"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/coupon/export/coupon.step",
+            "sha256": "21c2b113fb69631e86276b34892ebb4f5359a4ff08b8d7b5e999aa0921143425",
+            "bytes": 6818,
+            "deterministic": true,
+            "second_sha256": "21c2b113fb69631e86276b34892ebb4f5359a4ff08b8d7b5e999aa0921143425"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/coupon/export/coupon.stl",
+            "sha256": "1b376bfff2e1fb6a52fcee1ec107bbdea5857e5d8782c7e1fc4876bb8823969d",
+            "bytes": 684
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/coupon/export/coupon.glb",
+            "sha256": "4a548b72d8c56bd4700cbacb4fa4a8516ce0d08f62a1bef22fa679d8722156cb",
+            "bytes": 940
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 12,
+          "vertices": 8,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 9600.0,
+          "surface_area": 5600.0,
+          "bbox_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bbox_max": [
+            60.0,
+            40.0,
+            4.0
+          ],
+          "center_of_mass": [
+            30.0,
+            20.0,
+            2.0
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread c8904e58-6f19-4495-b28f-ec2c14b02473; engine versions [\"['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']\"]; engine calls 12; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 12,
+        "allow_errors": false,
+        "engine_versions": [
+          "['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']"
+        ],
+        "zoo_versions": [
+          "['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/freecad/coupon/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = training-only; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "training-only",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present",
+      "ok": true,
+      "evidence": [
+        "results/freecad/coupon/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 28, 'has_result': True} lines = 47"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "FreeCAD",
+          "Part",
+          "Sketcher"
+        ],
+        "construction_ops": {
+          "calls": 28,
+          "has_result": true
+        },
+        "sketch_blocks": 28,
+        "feature_ops": 28
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

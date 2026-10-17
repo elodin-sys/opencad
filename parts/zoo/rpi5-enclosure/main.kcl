@@ -1,0 +1,454 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+boardLength = 85mm
+boardWidth = 56mm
+pcbThickness = 1.6mm
+mountX = 3.5mm
+mountY = 3.5mm
+mountPitchX = 58mm
+mountPitchY = 49mm
+boardMountDiameter = 2.7mm
+underBoardDepth = 3mm
+componentFreeRadius = 3.1mm
+edgeClearance = 0.5mm
+headroom = 20mm
+wallThickness = 2.4mm
+standoffHeight = 5mm
+standoffDiameter = 6.2mm
+pilotDiameter = 2.5mm
+pilotDepth = 5mm
+lidHoleDiameter = 3mm
+lidThickness = 4mm
+cornerPostWidth = 8mm
+closureGap = 0.05mm
+usbCx = 11.2mm
+hdmi0X = 25.8mm
+hdmi1X = 39.2mm
+usbAUpperY = 47mm
+usbALowerY = 29.1mm
+rj45Y = 10.2mm
+sdYMin = 22mm
+sdYMax = 34mm
+
+// Sanity bounds preserve independent parameter edits; the first guard rejects negative headroom.
+assert(headroom, isGreaterThan = 0mm, error = "headroom must be positive")
+assert(boardLength, isGreaterThan = 0mm, error = "boardLength must be positive")
+assert(boardWidth, isGreaterThan = 0mm, error = "boardWidth must be positive")
+assert(pcbThickness, isGreaterThan = 0mm, error = "pcbThickness must be positive")
+assert(mountX, isGreaterThan = 0mm, error = "mountX must be positive")
+assert(mountY, isGreaterThan = 0mm, error = "mountY must be positive")
+assert(mountPitchX, isGreaterThan = 0mm, error = "mountPitchX must be positive")
+assert(mountPitchY, isGreaterThan = 0mm, error = "mountPitchY must be positive")
+assert(boardMountDiameter, isGreaterThan = 0mm, error = "boardMountDiameter must be positive")
+assert(underBoardDepth, isGreaterThan = 0mm, error = "underBoardDepth must be positive")
+assert(componentFreeRadius, isGreaterThan = 0mm, error = "componentFreeRadius must be positive")
+assert(edgeClearance, isGreaterThan = 0mm, error = "edgeClearance must be positive")
+assert(wallThickness, isGreaterThan = 0mm, error = "wallThickness must be positive")
+assert(standoffHeight, isGreaterThan = 0mm, error = "standoffHeight must be positive")
+assert(standoffDiameter, isGreaterThan = 0mm, error = "standoffDiameter must be positive")
+assert(pilotDiameter, isGreaterThan = 0mm, error = "pilotDiameter must be positive")
+assert(pilotDepth, isGreaterThan = 0mm, error = "pilotDepth must be positive")
+assert(lidHoleDiameter, isGreaterThan = 0mm, error = "lidHoleDiameter must be positive")
+assert(lidThickness, isGreaterThan = 0mm, error = "lidThickness must be positive")
+assert(cornerPostWidth, isGreaterThan = 0mm, error = "cornerPostWidth must be positive")
+assert(closureGap, isGreaterThan = 0mm, error = "closureGap must be positive")
+assert(usbCx, isGreaterThan = 0mm, error = "usbCx must be positive")
+assert(hdmi0X, isGreaterThan = 0mm, error = "hdmi0X must be positive")
+assert(hdmi1X, isGreaterThan = 0mm, error = "hdmi1X must be positive")
+assert(usbAUpperY, isGreaterThan = 0mm, error = "usbAUpperY must be positive")
+assert(usbALowerY, isGreaterThan = 0mm, error = "usbALowerY must be positive")
+assert(rj45Y, isGreaterThan = 0mm, error = "rj45Y must be positive")
+assert(sdYMin, isGreaterThan = 0mm, error = "sdYMin must be positive")
+assert(sdYMax, isGreaterThan = 0mm, error = "sdYMax must be positive")
+
+// Datums: PCB bottom and every annular seat stay at global z = 0.
+floorTopZ = -standoffHeight
+floorBottomZ = floorTopZ - wallThickness
+lidBottomZ = pcbThickness + headroom
+rimZ = lidBottomZ - closureGap
+lidTopZ = lidBottomZ + lidThickness
+constructionOverlap = wallThickness / 4
+bossRadius = standoffDiameter / 2
+pilotRadius = pilotDiameter / 2
+lidHoleRadius = lidHoleDiameter / 2
+innerLeft = -edgeClearance
+innerRight = boardLength + edgeClearance
+innerFront = -edgeClearance
+innerBack = boardWidth + edgeClearance
+wallLeft = innerLeft - wallThickness
+wallRight = innerRight + wallThickness
+wallFront = innerFront - wallThickness
+wallBack = innerBack + wallThickness
+postLeft = innerLeft - cornerPostWidth
+postRight = innerRight + cornerPostWidth
+postFront = innerFront - cornerPostWidth
+postBack = innerBack + cornerPostWidth
+cornerLeft = innerLeft - (cornerPostWidth / 2)
+cornerRight = innerRight + cornerPostWidth / 2
+cornerFront = innerFront - (cornerPostWidth / 2)
+cornerBack = innerBack + cornerPostWidth / 2
+
+assert(wallThickness, isGreaterThanOrEqual = 2mm, error = "Floor and straight walls require at least 2 mm")
+assert(lidThickness, isGreaterThanOrEqual = 2mm, error = "Lid requires at least 2 mm")
+assert(edgeClearance, isGreaterThanOrEqual = 0.5mm, error = "PCB edge clearance must be at least 0.5 mm")
+assert(closureGap, isLessThanOrEqual = 0.1mm, error = "The closure gap may not exceed 0.1 mm")
+assert(cornerPostWidth, isGreaterThan = wallThickness, error = "Corner posts must extend beyond the straight walls")
+assert(standoffHeight, isGreaterThan = underBoardDepth, error = "The floor must clear the underside components")
+assert(standoffHeight + wallThickness - pilotDepth, isGreaterThanOrEqual = 2mm, error = "Standoff pilots must retain at least 2 mm below their flat bottoms")
+assert(rimZ - floorBottomZ - pilotDepth, isGreaterThanOrEqual = 2mm, error = "Corner pilots must retain at least 2 mm below their flat bottoms")
+assert(rimZ, isGreaterThan = pcbThickness, error = "Connector notches must have positive height")
+assert(rimZ, isGreaterThan = -underBoardDepth, error = "The SD notch must have positive height")
+assert(pilotDiameter, isLessThan = boardMountDiameter, error = "Standoff pilots must be smaller than the PCB clearance holes")
+assert(boardMountDiameter, isLessThan = standoffDiameter, error = "PCB seats must surround the mounting holes")
+assert(standoffDiameter, isLessThanOrEqual = 2 * componentFreeRadius, error = "Bosses must remain inside the component-free rings")
+assert(mountX, isGreaterThan = componentFreeRadius, error = "Near mounting rings must fit inside the x edge")
+assert(mountY, isGreaterThan = componentFreeRadius, error = "Near mounting rings must fit inside the y edge")
+assert(mountX + mountPitchX + componentFreeRadius, isLessThan = boardLength, error = "Far mounting rings must fit inside the board length")
+assert(mountY + mountPitchY + componentFreeRadius, isLessThan = boardWidth, error = "Far mounting rings must fit inside the board width")
+assert(mountPitchX, isGreaterThan = 2 * componentFreeRadius, error = "Mounting columns must remain separate")
+assert(mountPitchY, isGreaterThan = 2 * componentFreeRadius, error = "Mounting rows must remain separate")
+assert(lidHoleDiameter, isGreaterThan = pilotDiameter, error = "Lid holes must clear the pilot diameter")
+assert((cornerPostWidth - lidHoleDiameter) / 2, isGreaterThanOrEqual = 2mm, error = "Corner-post edge ligaments must be at least 2 mm")
+assert(edgeClearance + wallThickness, isLessThan = 25mm, error = "Source plug tools must cross each entire wall")
+assert(
+  usbCx,
+  isGreaterThan = 6.5mm,
+  isLessThan = boardLength - 6.5mm,
+  error = "USB-C opening must lie within the board edge",
+)
+assert(
+  hdmi0X,
+  isGreaterThan = 6mm,
+  isLessThan = boardLength - 6mm,
+  error = "HDMI0 opening must lie within the board edge",
+)
+assert(
+  hdmi1X,
+  isGreaterThan = 6mm,
+  isLessThan = boardLength - 6mm,
+  error = "HDMI1 opening must lie within the board edge",
+)
+assert(hdmi0X - 6mm, isGreaterThan = usbCx + 6.5mm, error = "USB-C and HDMI0 notches must stay separate")
+assert(hdmi1X - 6mm, isGreaterThan = hdmi0X + 6mm, error = "HDMI notches must stay separate")
+assert(
+  usbAUpperY,
+  isGreaterThan = 7.5mm,
+  isLessThan = boardWidth - 7.5mm,
+  error = "Upper USB-A notch must stay within the board edge",
+)
+assert(
+  usbALowerY,
+  isGreaterThan = 7.5mm,
+  isLessThan = boardWidth - 7.5mm,
+  error = "Lower USB-A notch must stay within the board edge",
+)
+assert(
+  rj45Y,
+  isGreaterThan = 8.5mm,
+  isLessThan = boardWidth - 8.5mm,
+  error = "RJ45 notch must stay within the board edge",
+)
+assert(usbALowerY - 7.5mm, isGreaterThan = rj45Y + 8.5mm, error = "RJ45 and lower USB-A notches must stay separate")
+assert(usbAUpperY - 7.5mm, isGreaterThan = usbALowerY + 7.5mm, error = "USB-A notches must stay separate")
+assert(
+  sdYMax,
+  isGreaterThan = sdYMin,
+  isLessThan = boardWidth,
+  error = "SD access must have positive width inside the board edge",
+)
+
+// Source hardware remains evaluator-side. These boxes are construction cutters only.
+// Original heights are retained for the lid; base notches extend upward to the rim.
+plugBoxes = [
+  {
+    name = "usb_c_plug",
+    xMin = usbCx - 6.5mm,
+    xMax = usbCx + 6.5mm,
+    yMin = -25mm,
+    yMax = 0mm,
+    zMin = pcbThickness,
+    zMax = pcbThickness + 7mm
+  },
+  {
+    name = "hdmi0_plug",
+    xMin = hdmi0X - 6mm,
+    xMax = hdmi0X + 6mm,
+    yMin = -25mm,
+    yMax = 0mm,
+    zMin = pcbThickness,
+    zMax = pcbThickness + 6.5mm
+  },
+  {
+    name = "hdmi1_plug",
+    xMin = hdmi1X - 6mm,
+    xMax = hdmi1X + 6mm,
+    yMin = -25mm,
+    yMax = 0mm,
+    zMin = pcbThickness,
+    zMax = pcbThickness + 6.5mm
+  },
+  {
+    name = "usb_a_upper_plug",
+    xMin = boardLength,
+    xMax = boardLength + 25mm,
+    yMin = usbAUpperY - 7.5mm,
+    yMax = usbAUpperY + 7.5mm,
+    zMin = pcbThickness,
+    zMax = pcbThickness + 17mm
+  },
+  {
+    name = "usb_a_lower_plug",
+    xMin = boardLength,
+    xMax = boardLength + 25mm,
+    yMin = usbALowerY - 7.5mm,
+    yMax = usbALowerY + 7.5mm,
+    zMin = pcbThickness,
+    zMax = pcbThickness + 17mm
+  },
+  {
+    name = "rj45_plug",
+    xMin = boardLength,
+    xMax = boardLength + 25mm,
+    yMin = rj45Y - 8.5mm,
+    yMax = rj45Y + 8.5mm,
+    zMin = pcbThickness,
+    zMax = pcbThickness + 15mm
+  },
+  {
+    name = "sd_card_slot",
+    xMin = -25mm,
+    xMax = 0mm,
+    yMin = sdYMin,
+    yMax = sdYMax,
+    zMin = -underBoardDepth,
+    zMax = 0mm
+  }
+]
+reliefGuards = map(
+  plugBoxes,
+  f = fn(@box) {
+    assert(lidTopZ - box.zMax, isGreaterThanOrEqual = 2mm, error = "The lid must retain a 2 mm roof above plug reliefs: " + box.name)
+    return true
+  },
+)
+
+mountAxes = [
+  [mountX, mountY],
+  [mountX + mountPitchX, mountY],
+  [mountX, mountY + mountPitchY],
+  [
+    mountX + mountPitchX,
+    mountY + mountPitchY
+  ]
+]
+cornerAxes = [
+  [cornerLeft, cornerFront],
+  [cornerRight, cornerFront],
+  [cornerLeft, cornerBack],
+  [cornerRight, cornerBack]
+]
+
+// The exact 20-line footprint O includes the four square posts in one boundary.
+fn outlineRegion(@z) {
+  outlineSketch = sketch(on = offsetPlane(XY, offset = z)) {
+    edge01 = line(start = [postLeft, postFront], end = [innerLeft, postFront])
+    edge02 = line(start = [innerLeft, postFront], end = [innerLeft, wallFront])
+    edge03 = line(start = [innerLeft, wallFront], end = [innerRight, wallFront])
+    edge04 = line(start = [innerRight, wallFront], end = [innerRight, postFront])
+    edge05 = line(start = [innerRight, postFront], end = [postRight, postFront])
+    edge06 = line(start = [postRight, postFront], end = [postRight, innerFront])
+    edge07 = line(start = [postRight, innerFront], end = [wallRight, innerFront])
+    edge08 = line(start = [wallRight, innerFront], end = [wallRight, innerBack])
+    edge09 = line(start = [wallRight, innerBack], end = [postRight, innerBack])
+    edge10 = line(start = [postRight, innerBack], end = [postRight, postBack])
+    edge11 = line(start = [postRight, postBack], end = [innerRight, postBack])
+    edge12 = line(start = [innerRight, postBack], end = [innerRight, wallBack])
+    edge13 = line(start = [innerRight, wallBack], end = [innerLeft, wallBack])
+    edge14 = line(start = [innerLeft, wallBack], end = [innerLeft, postBack])
+    edge15 = line(start = [innerLeft, postBack], end = [postLeft, postBack])
+    edge16 = line(start = [postLeft, postBack], end = [postLeft, innerBack])
+    edge17 = line(start = [postLeft, innerBack], end = [wallLeft, innerBack])
+    edge18 = line(start = [wallLeft, innerBack], end = [wallLeft, innerFront])
+    edge19 = line(start = [wallLeft, innerFront], end = [postLeft, innerFront])
+    edge20 = line(start = [postLeft, innerFront], end = [postLeft, postFront])
+  }
+  return region(segments = [
+    outlineSketch.edge01,
+    outlineSketch.edge02
+  ])
+}
+
+// Global XY tools avoid face-local flips. Hide every construction tool region.
+// Outline regions belong to the displayed base/lid bodies; no datum axes are drawn.
+fn boxPrism(@box, bottom, top) {
+  // Clip only empty exterior tool volume. The source envelope's intersection
+  // with O is unchanged, and spent sketch extents stay inside the part bbox.
+  cutLeft = if box.xMin < postLeft {
+    postLeft
+  } else {
+    box.xMin
+  }
+  cutRight = if box.xMax > postRight {
+    postRight
+  } else {
+    box.xMax
+  }
+  cutFront = if box.yMin < postFront {
+    postFront
+  } else {
+    box.yMin
+  }
+  cutBack = if box.yMax > postBack {
+    postBack
+  } else {
+    box.yMax
+  }
+  boxSketch = sketch(on = offsetPlane(XY, offset = bottom)) {
+    front = line(start = [cutLeft, cutFront], end = [cutRight, cutFront])
+    right = line(start = [cutRight, cutFront], end = [cutRight, cutBack])
+    back = line(start = [cutRight, cutBack], end = [cutLeft, cutBack])
+    left = line(start = [cutLeft, cutBack], end = [cutLeft, cutFront])
+  }
+  boxRegion = region(segments = [boxSketch.front, boxSketch.right])
+  prism = extrude(boxRegion, length = top - bottom, method = NEW)
+  hide(boxRegion)
+  return prism
+}
+
+fn roundPrism(@center, diskRadius, bottom, top) {
+  roundSketch = sketch(on = offsetPlane(XY, offset = bottom)) {
+    boundary = circle(center = center, start = [center[0] + diskRadius, center[1]])
+  }
+  roundRegion = region(segments = [roundSketch.boundary])
+  cylinder = extrude(roundRegion, length = top - bottom, method = NEW)
+  hide(roundRegion)
+  return cylinder
+}
+
+// 1. Outer base blank: floor exterior and moving base rim.
+baseOutline = outlineRegion(floorBottomZ)
+baseBlank = extrude(
+  baseOutline,
+  length = rimZ - floorBottomZ,
+  method = NEW,
+  tagStart = $floorExterior,
+  tagEnd = $baseRim,
+)
+
+// 2. Cavity: exact floor top; exit overrun prevents coincident tool caps.
+cavityTool = boxPrism(
+  {
+    xMin = innerLeft,
+    xMax = innerRight,
+    yMin = innerFront,
+    yMax = innerBack
+  },
+  bottom = floorTopZ,
+  top = rimZ + constructionOverlap,
+)
+baseShell = subtract(baseBlank, tools = [cavityTool])
+
+// 3. Four bosses overlap the floor internally, and terminate at the fixed PCB datum.
+baseWithBosses = reduce(
+  mountAxes,
+  initial = baseShell,
+  f = fn(@axis, accum) {
+    boss = roundPrism(
+      axis,
+      diskRadius = bossRadius,
+      bottom = floorTopZ - constructionOverlap,
+      top = 0mm,
+    )
+    return union([accum, boss])
+  },
+)
+
+// 4. Fixed board pilots: planar bottom z = -pilotDepth and annular seats at z = 0.
+// These remain fixed when standoffHeight moves the floor downward.
+baseWithBoardPilots = reduce(
+  mountAxes,
+  initial = baseWithBosses,
+  f = fn(@axis, accum) {
+    pilot = roundPrism(
+      axis,
+      diskRadius = pilotRadius,
+      bottom = -pilotDepth,
+      top = constructionOverlap,
+    )
+    return subtract(accum, tools = [pilot])
+  },
+)
+
+// 5. Every port has an open-to-rim notch, preserving its exact sill and jambs.
+baseWithNotches = reduce(
+  plugBoxes,
+  initial = baseWithBoardPilots,
+  f = fn(@box, accum) {
+    notch = boxPrism(box, bottom = box.zMin, top = rimZ + constructionOverlap)
+    return subtract(accum, tools = [notch])
+  },
+)
+
+// 6. Corner-post blind pilots translate with the rim, retaining fixed engagement.
+base = reduce(
+  cornerAxes,
+  initial = baseWithNotches,
+  f = fn(@axis, accum) {
+    pilot = roundPrism(
+      axis,
+      diskRadius = pilotRadius,
+      bottom = rimZ - pilotDepth,
+      top = rimZ + constructionOverlap,
+    )
+    return subtract(accum, tools = [pilot])
+  },
+)
+
+// 7. Fresh footprint and NEW extrusion keep the removable lid a separate solid.
+lidOutline = outlineRegion(lidBottomZ)
+lidBlank = extrude(
+  lidOutline,
+  length = lidThickness,
+  method = NEW,
+  tagStart = $lidUnderside,
+  tagEnd = $lidExterior,
+)
+
+// 8. Four clearance holes, coaxial with the square corner-post pilots.
+// A 0.02 mm exit overrun keeps the engine tool bounds within bbox tolerance.
+lidWithHoles = reduce(
+  cornerAxes,
+  initial = lidBlank,
+  f = fn(@axis, accum) {
+    clearance = roundPrism(
+      axis,
+      diskRadius = lidHoleRadius,
+      bottom = lidBottomZ - 0.02mm,
+      top = lidTopZ + 0.02mm,
+    )
+    return subtract(accum, tools = [clearance])
+  },
+)
+
+// 9. Cut only positive-volume intersections with original plug boxes.
+// At headroom = 15 mm USB-A receives two 15 x 2.9 x 2 mm reliefs;
+// the RJ45 top is tangent to the lid and is deliberately skipped.
+lid = reduce(
+  plugBoxes,
+  initial = lidWithHoles,
+  f = fn(@box, accum) {
+    return if box.zMax > lidBottomZ & box.zMin < lidTopZ {
+      relief = boxPrism(box, bottom = box.zMin, top = box.zMax)
+      subtract(accum, tools = [relief])
+    } else {
+      accum
+    }
+  },
+)
+
+// Acceptance names and selectors live in the unchanged PartContract:
+// base contains [42.5, 28, -6]; lid contains [42.5, 28, 24.6].
+// The four board keep-outs and seven plug envelopes are evaluator hardware only.
+// STEP face/cylinder selectors identify all seats, pilot bottoms, sills and jambs.
+// The seven base rim patches use mode=sum; shell_wall_floor_lid_p05 uses 6000 rays.
+// Export exactly these two solids, with the assembled 0.05 mm nominal closure gap.

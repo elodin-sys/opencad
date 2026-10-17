@@ -1,0 +1,202 @@
+id: four-bar
+title: 'Planar four-bar crank-rocker as an assembly: ground, crank, coupler and rocker closed into one
+  loop'
+kind: machine
+truth_class: C
+role: validation
+source:
+  citation: Analytic mechanism reference (scripts/derive_mechanism_truth.py); circle intersection on the
+    assembled branch
+  urls: []
+  accessed: '2026-09-25'
+  revision: spec v1
+  license: this repository
+intent: 'Build the four-bar linkage of the attached specification as a machine of four separately designed
+  parts: a ground plate and three stadium links (crank 40, coupler 100, rocker 80 between hole centres),
+  each drafted and modelled in its own frame as the specification states, in the stated layers. Connect
+  them with four revolute pins into one closed loop: three pins form the joint tree from the ground and
+  the fourth is the loop''s closing joint; place the links in the specified rest configuration so the
+  loop closes. The crank is the motor-driven joint. Declare a motion sweep of one full crank revolution.
+  Predict the rocker angle, its swing and the coupler point path from the geometry.'
+inputs:
+- path: inputs/four-bar-spec.md
+  kind: text
+  sha256: aececd85a2ba8a2e020775f05a44f1bd1c3a505c8c8c5ed634606d975490bf17
+  note: the complete design specification
+truth:
+- path: truth/four-bar-truth.yaml
+  kind: yaml
+  sha256: f41d12ce6f78163a8bbfdffd80b5ea4885673c53f76cfebf0a8b172519841f0e
+  note: rest angles, swing and link volumes (scripts/derive_mechanism_truth.py)
+- path: truth/rocker-angle.csv
+  kind: table
+  sha256: 4704c1a6c7565c464e6312f0f99518cbf8c9981e32d79a46d9c608aae7ae7a0c
+  note: rocker angle from rest vs crank angle, 0..360 deg by 10
+- path: truth/coupler-point.csv
+  kind: table
+  sha256: b973e40cf58b07f5d321f2db929118bc246e8508b9e534682b208fd4d10ee09a
+  note: coupler point x, y vs crank angle, 0..360 deg by 10
+arms:
+- id: spec-only
+  design: four-bar
+  inputs:
+  - inputs/four-bar-spec.md
+  images: []
+  notes: Text specification only.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 160.0
+  - 118.0
+  - 20.0
+  tolerance: 0.15
+  note: ground plate x -30..130 and y from -30; coupler and rocker ends reach y 88 at rest; layers z -5..15
+- id: solid_count
+  kind: solid_count
+  expected: 4
+- id: ground
+  kind: solid
+  point:
+  - 50.0
+  - 0.0
+  - -2.5
+  expected: 47717.26
+  tolerance_rel: 0.005
+- id: crank
+  kind: solid
+  point:
+  - 20.0
+  - 0.0
+  - 2.5
+  expected: 3922.57
+  tolerance_rel: 0.005
+- id: coupler
+  kind: solid
+  point:
+  - 70.0
+  - 40.0
+  - 7.5
+  expected: 8722.57
+  tolerance_rel: 0.005
+- id: rocker
+  kind: solid
+  point:
+  - 100.0
+  - 40.0
+  - 12.5
+  expected: 7122.57
+  tolerance_rel: 0.005
+- id: crank_pin_hole
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 40.0
+  - 0
+  - 2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 3.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 5.0
+  length_tolerance: 0.1
+- id: coupler_far_hole
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 100.0
+  - 80.0
+  - 7.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 3.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 5.0
+  length_tolerance: 0.1
+- id: rocker_pivot_hole
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 100.0
+  - 0
+  - 12.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 3.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 5.0
+  length_tolerance: 0.1
+- id: ground_rocker_hole
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 100.0
+  - 0
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 3.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 5.0
+  length_tolerance: 0.1
+performance:
+- id: rockerAngle
+  quantity: joint_value
+  unit: deg
+  evidence: C
+  series: truth/rocker-angle.csv
+  x_column: 0
+  y_column: 1
+  skip: 1
+  tolerance: 0.1
+  source: circle intersection (Freudenstein) on the open branch, from rest
+  where: the joint at the rocker's ground pivot O4 with the ground as its parent (`joint`), as a series
+    over the one-revolution crank motion (`motion`, range 0 to 360 deg, no `at`)
+- id: rockerSwing
+  quantity: joint_range
+  unit: deg
+  evidence: C
+  value: 64.66706138631885
+  tolerance: 0.05
+  source: max - min of the rocker angle over one crank revolution
+  where: the joint at O4 (`joint`) over the one-revolution crank motion (`motion`)
+- id: couplerX
+  quantity: point_x
+  unit: mm
+  evidence: C
+  series: truth/coupler-point.csv
+  x_column: 0
+  y_column: 1
+  skip: 1
+  tolerance: 0.1
+  source: coupler point (50, 30) in the coupler frame
+  where: the coupler point P (`body` the coupler, `location` its assembly position at rest) over the crank
+    motion (`motion`)
+- id: couplerY
+  quantity: point_y
+  unit: mm
+  evidence: C
+  series: truth/coupler-point.csv
+  x_column: 0
+  y_column: 2
+  skip: 1
+  tolerance: 0.1
+  source: coupler point (50, 30) in the coupler frame
+  where: the coupler point P (`body` the coupler, `location` its assembly position at rest) over the crank
+    motion (`motion`)
+notes:
+- Link volumes are 5 (L 16 + pi 8^2 - 2 pi 3^2); the ground 160 x 60 x 5 - 2 pi 3^2 5.
+- Series references are scored by the largest absolute error at their points (the prediction interpolated
+  onto them).

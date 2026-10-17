@@ -1,0 +1,19 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/tangent
+Title: Tangent
+
+# Tangent
+
+Constrain sketch curves and segments to meet tangentially in Zoo Design Studio.
+
+The Tangent constraint keeps a curve and another sketch entity touching with a smooth transition. Use
+it for arcs that need to flow into lines, circles, or other curved profile geometry.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/tangent/tangent.gif"
+  alt="Applying a tangent constraint to sketch geometry"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  The selected geometry meets tangentially
+</div>

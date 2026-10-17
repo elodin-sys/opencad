@@ -1,0 +1,80 @@
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[project]
+name = "zoo_mcp"
+version = "0.26.8"
+requires-python = ">=3.11, <3.14"
+dependencies = [
+    "aiofiles<26.0",
+    "kittycad>=1.5.0,<2.0",
+    "mcp[cli]>=1.27.1,<2.0",
+    "pillow<13.0",
+    "pymongo>=4.6.0,<5.0",
+    "trimesh<6.0",
+    "truststore<1.0",
+    "typing-extensions>=4.12",
+    "websockets>=14.1,<17.0",
+    "zoo-kcl>=0.3.184",
+]
+authors = [
+    { name = "Ryan Barton", email = "ryan@zoo.dev" },
+]
+maintainers = [
+    { name = "Ryan Barton", email = "ryan@zoo.dev" }
+]
+description = "An MCP server utilizing Zoo's various tools"
+readme = "README.md"
+license-files = ["LICENSE"]
+license = "MIT"
+keywords = ["zoo", "mcp", "kittycad", "3d", "modeling", "server"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+
+    "Intended Audience :: Developers",
+
+    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+[project.urls]
+Repository = "https://github.com/KittyCAD/mcp"
+
+[project.scripts]
+zoo-mcp = "zoo_mcp.server:main"
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers"
+markers = [
+    "live: hits live external services (zoo.dev). Runs by default; deselect locally with `-m 'not live'`.",
+]
+
+[tool.ruff.lint]
+extend-select = ["F", "I"]
+ignore = ["BLE001"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.*"]
+
+[dependency-groups]
+dev = [
+    "pytest-asyncio",
+    "pytest-httpx",
+    "pytest-rerunfailures",
+    "pytest-xdist",
+    "ruff==0.16.5",
+    "ty",
+    "uv-build",
+]

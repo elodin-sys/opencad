@@ -1,0 +1,339 @@
+schema_version: 1
+name: gear-train-pinion
+intent: >-
+  Spur pinion of the gear-train assembly, in its own frame: axis +z through the origin, bottom face
+  z = 0, top face z = 8 (face width 8). 20 teeth, module 2, pressure angle 20 deg, profile shift 0:
+  pitch radius 20, base radius 18.794, tip radius 22 (addendum 1.0 m), root radius 17.5 (dedendum
+  1.25 m). Each flank is a true involute of the base circle from the base circle to the tip circle
+  (12-16 sample points per flank), continued radially from the base circle down to the root circle,
+  with a tip arc on r = 22, a root arc on r = 17.5 and no fillets. Tooth thickness at the pitch circle
+  3.0916 (pi m / 2 - 0.05, thinned 0.05 for backlash, split equally between the two flanks). One tooth
+  is centred on +x. D6 bore through on the axis. The bottom face seats on the carrier top, the bore
+  axis is the pinionSpin revolute joint axis, and the flanks mesh with the 40-tooth wheel at centre
+  distance 60. Authoritative source: sources/gear-pair-spec.md.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of the bottom face on the gear axis: the bore axis meets the bottom face z = 0 at [0, 0, 0]"
+  axes:
+    x: "radial, through the centre line of one tooth (the tooth centred on +x); toward the wheel axis in the assembly"
+    y: "radial, completing a right-handed frame; y = 0 is the symmetry plane of the +x tooth"
+    z: "gear axis, up from the bottom face z = 0 to the top face z = 8"
+  datums:
+    - name: A
+      description: "bottom face z = 0, seats on the carrier top"
+    - name: B
+      description: "bore axis x = y = 0 along +z, the pinionSpin revolute joint axis"
+    - name: C
+      description: "plane y = 0, symmetry plane of the tooth centred on +x (tooth phase)"
+
+envelope:
+  min: [-22, -22, 0]
+  max: [22, 22, 8]
+  tolerance: 0.05
+
+parameters:
+  - name: toothCount
+    value: 20
+    unit: ""
+    provenance: stated
+    source: "gear-pair-spec.md, parameter table: Pinion 20 teeth"
+    tolerance: 0.001
+    description: "number of teeth; teeth centred at 18 deg steps from +x"
+  - name: gearModule
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "gear-pair-spec.md, parameter table: Module 2 mm"
+    tolerance: 0.001
+  - name: pressureAngle
+    value: 20
+    unit: deg
+    provenance: stated
+    source: "gear-pair-spec.md, parameter table: Pressure angle 20 deg"
+    tolerance: 0.001
+  - name: profileShift
+    value: 0
+    unit: ""
+    provenance: stated
+    source: "gear-pair-spec.md, parameter table: Profile shift 0 (both gears)"
+    tolerance: 0.001
+  - name: addendumCoeff
+    value: 1.0
+    unit: ""
+    provenance: stated
+    source: "gear-pair-spec.md, Addendum / dedendum 1.0 m / 1.25 m"
+    tolerance: 0.001
+  - name: dedendumCoeff
+    value: 1.25
+    unit: ""
+    provenance: stated
+    source: "gear-pair-spec.md, Addendum / dedendum 1.0 m / 1.25 m"
+    tolerance: 0.001
+  - name: faceWidth
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "gear-pair-spec.md, Face width 8 mm, from z = 0 to z = 8"
+    tolerance: 0.01
+    description: "extrusion length along +z from the bottom face z = 0"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 2386.78
+        direction: increase
+        bbox_delta: [0, 0, 2]
+        tolerance_rel: 0.01
+      sweep:
+        values: [6, 8, 10]
+      infeasible_deltas: [-8]
+  - name: boreDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "gear-pair-spec.md, Pinion bore D6 on the axis at (0, 0)"
+    tolerance: 0.01
+    description: "through bore on the gear axis"
+  - name: backlashThinning
+    value: 0.05
+    unit: mm
+    provenance: stated
+    source: "gear-pair-spec.md, Circular backlash 0.10 mm total: thin each tooth by 0.05 mm at its pitch circle"
+    tolerance: 0.001
+    description: "reduction of the pitch-circle tooth thickness, split equally between the two flanks (each flank rotated by backlashThinning / (2 pitchRadius) about the axis)"
+    edit_test:
+      delta: 0.05
+      expect:
+        volume_delta: -35.55
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.1
+      infeasible_deltas: [1.5]
+  - name: flankSamples
+    value: 14
+    unit: ""
+    provenance: defaulted
+    tolerance: 2
+    rationale: "the intent asks for 12-16 sample points per involute flank from the base to the tip circle; 14 is the middle of that range"
+  - name: pitchRadius
+    value: 20
+    unit: mm
+    provenance: derived
+    formula: "toothCount * gearModule / 2"
+    tolerance: 0.001
+  - name: baseRadius
+    value: 18.79385
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius * cos(pressureAngle)"
+    tolerance: 0.001
+  - name: tipRadius
+    value: 22
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius + (addendumCoeff + profileShift) * gearModule"
+    tolerance: 0.001
+  - name: rootRadius
+    value: 17.5
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius - (dedendumCoeff - profileShift) * gearModule"
+    tolerance: 0.001
+  - name: pitchToothThickness
+    value: 3.09159
+    unit: mm
+    provenance: derived
+    formula: "pi * gearModule / 2 + 2 * profileShift * gearModule * tan(pressureAngle) - backlashThinning"
+    tolerance: 0.001
+
+features:
+  - id: gearBody
+    kind: extrude
+    description: "closed 20-tooth spur profile (root arcs on rootRadius, radial segments from rootRadius to baseRadius, involute flanks, tip arcs on tipRadius, no fillets) extruded from z = 0 to z = faceWidth"
+    parameters: [toothCount, gearModule, faceWidth, rootRadius, tipRadius, addendumCoeff, dedendumCoeff]
+    verify:
+      - method: bbox
+      - method: section
+        section: midSection
+      - method: face
+        face: seatFace
+      - method: face
+        face: topFace
+      - method: dimension
+        dimension: faceWidthSpan
+      - method: solid
+        points: [[10, 0, 4]]
+  - id: involuteFlanks
+    kind: profile
+    description: "each flank a true involute of the base circle from baseRadius to tipRadius (flankSamples points), continued radially from baseRadius down to rootRadius; pitch-circle tooth thickness pitchToothThickness, symmetric about the tooth centre line"
+    parameters: [pressureAngle, profileShift, pitchRadius, baseRadius, pitchToothThickness, backlashThinning, flankSamples]
+    verify:
+      - method: section
+        section: midSection
+      - method: solid
+        points: [[20, 0, 4]]
+      - method: void
+        points: [[19.7538, 3.1287, 4]]
+  - id: toothPattern
+    kind: pattern
+    count: 20
+    description: "polar pattern of the tooth about the z axis at 360 / toothCount = 18 deg steps, one tooth centred on +x (so teeth also sit on +y, -x and -y)"
+    parameters: [toothCount]
+    verify:
+      - method: solid
+        points: [[20, 0, 4], [0, 20, 4], [-20, 0, 4], [0, -20, 4]]
+      - method: void
+        points: [[19.7538, 3.1287, 4], [19.7538, -3.1287, 4]]
+  - id: bore
+    kind: hole
+    description: "D6 through bore on the gear axis, z = 0 to z = faceWidth"
+    parameters: [boreDiameter]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: void
+        points: [[0, 0, 1.5], [0, 0, 4], [0, 0, 6.5]]
+
+interfaces:
+  - name: seat
+    description: "bottom face z = 0 (datum A) seats on the carrier top; neither edit test moves it"
+    must_not_change: true
+    checks: [seatFace]
+  - name: jointAxis
+    description: "bore axis x = y = 0 (datum B) is the pinionSpin revolute joint axis: own-frame point [0, 0, 0], axis [0, 0, 1]"
+    must_not_change: true
+    checks: [bore]
+  - name: meshPhase
+    description: "the flanks mesh with the 40-tooth wheel at centre distance 60 along +x; the tooth centred on +x (datum C) sets the phase the wheel's half-pitch rotation is matched to"
+    must_not_change: true
+    checks: [toothPhase]
+
+acceptance:
+  volume:
+    expected: 9547.10
+    tolerance: 20
+    provenance: derived
+    note: "faceWidth * (pi rootRadius^2 - pi (boreDiameter/2)^2 + toothCount * T), T = integral from rootRadius to tipRadius of 2 psi(r) r dr = 12.9775 per tooth, psi(r) = psiB - inv(acos(baseRadius / r)) above the base circle and psiB below it, psiB = pitchToothThickness / (2 pitchRadius) + inv(pressureAngle) = 0.092194 rad; section area 1193.388"
+  surface_area:
+    expected: 4642.0
+    tolerance_rel: 0.01
+    provenance: derived
+    note: "2 * 1193.388 + faceWidth * perimeter; perimeter = toothCount * (2 * (radial 1.29385 + involute arc baseRadius tan^2(alphaTip) / 2) + tip arc 2 psiTip tipRadius + root arc (2 pi / toothCount - 2 psiB) rootRadius) + pi boreDiameter = 281.904"
+  center_of_mass:
+    expected: [0, 0, 4]
+    tolerance: 0.05
+    provenance: derived
+    note: "polar tooth pattern about z is balanced; mid face width"
+  solid_count: 1
+  sections:
+    - id: midSection
+      plane: z
+      at: 4
+      expect:
+        area: 1193.388
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 1
+      description: "mid face width: toothed outer loop and the bore; area derivation in the volume note"
+  faces:
+    - name: seatFace
+      plane: z
+      at: 0
+      normal: "-"
+      area: 1193.388
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: topFace
+      plane: z
+      at: 8
+      normal: "+"
+      area: 1193.388
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      radius_tolerance: 0.02
+      description: "through bore on the joint axis"
+  dimensions:
+    - name: faceWidthSpan
+      axis: z
+      expected: 8
+      tolerance: 0.02
+      between: [seatFace, topFace]
+      description: "face width between the bottom and top faces"
+    - name: tipDiameterX
+      axis: x
+      expected: 44
+      tolerance: 0.05
+      description: "bbox extent along x: tip arcs of the teeth on +x and -x"
+    - name: tipDiameterY
+      axis: y
+      expected: 44
+      tolerance: 0.05
+      description: "bbox extent along y: tip arcs of the teeth on +y and -y"
+  solids:
+    - name: pinion
+      contains_point: [10, 0, 4]
+      description: "the single pinion solid"
+  probes:
+    - name: teethOnAxes
+      state: solid
+      points: [[20, 0, 4], [0, 20, 4], [-20, 0, 4], [0, -20, 4]]
+      description: "pitch-circle points on tooth centre lines at 0, 90, 180, 270 deg (1.55 mm half thickness)"
+    - name: spacesAtHalfPitch
+      state: void
+      points: [[19.7538, 3.1287, 4], [19.7538, -3.1287, 4]]
+      description: "pitch-circle points on the space centre lines at +-9 deg (about 1.5 mm from each flank)"
+    - name: boreVoid
+      state: void
+      points: [[0, 0, 1.5], [0, 0, 4], [0, 0, 6.5]]
+    - name: rootRing
+      state: solid
+      points: [[10, 0, 4], [-10, 0, 4]]
+  cylinder_counts:
+    - name: boreCount
+      diameter: 6
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+  gears:
+    - name: pinionTeeth
+      solid: pinion
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      at: 4
+      module: 2
+      teeth: 20
+      description: "tooth count from the mid face width section"
+  symmetry:
+    - name: toothPhase
+      plane: y
+      at: 0
+  blockout:
+    volume_min: 9300
+    volume_max: 12170
+
+references:
+  - path: sources/gear-pair-spec.md
+    kind: text
+    role: authoritative
+    sha256: 0acea6d35513df93499f95e7242721b64488c45819f6e58ebd09ed627fb09d87
+    units: mm
+    note: "gear-pair design specification (module, teeth, pressure angle, backlash, bore, face width, phase)"
+
+open_questions:
+  - "Material, density and process are not stated; no mass claim is made."
+  - "The sources fix the flank sample count only as a 12-16 range; 14 is a default."
+  - "Mesh behaviour with the wheel (zero interference, flank gap <= 0.15 mm over a full pitch at centre distance 60, 0.5 tip clearance) is an assembly-level check and is not encoded in this single-part contract."

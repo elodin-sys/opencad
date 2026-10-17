@@ -1,0 +1,879 @@
+schema_version: 1
+name: fusion-12944-recon
+intent: >-
+  Reconstruct the mechanical part shown in the attached renders, sections and dimension
+  sheet as editable, parameterized KCL in the part's own frame (bbox min [-63.351, -0.0, -54.0],
+  size [126.701, 15.0, 108.0] mm). Declare every hole, boss and shaft as an acceptance
+  cylinder and every planar face level as a named face; one solid; export STEP and STL.
+  Held-out: the pipeline is frozen, the reference CAD is evaluator-only. The body is a
+  15 mm square-ish mounting flange (Fusion Gallery 22303_e9723631_0014_1 / joint_set_12944)
+  with four Ø24 corner bosses and coaxial Ø10 holes, concave Ø174 side cuts, a through
+  Ø18 centre bore, a through hub, and matching circular pockets 3 mm deep from each Y face.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: >-
+    Part-frame origin used by sources/dimension-sheet.md: [0, 0, 0] is the XZ centre of the
+    y = 0 (minimum-y) face. The axis-aligned bounding-box minimum corner is then the listed
+    offset [xMin, yMin, zMin] = [-63.351, 0.0, -54.0], and the maximum corner is
+    [63.351, 15.0, 54.0]. This is not a bbox-min-at-origin frame.
+  axes:
+    x: >-
+      From the -x envelope face toward +x. The partial Ø174 side-cut axis at x = -141 lies
+      on the -x side; the four mount-hole axes sit at x = ±mountCentreX. In front.png and
+      section-y7.5.png, +x is to the right.
+    y: >-
+      From the y = 0 bottom face through the 15 mm thickness toward the y = 15 top face.
+      Positive y points out of the +y faces (faceY15Flange, faceY15Hub). Right-handed with x and z.
+    z: >-
+      From the z = -54 straight edge toward the z = +54 straight edge. Mount-hole axes sit
+      at z = ±mountCentreZ. In front.png and section-y7.5.png, +z is up.
+  datums:
+    - name: A
+      description: >-
+        Primary: the y = 0 material faces (faceY0Flange and faceY0Hub), outward normal -y.
+        Thickness, pocketDepth and mountHoleY0 are measured from this plane.
+    - name: B
+      description: >-
+        Secondary: the z = -54 straight edge faceZMin, outward normal -z. Together with
+        faceZMax it pins spanZ.
+    - name: C
+      description: >-
+        Tertiary: the XZ midplanes x = 0 and z = 0. The centre bore and hub are coaxial
+        with x = z = 0; the four mount axes are mirrored across both midplanes.
+
+envelope:
+  min: [-63.351, 0.0, -54.0]
+  max: [63.351, 15.0, 54.0]
+  tolerance: 0.05
+
+parameters:
+  - name: xMin
+    value: -63.351
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md envelope bbox min x
+    tolerance: 0.02
+    description: Bounding-box minimum x; the -x envelope extreme.
+  - name: yMin
+    value: 0.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md envelope bbox min y
+    tolerance: 0.01
+    description: Bounding-box minimum y; datum A.
+  - name: zMin
+    value: -54.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md envelope bbox min z
+    tolerance: 0.02
+    description: Bounding-box minimum z; the -z straight-edge face.
+  - name: spanX
+    value: 126.701
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md envelope size x (and part-brief.md / user intent)
+    tolerance: 0.05
+    description: Overall x extent. Sheet min/max imply 126.702 mm; 0.001 mm conflict is tolerated.
+  - name: plateThickness
+    value: 15.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md envelope size y
+    tolerance: 0.01
+    description: Overall y extent and blank thickness.
+  - name: spanZ
+    value: 108.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md envelope size z
+    tolerance: 0.02
+    description: Overall z extent (straight edges at z = ±54).
+  - name: centerHoleDiameter
+    value: 18.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md cylindrical features, hole Ø18 at [0, 7.5, 0]
+    tolerance: 0.05
+    description: Through centre bore, full 360, axis along y at the origin.
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: -895.35
+        direction: decrease
+        tolerance_rel: 0.02
+        bbox_delta: [0, 0, 0]
+      sweep:
+        values: [16, 18, 20]
+      infeasible_deltas: [20]
+  - name: mountHoleDiameter
+    value: 10.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md cylindrical features, four hole Ø10
+    tolerance: 0.05
+    description: Four mount holes coaxial with the corner bosses.
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: -1519.82
+        direction: decrease
+        tolerance_rel: 0.02
+        bbox_delta: [0, 0, 0]
+      sweep:
+        values: [8, 10, 12]
+      infeasible_deltas: [15]
+  - name: mountHoleLength
+    value: 11.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md Ø10 extent 4 .. 15, length 11
+    tolerance: 0.05
+    description: Axial length of each Ø10 hole (y = mountHoleY0 to yMax).
+  - name: mountHoleY0
+    value: 4.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md Ø10 extent start from axis point at y = 0
+    tolerance: 0.05
+    description: y station where each Ø10 cylindrical face begins.
+  - name: bossDiameter
+    value: 24.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md cylindrical features, four pin Ø24
+    tolerance: 0.05
+    description: Four corner bosses, partial 360, tangent to the x and z envelope faces.
+  - name: sideCutDiameter
+    value: 174.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md cylindrical features, two hole Ø174
+    tolerance: 0.05
+    description: Concave side scallops whose axes lie outside the envelope at x = ±sideCutCentreX.
+  - name: sideCutCentreX
+    value: 141.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md Ø174 axis through [±141, 7.5, 0]
+    tolerance: 0.05
+    description: Absolute x of each Ø174 axis (z = 0). Axes are at x = ±sideCutCentreX.
+  - name: mountCentreX
+    value: 51.351
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md Ø10/Ø24 axis x = ±51.351
+    tolerance: 0.02
+    description: Absolute x of the four mount/boss axes. Equals -xMin - bossDiameter/2.
+  - name: mountCentreZ
+    value: 42.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md Ø10/Ø24 axis z = ±42
+    tolerance: 0.02
+    description: Absolute z of the four mount/boss axes. Equals -zMin - bossDiameter/2.
+  - name: pocketDepth
+    value: 3.0
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md planar faces at y = 3 (-y) and y = 12 (+y)
+    tolerance: 0.05
+    description: Depth of the circular pocket cut from each Y face; both sides use this value.
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: -8312.66
+        direction: decrease
+        tolerance_rel: 0.08
+        bbox_delta: [0, 0, 0]
+      sweep:
+        values: [2, 3, 4]
+      infeasible_deltas: [6]
+  - name: xMax
+    value: 63.351
+    unit: mm
+    provenance: derived
+    formula: -xMin
+    tolerance: 0.02
+    description: Bounding-box maximum x.
+  - name: yMax
+    value: 15.0
+    unit: mm
+    provenance: derived
+    formula: yMin + plateThickness
+    tolerance: 0.01
+    description: Bounding-box maximum y.
+  - name: zMax
+    value: 54.0
+    unit: mm
+    provenance: derived
+    formula: -zMin
+    tolerance: 0.02
+    description: Bounding-box maximum z.
+  - name: pocketFloorY
+    value: 3.0
+    unit: mm
+    provenance: derived
+    formula: yMin + pocketDepth
+    tolerance: 0.05
+    description: y of the -y pocket floor (faceY3Pocket).
+  - name: pocketCeilY
+    value: 12.0
+    unit: mm
+    provenance: derived
+    formula: yMax - pocketDepth
+    tolerance: 0.05
+    description: y of the +y pocket floor (faceY12Pocket).
+  - name: hubDiameter
+    value: 36.0
+    unit: mm
+    provenance: derived
+    formula: 2 * sqrt(763.41 / pi + 9^2)
+    tolerance: 0.05
+    source: sources/dimension-sheet.md y=0 and y=15 island area 763.41 mm2 plus Ø18 hole
+    description: >-
+      Through hub OD. 763.41 mm2 = pi*(18^2 - 9^2) exactly, so the hub is Ø36 minus the
+      centre bore on both y = 0 and y = 15. Literals (not centerHoleDiameter) so an edit
+      of the bore does not move the hub.
+  - name: pocketDiameter
+    value: 81.174
+    unit: mm
+    provenance: derived
+    formula: 2 * sqrt(4156.33 / pi + (hubDiameter / 2)^2)
+    tolerance: 0.5
+    source: sources/dimension-sheet.md y=3 and y=12 planar area 4156.33 mm2
+    description: >-
+      Circular pocket OD treating the y=3/y=12 face as an annulus around the hub.
+      Wide tolerance because unstated fillets shrink the planar area.
+  - name: filletRadius
+    value: 3.0
+    unit: mm
+    provenance: inferred
+    rationale: >-
+      section-x0.png and section-z-0.png show rounded I-beam transitions at the hub-to-pocket
+      and pocket-to-flange corners. section-z-0 is anisotropically scaled, so a millimetre
+      radius cannot be locked; 3 mm is a mid visual read with a wide band. The part can be
+      blocked out without it; finished face areas assume some fillet.
+    tolerance: 1.5
+    description: Blend radius at the pocket inner and outer corners on both Y faces.
+
+features:
+  - id: plateBlank
+    kind: extrude
+    description: >-
+      Outer profile extruded plateThickness along +y from yMin: convex hull of the four
+      Ø24 corner disks, minus the two Ø174 side cuts. Reaches the envelope at the boss
+      tangency points and at z = ±54.
+    parameters: [xMin, xMax, yMin, yMax, zMin, zMax, spanX, spanZ, plateThickness, bossDiameter, mountCentreX, mountCentreZ, sideCutDiameter, sideCutCentreX]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[0, 7.5, 50], [13, 7.5, 0], [30, 7.5, 0]]
+      - method: dimension
+        dimension: dimSpanX
+      - method: dimension
+        dimension: dimSpanY
+      - method: dimension
+        dimension: dimSpanZ
+      - method: face
+        face: faceZMin
+      - method: face
+        face: faceZMax
+  - id: sideCutXn
+    kind: cut
+    description: Partial concave Ø174 cut, axis through [-sideCutCentreX, 0, 0] along +y, full thickness.
+    parameters: [sideCutDiameter, sideCutCentreX, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: holeSideXn
+      - method: void
+        points: [[-58, 7.5, 0]]
+  - id: sideCutXp
+    kind: cut
+    description: Partial concave Ø174 cut, axis through [+sideCutCentreX, 0, 0] along +y, full thickness.
+    parameters: [sideCutDiameter, sideCutCentreX, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: holeSideXp
+      - method: void
+        points: [[58, 7.5, 0]]
+  - id: cornerBosses
+    kind: boss
+    count: 4
+    description: >-
+      Four Ø24 pins at (±mountCentreX, y, ±mountCentreZ), each tangent to one x-extreme and
+      one z-extreme of the envelope and externally tangent to the nearer Ø174 cut
+      (centre distance 99 = 87 + 12).
+    parameters: [bossDiameter, mountCentreX, mountCentreZ, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: pinBossXnZn
+      - method: cylinder
+        cylinder: pinBossXnZp
+      - method: cylinder
+        cylinder: pinBossXpZn
+      - method: cylinder
+        cylinder: pinBossXpZp
+      - method: count
+        section: sectionYMid
+        count: 1
+  - id: pocketMinusY
+    kind: pocket
+    description: >-
+      Circular pocket of diameter pocketDiameter and depth pocketDepth from yMin, leaving
+      the ØhubDiameter hub. Floor is faceY3Pocket (normal -y).
+    parameters: [pocketDiameter, pocketDepth, pocketFloorY, hubDiameter]
+    verify:
+      - method: face
+        face: faceY3Pocket
+      - method: void
+        points: [[30, 1.5, 0]]
+      - method: dimension
+        dimension: dimPocketDepth
+  - id: pocketPlusY
+    kind: pocket
+    description: Matching circular pocket from yMax down to pocketCeilY. Floor is faceY12Pocket (normal +y).
+    parameters: [pocketDiameter, pocketDepth, pocketCeilY, hubDiameter]
+    verify:
+      - method: face
+        face: faceY12Pocket
+      - method: void
+        points: [[30, 13.5, 0]]
+      - method: dimension
+        dimension: dimPocketWeb
+  - id: hub
+    kind: boss
+    description: >-
+      Through hub of OD hubDiameter coaxial with the origin, full plateThickness. End
+      faces are faceY0Hub and faceY15Hub (each 763.41 mm2 after the centre bore).
+    parameters: [hubDiameter, plateThickness, centerHoleDiameter]
+    verify:
+      - method: face
+        face: faceY0Hub
+      - method: face
+        face: faceY15Hub
+      - method: solid
+        points: [[13, 7.5, 0]]
+  - id: centreBore
+    kind: hole
+    description: Through Ø18 hole on [0, y, 0], full 360, length plateThickness.
+    parameters: [centerHoleDiameter, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: holeCentre
+      - method: void
+        points: [[0, 7.5, 0]]
+      - method: section
+        section: sectionYMid
+  - id: mountHoles
+    kind: hole
+    count: 4
+    description: >-
+      Four Ø10 holes coaxial with the corner bosses. Sheet extent y = 4 .. 15 (length 11)
+      from the axis point at y = 0.
+    parameters: [mountHoleDiameter, mountHoleLength, mountHoleY0, mountCentreX, mountCentreZ]
+    verify:
+      - method: cylinder
+        cylinder: holeMountXnZn
+      - method: cylinder
+        cylinder: holeMountXnZp
+      - method: cylinder
+        cylinder: holeMountXpZn
+      - method: cylinder
+        cylinder: holeMountXpZp
+      - method: void
+        points: [[-51.351, 10, -42], [-51.351, 10, 42], [51.351, 10, -42], [51.351, 10, 42]]
+      - method: count
+        section: sectionYMid
+        count: 1
+  - id: pocketFillets
+    kind: fillet
+    optional: true
+    description: Inferred blends at hub-to-pocket and pocket-to-flange corners on both Y faces.
+    parameters: [filletRadius]
+    verify:
+      - method: section
+        section: sectionX0
+
+interfaces:
+  - name: mountingPattern
+    description: Four corner bosses and their coaxial mount holes; must survive edits of the centre bore and pocket depth.
+    must_not_change: true
+    checks: [pinBossXnZn, pinBossXnZp, pinBossXpZn, pinBossXpZp, holeMountXnZn, holeMountXnZp, holeMountXpZn, holeMountXpZp]
+  - name: centreBore
+    description: Through Ø18 at the origin.
+    must_not_change: true
+    checks: [holeCentre]
+  - name: flangeDatums
+    description: Bottom and top flange / hub faces and the straight z-edges.
+    must_not_change: true
+    checks: [faceY0Flange, faceY0Hub, faceY15Flange, faceY15Hub, faceZMin, faceZMax, dimSpanY]
+  - name: sideScallops
+    description: Concave Ø174 side profiles.
+    must_not_change: true
+    checks: [holeSideXn, holeSideXp]
+  - name: pocketStack
+    description: Symmetric circular pockets and the remaining web.
+    must_not_change: true
+    checks: [faceY3Pocket, faceY12Pocket, dimPocketWeb, dimPocketDepth]
+
+acceptance:
+  volume:
+    expected: 148190.98
+    tolerance_rel: 0.002
+    provenance: stated
+    note: sources/dimension-sheet.md envelope and mass properties (no closed-form construction formula)
+  surface_area:
+    expected: 34691.95
+    tolerance_rel: 0.005
+    provenance: stated
+    note: sources/dimension-sheet.md surface area 34691.95 mm2
+  center_of_mass:
+    expected: [0.0, 7.554, 0.0]
+    tolerance: 0.05
+    provenance: stated
+    note: sources/dimension-sheet.md centre of mass; slight +y offset from mid-thickness 7.5
+  solid_count: 1
+  bbox_tolerance: 0.05
+  sections:
+    - id: sectionX0
+      plane: x
+      at: 0.0
+      expect: {area: 1041.45, loops: 2, holes: 0}
+      description: >-
+        Midplane x = 0. Two I-beam islands (the +z and -z rails), each about 15 x 45 mm bbox,
+        no interior holes. Sheet area 1041.45; section-x0.png shows the two outlines.
+    - id: sectionYMid
+      plane: y
+      at: 7.5
+      expect: {area: 11999.89, loops: 1, holes: 5}
+      description: >-
+        Mid-thickness XZ cut. One outer loop (scalloped square with four corner bosses) and
+        five holes (Ø18 + four Ø10). Sheet 11999.89; image caption 12002.30.
+    - id: sectionZ0
+      plane: z
+      at: 0.0
+      expect: {area: 1041.45, loops: 2, holes: 0}
+      description: >-
+        Midplane z = 0. Two I-beam islands (the ±x sides) separated by the centre bore.
+        Sheet 1041.45; image caption 1042.53.
+  faces:
+    - name: faceY0Flange
+      plane: y
+      at: 0.0
+      normal: "-"
+      area: 5188.92
+      area_tolerance_rel: 0.01
+      center: [0.0, 0.0]
+      mode: one
+    - name: faceY0Hub
+      plane: y
+      at: 0.0
+      normal: "-"
+      area: 763.41
+      area_tolerance_rel: 0.01
+      center: [0.0, 0.0]
+      mode: one
+    - name: faceY3Pocket
+      plane: y
+      at: 3.0
+      normal: "-"
+      area: 4156.33
+      area_tolerance_rel: 0.01
+      center: [0.0, 0.0]
+      mode: one
+    - name: faceY12Pocket
+      plane: y
+      at: 12.0
+      normal: "+"
+      area: 4156.33
+      area_tolerance_rel: 0.01
+      center: [0.0, 0.0]
+      mode: one
+    - name: faceY15Flange
+      plane: y
+      at: 15.0
+      normal: "+"
+      area: 5892.64
+      area_tolerance_rel: 0.01
+      center: [0.0, 0.0]
+      mode: one
+    - name: faceY15Hub
+      plane: y
+      at: 15.0
+      normal: "+"
+      area: 763.41
+      area_tolerance_rel: 0.01
+      center: [0.0, 0.0]
+      mode: one
+    - name: faceZMin
+      plane: z
+      at: -54.0
+      normal: "-"
+      area: 1540.52
+      area_tolerance_rel: 0.01
+      center: [0.0, 7.5]
+      mode: one
+    - name: faceZMax
+      plane: z
+      at: 54.0
+      normal: "+"
+      area: 1540.52
+      area_tolerance_rel: 0.01
+      center: [0.0, 7.5]
+      mode: one
+  cylinders:
+    - name: holeSideXn
+      point: [-141.0, 0.0, 0.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: hole
+      diameter: 174.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 15.0
+      t_range: [0.0, 15.0]
+      description: Partial Ø174 side cut, axis outside the envelope on -x.
+    - name: holeSideXp
+      point: [141.0, 0.0, 0.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: hole
+      diameter: 174.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 15.0
+      t_range: [0.0, 15.0]
+      description: Partial Ø174 side cut, axis outside the envelope on +x.
+    - name: holeCentre
+      point: [0.0, 0.0, 0.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: hole
+      diameter: 18.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 15.0
+      t_range: [0.0, 15.0]
+      description: Through centre bore, full 360.
+    - name: holeMountXnZn
+      point: [-51.351, 0.0, -42.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: hole
+      diameter: 10.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 11.0
+      t_range: [4.0, 15.0]
+      description: Mount hole at -x -z; sheet extent y = 4 .. 15.
+    - name: holeMountXnZp
+      point: [-51.351, 0.0, 42.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: hole
+      diameter: 10.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 11.0
+      t_range: [4.0, 15.0]
+      description: Mount hole at -x +z; sheet extent y = 4 .. 15.
+    - name: holeMountXpZn
+      point: [51.351, 0.0, -42.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: hole
+      diameter: 10.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 11.0
+      t_range: [4.0, 15.0]
+      description: Mount hole at +x -z; sheet extent y = 4 .. 15.
+    - name: holeMountXpZp
+      point: [51.351, 0.0, 42.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: hole
+      diameter: 10.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 11.0
+      t_range: [4.0, 15.0]
+      description: Mount hole at +x +z; sheet extent y = 4 .. 15.
+    - name: pinBossXnZn
+      point: [-51.351, 0.0, -42.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: pin
+      diameter: 24.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 15.0
+      t_range: [0.0, 15.0]
+      description: Corner boss at -x -z, partial 360, length 15.
+    - name: pinBossXnZp
+      point: [-51.351, 0.0, 42.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: pin
+      diameter: 24.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 15.0
+      t_range: [0.0, 15.0]
+      description: Corner boss at -x +z, partial 360, length 15.
+    - name: pinBossXpZn
+      point: [51.351, 0.0, -42.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: pin
+      diameter: 24.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 15.0
+      t_range: [0.0, 15.0]
+      description: Corner boss at +x -z, partial 360, length 15.
+    - name: pinBossXpZp
+      point: [51.351, 0.0, 42.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: pin
+      diameter: 24.0
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 15.0
+      t_range: [0.0, 15.0]
+      description: Corner boss at +x +z, partial 360, length 15.
+  planes: []
+  dimensions:
+    - name: dimSpanX
+      axis: x
+      expected: 126.701
+      tolerance: 0.05
+      description: Envelope x extent.
+    - name: dimSpanY
+      axis: y
+      expected: 15.0
+      tolerance: 0.02
+      between: [faceY0Flange, faceY15Flange]
+      description: Thickness between the y = 0 and y = 15 flange faces.
+    - name: dimSpanZ
+      axis: z
+      expected: 108.0
+      tolerance: 0.05
+      between: [faceZMin, faceZMax]
+      description: Envelope z extent between the straight edges.
+    - name: dimPocketDepth
+      axis: y
+      expected: 3.0
+      tolerance: 0.05
+      between: [faceY0Flange, faceY3Pocket]
+      description: Bottom pocket depth.
+    - name: dimPocketWeb
+      axis: y
+      expected: 9.0
+      tolerance: 0.05
+      between: [faceY3Pocket, faceY12Pocket]
+      description: Remaining web between the two pocket floors.
+  solids:
+    - name: plate
+      contains_point: [13.0, 7.5, 0.0]
+      description: Single solid; point inside the hub annulus.
+  probes:
+    - name: voids
+      state: void
+      points:
+        - [0.0, 7.5, 0.0]
+        - [-51.351, 10.0, -42.0]
+        - [-51.351, 10.0, 42.0]
+        - [51.351, 10.0, -42.0]
+        - [51.351, 10.0, 42.0]
+        - [-58.0, 7.5, 0.0]
+        - [58.0, 7.5, 0.0]
+        - [30.0, 1.5, 0.0]
+        - [30.0, 13.5, 0.0]
+      description: Centre bore, four mount holes at y = 10, side-cut interiors, both pocket voids.
+    - name: solids
+      state: solid
+      points:
+        - [13.0, 7.5, 0.0]
+        - [30.0, 7.5, 0.0]
+        - [0.0, 7.5, 50.0]
+        - [-43.351, 10.0, -42.0]
+      description: Hub annulus, pocket web, +z flange rail, corner-boss wall outside the Ø10.
+  cylinder_counts:
+    - name: countHole10
+      diameter: 10.0
+      kind: hole
+      direction: [0.0, 1.0, 0.0]
+      expected: 4
+    - name: countHole18
+      diameter: 18.0
+      kind: hole
+      direction: [0.0, 1.0, 0.0]
+      expected: 1
+    - name: countHole174
+      diameter: 174.0
+      kind: hole
+      direction: [0.0, 1.0, 0.0]
+      expected: 2
+    - name: countPin24
+      diameter: 24.0
+      kind: pin
+      direction: [0.0, 1.0, 0.0]
+      expected: 4
+  passages:
+    - name: centreThrough
+      point_a: [0.0, 0.5, 0.0]
+      point_b: [0.0, 14.5, 0.0]
+      plugs:
+        - [[-10.0, -1.0, -10.0], [10.0, 0.1, 10.0]]
+        - [[-10.0, 14.9, -10.0], [10.0, 16.0, 10.0]]
+      expect_connected: true
+      description: Air path through the Ø18 centre bore; mouths plugged (seal 8 cannot close r=9).
+    - name: mountXnZn
+      point_a: [-51.351, 5.0, -42.0]
+      point_b: [-51.351, 14.0, -42.0]
+      plugs:
+        - [[-57.0, 3.5, -48.0], [-45.0, 4.5, -36.0]]
+        - [[-57.0, 14.5, -48.0], [-45.0, 15.5, -36.0]]
+      expect_connected: true
+      description: Air path along the -x -z Ø10 (sheet extent y = 4 .. 15).
+    - name: mountXnZp
+      point_a: [-51.351, 5.0, 42.0]
+      point_b: [-51.351, 14.0, 42.0]
+      plugs:
+        - [[-57.0, 3.5, 36.0], [-45.0, 4.5, 48.0]]
+        - [[-57.0, 14.5, 36.0], [-45.0, 15.5, 48.0]]
+      expect_connected: true
+    - name: mountXpZn
+      point_a: [51.351, 5.0, -42.0]
+      point_b: [51.351, 14.0, -42.0]
+      plugs:
+        - [[45.0, 3.5, -48.0], [57.0, 4.5, -36.0]]
+        - [[45.0, 14.5, -48.0], [57.0, 15.5, -36.0]]
+      expect_connected: true
+    - name: mountXpZp
+      point_a: [51.351, 5.0, 42.0]
+      point_b: [51.351, 14.0, 42.0]
+      plugs:
+        - [[45.0, 3.5, 36.0], [57.0, 4.5, 48.0]]
+        - [[45.0, 14.5, 36.0], [57.0, 15.5, 48.0]]
+      expect_connected: true
+  deviation: null
+  blockout:
+    volume_min: 182000
+    volume_max: 205300
+  export_volume_tolerance_rel: 0.002
+
+references:
+  - path: sources/part-brief.md
+    kind: text
+    role: authoritative
+    sha256: def482e91661e934c0c45f0f2bc0e109c5b2b61cae7d5556e27385205cdec0bf
+    units: mm
+    note: Held-out reconstruction brief; frame and one-solid / STEP+STL intent.
+  - path: sources/dimension-sheet.md
+    kind: table
+    role: authoritative
+    sha256: d2fa6c8c40ab0e2b8a2ea1d7aac083922b8315c3072c1cf5c04ef7022809c708
+    units: mm
+    note: Native-frame envelope, mass properties, planar levels, cylinders, sections.
+  - path: sources/render-notes.md
+    kind: text
+    role: illustrative
+    sha256: 099190bcedfa422c7d7d81397eada2c9e5d54e61f2dd2be8203fde4c7ddddde3
+    units: mm
+    note: Render inventory; mesh bbox 126.682 x 15 x 108 vs sheet 126.701 x 15 x 108.
+  - path: sources/front.png
+    kind: image
+    role: illustrative
+    sha256: cf01480c1ad346e0e3732cad97c7ea957759eac23febacc27c2a3193e6b0fdad
+    units: mm
+    note: Orthographic XZ; concentric hub/pocket and four corner holes.
+  - path: sources/iso-below.png
+    kind: image
+    role: illustrative
+    sha256: dbe4e357a283f8c277b8bd95c6e546cd9226e8e6d96efbb9ba8d6815aff5f777
+    units: mm
+    note: Iso from -y; caption bbox 126.68 x 15.00 x 108.00.
+  - path: sources/iso.png
+    kind: image
+    role: illustrative
+    sha256: 4e81696ca175f97af16fc382bbf322e9ed71f5bfcb054beb6ef2bd8eb055f5d4
+    units: mm
+    note: Iso from +y; recessed large circle and raised hub.
+  - path: sources/iso2.png
+    kind: image
+    role: illustrative
+    sha256: c20a5240025eef2e304ffe428dea619a25366480e2759169c23a17c47d03c3c7
+    units: mm
+    note: Second +y iso, same topology.
+  - path: sources/right.png
+    kind: image
+    role: illustrative
+    sha256: e3e091f2a7e45f4ab9114548cc1d8250151fdcc39aa69fa818b860d60ca597b9
+    units: mm
+    note: Orthographic YZ; 15 mm thickness slab.
+  - path: sources/section-x0.png
+    kind: drawing
+    role: illustrative
+    sha256: 3cb9e0711767d1111766e1e932e04b49fe19f3a1bdccbe4bce49e0c34776b141
+    units: mm
+    note: Material outline at x = 0; two I-beam islands, 0 holes.
+  - path: sources/section-y7.5.png
+    kind: drawing
+    role: illustrative
+    sha256: 6646a693b71db350844cf159d6c4fb43d6cedd8d903b861b8c6a8be3e295460e
+    units: mm
+    note: Material outline at y = 7.5; used for pixel scale 8.9 px/mm.
+  - path: sources/section-z-0.png
+    kind: drawing
+    role: illustrative
+    sha256: 0071550d873ea971ea404e6fbf6d44b4ac2655422502f8a8c4af7f0715312ecc
+    units: mm
+    note: Material outline at z = 0; two I-beam islands; anisotropic plot scale.
+  - path: sources/top.png
+    kind: image
+    role: illustrative
+    sha256: c5b417abe796ee2a4bc8ab1fa48b3175c5730908cf2544e1c20a461dc4b22623
+    units: mm
+    note: Orthographic XY; 15 mm thickness, x span about ±63.
+
+open_questions:
+  - >-
+    Fillet radii at the hub-to-pocket and pocket-to-flange corners are visible in
+    section-x0.png and section-z-0.png but not stated. filletRadius is inferred 3 mm
+    with tolerance 1.5 mm; inner vs outer radii are not resolved. Feature pocketFillets
+    is optional.
+  - >-
+    Pocket outer diameter is not in the cylinder table. pocketDiameter 81.174 mm is
+    derived from the 4156.33 mm2 y=3/y=12 faces as an annulus around the hub. Unstated
+    fillets shrink that planar area, so a sharp-corner pocket may be slightly larger.
+  - >-
+    Hub Ø36 is not listed among the sheet cylinders (only the 763.41 mm2 end-face areas).
+    It is a derived construction parameter, not an acceptance cylinder, so the inspector
+    will not score a hub pin axis unless a later revision adds one.
+  - >-
+    The sheet gives four Ø10 holes with axial extent y = 4 .. 15 (length 11), but
+    front.png, iso.png and iso-below.png show four corner openings on both faces.
+    Acceptance cylinders follow the sheet. Whether y = 0 is a 4 mm blind skin or a
+    cylinder-extraction artifact is unresolved; no solid probe was placed in the
+    y = 0 .. 4 boss cores.
+  - >-
+    Envelope size x is listed as 126.701 mm while min/max ±63.351 imply 126.702 mm.
+    render-notes.md mesh width is 126.682 mm. Contract uses the sheet min/max with
+    envelope.tolerance 0.05.
+  - >-
+    Section image captions (y = 7.5 area 12002.30, z = 0 area 1042.53) differ from the
+    sheet (11999.89 and 1041.45). Sheet values are authoritative.
+  - >-
+    faceY0Flange area 5188.92 vs faceY15Flange 5892.64 (difference 703.72 mm2) is stated
+    but unexplained. Both values are recorded; no extra cut on y = 0 was invented.
+  - >-
+    Centre of mass y = 7.554 vs mid-thickness 7.5 is stated. Consistent with a slight
+    +y mass bias (larger +y flange area, one-sided Ø10 extents) but no separate
+    asymmetric feature was identified.
+  - Material, density and process are unknown; mass claims are off-limits.
+  - >-
+    Reference lists 27 faces, 8 planar levels (smaller faces omitted). Remaining faces
+    are cylindrical or fillet; no additional named planar levels.
+  - >-
+    No reference mesh is in this bundle (held-out evaluator CAD). acceptance.deviation
+    is unset.

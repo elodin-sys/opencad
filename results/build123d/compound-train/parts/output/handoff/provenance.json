@@ -1,0 +1,71 @@
+{
+  "generated_at": "2026-09-27T16:59:31Z",
+  "skillkat_version": "0.1.0",
+  "backend": "build123d",
+  "engine_version": "0.12.0",
+  "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+  "host": "Daniels-MacBook-Pro.local",
+  "git": {
+    "head": "f067337b8ab648471ad40a647b21672f74d56978",
+    "dirty": true
+  },
+  "part": "compound-train-output",
+  "release_status": "reconstruction",
+  "verdict": "PASS",
+  "gates": {
+    "passed": [
+      "contract_provenance",
+      "envelope",
+      "mass_properties",
+      "features",
+      "export_agreement",
+      "edit_robustness",
+      "source_hygiene",
+      "export_integrity",
+      "traceability",
+      "evidence_separation",
+      "independence"
+    ],
+    "failed": [],
+    "not_applicable": [
+      "reference_fidelity"
+    ]
+  },
+  "design_bundle_sha256": {
+    "brief.md": "599608f8e3e08fa8c45081660237c578fc08e74867f4898d192a6bb797265910",
+    "contract.yaml": "2a744519858c8020ce51b40ad5a7fbd7c1b379c3972701b7dea0c1cbd73ffb99",
+    "sources/compound-train-spec.md": "e2734c43ae1d2aa36320d0b7680e21616422e902b471b3eb98295e3292296af5"
+  },
+  "kcl_sha256": {
+    "main.py": "10c6ac2003a8bcfa6a592b88cfbc15f02b340a8819b367504f85b4a58a8ac602"
+  },
+  "source_sha256": {
+    "main.py": "10c6ac2003a8bcfa6a592b88cfbc15f02b340a8819b367504f85b4a58a8ac602"
+  },
+  "exports": {
+    "step": {
+      "file": "compound-train-output.step",
+      "sha256": "e69ce1aef13ffccb146b963bed96b0e7627dec7d386aca9195220938a0f88634",
+      "bytes": 5413624
+    },
+    "stl": {
+      "file": "compound-train-output.stl",
+      "sha256": "f00ec6e497524fadae5b0254e8e2806529195e73d0fc0ba818025ff901396e14",
+      "bytes": 279084
+    },
+    "glb": {
+      "file": "compound-train-output.glb",
+      "sha256": "25440b747160d808b80a4fe7f600608ead48e5844d9dbb2c5fdf8e90fc5ef4dc",
+      "bytes": 101224
+    }
+  },
+  "codex_threads": {
+    "plan": null,
+    "model": "4ca54861-56cb-4b48-b225-ee1b015bf2bf",
+    "model_retry": null,
+    "blockout": null
+  },
+  "engine_calls_total": 11,
+  "physical_validation": "not performed",
+  "engineering_review": "not performed"
+}

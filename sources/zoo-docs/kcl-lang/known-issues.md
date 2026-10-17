@@ -1,0 +1,25 @@
+Source URL: https://zoo.dev/docs/kcl-lang/known-issues
+Title: Known Issues
+
+# Known Issues
+
+Known issues with the KCL standard library for the Zoo Design Studio.
+
+## Geometry Engine
+
+The following are bugs that are not in Zoo Design Studio or KCL itself. These bugs,
+once fixed in engine, will just start working here with no language changes.
+
+- **Import**: Right now you can import a file, but you cannot edit it — even if
+    that file has BREP data. Imports have type `ImportedGeometry` rather than
+    `Solid`, so functions that operate on `Solid` will reject imported geometry.
+    Recreate the geometry natively in KCL if you need to modify it. The engine
+    will account for this later.
+
+- **CSG Booleans**: Coplanar (bodies that share a plane) unions, subtractions, and intersections are not currently supported.
+
+## KCL Version 1.0
+
+The following are known issues with KCL 1.0. To opt-in to the fixes and new features, use the latest version of KCL with `@settings(kclVersion = 2.0)`.
+
+- **Region tags are shuffled**: When you name a segment in a sketch block, the tags in the region may not correspond to the original sketch segments. This is fixed in KCL 2.0.

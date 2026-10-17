@@ -1,0 +1,423 @@
+id: enclosure-base
+title: 'Enclosure base (CadQuery parametric enclosure, lower body): open 100 x 150 x 47 box, 3 mm walls
+  and floor, four hollow Ø10/Ø4 screw posts with blind bores; one solid (fast regression)'
+truth_class: B
+role: validation
+source:
+  citation: CadQuery documentation example "A Parametric Enclosure", base body only (published default
+    parameters, split 4 mm below the top, lower body selected by position); reference generated and frozen
+    by scripts/derive_enclosure_base_truth.py with CadQuery 2.8.0
+  urls:
+  - https://cadquery.readthedocs.io/en/latest/examples.html#a-parametric-enclosure
+  - https://github.com/CadQuery/cadquery/blob/17846d631e26e8deee0fee43bd6daa1c5c5dbee2/doc/examples.rst
+  accessed: '2026-09-22'
+  revision: CadQuery/cadquery@17846d631e26e8deee0fee43bd6daa1c5c5dbee2 (2023-10-22)
+  license: Apache-2.0 (CadQuery)
+intent: 'Design the enclosure base exactly as specified in the attached specification: one connected solid
+  in millimetres, datum plane the bottom face (z = 0), origin at the footprint centre. Outer 100 x 150
+  with r = 10 vertical corners and an r = 2 bottom edge round, 47 tall with a flat sharp rim; cavity 94
+  x 144 with r = 7 corners from the 3 mm floor (z = 3) to the open top; four free-standing Ø10 screw posts
+  at (+-38, +-63) from the floor to z = 47 with Ø4 bores that stop at the floor. Declare the bbox, volume,
+  the listed sections and faces, every post and bore as a cylinder with its extent, solid and void probes,
+  a wall-thickness check (p05 >= 2.9), and edit tests on the outer width (wall thickness and 12 mm post
+  inset preserved) and the post bore diameter.'
+inputs:
+- path: inputs/enclosure-base-spec.md
+  kind: text
+  sha256: 5fea818692cbc29954c48cebb5413d22ad2b7f42ae80416c72d6d387ef1b2002
+  note: the complete design specification with the reference measurements
+- path: inputs/enclosure-base-iso.png
+  kind: image
+  sha256: 2a8fd145c1e633fdafe492ced42153af2857af9dcff05c33c6323383ed0f1382
+  note: isometric render of the reference
+- path: inputs/enclosure-base-top.png
+  kind: image
+  sha256: d2082d6515363d4843797322498e9f62ae0f9a60f9b725bbc8b916171e7deb7b
+  note: top view of the reference, +x right, +y up
+- path: inputs/enclosure-base-section.png
+  kind: drawing
+  sha256: d15e879f8de5dee0e38f58a63a70206e7099478c43379d0b2ed5f1ba6728a3d8
+  note: filled section x = 38 of the reference through two posts, mm axes
+truth:
+- path: truth/base.step
+  kind: cad
+  sha256: 5c24c0f65dc7a16abae19e2cb67e84ce0ae97336760e05f47dc4c4373c495257
+  units: mm
+- path: truth/base.stl
+  kind: mesh
+  sha256: c3104ddd00468f1c9a69d0d761df9a5033d0f5084773eddfa8048c1f3ef3f63f
+  units: mm
+- path: truth/parametric-enclosure.rst
+  kind: other
+  sha256: 36fb5b35f31361ef45ccd8691711cd8ee3cea80fb381a813e86397a6972a433d
+  note: upstream example section verbatim at the pinned revision; evaluator-only
+- path: truth/base-50-tall.step
+  kind: cad
+  sha256: 029f5b65dd3e1d1088a291368196e452dba0c67c2e1a0e0588654917ba497952
+  units: mm
+  note: wrong variant (the base built 50 tall, the unsplit height) for the mutant harness
+arms:
+- id: spec-and-views
+  design: enclosure-base
+  inputs:
+  - inputs/enclosure-base-spec.md
+  - inputs/enclosure-base-iso.png
+  - inputs/enclosure-base-top.png
+  - inputs/enclosure-base-section.png
+  images:
+  - inputs/enclosure-base-iso.png
+  - inputs/enclosure-base-top.png
+  - inputs/enclosure-base-section.png
+  notes: Fast regression case. The specification carries every dimension and the reference measurements;
+    the reference geometry and its generator are evaluator-only.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 100.0
+  - 150.0
+  - 47.0
+  tolerance: 0.1
+  note: 47 tall after the lid split, not the 50 mm p_outerHeight
+- id: solid_count
+  kind: solid_count
+  expected: 1
+- id: volume
+  kind: volume
+  from:
+    file: truth/base.step
+    measure: volume
+  tolerance_rel: 0.01
+- id: section_mid_z25
+  kind: section
+  plane: z
+  at: 25.0
+  expected:
+    area: 1684.115
+    loops: 5
+    holes: 5
+  area_tolerance_rel: 0.02
+  note: the wall ring with the cavity, and four posts with their bores
+- id: section_floor_z1p5
+  kind: section
+  plane: z
+  at: 1.5
+  expected:
+    area: 14883.508
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.01
+  note: the floor is solid under the bores (they are blind)
+- id: section_posts_x38
+  kind: section
+  plane: x
+  at: 38.0
+  expected:
+    area: 1240.283
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.02
+  note: floor, end walls and two posts in one loop; the bores are open-topped notches
+- id: bottom_face
+  kind: face
+  plane: z
+  at: 0.0
+  normal: '-'
+  expected: 13961.062
+  area_tolerance_rel: 0.01
+  tolerance: 0.05
+  note: 96 x 146 with r = 8 corners (the r = 2 bottom round takes 2 mm off every side)
+- id: cavity_floor
+  kind: face
+  plane: z
+  at: 3.0
+  normal: +
+  expected: 13179.779
+  area_tolerance_rel: 0.01
+  tolerance: 0.05
+  center:
+  - 0.0
+  - 0.0
+  note: 94 x 144 with r = 7 corners, less the four post footprints
+- id: bore_floor_pp
+  kind: face
+  plane: z
+  at: 3.0
+  normal: +
+  expected: 12.566
+  area_tolerance_rel: 0.03
+  tolerance: 0.05
+  center:
+  - 38.0
+  - 63.0
+- id: bore_floor_mp
+  kind: face
+  plane: z
+  at: 3.0
+  normal: +
+  expected: 12.566
+  area_tolerance_rel: 0.03
+  tolerance: 0.05
+  center:
+  - -38.0
+  - 63.0
+- id: bore_floor_mm
+  kind: face
+  plane: z
+  at: 3.0
+  normal: +
+  expected: 12.566
+  area_tolerance_rel: 0.03
+  tolerance: 0.05
+  center:
+  - -38.0
+  - -63.0
+- id: bore_floor_pm
+  kind: face
+  plane: z
+  at: 3.0
+  normal: +
+  expected: 12.566
+  area_tolerance_rel: 0.03
+  tolerance: 0.05
+  center:
+  - 38.0
+  - -63.0
+- id: rim
+  kind: face
+  plane: z
+  at: 47.0
+  normal: +
+  expected: 1420.221
+  area_tolerance_rel: 0.01
+  tolerance: 0.05
+  center:
+  - 0.0
+  - 0.0
+  note: the wall ring; the post tops are separate faces
+- id: bore_pp
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 38.0
+  - 63.0
+  - 0.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 2.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  t_range:
+  - 3.0
+  - 47.0
+  length: 44.0
+  length_tolerance: 0.1
+- id: bore_mp
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -38.0
+  - 63.0
+  - 0.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 2.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  t_range:
+  - 3.0
+  - 47.0
+  length: 44.0
+  length_tolerance: 0.1
+- id: bore_mm
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - -38.0
+  - -63.0
+  - 0.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 2.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  t_range:
+  - 3.0
+  - 47.0
+  length: 44.0
+  length_tolerance: 0.1
+- id: bore_pm
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 38.0
+  - -63.0
+  - 0.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 2.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  t_range:
+  - 3.0
+  - 47.0
+  length: 44.0
+  length_tolerance: 0.1
+- id: post_pp
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 38.0
+  - 63.0
+  - 0.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 5.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  t_range:
+  - 3.0
+  - 47.0
+  length: 44.0
+  length_tolerance: 0.1
+- id: post_mp
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - -38.0
+  - 63.0
+  - 0.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 5.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  t_range:
+  - 3.0
+  - 47.0
+  length: 44.0
+  length_tolerance: 0.1
+- id: post_mm
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - -38.0
+  - -63.0
+  - 0.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 5.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  t_range:
+  - 3.0
+  - 47.0
+  length: 44.0
+  length_tolerance: 0.1
+- id: post_pm
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 38.0
+  - -63.0
+  - 0.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 5.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  t_range:
+  - 3.0
+  - 47.0
+  length: 44.0
+  length_tolerance: 0.1
+- id: material_solid
+  kind: probe
+  state: solid
+  points:
+  - - 0.0
+    - 0.0
+    - 1.5
+  - - 38.0
+    - 63.0
+    - 1.5
+  - - -38.0
+    - -63.0
+    - 1.5
+  - - 48.5
+    - 0.0
+    - 25.0
+  - - 0.0
+    - -73.5
+    - 25.0
+  - - 41.5
+    - 63.0
+    - 25.0
+  - - -38.0
+    - -59.5
+    - 40.0
+  note: floor (including under two bores), side and end walls, two post walls; every point 1.5 mm from
+    a surface
+- id: openings_void
+  kind: probe
+  state: void
+  points:
+  - - 0.0
+    - 0.0
+    - 25.0
+  - - 0.0
+    - 50.0
+    - 30.0
+  - - 30.0
+    - 0.0
+    - 10.0
+  - - -40.0
+    - -40.0
+    - 45.0
+  - - 38.0
+    - 63.0
+    - 25.0
+  - - -38.0
+    - -63.0
+    - 40.0
+  - - 38.0
+    - -63.0
+    - 4.5
+  note: cavity and three post bores (one 1.5 mm above its floor)
+- id: min_wall
+  kind: thickness
+  stat: p05
+  min: 2.9
+  samples: 6000
+  max_thickness: 6.0
+  note: walls, floor and post walls are 3 thick; rays longer than 6 run along a wall's height and are
+    ignored
+- id: deviation
+  kind: deviation
+  required: false
+  reference: truth/base.stl
+  reference_units: mm
+  p95_max: 0.3
+  hausdorff_max: 1.5
+  note: diagnostic whole-part agreement; small features are scored individually above
+notes:
+- 'Fast regression case (docs/design-ladder.md, fast pair): target <= 15 min per backend from inputs to
+  a scored handoff.'
+- The cavity is scored by geometry (sections, faces, probes, thickness), not by operation; a shell command
+  or a Boolean cut scores the same.

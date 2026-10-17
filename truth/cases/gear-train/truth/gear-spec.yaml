@@ -1,0 +1,31 @@
+module: 2.0
+pressure_angle_deg: 20.0
+profile_shift: 0.0
+pinion_teeth: 20
+wheel_teeth: 40
+center_distance: 60.0
+face_width: 8.0
+pinion_bore: 6.0
+wheel_bore: 8.0
+addendum_coeff: 1.0
+dedendum_coeff: 1.25
+backlash_total: 0.1
+flank_points: 16
+arc_step: 0.25
+carrier:
+  size:
+  - 110.0
+  - 50.0
+  - 5.0
+  min:
+  - -25.0
+  - -25.0
+  - -5.0
+pinion_center:
+- 0.0
+- 0.0
+wheel_center:
+- 60.0
+- 0.0
+phase: pinion tooth centred on +x; wheel rotated by half a pitch (pi/40) so a tooth
+  space faces it

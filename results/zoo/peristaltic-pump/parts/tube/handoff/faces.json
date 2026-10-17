@@ -1,0 +1,75 @@
+{
+  "named_faces": {
+    "inlet": {
+      "plane": "x",
+      "at": -30.0,
+      "normal": "-",
+      "found": 1,
+      "area": 6.283185307179588,
+      "ok": true,
+      "position": -30.000000000000004,
+      "area_expected": 6.283,
+      "area_ok": true,
+      "center_expected": [
+        10.67,
+        0.0
+      ],
+      "center_error": 3.552716994523012e-15,
+      "centroid_uv": [
+        10.670000000000003,
+        -4.853826988121479e-18
+      ]
+    },
+    "outlet": {
+      "plane": "x",
+      "at": -30.0,
+      "normal": "-",
+      "found": 1,
+      "area": 6.283185307179569,
+      "ok": true,
+      "position": -30.0,
+      "area_expected": 6.283,
+      "area_ok": true,
+      "center_expected": [
+        -10.67,
+        0.0
+      ],
+      "center_error": 3.612626828756815e-15,
+      "centroid_uv": [
+        -10.669999999999996,
+        6.552084556210555e-16
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "inlet",
+      "plane": "x",
+      "at": -30.0,
+      "normal": "-",
+      "area": 6.283,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        10.67,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "outlet",
+      "plane": "x",
+      "at": -30.0,
+      "normal": "-",
+      "area": 6.283,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        -10.67,
+        0.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 2
+}

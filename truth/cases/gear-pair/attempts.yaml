@@ -1,0 +1,176 @@
+attempts:
+- started: '2026-09-19T05:24:55Z'
+  arm: spec-only
+  backend: zoo
+  design: gear-pair
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  resume_reason: modelled part exists; --force redoes plan+model, --resume-from pipeline
+    keeps the blockout only
+  decompose: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/gear-pair-1789795497
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 16
+      required_total: 16
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 1428
+  finished: '2026-09-19T05:48:44Z'
+- started: '2026-09-20T08:53:53Z'
+  arm: spec-only
+  backend: build123d
+  design: gear-pair
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/gear-pair
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: ef694c60-112a-42dd-9982-1bd2c49018fa
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/gear-pair/manifest.yaml'''
+  seconds: 1294
+  finished: '2026-09-20T09:15:29Z'
+- started: '2026-09-20T08:53:53Z'
+  arm: spec-only
+  backend: cadquery
+  design: gear-pair
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/gear-pair
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 73a40e97-141b-4a23-b8ce-1c1f7b03b0be
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/gear-pair/manifest.yaml'''
+  seconds: 2137
+  finished: '2026-09-20T09:29:32Z'
+- started: '2026-09-20T10:03:03Z'
+  finished: '2026-09-20T10:03:06Z'
+  arm: spec-only
+  design: gear-pair
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 16
+      required_total: 16
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: ef41ab0010f5a8fe914a372755491314886263cf43f45b017b599dfd095961be
+  seconds: 250
+  backend: cadquery
+- started: '2026-09-20T10:04:37Z'
+  finished: '2026-09-20T10:04:40Z'
+  arm: spec-only
+  design: gear-pair
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 16
+      required_total: 16
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 815d18ddbcf34ec952cae998051e3afab18fca880b222aec99f29498b11b1f0d
+  seconds: 93
+  backend: build123d
+- started: '2026-09-20T10:04:49Z'
+  arm: spec-only
+  backend: freecad
+  design: gear-pair
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/gear-pair
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 16
+      required_total: 16
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 647
+  finished: '2026-09-20T10:15:37Z'
+- started: '2026-09-20T10:11:53Z'
+  arm: spec-only
+  backend: freecad
+  design: gear-pair
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/gear-pair
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 16
+      required_total: 16
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 345
+  finished: '2026-09-20T10:17:39Z'

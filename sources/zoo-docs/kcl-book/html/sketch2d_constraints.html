@@ -1,0 +1,402 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Sketching 2D shapes - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/sketch2d_constraints.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="sketching-2d-shapes"><a class="header" href="#sketching-2d-shapes">Sketching 2D shapes</a></h1>
+<ul>
+<li><a href="#fixed-geometry-your-first-triangle">Fixed geometry: your first triangle</a>
+<ul>
+<li><a href="#1-set-kcl-settings">1: Set KCL settings</a></li>
+<li><a href="#2-choose-a-plane">2: Choose a plane</a></li>
+<li><a href="#3-start-a-sketch-block">3: Start a sketch block</a></li>
+<li><a href="#4-add-geometry">4: Add geometry</a></li>
+</ul>
+</li>
+<li><a href="#working-with-constraints">Working with constraints</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<p>Let's use KCL to sketch some basic 2D shapes. <strong>Sketching</strong> is a core workflow for mechanical engineers, designers, and hobbyists. You can either sketch <em>fixed geometry</em>, where you manually position your lines, points and curves, or you can use <em>unconstrained</em> geometry, then <em>add constraints</em> later to pin them down into a fixed position. We'll walk through both these options. Let's start with fixed geometry. Then we'll use constraints to think more like an engineer.</p>
+<h2 id="fixed-geometry-your-first-triangle"><a class="header" href="#fixed-geometry-your-first-triangle">Fixed geometry: your first triangle</a></h2>
+<p>Let's sketch a really simple triangle. We'll sketch a right-angled triangle, with side lengths 3, 4 and 5.</p>
+<p>Just copy this code into the KCL editor:</p>
+<pre><code class="language-kcl">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+myTriangle = sketch(on = YZ) {
+  line(start = [0, 0], end = [0, 3])
+  line(start = [0, 3], end = [4, 3])
+  line(start = [4, 3], end = [0, 0])
+}
+</code></pre>
+<p>When you're done, use the Camera Cube in the corner and select the "Right" face. The camera should swivel around and face your triangle head-on. Your screen should look something like this:</p>
+<p><img src="images/static/first_triangle_constrained.png" alt="Result of running program 1" /></p>
+<p>Congratulations, you've sketched your first triangle! Rendering your first triangle is a <a href="https://rampantgames.com/blog/?p=7745">big deal in graphics programming</a>, and sketching your first triangle is a big deal in KCL. Let's break this code down line-by-line and see what it's actually doing.</p>
+<h3 id="1-set-kcl-settings"><a class="header" href="#1-set-kcl-settings">1: Set KCL settings</a></h3>
+<p>This step is optional, but it's good practice. KCL lets you set a few settings at the top of your file, with <code>@settings(...)</code>. Zoo Design Studio will usually set this line for you when you make a new file, and then you can change it later. In <code>@settings(defaultLengthUnit = mm, kclVersion = 2.0)</code>, we're choosing two settings:</p>
+<ol>
+<li>Set the default unit to millimeters. This means that when you write a point like <code>[4, 3]</code> it's treated as 4 millimeters and 3 millimeters. You could write them manually, via <code>[4mm, 3mm]</code> instead. But it's good to set these defaults, so everyone knows that <code>[4, 3]</code> means 4x3 millimeters, not inches or yards or meters. You could replace <code>mm</code> with <code>cm</code>, <code>m</code>, <code>in</code>, <code>ft</code>, or <code>yd</code> instead.</li>
+<li>Set the KCL version to <code>2.0</code>. This way, in the future, we could add new features in KCL 2.2 without affecting your old code.</li>
+</ol>
+<h3 id="2-choose-a-plane"><a class="header" href="#2-choose-a-plane">2: Choose a plane</a></h3>
+<p>In KCL, there are six basic built-in planes you can use. There's XY, YZ, XZ, and negative versions of each (-XY, -YZ and -XZ). These negative planes are in the exact same place as their matching positive planes, but treat their normal axis (in other words, the axis considered "up") as the opposite direction. For example, XY and -XY share an X and Y axis, but their Z axes are flipped. Extruding "up" in the XY plane and "up" in the -XY plane are opposite directions.</p>
+<p><img src="images/static/xy_vs_neg_xy.png" alt="Difference between XY and -XY planes" /></p>
+<p>You can use one of these standard planes, or define your own (we'll get to that later). Those six standard planes can be used just like normal variables you define, except they're pre-defined by KCL in its standard library.</p>
+<p>You can also sketch on the face of a solid, instead of a plane. But we'll cover that later, in a dedicated chapter on <a href="sketch_on_face.html">sketch on face</a>.</p>
+<h3 id="3-start-a-sketch-block"><a class="header" href="#3-start-a-sketch-block">3: Start a sketch block</a></h3>
+<p>Line 3, <code>sketch(on = YZ)</code>, is where we actually start sketching. This line declares a sketch block. A sketch block has two parts:</p>
+<ul>
+<li>A list of arguments (enclosed by parentheses <code>(...)</code>). Right now, there's only one argument: <code>on</code>, where we pass the plane chosen in step 2, e.g. <code>on = YZ</code>.</li>
+<li>A sketch block (enclosed by braces, <code>{...}</code>). The sketch block defines geometry (like lines or arcs), and relationships between them. Our first sketch block will be very simple, with 3 straight lines. We'll build more complex examples later.</li>
+</ul>
+<h3 id="4-add-geometry"><a class="header" href="#4-add-geometry">4: Add geometry</a></h3>
+<p>Sketches contain geometry like lines, arcs, circles and points. In our example sketch, we added three straight lines, each with a start and end. These lines are created by the <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-line"><code>line</code></a> function, which takes two parameters: a <code>start</code> and an <code>end</code>. We make a line like this: <code>line(start = [0, 0], end = [0, 3])</code>.</p>
+<h2 id="working-with-constraints"><a class="header" href="#working-with-constraints">Working with constraints</a></h2>
+<p>For simple geometry, like a single triangle, manually positioning the endpoints of lines works just fine. But when you're making more complex shapes, it's hard to choose the positions of every point. Mechanical engineers rarely work out every point's true location in 3D space. Instead, they start with a few pieces of information -- some initial guesses -- and then they add more requirements, letting their CAD suite tweak the geometry to meet these requirements. In other words, they <em>constrain</em> their initial guesses.</p>
+<p>Let's start with a goal: sketching a rhombus. There are many ways to define a rhombus, but we'll use this definition: "a parallelogram in which the diagonals are perpendicular". Now, we could use a pen and paper to do some high-school geometry and work out where all 4 points of our rhombus go. That works for this simple example, but it's just not feasible for more complex geometry. Instead, let's just put some initial guesses in, and use KCL's built-in constraint solver to ensure we build a rhombus.</p>
+<p>To start, we know our rhombus will have 4 lines. So let's put in some rough guesses.</p>
+<pre><code class="language-kcl">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+sketch(on = YZ) {
+  line1 = line(start = [var 1mm, var 1mm], end = [var 0mm, var 4mm])
+  line2 = line(start = [var 0mm, var 4mm], end = [var 3mm, var 3mm])
+  line3 = line(start = [var 4mm, var 4mm], end = [var 3mm, var 0mm])
+  line4 = line(start = [var 3mm, var 0mm], end = [var 1mm, var 1mm])
+}
+</code></pre>
+<p>This looks pretty similar to our earlier triangle example, with two big differences.</p>
+<p>First, we're assigning each line to a <em>variable</em>. We've got 4 lines and 4 variables: <code>line1</code>, <code>line2</code>, <code>line3</code> and <code>line4</code>. This isn't strictly necessary yet -- each <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-line"><code>line</code></a> function works just fine on its own, without being assigned to a variable, as you saw in the triangle example earlier. By assigning our geometry to variables, we can give each line a name. We can then refer to <code>line1</code> or <code>line2</code> later in your sketch block.</p>
+<p>Secondly, we're using the <em>var</em> keyword, for the <code>start</code> and <code>end</code> arguments. This means each line's endpoint is no longer an exact location! Instead, it means the <code>start</code> and <code>end</code> points are initial guesses. If we used <code>start = [1mm, 1mm]</code>, that means the line has to start at <em>exactly</em> the point (1, 1), no changes allowed. But if you write <code>start = [var 1mm, var 1mm]</code>, then we're telling KCL to reposition our line's start and end later. That's exactly what we want. (1, 1) is just a starting guess for where the corner of our rhombus will be. We'll let the computer do the hard work of calculating the exact geometry for us. So we tell KCL it's OK to reposition this point's X and Y axes, by using <code>var</code> with each one.</p>
+<p>So far, our geometry looks like this:</p>
+<p><img src="images/static/rhom0.png" alt="Starting our rhombus" /></p>
+<p>That doesn't look very much like a rhombus. Let's add some <em>constraints</em> -- some requirements we know. Firstly, we know that all 4 edges should share corners. In other words, line1 should end where line2 begins, line 2 should end where line 3 begins, and so on. Let's add some constraints with the <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-coincident"><code>coincident</code></a> function.</p>
+<pre><code class="language-kcl">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+sketch(on = YZ) {
+  line1 = line(start = [var 1mm, var 1mm], end = [var 0mm, var 4mm])
+  line2 = line(start = [var 0mm, var 4mm], end = [var 3mm, var 3mm])
+  line3 = line(start = [var 4mm, var 4mm], end = [var 3mm, var 0mm])
+  line4 = line(start = [var 3mm, var 0mm], end = [var 1mm, var 1mm])
+
+  // The 4 lines should form a shape, i.e. their endpoints should touch.
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+}
+</code></pre>
+<p>There, now our 4 lines form a quadrilateral.</p>
+<p><img src="images/static/rhom1.png" alt="We made a quadrilateral" /></p>
+<p>What else do we know about a rhombus? Well, we know that opposite lines have to be parallel. So let's tell KCL that <code>line1</code> and <code>line3</code> are parallel, using KCL's <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-parallel"><code>parallel</code></a> constraint. We add the <code>parallel([line1, line3])</code> and <code>parallel([line2, line4])</code> to our sketch block.</p>
+<pre><code class="language-kcl">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+sketch(on = YZ) {
+  line1 = line(start = [var 1mm, var 1mm], end = [var 0mm, var 4mm])
+  line2 = line(start = [var 0mm, var 4mm], end = [var 3mm, var 3mm])
+  line3 = line(start = [var 4mm, var 4mm], end = [var 3mm, var 0mm])
+  line4 = line(start = [var 3mm, var 0mm], end = [var 1mm, var 1mm])
+
+  // The 4 lines should form a shape, i.e. their endpoints should touch.
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+
+  // Opposite edges are parallel.
+  parallel([line1, line3])
+  parallel([line2, line4])
+}
+</code></pre>
+<p>Lastly, their internal diagonals should be perpendicular. Firstly, let's define its diagonals:</p>
+<pre><code class="language-kcl">// Add a diagonal, which goes from one corner to the opposite corner.
+diagonal1 = line(
+  start = [var 1.02mm, var 1.71mm],
+  end = [var 3.18mm, var 3.66mm],
+  // This line is construction geometry: not included in our final shape.
+  // It's just used to constrain our real geometry.
+  construction = true,
+)
+coincident([diagonal1.start, line1.start])
+coincident([diagonal1.end, line2.end])
+
+// Add the next diagonal, across the other pair of corners.
+diagonal2 = line(
+  start = [var 0.2mm, var 4.78mm],
+  end = [var 3.99mm, var 0.59mm],
+  // Again, this is construction geometry.
+  construction = true,
+)
+coincident([diagonal2.start, line2.start])
+coincident([diagonal2.end, line3.end])
+</code></pre>
+<p>We've marked these two diagonal lines as <em>construction geometry</em>. That means we don't want them to appear in the final rendered shape. We're only adding these lines to our sketch block for constraining other, real geometry. But it shouldn't actually make a selectable edge elsewhere in our design. If you view the sketch in Zoo Design Studio, construction geometry is drawn with dashed lines. Real geometry uses normal, full lines.</p>
+<p><img src="images/static/rhom2.png" alt="Added the construction geometry diagonals" /></p>
+<p>Let's add a <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-perpendicular"><code>perpendicular</code></a> constraint on the diagonals:</p>
+<pre><code class="language-kcl">// The two diagonals are perpendicular.
+perpendicular([diagonal1, diagonal2])
+</code></pre>
+<p>Now our shape is properly constrained to be a rhombus! Here's the final result:</p>
+<pre><code class="language-kcl">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+starting = sketch(on = YZ) {
+  line1 = line(start = [var 0.74mm, var 0.98mm], end = [var 0.13mm, var 3.79mm])
+  line2 = line(start = [var 0.13mm, var 3.79mm], end = [var 2.98mm, var 3.33mm])
+  line3 = line(start = [var 2.98mm, var 3.33mm], end = [var 3.58mm, var 0.51mm])
+  line4 = line(start = [var 3.58mm, var 0.51mm], end = [var 0.74mm, var 0.98mm])
+
+  // The 4 lines should form a shape, i.e. their endpoints should touch.
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+
+  // Opposite edges are parallel.
+  parallel([line1, line3])
+  parallel([line2, line4])
+
+  // Add a diagonal, which goes from one corner to the opposite corner.
+  diagonal1 = line(start = [var 0.74mm, var 0.98mm], end = [var 2.98mm, var 3.33mm], construction = true)
+  coincident([diagonal1.start, line1.start])
+  coincident([diagonal1.end, line2.end])
+
+  // Add the next diagonal, across the other pair of corners.
+  diagonal2 = line(start = [var 0.13mm, var 3.79mm], end = [var 3.58mm, var 0.51mm], construction = true)
+  coincident([diagonal2.start, line2.start])
+  coincident([diagonal2.end, line3.end])
+
+  // The two diagonals are perpendicular.
+  perpendicular([diagonal1, diagonal2])
+}
+</code></pre>
+<p><img src="images/static/rhom3.png" alt="The final rhombus" /></p>
+<p>Now when KCL runs this program, it'll take the initial guesses for each point (marked with <code>var</code>) and apply the constraints to figure out the final locations of all our geometry. This <em>really</em> helps simplify complicated 2D shapes.</p>
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>We've learned how to use KCL to define 2D shapes:</p>
+<ul>
+<li>Sketches are on some plane, and KCL includes standard planes XY, YZ and XZ (and their negative versions, which point the third axis down instead of up).</li>
+<li>Start a sketch with a sketch block like <code>sketch(on = XY) { ... }</code>.</li>
+<li>Sketches call functions like <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-line"><code>line</code></a> to make geometry.</li>
+<li>Geometry can use fixed, exact points like <code>[2, 2]</code>, or they can vary the point's exact location later (like <code>[var 2, var 2]</code>).</li>
+<li>You can assign geometry to variables, like <code>myLine = line(start = [2, 2], end = [3, 3])</code>.</li>
+<li>Constraints like <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-parallel"><code>parallel</code></a> reposition geometry, e.g. <code>parallel([line1, line2])</code>.</li>
+</ul>
+<p>Next, we'll look at how to build curved lines, like arcs and circles. We'll use new constraints on them to make more realistic shapes.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="pipelines.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="sketch2d_curves_constraints.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="pipelines.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="sketch2d_curves_constraints.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

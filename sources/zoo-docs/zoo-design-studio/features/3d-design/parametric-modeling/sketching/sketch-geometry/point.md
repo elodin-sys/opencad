@@ -1,0 +1,19 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/point
+Title: Point
+
+# Point
+
+Create sketch points in Zoo Design Studio.
+
+Use Point to place explicit sketch points for references, constraint anchors, and feature placement.
+Points are useful when geometry needs to be located without adding an enclosing profile segment.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/point/point.gif"
+  alt="Creating a sketch point in Zoo Design Studio"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Place points as explicit sketch references
+</div>

@@ -1,0 +1,38 @@
+Source URL: https://zoo.dev/docs/developer-tools/cli/manual/zoo_user_view
+Title: zoo user view
+
+# zoo user view
+
+View user.
+
+View user.
+
+### Options
+
+<dl class="flags">
+   <dt><code>-w/--web</code></dt>
+   <dd>Open the user in the browser<br/>Default value: <code>false</code></dd>
+
+   <dt><code>-f/--format</code></dt>
+   <dd>Output format<br/>Possible values: <code>json | yaml | table</code></dd>
+
+   <dt><code>-d/--debug</code></dt>
+   <dd>Print debug info<br/>Default value: <code>false</code></dd>
+
+   <dt><code>--host</code></dt>
+   <dd>Zoo API host to use for all commands (e.g., "api.zoo.dev" or "http://localhost:8888"). Overrides the configured default host</dd>
+
+   <dt><code>-h/--help</code></dt>
+   <dd>Print help (see a summary with '-h')</dd>
+</dl>
+
+
+### About
+
+Display information about a Zoo user.
+
+With `--web`, open the user in a web browser instead.
+
+### See also
+
+* [zoo user](./zoo_user)

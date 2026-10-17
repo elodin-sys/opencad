@@ -1,0 +1,44 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import slotY, slotHalf, slotWidth, slotDepth, flangeYMax, flangeRadius, flangeYMin from "params.kcl"
+
+assert(slotHalf, isGreaterThan = 0mm, error = "slot half-width must be positive")
+assert(slotHalf, isLessThan = flangeRadius, error = "slot walls must sit inside the flange OD")
+assert(slotWidth, isGreaterThan = 0mm, error = "slot width must be positive")
+assert(slotDepth, isGreaterThan = 0mm, error = "slot depth must be positive")
+assert(slotY, isGreaterThan = flangeYMin, error = "slot floor must stay above the flange underside")
+assert(slotY, isLessThan = flangeYMax, error = "slot floor must sit below the arm tops")
+
+// Overrun past the arm tops and flange OD so the subtract is not coplanar.
+cutOverrun = 0.1mm
+
+export fn uSlot(@body) {
+  cutTop = flangeYMax + cutOverrun
+  cutHalfZ = flangeRadius + cutOverrun
+
+  cutProfile = sketch(on = XY) {
+    south = line(start = [var -19.844mm, var 112.648mm], end = [var 19.844mm, var 112.648mm])
+    east = line(start = [var 19.844mm, var 112.648mm], end = [var 19.844mm, var 125.448mm])
+    north = line(start = [var 19.844mm, var 125.448mm], end = [var -19.844mm, var 125.448mm])
+    west = line(start = [var -19.844mm, var 125.448mm], end = [var -19.844mm, var 112.648mm])
+
+    coincident([south.end, east.start])
+    coincident([east.end, north.start])
+    coincident([north.end, west.start])
+    coincident([west.end, south.start])
+
+    horizontal(south)
+    horizontal(north)
+    vertical(east)
+    vertical(west)
+
+    coincident([south.start, [-slotHalf, slotY]])
+    horizontalDistance([south.start, south.end]) == 2 * slotHalf
+    verticalDistance([south.start, west.start]) == cutTop - slotY
+  }
+
+  cutRegion = region(segments = [cutProfile.south, cutProfile.east])
+  cutter = extrude(cutRegion, length = cutHalfZ, bidirectionalLength = cutHalfZ)
+  hide(cutProfile)
+  return subtract(body, tools = [cutter])
+}

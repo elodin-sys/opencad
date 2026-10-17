@@ -1,0 +1,212 @@
+schema_version: 1
+kind: assembly
+name: fda-pump
+intent: >-
+  Analysis of the FDA benchmark centrifugal blood pump (Interlaboratory Study 2) from its supplied CAD
+  (sources/pump_housing.step, sources/pump_rotor.step; authoritative, 1 CAD unit = 100 um, scaled by 0.1 to mm) and the
+  transcribed packet sources/fda-pump-packet.md. The housing chamber model (the inner surface of the D60 x 9 chamber and
+  its tubing: the curved D12 inlet tube and the D4.39 throat, diffuser and D12 outlet tube) and the D52 four-blade rotor
+  keep their supplied relative position; the rotor turns about the pump axis (+z) on a revolute joint at the rest phase
+  of the CAD (blades along +-x and +-y, one blade 90 degrees to the outlet axis). The assembly source builds the
+  physical housing wall as a derived solid around the chamber model and the sealed blood-analog flow region (chamber
+  minus rotor) as a derived fluid body with named inlet (curved inlet tube's open end), outlet (outlet tube's open end),
+  rotor-wall and housing-wall boundaries. Six operating conditions C1-C6 (flow in L/min, rotor speed in rpm) and the
+  Newtonian blood analog (1035 kg/m3, 0.0035 Pa s) come from the packet. Predicted: the static pressure rise outlet
+  minus inlet at every condition from a steady OpenFOAM MRF analysis (mesh-refinement pair at C5, one level elsewhere),
+  plus the reduced Euler-head estimate at every condition under separate ids. Nonclinical engineering use only.
+units: {length: mm, angle: deg}
+frame:
+  origin: pump axis on the inner back face of the chamber (the face opposite the inlet); the supplied CAD origin scaled to mm
+  axes:
+    x: along the outlet tube axis, toward the outlet (up in the packet's front view)
+    y: "completes a right-handed frame (left in the front view; the outlet throat is at y = -27.8)"
+    z: "pump and rotor axis, from the chamber back face toward the inlet tube"
+  datums:
+    - {name: A, description: chamber inner back face z = 0 (rotor shaft end face lies on it)}
+    - {name: B, description: pump axis x = y = 0}
+    - {name: C, description: "outlet end plane x = 245 (the outlet pressure probe height, 0.245 m above the axis)"}
+    - {name: D, description: "inlet end plane x = 90 at the end of the R90 inlet bend (tube centre y = 0, z = 294)"}
+envelope: {min: [-33.0, -36.8, -3.0], max: [245.0, 33.0, 303.0], tolerance: 0.5}
+datum_part: housing
+parts:
+  - name: housing
+    kind: derived
+    role: solid
+    description: >-
+      Physical housing wall in the assembly frame, built in the assembly source around the chamber construction body:
+      the chamber model grown outward by housingWallThickness (3 mm) minus the chamber model, so its inner surface is
+      exactly the supplied chamber surface (D60 x 9 drum z = 0..9, R5 inlet fillet, D12 straight inlet tube z = 14..204,
+      R90 bend to the inlet end plane x = 90, D4.39 throat x = 0.4..20 on y = -27.8 / z = 6.563, 20 deg diffuser
+      x = 20..41.54, D12 outlet tube to x = 245). Closed at the back face (z = -3..0); open and flush with the inlet end
+      plane x = 90 and the outlet end plane x = 245. Assembled bbox [-33, -36.8, -3] .. [245, 33, 303].
+  - name: rotor
+    kind: purchased
+    role: solid
+    catalog:
+      name: rotor
+      kind: step
+      path: sources/pump_rotor.step
+      scale: 0.1
+      description: supplied rotor STEP (GAMBIT, 1 unit = 100 um) scaled to mm; its own frame is the CAD frame
+    description: >-
+      Supplied rotor in its own frame (the scaled CAD frame, identical to the assembly frame at rest): axis +z through
+      the origin; D3.2 shaft stub z = 0..1 whose end face lies on the chamber back face; D52 disc z = 1..5 with a
+      polished, curved rim; four straight radial blades 3 wide x 3 tall (z = 5..8) from r = 7.5 to r = 26 along +x, -x,
+      +y and -y; D8 hub z = 5..15 with a spherical nose to z = 19 inside the inlet tube; edge fillets 0.05-0.6 mm.
+      Clearances to the chamber: 1 mm at z = 0..1 and z = 8..9, 4 mm at the rim. Volume 9768.3 mm3.
+  - name: chamber
+    kind: purchased
+    role: construction
+    catalog:
+      name: chamber
+      kind: step
+      path: sources/pump_housing.step
+      scale: 0.1
+      description: supplied housing chamber model (inner surface of chamber and tubing), 1 unit = 100 um, scaled to mm
+    description: >-
+      Construction input only: the supplied flow-region model of the chamber and tubing (a single solid, volume
+      88098.1 mm3, bbox [-30, -33.8, 0] .. [245, 30, 300] after scaling). The assembly source builds the housing wall
+      around it and the blood body inside it; never placed or exported.
+  - name: blood
+    kind: derived
+    role: fluid
+    description: >-
+      Sealed blood-analog flow region built in the assembly source: chamber model minus the rotor at rest (one solid,
+      78329.9 mm3), closed by the chamber's own planar end faces at the inlet (x = 90) and outlet (x = 245).
+parameters:
+  - {name: cadUnit, value: 0.1, unit: mm, provenance: stated, source: "sources/fda-pump-packet.md, CAD files: 1 unit = 100 um", tolerance: 1.0e-6, description: scale applied to both supplied STEP files}
+  - {name: housingWallThickness, value: 3.0, unit: mm, provenance: inferred, rationale: "the sources give only the inner (fluid) surface; 3 mm is a nominal wall that keeps the offset robust around the D4.39 throat and does not change the flow region", tolerance: 0.1, description: outward thickness of the derived housing wall}
+  - {name: chamberDiameter, value: 60.0, unit: mm, provenance: stated, source: "sources/fda-pump-packet.md, Pump geometry", tolerance: 0.01}
+  - {name: chamberWidth, value: 9.0, unit: mm, provenance: stated, source: "sources/fda-pump-packet.md, Pump geometry", tolerance: 0.01}
+  - {name: rotorDiameter, value: 52.0, unit: mm, provenance: stated, source: "sources/fda-pump-packet.md, Pump geometry", tolerance: 0.01}
+  - {name: axialClearance, value: 1.0, unit: mm, provenance: stated, source: "sources/fda-pump-packet.md, Housing/rotor clearances", tolerance: 0.01, description: housing to the rotor back face and to the blade tops}
+  - {name: rimClearance, value: 4.0, unit: mm, provenance: stated, source: "sources/fda-pump-packet.md, Housing/rotor clearances", tolerance: 0.01, description: housing to the rotor rim}
+  - {name: tubeDiameter, value: 12.0, unit: mm, provenance: stated, source: "sources/fda-pump-packet.md, Inlet and Outlet", tolerance: 0.01, description: inner diameter of the inlet and outlet tubes}
+  - {name: inletProbeDistance, value: 175.0, unit: mm, provenance: stated, source: "sources/fda-pump-packet.md, Experimental setup", tolerance: 1.0, description: "inlet pressure probe on the straight inlet tube at (0, 0, 175)"}
+  - {name: outletProbeHeight, value: 245.0, unit: mm, provenance: stated, source: "sources/fda-pump-packet.md, Experimental setup", tolerance: 1.0, description: outlet pressure probe 0.245 m above the pump axis (the outlet end plane x = 245)}
+joints:
+  - name: rotorSpin
+    kind: revolute
+    parent: housing
+    child: rotor
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 0.0
+    angle: 0.0
+    drive:
+      kind: motor
+      case_value: speedRpm
+      description: "positive about +z (counter-clockwise seen from the inlet): carries the flow toward +x at the outlet throat (y = -27.8)"
+    description: rotor on the pump axis at the CAD rest phase (the +x blade along the housing +x axis); steady runs use this frozen position
+  - name: bloodFixed
+    kind: rigid
+    parent: housing
+    child: blood
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: the flow region is built in the housing (assembly) frame
+fluid_volumes:
+  - name: blood
+    body: blood
+    walls: [housing]
+    minus: [rotor]
+    caps:
+      - {name: inletCap, point: [90.0, 0.0, 294.0], normal: [1.0, 0.0, 0.0]}
+      - {name: outletCap, point: [245.0, -27.8, 6.563], normal: [1.0, 0.0, 0.0]}
+    seed: [0.0, 0.0, 100.0]
+    volume: {expected: 78329.9, tolerance_rel: 0.01, provenance: derived, note: "chamber model 88098.1 mm3 minus rotor 9768.3 mm3 (rotor fully inside; OpenCascade on the scaled supplied STEPs)"}
+    hausdorff_max: 0.1
+    description: seed on the straight inlet tube axis, 6 mm from its wall and 81 mm from the rotor nose
+boundaries:
+  - {name: inlet, role: inlet, body: blood, select: plane, point: [90.0, 0.0, 294.0], normal: [1.0, 0.0, 0.0], area: {expected: 113.097, tolerance_rel: 0.01, provenance: derived, note: "pi * 6^2, the D12 tube"}, description: open end of the curved inlet tube (flow enters along -x)}
+  - {name: outlet, role: outlet, body: blood, select: plane, point: [245.0, -27.8, 6.563], normal: [1.0, 0.0, 0.0], area: {expected: 113.097, tolerance_rel: 0.01, provenance: derived, note: "pi * 6^2, the D12 tube"}, description: open end of the outlet tube at the outlet probe height}
+  - {name: rotorWall, role: rotating_wall, body: blood, select: touching, touching: rotor, description: "every rotor surface wetted by the flow (disc, blades, hub, nose, shaft stub)"}
+  - {name: housingWall, role: wall, body: blood, select: rest, description: "chamber, tube, throat and diffuser walls"}
+operating_cases:
+  - {id: C1, values: {flowLMin: 2.5, speedRpm: 2500.0, inletTurbulencePct: 4.0}, units: {flowLMin: L/min, speedRpm: rpm, inletTurbulencePct: "%"}, split: held_out, source: "sources/fda-pump-packet.md, Simulation conditions table"}
+  - {id: C2, values: {flowLMin: 2.5, speedRpm: 3500.0, inletTurbulencePct: 4.0}, units: {flowLMin: L/min, speedRpm: rpm, inletTurbulencePct: "%"}, split: held_out, source: "sources/fda-pump-packet.md, Simulation conditions table"}
+  - {id: C3, values: {flowLMin: 4.5, speedRpm: 3500.0, inletTurbulencePct: 5.0}, units: {flowLMin: L/min, speedRpm: rpm, inletTurbulencePct: "%"}, split: held_out, source: "sources/fda-pump-packet.md, Simulation conditions table"}
+  - {id: C4, values: {flowLMin: 6.0, speedRpm: 2500.0, inletTurbulencePct: 7.0}, units: {flowLMin: L/min, speedRpm: rpm, inletTurbulencePct: "%"}, split: held_out, source: "sources/fda-pump-packet.md, Simulation conditions table"}
+  - {id: C5, values: {flowLMin: 6.0, speedRpm: 3500.0, inletTurbulencePct: 7.0}, units: {flowLMin: L/min, speedRpm: rpm, inletTurbulencePct: "%"}, split: development, source: "sources/fda-pump-packet.md, Simulation conditions table", description: mesh-refinement case}
+  - {id: C6, values: {flowLMin: 7.0, speedRpm: 3500.0, inletTurbulencePct: 7.0}, units: {flowLMin: L/min, speedRpm: rpm, inletTurbulencePct: "%"}, split: held_out, source: "sources/fda-pump-packet.md, Simulation conditions table"}
+observables:
+  - {id: pressureRiseC1, quantity: pressure_rise, unit: Pa, simulation: cfd, case: C1, averaging: steady, description: "static pressure, outlet patch average minus inlet patch average, no hydrostatic component"}
+  - {id: pressureRiseC2, quantity: pressure_rise, unit: Pa, simulation: cfd, case: C2, averaging: steady, description: "static pressure, outlet patch average minus inlet patch average, no hydrostatic component"}
+  - {id: pressureRiseC3, quantity: pressure_rise, unit: Pa, simulation: cfd, case: C3, averaging: steady, description: "static pressure, outlet patch average minus inlet patch average, no hydrostatic component"}
+  - {id: pressureRiseC4, quantity: pressure_rise, unit: Pa, simulation: cfd, case: C4, averaging: steady, description: "static pressure, outlet patch average minus inlet patch average, no hydrostatic component"}
+  - {id: pressureRiseC5, quantity: pressure_rise, unit: Pa, simulation: cfdC5, case: C5, averaging: steady, description: "static pressure, outlet patch average minus inlet patch average, no hydrostatic component; two mesh levels"}
+  - {id: pressureRiseC6, quantity: pressure_rise, unit: Pa, simulation: cfd, case: C6, averaging: steady, description: "static pressure, outlet patch average minus inlet patch average, no hydrostatic component"}
+  - {id: eulerPressureRiseC1, quantity: pressure_rise, unit: Pa, simulation: euler, case: C1, averaging: steady, description: reduced Euler-head estimate for comparison with pressureRiseC1}
+  - {id: eulerPressureRiseC2, quantity: pressure_rise, unit: Pa, simulation: euler, case: C2, averaging: steady, description: reduced Euler-head estimate for comparison with pressureRiseC2}
+  - {id: eulerPressureRiseC3, quantity: pressure_rise, unit: Pa, simulation: euler, case: C3, averaging: steady, description: reduced Euler-head estimate for comparison with pressureRiseC3}
+  - {id: eulerPressureRiseC4, quantity: pressure_rise, unit: Pa, simulation: euler, case: C4, averaging: steady, description: reduced Euler-head estimate for comparison with pressureRiseC4}
+  - {id: eulerPressureRiseC5, quantity: pressure_rise, unit: Pa, simulation: euler, case: C5, averaging: steady, description: reduced Euler-head estimate for comparison with pressureRiseC5}
+  - {id: eulerPressureRiseC6, quantity: pressure_rise, unit: Pa, simulation: euler, case: C6, averaging: steady, description: reduced Euler-head estimate for comparison with pressureRiseC6}
+simulations:
+  - id: cfdC5
+    physics: cfd_steady
+    solver: openfoam
+    cases: [C5]
+    bodies: [blood, rotor]
+    inputs:
+      fluidDensity: {value: 1035.0, unit: kg/m3, provenance: stated, source: "sources/fda-pump-packet.md, Simulation conditions"}
+      fluidViscosity: {value: 0.0035, unit: Pa s, provenance: stated, source: "sources/fda-pump-packet.md, Simulation conditions (Newtonian)"}
+    settings: {flow_key: flowLMin, speed_key: speedRpm, inlet_diameter_mm: 12.0, cell_mm: 0.6, iterations: 1500, processes: 8, timeout_s: 36000}
+    outputs: [pressureRiseC5]
+    refinement: [1.0, 0.7, {factor: 0.5, iterations: 3000}]
+    description: steady MRF simpleFoam k-omega SST at the CAD rotor phase; three mesh levels (1.0 and 0.7 at 1500 iterations, 0.5 from rest at 3000 iterations) give the grid-convergence index
+  - id: cfd
+    physics: cfd_steady
+    solver: openfoam
+    cases: [C1, C2, C3, C4, C6]
+    bodies: [blood, rotor]
+    inputs:
+      fluidDensity: {value: 1035.0, unit: kg/m3, provenance: stated, source: "sources/fda-pump-packet.md, Simulation conditions"}
+      fluidViscosity: {value: 0.0035, unit: Pa s, provenance: stated, source: "sources/fda-pump-packet.md, Simulation conditions (Newtonian)"}
+    settings: {flow_key: flowLMin, speed_key: speedRpm, inlet_diameter_mm: 12.0, cell_mm: 0.6, iterations: 1500, processes: 8}
+    outputs: [pressureRiseC1, pressureRiseC2, pressureRiseC3, pressureRiseC4, pressureRiseC6]
+    refinement: [1.0]
+    description: steady MRF simpleFoam k-omega SST at the CAD rotor phase, the C5 base mesh level
+  - id: euler
+    physics: reduced
+    solver: reduced:pump_euler
+    cases: [C1, C2, C3, C4, C5, C6]
+    bodies: [rotor]
+    inputs:
+      fluidDensity: {value: 1035.0, unit: kg/m3, provenance: stated, source: "sources/fda-pump-packet.md, Simulation conditions"}
+      bladeCount: {value: 4.0, unit: "", provenance: stated, source: "sources/fda-pump-packet.md, Pump geometry (four blades at 90 degrees)"}
+      bladeOutletAngle: {value: 90.0, unit: deg, provenance: measured (reference model), source: "sources/pump_rotor.step: straight radial blades, side faces parallel to the radius"}
+      bladeOutletWidth: {value: 3.0, unit: mm, provenance: stated, source: "sources/fda-pump-packet.md, Pump geometry (blades 0.003 m x 0.003 m x 0.0185 m); CAD blades z = 5..8"}
+      hydraulicEfficiency: {value: 0.65, unit: "", provenance: inferred, rationale: "sources are silent; typical hydraulic efficiency of a small low-specific-speed centrifugal pump (n_q about 12, Q about 0.1 L/s) with straight radial blades and a 4 mm rim gap, textbook range 0.55-0.75; not tuned to any measurement", uncertainty: 0.1}
+    settings: {flow_key: flowLMin, speed_key: speedRpm}
+    outputs: [eulerPressureRiseC1, eulerPressureRiseC2, eulerPressureRiseC3, eulerPressureRiseC4, eulerPressureRiseC5, eulerPressureRiseC6]
+    description: reduced Euler-head estimate on the placed rotor's tip radius (26 mm), for comparison with the CFD
+acceptance:
+  solid_count: 3
+  clearances:
+    - {name: rotorInHousing, a: rotor, b: housing, min_gap: 0.0, interference_tolerance: 0.01, description: "no interference; the shaft stub end face sits on the housing back face z = 0 (the rig shaft passes a seal there), every other rotor face is at least 1 mm from the housing"}
+  motions:
+    - {name: spin, drive: rotorSpin, range: [0.0, 90.0], steps: 12, interference_tolerance: 0.01, pairs: [[rotor, housing]], description: one blade pitch of the four-blade rotor past the cutwater; the blood body is rest-phase geometry and is excluded}
+references:
+  - {path: sources/fda-pump-packet.md, kind: text, role: authoritative, sha256: 793748e01192fdbe2aa3c7c6f85d91bb6024efde62638bb466bc955d52a95377, revision: "FDA OSEL-DAM CFD and Blood Damage Benchmarks, commit ca35ecc44137fa6bd0d735190eb836ea0dc0d547", note: "geometry, experimental setup and simulation conditions"}
+  - {path: sources/pump_housing.step, kind: cad, role: authoritative, sha256: c9cd9061f29473aa48cf422703992bb47675972ee91eaf048a5254fbc283d447, note: "housing chamber inner-surface model, 1 unit = 100 um"}
+  - {path: sources/pump_rotor.step, kind: cad, role: authoritative, sha256: fa7a064cb1ed1475b7a09f6094579177e996403dd24c4f10875b879f4f7e40c8, note: "rotor in its position relative to the housing, 1 unit = 100 um"}
+  - {path: sources/coordinate_system.png, kind: drawing, role: authoritative, sha256: fe11693f1ad0779ddbac38994541223399dff388a23fc52b0137366d31dc4245, note: axes of the drawings and CAD}
+  - {path: sources/front_view_with_dimensions.png, kind: drawing, role: authoritative, sha256: f66eb511075ec0f7f5bc3430879ab2908690214e480c3e654cfe5e3c9bbaaaf7, note: housing front view (not to scale)}
+  - {path: sources/side_view_with_dimensions.png, kind: drawing, role: authoritative, sha256: ac754287f16c8479930d17e33e377c077629d438f69cdd1092d34a86d49dd28d, note: housing side view (not to scale)}
+  - {path: sources/outlet_tube_detail.png, kind: drawing, role: authoritative, sha256: f49aa7536314378cf0b49636f4303525f87396a9219ced30afe6e7dbb4c2e49f, note: "throat, cutwater and outlet offset detail"}
+  - {path: sources/housing_rotor_clearance.png, kind: image, role: illustrative, sha256: 36b979f9dd5fa87ce29410fe676d5afd8ab4e7e84cd76ba246eeed460ad2f98f, note: section render of the rotor in the chamber}
+  - {path: sources/pump_and_rotor_iso.png, kind: image, role: illustrative, sha256: 29b102d2816a726816feb51686762d7d17f7839e0c38ed345666d65c2fe7ecd9, note: isometric render of the chamber model}
+  - {path: sources/pump_experimental_setup.png, kind: image, role: illustrative, sha256: eec0038ded8d1c5eeec7cfa58ef3cef013abd31b82d66bdf812e8e379d486b1b, note: "flow loop and probe positions (0.175 m, 0.245 m)"}
+open_questions:
+  - "Rotation sense is not stated in the sources; positive speed about +z (counter-clockwise seen from the inlet) is inferred from the volute: the throat is tangent at y = -30 and leaves toward +x, so the rotor must carry the flow toward +x there."
+  - "The inlet patch is the curved tube's open end (x = 90); the rig's inlet probe is on the straight tube at (0, 0, 175), downstream of it, so the patch-average pressure rise omits the tube loss between the patch and the probe (estimated 0.1-0.3 kPa at 6-7 L/min). The outlet patch coincides with the outlet probe height (x = 245)."
+  - "Resolved (asm-ecr-1, evaluator evidence): the per-case inlet turbulence intensity (4, 5, 7 %) is the operating value inletTurbulencePct, which the openfoam adapter now reads for each case by default (settings turbulence_key, default inletTurbulencePct); no setting is needed, and the earlier note that the adapter names no key for it is withdrawn."
+  - "Changed (asm-ecr-1, evaluator simulation evidence): cfd now states refinement [1.0]. It omitted refinement, so the schema default [1.0, 0.5] applied although its description runs only the C5 base mesh level; the openfoam adapter now builds every requested level, which would have added a 0.3 mm interior / 0.15 mm wall / 0.075 mm rotor level (about 8-10 million cells) to each of C1-C4 and C6. The mesh-refinement pair stays cfdC5 [1.0, 0.7]; the lint warning that the one-level cfd gives no numerical-uncertainty estimate is expected, that estimate comes from cfdC5."
+  - "Changed (asm-ecr-2, evaluator simulation evidence): cfdC5 now states refinement [1.0, 0.7, {factor: 0.5, iterations: 3000}], superseding the pair [1.0, 0.7] kept in asm-ecr-1. Two levels give the grid-convergence index only at an assumed order with safety factor 3, and a prediction now resolves only when its finest three levels converge monotonically. The evaluator ran the third level into this simulation's case directories (sim study fda-pump cfdC5 --case C5); pressure rise at C5, each level's mean over its last fifth of iterations: 41,985 Pa at 1.0 (1,250,239 cells, iteration spread 566 Pa, tail drift 0.9 %), 38,620 Pa at 0.7 (2,855,435 cells, 780 Pa, 1.3 %), 36,240 Pa at 0.5 (6,384,580 cells, 3000 iterations, 918 Pa, 0.4 %). The three levels converge monotonically at observed order 1.18 (GCI 0.22 of the finest value). The finest level starts from rest on the finest mesh and runs 3000 iterations; the other levels keep the simulation's 1500. cfdC5.description and the mesh-settings question now name the three levels; cfd keeps refinement [1.0]."
+  - "Changed (asm-ecr-2, evaluator run-time evidence): cfdC5.settings now states timeout_s 36000. The fresh level-0.5 run took 25,600 s in the container (snappyHexMesh 1,620 s, simpleFoam 23,750 s on 8 processes), above the adapter's default timeout_s of 7200 s per run; 36000 s lets a fresh run of the finest level finish. Every other cfdC5 and cfd setting is as published."
+  - "The housing wall thickness (3 mm) and the housing and rotor materials are not in the sources; neither affects the flow region or the pressure-rise predictions."
+  - "The rotor's D3.2 shaft stub ends flush on the chamber back face as supplied; in the rig it passes through a seal. The housing wall is closed there, so the rotor-housing gap is zero at the shaft end face (min_gap 0)."
+  - "hydraulicEfficiency 0.65 +- 0.10 for the Euler estimate is inferred, not stated."
+  - "Mesh settings (cell 0.6 mm, refinement 1.0 / 0.7 / 0.5 at C5 with the finest level at 3000 iterations, 1500 iterations otherwise, 8 processes) are numerical choices; the 1 mm axial gaps get about two cells at the base level. The inlet and outlet tube Reynolds numbers (about 1300-3600) are transitional while the adapter runs k-omega SST everywhere."
+  - "The inlet cap plane x = 90 also crosses the outlet tube (x = 41.5..245); the evaluator's caps must close only their own openings, not act as half-space cuts."

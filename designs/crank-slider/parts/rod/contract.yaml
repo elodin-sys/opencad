@@ -1,0 +1,317 @@
+schema_version: 1
+name: crank-slider-rod
+intent: >-
+  Connecting rod in its own frame: origin at the centre of hole A on the bottom face, z along
+  the pin axes, +x from hole A toward hole B. Stadium plate as the crank: 5 thick (z = 0..5),
+  16 wide (y = -8..8), semicircular ends of radius 8 centred on its two holes, overall
+  x = -8..108; hole A at (0, 0) and wrist pin hole B at (100, 0), both D6 through along z.
+  Interfaces: the bottom face z = 0 lies on the crank's top face at A (revolute crank pin) and
+  on the slider's top face at B (revolute wrist pin). Volume 8722.57 mm3 (derived as the crank
+  with a 100 mm centre distance). Body `rod` of the offset crank-slider assembly `crank-slider`;
+  the authoritative source is sources/crank-slider-spec.md (text only).
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of hole A (the crank-pin bore) on the bottom face: x = y = z = 0"
+  axes:
+    x: "along the rod centre line from hole A toward hole B (wrist pin); hole B axis at x = 100"
+    y: "across the 16 mm width (y = -8..8), right-handed (y = z cross x); y = 0 is the mirror plane through both pin axes"
+    z: "along the pin axes, up through the 5 mm thickness from the bottom face z = 0 to the top face z = 5"
+  datums:
+    - name: A
+      description: "bottom face z = 0 (outward normal -z), which lies on the crank's top face at A and on the slider's top face at B"
+    - name: B
+      description: "hole A axis: the line x = 0, y = 0 parallel to z (revolute crank pin, assembly joint crankPin)"
+    - name: C
+      description: "hole B axis: the line x = 100, y = 0 parallel to z (revolute wrist pin, assembly joint wristPin)"
+
+envelope:
+  min: [-8, -8, 0]
+  max: [108, 8, 5]
+  tolerance: 0.05
+
+parameters:
+  - name: centreDistance
+    value: 100
+    unit: mm
+    provenance: stated
+    source: "sources/crank-slider-spec.md, part table, Connecting rod row: 'A to wrist pin B: 100'"
+    tolerance: 0.01
+    description: "centre distance from hole A (x = 0) to hole B (x = centreDistance) along +x; fixed by the assembly loop (|AB| = 100), so it carries no edit test"
+  - name: plateWidth
+    value: 16
+    unit: mm
+    provenance: stated
+    source: "sources/crank-slider-spec.md, part table, Crank row ('16 wide'), reused by the Connecting rod row ('stadium plate as the crank')"
+    tolerance: 0.01
+    description: "plate width across y, centred on the pin line (y = -plateWidth/2..plateWidth/2)"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 1267.035
+        direction: increase
+        bbox_delta: [2, 2, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [12, 16, 20]
+      infeasible_deltas: [-12]
+  - name: plateThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "sources/crank-slider-spec.md, part table, Crank row ('stadium plate 5 thick'), reused by the Connecting rod row; Frame paragraph: rod layer z 5..10"
+    tolerance: 0.01
+    description: "plate thickness along z, from the bottom face z = 0 to the top face"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 1744.513
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.02
+      sweep:
+        values: [3, 5, 8]
+      infeasible_deltas: [-5]
+  - name: holeDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "sources/crank-slider-spec.md, part table, Crank row ('Ø6 holes'), reused by the Connecting rod row"
+    tolerance: 0.01
+    description: "diameter of both through holes A and B (pin bores along z)"
+  - name: endRadius
+    value: 8
+    unit: mm
+    provenance: derived
+    formula: "plateWidth / 2"
+    source: "sources/crank-slider-spec.md, part table, Crank row: 'semicircular ends of radius 8 centred on its two holes' (equal to 16 / 2)"
+    tolerance: 0.01
+    description: "radius of the two semicircular ends, centred on the hole axes and tangent to the flanks"
+
+features:
+  - id: stadiumPlate
+    kind: extrude
+    description: "stadium outline: flanks y = +/-plateWidth/2 from x = 0 to x = centreDistance joined by semicircular ends of radius endRadius centred on hole A (0, 0) and hole B (centreDistance, 0); extruded from z = 0 to z = plateThickness"
+    parameters: [centreDistance, plateWidth, endRadius, plateThickness]
+    verify:
+      - method: bbox
+      - method: section
+        section: midZ
+      - method: section
+        section: webX
+      - method: face
+        face: floor
+      - method: face
+        face: deck
+      - method: dimension
+        dimension: lengthX
+      - method: dimension
+        dimension: widthY
+      - method: dimension
+        dimension: thicknessZ
+      - method: cylinder
+        cylinder: endA
+      - method: cylinder
+        cylinder: endB
+      - method: solid
+        points: [[50, 0, 2.5], [-5.5, 0, 2.5], [105.5, 0, 2.5]]
+      - method: void
+        points: [[-6.8, 6.8, 2.5], [-6.8, -6.8, 2.5], [106.8, 6.8, 2.5], [106.8, -6.8, 2.5]]
+  - id: holeA
+    kind: hole
+    description: "crank-pin bore A: holeDiameter through the plate along z, axis at (0, 0)"
+    parameters: [holeDiameter, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: holeA
+      - method: section
+        section: throughA
+      - method: void
+        points: [[0, 0, 1.25], [0, 0, 3.75]]
+  - id: holeB
+    kind: hole
+    description: "wrist-pin bore B: holeDiameter through the plate along z, axis at (centreDistance, 0)"
+    parameters: [holeDiameter, centreDistance, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: holeB
+      - method: section
+        section: throughB
+      - method: void
+        points: [[100, 0, 1.25], [100, 0, 3.75]]
+
+interfaces:
+  - name: crankPin
+    description: "revolute crank pin A (assembly joint crankPin, own-frame point [0, 0, 0], axis [0, 0, 1]): bore A on the z axis, the bottom face z = 0 that lies on the crank's top face, and the pin-line mirror plane y = 0; the width and thickness edits move none of them"
+    must_not_change: true
+    checks: [holeA, floor, mirrorY]
+  - name: wristPin
+    description: "revolute wrist pin B (assembly joint wristPin, own-frame point [100, 0, 0], axis [0, 0, 1]): bore B at x = 100, the bottom face z = 0 that lies on the slider's top face, and the pin-line mirror plane y = 0; the width and thickness edits move none of them"
+    must_not_change: true
+    checks: [holeB, floor, mirrorY]
+
+acceptance:
+  volume:
+    expected: 8722.566
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "plateThickness * (centreDistance * plateWidth + pi * endRadius^2 - 2 * pi * (holeDiameter / 2)^2) = 5 * (1600 + 46 pi) = 5 * 1744.513; the intent states 8722.57"
+  surface_area:
+    expected: 4928.849
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "2 * 1744.513 (top and bottom) + plateThickness * (2 * centreDistance + 2 pi * endRadius) (outline wall 1251.327) + 2 * pi * holeDiameter * plateThickness (two bores 188.496)"
+  center_of_mass:
+    expected: [50, 0, 2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "uniform plate symmetric about x = centreDistance / 2, y = 0 and z = plateThickness / 2"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 2.5
+      expect:
+        area: 1744.513
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 2
+      description: "mid-thickness section: stadium outline with both bores"
+    - id: webX
+      plane: x
+      at: 50
+      expect:
+        area: 80
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+      description: "web between the bores: plateWidth x plateThickness rectangle"
+    - id: throughA
+      plane: x
+      at: 1
+      expect:
+        area: 51.716
+        area_tolerance_rel: 0.002
+        loops: 2
+        holes: 0
+      description: "1 mm past bore A's axis: the bore splits the plate into two strips, 2 * plateThickness * (plateWidth / 2 - sqrt(3^2 - 1^2))"
+    - id: throughB
+      plane: x
+      at: 99
+      expect:
+        area: 51.716
+        area_tolerance_rel: 0.002
+        loops: 2
+        holes: 0
+      description: "1 mm before bore B's axis: the bore splits the plate into two strips"
+  faces:
+    - name: floor
+      plane: z
+      at: 0
+      normal: "-"
+      center: [50, 0]
+      mode: one
+    - name: deck
+      plane: z
+      at: 5
+      normal: "+"
+      area: 1744.513
+      area_tolerance_rel: 0.002
+      center: [50, 0]
+      mode: one
+  cylinders:
+    - name: holeA
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      radius_tolerance: 0.02
+      description: "crank-pin bore A, through along z"
+    - name: holeB
+      point: [100, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      radius_tolerance: 0.02
+      description: "wrist-pin bore B, through along z"
+    - name: endA
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 8
+      radius_tolerance: 0.02
+      description: "semicircular end around bore A (convex half cylinder, concentric with the bore)"
+    - name: endB
+      point: [100, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 8
+      radius_tolerance: 0.02
+      description: "semicircular end around bore B (convex half cylinder, concentric with the bore)"
+  dimensions:
+    - name: lengthX
+      axis: x
+      expected: 116
+      tolerance: 0.05
+      description: "overall length x = -8..108: centreDistance + 2 * endRadius"
+    - name: widthY
+      axis: y
+      expected: 16
+      tolerance: 0.05
+      description: "overall width y = -8..8: plateWidth"
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [floor, deck]
+      description: "plate thickness between the bottom and top faces"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[50, 0, 2.5], [-5.5, 0, 2.5], [105.5, 0, 2.5], [0, 5.5, 2.5], [100, -5.5, 2.5]]
+      description: "web centre and the ring of material around each bore"
+    - name: inBores
+      state: void
+      points: [[0, 0, 1.25], [0, 0, 3.75], [100, 0, 1.25], [100, 0, 3.75]]
+      description: "both bores open near the bottom and near the top (through)"
+    - name: roundedEnds
+      state: void
+      points: [[-6.8, 6.8, 2.5], [-6.8, -6.8, 2.5], [106.8, 6.8, 2.5], [106.8, -6.8, 2.5]]
+      description: "bbox corners 1.6 mm outside the R8 ends: a square-ended plate fails"
+  cylinder_counts:
+    - name: pinBores
+      diameter: 6
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 2
+      description: "exactly the two pin bores"
+  symmetry:
+    - name: mirrorY
+      plane: y
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 8700
+    volume_max: 9300
+
+references:
+  - path: sources/crank-slider-spec.md
+    kind: text
+    role: authoritative
+    sha256: cd01ebc4dc4d7289a786bef3bca834eb565dd9f6109941bbcc2ec04b879c0d1c
+    units: mm
+    revision: "unversioned (as supplied)"
+    note: "part table (Crank and Connecting rod rows), Frame, Part frames and Joints paragraphs"
+
+open_questions:
+  - "Material, density and process are not stated; mass properties use the analyzer's default density."
+  - "No fit or tolerance class is given for the D6 pin bores; the contract uses nominal 6.00 mm with a 0.02 mm digital radius tolerance."
+  - "Edge breaks (chamfers or fillets on the plate edges and bore mouths) are not stated; the contract assumes sharp edges."

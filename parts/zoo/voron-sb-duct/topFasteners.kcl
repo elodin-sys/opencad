@@ -1,0 +1,130 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import topHoleAx, topHoleAy, topHoleBx, topHoleBy, topPilotDiameter, topCounterboreDiameter, topPilotStartZ, topBoreCylinderEndZ, topCounterboreDepth, topCounterboreFloorZ, topPilotLength, rearCableNotchDiameter, topZ, backY from "params.kcl"
+
+assert(
+  topPilotDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = topCounterboreDiameter,
+  error = "Top pilot diameter must stay positive and smaller than the counterbore.",
+)
+assert(topCounterboreDiameter, isGreaterThan = topPilotDiameter, error = "Top counterbore must exceed the pilot diameter.")
+assert(
+  topCounterboreDepth,
+  isGreaterThan = 0mm,
+  isLessThan = topBoreCylinderEndZ - topPilotStartZ,
+  error = "Counterbore depth must leave a positive pilot under the moving floor.",
+)
+assert(topPilotStartZ, isLessThan = topBoreCylinderEndZ - topCounterboreDepth, error = "Pilot start must stay below the driven counterbore floor.")
+assert(
+  topPilotLength,
+  isGreaterThan = 0mm,
+  isLessThan = topBoreCylinderEndZ - topPilotStartZ,
+  error = "Declared pilot length must stay positive and shorter than the straight bore.",
+)
+assert(
+  topCounterboreFloorZ,
+  isGreaterThan = topPilotStartZ,
+  isLessThan = topBoreCylinderEndZ,
+  error = "Declared counterbore shoulder must lie between pilot start and bore end.",
+)
+assert(
+  topBoreCylinderEndZ,
+  isGreaterThan = topPilotStartZ,
+  isLessThan = topZ,
+  error = "Straight counterbore must end above the pilot and below the top entry.",
+)
+assert(
+  rearCableNotchDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = 10mm,
+  error = "Cable notch must stay a small back-edge relief inside |x| < 10.",
+)
+assert(
+  topHoleAx,
+  isGreaterThan = -10mm + topCounterboreDiameter / 2,
+  isLessThan = 10mm - (topCounterboreDiameter / 2),
+  error = "Hole A must stay inside the roof |x| < 10 band.",
+)
+assert(
+  topHoleBx,
+  isGreaterThan = -10mm + topCounterboreDiameter / 2,
+  isLessThan = 10mm - (topCounterboreDiameter / 2),
+  error = "Hole B must stay inside the roof |x| < 10 band.",
+)
+
+overlap = 0.03mm
+entryOverrun = 0.04mm
+
+fn zCircleCutter(@boreDia, z0, cutLen, cx, cy) {
+  plane = offsetPlane(XY, offset = z0)
+  sk = sketch(on = plane) {
+    rim = circle(center = [0mm, 0mm], start = [boreDia / 2, 0mm])
+  }
+  cut = extrude(region(segments = [sk.rim]), length = cutLen, method = NEW)
+  hide(sk)
+  return translate(
+    cut,
+    x = cx,
+    y = cy,
+    global = true,
+  )
+}
+
+export fn topFasteners(@body) {
+  zFloor = topBoreCylinderEndZ - topCounterboreDepth
+  cboreA = zCircleCutter(
+    topCounterboreDiameter,
+    z0 = zFloor,
+    cutLen = topCounterboreDepth + overlap,
+    cx = topHoleAx,
+    cy = topHoleAy,
+  )
+  cboreB = zCircleCutter(
+    topCounterboreDiameter,
+    z0 = zFloor,
+    cutLen = topCounterboreDepth + overlap,
+    cx = topHoleBx,
+    cy = topHoleBy,
+  )
+  pilotA = zCircleCutter(
+    topPilotDiameter,
+    z0 = topPilotStartZ,
+    cutLen = topPilotLength + overlap,
+    cx = topHoleAx,
+    cy = topHoleAy,
+  )
+  pilotB = zCircleCutter(
+    topPilotDiameter,
+    z0 = topPilotStartZ,
+    cutLen = topPilotLength + overlap,
+    cx = topHoleBx,
+    cy = topHoleBy,
+  )
+  notch = zCircleCutter(
+    rearCableNotchDiameter,
+    z0 = topPilotStartZ,
+    cutLen = topZ - topPilotStartZ + entryOverrun,
+    cx = 0mm,
+    cy = backY,
+  )
+  entryDia = topCounterboreDiameter + 2 * (topZ - topBoreCylinderEndZ + entryOverrun)
+  entryA = zCircleCutter(
+    entryDia,
+    z0 = topBoreCylinderEndZ - overlap,
+    cutLen = topZ - topBoreCylinderEndZ + overlap + entryOverrun,
+    cx = topHoleAx,
+    cy = topHoleAy,
+  )
+  entryB = zCircleCutter(
+    entryDia,
+    z0 = topBoreCylinderEndZ - overlap,
+    cutLen = topZ - topBoreCylinderEndZ + overlap + entryOverrun,
+    cx = topHoleBx,
+    cy = topHoleBy,
+  )
+  withCbores = subtract(body, tools = [cboreA, cboreB])
+  withPilots = subtract(withCbores, tools = [pilotA, pilotB])
+  withNotch = subtract(withPilots, tools = [notch])
+  return subtract(withNotch, tools = [entryA, entryB])
+}

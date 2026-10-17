@@ -1,0 +1,792 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/bearing-housing/contract.yaml: 12 parameters {'stated': 11, 'derived': 1}; sources unresolved {}; unanchored 11",
+        "open questions: 2 (blocking []); interfaces 2, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 11,
+          "derived": 1
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "Surface area and centre of mass are not given by the spec and are not declared (centre of mass is x = y = 0 by symmetry; its z is not computed).",
+          "Only the hole diameters are edit-tested; the outline parameters (overallHeight, flangeThickness, bossDiameter, flangeLength, holeSpacing, draftAngle, edgeRadius) stay fixed because the drafted, fully rounded tangent hull rebuilds in OpenCascade only at the nominal outline (spec robustness note)."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [
+          "overallHeight",
+          "flangeThickness",
+          "bossDiameter",
+          "flangeLength",
+          "holeSpacing",
+          "draftAngle",
+          "edgeRadius",
+          "counterboreDiameter",
+          "counterboreDepth",
+          "boreDiameter",
+          "mountingHoleDiameter"
+        ],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "counterbore",
+          "boss_top",
+          "section_boss_z15",
+          "section_boss_z24",
+          "draft_flat_pp",
+          "draft_flat_mp",
+          "draft_flat_mm",
+          "draft_flat_pm",
+          "spanX",
+          "spanY",
+          "spanZ",
+          "mirrorX",
+          "mirrorY"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/freecad/bearing-housing/inspect.json bbox.max_error = 0.0001 (tol 0.05)",
+        "results/freecad/bearing-housing/verify.json engine bbox.max_error = 0.8738 (engine bbox differs: engine analyze can include cut-tool extents; disclosed, not gating)"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -49.1775,
+            -28.4275,
+            0.0
+          ],
+          "expected_max": [
+            49.1775,
+            28.4275,
+            26.0
+          ],
+          "measured_min": [
+            -49.1776,
+            -28.4276,
+            0.0
+          ],
+          "measured_max": [
+            49.1776,
+            28.4276,
+            26.0
+          ],
+          "max_error": 0.0001,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -49.1775,
+            -28.4275,
+            0.0
+          ],
+          "expected_max": [
+            49.1775,
+            28.4275,
+            26.0
+          ],
+          "measured_min": [
+            -49.5135,
+            -29.3013,
+            -0.0
+          ],
+          "measured_max": [
+            49.5135,
+            29.3013,
+            26.0
+          ],
+          "max_error": 0.8738,
+          "tolerance": 0.05,
+          "ok": false
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/freecad/bearing-housing/inspect.json volume = 46880.7398 vs 46881.3",
+        "results/freecad/bearing-housing/inspect.json surface_area = None vs None",
+        "results/freecad/bearing-housing/inspect.json center_of_mass = None vs None"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 46881.3,
+          "measured": 46880.7398,
+          "error": 0.5602,
+          "band": 234.4065,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": false,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": false,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/freecad/bearing-housing/inspect.json features: 7/7 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared",
+        "symmetry mirrorX: max 0.034 mm at (-26.9, -5.4, 14.5), p95 0.019 (tol 0.1 / 0.05) [fine STEP tessellation]",
+        "symmetry mirrorY: max 0.014 mm at (21.0, -19.2, 11.0), p95 0.000 (tol 0.1 / 0.05) [fine STEP tessellation]",
+        "results/freecad/bearing-housing/verify.json snapshots.reference_silhouette (IoU vs input renders, evidence) = {'iso': 0.987, 'top': 0.994}; sheet snapshots/view-compare.png"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "counterbore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "through_bore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "mounting_hole_left": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "mounting_hole_right": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "counterbore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "boss_top": {
+            "ok": true,
+            "kind": "face"
+          },
+          "section_boss_z15": {
+            "ok": true,
+            "kind": "section"
+          },
+          "section_boss_z24": {
+            "ok": true,
+            "kind": "section"
+          },
+          "draft_flat_pp": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "draft_flat_mp": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "draft_flat_mm": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "draft_flat_pm": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "spanX": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "spanY": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "spanZ": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "mirrorX": {
+            "ok": true,
+            "kind": "symmetry"
+          },
+          "mirrorY": {
+            "ok": true,
+            "kind": "symmetry"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/freecad/bearing-housing/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/freecad/bearing-housing/inspect.json agreement engine=46881.57558075742 step=46880.739842356 stl=46839.664731077966 (rel tol 0.002; independent=False)",
+        "results/freecad/bearing-housing/inspect.json agreement.manifold = 46839.66473107797 (Manifold kernel witness, rel vs STEP 0.0008761617546171162; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 46881.57558075742,
+        "kcl": 46881.57558075742,
+        "step": 46880.739842356,
+        "stl": 46839.664731077966,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "manifold": 46839.66473107797,
+        "manifold_vs_step_rel": 0.0008761617546171162,
+        "engine_vs_step_rel": 1.7826902993136833e-05,
+        "kcl_vs_step_rel": 1.7826902993136833e-05,
+        "stl_vs_step_rel": 0.0008761617546172714,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/freecad/bearing-housing/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 0/0 values; infeasible refused 0/0; interfaces pinned 13"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "boreDiameter",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -273.32,
+                "measured": -273.3185612019879,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 13,
+                "driven": [
+                  "through_bore"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "mountingHoleDiameter",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -362.85,
+                "measured": -362.8539521689454,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 13,
+                "driven": [
+                  "mounting_hole_left",
+                  "mounting_hole_right",
+                  "section_y0"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "6c50bc4c65f9e6ead3e8b2ddb18e05558f950f66c6931651b6290e90bafa8168",
+          "re_export_sha256": "6c50bc4c65f9e6ead3e8b2ddb18e05558f950f66c6931651b6290e90bafa8168",
+          "ok": true
+        },
+        "sweep": {
+          "values": 0,
+          "passed": 0
+        },
+        "infeasible": {
+          "declared": 0,
+          "refused": 0
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/freecad/bearing-housing/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=17",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "PartDesign",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "math",
+            "FreeCAD",
+            "Part",
+            "Sketcher"
+          ],
+          "forbidden_imports": [],
+          "asserts": 17,
+          "sketch_blocks": 12,
+          "feature_ops": 12,
+          "construction_ops": {
+            "calls": 12,
+            "has_result": true
+          },
+          "parameters": {
+            "overallHeight": {
+              "found": true,
+              "value": 26.0,
+              "expected": 26.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "flangeThickness": {
+              "found": true,
+              "value": 11.0,
+              "expected": 11.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "bossDiameter": {
+              "found": true,
+              "value": 57.0,
+              "expected": 57.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "flangeLength": {
+              "found": true,
+              "value": 98.5,
+              "expected": 98.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "holeSpacing": {
+              "found": true,
+              "value": 76.5,
+              "expected": 76.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "lobeDiameter": {
+              "found": true,
+              "value": 22.0,
+              "expected": 22.0,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            },
+            "draftAngle": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "edgeRadius": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "counterboreDiameter": {
+              "found": true,
+              "value": 47.0,
+              "expected": 47.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "counterboreDepth": {
+              "found": true,
+              "value": 14.0,
+              "expected": 14.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "boreDiameter": {
+              "found": true,
+              "value": 14.0,
+              "expected": 14.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "mountingHoleDiameter": {
+              "found": true,
+              "value": 10.0,
+              "expected": 10.0,
+              "file": "main.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 164,
+          "numeric_literals": 82,
+          "source_size": {
+            "lines": 164,
+            "numeric_literals": 82,
+            "max_lines": 4000,
+            "max_literals": 6000,
+            "ok": true
+          },
+          "ok": true,
+          "partdesign_tree": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/freecad/bearing-housing/export.json step.deterministic = True sha256 6c50bc4c65f9; stl=present; glb=present",
+        "results/freecad/bearing-housing/inspect.json valid = True solids = 1 (expected 1)",
+        "results/freecad/bearing-housing/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = False; manifold witness = 46839.66473107797"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/bearing-housing/export/bearing-housing.step",
+            "sha256": "6c50bc4c65f9e6ead3e8b2ddb18e05558f950f66c6931651b6290e90bafa8168",
+            "bytes": 87216,
+            "deterministic": true,
+            "second_sha256": "6c50bc4c65f9e6ead3e8b2ddb18e05558f950f66c6931651b6290e90bafa8168",
+            "determinism_source": "edit restore re-export"
+          },
+          "fcstd": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/bearing-housing/export/bearing-housing.FCStd",
+            "sha256": "fe44a65ad97eebd16aec562c37733f4367e48d628fbebabcc3b7fa751259b08a",
+            "bytes": 170081
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/bearing-housing/export/bearing-housing.stl",
+            "sha256": "1b5c6fc838fb42d78acfbe5d5c9fe8bf131c9a3f8069ffa083212e2eeed3f3ae",
+            "bytes": 1647584
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/freecad/bearing-housing/export/bearing-housing.glb",
+            "sha256": "ebaa44a6a9991cbc3c9394fef5bf22661a6a9c39acc25f852b8487204220aa64",
+            "bytes": 593852
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 46839.66473107797,
+          "faces": 32950,
+          "vertices": 16471,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 46839.664731077966,
+          "surface_area": 14646.10239552073,
+          "bbox_min": [
+            -49.17742919921875,
+            -28.42742919921875,
+            -1.1102230246251565e-15
+          ],
+          "bbox_max": [
+            49.17742919921875,
+            28.42742919921875,
+            26.0
+          ],
+          "center_of_mass": [
+            1.8234114073481593e-05,
+            7.611471096490977e-07,
+            8.034872711944736
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 3e0fbe26-d60d-4c79-abf4-d9a85ae06a71; engine versions [\"['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']\"]; engine calls 2; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 2,
+        "allow_errors": false,
+        "engine_versions": [
+          "['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']"
+        ],
+        "zoo_versions": [
+          "['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/freecad/bearing-housing/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present, no traced geometry",
+      "ok": true,
+      "evidence": [
+        "results/freecad/bearing-housing/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 12, 'has_result': True} lines = 164"
+      ],
+      "failure_means": "the deliverable is a re-export or a trace of the reference, not a design",
+      "knob": "rebuild from construction with dimensions as parameters; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "math",
+          "FreeCAD",
+          "Part",
+          "Sketcher"
+        ],
+        "construction_ops": {
+          "calls": 12,
+          "has_result": true
+        },
+        "sketch_blocks": 12,
+        "feature_ops": 12,
+        "source_size": {
+          "lines": 164,
+          "numeric_literals": 82,
+          "max_lines": 4000,
+          "max_literals": 6000,
+          "ok": true
+        }
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

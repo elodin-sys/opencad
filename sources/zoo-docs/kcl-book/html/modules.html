@@ -1,0 +1,435 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Modules - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/modules.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="modules"><a class="header" href="#modules">Modules</a></h1>
+<ul>
+<li><a href="#splitting-code-into-modules">Splitting code into modules</a></li>
+<li><a href="#importing-and-exporting-specific-items">Importing and exporting specific items</a></li>
+<li><a href="#default-export">Default export</a></li>
+<li><a href="#organizing-modules-into-directories">Organizing modules into directories</a>
+<ul>
+<li><a href="#re-exporting-through-mainkcl">Re-exporting through <code>main.kcl</code></a></li>
+<li><a href="#naming-an-imported-directory">Naming an imported directory</a></li>
+</ul>
+</li>
+</ul>
+<p>So far, all the KCL examples we've seen have been fairly small. But as you start modeling larger projects, you'll find that your code no longer neatly fits into one file. Organizing your code into smaller <em>modules</em> can really help. In this chapter, we'll explain how to break your code into smaller <em>modules</em>, which let you break your one big KCL file into several smaller ones. This can help your models render much faster, by executing different modules in parallel.</p>
+<h2 id="splitting-code-into-modules"><a class="header" href="#splitting-code-into-modules">Splitting code into modules</a></h2>
+<p>So far, all our KCL examples have been a single file -- <code>main.kcl</code>. That's the default name that Zoo Design Studio and other KCL tools (like our command-line interface) use. But what happens when <code>main.kcl</code> gets too big?</p>
+<p>Say we have a KCL file like this, which defines a cube function, a sphere function, and then models several cubes and spheres.</p>
+<pre><code class="language-kcl=cubes_and_spheres">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+fn cube() {
+  sideLen = 10
+  sketch001 = sketch(on = XY) {
+    line1 = line(start = [var 0mm, var 0mm], end = [var 3.08mm, var 0mm])
+    line2 = line(start = [var 3.08mm, var 0mm], end = [var 3.08mm, var -3.01mm])
+    line3 = line(start = [var 3.08mm, var -3.01mm], end = [var 0mm, var -3.01mm])
+    line4 = line(start = [var 0mm, var -3.01mm], end = [var 0mm, var 0mm])
+    coincident([line1.end, line2.start])
+    coincident([line2.end, line3.start])
+    coincident([line3.end, line4.start])
+    coincident([line4.end, line1.start])
+    parallel([line2, line4])
+    parallel([line3, line1])
+    perpendicular([line1, line2])
+    horizontal(line3)
+    coincident([line1.start, ORIGIN])
+    equalLength([line1, line2, line3, line4])
+    fixed([line1.start, ORIGIN])
+    distance([line1.start, line1.end]) == sideLen
+  }
+  hide(sketch001)
+  return region(segments = [sketch001.line1, sketch001.line2])
+    |&gt; extrude(length = sideLen)
+}
+
+fn sphere() {
+  sphereRadius = 2cm
+  sketch001 = sketch(on = XY) {
+    line1 = line(start = [var -9.84mm, var 0mm], end = [var 10.19mm, var 0mm])
+    distance([line1.start, line1.end]) == sphereRadius
+    horizontal([line1.start, ORIGIN])
+    horizontal([line1.end, ORIGIN])
+    arc1 = arc(start = [var -3.87mm, var 9.09mm], end = [var -9.76mm, var 1.56mm], center = [var 0mm, var 0mm])
+    coincident([arc1.center, ORIGIN])
+    coincident([arc1.end, line1.start])
+    coincident([arc1.start, line1.end])
+  }
+  hidden001 = hide(sketch001)
+  region001 = region(segments = [sketch001.line1, sketch001.arc1])
+  return revolve(region001, angle = 360deg, axis = X)
+}
+
+// Draw ten spheres and ten cubes.
+map(
+  [1..10],
+  f = fn(@i) { return cube() |&gt; translate(x = i * 20) },
+)
+
+map(
+  [1..10],
+  f = fn(@i) { return sphere() |&gt; translate(y = i * 20)},
+)
+</code></pre>
+<p><model-viewer
+            alt="Several cubes and spheres"
+            src="gltf/cubes_and_spheres/output.gltf"
+            poster="images/dynamic/cubes_and_spheres.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+We can split this file into two separate files, <code>cubes.kcl</code> and <code>spheres.kcl</code>. We'll put the <code>sphere</code> function and the <code>map</code> that makes ten spheres into <code>spheres.kcl</code>. Then the <code>cube</code> function and the <code>map</code> that makes ten cubes into <code>cubes.kcl</code>.</p>
+<p>To tell <code>main.kcl</code> to execute these two files, we use the <code>import</code> keyword with each file's filepath.</p>
+<pre><code class="language-kcl">import "cubes.kcl"
+import "spheres.kcl"
+</code></pre>
+<p>If you open this file, you'll see the same image as before (10 spheres and 10 cubes). There's two advantages to the multi-file approach:</p>
+<ol>
+<li>Grouping related code into its own file can make it easier to read.</li>
+<li>In KCL, <em>each module executes in parallel</em>. This means the cubes and spheres will be drawn simultaneously, taking roughly half the time. Splitting big KCL files into smaller modules really speed up large projects.</li>
+</ol>
+<p>Each of your <code>.kcl</code> files is a KCL module. Import paths are always relative to the file doing the importing, so any module can import the <code>.kcl</code> files sitting next to it in the same directory. Once your project grows big enough to need subdirectories, there are a few more rules to learn -- see <a href="#organizing-modules-into-directories">Organizing modules into directories</a> below.</p>
+<p>One other rule: <code>import</code> statements must be at the <em>top level</em> of a file. They can't be nested inside a function definition or any other block. They don't have to be the first lines in the file, though -- this is fine:</p>
+<pre><code class="language-kcl">sideLen = 10
+import "cubes.kcl"
+</code></pre>
+<p>Most people put their imports at the top anyway, because it makes it easy to see what a file depends on.</p>
+<h2 id="importing-and-exporting-specific-items"><a class="header" href="#importing-and-exporting-specific-items">Importing and exporting specific items</a></h2>
+<p>In the previous example, we just imported an entire file, causing KCL to run all its code. But what if I want to use values from one KCL file (perhaps a variable like <code>radius = 20in</code> or a function like <code>cube</code>) in another file? You can <code>export</code> and <code>import</code> specific variables between KCL modules. Let's see how.</p>
+<p>Here's a simple example. Let's export some constants from one file (<code>car_constants.kcl</code>) and import them into another (<code>car_wheel.kcl</code>).</p>
+<pre><code class="language-kcl">// car_constants.kcl
+export wheelDiameter = 15in
+export wheelDepth = 4in
+export axleLength = 2in
+</code></pre>
+<p>Here, we export 3 different variables from <code>car_constants.kcl</code>. Next, let's import and use some of them.</p>
+<pre><code class="language-kcl">// car_wheel.kcl
+import wheelDepth, wheelDiameter from "car_constants.kcl"
+
+makeWheel(diameter = wheelDiameter)
+|&gt; extrude(length = wheelDepth)
+</code></pre>
+<p>You can export any variable, not just simple numbers. For example, we could <code>export fn cube(sideLength)</code> from <code>cube.kcl</code>, and then import it in <code>main.kcl</code> and use it to draw several cubes. Alternatively, <code>cube.kcl</code> could export an <em>actual cube</em>, not just a function to create one. Here's an example showing both of these:</p>
+<pre><code class="language-kcl">// cube.kcl
+fn cube(sideLength) {
+  sketch001 = sketch(on = XY) {
+    // Code omitted for brevity; same as previous cube examples
+  }
+  return region(segments = [sketch001.line1, sketch001.line2])
+    |&gt; extrude(length = sideLen)
+}
+
+export mySpecificCube = cube(sideLength = 20)
+</code></pre>
+<p>Now in <code>main.kcl</code> we can access <code>mySpecificCube</code>, and translate or rotate it. We can also use the <code>cube</code> function to make more cubes.</p>
+<pre><code class="language-kcl">// main.kcl
+import mySpecificCube, cube from "cube.kcl"
+
+mySpecificCube |&gt; translate(x = 50) |&gt; rotate(pitch = 40)
+secondCube = cube(sideLength = 7)
+</code></pre>
+<p><img src="images/static/two_cubes_import.png" alt="The imported specific cube and a second cube created from the imported fn cube" /></p>
+<h2 id="default-export"><a class="header" href="#default-export">Default export</a></h2>
+<p>Here's a little time-saving feature for KCL exports. The last expression or variable declared in a KCL module is its <em>default export</em>. This means we could shorten our program</p>
+<pre><code class="language-kcl">export fn cube(sideLength) {
+  // Code omitted for brevity.
+  // Same as previous example.
+}
+
+// This is the last expression in the module, so it's the _default export_.
+cube(sideLength = 20)
+</code></pre>
+<p>and use it in <code>main.kcl</code> like this:</p>
+<pre><code class="language-kcl">// main.kcl
+import cube from "cube.kcl"
+// Let's use the default export, and give it a name.
+import "cube.kcl" as mySpecificCube
+
+mySpecificCube |&gt; translate(x = 50) |&gt; rotate(pitch = 45)
+secondCube = cube(sideLength = 7)
+</code></pre>
+<h2 id="organizing-modules-into-directories"><a class="header" href="#organizing-modules-into-directories">Organizing modules into directories</a></h2>
+<p>Once a project has more than a handful of files, you'll want to group them into directories. Say we're modeling a car, and we've put everything to do with the wheels in its own directory:</p>
+<pre><code class="language-text">car/
+├── main.kcl
+├── chassis.kcl
+├── constants.kcl
+└── wheels/
+    ├── main.kcl
+    ├── tire.kcl
+    └── rim.kcl
+</code></pre>
+<p>KCL has three rules about which of these files can import which.</p>
+<p><strong>1. Any module can import its neighbors.</strong> Import paths are relative to the file doing the importing, not to the top of your project. So <code>car/main.kcl</code> can import <code>chassis.kcl</code> and <code>constants.kcl</code>, and <code>wheels/main.kcl</code> can import <code>tire.kcl</code> and <code>rim.kcl</code>.</p>
+<p><strong>2. From a directory, you can only import its <code>main.kcl</code>.</strong> So <code>car/main.kcl</code> can do this:</p>
+<pre><code class="language-kcl">import "wheels/main.kcl"
+</code></pre>
+<p>but <em>not</em> this:</p>
+<pre><code class="language-text">import "wheels/tire.kcl"
+</code></pre>
+<p>which fails to parse with:</p>
+<blockquote>
+<p>import path to a subdirectory must only refer to main.kcl.</p>
+</blockquote>
+<p>Think of a directory's <code>main.kcl</code> as its front door. Everything inside the directory is private, and <code>main.kcl</code> decides what the rest of the project is allowed to see. This keeps directories self-contained: you can rearrange the files inside <code>wheels/</code> without breaking anything outside it. The rule applies at any depth -- if <code>wheels/</code> had a <code>hardware/</code> directory inside it, <code>car/main.kcl</code> could import <code>"wheels/hardware/main.kcl"</code>. It's only the <em>last</em> part of the path that has to be <code>main.kcl</code>.</p>
+<p><strong>3. You can never import from a parent directory.</strong> An import path can't start with <code>..</code>, and it can't be an absolute path like <code>/Users/me/parts/bolt.kcl</code>. So <code>wheels/tire.kcl</code> cannot do this:</p>
+<pre><code class="language-text">import "../constants.kcl"
+</code></pre>
+<p>which fails to parse with:</p>
+<blockquote>
+<p>import path may not start with '..'. Cannot reference a parent module or anything outside the bounds of your project.</p>
+</blockquote>
+<p>Modules can only ever reach sideways or downwards, which means a directory never depends on where it's been placed. If a nested module needs a value from higher up in the project, pass it in as a function parameter instead of importing it: have <code>tire.kcl</code> export a <code>fn tire(diameter)</code>, and let <code>car/main.kcl</code> supply the diameter from <code>constants.kcl</code>.</p>
+<h3 id="re-exporting-through-mainkcl"><a class="header" href="#re-exporting-through-mainkcl">Re-exporting through <code>main.kcl</code></a></h3>
+<p>Rule 2 sounds restrictive, but it isn't, because a <code>main.kcl</code> can pass items through from its neighbors using <code>export import</code>. This lets a directory expose exactly what it wants, and nothing else.</p>
+<pre><code class="language-kcl">// wheels/main.kcl
+// Let the rest of the project use `tireWidth`, but keep the rest of tire.kcl private.
+export import tireWidth from "tire.kcl"
+
+// Or re-export everything that rim.kcl exports.
+export import * from "rim.kcl"
+</code></pre>
+<p>Now <code>car/main.kcl</code> can import those items straight from the <code>wheels</code> directory, without knowing which file inside it they came from:</p>
+<pre><code class="language-kcl">// car/main.kcl
+import tireWidth, rimWidth from "wheels/main.kcl"
+</code></pre>
+<p>Anything <code>wheels/main.kcl</code> doesn't re-export stays invisible outside the directory, even if the file it lives in exports it. Note that <code>export</code> only works on the <code>import x from "..."</code> and <code>import * from "..."</code> forms -- writing <code>export import "tire.kcl"</code> won't re-export anything.</p>
+<h3 id="naming-an-imported-directory"><a class="header" href="#naming-an-imported-directory">Naming an imported directory</a></h3>
+<p>When you import a whole module without naming it, KCL derives a name from the path. For a directory import, that name is the <em>directory</em> name, not <code>main</code>:</p>
+<pre><code class="language-kcl">// This makes the module available as `wheels`, not `main`.
+import "wheels/main.kcl"
+
+// Access its exported items with `::`
+myTire = wheels::tire()
+</code></pre>
+<p>If the name KCL derives wouldn't be a valid KCL identifier -- because the file name contains a hyphen or a space, or starts with a digit or underscore -- you have to name it yourself with <code>as</code>:</p>
+<pre><code class="language-kcl">import "cube-inches.kcl" as cubeInches
+</code></pre>
+<p>Finally, imports can't be circular. If <code>a.kcl</code> imports <code>b.kcl</code>, then <code>b.kcl</code> can't import <code>a.kcl</code>, directly or through a chain of other modules.</p>
+<p>For more details, you can read the <a href="https://zoo.dev/docs/kcl-lang/modules">modules reference</a> in the KCL docs.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="units_of_measurement.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="interop.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="units_of_measurement.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="interop.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,506 @@
+schema_version: 1
+name: spleen-c1-blade
+intent: >-
+  Reconstruct one SPLEEN C1 turbine cascade blade as editable KCL. Build the closed
+  airfoil profile from the attached coordinate table (sheet SPLEENC1_Coord: pressure
+  side x,y in columns A-B and suction side x,y in columns C-D, both in metres, both
+  running from the leading edge at the origin to the shared trailing-edge point),
+  keeping the table's axes, origin, scale and orientation exactly: x axial, y
+  pitchwise, leading edge at (0, 0), trailing edge at (47.614, -21.600) mm, so the
+  chord sits at the documented 24.4 degree stagger. Extrude the profile straight
+  along +z from z = 0 over the documented cascade span (165.0 mm, Table 2.1).
+  Preserve the leading edge, the suction-side curvature and the trailing-edge
+  closure as given; do not substitute a generic airfoil, do not smooth or re-fit
+  the shape beyond what a faithful curve through the published points requires,
+  and do not add a root, platform, fillets or a display stand. The coordinate
+  table is authoritative over any CAD file (the database's v1 CAD had a wrong
+  stagger angle). One solid; export STEP and STL.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: >-
+    The shared leading-edge coordinate in SPLEENC1_Coord cells A3:D3, at the
+    starting span plane z = 0. This is (0, 0, 0) mm; it is a published boundary
+    landmark, not the minimum-x point or the profile centroid.
+  axes:
+    x: >-
+      Positive axial direction, exactly increasing spreadsheet x (columns A and C)
+      after multiplication by 1000 to convert metres to millimetres.
+    y: >-
+      Positive pitchwise direction, exactly increasing spreadsheet y (columns B
+      and D) after multiplication by 1000. The shared trailing edge has negative y.
+    z: >-
+      Positive span direction normal to the spreadsheet XY plane, completing a
+      right-handed frame; extrude from z = 0 to z = 165.0 mm without twist or taper.
+  datums:
+    - name: spanStart
+      description: >-
+        Planar blade end at z = 0, outward normal -z; its leading-edge landmark
+        fixes the origin and its sketch axes retain the spreadsheet x and y axes.
+    - name: axialDatum
+      description: >-
+        Construction datum plane y = 0 containing the origin and the +x and +z
+        directions. It fixes the axial direction without aligning the chord to x.
+    - name: pitchwiseDatum
+      description: >-
+        Construction datum plane x = 0 containing the origin and the +y and +z
+        directions. It is not tangent to the leading-edge nose.
+    - name: chordDatum
+      description: >-
+        Line in z = 0 from (0, 0) to the exact shared coordinate
+        (47.6144470215, -21.59972305301) mm in A1003:D1003. Its signed angle from
+        +x toward +y is -24.40085023652175 deg, consistent with the rounded
+        documented stagger magnitude 24.4 deg. No additional stagger rotation.
+    - name: spanEnd
+      description: Planar blade end at z = 165.0 mm, outward normal +z.
+
+envelope:
+  min: [-0.19685863578579998, -21.6984059788506, 0.0]
+  max: [47.77582706417, 9.51390836469706, 165.0]
+  tolerance: 0.01
+
+parameters:
+  - name: span
+    value: 165.0
+    unit: mm
+    provenance: stated
+    source: sources/spleen-c1-geometry-excerpt.md, Table 2.1, "Cascade span [mm] | 165.0"
+    tolerance: 0.01
+    description: Straight extrusion length along +z; the starting plane remains z = 0.
+    edit_test:
+      delta: 10.0
+      expect:
+        volume_delta: 2306.3711778179277
+        direction: increase
+        tolerance_rel: 0.002
+        bbox_delta: [0.0, 0.0, 10.0]
+  - name: axialChord
+    value: 47.6144470215
+    unit: mm
+    provenance: stated
+    source: sources/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx, SPLEENC1_Coord!A1003/C1003 and Features!B6
+    tolerance: 0.001
+    description: >-
+      Shared trailing-edge x coordinate: 0.0476144470215 m in the coordinate
+      table, and 47.6144470215 mm in Features. Retain all digits. At baseline,
+      every source x coordinate is used unchanged after unit conversion.
+      For the edit test, multiply every converted x by axialChord / 47.6144470215,
+      holding every y coordinate, trailingEdgeY, and span fixed. This defines
+      an axial-only edit about x = 0; it does not impose an additional rotation.
+    edit_test:
+      delta: 1.0
+      expect:
+        volume_delta: 799.2348292276137
+        direction: increase
+        tolerance_rel: 0.002
+        bbox_delta: [1.0075237391351841, 0.0, 0.0]
+  - name: trailingEdgeY
+    value: -21.59972305301
+    unit: mm
+    provenance: stated
+    source: sources/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx, SPLEENC1_Coord!B1003/D1003
+    tolerance: 0.001
+    description: >-
+      Shared trailing-edge y coordinate, from -0.02159972305301 m. Retain all
+      digits. A deliberate edit scales converted y by trailingEdgeY /
+      (-21.59972305301) about y = 0, independently of axialChord and span.
+      Both coordinate scale factors equal one for the requested reconstruction.
+  - name: trailingEdgeRadius
+    value: 0.435
+    unit: mm
+    provenance: stated
+    source: sources/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx, Features!A9:B9, "Trailing edge radius [mm]", 0.435
+    tolerance: 0.005
+    description: >-
+      Published nominal trailing-edge radius; documentary cross-check on the
+      supplied contour, not a fillet operation or permission to replace the
+      terminal coordinate rows with a fitted circle. The coordinate table wins
+      any discrepancy. This is a nominal reference constant, not an edit driver.
+  - name: profilePerimeter
+    value: 123.78447524923155
+    unit: mm
+    provenance: measured (reference model)
+    source: reference/profile.json
+    tolerance: 0.05
+    description: >-
+      measurements.perimeter: closed-loop sum of consecutive point distances,
+      including the final segment to the leading edge. Nominal verification
+      constant used for the analytic surface-area baseline, not a shape driver.
+  - name: trueChord
+    value: 52.284640202739865
+    unit: mm
+    provenance: derived
+    formula: sqrt(axialChord^2 + trailingEdgeY^2)
+    tolerance: 0.001
+    description: >-
+      Distance between the shared LE and TE landmarks. The workbook Features
+      value 52.285 mm and Table 2.1 value 52.28 mm are rounded documentary
+      cross-checks. Do not use the ingest's farthest-pair chord as this parameter.
+      Nominal derived reference constant; it must not equality-lock edit drivers.
+  - name: signedStagger
+    value: -24.40085023652175
+    unit: deg
+    provenance: derived
+    formula: atan2(trailingEdgeY, axialChord) * 180 / pi
+    tolerance: 0.005
+    description: >-
+      Signed LE-to-TE chord angle measured from +x toward +y. Its magnitude
+      rounds to the published 24.4 deg. It documents the orientation already
+      present in the coordinates; never rotate the nominal profile by this
+      angle again. Nominal derived reference constant, not an equality lock.
+
+features:
+  - id: closedAirfoil
+    kind: profile
+    count: 1
+    description: >-
+      One closed airfoil boundary from all published coordinate rows. Trace PS
+      A3:B1003 from LE to TE, then SS C1002:D4 in reverse toward LE, and close
+      once at the original LE. Each side has 1001 points; shared endpoints yield
+      2000 distinct loop vertices. Preserve every point and side identity.
+      A faithful through-point curve is permitted; smoothing, point reduction,
+      generic-airfoil substitution and reference-CAD imports are forbidden.
+      Nominal source-point-to-boundary error must be at most 0.001 mm; this
+      additional pointwise requirement needs verification beyond schema probes.
+    parameters: [axialChord, trailingEdgeY, trueChord, signedStagger, profilePerimeter]
+    verify:
+      - method: bbox
+        note: Full table extrema; LE and TE landmarks are not the bounding-box extrema.
+      - method: section
+        section: midSpan
+      - method: count
+        section: midSpan
+        count: 1
+        note: One outer boundary, zero holes; acceptance.solid_count separately requires one solid.
+      - method: solid
+        points: [[10.0, 6.0, 82.5], [25.0, 3.0, 82.5], [40.0, -12.2, 82.5]]
+      - method: void
+        points: [[20.0, 0.0, 82.5], [25.0, 7.0, 82.5]]
+        note: Exterior clear-space probes on opposite sides of the blade; these do not specify cavities.
+  - id: pressureSide
+    kind: profile
+    count: 1
+    description: >-
+      Pressure-side boundary portion of closedAirfoil, exactly columns A-B
+      from row 3 through row 1003; preserve its curved contour and side identity
+      along the full span. This is not an additional solid.
+    parameters: [axialChord, trailingEdgeY]
+    verify:
+      - method: section
+        section: axialCrown
+      - method: solid
+        points: [[30.0, -3.0, 82.5], [40.0, -13.0, 82.5]]
+      - method: void
+        points: [[25.0, -1.0, 82.5]]
+        note: Exterior of the pressure side.
+  - id: suctionSide
+    kind: profile
+    count: 1
+    description: >-
+      Suction-side boundary portion of closedAirfoil, exactly columns C-D
+      from row 3 through row 1003, traversed backward when closing the loop.
+      Preserve the pronounced crown, nose curvature and terminal curvature.
+    parameters: [axialChord, trailingEdgeY]
+    verify:
+      - method: bbox
+        note: In particular retain y_max = 9.51390836469706 mm.
+      - method: section
+        section: axialCrown
+      - method: solid
+        points: [[14.0, 9.3, 82.5]]
+      - method: void
+        points: [[14.0, 9.7, 82.5]]
+        note: Exterior of the suction-side crown.
+  - id: leadingEdge
+    kind: profile
+    count: 1
+    description: >-
+      The sides meet at the published origin (0, 0) and retain the surrounding
+      rounded nose, including negative-x coordinates. No leading-edge radius
+      is invented and no tangent-plane relocation is allowed.
+    parameters: [axialChord, trailingEdgeY]
+    verify:
+      - method: bbox
+        note: Retain x_min = -0.19685863578579998 mm despite the LE landmark at x = 0.
+      - method: section
+        section: axialLeadingEdge
+      - method: solid
+        points: [[-0.1, 0.5, 82.5], [0.1, 0.4, 82.5]]
+      - method: void
+        points: [[-0.3, 0.7, 82.5], [-0.05, -0.2, 82.5]]
+        note: Exterior points bracket the nose.
+  - id: trailingEdge
+    kind: profile
+    count: 1
+    description: >-
+      Close the PS/SS terminal arcs at the exact shared table point
+      (47.6144470215, -21.59972305301) mm. Preserve all nearby coordinate rows
+      and the table's rounded edge, including its extrema beyond that landmark.
+      The documented 0.435 mm radius is retained as a cross-check; add no
+      independent circular cap, bevel, gap, blunt truncation or fillet.
+    parameters: [axialChord, trailingEdgeY, trailingEdgeRadius]
+    verify:
+      - method: bbox
+        note: Retain x_max = 47.77582706417 and y_min = -21.6984059788506 mm.
+      - method: section
+        section: axialTrailingEdge
+      - method: count
+        section: axialTrailingEdge
+        count: 1
+      - method: solid
+        points: [[47.55, -21.3, 82.5]]
+      - method: void
+        points: [[47.9, -21.3, 82.5]]
+        note: Exterior of the rounded trailing edge.
+  - id: straightSpan
+    kind: extrude
+    count: 1
+    description: >-
+      Extrude the complete closedAirfoil straight from z = 0 through +165.0 mm.
+      The XY profile is constant at every span station: one solid, no twist,
+      taper, holes, cavities, root, platform, added fillets or display stand.
+    parameters: [span, axialChord, trailingEdgeY]
+    verify:
+      - method: bbox
+      - method: section
+        section: nearSpanStart
+      - method: section
+        section: midSpan
+      - method: section
+        section: nearSpanEnd
+      - method: count
+        section: nearSpanStart
+        count: 1
+      - method: count
+        section: nearSpanEnd
+        count: 1
+      - method: solid
+        points: [[25.0, 3.0, 1.0], [25.0, 3.0, 164.0]]
+      - method: face
+        face: spanStart
+      - method: face
+        face: spanEnd
+  - id: planarEndCaps
+    kind: other
+    count: 2
+    description: Two planar airfoil-shaped caps created by the extrusion, at z = 0 and z = span.
+    parameters: [span, axialChord, trailingEdgeY]
+    verify:
+      - method: face
+        face: spanStart
+      - method: face
+        face: spanEnd
+
+interfaces:
+  - name: sourceFrame
+    description: >-
+      Preserve the table's LE origin, axial/pitchwise axes, signed stagger and
+      metre-to-millimetre scale in KCL and both exports. No centering or presentation rotation.
+    must_not_change: true
+  - name: pressureSide
+    description: >-
+      Retain traceable pressure-side wall identity from columns A-B, including
+      all wall faces if the curve representation creates multiple faces.
+    must_not_change: true
+  - name: suctionSide
+    description: >-
+      Retain traceable suction-side wall identity from columns C-D, including
+      all wall faces if the curve representation creates multiple faces.
+    must_not_change: true
+  - name: spanCaps
+    description: >-
+      Keep named planar end faces spanStart (z = 0, outward -z) and spanEnd
+      (z = span, outward +z). This blade has no inlet/outlet flow-domain faces
+      and no root or platform mating interface.
+    must_not_change: true
+
+acceptance:
+  bbox_tolerance: 0.01
+  volume:
+    expected: 38055.12443399581
+    tolerance_rel: 0.002
+    provenance: derived
+    note: >-
+      A = reference/profile.json measurements.area = 230.63711778179277 mm^2,
+      the closed-point-loop shoelace area. V = A * span. At baseline span = 165.
+      For the independent edits, DeltaV_span = A * DeltaSpan and
+      DeltaV_axialChord = A * span * DeltaAxialChord / 47.6144470215, with
+      all y coordinates fixed. Center-of-mass formula (the schema has no
+      center_of_mass.note field): for consecutive points p_i=(x_i,y_i), closing
+      cyclically, d_i=x_i*y_(i+1)-x_(i+1)*y_i, A_poly=0.5*sum(d_i),
+      Cx=sum((x_i+x_(i+1))*d_i)/(6*A_poly),
+      Cy=sum((y_i+y_(i+1))*d_i)/(6*A_poly), Cz=span/2.
+      Use area moments, not measurements.centroid, which is only a vertex mean.
+      Blockout is the same envelope-only airfoil extrusion, with band
+      [0.99*A*span, 1.01*A*span].
+  surface_area:
+    expected: 20885.71265168679
+    tolerance_rel: 0.002
+    provenance: derived
+    note: >-
+      S = 2*A + profilePerimeter*span, with A = 230.63711778179277 mm^2 from
+      reference/profile.json measurements.area. Two caps plus all extruded
+      boundary walls. This polygonal reference baseline permits only small
+      interpolation differences within the stated digital tolerance.
+  center_of_mass:
+    expected: [20.619657984838426, 1.0449253890203034, 82.5]
+    tolerance: 0.01
+    provenance: derived
+  solid_count: 1
+  sections:
+    - id: nearSpanStart
+      plane: z
+      at: 16.5
+      expect:
+        area: 230.63711778179277
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+      description: >-
+        At span/10, expose the full closed airfoil; A from measurements.area.
+        One outer loop and no inner loops.
+    - id: midSpan
+      plane: z
+      at: 82.5
+      expect:
+        area: 230.63711778179277
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+      description: At span/2, the same full airfoil area A and topology.
+    - id: nearSpanEnd
+      plane: z
+      at: 148.5
+      expect:
+        area: 230.63711778179277
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+      description: At 9*span/10, the same full airfoil area A and topology; detect taper or twist.
+    - id: axialLeadingEdge
+      plane: x
+      at: 0.1
+      expect:
+        area: 306.8773636067
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 0
+      description: >-
+        Leading-edge diagnostic rectangle in yz. Linear intersection of
+        reference/profile.json points_mm gives y in [-0.1007751328722282,
+        1.7590876768653476] mm; area = their difference * span.
+    - id: axialCrown
+      plane: x
+      at: 14.0
+      expect:
+        area: 1061.785915064893
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 0
+      description: >-
+        Pressure/suction-side crown diagnostic rectangle in yz. Intersections
+        of points_mm give y in [3.0780356493613352, 9.513101801269778] mm;
+        area = their difference * span.
+    - id: axialTrailingEdge
+      plane: x
+      at: 47.6
+      expect:
+        area: 120.18396505371327
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 0
+      description: >-
+        Terminal closure diagnostic rectangle in yz. Intersections of points_mm
+        give y in [-21.610116599844556, -20.881728932852354] mm;
+        area = their difference * span.
+  faces:
+    - name: spanStart
+      plane: z
+      at: 0.0
+      normal: '-'
+      area: 230.63711778179277
+      area_tolerance_rel: 0.002
+      tolerance: 0.01
+      center: [20.619657984838426, 1.0449253890203034]
+    - name: spanEnd
+      plane: z
+      at: 165.0
+      normal: '+'
+      area: 230.63711778179277
+      area_tolerance_rel: 0.002
+      tolerance: 0.01
+      center: [20.619657984838426, 1.0449253890203034]
+  deviation: null
+  blockout:
+    volume_min: 37674.57318965585
+    volume_max: 38435.67567833576
+  export_volume_tolerance_rel: 0.002
+
+references:
+  - path: sources/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx
+    kind: table
+    role: authoritative
+    sha256: eb02e45c1ff8b6f94fcb7a91209f5b0113c96b1ffa27f9cbaff18133cb37a4f2
+    units: m in SPLEENC1_Coord; mm and deg in Features
+    revision: Coordinate workbook v1; cited by SPLEEN database v5 as correct
+    note: >-
+      SPLEENC1_Coord rows 3:1003, A-B pressure side and C-D suction side, both
+      LE to TE. Features cells B4/B6:B9 give documentary angle, chords, pitch
+      and TE radius. Workbook coordinates take precedence over rounded text
+      and any CAD geometry, including the known wrong-stagger v1 CAD.
+  - path: sources/spleen-c1-geometry-excerpt.md
+    kind: text
+    role: authoritative
+    sha256: f3e30892ac891e29e7b6483e6456b6d7e2364fdf719a08a28e0f13ada6fc18e8
+    units: mm and deg; coordinate commentary also uses m
+    revision: Database v5; Geometry_TestSection_Info_v2 Table 2.1; v2 update dated 25/11/2022
+    note: >-
+      Supplies the 165.0 mm blade span and documentary cascade parameters;
+      quotes the correction identifying the coordinate workbook as correct.
+      Source attribution is recorded in the excerpt; original PDFs/CAD are
+      not supplied. The 225 mm upstream test-section height is not blade span.
+  - path: reference/profile.json
+    kind: reference-model
+    role: authoritative
+    sha256: 0566d60bccac41d4dcbb77698128b45c40ce94b7256b153278998cc265e371e7
+    units: mm, mm^2 and deg
+    revision: Deterministic profile ingest generated 2026-09-15T17:56:12Z
+    note: >-
+      Derived numerical reference subordinate to the workbook. Use points_mm,
+      measurements.area, perimeter, bbox_min, bbox_max and size for nominal
+      verification. Verified point-for-point against the converted workbook.
+      measurements.chord and stagger_deg describe the farthest vertex pair,
+      not the shared LE/TE chord; measurements.centroid is an unweighted
+      boundary-vertex mean, not the area centroid. Exclude those three fields
+      from physical chord/stagger/COM acceptance. No mesh or suggested
+      tolerances are present. closed_input=false means the final LE vertex is
+      not repeated; cyclic closure is required. The polygon was independently
+      checked for validity because self_intersections_checked=false.
+  - path: reference/profile.png
+    kind: image
+    role: illustrative
+    sha256: 882cb4e073a2d8c3fb8beab93ed9095e96565fffff2ad9ef81c1596dde6d75dd
+    units: Pixels rendering the mm profile at approximately 17.509964 pixels/mm
+    revision: Plot accompanying the 2026-09-15T17:56:12Z profile ingest
+    note: >-
+      900 by 606 pixel undimensioned plan-view plot of the same loop; used only
+      for visual orientation and feature evidence. No dimensions were inferred
+      from raster pixels.
+
+open_questions:
+  - >-
+    What material, density and manufacturing process, if any, should be assigned?
+    The supplied sources establish geometry only; these fields remain null and
+    no mass claim is made.
+  - >-
+    Is a specific original interpolation law required between published points?
+    No spline degree, knot vector or continuity convention is supplied. The
+    reconstruction must retain every point within 0.001 mm and preserve the
+    contour without smoothing; exact between-point authoring geometry remains
+    unspecified.

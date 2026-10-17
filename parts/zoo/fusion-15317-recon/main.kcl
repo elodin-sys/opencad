@@ -1,0 +1,16 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// fusion-15317-recon: Ø88.9 flange with a through U-slot and two stepped arm bores on a
+// Ø50.8 waisted hub. Parameters live in params.kcl, the envelope revolve in datum.kcl;
+// each module cuts one feature group. Order follows the partition's depends_on.
+import datum from "datum.kcl"
+import armBores from "armBores.kcl"
+import hubWaist from "hubWaist.kcl"
+import rimHoles from "rimHoles.kcl"
+import uSlot from "uSlot.kcl"
+
+part = datum
+  |> armBores()
+  |> hubWaist()
+  |> rimHoles()
+  |> uSlot()

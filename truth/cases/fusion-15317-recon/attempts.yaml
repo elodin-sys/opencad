@@ -1,0 +1,182 @@
+attempts:
+- started: '2026-09-19T05:50:40Z'
+  arm: renders-and-sheet
+  backend: zoo
+  design: fusion-15317-recon
+  stage_reached: scored
+  force: false
+  resume_from: null
+  decompose: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-15317-recon-1789799227
+  draft:
+    ok: true
+    rounds: 1
+    thread_id: 912a45e9-cecf-4000-bb1a-2511f215cf0e
+    problems: []
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: f53d8645-daee-4bee-b4ab-269e68f44dbc
+  pipeline:
+    exit: 1
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    retry: true
+    corrections: 2
+    stopped: the worker changed nothing
+  stuck_class: kernel-incomplete
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 20
+      required_total: 20
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 7880
+  finished: '2026-09-19T08:02:01Z'
+- started: '2026-09-20T13:13:49Z'
+  arm: renders-and-sheet
+  backend: build123d
+  design: fusion-15317-recon
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-15317-recon
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 4bb79184-8a90-472c-b321-96e0c8c71eaf
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/fusion-15317-recon/manifest.yaml'''
+  seconds: 1182
+  finished: '2026-09-20T13:33:34Z'
+- started: '2026-09-20T13:13:49Z'
+  arm: renders-and-sheet
+  backend: cadquery
+  design: fusion-15317-recon
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-15317-recon
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 4bbd46a5-cd1c-4232-a8fd-db65b621ae03
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/fusion-15317-recon/manifest.yaml'''
+  seconds: 1195
+  finished: '2026-09-20T13:33:46Z'
+- started: '2026-09-20T13:13:49Z'
+  arm: renders-and-sheet
+  backend: freecad
+  design: fusion-15317-recon
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-15317-recon
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: f247cc1a-2227-4350-bd16-72b8c36fa9c1
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 20
+      required_total: 20
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 1245
+  finished: '2026-09-20T13:34:35Z'
+- started: '2026-09-20T13:34:45Z'
+  finished: '2026-09-20T13:34:48Z'
+  arm: renders-and-sheet
+  design: fusion-15317-recon
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 20
+      required_total: 20
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 0bef7bfa1c0f7f840002dd73a5532235a1d664c40fbea145cf05e523730bc550
+  seconds: 6
+  backend: cadquery
+- started: '2026-09-20T13:34:52Z'
+  finished: '2026-09-20T13:34:55Z'
+  arm: renders-and-sheet
+  design: fusion-15317-recon
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 18
+      required_total: 20
+      optional_pass: 0
+      optional_total: 0
+    failed:
+    - face_xp_36p5
+    - face_xn_m36p5
+  step_sha256: 473356a5b7b3f3db15d30b7695a80ff98432dd486775339b988f22bb2cd56a28
+  seconds: 6
+  backend: build123d
+- started: '2026-09-20T13:39:47Z'
+  finished: '2026-09-20T13:39:50Z'
+  arm: renders-and-sheet
+  design: fusion-15317-recon
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 20
+      required_total: 20
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 009199c7d79dfb9c56676f3b7bb9bc22f2e5389fbd08d187f26b0963455a2ad1
+  seconds: 6
+  backend: build123d

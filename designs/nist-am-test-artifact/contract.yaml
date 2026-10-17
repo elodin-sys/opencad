@@ -1,0 +1,5326 @@
+# Native reconstruction intent and independent geometric acceptance; units mm and deg.
+schema_version: 1
+name: nist-am-test-artifact
+intent: 'Reconstruct the NIST Additive Manufacturing Test Artifact (Moylan et al. 2014, Fig. 8) as editable, parameterized
+  KCL from the attached drawing, paper excerpts, renders, section drawings and dimension sheet. Frame: origin at
+  the centre of the top surface, z = 0 on the top surface with +z toward the pin tips (the base extends to z = -10,
+  features to z = +7), the Ø10 centre hole on the z axis, +x toward the Ø4 hole at x = +60; the four rows of Ø4
+  pins (20, 30, 40, 50) and the four Ø4 holes (60) lie on the +-x and +-y axes; the diamond base is a 100 mm square
+  rotated 45 deg (corners on the axes at 70.71). Model every feature at its stated size and position: centre hole
+  and two concentric central cylinders, 16 pins and 4 holes, both L-shaped staircases with 1 mm steps and 10 mm
+  treads, the 1-in-25 ramp with 2.5 mm landings, the lateral cavities and bosses on one side, the five fine pins
+  and five fine holes (Ø2 to Ø0.25, 2 mm tall/deep) and the fine rectangular bosses and slots. Small features are
+  scored individually: a correct base cannot compensate for a missing pin. One solid; export STEP and STL. The reference
+  CAD is evaluator-only; the deliverable must be construction, never an import.'
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+frame:
+  origin: Intersection of the Ø10 centre-hole axis with datum A, the original flat top surface of the diamond base.
+    This point is [0,0,0], even though the hole removes material there.
+  axes:
+    x: In datum A, from the centre-hole axis toward the right-hand Ø4 through hole at [60,0,0] in top.png.
+    y: In datum A, toward the Ø4 through hole at [0,60,0], upward in top.png; x cross y gives +z.
+    z: Normal to datum A toward the pin tips; top surface z=0, base bottom z=-10, tallest original features z=7.
+  datums:
+  - name: A
+    description: Primary unraised top surface of the base, z=0, outward normal +z.
+  - name: B
+    description: 'Secondary Ø10 centre bore: its z axis fixes x=y=0. This functional datum follows the published
+      prose, independently of drawing letter placement.'
+  - name: C
+    description: Tertiary Ø4 through-hole axis at x=+60,y=0; direction from B toward C fixes +x.
+  - name: stairPlanes
+    description: Positive staircase near edges x=-12,y=+12; negative staircase near edges x=-12,y=-12. Named acceptance
+      faces specify the remaining levels.
+  - name: diagonalCoordinates
+    description: u=(x+y)/sqrt(2), v=(x-y)/sqrt(2). NE side u=+50; NW lateral side v=-50. Ramp uses r=v with u=0.
+      Lateral profiles use t=u and inward depth along increasing q=v; their centres have z=-5. These are scalar
+      coordinate definitions, not a second right-handed frame.
+envelope:
+  min:
+  - -70.71067811865474
+  - -70.71067811865474
+  - -10
+  max:
+  - 70.71067811865474
+  - 70.71067811865474
+  - 7
+  tolerance: 0.03
+parameters:
+- name: baseSide
+  value: 100
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Edge length before rotating about z.
+  source: 'sources/nist-am-artifact-description.md; datum frame: "100 mm square"'
+- name: baseRotation
+  value: 45
+  unit: deg
+  provenance: stated
+  tolerance: 0.02
+  description: Diamond rotation; all diagonal directions use this angle.
+  source: 'sources/nist-am-artifact-description.md; datum frame: "rotated 45 deg about z"'
+- name: baseThickness
+  value: 10
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Top is fixed at z=0; edit moves the bottom and extends only through holes.
+  source: 'sources/nist-am-artifact-description.md §7.1; sources/drawing-01.png B-B: 10'
+  edit_test:
+    delta: 1
+    expect:
+      volume_delta: 9871.194701202818
+      direction: increase
+      tolerance_rel: 0.005
+      bbox_delta:
+      - 0
+      - 0
+      - 1
+- name: baseHalfDiagonal
+  value: 70.71067811865474
+  unit: mm
+  provenance: derived
+  tolerance: 0.02
+  description: Corner distance along each global axis.
+  formula: baseSide / sqrt(2)
+- name: mainPinDiameter
+  value: 4
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: All sixteen axis-row pins.
+  source: 'sources/nist-am-artifact-description.md §7.3: "sixteen Ø4 pins"'
+- name: mainPinHeight
+  value: 7
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Independent pin height; changing this does not move the stair treads or central bosses.
+  source: 'sources/drawing-01.png B-B: 7; sources/dimension-sheet.md cylindrical features: 0 .. 7'
+  edit_test:
+    delta: 1
+    expect:
+      volume_delta: 201.06192982974676
+      direction: increase
+      tolerance_rel: 0.005
+      bbox_delta:
+      - 0
+      - 0
+      - 1
+- name: pinFirstRadius
+  value: 20
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Innermost pin centre on each signed axis.
+  source: 'sources/drawing-01.png B-B: 20; sources/nist-am-artifact-description.md §7.3'
+- name: pinPitch
+  value: 10
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Uniform axis-row pitch.
+  source: 'sources/nist-am-artifact-description.md §7.3: "20, 30, 40 and 50 mm"'
+- name: pinsPerArm
+  value: 4
+  unit: ''
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/nist-am-artifact-description.md §7.3: four stated stations per signed axis'
+- name: mainHoleDiameter
+  value: 4
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Through the base.
+  source: 'sources/nist-am-artifact-description.md §7.3: "four Ø4 holes"'
+- name: mainHoleRadius
+  value: 60
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Radial position on each signed axis.
+  source: 'sources/drawing-01.png B-B: 60; sources/nist-am-artifact-description.md §7.3'
+- name: centerHoleDiameter
+  value: 10
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Single uninterrupted bore through the base and both central bosses.
+  source: 'sources/nist-am-artifact-description.md §7.2: "Ø10 through hole"'
+- name: lowerBossDiameter
+  value: 20
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/dimension-sheet.md cylindrical features: pin diameter 20, extent 0 .. 4'
+- name: lowerBossHeight
+  value: 4
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/dimension-sheet.md cylindrical features: pin diameter 20, length 4'
+- name: upperBossDiameter
+  value: 15
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/dimension-sheet.md cylindrical features: pin diameter 15, extent 4 .. 7'
+- name: upperBossHeight
+  value: 3
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Added above lowerBossHeight; upper cap is at z=7.
+  source: 'sources/dimension-sheet.md cylindrical features: pin diameter 15, length 3'
+- name: stairInnerOffset
+  value: 12
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Nearest edges of both L footprints to the coordinate axes.
+  source: 'sources/dimension-sheet.md axis-aligned faces: x=-12, y=±12'
+- name: stairTread
+  value: 10
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Width and length of each of the five treads in each staircase.
+  source: 'sources/nist-am-artifact-description.md §7.4: "10 mm squares"'
+- name: stairFirstHeight
+  value: 3
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Smallest absolute level; negative stair has the same depths.
+  source: 'sources/drawing-02.png F-F and G-G: 3, 4, 5, 6, 7'
+- name: stairIncrement
+  value: 1
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Increment between the five nominal levels, not a monotonic walk along the L.
+  source: 'sources/nist-am-artifact-description.md §7.4: "distance between steps (1 mm)"'
+- name: rampLowHeight
+  value: 1
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/nist-am-artifact-description.md §7.7; sources/drawing-01.png C-C: 1 at the low landing'
+- name: rampRise
+  value: 1
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Low landing stays fixed. High landing rises with this parameter.
+  source: 'sources/nist-am-artifact-description.md §7.7: "1 mm rise over a 25 mm run"'
+  edit_test:
+    delta: 0.5
+    expect:
+      volume_delta: 37.5
+      direction: increase
+      tolerance_rel: 0.005
+      bbox_delta:
+      - 0
+      - 0
+      - 0
+- name: rampRun
+  value: 25
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Horizontal length of the inclined portion, measured along (1,-1,0)/sqrt(2).
+  source: 'sources/nist-am-artifact-description.md §7.7; sources/drawing-01.png C-C: 25'
+- name: rampLanding
+  value: 2.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/nist-am-artifact-description.md §7.7; sources/drawing-01.png C-C: 2.50 at both ends'
+- name: rampWidth
+  value: 5
+  unit: mm
+  provenance: measured
+  tolerance: 0.3
+  description: Perpendicular width; 48.4 px at 9.675 px/mm; independently 12.5/2.5=5.
+  source: sources/top.png; sources/section-z1.png; sources/dimension-sheet.md z=1 and z=2 landing areas 12.5
+- name: rampStartRadius
+  value: 15
+  unit: mm
+  provenance: measured
+  tolerance: 0.3
+  description: High end nearest the centre; radial coordinate r=(x-y)/sqrt(2). End radius is 45.
+  source: sources/top.png; sources/dimension-sheet.md high-end plane centroid [10.607,-10.607,1]
+- name: fineHeightDepth
+  value: 2
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/nist-am-artifact-description.md §7.9: "All features are 2 mm tall or deep"; sources/drawing-01.png
+    D-D; sources/drawing-02.png E-E'
+- name: fineSizeA
+  value: 2
+  unit: mm
+  provenance: stated
+  tolerance: 0.005
+  description: Round diameter and corresponding rectangular width.
+  source: sources/drawing-01.png D-D diameter/width labels; sources/drawing-02.png E-E
+- name: fineSizeB
+  value: 1.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.005
+  description: Round diameter and corresponding rectangular width.
+  source: sources/drawing-01.png D-D diameter/width labels; sources/drawing-02.png E-E
+- name: fineSizeC
+  value: 1
+  unit: mm
+  provenance: stated
+  tolerance: 0.005
+  description: Round diameter and corresponding rectangular width.
+  source: sources/drawing-01.png D-D diameter/width labels; sources/drawing-02.png E-E
+- name: fineSizeD
+  value: 0.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.005
+  description: Round diameter and corresponding rectangular width.
+  source: sources/drawing-01.png D-D diameter/width labels; sources/drawing-02.png E-E
+- name: fineSizeE
+  value: 0.25
+  unit: mm
+  provenance: stated
+  tolerance: 0.005
+  description: Round diameter and corresponding rectangular width.
+  source: sources/drawing-01.png D-D diameter/width labels; sources/drawing-02.png E-E
+- name: fineFirstX
+  value: 28.284
+  unit: mm
+  provenance: stated
+  tolerance: 0.005
+  description: Fine pin A x coordinate; fine hole A is the reflected point.
+  source: 'sources/dimension-sheet.md cylindrical features: Ø2 pin axis [28.284,21.213,0]'
+- name: fineFirstY
+  value: 21.213
+  unit: mm
+  provenance: stated
+  tolerance: 0.005
+  description: Fine pin A y coordinate.
+  source: 'sources/dimension-sheet.md cylindrical features: Ø2 pin axis [28.284,21.213,0]'
+- name: finePitch
+  value: 5
+  unit: mm
+  provenance: inferred
+  tolerance: 0.05
+  description: Centre pitch along (1,-1,0)/sqrt(2); holes are reflected across x=y.
+  rationale: Successive stated axes differ by approximately (3.536,-3.535) mm. Their distances round to 5 mm; one
+    pitch preserves the straight row without treating table rounding as irregular spacing.
+- name: rectOuterInset
+  value: 1
+  unit: mm
+  provenance: inferred
+  tolerance: 0.05
+  description: Distance of every fine rectangle outer end from the NE side plane u=baseSide/2.
+  rationale: Transform the stated cap/floor centroids to u=(x+y)/sqrt(2) and add half the length inferred from area/width.
+    All twenty ends give u=49 within 0.01 mm, hence 50-49=1 mm.
+- name: rectLengthRatio
+  value: 3
+  unit: ''
+  provenance: inferred
+  tolerance: 0.05
+  description: Rectangular length divided by width.
+  rationale: Supplied individual face areas 12, 6.75, 3, 0.75 and 0.19 mm2 (rounded) divided by the stated widths
+    squared imply a common ratio of 3. The smallest exact nominal area is then 0.1875 mm2. Section outlines corroborate
+    3:1 rectangles.
+- name: rectStartV1
+  value: 2
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Inner signed-v edge of boss 1; the matching slot reflects v to -v.
+  source: 'sources/drawing-02.png E-E: positive ordinate 2'
+- name: rectStartV2
+  value: 6
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Inner signed-v edge of boss 2; the matching slot reflects v to -v.
+  source: 'sources/drawing-02.png E-E: positive ordinate 6'
+- name: rectStartV3
+  value: 11
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Inner signed-v edge of boss 3; the matching slot reflects v to -v.
+  source: 'sources/drawing-02.png E-E: positive ordinate 11'
+- name: rectStartV4
+  value: 14
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Inner signed-v edge of boss 4; the matching slot reflects v to -v.
+  source: 'sources/drawing-02.png E-E: positive ordinate 14'
+- name: rectStartV5
+  value: 17.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Inner signed-v edge of boss 5; the matching slot reflects v to -v.
+  source: 'sources/drawing-02.png E-E: positive ordinate 17.5'
+- name: rectStartV6
+  value: 19.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Inner signed-v edge of boss 6; the matching slot reflects v to -v.
+  source: 'sources/drawing-02.png E-E: positive ordinate 19.5'
+- name: rectStartV7
+  value: 22
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Inner signed-v edge of boss 7; the matching slot reflects v to -v.
+  source: 'sources/drawing-02.png E-E: positive ordinate 22'
+- name: rectStartV8
+  value: 23
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Inner signed-v edge of boss 8; the matching slot reflects v to -v.
+  source: 'sources/drawing-02.png E-E: positive ordinate 23'
+- name: rectStartV9
+  value: 24.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Inner signed-v edge of boss 9; the matching slot reflects v to -v.
+  source: 'sources/drawing-02.png E-E: positive ordinate 24.5'
+- name: rectStartV10
+  value: 25
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Inner signed-v edge of boss 10; the matching slot reflects v to -v.
+  source: 'sources/drawing-02.png E-E: positive ordinate 25'
+- name: lateralCenterZ
+  value: -5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Fixed relative to datum A, including during the base-thickness edit.
+  source: sources/dimension-sheet.md cylindrical feature axes and inclined-plane centroids at z=-5
+- name: lateralFirstStation
+  value: 40
+  unit: mm
+  provenance: measured
+  tolerance: 0.3
+  description: Side coordinate t=(x+y)/sqrt(2); first centre is 10 mm from the +y corner.
+  source: 'sources/drawing-01.png A-A: first centre x≈394 px, edge x≈330 px, opposite edge x≈964 px; sources/dimension-sheet.md
+    Ø3 axis point [28.284,28.284,-5]'
+- name: lateralPitch
+  value: 10
+  unit: mm
+  provenance: measured
+  tolerance: 0.3
+  description: Successive feature stations decrease t by 10 mm.
+  source: 'sources/drawing-01.png A-A: eight centres ≈394,458,521,584,647,710,774,837 px; sources/dimension-sheet.md
+    located side axes/centroids'
+- name: lateralSmallDiameter
+  value: 3
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/drawing-01.png A-A: Ø3 depth 3'
+- name: lateralSmallDepth
+  value: 3
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Depth for the small round and square cavities.
+  source: 'sources/drawing-01.png A-A: Ø3 depth 3; sources/dimension-sheet.md square roof/floor area 9 and width
+    3'
+- name: lateralLargeDiameter
+  value: 6
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/drawing-01.png A-A: Ø6 depth 5'
+- name: lateralLargeDepth
+  value: 5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Depth for the large round, square, diamond and two rhombi.
+  source: 'sources/drawing-01.png A-A: Ø6 depth 5; sources/dimension-sheet.md large polygon backs at q=-45 and mouths
+    at q=-50'
+- name: lateralSmallSquare
+  value: 3
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/drawing-01.png A-A: square width and height 3'
+- name: lateralLargeSquare
+  value: 6
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: ''
+  source: 'sources/drawing-01.png A-A: square width and height 6'
+- name: lateralSmallDiamond
+  value: 3
+  unit: mm
+  provenance: measured
+  tolerance: 0.3
+  description: Equal horizontal and vertical diagonals; straight edges.
+  source: 'sources/drawing-01.png A-A: small diamond around (521,1331) px, ≈19 px diagonals at 6.34 px/mm'
+- name: lateralSmallDiamondDepth
+  value: 3
+  unit: mm
+  provenance: measured
+  tolerance: 0.3
+  description: Depth of the small diamond; source does not explicitly label it.
+  source: 'sources/section-z-5.png: third lateral notch reaches q≈-47; sources/drawing-01.png A-A small-feature
+    group'
+- name: lateralLargeDiamond
+  value: 6
+  unit: mm
+  provenance: measured
+  tolerance: 0.3
+  description: Equal horizontal and vertical diagonals.
+  source: 'sources/drawing-01.png A-A: large diamond around (710,1331) px, ≈38 px diagonals; sources/dimension-sheet.md
+    back area 18 and 45-degree wall normals'
+- name: lateralTallHeight
+  value: 6
+  unit: mm
+  provenance: measured
+  tolerance: 0.3
+  description: Tall rhombus vertical diagonal.
+  source: 'sources/drawing-01.png A-A: tall rhombus around (774,1331) px, ≈38 px high; sources/dimension-sheet.md
+    wall vertices z=-8 and z=-2'
+- name: lateralWideHeight
+  value: 4
+  unit: mm
+  provenance: measured
+  tolerance: 0.3
+  description: Wide rhombus vertical diagonal; edges are planar, not arcs.
+  source: 'sources/drawing-01.png A-A: wide rhombus around (837,1331) px, ≈26 px high; sources/dimension-sheet.md
+    wall vertices z=-7 and z=-3'
+- name: lateralApexAngle
+  value: 60
+  unit: deg
+  provenance: stated
+  tolerance: 0.1
+  description: Acute included angle; tall profile has its acute tips along z, wide profile along t.
+  source: 'sources/drawing-01.png A-A: 60.000° labels at the tall and wide rhombi'
+- name: lateralTallWidth
+  value: 3.4641016151377535
+  unit: mm
+  provenance: derived
+  tolerance: 0.3
+  description: Tall rhombus horizontal diagonal.
+  formula: lateralTallHeight * tan(lateralApexAngle / 2)
+- name: lateralWideWidth
+  value: 6.9282032302755105
+  unit: mm
+  provenance: derived
+  tolerance: 0.3
+  description: Wide rhombus horizontal diagonal.
+  formula: lateralWideHeight / tan(lateralApexAngle / 2)
+features:
+- id: diamondBase
+  kind: extrude
+  description: 100 mm square rotated 45 degrees, top at z=0, bottom z=-10; one final connected solid. Construct
+    native geometry and export STEP and STL.
+  parameters:
+  - baseSide
+  - baseRotation
+  - baseThickness
+  - baseHalfDiagonal
+  count: 1
+  verify:
+  - method: face
+    face: datumTop
+  - method: face
+    face: baseBottom
+  - method: dimension
+    dimension: spanX
+  - method: dimension
+    dimension: spanY
+  - method: dimension
+    dimension: totalHeight
+  - method: dimension
+    dimension: baseThicknessCheck
+  - method: solid
+    points:
+    - - 0
+      - 15
+      - -9
+    - - 10
+      - -40
+      - -8
+    - - -50
+      - -5
+      - -5
+    note: ''
+  - method: bbox
+  optional: false
+- id: sideSouthWest
+  kind: wall
+  description: Named diamond side; NW carries the eight lateral openings.
+  parameters:
+  - baseSide
+  - baseThickness
+  - baseRotation
+  count: 1
+  verify:
+  - method: plane
+    plane: sideSouthWest
+  optional: false
+- id: sideSouthEast
+  kind: wall
+  description: Named diamond side; NW carries the eight lateral openings.
+  parameters:
+  - baseSide
+  - baseThickness
+  - baseRotation
+  count: 1
+  verify:
+  - method: plane
+    plane: sideSouthEast
+  optional: false
+- id: sideNorthEast
+  kind: wall
+  description: Named diamond side; NW carries the eight lateral openings.
+  parameters:
+  - baseSide
+  - baseThickness
+  - baseRotation
+  count: 1
+  verify:
+  - method: plane
+    plane: sideNorthEast
+  optional: false
+- id: sideNorthWest
+  kind: wall
+  description: Named diamond side; NW carries the eight lateral openings.
+  parameters:
+  - baseSide
+  - baseThickness
+  - baseRotation
+  count: 1
+  verify:
+  - method: plane
+    plane: sideNorthWest
+  optional: false
+- id: centerBore
+  kind: hole
+  description: Ø10 bore continuous from z=-10 to z=7, including both bosses.
+  parameters:
+  - centerHoleDiameter
+  - baseThickness
+  - lowerBossHeight
+  - upperBossHeight
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: centerBore
+  - method: void
+    points:
+    - - 0
+      - 0
+      - -5
+    - - 0
+      - 0
+      - 2
+    - - 0
+      - 0
+      - 6
+    note: ''
+  optional: false
+- id: lowerCentralBoss
+  kind: boss
+  description: Ø20 annular lower boss from z=0 to z=4, with Ø10 bore.
+  parameters:
+  - lowerBossDiameter
+  - lowerBossHeight
+  - centerHoleDiameter
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: lowerCentralBoss
+  - method: face
+    face: lowerBossShoulder
+  - method: solid
+    points:
+    - - 8.5
+      - 0
+      - 2
+    note: ''
+  optional: false
+- id: upperCentralBoss
+  kind: boss
+  description: Ø15 annular upper boss from z=4 to z=7, with Ø10 bore.
+  parameters:
+  - upperBossDiameter
+  - upperBossHeight
+  - lowerBossHeight
+  - centerHoleDiameter
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: upperCentralBoss
+  - method: face
+    face: upperBossCap
+  - method: solid
+    points:
+    - - 6.25
+      - 0
+      - 5.5
+    note: ''
+  optional: false
+- id: pin_px_20
+  kind: boss
+  description: Independent Ø4 pin at [20, 0], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_px_20
+  - method: face
+    face: pin_px_20_cap
+  - method: solid
+    points:
+    - - 20
+      - 0
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_px_30
+  kind: boss
+  description: Independent Ø4 pin at [30, 0], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_px_30
+  - method: face
+    face: pin_px_30_cap
+  - method: solid
+    points:
+    - - 30
+      - 0
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_px_40
+  kind: boss
+  description: Independent Ø4 pin at [40, 0], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_px_40
+  - method: face
+    face: pin_px_40_cap
+  - method: solid
+    points:
+    - - 40
+      - 0
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_px_50
+  kind: boss
+  description: Independent Ø4 pin at [50, 0], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_px_50
+  - method: face
+    face: pin_px_50_cap
+  - method: solid
+    points:
+    - - 50
+      - 0
+      - 3.5
+    note: ''
+  optional: false
+- id: hole_px
+  kind: hole
+  description: Ø4 base through hole at [60, 0]; +x hole defines orientation.
+  parameters:
+  - mainHoleDiameter
+  - mainHoleRadius
+  - baseThickness
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: hole_px
+  - method: void
+    points:
+    - - 60
+      - 0
+      - -5
+    note: ''
+  optional: false
+- id: pin_nx_20
+  kind: boss
+  description: Independent Ø4 pin at [-20, 0], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_nx_20
+  - method: face
+    face: pin_nx_20_cap
+  - method: solid
+    points:
+    - - -20
+      - 0
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_nx_30
+  kind: boss
+  description: Independent Ø4 pin at [-30, 0], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_nx_30
+  - method: face
+    face: pin_nx_30_cap
+  - method: solid
+    points:
+    - - -30
+      - 0
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_nx_40
+  kind: boss
+  description: Independent Ø4 pin at [-40, 0], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_nx_40
+  - method: face
+    face: pin_nx_40_cap
+  - method: solid
+    points:
+    - - -40
+      - 0
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_nx_50
+  kind: boss
+  description: Independent Ø4 pin at [-50, 0], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_nx_50
+  - method: face
+    face: pin_nx_50_cap
+  - method: solid
+    points:
+    - - -50
+      - 0
+      - 3.5
+    note: ''
+  optional: false
+- id: hole_nx
+  kind: hole
+  description: Ø4 base through hole at [-60, 0]; +x hole defines orientation.
+  parameters:
+  - mainHoleDiameter
+  - mainHoleRadius
+  - baseThickness
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: hole_nx
+  - method: void
+    points:
+    - - -60
+      - 0
+      - -5
+    note: ''
+  optional: false
+- id: pin_py_20
+  kind: boss
+  description: Independent Ø4 pin at [0, 20], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_py_20
+  - method: face
+    face: pin_py_20_cap
+  - method: solid
+    points:
+    - - 0
+      - 20
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_py_30
+  kind: boss
+  description: Independent Ø4 pin at [0, 30], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_py_30
+  - method: face
+    face: pin_py_30_cap
+  - method: solid
+    points:
+    - - 0
+      - 30
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_py_40
+  kind: boss
+  description: Independent Ø4 pin at [0, 40], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_py_40
+  - method: face
+    face: pin_py_40_cap
+  - method: solid
+    points:
+    - - 0
+      - 40
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_py_50
+  kind: boss
+  description: Independent Ø4 pin at [0, 50], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_py_50
+  - method: face
+    face: pin_py_50_cap
+  - method: solid
+    points:
+    - - 0
+      - 50
+      - 3.5
+    note: ''
+  optional: false
+- id: hole_py
+  kind: hole
+  description: Ø4 base through hole at [0, 60]; +x hole defines orientation.
+  parameters:
+  - mainHoleDiameter
+  - mainHoleRadius
+  - baseThickness
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: hole_py
+  - method: void
+    points:
+    - - 0
+      - 60
+      - -5
+    note: ''
+  optional: false
+- id: pin_ny_20
+  kind: boss
+  description: Independent Ø4 pin at [0, -20], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_ny_20
+  - method: face
+    face: pin_ny_20_cap
+  - method: solid
+    points:
+    - - 0
+      - -20
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_ny_30
+  kind: boss
+  description: Independent Ø4 pin at [0, -30], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_ny_30
+  - method: face
+    face: pin_ny_30_cap
+  - method: solid
+    points:
+    - - 0
+      - -30
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_ny_40
+  kind: boss
+  description: Independent Ø4 pin at [0, -40], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_ny_40
+  - method: face
+    face: pin_ny_40_cap
+  - method: solid
+    points:
+    - - 0
+      - -40
+      - 3.5
+    note: ''
+  optional: false
+- id: pin_ny_50
+  kind: boss
+  description: Independent Ø4 pin at [0, -50], z=0..7.
+  parameters:
+  - mainPinDiameter
+  - mainPinHeight
+  - pinFirstRadius
+  - pinPitch
+  - pinsPerArm
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: pin_ny_50
+  - method: face
+    face: pin_ny_50_cap
+  - method: solid
+    points:
+    - - 0
+      - -50
+      - 3.5
+    note: ''
+  optional: false
+- id: hole_ny
+  kind: hole
+  description: Ø4 base through hole at [0, -60]; +x hole defines orientation.
+  parameters:
+  - mainHoleDiameter
+  - mainHoleRadius
+  - baseThickness
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: hole_ny
+  - method: void
+    points:
+    - - 0
+      - -60
+      - -5
+    note: ''
+  optional: false
+- id: raisedTread_outerX
+  kind: boss
+  description: 10×10 tread centred (-37,17) at z=3.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 1
+  verify:
+  - method: face
+    face: raisedTread_outerX
+  - method: solid
+    points:
+    - - -37
+      - 17
+      - 1.5
+    note: ''
+  - method: void
+    points:
+    - - -37
+      - 17
+      - 3.5
+    note: ''
+  - method: dimension
+    dimension: raisedTread_outerX_level
+  optional: false
+- id: raisedTread_middleX
+  kind: boss
+  description: 10×10 tread centred (-27,17) at z=5.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 1
+  verify:
+  - method: face
+    face: raisedTread_middleX
+  - method: solid
+    points:
+    - - -27
+      - 17
+      - 2.5
+    note: ''
+  - method: void
+    points:
+    - - -27
+      - 17
+      - 5.5
+    note: ''
+  - method: dimension
+    dimension: raisedTread_middleX_level
+  optional: false
+- id: raisedTread_elbow
+  kind: boss
+  description: 10×10 tread centred (-17,17) at z=7.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 1
+  verify:
+  - method: face
+    face: raisedTread_elbow
+  - method: solid
+    points:
+    - - -17
+      - 17
+      - 3.5
+    note: ''
+  - method: void
+    points:
+    - - -17
+      - 17
+      - 7.5
+    note: ''
+  - method: dimension
+    dimension: raisedTread_elbow_level
+  optional: false
+- id: raisedTread_middleY
+  kind: boss
+  description: 10×10 tread centred (-17,27) at z=6.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 1
+  verify:
+  - method: face
+    face: raisedTread_middleY
+  - method: solid
+    points:
+    - - -17
+      - 27
+      - 3.0
+    note: ''
+  - method: void
+    points:
+    - - -17
+      - 27
+      - 6.5
+    note: ''
+  - method: dimension
+    dimension: raisedTread_middleY_level
+  optional: false
+- id: raisedTread_outerY
+  kind: boss
+  description: 10×10 tread centred (-17,37) at z=4.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 1
+  verify:
+  - method: face
+    face: raisedTread_outerY
+  - method: solid
+    points:
+    - - -17
+      - 37
+      - 2.0
+    note: ''
+  - method: void
+    points:
+    - - -17
+      - 37
+      - 4.5
+    note: ''
+  - method: dimension
+    dimension: raisedTread_outerY_level
+  optional: false
+- id: recessedTread_outerX
+  kind: pocket
+  description: 10×10 tread centred (-37,-17) at z=-3.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 1
+  verify:
+  - method: face
+    face: recessedTread_outerX
+  - method: void
+    points:
+    - - -37
+      - -17
+      - -1.5
+    note: ''
+  - method: solid
+    points:
+    - - -37
+      - -17
+      - -3.5
+    note: ''
+  - method: dimension
+    dimension: recessedTread_outerX_level
+  optional: false
+- id: recessedTread_middleX
+  kind: pocket
+  description: 10×10 tread centred (-27,-17) at z=-5.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 1
+  verify:
+  - method: face
+    face: recessedTread_middleX
+  - method: void
+    points:
+    - - -27
+      - -17
+      - -2.5
+    note: ''
+  - method: solid
+    points:
+    - - -27
+      - -17
+      - -5.5
+    note: ''
+  - method: dimension
+    dimension: recessedTread_middleX_level
+  optional: false
+- id: recessedTread_elbow
+  kind: pocket
+  description: 10×10 tread centred (-17,-17) at z=-7.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 1
+  verify:
+  - method: face
+    face: recessedTread_elbow
+  - method: void
+    points:
+    - - -17
+      - -17
+      - -3.5
+    note: ''
+  - method: solid
+    points:
+    - - -17
+      - -17
+      - -7.5
+    note: ''
+  - method: dimension
+    dimension: recessedTread_elbow_level
+  optional: false
+- id: recessedTread_middleY
+  kind: pocket
+  description: 10×10 tread centred (-17,-27) at z=-6.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 1
+  verify:
+  - method: face
+    face: recessedTread_middleY
+  - method: void
+    points:
+    - - -17
+      - -27
+      - -3.0
+    note: ''
+  - method: solid
+    points:
+    - - -17
+      - -27
+      - -6.5
+    note: ''
+  - method: dimension
+    dimension: recessedTread_middleY_level
+  optional: false
+- id: recessedTread_outerY
+  kind: pocket
+  description: 10×10 tread centred (-17,-37) at z=-4.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 1
+  verify:
+  - method: face
+    face: recessedTread_outerY
+  - method: void
+    points:
+    - - -17
+      - -37
+      - -2.0
+    note: ''
+  - method: solid
+    points:
+    - - -17
+      - -37
+      - -4.5
+    note: ''
+  - method: dimension
+    dimension: recessedTread_outerY_level
+  optional: false
+- id: stairVerticalSurfaces
+  kind: wall
+  description: All vertical staircase surfaces, including the two distinct faces at each y=±22.
+  parameters:
+  - stairInnerOffset
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  count: 18
+  verify:
+  - method: face
+    face: raisedX42
+  - method: face
+    face: recessedX42
+  - method: face
+    face: raisedX32
+  - method: face
+    face: recessedX32
+  - method: face
+    face: raisedX22
+  - method: face
+    face: recessedX22
+  - method: face
+    face: raisedX12
+  - method: face
+    face: recessedX12
+  - method: face
+    face: raisedY12
+  - method: face
+    face: recessedY12
+  - method: face
+    face: raisedY22Long
+  - method: face
+    face: raisedY22Riser
+  - method: face
+    face: recessedY22Long
+  - method: face
+    face: recessedY22Riser
+  - method: face
+    face: raisedY32
+  - method: face
+    face: recessedY32
+  - method: face
+    face: raisedY42
+  - method: face
+    face: recessedY42
+  optional: false
+- id: inclinedRamp
+  kind: boss
+  description: '5 mm wide, r=15..45 on x=-y>0: high landing 15..17.5 at z=2, slope to z=1 over 25, low landing 42.5..45.'
+  parameters:
+  - rampLowHeight
+  - rampRise
+  - rampRun
+  - rampLanding
+  - rampWidth
+  - rampStartRadius
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rampHighLanding
+  - method: face
+    face: rampLowLanding
+  - method: plane
+    plane: rampSlope
+  - method: plane
+    plane: rampSidePositive
+  - method: plane
+    plane: rampSideNegative
+  - method: plane
+    plane: rampHighEnd
+  - method: plane
+    plane: rampLowEnd
+  - method: dimension
+    dimension: rampRiseCheck
+  - method: solid
+    points:
+    - - 11.490485194
+      - -11.490485194
+      - 1
+    - - 21.213203436
+      - -21.213203436
+      - 1.25
+    - - 30.935921677
+      - -30.935921677
+      - 0.5
+    note: ''
+  - method: void
+    points:
+    - - 11.490485194
+      - -11.490485194
+      - 2.3
+    - - 21.213203436
+      - -21.213203436
+      - 1.75
+    - - 30.935921677
+      - -30.935921677
+      - 1.3
+    note: ''
+  optional: false
+- id: finePinA
+  kind: boss
+  description: Fine Ø2 pin, z=0..2, centre (28.284271,21.213203).
+  parameters:
+  - fineSizeA
+  - fineHeightDepth
+  - fineFirstX
+  - fineFirstY
+  - finePitch
+  - baseRotation
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: finePinA
+  - method: face
+    face: finePinA_cap
+  - method: solid
+    points:
+    - - 28.284271247
+      - 21.213203436
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 28.284271247
+      - 21.213203436
+      - 2.5
+    note: ''
+  optional: false
+- id: fineHoleA
+  kind: hole
+  description: Fine Ø2 hole, z=-2..0, centre (21.213203,28.284271).
+  parameters:
+  - fineSizeA
+  - fineHeightDepth
+  - fineFirstX
+  - fineFirstY
+  - finePitch
+  - baseRotation
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: fineHoleA
+  - method: face
+    face: fineHoleA_floor
+  - method: void
+    points:
+    - - 21.213203436
+      - 28.284271247
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 21.213203436
+      - 28.284271247
+      - -2.5
+    note: ''
+  optional: false
+- id: finePinB
+  kind: boss
+  description: Fine Ø1.5 pin, z=0..2, centre (31.819805,17.677670).
+  parameters:
+  - fineSizeB
+  - fineHeightDepth
+  - fineFirstX
+  - fineFirstY
+  - finePitch
+  - baseRotation
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: finePinB
+  - method: face
+    face: finePinB_cap
+  - method: solid
+    points:
+    - - 31.819805153
+      - 17.67766953
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 31.819805153
+      - 17.67766953
+      - 2.5
+    note: ''
+  optional: false
+- id: fineHoleB
+  kind: hole
+  description: Fine Ø1.5 hole, z=-2..0, centre (17.677670,31.819805).
+  parameters:
+  - fineSizeB
+  - fineHeightDepth
+  - fineFirstX
+  - fineFirstY
+  - finePitch
+  - baseRotation
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: fineHoleB
+  - method: face
+    face: fineHoleB_floor
+  - method: void
+    points:
+    - - 17.67766953
+      - 31.819805153
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 17.67766953
+      - 31.819805153
+      - -2.5
+    note: ''
+  optional: false
+- id: finePinC
+  kind: boss
+  description: Fine Ø1 pin, z=0..2, centre (35.355339,14.142136).
+  parameters:
+  - fineSizeC
+  - fineHeightDepth
+  - fineFirstX
+  - fineFirstY
+  - finePitch
+  - baseRotation
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: finePinC
+  - method: face
+    face: finePinC_cap
+  - method: solid
+    points:
+    - - 35.355339059
+      - 14.142135624
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 35.355339059
+      - 14.142135624
+      - 2.5
+    note: ''
+  optional: false
+- id: fineHoleC
+  kind: hole
+  description: Fine Ø1 hole, z=-2..0, centre (14.142136,35.355339).
+  parameters:
+  - fineSizeC
+  - fineHeightDepth
+  - fineFirstX
+  - fineFirstY
+  - finePitch
+  - baseRotation
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: fineHoleC
+  - method: face
+    face: fineHoleC_floor
+  - method: void
+    points:
+    - - 14.142135624
+      - 35.355339059
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 14.142135624
+      - 35.355339059
+      - -2.5
+    note: ''
+  optional: false
+- id: finePinD
+  kind: boss
+  description: Fine Ø0.5 pin, z=0..2, centre (38.890873,10.606602).
+  parameters:
+  - fineSizeD
+  - fineHeightDepth
+  - fineFirstX
+  - fineFirstY
+  - finePitch
+  - baseRotation
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: finePinD
+  - method: face
+    face: finePinD_cap
+  - method: solid
+    points:
+    - - 38.890872965
+      - 10.606601718
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 38.890872965
+      - 10.606601718
+      - 2.5
+    note: ''
+  optional: false
+- id: fineHoleD
+  kind: hole
+  description: Fine Ø0.5 hole, z=-2..0, centre (10.606602,38.890873).
+  parameters:
+  - fineSizeD
+  - fineHeightDepth
+  - fineFirstX
+  - fineFirstY
+  - finePitch
+  - baseRotation
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: fineHoleD
+  - method: face
+    face: fineHoleD_floor
+  - method: void
+    points:
+    - - 10.606601718
+      - 38.890872965
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 10.606601718
+      - 38.890872965
+      - -2.5
+    note: ''
+  optional: false
+- id: finePinE
+  kind: boss
+  description: Fine Ø0.25 pin, z=0..2, centre (42.426407,7.071068).
+  parameters:
+  - fineSizeE
+  - fineHeightDepth
+  - fineFirstX
+  - fineFirstY
+  - finePitch
+  - baseRotation
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: finePinE
+  - method: face
+    face: finePinE_cap
+  - method: solid
+    points:
+    - - 42.426406871
+      - 7.071067812
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 42.426406871
+      - 7.071067812
+      - 2.5
+    note: ''
+  optional: false
+- id: fineHoleE
+  kind: hole
+  description: Fine Ø0.25 hole, z=-2..0, centre (7.071068,42.426407).
+  parameters:
+  - fineSizeE
+  - fineHeightDepth
+  - fineFirstX
+  - fineFirstY
+  - finePitch
+  - baseRotation
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: fineHoleE
+  - method: face
+    face: fineHoleE_floor
+  - method: void
+    points:
+    - - 7.071067812
+      - 42.426406871
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 7.071067812
+      - 42.426406871
+      - -2.5
+    note: ''
+  optional: false
+- id: rectBoss1
+  kind: boss
+  description: 'Fine rectangle 1: width 2, radial length 6, u range 43..49, v range 2..4, z=0..2.'
+  parameters:
+  - fineSizeA
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV1
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectBoss1_cap
+  - method: solid
+    points:
+    - - 34.648232278
+      - 30.405591591
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 37.052395334
+      - 32.809754647
+      - 1
+    - - 32.244069222
+      - 28.001428535
+      - 1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectSlot1
+  kind: pocket
+  description: 'Fine rectangle 1: width 2, radial length 6, u range 43..49, v range -2..-4, z=0..-2.'
+  parameters:
+  - fineSizeA
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV1
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectSlot1_floor
+  - method: void
+    points:
+    - - 30.405591591
+      - 34.648232278
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 32.809754647
+      - 37.052395334
+      - -1
+    - - 28.001428535
+      - 32.244069222
+      - -1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectBoss2
+  kind: boss
+  description: 'Fine rectangle 2: width 2, radial length 6, u range 43..49, v range 6..8, z=0..2.'
+  parameters:
+  - fineSizeA
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV2
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectBoss2_cap
+  - method: solid
+    points:
+    - - 37.476659403
+      - 27.577164466
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 39.880822459
+      - 29.981327522
+      - 1
+    - - 35.072496347
+      - 25.17300141
+      - 1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectSlot2
+  kind: pocket
+  description: 'Fine rectangle 2: width 2, radial length 6, u range 43..49, v range -6..-8, z=0..-2.'
+  parameters:
+  - fineSizeA
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV2
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectSlot2_floor
+  - method: void
+    points:
+    - - 27.577164466
+      - 37.476659403
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 29.981327522
+      - 39.880822459
+      - -1
+    - - 25.17300141
+      - 35.072496347
+      - -1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectBoss3
+  kind: boss
+  description: 'Fine rectangle 3: width 1.5, radial length 4.5, u range 44.5..49, v range 11..12.5, z=0..2.'
+  parameters:
+  - fineSizeB
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV3
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectBoss3_cap
+  - method: solid
+    points:
+    - - 41.365746699
+      - 24.748737342
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 43.23957967
+      - 26.622570312
+      - 1
+    - - 39.491913729
+      - 22.874904371
+      - 1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectSlot3
+  kind: pocket
+  description: 'Fine rectangle 3: width 1.5, radial length 4.5, u range 44.5..49, v range -11..-12.5, z=0..-2.'
+  parameters:
+  - fineSizeB
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV3
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectSlot3_floor
+  - method: void
+    points:
+    - - 24.748737342
+      - 41.365746699
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 26.622570312
+      - 43.23957967
+      - -1
+    - - 22.874904371
+      - 39.491913729
+      - -1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectBoss4
+  kind: boss
+  description: 'Fine rectangle 4: width 1.5, radial length 4.5, u range 44.5..49, v range 14..15.5, z=0..2.'
+  parameters:
+  - fineSizeB
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV4
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectBoss4_cap
+  - method: solid
+    points:
+    - - 43.487067043
+      - 22.627416998
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 45.360900013
+      - 24.501249968
+      - 1
+    - - 41.613234073
+      - 20.753584028
+      - 1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectSlot4
+  kind: pocket
+  description: 'Fine rectangle 4: width 1.5, radial length 4.5, u range 44.5..49, v range -14..-15.5, z=0..-2.'
+  parameters:
+  - fineSizeB
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV4
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectSlot4_floor
+  - method: void
+    points:
+    - - 22.627416998
+      - 43.487067043
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 24.501249968
+      - 45.360900013
+      - -1
+    - - 20.753584028
+      - 41.613234073
+      - -1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectBoss5
+  kind: boss
+  description: 'Fine rectangle 5: width 1, radial length 3, u range 46..49, v range 17.5..18.5, z=0..2.'
+  parameters:
+  - fineSizeC
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV5
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectBoss5_cap
+  - method: solid
+    points:
+    - - 46.315494168
+      - 20.859650045
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 47.658997052
+      - 22.203152929
+      - 1
+    - - 44.971991283
+      - 19.516147161
+      - 1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectSlot5
+  kind: pocket
+  description: 'Fine rectangle 5: width 1, radial length 3, u range 46..49, v range -17.5..-18.5, z=0..-2.'
+  parameters:
+  - fineSizeC
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV5
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectSlot5_floor
+  - method: void
+    points:
+    - - 20.859650045
+      - 46.315494168
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 22.203152929
+      - 47.658997052
+      - -1
+    - - 19.516147161
+      - 44.971991283
+      - -1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectBoss6
+  kind: boss
+  description: 'Fine rectangle 6: width 1, radial length 3, u range 46..49, v range 19.5..20.5, z=0..2.'
+  parameters:
+  - fineSizeC
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV6
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectBoss6_cap
+  - method: solid
+    points:
+    - - 47.72970773
+      - 19.445436483
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 49.073210614
+      - 20.788939367
+      - 1
+    - - 46.386204846
+      - 18.101933598
+      - 1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectSlot6
+  kind: pocket
+  description: 'Fine rectangle 6: width 1, radial length 3, u range 46..49, v range -19.5..-20.5, z=0..-2.'
+  parameters:
+  - fineSizeC
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV6
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectSlot6_floor
+  - method: void
+    points:
+    - - 19.445436483
+      - 47.72970773
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 20.788939367
+      - 49.073210614
+      - -1
+    - - 18.101933598
+      - 46.386204846
+      - -1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectBoss7
+  kind: boss
+  description: 'Fine rectangle 7: width 0.5, radial length 1.5, u range 47.5..49, v range 22..22.5, z=0..2.'
+  parameters:
+  - fineSizeD
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV7
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectBoss7_cap
+  - method: solid
+    points:
+    - - 49.851028074
+      - 18.384776311
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 50.664200872
+      - 19.197949109
+      - 1
+    - - 49.037855275
+      - 17.571603512
+      - 1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectSlot7
+  kind: pocket
+  description: 'Fine rectangle 7: width 0.5, radial length 1.5, u range 47.5..49, v range -22..-22.5, z=0..-2.'
+  parameters:
+  - fineSizeD
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV7
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectSlot7_floor
+  - method: void
+    points:
+    - - 18.384776311
+      - 49.851028074
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 19.197949109
+      - 50.664200872
+      - -1
+    - - 17.571603512
+      - 49.037855275
+      - -1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectBoss8
+  kind: boss
+  description: 'Fine rectangle 8: width 0.5, radial length 1.5, u range 47.5..49, v range 23..23.5, z=0..2.'
+  parameters:
+  - fineSizeD
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV8
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectBoss8_cap
+  - method: solid
+    points:
+    - - 50.558134855
+      - 17.67766953
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 51.371307653
+      - 18.490842328
+      - 1
+    - - 49.744962056
+      - 16.864496731
+      - 1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectSlot8
+  kind: pocket
+  description: 'Fine rectangle 8: width 0.5, radial length 1.5, u range 47.5..49, v range -23..-23.5, z=0..-2.'
+  parameters:
+  - fineSizeD
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV8
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectSlot8_floor
+  - method: void
+    points:
+    - - 17.67766953
+      - 50.558134855
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 18.490842328
+      - 51.371307653
+      - -1
+    - - 16.864496731
+      - 49.744962056
+      - -1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectBoss9
+  kind: boss
+  description: 'Fine rectangle 9: width 0.25, radial length 0.75, u range 48.25..49, v range 24.5..24.75, z=0..2.'
+  parameters:
+  - fineSizeE
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV9
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectBoss9_cap
+  - method: solid
+    points:
+    - - 51.795571722
+      - 16.970562748
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 52.343579477
+      - 17.518570504
+      - 1
+    - - 51.247563966
+      - 16.422554993
+      - 1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectSlot9
+  kind: pocket
+  description: 'Fine rectangle 9: width 0.25, radial length 0.75, u range 48.25..49, v range -24.5..-24.75, z=0..-2.'
+  parameters:
+  - fineSizeE
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV9
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectSlot9_floor
+  - method: void
+    points:
+    - - 16.970562748
+      - 51.795571722
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 17.518570504
+      - 52.343579477
+      - -1
+    - - 16.422554993
+      - 51.247563966
+      - -1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectBoss10
+  kind: boss
+  description: 'Fine rectangle 10: width 0.25, radial length 0.75, u range 48.25..49, v range 25..25.25, z=0..2.'
+  parameters:
+  - fineSizeE
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV10
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectBoss10_cap
+  - method: solid
+    points:
+    - - 52.149125113
+      - 16.617009358
+      - 1
+    note: ''
+  - method: void
+    points:
+    - - 52.697132868
+      - 17.165017113
+      - 1
+    - - 51.601117357
+      - 16.069001602
+      - 1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: rectSlot10
+  kind: pocket
+  description: 'Fine rectangle 10: width 0.25, radial length 0.75, u range 48.25..49, v range -25..-25.25, z=0..-2.'
+  parameters:
+  - fineSizeE
+  - fineHeightDepth
+  - rectOuterInset
+  - rectLengthRatio
+  - rectStartV10
+  - baseSide
+  - baseRotation
+  count: 1
+  verify:
+  - method: face
+    face: rectSlot10_floor
+  - method: void
+    points:
+    - - 16.617009358
+      - 52.149125113
+      - -1
+    note: ''
+  - method: solid
+    points:
+    - - 17.165017113
+      - 52.697132868
+      - -1
+    - - 16.069001602
+      - 51.601117357
+      - -1
+    note: Radial checks are 0.4 mm from the nominal end walls, exceeding the inset and aspect-ratio uncertainty.
+  optional: false
+- id: lateral_smallRound
+  kind: cavity
+  description: Blind side cavity smallRound; t=40, q=-50..-47, centred z=-5. Eight cavities are supported by the
+    side-face area and section outline.
+  parameters:
+  - lateralCenterZ
+  - lateralFirstStation
+  - lateralPitch
+  - baseSide
+  - baseRotation
+  - lateralSmallDiameter
+  - lateralSmallDepth
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: lateral_smallRound
+  - method: plane
+    plane: lateralSmallBacks
+  - method: void
+    points:
+    - - -6.01040764
+      - 62.578950135
+      - -5
+    note: ''
+  - method: solid
+    points:
+    - - -4.5254834
+      - 61.094025895
+      - -5
+    note: Behind the blind bottom by 0.6 mm; safely beyond the 0.3 mm uncertain small-diamond depth.
+  optional: false
+- id: lateral_smallSquare
+  kind: cavity
+  description: Blind side cavity smallSquare; t=30, q=-50..-47, centred z=-5. Eight cavities are supported by the
+    side-face area and section outline.
+  parameters:
+  - lateralCenterZ
+  - lateralFirstStation
+  - lateralPitch
+  - baseSide
+  - baseRotation
+  - lateralSmallSquare
+  - lateralSmallDepth
+  count: 1
+  verify:
+  - method: plane
+    plane: lateralSmallBacks
+  - method: void
+    points:
+    - - -13.081475452
+      - 55.507882323
+      - -5
+    note: ''
+  - method: solid
+    points:
+    - - -11.596551211
+      - 54.022958083
+      - -5
+    note: Behind the blind bottom by 0.6 mm; safely beyond the 0.3 mm uncertain small-diamond depth.
+  - method: face
+    face: lateral_smallSquare_wall1
+  - method: plane
+    plane: lateral_smallSquare_wall2
+  - method: face
+    face: lateral_smallSquare_wall3
+  - method: plane
+    plane: lateral_smallSquare_wall4
+  optional: false
+- id: lateral_smallDiamond
+  kind: cavity
+  description: Blind side cavity smallDiamond; t=20, q=-50..-47, centred z=-5. Eight cavities are supported by the
+    side-face area and section outline.
+  parameters:
+  - lateralCenterZ
+  - lateralFirstStation
+  - lateralPitch
+  - baseSide
+  - baseRotation
+  - lateralSmallDiamond
+  - lateralSmallDiamondDepth
+  count: 1
+  verify:
+  - method: plane
+    plane: lateralSmallBacks
+  - method: void
+    points:
+    - - -20.152543264
+      - 48.436814511
+      - -5
+    note: ''
+  - method: solid
+    points:
+    - - -18.667619023
+      - 46.951890271
+      - -5
+    note: Behind the blind bottom by 0.6 mm; safely beyond the 0.3 mm uncertain small-diamond depth.
+  - method: plane
+    plane: lateral_smallDiamond_wall1
+  - method: plane
+    plane: lateral_smallDiamond_wall2
+  - method: plane
+    plane: lateral_smallDiamond_wall3
+  - method: plane
+    plane: lateral_smallDiamond_wall4
+  optional: false
+- id: lateral_largeRound
+  kind: cavity
+  description: Blind side cavity largeRound; t=10, q=-50..-45, centred z=-5. Eight cavities are supported by the
+    side-face area and section outline.
+  parameters:
+  - lateralCenterZ
+  - lateralFirstStation
+  - lateralPitch
+  - baseSide
+  - baseRotation
+  - lateralLargeDiameter
+  - lateralLargeDepth
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: lateral_largeRound
+  - method: plane
+    plane: lateralLargeBacks
+  - method: void
+    points:
+    - - -26.516504294
+      - 40.658639918
+      - -5
+    note: ''
+  - method: solid
+    points:
+    - - -24.324473273
+      - 38.466608897
+      - -5
+    note: Behind the blind bottom by 0.6 mm; safely beyond the 0.3 mm uncertain small-diamond depth.
+  optional: false
+- id: lateral_largeSquare
+  kind: cavity
+  description: Blind side cavity largeSquare; t=0, q=-50..-45, centred z=-5. Eight cavities are supported by the
+    side-face area and section outline.
+  parameters:
+  - lateralCenterZ
+  - lateralFirstStation
+  - lateralPitch
+  - baseSide
+  - baseRotation
+  - lateralLargeSquare
+  - lateralLargeDepth
+  count: 1
+  verify:
+  - method: plane
+    plane: lateralLargeBacks
+  - method: void
+    points:
+    - - -33.587572106
+      - 33.587572106
+      - -5
+    note: ''
+  - method: solid
+    points:
+    - - -31.395541085
+      - 31.395541085
+      - -5
+    note: Behind the blind bottom by 0.6 mm; safely beyond the 0.3 mm uncertain small-diamond depth.
+  - method: face
+    face: lateral_largeSquare_wall1
+  - method: plane
+    plane: lateral_largeSquare_wall2
+  - method: face
+    face: lateral_largeSquare_wall3
+  - method: plane
+    plane: lateral_largeSquare_wall4
+  optional: false
+- id: lateral_largeDiamond
+  kind: cavity
+  description: Blind side cavity largeDiamond; t=-10, q=-50..-45, centred z=-5. Eight cavities are supported by
+    the side-face area and section outline.
+  parameters:
+  - lateralCenterZ
+  - lateralFirstStation
+  - lateralPitch
+  - baseSide
+  - baseRotation
+  - lateralLargeDiamond
+  - lateralLargeDepth
+  count: 1
+  verify:
+  - method: plane
+    plane: lateralLargeBacks
+  - method: void
+    points:
+    - - -40.658639918
+      - 26.516504294
+      - -5
+    note: ''
+  - method: solid
+    points:
+    - - -38.466608897
+      - 24.324473273
+      - -5
+    note: Behind the blind bottom by 0.6 mm; safely beyond the 0.3 mm uncertain small-diamond depth.
+  - method: plane
+    plane: lateral_largeDiamond_wall1
+  - method: plane
+    plane: lateral_largeDiamond_wall2
+  - method: plane
+    plane: lateral_largeDiamond_wall3
+  - method: plane
+    plane: lateral_largeDiamond_wall4
+  optional: false
+- id: lateral_tallRhombus
+  kind: cavity
+  description: Blind side cavity tallRhombus; t=-20, q=-50..-45, centred z=-5. Eight cavities are supported by the
+    side-face area and section outline.
+  parameters:
+  - lateralCenterZ
+  - lateralFirstStation
+  - lateralPitch
+  - baseSide
+  - baseRotation
+  - lateralTallHeight
+  - lateralTallWidth
+  - lateralApexAngle
+  - lateralLargeDepth
+  count: 1
+  verify:
+  - method: plane
+    plane: lateralLargeBacks
+  - method: void
+    points:
+    - - -47.72970773
+      - 19.445436483
+      - -5
+    note: ''
+  - method: solid
+    points:
+    - - -45.537676708
+      - 17.253405461
+      - -5
+    note: Behind the blind bottom by 0.6 mm; safely beyond the 0.3 mm uncertain small-diamond depth.
+  - method: plane
+    plane: lateral_tallRhombus_wall1
+  - method: plane
+    plane: lateral_tallRhombus_wall2
+  - method: plane
+    plane: lateral_tallRhombus_wall3
+  - method: plane
+    plane: lateral_tallRhombus_wall4
+  optional: false
+- id: lateral_wideRhombus
+  kind: cavity
+  description: Blind side cavity wideRhombus; t=-30, q=-50..-45, centred z=-5. Eight cavities are supported by the
+    side-face area and section outline.
+  parameters:
+  - lateralCenterZ
+  - lateralFirstStation
+  - lateralPitch
+  - baseSide
+  - baseRotation
+  - lateralWideHeight
+  - lateralWideWidth
+  - lateralApexAngle
+  - lateralLargeDepth
+  count: 1
+  verify:
+  - method: plane
+    plane: lateralLargeBacks
+  - method: void
+    points:
+    - - -54.800775542
+      - 12.374368671
+      - -5
+    note: ''
+  - method: solid
+    points:
+    - - -52.60874452
+      - 10.182337649
+      - -5
+    note: Behind the blind bottom by 0.6 mm; safely beyond the 0.3 mm uncertain small-diamond depth.
+  - method: plane
+    plane: lateral_wideRhombus_wall1
+  - method: plane
+    plane: lateral_wideRhombus_wall2
+  - method: plane
+    plane: lateral_wideRhombus_wall3
+  - method: plane
+    plane: lateral_wideRhombus_wall4
+  optional: false
+- id: sectionInventory
+  kind: pattern
+  description: Required material/void inventory across independent section planes. Fine features have additional
+    individual checks.
+  parameters:
+  - baseThickness
+  - mainPinHeight
+  - stairTread
+  - stairFirstHeight
+  - stairIncrement
+  - fineHeightDepth
+  count: 1
+  verify:
+  - method: section
+    section: axisX
+  - method: section
+    section: axisY
+  - method: section
+    section: belowFine
+  - method: section
+    section: bottomInterior
+  - method: section
+    section: positiveLow
+  - method: section
+    section: rampMid
+  - method: section
+    section: stepsAbove3
+  - method: section
+    section: stepsAbove4
+  - method: section
+    section: stepsAbove5
+  - method: section
+    section: stepsAbove6
+  - method: section
+    section: lateralAndDeepStair
+  - method: count
+    section: positiveLow
+    count: 34
+    note: Outer section loops, not final solid count:16 main pins+1 stair+1 central annulus+1 ramp+5 fine pins+10
+      rectangular bosses.
+  optional: false
+interfaces:
+- name: primaryTopDatum
+  description: Retain the z=0 datum surface and its nominal footprint through the specified height/thickness edits.
+  must_not_change: true
+  checks:
+  - datumTop
+- name: centralDatumBore
+  description: Centre and diameter define the datum. Nominal length is checked; thickness edits intentionally extend
+    it, so this whole cylinder check is not invariant.
+  must_not_change: false
+  checks:
+  - centerBore
+  - upperBossCap
+  - lowerBossShoulder
+- name: positiveXDatumHole
+  description: Located axis at [60,0] sets +x. Through length follows base thickness.
+  must_not_change: false
+  checks:
+  - hole_px
+- name: diamondEnvelope
+  description: Four side planes and rotated spans; areas and z extent change with a thickness edit.
+  must_not_change: false
+  checks:
+  - sideSouthWest
+  - sideSouthEast
+  - sideNorthEast
+  - sideNorthWest
+  - spanX
+  - spanY
+  - totalHeight
+  - baseThicknessCheck
+- name: stairMetrologySurfaces
+  description: All ten treads and eighteen vertical metrology faces survive the chosen edit tests.
+  must_not_change: true
+  checks:
+  - raisedTread_outerX
+  - raisedTread_middleX
+  - raisedTread_elbow
+  - raisedTread_middleY
+  - raisedTread_outerY
+  - recessedTread_outerX
+  - recessedTread_middleX
+  - recessedTread_elbow
+  - recessedTread_middleY
+  - recessedTread_outerY
+  - raisedX42
+  - recessedX42
+  - raisedX32
+  - recessedX32
+  - raisedX22
+  - recessedX22
+  - raisedX12
+  - recessedX12
+  - raisedY12
+  - recessedY12
+  - raisedY22Long
+  - raisedY22Riser
+  - recessedY22Long
+  - recessedY22Riser
+  - raisedY32
+  - recessedY32
+  - raisedY42
+  - recessedY42
+- name: fineMetrologyFeatures
+  description: Keep all ten fine circular surfaces and twenty rectangular caps/floors at their separate locations.
+  must_not_change: true
+  checks:
+  - finePinA_cap
+  - fineHoleA_floor
+  - finePinB_cap
+  - fineHoleB_floor
+  - finePinC_cap
+  - fineHoleC_floor
+  - finePinD_cap
+  - fineHoleD_floor
+  - finePinE_cap
+  - fineHoleE_floor
+  - rectBoss1_cap
+  - rectSlot1_floor
+  - rectBoss2_cap
+  - rectSlot2_floor
+  - rectBoss3_cap
+  - rectSlot3_floor
+  - rectBoss4_cap
+  - rectSlot4_floor
+  - rectBoss5_cap
+  - rectSlot5_floor
+  - rectBoss6_cap
+  - rectSlot6_floor
+  - rectBoss7_cap
+  - rectSlot7_floor
+  - rectBoss8_cap
+  - rectSlot8_floor
+  - rectBoss9_cap
+  - rectSlot9_floor
+  - rectBoss10_cap
+  - rectSlot10_floor
+- name: lateralMetrologyFeatures
+  description: Keep both circular side axes and the eight cavity back outlines; no lateral movement during thickness
+    or pin-height edits.
+  must_not_change: true
+  checks:
+  - lateral_smallRound
+  - lateral_largeRound
+  - lateralSmallBacks
+  - lateralLargeBacks
+  - lateral_smallSquare_wall1
+  - lateral_smallSquare_wall3
+  - lateral_largeSquare_wall1
+  - lateral_largeSquare_wall3
+- name: rampLandingsAndSlope
+  description: Nominal ramp checked by both landings, side/end planes and slope; rampRise edit intentionally changes
+    high levels.
+  must_not_change: false
+  checks:
+  - rampHighLanding
+  - rampLowLanding
+  - rampSlope
+  - rampHighEnd
+  - rampLowEnd
+  - rampSidePositive
+  - rampSideNegative
+  - rampRiseCheck
+acceptance:
+  bbox_tolerance: 0.03
+  volume:
+    expected: 100987.061651834
+    tolerance_rel: 0.0005
+    provenance: derived
+    note: 'Analytic signed primitives: baseSide^2*baseThickness - pi/4*(centerHoleDiameter^2+4*mainHoleDiameter^2)*baseThickness
+      + 16*pi*mainPinDiameter^2*mainPinHeight/4 + pi/4*(lowerBossDiameter^2-centerHoleDiameter^2)*lowerBossHeight
+      + pi/4*(upperBossDiameter^2-centerHoleDiameter^2)*upperBossHeight + rampWidth*(rampRun/2+rampLanding)*(2*rampLowHeight+rampRise)
+      - sum(lateral profile area*depth). The equal positive/negative stairs and fine-feature volumes cancel algebraically,
+      but every member remains individually mandatory. Lateral subtraction=594.320976353 mm3. Independent supplied
+      table value=100987.06 mm3.'
+  surface_area:
+    expected: 28904.433778012
+    tolerance_rel: 0.001
+    provenance: derived
+    note: 2*baseSide^2 + 4*baseSide*baseThickness - 2*Athrough + pi*(centerHoleDiameter+4*mainHoleDiameter)*baseThickness
+      + 16*pi*mainPinDiameter*mainPinHeight + pi*(lowerBossDiameter*lowerBossHeight+upperBossDiameter*upperBossHeight+centerHoleDiameter*(lowerBossHeight+upperBossHeight))
+      + 2*640 + rampExcessArea + fineWallArea + lateralWallArea. Athrough=pi/4*(centerHoleDiameter^2+4*mainHoleDiameter^2);
+      rampExcessArea=105.099960032; fineWallArea=401.973445725; lateralWallArea=538.112803658 mm2. The attached
+      sheet gives 28904.43 mm2.
+  center_of_mass:
+    expected:
+    - 0.261256747
+    - 0.867161542
+    - -4.636979473
+    tolerance: 0.02
+    provenance: derived
+    note: Signed first moments / analytic volume. Sum V_i*[cx_i,cy_i,cz_i], subtract cavities; use centre z=h/2
+      for additions and z=-d/2 for top pockets. Base centroid [0,0,-baseThickness/2]. Side cavity centroid xyz(t,-baseSide/2+depth/2,lateralCenterZ).
+      Ramp volume225 and centroid [19.854641796,-19.854641796,0.787037037] from integrating r*h(r), h(r)^2/2. Net
+      moments [26383.551236997,87572.096143311,-468274.931965609] mm4. Rounded table COM [0.261,0.867,-4.637].
+  solid_count: 1
+  sections:
+  - id: axisX
+    plane: x
+    at: 0
+    expect:
+      area: 1513.213562373
+      area_tolerance_rel: 0.001
+      loops: 4
+      holes: 0
+    description: 100*sqrt(2)*10 - 2*4*10 - 10*10 + 8*4*7 + (20-10)*4 + (15-10)*3; sources/dimension-sheet.md x=0:1513.21,4,0.
+  - id: axisY
+    plane: y
+    at: 0
+    expect:
+      area: 1513.213562373
+      area_tolerance_rel: 0.001
+      loops: 4
+      holes: 0
+    description: Same formula as axisX; sources/dimension-sheet.md y=0:1513.21,4,0.
+  - id: belowFine
+    plane: z
+    at: -1
+    expect:
+      area: 9319.880127592
+      area_tolerance_rel: 0.001
+      loops: 1
+      holes: 21
+    description: baseSide^2 - through-hole area - 5*stairTread^2 - fine hole/slot areas; sources/dimension-sheet.md
+      z=-1:9319.88,1,21.
+  - id: bottomInterior
+    plane: z
+    at: -8.5
+    expect:
+      area: 9871.194701203
+      area_tolerance_rel: 0.001
+      loops: 1
+      holes: 5
+    description: baseSide^2 - through-hole area. Below every blind cavity and above z=-10.
+  - id: positiveLow
+    plane: z
+    at: 0.5
+    expect:
+      area: 1137.99595246
+      area_tolerance_rel: 0.001
+      loops: 34
+      holes: 1
+    description: 16*pi*(mainPinDiameter/2)^2 + central annulus area with outer radius 10 + 5*stairTread^2 + fine
+      area 51.314573611 + ramp section 150; no cap lies at z=0.5.
+  - id: rampMid
+    plane: z
+    at: 1.5
+    expect:
+      area: 1062.99595246
+      area_tolerance_rel: 0.001
+      loops: 34
+      holes: 1
+    description: 16*pi*(mainPinDiameter/2)^2 + central annulus area with outer radius 10 + 5*stairTread^2 + fine
+      area 51.314573611 + ramp section 75; no cap lies at z=1.5.
+  - id: stepsAbove3
+    plane: z
+    at: 3.5
+    expect:
+      area: 836.681378849
+      area_tolerance_rel: 0.001
+      loops: 18
+      holes: 1
+    description: 16*pi*(mainPinDiameter/2)^2 + central annulus area with outer radius 10 + 4*stairTread^2 + fine
+      area 0.000000000 + ramp section 0; no cap lies at z=3.5.
+  - id: stepsAbove4
+    plane: z
+    at: 4.5
+    expect:
+      area: 599.236700254
+      area_tolerance_rel: 0.001
+      loops: 18
+      holes: 1
+    description: 16*pi*(mainPinDiameter/2)^2 + central annulus area with outer radius 7.5 + 3*stairTread^2 + fine
+      area 0.000000000 + ramp section 0; no cap lies at z=4.5.
+  - id: stepsAbove5
+    plane: z
+    at: 5.5
+    expect:
+      area: 499.236700254
+      area_tolerance_rel: 0.001
+      loops: 18
+      holes: 1
+    description: 16*pi*(mainPinDiameter/2)^2 + central annulus area with outer radius 7.5 + 2*stairTread^2 + fine
+      area 0.000000000 + ramp section 0; no cap lies at z=5.5.
+  - id: stepsAbove6
+    plane: z
+    at: 6.5
+    expect:
+      area: 399.236700254
+      area_tolerance_rel: 0.001
+      loops: 18
+      holes: 1
+    description: 16*pi*(mainPinDiameter/2)^2 + central annulus area with outer radius 7.5 + 1*stairTread^2 + fine
+      area 0.000000000 + ramp section 0; no cap lies at z=6.5.
+  - id: lateralAndDeepStair
+    plane: z
+    at: -5.5
+    expect:
+      area: 9522.71450207
+      area_tolerance_rel: 0.001
+      loops: 1
+      holes: 6
+    description: baseSide^2 - through-hole area - 2*stairTread^2 - sum(horizontal cavity width at z+5=-0.5 times
+      depth). Circle width=2*sqrt(R^2-dz^2); rhombus width=W*(1-2*abs(dz)/H). Eight lateral notches join the exterior,
+      leaving five through holes and one remaining rectangular stair pocket.
+  faces:
+  - name: datumTop
+    plane: z
+    at: 0
+    normal: +
+    area: 8181.884175132
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - 2.02
+    - -0.01
+    mode: one
+  - name: baseBottom
+    plane: z
+    at: -10
+    normal: '-'
+    area: 9871.194701203
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - 0
+    mode: one
+  - name: lowerBossShoulder
+    plane: z
+    at: 4
+    normal: +
+    area: 137.444678595
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - 0
+    mode: one
+  - name: upperBossCap
+    plane: z
+    at: 7
+    normal: +
+    area: 98.174770425
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - 0
+    mode: one
+  - name: pin_px_20_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 20
+    - 0
+    mode: one
+  - name: pin_px_30_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 30
+    - 0
+    mode: one
+  - name: pin_px_40_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 40
+    - 0
+    mode: one
+  - name: pin_px_50_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 50
+    - 0
+    mode: one
+  - name: pin_nx_20_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -20
+    - 0
+    mode: one
+  - name: pin_nx_30_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -30
+    - 0
+    mode: one
+  - name: pin_nx_40_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -40
+    - 0
+    mode: one
+  - name: pin_nx_50_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -50
+    - 0
+    mode: one
+  - name: pin_py_20_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - 20
+    mode: one
+  - name: pin_py_30_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - 30
+    mode: one
+  - name: pin_py_40_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - 40
+    mode: one
+  - name: pin_py_50_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - 50
+    mode: one
+  - name: pin_ny_20_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - -20
+    mode: one
+  - name: pin_ny_30_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - -30
+    mode: one
+  - name: pin_ny_40_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - -40
+    mode: one
+  - name: pin_ny_50_cap
+    plane: z
+    at: 7
+    normal: +
+    area: 12.566370614
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 0
+    - -50
+    mode: one
+  - name: raisedTread_outerX
+    plane: z
+    at: 3
+    normal: +
+    area: 100
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -37
+    - 17
+    mode: one
+  - name: raisedTread_middleX
+    plane: z
+    at: 5
+    normal: +
+    area: 100
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -27
+    - 17
+    mode: one
+  - name: raisedTread_elbow
+    plane: z
+    at: 7
+    normal: +
+    area: 100
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -17
+    - 17
+    mode: one
+  - name: raisedTread_middleY
+    plane: z
+    at: 6
+    normal: +
+    area: 100
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -17
+    - 27
+    mode: one
+  - name: raisedTread_outerY
+    plane: z
+    at: 4
+    normal: +
+    area: 100
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -17
+    - 37
+    mode: one
+  - name: recessedTread_outerX
+    plane: z
+    at: -3
+    normal: +
+    area: 100
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -37
+    - -17
+    mode: one
+  - name: recessedTread_middleX
+    plane: z
+    at: -5
+    normal: +
+    area: 100
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -27
+    - -17
+    mode: one
+  - name: recessedTread_elbow
+    plane: z
+    at: -7
+    normal: +
+    area: 100
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -17
+    - -17
+    mode: one
+  - name: recessedTread_middleY
+    plane: z
+    at: -6
+    normal: +
+    area: 100
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -17
+    - -27
+    mode: one
+  - name: recessedTread_outerY
+    plane: z
+    at: -4
+    normal: +
+    area: 100
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - -17
+    - -37
+    mode: one
+  - name: raisedX42
+    plane: x
+    at: -42
+    normal: '-'
+    area: 30
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - 17
+    - 1.5
+    mode: one
+  - name: recessedX42
+    plane: x
+    at: -42
+    normal: +
+    area: 30
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -17
+    - -1.5
+    mode: one
+  - name: raisedX32
+    plane: x
+    at: -32
+    normal: '-'
+    area: 20
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - 17
+    - 4
+    mode: one
+  - name: recessedX32
+    plane: x
+    at: -32
+    normal: +
+    area: 20
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -17
+    - -4
+    mode: one
+  - name: raisedX22
+    plane: x
+    at: -22
+    normal: '-'
+    area: 120
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - 28.67
+    - 3.17
+    mode: one
+  - name: recessedX22
+    plane: x
+    at: -22
+    normal: +
+    area: 120
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -28.67
+    - -3.17
+    mode: one
+  - name: raisedX12
+    plane: x
+    at: -12
+    normal: +
+    area: 170
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - 25.24
+    - 2.97
+    mode: one
+  - name: recessedX12
+    plane: x
+    at: -12
+    normal: '-'
+    area: 170
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -25.24
+    - -2.97
+    mode: one
+  - name: raisedY12
+    plane: y
+    at: 12
+    normal: '-'
+    area: 150
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -24.33
+    - 2.77
+    mode: one
+  - name: recessedY12
+    plane: y
+    at: -12
+    normal: '-'
+    area: 150
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -24.33
+    - -2.77
+    mode: one
+  - name: raisedY22Long
+    plane: y
+    at: 22
+    normal: +
+    area: 80
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -30.75
+    - 2.13
+    mode: one
+  - name: raisedY22Riser
+    plane: y
+    at: 22
+    normal: +
+    area: 10
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -17
+    - 6.5
+    mode: one
+  - name: recessedY22Long
+    plane: y
+    at: -22
+    normal: +
+    area: 80
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -30.75
+    - -2.12
+    mode: one
+  - name: recessedY22Riser
+    plane: y
+    at: -22
+    normal: +
+    area: 10
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -17
+    - -6.5
+    mode: one
+  - name: raisedY32
+    plane: y
+    at: 32
+    normal: +
+    area: 20
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -17
+    - 5
+    mode: one
+  - name: recessedY32
+    plane: y
+    at: -32
+    normal: +
+    area: 20
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -17
+    - -5
+    mode: one
+  - name: raisedY42
+    plane: y
+    at: 42
+    normal: +
+    area: 40
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -17
+    - 2
+    mode: one
+  - name: recessedY42
+    plane: y
+    at: -42
+    normal: +
+    area: 40
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -17
+    - -2
+    mode: one
+  - name: rampHighLanding
+    plane: z
+    at: 2
+    normal: +
+    area: 12.5
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 11.490485194
+    - -11.490485194
+    mode: one
+  - name: rampLowLanding
+    plane: z
+    at: 1
+    normal: +
+    area: 12.5
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    center:
+    - 30.935921677
+    - -30.935921677
+    mode: one
+  - name: finePinA_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 3.141592654
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center:
+    - 28.284271247
+    - 21.213203436
+    mode: one
+  - name: fineHoleA_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 3.141592654
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center:
+    - 21.213203436
+    - 28.284271247
+    mode: one
+  - name: finePinB_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 1.767145868
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center:
+    - 31.819805153
+    - 17.67766953
+    mode: one
+  - name: fineHoleB_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 1.767145868
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center:
+    - 17.67766953
+    - 31.819805153
+    mode: one
+  - name: finePinC_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 0.785398163
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center:
+    - 35.355339059
+    - 14.142135624
+    mode: one
+  - name: fineHoleC_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 0.785398163
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center:
+    - 14.142135624
+    - 35.355339059
+    mode: one
+  - name: finePinD_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 0.196349541
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center:
+    - 38.890872965
+    - 10.606601718
+    mode: one
+  - name: fineHoleD_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 0.196349541
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center:
+    - 10.606601718
+    - 38.890872965
+    mode: one
+  - name: finePinE_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 0.049087385
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center:
+    - 42.426406871
+    - 7.071067812
+    mode: one
+  - name: fineHoleE_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 0.049087385
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center:
+    - 7.071067812
+    - 42.426406871
+    mode: one
+  - name: rectBoss1_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 12
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 34.648232278
+    - 30.405591591
+    mode: one
+  - name: rectSlot1_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 12
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 30.405591591
+    - 34.648232278
+    mode: one
+  - name: rectBoss2_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 12
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 37.476659403
+    - 27.577164466
+    mode: one
+  - name: rectSlot2_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 12
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 27.577164466
+    - 37.476659403
+    mode: one
+  - name: rectBoss3_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 6.75
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 41.365746699
+    - 24.748737342
+    mode: one
+  - name: rectSlot3_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 6.75
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 24.748737342
+    - 41.365746699
+    mode: one
+  - name: rectBoss4_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 6.75
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 43.487067043
+    - 22.627416998
+    mode: one
+  - name: rectSlot4_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 6.75
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 22.627416998
+    - 43.487067043
+    mode: one
+  - name: rectBoss5_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 3
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 46.315494168
+    - 20.859650045
+    mode: one
+  - name: rectSlot5_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 3
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 20.859650045
+    - 46.315494168
+    mode: one
+  - name: rectBoss6_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 3
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 47.72970773
+    - 19.445436483
+    mode: one
+  - name: rectSlot6_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 3
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 19.445436483
+    - 47.72970773
+    mode: one
+  - name: rectBoss7_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 0.75
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 49.851028074
+    - 18.384776311
+    mode: one
+  - name: rectSlot7_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 0.75
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 18.384776311
+    - 49.851028074
+    mode: one
+  - name: rectBoss8_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 0.75
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 50.558134855
+    - 17.67766953
+    mode: one
+  - name: rectSlot8_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 0.75
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 17.67766953
+    - 50.558134855
+    mode: one
+  - name: rectBoss9_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 0.1875
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 51.795571722
+    - 16.970562748
+    mode: one
+  - name: rectSlot9_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 0.1875
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 16.970562748
+    - 51.795571722
+    mode: one
+  - name: rectBoss10_cap
+    plane: z
+    at: 2
+    normal: +
+    area: 0.1875
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 52.149125113
+    - 16.617009358
+    mode: one
+  - name: rectSlot10_floor
+    plane: z
+    at: -2
+    normal: +
+    area: 0.1875
+    area_tolerance_rel: 0.01
+    tolerance: 0.025
+    center:
+    - 16.617009358
+    - 52.149125113
+    mode: one
+  - name: lateral_smallSquare_wall1
+    plane: z
+    at: -6.5
+    normal: +
+    area: 9.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    center:
+    - -13.081475452
+    - 55.507882323
+    mode: one
+  - name: lateral_smallSquare_wall3
+    plane: z
+    at: -3.5
+    normal: '-'
+    area: 9.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    center:
+    - -13.081475452
+    - 55.507882323
+    mode: one
+  - name: lateral_largeSquare_wall1
+    plane: z
+    at: -8.0
+    normal: +
+    area: 30.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    center:
+    - -33.587572106
+    - 33.587572106
+    mode: one
+  - name: lateral_largeSquare_wall3
+    plane: z
+    at: -2.0
+    normal: '-'
+    area: 30.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    center:
+    - -33.587572106
+    - 33.587572106
+    mode: one
+  cylinders:
+  - name: centerBore
+    point:
+    - 0
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 10
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 17
+    length_tolerance: 0.02
+    t_range:
+    - -10
+    - 7
+    description: sources/dimension-sheet.md Ø10 hole axis and extent
+  - name: lowerCentralBoss
+    point:
+    - 0
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 20
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 4
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 4
+    description: sources/dimension-sheet.md Ø20 pin 0 .. 4
+  - name: upperCentralBoss
+    point:
+    - 0
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 15
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 3
+    length_tolerance: 0.02
+    t_range:
+    - 4
+    - 7
+    description: sources/dimension-sheet.md Ø15 pin 4 .. 7
+  - name: pin_px_20
+    point:
+    - 20
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_px_30
+    point:
+    - 30
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_px_40
+    point:
+    - 40
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_px_50
+    point:
+    - 50
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: hole_px
+    point:
+    - 60
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 10
+    length_tolerance: 0.02
+    t_range:
+    - -10
+    - 0
+    description: sources/dimension-sheet.md individual Ø4 through-hole axis, diameter and extent
+  - name: pin_nx_20
+    point:
+    - -20
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_nx_30
+    point:
+    - -30
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_nx_40
+    point:
+    - -40
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_nx_50
+    point:
+    - -50
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: hole_nx
+    point:
+    - -60
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 10
+    length_tolerance: 0.02
+    t_range:
+    - -10
+    - 0
+    description: sources/dimension-sheet.md individual Ø4 through-hole axis, diameter and extent
+  - name: pin_py_20
+    point:
+    - 0
+    - 20
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_py_30
+    point:
+    - 0
+    - 30
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_py_40
+    point:
+    - 0
+    - 40
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_py_50
+    point:
+    - 0
+    - 50
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: hole_py
+    point:
+    - 0
+    - 60
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 10
+    length_tolerance: 0.02
+    t_range:
+    - -10
+    - 0
+    description: sources/dimension-sheet.md individual Ø4 through-hole axis, diameter and extent
+  - name: pin_ny_20
+    point:
+    - 0
+    - -20
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_ny_30
+    point:
+    - 0
+    - -30
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_ny_40
+    point:
+    - 0
+    - -40
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: pin_ny_50
+    point:
+    - 0
+    - -50
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 7
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 7
+    description: sources/dimension-sheet.md individual Ø4 pin axis, diameter and extent
+  - name: hole_ny
+    point:
+    - 0
+    - -60
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 4
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 10
+    length_tolerance: 0.02
+    t_range:
+    - -10
+    - 0
+    description: sources/dimension-sheet.md individual Ø4 through-hole axis, diameter and extent
+  - name: finePinA
+    point:
+    - 28.284271247
+    - 21.213203436
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 2
+    radius_tolerance: 0.005
+    axis_tolerance: 0.015
+    length: 2
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 2
+    description: sources/dimension-sheet.md individual Ø2 fine pin axis and extent
+  - name: fineHoleA
+    point:
+    - 21.213203436
+    - 28.284271247
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 2
+    radius_tolerance: 0.005
+    axis_tolerance: 0.015
+    length: 2
+    length_tolerance: 0.02
+    t_range:
+    - -2
+    - 0
+    description: sources/dimension-sheet.md individual Ø2 fine hole axis and extent
+  - name: finePinB
+    point:
+    - 31.819805153
+    - 17.67766953
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 1.5
+    radius_tolerance: 0.005
+    axis_tolerance: 0.015
+    length: 2
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 2
+    description: sources/dimension-sheet.md individual Ø1.5 fine pin axis and extent
+  - name: fineHoleB
+    point:
+    - 17.67766953
+    - 31.819805153
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 1.5
+    radius_tolerance: 0.005
+    axis_tolerance: 0.015
+    length: 2
+    length_tolerance: 0.02
+    t_range:
+    - -2
+    - 0
+    description: sources/dimension-sheet.md individual Ø1.5 fine hole axis and extent
+  - name: finePinC
+    point:
+    - 35.355339059
+    - 14.142135624
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 1
+    radius_tolerance: 0.005
+    axis_tolerance: 0.015
+    length: 2
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 2
+    description: sources/dimension-sheet.md individual Ø1 fine pin axis and extent
+  - name: fineHoleC
+    point:
+    - 14.142135624
+    - 35.355339059
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 1
+    radius_tolerance: 0.005
+    axis_tolerance: 0.015
+    length: 2
+    length_tolerance: 0.02
+    t_range:
+    - -2
+    - 0
+    description: sources/dimension-sheet.md individual Ø1 fine hole axis and extent
+  - name: finePinD
+    point:
+    - 38.890872965
+    - 10.606601718
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 0.5
+    radius_tolerance: 0.005
+    axis_tolerance: 0.015
+    length: 2
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 2
+    description: sources/dimension-sheet.md individual Ø0.5 fine pin axis and extent
+  - name: fineHoleD
+    point:
+    - 10.606601718
+    - 38.890872965
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 0.5
+    radius_tolerance: 0.005
+    axis_tolerance: 0.015
+    length: 2
+    length_tolerance: 0.02
+    t_range:
+    - -2
+    - 0
+    description: sources/dimension-sheet.md individual Ø0.5 fine hole axis and extent
+  - name: finePinE
+    point:
+    - 42.426406871
+    - 7.071067812
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 0.25
+    radius_tolerance: 0.005
+    axis_tolerance: 0.015
+    length: 2
+    length_tolerance: 0.02
+    t_range:
+    - 0
+    - 2
+    description: sources/dimension-sheet.md individual Ø0.25 fine pin axis and extent
+  - name: fineHoleE
+    point:
+    - 7.071067812
+    - 42.426406871
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 0.25
+    radius_tolerance: 0.005
+    axis_tolerance: 0.015
+    length: 2
+    length_tolerance: 0.02
+    t_range:
+    - -2
+    - 0
+    description: sources/dimension-sheet.md individual Ø0.25 fine hole axis and extent
+  - name: lateral_smallRound
+    point:
+    - 28.284271247
+    - 28.284271247
+    - -5
+    direction:
+    - 0.707106781
+    - -0.707106781
+    - 0
+    kind: hole
+    diameter: 3
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 3
+    length_tolerance: 0.02
+    t_range:
+    - -50
+    - -47
+    description: sources/dimension-sheet.md Ø3 lateral bore, full 360°, exact axis and depth
+  - name: lateral_largeRound
+    point:
+    - 7.071067812
+    - 7.071067812
+    - -5
+    direction:
+    - 0.707106781
+    - -0.707106781
+    - 0
+    kind: hole
+    diameter: 6
+    radius_tolerance: 0.005
+    axis_tolerance: 0.02
+    length: 5
+    length_tolerance: 0.02
+    t_range:
+    - -50
+    - -45
+    description: sources/dimension-sheet.md Ø6 lateral bore, full 360°, exact axis and depth
+  planes:
+  - name: sideSouthWest
+    point:
+    - -70.710678119
+    - 0
+    - -5
+    normal:
+    - -0.707106781
+    - -0.707106781
+    - 0
+    area: 1000
+    area_tolerance_rel: 0.001
+    tolerance: 0.03
+    angle_tolerance_deg: 0.1
+    description: Plain area baseSide*baseThickness; NW subtracts eight lateral opening areas. sources/dimension-sheet.md
+      inclined planar faces.
+  - name: sideSouthEast
+    point:
+    - 0
+    - -70.710678119
+    - -5
+    normal:
+    - 0.707106781
+    - -0.707106781
+    - 0
+    area: 1000
+    area_tolerance_rel: 0.001
+    tolerance: 0.03
+    angle_tolerance_deg: 0.1
+    description: Plain area baseSide*baseThickness; NW subtracts eight lateral opening areas. sources/dimension-sheet.md
+      inclined planar faces.
+  - name: sideNorthEast
+    point:
+    - 0
+    - 70.710678119
+    - -5
+    normal:
+    - 0.707106781
+    - 0.707106781
+    - 0
+    area: 1000
+    area_tolerance_rel: 0.001
+    tolerance: 0.03
+    angle_tolerance_deg: 0.1
+    description: Plain area baseSide*baseThickness; NW subtracts eight lateral opening areas. sources/dimension-sheet.md
+      inclined planar faces.
+  - name: sideNorthWest
+    point:
+    - -70.710678119
+    - 0
+    - -5
+    normal:
+    - -0.707106781
+    - 0.707106781
+    - 0
+    area: 872.908371341
+    area_tolerance_rel: 0.001
+    tolerance: 0.03
+    angle_tolerance_deg: 0.1
+    description: Plain area baseSide*baseThickness; NW subtracts eight lateral opening areas. sources/dimension-sheet.md
+      inclined planar faces.
+  - name: rampSlope
+    point:
+    - 21.213203436
+    - -21.213203436
+    - 1.5
+    normal:
+    - 0.028261671
+    - -0.028261671
+    - 0.999200959
+    area: 125.099960032
+    area_tolerance_rel: 0.001
+    tolerance: 0.03
+    angle_tolerance_deg: 0.1
+    description: z=2-(r-17.5)/25 for 17.5<=r<=42.5; area=rampWidth*sqrt(rampRun^2+rampRise^2). sources/dimension-sheet.md
+      slope centroid and normal.
+  - name: rampSidePositive
+    point:
+    - 22.980970389
+    - -19.445436483
+    - 1
+    normal:
+    - 0.707106781
+    - 0.707106781
+    - 0
+    area: 45
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    angle_tolerance_deg: 0.1
+    description: Positive transverse side at u=2.5; integral h(r) dr = 45.
+  - name: rampSideNegative
+    point:
+    - 19.445436483
+    - -22.980970389
+    - 1
+    normal:
+    - -0.707106781
+    - -0.707106781
+    - 0
+    area: 45
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    angle_tolerance_deg: 0.1
+    description: Negative transverse side at u=-2.5; integral h(r) dr = 45.
+  - name: rampHighEnd
+    point:
+    - 10.606601718
+    - -10.606601718
+    - 1
+    normal:
+    - -0.707106781
+    - 0.707106781
+    - 0
+    area: 10
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    angle_tolerance_deg: 0.1
+    description: Near end r=15; area=rampWidth*(rampLowHeight+rampRise).
+  - name: rampLowEnd
+    point:
+    - 31.819805153
+    - -31.819805153
+    - 0.5
+    normal:
+    - 0.707106781
+    - -0.707106781
+    - 0
+    area: 5
+    area_tolerance_rel: 0.002
+    tolerance: 0.03
+    angle_tolerance_deg: 0.1
+    description: Far end r=45; area=rampWidth*rampLowHeight.
+  - name: lateralSmallBacks
+    point:
+    - -12.02081528
+    - 54.447222151
+    - -5
+    normal:
+    - -0.707106781
+    - 0.707106781
+    - 0
+    area: 20.568583471
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: 'Combined area on q=-47 of the three small cavity backs: pi*3^2/4+3^2+3^2/2. Plane probes sum all
+      coplanar hits; individual void/solid probes locate each cavity.'
+  - name: lateralLargeBacks
+    point:
+    - -31.819805153
+    - 31.819805153
+    - -5
+    normal:
+    - -0.707106781
+    - 0.707106781
+    - 0
+    area: 106.523045188
+    area_tolerance_rel: 0.003
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: 'Combined area on q=-45 of five large cavity backs: pi*6^2/4+6^2+6^2/2+6*(6*tan(30deg))/2+4*(4/tan(30deg))/2.'
+  - name: lateral_smallSquare_wall2
+    point:
+    - -12.02081528
+    - 56.568542495
+    - -5.0
+    normal:
+    - -0.707106781
+    - -0.707106781
+    - 0.0
+    area: 9.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded smallSquare profile edge (1.5, -1.5) to (1.5, 1.5) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_smallSquare_wall4
+    point:
+    - -14.142135624
+    - 54.447222151
+    - -5.0
+    normal:
+    - 0.707106781
+    - 0.707106781
+    - 0.0
+    area: 9.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded smallSquare profile edge (-1.5, 1.5) to (-1.5, -1.5) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_smallDiamond_wall1
+    point:
+    - -19.622213178
+    - 48.967144597
+    - -5.75
+    normal:
+    - -0.5
+    - -0.5
+    - 0.707106781
+    area: 6.363961031
+    area_tolerance_rel: 0.02
+    tolerance: 0.08
+    angle_tolerance_deg: 0.1
+    description: Extruded smallDiamond profile edge (0, -1.5) to (1.5, 0) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_smallDiamond_wall2
+    point:
+    - -19.622213178
+    - 48.967144597
+    - -4.25
+    normal:
+    - -0.5
+    - -0.5
+    - -0.707106781
+    area: 6.363961031
+    area_tolerance_rel: 0.02
+    tolerance: 0.08
+    angle_tolerance_deg: 0.1
+    description: Extruded smallDiamond profile edge (1.5, 0) to (0, 1.5) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_smallDiamond_wall3
+    point:
+    - -20.68287335
+    - 47.906484425
+    - -4.25
+    normal:
+    - 0.5
+    - 0.5
+    - -0.707106781
+    area: 6.363961031
+    area_tolerance_rel: 0.02
+    tolerance: 0.08
+    angle_tolerance_deg: 0.1
+    description: Extruded smallDiamond profile edge (0, 1.5) to (-1.5, 0) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_smallDiamond_wall4
+    point:
+    - -20.68287335
+    - 47.906484425
+    - -5.75
+    normal:
+    - 0.5
+    - 0.5
+    - 0.707106781
+    area: 6.363961031
+    area_tolerance_rel: 0.02
+    tolerance: 0.08
+    angle_tolerance_deg: 0.1
+    description: Extruded smallDiamond profile edge (-1.5, 0) to (0, -1.5) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_largeSquare_wall2
+    point:
+    - -31.466251763
+    - 35.70889245
+    - -5.0
+    normal:
+    - -0.707106781
+    - -0.707106781
+    - 0.0
+    area: 30.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded largeSquare profile edge (3.0, -3.0) to (3.0, 3.0) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_largeSquare_wall4
+    point:
+    - -35.70889245
+    - 31.466251763
+    - -5.0
+    normal:
+    - 0.707106781
+    - 0.707106781
+    - 0.0
+    area: 30.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded largeSquare profile edge (-3.0, 3.0) to (-3.0, -3.0) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_largeDiamond_wall1
+    point:
+    - -39.597979746
+    - 27.577164466
+    - -6.5
+    normal:
+    - -0.5
+    - -0.5
+    - 0.707106781
+    area: 21.213203436
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded largeDiamond profile edge (0, -3.0) to (3.0, 0) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_largeDiamond_wall2
+    point:
+    - -39.597979746
+    - 27.577164466
+    - -3.5
+    normal:
+    - -0.5
+    - -0.5
+    - -0.707106781
+    area: 21.213203436
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded largeDiamond profile edge (3.0, 0) to (0, 3.0) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_largeDiamond_wall3
+    point:
+    - -41.71930009
+    - 25.455844123
+    - -3.5
+    normal:
+    - 0.5
+    - 0.5
+    - -0.707106781
+    area: 21.213203436
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded largeDiamond profile edge (0, 3.0) to (-3.0, 0) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_largeDiamond_wall4
+    point:
+    - -41.71930009
+    - 25.455844123
+    - -6.5
+    normal:
+    - 0.5
+    - 0.5
+    - 0.707106781
+    area: 21.213203436
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded largeDiamond profile edge (-3.0, 0) to (0, -3.0) in (t-centre,z+5); area=edge length*depth;
+      outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_tallRhombus_wall1
+    point:
+    - -47.117335294
+    - 20.057808918
+    - -6.5
+    normal:
+    - -0.612372436
+    - -0.612372436
+    - 0.5
+    area: 17.320508076
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded tallRhombus profile edge (0, -3.0) to (1.7320508075688767, 0) in (t-centre,z+5); area=edge
+      length*depth; outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_tallRhombus_wall2
+    point:
+    - -47.117335294
+    - 20.057808918
+    - -3.5
+    normal:
+    - -0.612372436
+    - -0.612372436
+    - -0.5
+    area: 17.320508076
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded tallRhombus profile edge (1.7320508075688767, 0) to (0, 3.0) in (t-centre,z+5); area=edge
+      length*depth; outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_tallRhombus_wall3
+    point:
+    - -48.342080166
+    - 18.833064047
+    - -3.5
+    normal:
+    - 0.612372436
+    - 0.612372436
+    - -0.5
+    area: 17.320508076
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded tallRhombus profile edge (0, 3.0) to (-1.7320508075688767, 0) in (t-centre,z+5); area=edge
+      length*depth; outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_tallRhombus_wall4
+    point:
+    - -48.342080166
+    - 18.833064047
+    - -6.5
+    normal:
+    - 0.612372436
+    - 0.612372436
+    - 0.5
+    area: 17.320508076
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded tallRhombus profile edge (-1.7320508075688767, 0) to (0, -3.0) in (t-centre,z+5); area=edge
+      length*depth; outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_wideRhombus_wall1
+    point:
+    - -53.576030671
+    - 13.599113542
+    - -6.0
+    normal:
+    - -0.353553391
+    - -0.353553391
+    - 0.866025404
+    area: 20.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded wideRhombus profile edge (0, -2.0) to (3.4641016151377553, 0) in (t-centre,z+5); area=edge
+      length*depth; outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_wideRhombus_wall2
+    point:
+    - -53.576030671
+    - 13.599113542
+    - -4.0
+    normal:
+    - -0.353553391
+    - -0.353553391
+    - -0.866025404
+    area: 20.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded wideRhombus profile edge (3.4641016151377553, 0) to (0, 2.0) in (t-centre,z+5); area=edge
+      length*depth; outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_wideRhombus_wall3
+    point:
+    - -56.025520413
+    - 11.149623799
+    - -4.0
+    normal:
+    - 0.353553391
+    - 0.353553391
+    - -0.866025404
+    area: 20.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded wideRhombus profile edge (0, 2.0) to (-3.4641016151377553, 0) in (t-centre,z+5); area=edge
+      length*depth; outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  - name: lateral_wideRhombus_wall4
+    point:
+    - -56.025520413
+    - 11.149623799
+    - -6.0
+    normal:
+    - 0.353553391
+    - 0.353553391
+    - 0.866025404
+    area: 20.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    angle_tolerance_deg: 0.1
+    description: Extruded wideRhombus profile edge (-3.4641016151377553, 0) to (0, -2.0) in (t-centre,z+5); area=edge
+      length*depth; outward material normal points into the cavity. Supported by A-A and sources/dimension-sheet.md.
+  dimensions:
+  - name: spanX
+    axis: x
+    expected: 141.421356237
+    tolerance: 0.03
+    description: sqrt(2)*baseSide; sources/dimension-sheet.md bbox size 141.421
+  - name: spanY
+    axis: y
+    expected: 141.421356237
+    tolerance: 0.03
+    description: sqrt(2)*baseSide; sources/dimension-sheet.md bbox size 141.421
+  - name: totalHeight
+    axis: z
+    expected: 17
+    tolerance: 0.03
+    description: baseThickness + max(mainPinHeight,lowerBossHeight+upperBossHeight,stairFirstHeight+4*stairIncrement).
+  - name: baseThicknessCheck
+    axis: z
+    expected: 10
+    tolerance: 0.03
+    description: baseThickness; top datum stays fixed.
+    between:
+    - baseBottom
+    - datumTop
+  - name: raisedTread_outerX_level
+    axis: z
+    expected: 3
+    tolerance: 0.03
+    description: Absolute level from datum A; order along the L is 3,5,7,6,4.
+    between:
+    - datumTop
+    - raisedTread_outerX
+  - name: raisedTread_middleX_level
+    axis: z
+    expected: 5
+    tolerance: 0.03
+    description: Absolute level from datum A; order along the L is 3,5,7,6,4.
+    between:
+    - datumTop
+    - raisedTread_middleX
+  - name: raisedTread_elbow_level
+    axis: z
+    expected: 7
+    tolerance: 0.03
+    description: Absolute level from datum A; order along the L is 3,5,7,6,4.
+    between:
+    - datumTop
+    - raisedTread_elbow
+  - name: raisedTread_middleY_level
+    axis: z
+    expected: 6
+    tolerance: 0.03
+    description: Absolute level from datum A; order along the L is 3,5,7,6,4.
+    between:
+    - datumTop
+    - raisedTread_middleY
+  - name: raisedTread_outerY_level
+    axis: z
+    expected: 4
+    tolerance: 0.03
+    description: Absolute level from datum A; order along the L is 3,5,7,6,4.
+    between:
+    - datumTop
+    - raisedTread_outerY
+  - name: recessedTread_outerX_level
+    axis: z
+    expected: 3
+    tolerance: 0.03
+    description: Absolute level from datum A; order along the L is 3,5,7,6,4.
+    between:
+    - datumTop
+    - recessedTread_outerX
+  - name: recessedTread_middleX_level
+    axis: z
+    expected: 5
+    tolerance: 0.03
+    description: Absolute level from datum A; order along the L is 3,5,7,6,4.
+    between:
+    - datumTop
+    - recessedTread_middleX
+  - name: recessedTread_elbow_level
+    axis: z
+    expected: 7
+    tolerance: 0.03
+    description: Absolute level from datum A; order along the L is 3,5,7,6,4.
+    between:
+    - datumTop
+    - recessedTread_elbow
+  - name: recessedTread_middleY_level
+    axis: z
+    expected: 6
+    tolerance: 0.03
+    description: Absolute level from datum A; order along the L is 3,5,7,6,4.
+    between:
+    - datumTop
+    - recessedTread_middleY
+  - name: recessedTread_outerY_level
+    axis: z
+    expected: 4
+    tolerance: 0.03
+    description: Absolute level from datum A; order along the L is 3,5,7,6,4.
+    between:
+    - datumTop
+    - recessedTread_outerY
+  - name: stairXTreadPitch
+    axis: x
+    expected: 10
+    tolerance: 0.03
+    description: One 10 mm tread between consecutive riser planes.
+    between:
+    - raisedX42
+    - raisedX32
+  - name: stairYTreadPitch
+    axis: y
+    expected: 10
+    tolerance: 0.03
+    description: One 10 mm tread between consecutive riser planes.
+    between:
+    - raisedY32
+    - raisedY42
+  - name: rampRiseCheck
+    axis: z
+    expected: 1
+    tolerance: 0.03
+    description: Landing level difference equals rampRise.
+    between:
+    - rampHighLanding
+    - rampLowLanding
+  deviation: null
+  blockout:
+    # envelope-filling primary solids (plate + both solid central boss blanks reach z = 7): baseSide^2*baseThickness + pi/4*lowerBossDiameter^2*lowerBossHeight + pi/4*upperBossDiameter^2*upperBossHeight = 101786.780822 mm3, band ±1 %; the bare plate (100000, z-max 0) is outside on purpose
+    volume_min: 100768.9
+    volume_max: 102804.6
+  export_volume_tolerance_rel: 0.002
+references:
+- path: sources/bottom.png
+  kind: image
+  role: authoritative
+  sha256: ceb5cdd1206fb513dce32d2ad6a0cb9726362b0504ac337b413cfe832d80194e
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/dimension-sheet.md
+  kind: table
+  role: authoritative
+  sha256: d1b8dbd3cd46b0d46b810689e5733a61618acb6adecb7db69d85bfba65bd7e8f
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Supplied evaluator-prepared rounded measurements, quoted as document evidence; no evaluator CAD access.
+- path: sources/drawing-01.png
+  kind: drawing
+  role: authoritative
+  sha256: 3182a3cc45c1744cd958d468f37e86a19659dd9fe65b72d5443a45663766460d
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256; NIST Fig.8 (2014)
+  note: 'Fig.8 first page: layout, A-A lateral features, B-B stations, C-C ramp, D-D fine sizes; xx are unspecified
+    GD&T.'
+- path: sources/drawing-02.png
+  kind: drawing
+  role: authoritative
+  sha256: bded7754aafa4bd02d41c7c6a3cf2d44564dd776a3849b4631550a78b7966266
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256; NIST Fig.8 (2014)
+  note: 'Fig.8 second page: E-E fine rectangle ordinates and F-F/G-G tread levels.'
+- path: sources/front.png
+  kind: image
+  role: authoritative
+  sha256: 038b4d1d2f98a39efa54b4510737a981040f10f2e785d9e775170385f9394f44
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/iso-below.png
+  kind: image
+  role: illustrative
+  sha256: f126217d09341105dbfda7789291939dbb44303e425fd545fb07ef767a67cdec
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/iso.png
+  kind: image
+  role: illustrative
+  sha256: fd1a1925f86e9141c26bcb4ae3fc7db93f5b06ffabafba854b6b8f2fe5d62b14
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/iso2.png
+  kind: image
+  role: illustrative
+  sha256: ad5fc1ef468fa300e27cc9779d73aef3bac447c0e7675d43c47b421cc238bcd9
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/nist-am-artifact-description.md
+  kind: text
+  role: authoritative
+  sha256: 1e10b2e09e840f8749668fd84c61cd15e4aed51dbb5f362ae3df49ad7e8a94e0
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256; NIST Fig.8 (2014)
+  note: Published excerpts and explicit reconstruction frame; geometric requirements.
+- path: sources/render-notes.md
+  kind: text
+  role: illustrative
+  sha256: 7b26cf394c9cc12942de018502fe780bb9fc3f296dd18e2036bd2430cfc828ef
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Render mesh has 9536 triangles; confirms units, envelope and file list.
+- path: sources/right.png
+  kind: image
+  role: authoritative
+  sha256: cc85285ba084e23beab536aaf406127648712889281f4b3c6ce3500c5061a329
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/section-x0.png
+  kind: image
+  role: authoritative
+  sha256: 42907681cc27f37d3ec993270ba52a02512bcfcd1c50379ff8c1e5a82f6b4ab0
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/section-y0.png
+  kind: image
+  role: authoritative
+  sha256: ce3ec33a6f3d6e2e3e4acd471ef9e44789bb65a828ec22dae405ea7128544fc1
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/section-z-1.png
+  kind: image
+  role: authoritative
+  sha256: c6ff32ad0cc2ac247168af91278b9e4795740f179ee286f6e2dad39f3c6738fe
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/section-z-5.png
+  kind: image
+  role: authoritative
+  sha256: 8fb3dcded9d28b5ad432ef6f8318fd16142b9cc0132481030d1f6a4978c048da
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/section-z1.png
+  kind: image
+  role: authoritative
+  sha256: a28c0e6ed943fc71a5316b535257f83a7b5bc6106dc44fef5697ac28961ae749
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/section-z5.png
+  kind: image
+  role: authoritative
+  sha256: 5f955f4a0a805278d61e7d006633a1145b08819cd6f1aa6f835ed2150a46bb45
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+- path: sources/top.png
+  kind: image
+  role: authoritative
+  sha256: dca24515a54a5c2508e3047778d7fe087437fa4aaf305b9ec5af65a189df5713
+  units: mm
+  revision: Supplied bundle revision identified by SHA-256
+  note: Orthographic visual evidence; use the mm grid for position and topology, with mesh/line-width uncertainty.
+open_questions:
+- Q1. The task summary says 34 cylindrical features, but the supplied table enumerates 35 (12 holes and 23 pins/bosses).
+  Is 34 a counting error? This contract requires all 35 located cylinders.
+- 'Q2. The prose mentions lateral bosses, a hexagon and a lens; A-A, the inclined-plane table and z=-5 outline instead
+  support eight blind cavities: two circles, two squares, two diamonds and two straight-edged rhombi. Are the alternative
+  terms descriptive only? These eight cavities reproduce the supplied volume, area and COM; no extra unsupported
+  boss or curved lens is added.'
+- Q3. The small lateral diamond has no explicit diagonal or depth callout. Are its 3 mm diagonals and 3 mm depth
+  nominal? They are measured from A-A and the section, use ±0.3 mm parameter tolerances, and agree with the aggregate
+  table properties.
+- 'Q4. Exact-face sections disagree: at z=1 the table gives 1138 mm2/35 loops but the image gives 1124.79/34; at
+  z=5 they give 599.24/19 versus 498.76/18; at z=-5 they give 9502.23/2 versus 9402.44/1. Confirm the intended coplanar-section
+  convention if those exact stations are needed. Acceptance uses non-coplanar z=0.5,1.5,3.5,4.5,5.5,6.5,-5.5 instead.'
+- Q5. Numeric GD&T values, material, density, manufacturing process, surface finish and edge-break requirements
+  are not supplied. What values apply for fabrication? The drawing xx boxes remain unspecified; this contract uses
+  digital reconstruction tolerances and makes no mass or manufacturability claim.

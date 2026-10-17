@@ -1,0 +1,269 @@
+id: gear-pair
+title: 'Spur-gear pair (20T/40T, m = 2, 20 deg) on a carrier plate: separate solids, tooth counts, involute
+  profile, meshing motion'
+truth_class: C
+role: validation
+source:
+  citation: Design specification authored for this benchmark; reference geometry generated independently
+    by scripts/derive_gear_truth.py (numpy involute + OpenCascade)
+  urls: []
+  accessed: '2026-09-17'
+  revision: spec v1
+  license: this repository
+intent: 'Design the spur-gear pair and carrier plate exactly as specified in the attached specification:
+  module 2, pressure angle 20 deg, zero profile shift, 20-tooth pinion (bore Ø6) at the origin and 40-tooth
+  wheel (bore Ø8) at (60, 0), face width 8 (z 0..8), 0.10 mm total circular backlash, pinion tooth centred
+  on +x and the wheel phased half a pitch so the pair meshes; carrier 110 x 50 x 5 under the gears with
+  clearance holes on the axes. Three separate solids in one KCL file; the pair must turn through a full
+  pitch without interference. Declare the three solids by contained points, the bores as cylinders, and
+  the gears'' tooth counts and mesh as acceptance items.'
+inputs:
+- path: inputs/gear-pair-spec.md
+  kind: text
+  sha256: 0acea6d35513df93499f95e7242721b64488c45819f6e58ebd09ed627fb09d87
+  note: the complete design specification
+truth:
+- path: truth/pair.step
+  kind: cad
+  sha256: 85d8e1aa388b4b93f0ba7c42d85f823b012f206aca256802d32c65f0e6734b05
+  units: mm
+- path: truth/pinion.step
+  kind: cad
+  sha256: 509dd6c5088bdf0b085a219074a69d6d9c03c01f41ca71cdf179df5a0fbc6781
+  units: mm
+- path: truth/wheel.step
+  kind: cad
+  sha256: 53b7b6c829d19ffd600db499846d7cbf6980b26f46b5c07664302c890188b894
+  units: mm
+- path: truth/carrier.step
+  kind: cad
+  sha256: 84ad390aa46d547f53228b4b91b1de0fda851cf42554a2980ea9402c1f77dc9c
+  units: mm
+- path: truth/pair.stl
+  kind: mesh
+  sha256: d7d0a6abd8b982cf5c3d8468f41deb1736f84e248f858fd3030959cec04c0118
+  units: mm
+- path: truth/pinion-profile.csv
+  kind: table
+  sha256: 8b287638750fa21bca88e24a5b12393a86efd0c1bab9636be4fcb8cd0d4531d4
+  units: mm
+- path: truth/wheel-profile.csv
+  kind: table
+  sha256: 29f23f2c10459bcf34d2aaef466c4312f307ca9a9996f17485a4855bd734e69d
+  units: mm
+- path: truth/gear-spec.yaml
+  kind: yaml
+  sha256: a3caf233bacb8a307f425ba699dff5f4ad469655db49b17bdd1a0197186855dd
+- path: truth/pair-19t.step
+  kind: cad
+  sha256: 17f2e7293522a824b46b5cde1dda842ba74720b6f07617756377c79300e999bf
+  units: mm
+  note: wrong-pinion (19 teeth) variant for the mutant harness
+arms:
+- id: spec-only
+  design: gear-pair
+  inputs:
+  - inputs/gear-pair-spec.md
+  images: []
+  notes: Text specification only; the reference involutes are evaluator-only.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 126.92
+  - 83.84
+  - 13.0
+  tolerance: 0.15
+  note: carrier -25..85 in x but the wheel tips reach ~102; wheel tips ~+-42 in y (phased half a pitch);
+    z -5..8
+- id: solid_count
+  kind: solid_count
+  expected: 3
+- id: pinion
+  kind: solid
+  point:
+  - 12.0
+  - 0.0
+  - 4.0
+  from:
+    file: truth/pinion.step
+    measure: volume
+  tolerance_rel: 0.01
+  note: the pinion body, volume vs the independent involute
+- id: wheel
+  kind: solid
+  point:
+  - 90.0
+  - 0.0
+  - 4.0
+  from:
+    file: truth/wheel.step
+    measure: volume
+  tolerance_rel: 0.01
+- id: carrier
+  kind: solid
+  point:
+  - 30.0
+  - 15.0
+  - -2.5
+  from:
+    file: truth/carrier.step
+    measure: volume
+  tolerance_rel: 0.005
+- id: pinion_bore
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 0
+  - 0
+  - 4
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 3.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 8.0
+  length_tolerance: 0.1
+- id: wheel_bore
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 60.0
+  - 0
+  - 4
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 4.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 8.0
+  length_tolerance: 0.1
+- id: carrier_pinion_hole
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 0
+  - 0
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 3.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 5.0
+  length_tolerance: 0.1
+- id: carrier_wheel_hole
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 60.0
+  - 0
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 4.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 5.0
+  length_tolerance: 0.1
+- id: pinion_teeth
+  kind: teeth
+  solid: pinion
+  point:
+  - 0
+  - 0
+  - 0
+  direction:
+  - 0
+  - 0
+  - 1
+  at: 4.0
+  module: 2.0
+  expected: 20
+- id: wheel_teeth
+  kind: teeth
+  solid: wheel
+  point:
+  - 60.0
+  - 0
+  - 0
+  direction:
+  - 0
+  - 0
+  - 1
+  at: 4.0
+  module: 2.0
+  expected: 40
+- id: pinion_profile
+  kind: profile2d
+  solid: pinion
+  plane: z
+  at: 4.0
+  reference: truth/pinion-profile.csv
+  reference_units: mm
+  reference_skip: 1
+  p95_max: 0.1
+  tolerance_rel: 0.01
+  chord_tolerance: 0.2
+  stagger_tolerance_deg: 360.0
+  outer_only: true
+  note: tooth profile vs the independent involute; the chord/stagger of a gear outline are not meaningful,
+    only p95 and area
+- id: gear_mesh
+  kind: gear_mesh
+  a: pinion
+  b: wheel
+  axis_a:
+  - - 0
+    - 0
+    - 0
+  - - 0
+    - 0
+    - 1
+  axis_b:
+  - - 60.0
+    - 0
+    - 0
+  - - 0
+    - 0
+    - 1
+  ratio: 0.5
+  pitch_deg: 18.0
+  steps: 6
+  backlash_max: 0.15
+  note: rotate the pinion through one pitch, the wheel at half speed opposite; no interference, flank
+    gap within the backlash band
+- id: gears_separate
+  kind: clearance
+  a: pinion
+  b: wheel
+  min_gap: 0.0
+  max_gap: 0.15
+  note: separate solids in contact range, never fused
+- id: pinion_on_carrier
+  kind: clearance
+  a: pinion
+  b: carrier
+  min_gap: 0.0
+  max_gap: 0.05
+- id: gear_tops
+  kind: face
+  plane: z
+  at: 8.0
+  normal: +
+  mode: sum
+  from: null
+  expected: null
+  tolerance: 0.05
+  note: both gear top faces at z = 8
+notes:
+- Motion is checked by rotating the exported solids in OpenCascade; a fused gear-shaped mesh fails solid_count
+  and the clearances.

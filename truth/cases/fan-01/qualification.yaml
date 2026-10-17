@@ -1,0 +1,57 @@
+# Qualification of the pinned CAD (geomcheck.qualify): every STEP must be valid, closed, positively oriented solids.
+# Produced with scripts/iges_to_solids.py from truth/raw/cad_model/cad_model/cad_model.igs (3864 faces, sewn at 0.05 mm).
+inputs/fan-duct.step:
+  repaired: "2026-09-25"
+  source: IGES shell 16 at 0.05 mm (398 B-spline faces); the same topology at every tolerance from 0.01 to 0.2 mm
+  before:
+    sha256: 2632530de9f2dda9232c5104b5ceefdda3f1a1fc9b1b9a0026d8127608db8b3e
+    problems: [BRepCheck BadOrientationOfSubshape on the shell, 20 edges shared with inconsistent orientation]
+    volume_integral: 2563925.4
+    note: >-
+      The IGES models the nozzle, two flange plates, the rotor duct and the diffuser as touching parts; sewing makes their
+      contact faces internal faces of one shell, which cannot be oriented consistently. ShapeFix_Shape, ShapeFix_Shell face
+      orientation and re-sewing leave 12-20 bad edges; BOPAlgo_MakerVolume (49 min) returns 7 pieces that omit the rotor duct.
+      The volume integral over the inconsistent shell is not the body's volume, and the manifest's old point (-311.0, -409.1,
+      1216.6) lies outside the wall (r 311 at y -409, where the wall is r 250..252).
+  steps:
+    - meridional section of shell 16 by the plane through the fan axis at 15 deg (clear of the flange rim notches)
+    - section curves polygonized into their planar cells (endpoints snapped within 0.1 mm), cells united and clipped to r >= 0
+      (1 region, 0 holes)
+    - union simplified to 0.005 mm (193 segments), revolved 360 deg about the axis, faces unified
+    - "command: scripts/iges_to_solids.py truth/raw/cad_model/cad_model/cad_model.igs --tolerance 0.05 --body duct=-725,-510,1190,-75,-136,1840 --revolve duct=-400,0,1515,0,1,0,15"
+  after:
+    sha256: 9b70daad9041bb6d47d6d276d23de0b4747d370e0bae2ea5dd6442fad57b0f74
+    solids: 1
+    faces: 193
+    free_edges: 0
+    volume: 3481742.0
+    pappus_volume: 3481697.1
+  fidelity: >-
+    Repaired -> IGES surfaces over 600 points: median 0.0000 mm, p99 1.67, max 4.48; IGES -> repaired over 800 points (0.01 mm /
+    0.02 rad tessellation): median 0.0000, p90 0.002, max 5.0. Every point beyond 0.05 mm lies on the flanges between r 274 and
+    295 (the outer rim notches and the bolt bosses between the rings, which a revolution of one section cannot reproduce).
+    Planar sections match to 0.001 mm on every flow surface: bore r 250.000 / outer 252.000 at y -421, -363.5, -306; diffuser
+    r 252.734 / 260.234 / 262.500 / 269.473 / 274.219 at y -250 / -211.6 / -200 / -164.3 / -140, round to 0.001 mm.
+inputs/fan-shaft.step:
+  repaired: "2026-09-25"
+  source: IGES shell 20 at 0.05 mm (37 B-spline faces)
+  before:
+    sha256: c59e00d8467cb64cfb570501bf1091bc46a08c52652a8ac69e6a537cf4e124d1
+    problems: [inside-out (volume integral -273190.733 mm3)]
+    note: >-
+      ShapeFix orients the shell in memory, but the STEP reader's healing turns the written file inside-out again (a BREP round
+      trip keeps it), so the B-spline shell cannot be supplied as a valid STEP solid as it is.
+  steps:
+    - rebuilt like the duct from its section at 15 deg (33 segments, material on the axis closed by the r >= 0 clip)
+    - "command: scripts/iges_to_solids.py ... --body shaft=-420,-416.7,1495,-380,-114,1535 --revolve shaft=-400,0,1515,0,1,0,15"
+  after:
+    sha256: 8a2716709cddba77254aad4885ba238d406cdb7de0a71ce4ec5b245e8e5eb426
+    solids: 1
+    faces: 32
+    free_edges: 0
+    volume: 282082.2
+  fidelity: >-
+    Repaired -> IGES over 600 points: median 0.0034 mm, p99 0.005, max 0.72 (at y -138); IGES -> repaired over 800 points: max
+    0.007 mm. Extent y -404.5..-114 as the packet states (the IGES bbox to y -416.74 is its B-spline control hull).
+truth/fan-duct.step: {same_as: inputs/fan-duct.step}
+truth/fan-shaft.step: {same_as: inputs/fan-shaft.step}

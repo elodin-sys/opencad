@@ -1,0 +1,148 @@
+attempts:
+- started: '2026-09-25T08:56:00Z'
+  arm: supplied-cad
+  design: fda-pump
+  backend: build123d
+  kind: machine
+  mode: analysis
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fda-pump
+  stage_reached: scored
+  pipeline:
+    code: 1
+    gates:
+      pass: 10
+      fail: 0
+    failed: []
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 2
+      required_total: 2
+      optional_pass: 0
+      optional_total: 0
+      performance_pass: 0
+      performance_scored: 0
+      performance_total: 6
+    accuracy_score: 100.0
+    failed:
+    - pressureRiseC1
+    - pressureRiseC2
+    - pressureRiseC3
+    - pressureRiseC4
+    - pressureRiseC5
+    - pressureRiseC6
+  seconds: 109
+  finished: '2026-09-25T08:57:49Z'
+- started: '2026-09-25T11:11:48Z'
+  arm: supplied-cad
+  design: fda-pump
+  backend: build123d
+  kind: machine
+  mode: analysis
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fda-pump
+  amended: false
+  stage_reached: scored
+  pipeline:
+    code: 1
+    gates:
+      pass: 11
+      fail: 1
+    failed:
+    - refinement
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 2
+      required_total: 2
+      optional_pass: 0
+      optional_total: 0
+      performance_pass: 1
+      performance_scored: 6
+      performance_total: 6
+    accuracy_score: 100.0
+    failed:
+    - pressureRiseC1
+    - pressureRiseC2
+    - pressureRiseC3
+    - pressureRiseC5
+    - pressureRiseC6
+  seconds: 31
+  finished: '2026-09-25T11:12:20Z'
+- started: '2026-09-26T07:24:15Z'
+  arm: supplied-cad
+  design: fda-pump
+  backend: build123d
+  kind: machine
+  mode: analysis
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fda-pump
+  amended: false
+  stage_reached: scored
+  pipeline:
+    code: 1
+    gates:
+      pass: 11
+      fail: 1
+    failed:
+    - refinement
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 2
+      required_total: 2
+      optional_pass: 0
+      optional_total: 0
+      performance_pass: 5
+      performance_scored: 6
+      performance_total: 6
+    accuracy_score: 100.0
+    failed:
+    - pressureRiseC3
+  seconds: 23
+  finished: '2026-09-26T07:24:38Z'
+- started: '2026-09-27T16:10:24Z'
+  arm: supplied-cad
+  design: fda-pump
+  backend: build123d
+  kind: machine
+  mode: analysis
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fda-pump
+  amended: true
+  stage_reached: scored
+  pipeline:
+    code: 1
+    gates:
+      pass: 11
+      fail: 1
+    failed:
+    - refinement
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 2
+      required_total: 2
+      optional_pass: 0
+      optional_total: 0
+      performance_pass: 4
+      performance_scored: 6
+      performance_unresolved: 1
+      performance_total: 6
+      performance_by_split:
+        development:
+          required: 2
+          pass: 1
+          fail: 0
+          unresolved: 1
+          missing: 0
+        held_out:
+          required: 4
+          pass: 3
+          fail: 1
+          unresolved: 0
+          missing: 0
+    accuracy_score: 100.0
+    failed:
+    - pressureRiseC3
+    unresolved:
+    - pressureRiseC5
+  seconds: 512
+  finished: '2026-09-27T16:18:56Z'

@@ -1,0 +1,627 @@
+attempts:
+- started: '2026-09-18T12:26:54Z'
+  arm: renders-sections-sheet
+  backend: zoo
+  design: voron-sb-duct
+  stage_reached: pipeline
+  force: false
+  resume_from: retry
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct-1789734414
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0b3e4-a949-7c82-b07e-fe789eab157c
+  pipeline:
+    exit: 1
+    gates:
+      pass: 5
+      fail: 6
+      not_applicable: 1
+    failed:
+    - envelope
+    - mass_properties
+    - export_agreement
+    - edit_robustness
+    - export_integrity
+    - evidence_separation
+    retry: true
+  score_error: 'ScoreError: no handoff STEP at /Users/danieldriscoll/dual/skillkat/results/voron-sb-duct/handoff/voron-sb-duct.step;
+    run the pipeline first'
+  seconds: 2577
+  finished: '2026-09-18T13:09:52Z'
+- started: '2026-09-18T15:01:22Z'
+  arm: renders-sections-sheet
+  backend: zoo
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct-1789743683
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0b3e4-a949-7c82-b07e-fe789eab157c
+  pipeline:
+    exit: 1
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    retry: true
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 15
+      required_total: 22
+      optional_pass: 1
+      optional_total: 2
+    failed:
+    - passage_left_duct
+    - passage_right_duct
+    - passage_hotend_cavity
+    - ducts_separate
+    - section_ym20
+    - section_z10
+    - section_z45
+    - deviation_vs_voron
+  seconds: 7878
+  finished: '2026-09-18T17:12:42Z'
+- started: '2026-09-18T17:34:41Z'
+  arm: renders-sections-sheet
+  backend: zoo
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: pipeline
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct-1789752882
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0b3e4-a949-7c82-b07e-fe789eab157c
+  pipeline:
+    exit: 1
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    retry: true
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 14
+      required_total: 22
+      optional_pass: 1
+      optional_total: 2
+    failed:
+    - passage_left_duct
+    - passage_right_duct
+    - passage_hotend_cavity
+    - ducts_separate
+    - section_ym12
+    - section_ym20
+    - section_z10
+    - section_z45
+    - deviation_vs_voron
+  seconds: 19039
+  finished: '2026-09-18T22:52:01Z'
+- started: '2026-09-19T07:44:03Z'
+  arm: renders-sections-sheet
+  backend: zoo
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: pipeline
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct-1789803844
+  pipeline:
+    exit: 1
+    gates:
+      pass: 8
+      fail: 3
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    - export_integrity
+    retry: true
+    corrections: 1
+    stopped: 'same failure after correction-1: edit_robustness,export_integrity,features|ok'
+  stuck_class: kernel-incomplete
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 12
+      required_total: 22
+      optional_pass: 0
+      optional_total: 2
+    failed:
+    - volume
+    - passage_left_duct
+    - passage_right_duct
+    - passage_hotend_cavity
+    - ducts_separate
+    - section_ym12
+    - section_ym20
+    - section_z10
+    - section_z30
+    - section_z45
+    - wall_min
+    - deviation_vs_voron
+  seconds: 6111
+  finished: '2026-09-19T09:25:55Z'
+- started: '2026-09-20T20:10:04Z'
+  arm: renders-sections-sheet
+  backend: freecad
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: a6acde24-166c-4248-8897-6765b0862990
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 1
+    stopped: 'same failure after correction-1: features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 16
+      required_total: 22
+      optional_pass: 0
+      optional_total: 2
+    failed:
+    - volume
+    - passage_left_duct
+    - passage_right_duct
+    - passage_hotend_cavity
+    - section_ym12
+    - section_z10
+    - section_z45
+    - deviation_vs_voron
+  seconds: 3120
+  finished: '2026-09-20T21:02:05Z'
+- started: '2026-09-20T20:10:04Z'
+  arm: renders-sections-sheet
+  backend: build123d
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 5800717e-ae6d-4269-ab0f-8ac72cc50f78
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 1
+    stopped: 'same failure after correction-1: features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 12
+      required_total: 22
+      optional_pass: 0
+      optional_total: 2
+    failed:
+    - volume
+    - passage_left_duct
+    - passage_right_duct
+    - passage_hotend_cavity
+    - ducts_separate
+    - section_ym12
+    - section_ym20
+    - section_z10
+    - section_z30
+    - section_z45
+    - wall_min
+    - deviation_vs_voron
+  seconds: 3160
+  finished: '2026-09-20T21:02:46Z'
+- started: '2026-09-20T20:10:04Z'
+  arm: renders-sections-sheet
+  backend: cadquery
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 4894f7fb-64bb-409c-bbdc-600404939683
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 1
+    stopped: 'same failure after correction-1: features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 13
+      required_total: 22
+      optional_pass: 0
+      optional_total: 2
+    failed:
+    - volume
+    - passage_left_duct
+    - passage_right_duct
+    - passage_hotend_cavity
+    - ducts_separate
+    - section_ym12
+    - section_ym20
+    - section_z10
+    - section_z30
+    - section_z45
+    - deviation_vs_voron
+  seconds: 3178
+  finished: '2026-09-20T21:03:04Z'
+- started: '2026-09-20T21:03:29Z'
+  arm: renders-sections-sheet
+  backend: freecad
+  design: voron-sb-duct
+  stage_reached: pipeline
+  force: false
+  resume_from: pipeline
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  pipeline:
+    exit: 1
+    gates:
+      pass: 8
+      fail: 3
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    - export_integrity
+    retry: true
+    corrections: 1
+    stopped: 'same failure after correction-1: edit_robustness,export_integrity,features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/voron-sb-duct/manifest.yaml'''
+  seconds: 8712
+  finished: '2026-09-20T23:28:41Z'
+- started: '2026-09-20T21:03:28Z'
+  arm: renders-sections-sheet
+  backend: build123d
+  design: voron-sb-duct
+  stage_reached: init
+  force: false
+  resume_from: pipeline
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  error: another pipeline process is driving voron-sb-duct (results/voron-sb-duct/.drive.lock
+    is held); wait for it or stop it first
+  seconds: 12099
+  finished: '2026-09-21T00:25:09Z'
+- started: '2026-09-20T21:03:28Z'
+  arm: renders-sections-sheet
+  backend: cadquery
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: pipeline
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  pipeline:
+    exit: 1
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    failed:
+    - features
+    - export_integrity
+    retry: true
+    corrections: 2
+    stopped: 'same failure after correction-2: export_integrity,features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 14
+      required_total: 22
+      optional_pass: 0
+      optional_total: 2
+    failed:
+    - volume
+    - passage_left_duct
+    - passage_right_duct
+    - passage_hotend_cavity
+    - ducts_separate
+    - section_ym12
+    - section_ym20
+    - section_z45
+    - wall_min
+    - deviation_vs_voron
+  seconds: 12175
+  finished: '2026-09-21T00:26:25Z'
+- started: '2026-09-20T21:03:28Z'
+  arm: renders-sections-sheet
+  backend: build123d
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: pipeline
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  pipeline:
+    exit: 1
+    gates:
+      pass: 8
+      fail: 3
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    - export_integrity
+    retry: true
+    corrections: 2
+    stopped: 'same failure after correction-2: edit_robustness,export_integrity,features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 12
+      required_total: 22
+      optional_pass: 1
+      optional_total: 2
+    failed:
+    - passage_left_duct
+    - passage_right_duct
+    - passage_hotend_cavity
+    - ducts_separate
+    - section_ym12
+    - section_ym20
+    - section_z10
+    - section_z30
+    - section_z45
+    - wall_min
+    - deviation_vs_voron
+  seconds: 12186
+  finished: '2026-09-21T00:26:36Z'
+- started: '2026-09-21T00:29:27Z'
+  finished: '2026-09-21T00:29:27Z'
+  arm: renders-sections-sheet
+  design: voron-sb-duct
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 14
+      required_total: 22
+      optional_pass: 1
+      optional_total: 2
+    failed:
+    - passage_left_duct
+    - passage_right_duct
+    - passage_hotend_cavity
+    - ducts_separate
+    - section_ym12
+    - section_ym20
+    - section_z10
+    - wall_min
+    - deviation_vs_voron
+  step_sha256: 654cdd30d0368fc8a2e3305406f8ae2caf867590cf65c2e375b0c05113314e20
+  seconds: 74
+  backend: freecad
+- started: '2026-09-21T07:07:21Z'
+  arm: renders-sections-sheet
+  backend: cadquery
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 6
+    stopped: 'no progress before correction-7: failing items 0 -> 4'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 21
+      required_total: 21
+      optional_pass: 0
+      optional_total: 2
+    failed:
+    - volume
+    - deviation_vs_voron
+  seconds: 25383
+  finished: '2026-09-21T14:10:26Z'
+- started: '2026-09-21T14:12:30Z'
+  arm: renders-sections-sheet
+  backend: cadquery
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 1
+    stopped: gates pass
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 21
+      required_total: 21
+      optional_pass: 0
+      optional_total: 2
+    failed:
+    - volume
+    - deviation_vs_voron
+  seconds: 1178
+  finished: '2026-09-21T14:32:10Z'
+- started: '2026-09-21T19:48:38Z'
+  arm: renders-sections-sheet
+  backend: build123d
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 5
+    stopped: gates pass
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 21
+      required_total: 21
+      optional_pass: 1
+      optional_total: 2
+    failed:
+    - deviation_vs_voron
+  seconds: 14017
+  finished: '2026-09-21T23:42:17Z'
+- started: '2026-09-22T00:02:35Z'
+  arm: renders-sections-sheet
+  backend: freecad
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  pipeline:
+    exit: 1
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    retry: true
+    corrections: 6
+    stopped: 'same failure after correction-6: edit_robustness,features|ok|13268d4ac2f8
+      (1 failing items)'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 21
+      required_total: 21
+      optional_pass: 0
+      optional_total: 2
+    failed:
+    - volume
+    - deviation_vs_voron
+  seconds: 36087
+  finished: '2026-09-22T10:04:03Z'
+- started: '2026-09-22T10:05:28Z'
+  arm: renders-sections-sheet
+  backend: freecad
+  design: voron-sb-duct
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/voron-sb-duct
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 2
+    stopped: gates pass
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 21
+      required_total: 21
+      optional_pass: 0
+      optional_total: 2
+    failed:
+    - volume
+    - deviation_vs_voron
+  seconds: 5513
+  finished: '2026-09-22T11:37:21Z'

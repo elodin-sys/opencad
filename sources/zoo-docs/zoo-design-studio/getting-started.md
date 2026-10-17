@@ -1,0 +1,184 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/getting-started
+Title: Getting Started
+
+# Getting Started
+
+Zoo Design Studio quick-start reference.
+
+## Getting started
+
+1. Open [Zoo Design Studio](https://zoo.dev/design-studio) and sign in or create an account.
+2. Choose the browser app or download the desktop app for your operating system.
+3. Create a project from scratch or choose **Create from Sample** on the project dashboard.
+
+Browser projects use **Personal Cloud**, so synced projects are available on other devices when
+signed in to the same account. Desktop projects can live in Personal Cloud or a local Directory
+library. Wait for **Cloud synced** before switching devices. See [Cloud Sync](/docs/zoo-design-studio/features/data-management/cloud-sync) for details.
+
+## UI overview
+
+Start with this tour of the workspace, feature tree, KCL editor, project files, and settings.
+You'll also learn about project libraries, mouse controls, measurements, and the tools for importing
+and exporting your work.
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/q9clNqGUMdY"
+            title="UI Overview in Zoo Design Studio"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>
+
+## Creating a new project
+
+In the video below, we’ll show you how to create a new, empty project in Zoo Design Studio and start designing from scratch. We’ll also walk through how to explore and use sample projects if you’d prefer a starting point you can inspect, modify, and build on. By the end, you’ll know how to choose the right way to begin, whether you want a blank canvas or an example to work from.
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/300B-OpLWRs"
+            title="Creating Your First Project in Zoo Design Studio"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>
+
+## Sketch basics
+
+Learn how to draw lines, circles, arcs, and rectangles, trim sketch geometry, and add constraints
+and dimensions in this introductory lesson.
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/Xmoc6A0pWoo"
+            title="Sketch Basics in Zoo Design Studio"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>
+
+To begin creating geometry, open a project. Before starting your sketch, ensure your desired units (e.g., mm, inches) are set.
+Once ready, click the Start Sketch button. This will prompt you for a plane on which to sketch, and then you will enter 2D sketching mode. This will allow you to:
+
+-   Draw geometric elements such as lines, arcs, and circles on the active workplane.
+-   Add dimensions and constraints to control the size, shape, and position of your geometry. Dimensions can also be based on parameters and formulas, allowing for powerful parametric design.
+
+When finished, click Exit Sketch and select a 3D feature such as Extrude, Revolve, or Sweep from the feature toolbar to create a solid model.
+
+For holes and cutouts, continue to the [Hole](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/modify-solids/hole) and [Boolean operations](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/boolean-operations) guides.
+
+## From 2D to 3D
+
+Turn sketch profiles into solid bodies with Extrude, Sweep, Loft, and Revolve. This lesson shows
+how to select profiles, set feature inputs, and reuse dimensions through variables.
+
+**Follow along:** To try the first example, start a sketch on the XY plane, draw a circle, and
+exit the sketch. Select its filled region with Extrude and use a length of 5 mm. The video uses
+prepared sketches for its other examples; find the author's starting KCL in the
+[video's YouTube comments](https://www.youtube.com/watch?v=KRYgKR6it60).
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/KRYgKR6it60"
+            title="Extrude, Sweep, Loft, and Revolve in Zoo Design Studio"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>
+
+### Continue the point-and-click series
+
+Follow the [Point-and-Click Tutorials](/docs/zoo-design-studio/point-and-click-tutorials) for the
+remaining lessons on shell and hole features, fillets and chamfers, Boolean operations, transforms,
+construction geometry, and patterns.
+
+## Zookeeper basics
+
+In this video, we introduce Zookeeper’s core capabilities and show how to work with it effectively. You’ll learn how to ask Zookeeper for actions, explanations, and guidance, and how to use conversation to explore designs, make changes, and understand design decisions. By the end, you’ll have a solid foundation for using Zookeeper as part of your design workflow.
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/oWvExe3ZFdk"
+            title="What Is Zookeeper? A Tour of the Conversational CAD Agent"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>
+
+## KCL basics
+
+Zoo Design Studio uses a custom programming language, KCL, for geometry creation. When you use point-and-click or Zookeeper to create geometry by sketching and extruding, our system generates KCL. However, you can also write KCL directly, allowing you to create complex models using commands and functions. We also store your KCL code in text files with .kcl extension—so we refer to these as KCL files.
+
+While you can achieve a lot with the point-and-click, directly editing or writing KCL unlocks advanced capabilities. This includes creating complex parametric models, automating design tasks through scripting, and defining geometries that might be challenging with GUI tools alone. It also makes Zoo designs highly portable and readily version-controllable with tools such as [git](https://git-scm.com/).
+
+A range of KCL-based sample parts are provided as reference models for use within Zoo Design Studio. To access these:
+
+Click Create from Sample on the project dashboard to browse available KCL examples or read the [KCL book](https://zoo.dev/docs/kcl-book/intro.html).
+
+## Importing and exporting files
+
+Zoo Design Studio supports various file formats for interoperability with other CAD systems:
+
+-   **Importing**: Add external models to your project by selecting Insert from the top command bar. Supported formats include `STEP`, `.sldprt` and `STL`. For further details see the [KCL docs](https://zoo.dev/docs/kcl-lang/foreign-imports).
+-   **Exporting**: Save your designs for use in other applications by choosing File → Export and selecting your desired format: `STEP`, `STL`, `gLTF`, `OBJ`, or `PLY`.
+-   For models created with Zookeeper, your generated geometry is automatically saved in the project folder and can be exported to any supported format at any time.

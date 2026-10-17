@@ -1,0 +1,265 @@
+schema_version: 1
+kind: assembly
+name: planetary-set
+intent: >-
+  Planetary gear set with a fixed ring from sources/planetary-set-spec.md (authoritative, text only), built as seven
+  separate solids from five part designs: a 150 x 150 x 5 base plate (the datum), a 48-tooth internal ring rigidly fixed on
+  it, a 24-tooth sun and a D88 x 5 carrier turning about the common z axis, and three identical 12-tooth planets (one
+  design placed three times) turning on the carrier at radius 36. Module 2, pressure angle 20 deg, zero profile shift;
+  every external tooth is thinned 0.10 mm and every ring tooth space widened 0.05 mm at the pitch circle (circular
+  backlash 0.20 mm at the sun meshes, 0.15 mm at the ring meshes). Every gear is phased as specified (sun, ring and carrier
+  at 0 deg, every planet at 15 deg) so all six meshes engage. The sun is motor-driven; each planet follows the sun and the
+  fixed ring through two epicyclic meshes relative to the carrier, and the free carrier is set by those loops. A sweep of
+  the sun checks that the set turns with zero interference and a flank gap of at most 0.2 mm at the sun meshes; the
+  evaluator measures the carrier ratio (carrier angle over sun angle) and the carrier angle after one sun revolution.
+units: {length: mm, angle: deg}
+frame:
+  origin: common sun, ring and carrier axis in the base plate top face (plate top z = 0)
+  axes:
+    x: "from the axis toward planet 1 at (36, 0); at rest the sun, the ring and the carrier each have a tooth or planet hole on +x"
+    y: "completes a right-handed frame (planet 2 at 120 deg, (-18, 31.176915))"
+    z: "up, along every gear axis; the gears stand on z = 0 and the carrier lies on z = 10"
+  datums:
+    - {name: A, description: "base plate top face z = 0; the ring, the sun and the planets stand on it"}
+    - {name: B, description: "common axis x = y = 0 of the sun, the ring and the carrier"}
+    - {name: C, description: "carrier bottom face z = 10, on the top faces of the sun and the planets"}
+envelope: {min: [-75.0, -75.0, -5.0], max: [75.0, 75.0, 15.0], tolerance: 0.1}
+datum_part: base
+parts:
+  - name: base
+    kind: modelled
+    design: planetary-set-base
+    intent: >-
+      Base plate in its own frame, which is the assembly frame: a 150 x 150 x 5 mm plate from corner (-75, -75, -5) to
+      (75, 75, 0), edges along x and y, with a D10 through hole on the z axis (x = y = 0). Its top face z = 0 is the seat
+      the ring, the sun and the three planets stand on; the ring is fixed rigidly on it, concentric with the hole. No other
+      features.
+    description: datum body; the assembly frame is its frame
+  - name: ring
+    kind: modelled
+    design: planetary-set-ring
+    intent: >-
+      Internal ring gear in its own frame: axis +z through the origin, bottom face z = 0, top face z = 10 (face width 10).
+      An annulus of outside radius 58 with 48 internal involute teeth, module 2, pressure angle 20 deg, zero profile shift:
+      pitch radius 48, internal tip radius 46, root radius 50.5, base radius 45.105 (48 x 2 x cos 20 deg / 2). The flanks
+      are involutes of the base circle with the material outside; one construction is the annulus r 46..58 minus a
+      48-tooth external involute gear of module 2 whose tips reach r 50.5 (the ring root) and whose teeth are the ring's
+      tooth spaces, 12-16 points per flank. Every tooth space is widened by 0.05 mm at the pitch circle (space width
+      pi x 2 / 2 + 0.05 = 3.1916 mm, tooth thickness 3.0916 mm), giving a circular backlash of 0.15 mm with each planet.
+      An internal tooth is centred on +x (tooth centres at k x 7.5 deg, tooth spaces centred at 3.75 + k x 7.5 deg). The
+      bottom face z = 0 stands on the base plate, rigidly fixed and concentric with its hole; the three planets mesh
+      inside it on radius 36.
+    description: held member; stands on the plate top
+  - name: sun
+    kind: modelled
+    design: planetary-set-sun
+    intent: >-
+      Sun gear in its own frame: axis +z through the origin, bottom face z = 0, face width 10 (z 0..10). 24 external
+      involute teeth, module 2, pressure angle 20 deg, zero profile shift: pitch radius 24, tip radius 26, root radius 21.5,
+      base radius 22.553. Involute flanks with 12-16 points per flank from the base circle to the tip; below the base
+      circle each flank continues as a radial line down to the root circle, with no fillet. Every tooth is thinned by
+      0.10 mm at the pitch circle (tooth thickness pi x 2 / 2 - 0.10 = 3.0416 mm), giving a circular backlash of 0.20 mm
+      with each planet. A tooth is centred on +x (tooth centres at k x 15 deg). D10 bore through on the axis. The bottom
+      face z = 0 stands on the base plate and the top face z = 10 carries the carrier; the sun is the motor-driven member
+      and meshes with the three planets at centre distance 36.
+    description: motor-driven input
+  - name: carrier
+    kind: modelled
+    design: planetary-set-carrier
+    intent: >-
+      Planet carrier in its own frame: axis +z through the origin, bottom face z = 0. A D88 x 5 disc (z 0..5) with a D10
+      centre hole on the axis and three D8 through holes on radius 36 at 0, 120 and 240 deg, centred at (36, 0),
+      (-18, 31.176915) and (-18, -31.176915); a planet hole is centred on +x. The bottom face z = 0 lies on the top faces
+      of the sun and the three planets (assembly z = 10); each planet hole is coaxial with a planet's D8 bore and is the
+      axis that planet turns on. Its rim (r 44) stays 2 mm inside the ring's tip circle (r 46).
+    description: free output member
+  - name: planet1
+    kind: modelled
+    design: planetary-set-planet
+    intent: &planetIntent >-
+      Planet gear in its own frame, one design placed three times: axis +z through the origin, bottom face z = 0, face
+      width 10 (z 0..10). 12 external involute teeth, module 2, pressure angle 20 deg, zero profile shift: pitch radius 12,
+      tip radius 14, root radius 9.5, base radius 11.276. Involute flanks with 12-16 points per flank from the base circle
+      to the tip; below the base circle each flank continues as a radial line down to the root circle, with no fillet (the
+      ring's tips reach r 10 from the planet axis, 0.5 mm from the root circle). Every tooth is thinned by 0.10 mm at the
+      pitch circle (tooth thickness pi x 2 / 2 - 0.10 = 3.0416 mm). A tooth is centred on +x (tooth centres at k x 30 deg).
+      D8 bore through on the axis, coaxial with a carrier planet hole. The bottom face z = 0 stands on the base plate and
+      the top face z = 10 touches the carrier; it meshes with the sun and inside the ring, both at centre distance 36.
+    description: planet on carrier hole 1 at (36, 0)
+  - name: planet2
+    kind: modelled
+    design: planetary-set-planet
+    intent: *planetIntent
+    description: planet on carrier hole 2 at (-18, 31.176915)
+  - name: planet3
+    kind: modelled
+    design: planetary-set-planet
+    intent: *planetIntent
+    description: planet on carrier hole 3 at (-18, -31.176915)
+parameters:
+  - {name: gearModule, value: 2.0, unit: mm, provenance: stated, tolerance: 0.001, source: "sources/planetary-set-spec.md, parameter table: Module"}
+  - {name: pressureAngle, value: 20.0, unit: deg, provenance: stated, tolerance: 0.01, source: "sources/planetary-set-spec.md, parameter table: Pressure angle"}
+  - {name: sunTeeth, value: 24.0, unit: "", provenance: stated, tolerance: 1.0e-6, source: "sources/planetary-set-spec.md, parameter table: Sun"}
+  - {name: planetTeeth, value: 12.0, unit: "", provenance: stated, tolerance: 1.0e-6, source: "sources/planetary-set-spec.md, parameter table: Planets"}
+  - {name: ringTeeth, value: 48.0, unit: "", provenance: stated, tolerance: 1.0e-6, source: "sources/planetary-set-spec.md, parameter table: Ring"}
+  - {name: faceWidth, value: 10.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/planetary-set-spec.md, parameter table: face width 10 (z 0..10)"}
+  - {name: planetOrbitRadius, value: 36.0, unit: mm, provenance: derived, tolerance: 0.01, formula: "gearModule * (sunTeeth + planetTeeth) / 2", description: "planet axis radius on the carrier, 24 + 12 = 48 - 12 (spec, Planet orbit)"}
+  - {name: carrierBottomZ, value: 10.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/planetary-set-spec.md, Frame: the carrier bottom face at z = 10", description: carrier bottom face on the gear tops}
+  - {name: planetRestAngle, value: 15.0, unit: deg, provenance: stated, tolerance: 0.01, source: "sources/planetary-set-spec.md, Rest configuration", description: "every planet turned half its 30 deg pitch from the carrier's +x"}
+  - {name: sunBacklash, value: 0.2, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/planetary-set-spec.md, parameter table: Circular backlash", description: circular backlash at the sun meshes}
+  - {name: ringBacklash, value: 0.15, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/planetary-set-spec.md, parameter table: Circular backlash", description: circular backlash at the ring meshes}
+  - {name: sunPlanetRatio, value: -2.0, unit: "", provenance: derived, tolerance: 1.0e-9, formula: "-sunTeeth / planetTeeth", description: "planet over sun displacement relative to the carrier (external mesh, opposite sense)"}
+  - {name: ringPlanetRatio, value: 4.0, unit: "", provenance: derived, tolerance: 1.0e-9, formula: "ringTeeth / planetTeeth", description: "planet over ring displacement relative to the carrier (internal mesh, same sense)"}
+  - {name: carrierRatio, value: 0.333333333333, unit: "", provenance: derived, tolerance: 1.0e-9, formula: "sunTeeth / (sunTeeth + ringTeeth)", description: "carrier over sun angle with the ring held (spec, Motion)"}
+joints:
+  - name: ringFixed
+    kind: rigid
+    parent: base
+    child: ring
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    angle: 0.0
+    description: "the ring stands on the plate top, concentric with the axis, an internal tooth on +x (ring at 0 deg)"
+  - name: sunSpin
+    kind: revolute
+    parent: base
+    child: sun
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    angle: 0.0
+    drive: {kind: motor, speed: 10.0, description: "the sun is motor-driven (spec, Motion); the spec states no speed, 10 rpm is a defaulted animation speed and no prediction depends on it"}
+    description: "sun on the plate top about the common axis, a tooth on +x at rest"
+  - name: carrierSpin
+    kind: revolute
+    parent: base
+    child: carrier
+    parent_frame: {origin: [0.0, 0.0, 10.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    angle: 0.0
+    drive: {kind: free, description: "set by the loops through the planets (sunPlanet1-3 and ringPlanet1-3)"}
+    description: "carrier bottom face on z = 10 about the common axis, planet hole 1 on +x at rest"
+  - name: planet1Spin
+    kind: revolute
+    parent: carrier
+    child: planet1
+    parent_frame: {origin: [36.0, 0.0, -10.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    angle: 15.0
+    drive: {kind: free, description: driven through sunPlanet1 and ringPlanet1}
+    description: "planet 1 under carrier hole 1 at (36, 0), bottom face on the plate top (10 below the carrier bottom face), turned 15 deg"
+  - name: planet2Spin
+    kind: revolute
+    parent: carrier
+    child: planet2
+    parent_frame: {origin: [-18.0, 31.176915, -10.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    angle: 15.0
+    drive: {kind: free, description: driven through sunPlanet2 and ringPlanet2}
+    description: "planet 2 under carrier hole 2 at (-18, 31.176915), bottom face on the plate top, turned 15 deg"
+  - name: planet3Spin
+    kind: revolute
+    parent: carrier
+    child: planet3
+    parent_frame: {origin: [-18.0, -31.176915, -10.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    angle: 15.0
+    drive: {kind: free, description: driven through sunPlanet3 and ringPlanet3}
+    description: "planet 3 under carrier hole 3 at (-18, -31.176915), bottom face on the plate top, turned 15 deg"
+transmissions:
+  - name: sunPlanet1
+    kind: gear
+    driver: sunSpin
+    driven: planet1Spin
+    carrier: carrierSpin
+    ratio: -2.0
+    mesh: {pitch_deg: 15.0, steps: 12, backlash_max: 0.2}
+    description: "24-tooth sun to 12-tooth planet 1 relative to the carrier, -24/12 (external mesh, opposite sense)"
+  - name: sunPlanet2
+    kind: gear
+    driver: sunSpin
+    driven: planet2Spin
+    carrier: carrierSpin
+    ratio: -2.0
+    mesh: {pitch_deg: 15.0, steps: 12, backlash_max: 0.2}
+    description: "24-tooth sun to 12-tooth planet 2 relative to the carrier, -24/12 (external mesh, opposite sense)"
+  - name: sunPlanet3
+    kind: gear
+    driver: sunSpin
+    driven: planet3Spin
+    carrier: carrierSpin
+    ratio: -2.0
+    mesh: {pitch_deg: 15.0, steps: 12, backlash_max: 0.2}
+    description: "24-tooth sun to 12-tooth planet 3 relative to the carrier, -24/12 (external mesh, opposite sense)"
+  - name: ringPlanet1
+    kind: gear
+    driver: ringFixed
+    driven: planet1Spin
+    carrier: carrierSpin
+    ratio: 4.0
+    description: "fixed 48-tooth internal ring to planet 1 relative to the carrier, +48/12 (internal mesh, same sense); checked by the sunTurn sweep and ringPlanet1Mesh"
+  - name: ringPlanet2
+    kind: gear
+    driver: ringFixed
+    driven: planet2Spin
+    carrier: carrierSpin
+    ratio: 4.0
+    description: "fixed 48-tooth internal ring to planet 2 relative to the carrier, +48/12 (internal mesh, same sense); checked by the sunTurn sweep and ringPlanet2Mesh"
+  - name: ringPlanet3
+    kind: gear
+    driver: ringFixed
+    driven: planet3Spin
+    carrier: carrierSpin
+    ratio: 4.0
+    description: "fixed 48-tooth internal ring to planet 3 relative to the carrier, +48/12 (internal mesh, same sense); checked by the sunTurn sweep and ringPlanet3Mesh"
+observables:
+  - id: carrierRatio
+    quantity: transmission_ratio
+    unit: ""
+    body: carrier
+    expected: {expected: 0.333333333333, tolerance: 1.0e-4, provenance: derived, note: "24 / (24 + 48) = 1/3, in the sun's sense (spec, Motion)"}
+    description: carrier angle over sun angle, measured by the evaluator from the placed geometry
+  - id: carrierAt360
+    quantity: joint_value
+    unit: deg
+    joint: carrierSpin
+    at: 360.0
+    expected: {expected: 120.0, tolerance: 0.01, provenance: derived, note: "360 x 24 / (24 + 48)"}
+    description: carrier angle from rest after the sun has turned one revolution, measured by the evaluator from the placed geometry
+acceptance:
+  solid_count: 7
+  clearances:
+    - {name: sunPlanet1Mesh, a: sun, b: planet1, min_gap: 0.0, max_gap: 0.2, description: "zero interference and a flank gap of at most 0.2 mm at the sun meshes (spec, Motion)"}
+    - {name: sunPlanet2Mesh, a: sun, b: planet2, min_gap: 0.0, max_gap: 0.2, description: "zero interference and a flank gap of at most 0.2 mm at the sun meshes (spec, Motion)"}
+    - {name: sunPlanet3Mesh, a: sun, b: planet3, min_gap: 0.0, max_gap: 0.2, description: "zero interference and a flank gap of at most 0.2 mm at the sun meshes (spec, Motion)"}
+    - {name: ringPlanet1Mesh, a: ring, b: planet1, min_gap: 0.0, max_gap: 0.2, description: "zero interference (spec, Motion); engagement bound inferred, design backlash 0.15 mm"}
+    - {name: ringPlanet2Mesh, a: ring, b: planet2, min_gap: 0.0, max_gap: 0.2, description: "zero interference (spec, Motion); engagement bound inferred, design backlash 0.15 mm"}
+    - {name: ringPlanet3Mesh, a: ring, b: planet3, min_gap: 0.0, max_gap: 0.2, description: "zero interference (spec, Motion); engagement bound inferred, design backlash 0.15 mm"}
+    - {name: carrierClearsRing, a: carrier, b: ring, min_gap: 1.9, description: "carrier rim r 44 inside the ring tip circle r 46: 2.0 mm less 0.1 mm for tessellation"}
+    - {name: ringSeat, a: ring, b: base, min_gap: 0.0, max_gap: 0.01, description: "the ring stands on the plate top z = 0 (spec, Frame)"}
+    - {name: sunSeat, a: sun, b: base, min_gap: 0.0, max_gap: 0.01, description: "the sun stands on the plate top z = 0 (spec, Frame)"}
+    - {name: planet1Seat, a: planet1, b: base, min_gap: 0.0, max_gap: 0.01, description: "planet 1 stands on the plate top z = 0 (spec, Frame)"}
+    - {name: planet2Seat, a: planet2, b: base, min_gap: 0.0, max_gap: 0.01, description: "planet 2 stands on the plate top z = 0 (spec, Frame)"}
+    - {name: planet3Seat, a: planet3, b: base, min_gap: 0.0, max_gap: 0.01, description: "planet 3 stands on the plate top z = 0 (spec, Frame)"}
+    - {name: carrierOnSun, a: carrier, b: sun, min_gap: 0.0, max_gap: 0.01, description: "the carrier bottom face z = 10 lies on the sun (spec, Frame)"}
+    - {name: carrierOnPlanet1, a: carrier, b: planet1, min_gap: 0.0, max_gap: 0.01, description: "the carrier bottom face z = 10 lies on planet 1 (spec, Frame)"}
+    - {name: carrierOnPlanet2, a: carrier, b: planet2, min_gap: 0.0, max_gap: 0.01, description: "the carrier bottom face z = 10 lies on planet 2 (spec, Frame)"}
+    - {name: carrierOnPlanet3, a: carrier, b: planet3, min_gap: 0.0, max_gap: 0.01, description: "the carrier bottom face z = 10 lies on planet 3 (spec, Frame)"}
+  motions:
+    - name: sunTurn
+      drive: sunSpin
+      range: [0.0, 22.5]
+      steps: 12
+      description: >-
+        One full mesh cycle of all six meshes: the sun turns 22.5 deg, the carrier 7.5 deg (one ring pitch relative to the
+        carrier), the sun 15 deg relative to the carrier (one sun pitch) and each planet -30 deg on the carrier (one planet
+        pitch); the set must turn with zero interference between any gears.
+references:
+  - {path: sources/planetary-set-spec.md, kind: text, role: authoritative, sha256: "2a8bca0f4ffa01692bc1a5879aeb8b02a1d728b2cbe39448f181197d86ca14ca", note: "parameter table, frames, rest configuration, flank construction, motion and predictions"}
+open_questions:
+  - "The spec states no drive speed; the sun's motor drive carries a defaulted 10 rpm for the animation only, and neither prediction depends on it (both are displacement ratios)."
+  - "The spec states no materials or densities; no mass or centre of mass is declared."
+  - "The spec names no fastening between the ring and the plate; the ring is a rigid joint standing on the plate top (z = 0), concentric with the axis."
+  - "The spec has no shafts, pins or bearings; the sun and the carrier turn about the common axis of their D10 holes and each planet about its D8 bore, coaxial with a carrier hole, as kinematic joints only."
+  - "The spec bounds the flank gap (0.2 mm) only at the sun meshes; the ring mesh clearances carry the same 0.2 mm bound as an engagement check at rest (their design circular backlash is 0.15 mm). The ring transmissions have no mesh sweep (the ring is on a rigid joint); the sunTurn motion covers their interference over one full mesh cycle."
+  - "The gears stand on the plate (z = 0) and carry the carrier (z = 10) face to face with no axial clearance, as specified; those pairs touch with zero interference volume while they turn."
+  - "After one sun revolution the carrier has turned 120 deg, one of its three-fold symmetry angles, so the posed set matches the rest pose with the planets permuted; the carrier angle must be tracked through the motion, not registered from the posed shape."

@@ -1,0 +1,295 @@
+Source URL: https://zoo.dev/docs/developer-tools/tutorials/beginner-onboarding-py
+Title: Send Your First Zookeeper Prompt with Python
+
+# Send Your First Zookeeper Prompt with Python
+
+Use Python to send a CAD prompt to Zookeeper over WebSocket.
+
+This quickstart shows you how to send your first Zookeeper prompt from Python
+over a WebSocket. You will ask Zookeeper to generate a simple part, wait for the
+streamed response, and save the generated model as a STEP file.
+
+In Zoo Design Studio, [Zookeeper](/docs/zoo-design-studio/zookeeper) is the
+conversational CAD agent that helps create, edit, and reason about models. The
+same agent is available to developers through the Zookeeper WebSocket.
+
+This tutorial uses two WebSocket-backed steps: Zookeeper generates editable KCL,
+then `zoo-kcl` executes that project and sends a Modeling WebSocket `export`
+command to produce the STEP file.
+
+## What you will build
+
+You will run a Python script that sends this prompt to Zookeeper:
+
+```text
+Design a simple mounting bracket with a flat rectangular base, two bolt holes,
+and one vertical tab with a circular hole.
+```
+
+When the request completes, the script writes the generated model to
+`zookeeper-output.step`.
+
+## Prerequisites
+
+Before you start, make sure you have:
+
+- A [Zoo account](/account)
+- [Python](https://www.python.org/downloads/) installed on your computer
+- A terminal app, such as Terminal on macOS or Linux, or PowerShell on Windows
+
+## Get an API token
+
+We will need an API token in order to use any of Zoo's services.
+
+<DocCardGrid>
+  <DocCard
+    title="Generate an API token"
+    href="/account/developer"
+  >
+    Zoo uses an API token to verify that requests come from a particular account.
+  </DocCard>
+</DocCardGrid>
+
+**Keep your token private**. Do not share it or commit it to source control.
+
+## Set your API token
+
+Set your API token as the `ZOO_API_TOKEN` environment variable. The script sends
+it as a bearer token when it opens the WebSocket. Currently this is the way
+that the Python SDK reads the API token to authenticate.
+
+On macOS or Linux, run:
+
+```bash
+export ZOO_API_TOKEN="YOUR-API-TOKEN"
+```
+
+On Windows PowerShell, run:
+
+```powershell
+$env:ZOO_API_TOKEN = "YOUR-API-TOKEN"
+```
+
+## Create a Python project
+
+Create a folder for the quickstart and move into it.
+
+On Windows PowerShell, macOS, Linux, run:
+
+```bash
+mkdir zookeeper-python-quickstart
+cd zookeeper-python-quickstart
+```
+
+Create and activate a virtual environment so the tutorial dependencies stay
+separate from the rest of your Python installation.
+
+On macOS or Linux, run:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install "websockets>=14" zoo-kcl
+```
+
+On Windows PowerShell, run:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install "websockets>=14" zoo-kcl
+```
+
+This guide uses the raw Zookeeper WebSocket instead of the Zoo Python SDK. It
+does not use the Zoo CLI. The `zoo-kcl` package provides the KCL execution layer
+that talks to the Modeling WebSocket and sends the final `export` command.
+
+## Write the script
+
+Create a file named `zookeeper_prompt.py` and paste in this script:
+
+```py
+import asyncio
+import json
+import os
+from pathlib import Path
+
+import kcl
+import websockets
+
+
+ZOOKEEPER_WS_URL = "wss://api.zoo.dev/ws/ml/zookeeper"
+PROJECT_NAME = "zookeeper-python-quickstart"
+OUTPUT_FILE = Path("zookeeper-output.step")
+PROMPT = """
+Design a simple mounting bracket with a flat rectangular base,
+two bolt holes, and one vertical tab with a circular hole.
+"""
+
+
+def find_main_kcl(value):
+    if not isinstance(value, dict):
+        return None
+
+    outputs = value.get("outputs")
+    if isinstance(outputs, dict) and isinstance(outputs.get("main.kcl"), str):
+        return outputs["main.kcl"]
+
+    for child in value.values():
+        found = find_main_kcl(child)
+        if found:
+            return found
+
+    return None
+
+
+async def export_step(main_kcl):
+    # This will open a connection to the Engine API and execute
+    # the KCL that the Agent API gave back.
+    files = await kcl.execute_code_and_export(
+        main_kcl,
+        kcl.FileExportFormat.Step,
+    )
+
+    OUTPUT_FILE.write_bytes(files[0].contents)
+    print(f"Saved {OUTPUT_FILE}")
+
+
+async def main():
+    # Read the API token from the envvar we set earlier
+    token = os.environ.get("ZOO_API_TOKEN")
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "User-Agent": "ZooDocsPythonQuickstart",
+    }
+    request = {
+        "type": "user",
+        "content": PROMPT,
+        "project_name": PROJECT_NAME,
+        "current_files": {"main.kcl": ""},
+    }
+
+    final_main_kcl = None
+
+    # Connect to the Agent API
+    async with websockets.connect(
+        ZOOKEEPER_WS_URL,
+        additional_headers=headers,
+    ) as websocket:
+        await websocket.send(json.dumps(request))
+
+        async for raw_message in websocket:
+            message = json.loads(raw_message)
+
+            # Particularly useful to record or show the conversation_id for
+            # debugging purposes.
+            if "conversation_id" in message:
+                print(f"Conversation: {message['conversation_id']}")
+
+            # This is the incoming response text
+            elif "delta" in message:
+                print(message["delta"], end="", flush=True)
+
+            # These are tool outputs
+            elif "tool_output" in message:
+                main_kcl = find_main_kcl(message["tool_output"])
+                if main_kcl:
+                    final_main_kcl = main_kcl
+
+            elif "end_of_stream" in message:
+                print()
+                break
+
+    await export_step(final_main_kcl)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## Send the prompt
+
+Run the script:
+
+```bash
+python zookeeper_prompt.py
+```
+
+The script opens a WebSocket to `wss://api.zoo.dev/ws/ml/zookeeper`, sends your
+prompt, and prints streamed response text as it arrives.
+
+When Zookeeper edits the project, the script keeps the latest returned KCL in
+memory. Zookeeper always returns a project with a top-level `main.kcl`. When the
+stream ends, `zoo-kcl` executes `main.kcl` from memory, and the Modeling
+WebSocket exports the scene as STEP. The script writes only
+`zookeeper-output.step`.
+
+You should see output similar to:
+
+```bash
+Conversation: <conversation-id>
+Saved zookeeper-output.step
+```
+
+Open the generated STEP file in Zoo Design Studio or another CAD tool to inspect
+the model.
+
+## WebSocket message shape
+
+The client sends a user message as JSON:
+
+```json
+{
+  "type": "user",
+  "content": "Create a 10 mm cube.",
+  "project_name": "zookeeper-python-quickstart",
+  "current_files": {
+    "main.kcl": ""
+  }
+}
+```
+
+Zookeeper streams JSON messages back over the same socket. The messages you will
+usually care about are:
+
+- `conversation_id`, sent when the socket is ready
+- `delta`, streamed assistant text
+- `tool_output`, generated project edits that the script exports to STEP
+- `error`, a typed error response
+- `end_of_stream`, the end of the current prompt response
+
+## Write better prompts
+
+Zookeeper works best when your prompt includes the part type, important
+features, and any dimensions or constraints you already know.
+
+Good first prompts usually include:
+
+- The object you want, such as a bracket, enclosure, gear, fixture, or adapter
+- The main features, such as holes, tabs, ribs, slots, bosses, or cutouts
+- Approximate dimensions if they matter
+- The intended use or manufacturing constraint if it affects the design
+
+For example:
+
+```text
+Design a 120 mm by 80 mm electronics enclosure with rounded corners, four screw
+bosses, a removable lid, and cable openings on one short side.
+```
+
+If the result is not what you wanted, make the next prompt more specific and run
+the script again.
+
+## Next steps
+
+Now that you have sent your first prompt, you can:
+
+- Try a different part description in `PROMPT`.
+- Send existing project files in `current_files` so Zookeeper can edit them.
+- Change `kcl.FileExportFormat.Step` if you want another output format.
+- Continue the model in [Zoo Design Studio](https://app.zoo.dev/).
+- Read the [Zookeeper guide](/docs/zoo-design-studio/zookeeper) for the broader
+  assistant workflow.

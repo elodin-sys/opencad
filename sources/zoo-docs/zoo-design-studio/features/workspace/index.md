@@ -1,0 +1,68 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/workspace
+Title: Workspace
+
+# Workspace
+
+Interface surfaces and in-editor tools used in Zoo Design Studio.
+
+Workspace covers the primary interface areas used to inspect, navigate, and edit the current design
+in Zoo Design Studio. This section documents the panels and editors that support modeling workflows
+across part modeling, assemblies, and direct KCL editing.
+
+## Video Walkthrough
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/q9clNqGUMdY"
+            title="UI Overview in Zoo Design Studio"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>
+
+## What You Can Do
+
+- Work directly in the 3D graphics area while opening and closing panes as needed.
+- Resize split areas by dragging pane boundaries.
+- Use the left and right pane zones for different tools and editors.
+- Use pane shortcuts such as `Shift+T` for Feature Tree and `Shift+C` for Code Editor.
+
+## Key Differences in This Area
+
+- The code editor and AI assistant are first-class workspace panes, not secondary add-ons.
+- Browser projects use browser-managed storage. Operating-system integrations such as revealing
+  files, opening desktop windows, and make-related actions are desktop workflows.
+
+Start with [Project Browser](/docs/zoo-design-studio/features/workspace/project-browser) for opening and
+creating work. Use [New Window](/docs/zoo-design-studio/features/workspace/new-window) when you need
+a separate desktop workspace while the current one stays open. Inside a project, use
+[Modeling Area](/docs/zoo-design-studio/features/workspace/modeling-area)
+for the [Scene](/docs/zoo-design-studio/features/workspace/modeling-area/scene),
+[Toolbar](/docs/zoo-design-studio/features/workspace/modeling-area/toolbar), and
+[View Controls](/docs/zoo-design-studio/features/workspace/modeling-area/view-controls). Use the
+[Top Bar](/docs/zoo-design-studio/features/workspace/top-bar) for project and session
+controls. Use [Feature Tree](/docs/zoo-design-studio/features/workspace/feature-tree),
+[Bodies Pane](/docs/zoo-design-studio/features/workspace/body-pane), and
+[Code Editor](/docs/zoo-design-studio/features/workspace/code-editor) to inspect model state and
+source. Use [File Explorer](/docs/zoo-design-studio/features/workspace/file-explorer) and
+[Variables Pane](/docs/zoo-design-studio/features/workspace/variables-pane) for project files and
+evaluated values. For keyboard-driven command access, see
+[Command Bar](/docs/zoo-design-studio/features/workspace/command-bar). Use
+[AI Chat](/docs/zoo-design-studio/features/workspace/ai-chat) to work with
+[Zookeeper](/docs/zoo-design-studio/zookeeper) inside the workspace. For workspace-level state, see
+[Status Bar](/docs/zoo-design-studio/features/workspace/status-bar). For interface and display
+preferences, see [Settings](/docs/zoo-design-studio/features/workspace/settings). For display
+overrides such as body color and transparency, see
+[Appearance](/docs/zoo-design-studio/features/workspace/appearance).

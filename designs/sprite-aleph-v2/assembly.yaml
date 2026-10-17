@@ -1,0 +1,3151 @@
+schema_version: 1
+kind: assembly
+name: sprite-aleph-v2
+intent: 'sprite-aleph-v2: a second variant of the Sprite tail-sitter FPV drone carrying the Aleph compute stack,
+  rebuilt around a mounting sled. A printed sled bolts to the carbon X frame on its four clamp axes and carries
+  everything: the Aleph on edge against a 4 mm starboard wall through four metal standoffs, right over the frame
+  (z 19..107), and the 6S pack flat in a tray forward of it (z 120..201). The shell is an open-bottom 60 x 75 sleeve
+  that slides down over the loaded sled and fixes with four flush countersunk M3 through its flanks into inserts
+  in sled pads; it mounts no payload. The cover slides on from the nose in the Sprite''s tongue-and-groove (groove
+  y 16..20, z 22..202) with the skirt band y 15..22 kept clear; the Aleph''s heatsink grille stops at y 14. The
+  nose is one smooth taper: keel rising from z 125, crown descending from 185, width tapering from 202, cubic Hermite
+  laws tangent to the unchanged Sprite camera aperture (shell tip 249.3, cover brow 256.7), sections morphing to
+  half-ellipses by 225. The tail (rear shell, ESC placement and slots, rear mount, launch pad) and the carbon frame
+  are v1 as built. 5 in props, PETG or ASA for the sled, shell and cover, every printed part fits a Bambu X1C. All
+  numbers are in sprite-aleph-v2-proposal.md (iteration 2) and the staging notes.'
+units:
+  length: mm
+  angle: deg
+frame:
+  origin: centre of the carbon mainFrame top face, z = 0, on the fuselage axis x = y = 0; the Sprite assembly frame
+  axes:
+    x: lateral, positive to starboard
+    y: toward the top cover
+    z: along the fuselage from the carbon plate top face toward the nose; nose up in hover
+  datums:
+  - name: A
+    description: Carbon frame top face z = 0; sled base bottom seats here; all new skins use this same origin.
+  - name: B
+    description: frame plate bottom face z = -6; the rear mount and rear shell seat here
+  - name: C
+    description: fuselage axis x = y = 0
+envelope:
+  min:
+  - -94.0
+  - -94.0
+  - -100.0
+  max:
+  - 94.0
+  - 94.0
+  - 256.7
+  tolerance: 0.5
+datum_part: mainFrame
+parts:
+- name: mainFrame
+  kind: modelled
+  design: sprite-aleph-v2-main-frame
+  material: carbon fibre plate
+  intent: 'Reuse sources/sprite-aleph-main-frame-main.py VERBATIM with every acceptance requirement from sources/sprite-aleph-main-frame-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Carbon X frame
+    plate of the Sprite Aleph FPV drone (Build Guide step 1: the four motors bolt to the carbon frame), body mainFrame
+    of the sprite-aleph assembly, in its own frame = the source frame of 013_Main Frame.stl (reference ingest, identity
+    transform, datum keep), which is the assembly frame. A 6 mm plate at z = -6..0 whose outline reaches x, y =
+    +-93.49 with four 12 mm arms on the diagonals; mesh volume 43060 mm3. Reproduced from the mesh: the 27 mm centre
+    opening, the M3 centre bolt pattern (30 x 30 square, 3.1 mm holes) that clamps main shell, plate and rear mount
+    with M3x30 screws (step 2), the two D-shaped slots beside the centre opening, and at each arm tip the motor
+    hole pattern (6 mm centre hole plus four radial 3.1 mm slots for 16-19 mm motor bolt circles), the motor axes
+    being x = +-80, y = +-80 (the main shell nacelle rings are centred there). Interfaces: top face z = 0 carries
+    the main shell floor; bottom face z = -6 carries the rear mount and rear shell rims; each arm tip carries a
+    motor cover. Authoritative: 013_Main Frame.stl and its reference ingest; the Assembly Guide is illustrative.
+    Reuse sources/sprite-drone-main-frame-main.py verbatim except adding editable motorBoltPattern, default 12 mm
+    square slot pattern, before carbon cutting. Preserve default geometry, measured slot lengths and width, all
+    source features, interfaces and whole-part acceptance. This is cut carbon, not a printed frame. Parameter record:
+    plateThickness=6.0 mm (tolerance 0.01); bodyHalfWidth=25.0 mm (tolerance 0.02); bodyHalfLength=37.5 mm (tolerance
+    0.02); bodyEndRadius=25.0 mm (tolerance 0.1); bodyEndCentreY=12.5 mm (tolerance 0.1); centreHoleDiameter=27.0
+    mm (tolerance 0.05); centreBoltSpacing=30.0 mm (tolerance 0.02); centreBoltDiameter=3.1 mm (tolerance 0.02);
+    crescentFlatY=25.5 mm (tolerance 0.02); crescentRim=3.0 mm (tolerance 0.05); crescentOuterRadius=22.0 mm (tolerance
+    0.05); crescentCornerRadius=3.0 mm (tolerance 0.1); armWidth=12.0 mm (tolerance 0.02); motorAxisOffset=80.0
+    mm (tolerance 0.02); motorHoleDiameter=6.0 mm (tolerance 0.02); motorSlotWidth=3.1 mm (tolerance 0.02); motorSlotInnerRadius=8.0
+    mm (tolerance 0.02); motorSlotOuterRadius=9.5 mm (tolerance 0.02); padRadius=11.5 mm (tolerance 0.05); lobeRadius=4.0
+    mm (tolerance 0.05); outlineHalfSpan=93.5 mm (tolerance 0.1); bodyArmFilletRadius=6.0 mm (tolerance 0.1); endArmFilletRadius=5.0
+    mm (tolerance 0.1); armPadFilletRadius=20.0 mm (tolerance 0.5); lobeFilletRadius=3.0 mm (tolerance 0.5); motorBoltPattern=12.0
+    mm (tolerance 0.02). V2 interface update only: frame top face carries the sled base, not a shell floor; four
+    existing (+/-15,+/-15) clamp axes take M3 x 16 into 12 mm F-F standoffs below rearMount. Preserve the default
+    motorBoltPattern=12 and all slot geometry until hardware selection; do not change carbon geometry in this draft.'
+- name: rearMount
+  kind: modelled
+  design: sprite-aleph-v2-rear-mount
+  material: PLA
+  intent: 'Reuse sources/sprite-aleph-rear-mount-main.py VERBATIM with every acceptance requirement from sources/sprite-aleph-rear-mount-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Modified Sprite
+    rear mount from sources/sprite-drone-rear-mount-main.py, same own and assembly frame (origin on frame top-face
+    centre, x starboard,y cover,z nose); keep the source geometry except the two specified removals. Plate top z-6
+    and bottom-7.2, width50 x+-25, y-36.53..36.70; D3.1 clamp holes on30x30 at (+-15,+-15). Cut ONLY the 1.2-thick
+    ring wall at z-13 (old bottom-21); remove the U-channel tab formerly x+-9,y25.5..30,z down to-30. Keep cross-bore
+    bosses to source z-13.33 (~-13.3), cross bore D3.2 along y at x0,z-10, side lands x+-25,z-6..-9, plate windows
+    and rear-shell pins/seat interfaces unchanged. Do not clip the entire body at-13 and remove the bosses. Rear
+    shell locates on short ring, lands and pins; rearShellOnMount uses parent datum [0,0,-7.2], offset -10.8 along
+    +z to child datum [0,0,-18], preserving the source pose. ESC upper parts reach z-14.4: >=1 to ring and bosses
+    (nominal1.4 and1.1). Twelve-mm spacers under plate on existing M3x30 clamp axes carry ESC, no old FC mount/tab.
+    Check ring-bottom face, tab-removal voids, retained bosses and seating features locally against source; original
+    bbox z-30, volume5607 and whole-part deviation band no longer apply. Parameter record: mountTopZ=-6 mm (tolerance
+    0.05); plateThickness=1.2 mm (tolerance 0.05); bodyWidth=50 mm (tolerance 0.1); bodyYMin=-36.53 mm (tolerance
+    0.1); plateFlatHalfLength=9.35 mm (tolerance 0.5); plateEndSemiAxis=27.3 mm (tolerance 0.5); bodyYMax=36.7 mm
+    (tolerance 0.1); wallThickness=1.2 mm (tolerance 0.1); ringBottomZ=-13 mm (tolerance 0.05); sideLandBottomZ=-9
+    mm (tolerance 0.1); holeSpacing=30 mm (tolerance 0.05); holeDiameter=3.1 mm (tolerance 0.08); crossBoreDiameter=3.2
+    mm (tolerance 0.08); crossBoreZ=-10 mm (tolerance 0.05); tabWidth=18 mm (tolerance 0.05); tabYMin=25.5 mm (tolerance
+    0.05); tabYMax=30 mm (tolerance 0.05); blockBottomZ=-13.33 mm (tolerance 0.05); windowHalfWidth=21.5 mm (tolerance
+    0.1); windowWideYMin=-7.5 mm (tolerance 0.1); windowWideYMax=9.5 mm (tolerance 0.1); windowNeckHalfWidth=10
+    mm (tolerance 0.1); windowNeckYMax=22.5 mm (tolerance 0.1); slotHalfWidth=10.25 mm (tolerance 0.1); slotYMax=-19.5
+    mm (tolerance 0.1); slotBossYMax=-29.5 mm (tolerance 0.1). V2 hardware only: existing clamp axes now use M3
+    x 16 from the sled and 12 mm M3 F-F standoffs, with M3 x 6 ESC screws from below; geometry and ESC pose stay
+    v1.'
+- name: rearShell
+  kind: modelled
+  design: sprite-aleph-v2-rear-shell
+  material: PLA
+  intent: 'Reuse sources/sprite-aleph-rear-shell-main.py VERBATIM with every acceptance requirement from sources/sprite-aleph-rear-shell-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Modified Sprite
+    tail cone, seed sources/sprite-drone-rear-shell-main.py, source own frame identical to assembly (origin frame
+    top-face centre, x starboard,y cover,z nose). Keep outline x+-72.3557,y-72.5217..72.3557,z-92.0649..-6 and0.8
+    wall, 56x73 inside near ESC bay (r28 at +-x,r36.5 at +-y) to z-30. Keep source rim against frame bottom z-6,
+    arm undersides12 wide to z-24, side locating pockets/pins and pilots at z-10 (D1.1, final drilled2..2.4). Preserve
+    Sprite +-x rim inlets with nominal inner/outer x28.2/29.0 to about z-22, open beside rearMount edges x+-25 over
+    abs(y) roughly<=7, curvature blends15..20deg off x; preserve open tail tip and smooth cone without off-axis
+    lobes. Add precisely TWO through-slots at +-y walls: 45 along x (x-22.5..22.5),10 along z (z-27..-17). They
+    admit PCB end corners and four MR30 sockets to y+-38.3; mated plugs outside to+-46.5. Require escSlotClearance1..2
+    to slot edges and no collision, plus continuous inlet/slot-to-tip passage. Launch pad unchanged; explicitly
+    check new external plugs against it. rearMountFit remains only +-y/off-axis; do not close +-x inlets. Unchanged
+    z-12 section remains one loop/one hole,579.5mm2+-3%; new slots are below it. Use source section/faces/probes
+    for unchanged cone stations and explicit slot void/edge checks at-27,-22,-17; no whole-part reference-deviation
+    or old volume requirement on this modified part. One source file, no decomposition. Parameter record: rimZ=-6.0
+    mm (tolerance 0.01); coneDepth=86.065 mm (tolerance 0.1); wallThickness=0.8 mm (tolerance 0.05); pilotHoleDiameter=1.1
+    mm (tolerance 0.1); pilotHoleZ=-10.0 mm (tolerance 0.1); drilledHoleDiameter=2.2 mm (tolerance 0.2); mirrorPlaneY=-0.083
+    mm (tolerance 0.02); armTipReach=96.9 mm (tolerance 0.3); armTipWidth=10.98 mm (tolerance 0.3); armKeelDepth=18.0
+    mm (tolerance 0.3); pocketWidth=15.74 mm (tolerance 0.3); pocketFloorZ=-24.24 mm (tolerance 0.3); rearMountWidth=50.0
+    mm (tolerance 0.2); rearMountLength=73.19 mm (tolerance 0.2); fitDepth=15.0 mm (tolerance 0.5); stadiumHalfWidth917=4.65
+    mm (tolerance 0.05); stadiumHalfLength917=17.23 mm (tolerance 0.05); stadiumHalfWidth888=5.98 mm (tolerance
+    0.05); stadiumHalfLength888=18.57 mm (tolerance 0.05); stadiumHalfWidth832=8.41 mm (tolerance 0.05); stadiumHalfLength832=20.99
+    mm (tolerance 0.05); stadiumHalfWidth752=11.53 mm (tolerance 0.05); stadiumHalfLength752=24.11 mm (tolerance
+    0.05); slotWidth=45 mm (tolerance 0.1); slotHeight=10 mm (tolerance 0.1); slotCenterZ=-22 mm (tolerance 0.05);
+    slotCount=2  (tolerance 0.01); escBayHalfX=28 mm (tolerance 0.5); escBayHalfY=36.5 mm (tolerance 0.5); armUndersideWidth=12
+    mm (tolerance 0.3); socketReachY=38.3 mm (tolerance 0.1); plugReachY=46.5 mm (tolerance 0.1); pcbReliefOuterX=24.0
+    mm (tolerance 0.1); pcbReliefZMin=-21.8 mm (tolerance 0.1); pcbReliefZMax=-17.8 mm (tolerance 0.1). Preserve
+    the v1 four PCB relief notches at abs(x) 22.5..24.0, z -21.8..-17.8 at the ends of the two unchanged 45 x 10
+    slots, and every amendment in the supplied v1 acceptance.'
+- name: launchPad
+  kind: modelled
+  design: sprite-aleph-v2-launch-pad
+  material: PLA
+  intent: 'Reuse sources/sprite-aleph-launch-pad-main.py VERBATIM with every acceptance requirement from sources/sprite-aleph-launch-pad-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Modified Sprite
+    launch pad (ground stand), starting from sources/sprite-drone-launch-pad-main.py. Own frame equals the source
+    frame of 014_Launch Pad.stl and assembly frame (identity, datum keep); launchPadStand uses parent [0, 0, -3],
+    child [0, 0, -27], axis +z and offset -24 mm, preserving identity placement with no rotation or drop. Envelope
+    x = -85..85, y = -75..75, z = -100..-20.59559 mm; notched volume about 62281 mm3. Add plugNotches: two open-top
+    box cuts, mirror-symmetric in x and y, x = -plugNotchHalfWidth..plugNotchHalfWidth = -24.5..24.5, through all
+    |y| >= 20, from above z = 0 down to plugNotchFloorZ = -27.0. Remove the finger tips and cap tops inside those
+    boxes so external MR30 plugs, motor leads and PCB ends pass as the drone is lowered. Preserve the cap material
+    below z = -27, surviving shelves and cradle arcs outside the notch, flat side walls, floor, flange, ribs and
+    apex relief slots. The rear shell seats at identity on four cap-wall contacts at |x| = 24.5..25.9, |y| = 26.5..29.0,
+    z = -25.8..-20.6. Solid seat verify points are [+/−25.0, +/−27.0, -25.0], all four sign combinations. One closed
+    mirror-symmetric solid. Keep all inherited source parameters and unaffected local acceptance; supersede only
+    acceptance necessarily changed by this notch. Reviewer clearances: plugs 1.5 mm vertically and 3.35 mm laterally,
+    PCB corner 1.75 mm; assembly escToLaunchPad minimum is 1.0 mm. Parameter record: armSpanX=170 mm (tolerance
+    0.1); armSpanY=150 mm (tolerance 0.1); padHeight=100 mm (tolerance 0.1); armWidth=30 mm (tolerance 0.05); armEndRadius=10
+    mm (tolerance 0.05); junctionRadius=5 mm (tolerance 0.1); flangeThickness=5 mm (tolerance 0.05); floorThickness=1.2
+    mm (tolerance 0.05); cupOuterRadius=28.89 mm (tolerance 0.05); cupFlatHalfLength=13.69 mm (tolerance 0.05);
+    wallThickness=1.2 mm (tolerance 0.05); cupInnerRadius=27.69 mm (tolerance 0.05); sideWallHeight=58.54 mm (tolerance
+    0.05); shelfHeight=73.53 mm (tolerance 0.05); cradleHalfWidth=31.37 mm (tolerance 0.05); cradleArcRadius=36.48
+    mm (tolerance 0.3); cradleArcDepth=7.66 mm (tolerance 0.3); ribThickness=5 mm (tolerance 0.05); ribTopRadius=2.5
+    mm (tolerance 0.05); ribRise=38.21 mm (tolerance 0.05); ribRunX=32.91 mm (tolerance 0.1); ribRunY=32.42 mm (tolerance
+    0.1); plugNotchHalfWidth=24.5 mm (tolerance 0.05); plugNotchFloorZ=-27.0 mm (tolerance 0.05). '
+- name: ark4in1Esc
+  kind: modelled
+  design: sprite-aleph-v2-esc-envelope
+  material: PLA
+  intent: 'Reuse sources/sprite-aleph-esc-envelope-main.py VERBATIM with every acceptance requirement from sources/sprite-aleph-esc-envelope-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: One analytic
+    clearance solid for ARK4IN1 ESC CONS, own frame=assembly: origin clamp-pattern centre projected on frame top
+    face,x starboard,y cover,z nose. Sources are proposal sections3/4.3 and ARK_4_IN_1_ESC_CON_Rev_4_0.step for
+    provenance and read-only measurements only: never import that STEP as a boolean/modeling input. PCB long direction
+    y,63.15x42.25x1.61, x-22.75..19.5,y approximately+-31.6,z-20.6..-19.0 (1.60 rounded). Retain true30.5x30.5 board
+    hole pitch centred on axis,original D3.5 reamed D3.8; centre over the existing30x30 M3 clamp pattern, giving0.25
+    offset per coordinate. Do not scale the PCB or move clamp axes to30.5. Explicitly represent four bores and check
+    M3 axes(+/-15,+/-15) fit their reamed openings. Twelve-mm spacers from rearMount underside-7.2 set the nominal
+    PCB station; preserve stated rounded PCB planes. Upper components reach z-14.4,lower/socket side approximately-25.5.
+    Source component allowances +4.85/-4.58,quoted with-socket envelope76.6x42.3x9.43; do not add incompatible stack
+    thickness claims without recording the datum ambiguity. Four MR30 sockets, two at each +-y end, y abs31.6..38.3,z-25.5..-18.6,
+    followed by mated plugs outside to abs(y)46.5. Slot envelopes are x+-22.5,z-27..-17 at both cone walls; sockets
+    and PCB end corners pass through with1..2 clearance to slot edges. Socket individual x centres/widths and plug
+    z profiles require read-only measurement of source or explicit provisional envelopes; no invented manufacturer
+    dimensions. Battery studs M2.5 at(x,y)=(-20,+-6); two10AWG wires and8-pin harness route through frameD27 hole
+    and shell duct,about110mm to alcove with150mm supplied leads. Clearance from ring and bosses>=1 (nominal1.4/1.1).
+    ESC mass24g is a source fact,not a uniform density for this conservative envelope. Retain one connected clearance
+    solid including sockets/plugs; no old FC bracket or future Kakute board is modelled. Parameter record: pcbLength=63.15
+    mm (tolerance 0.01); pcbWidth=42.25 mm (tolerance 0.01); sourcePcbThickness=1.61 mm (tolerance 0.01); pcbXMin=-22.75
+    mm (tolerance 0.01); pcbXMax=19.5 mm (tolerance 0.01); pcbZMin=-20.6 mm (tolerance 0.01); pcbZMax=-19 mm (tolerance
+    0.01); boardHolePitch=30.5 mm (tolerance 0.01); originalHoleDiameter=3.5 mm (tolerance 0.01); reamedHoleDiameter=3.8
+    mm (tolerance 0.01); clampPitch=30 mm (tolerance 0.01); clampDiameter=3 mm (tolerance 0.01); spacerLength=12
+    mm (tolerance 0.01); mountUndersideZ=-7.2 mm (tolerance 0.01); componentTopZ=-14.4 mm (tolerance 0.01); componentBottomZ=-25.5
+    mm (tolerance 0.01); socketStartY=31.6 mm (tolerance 0.01); socketEndY=38.3 mm (tolerance 0.01); socketTopZ=-18.6
+    mm (tolerance 0.01); plugReach=46.5 mm (tolerance 0.01); slotHalfWidth=22.5 mm (tolerance 0.01); slotBottomZ=-27
+    mm (tolerance 0.01); slotTopZ=-17 mm (tolerance 0.01); studX=-20 mm (tolerance 0.01); studOffsetY=6 mm (tolerance
+    0.01); studDiameter=2.5 mm (tolerance 0.01); sourcePlusAllowance=4.85 mm (tolerance 0.01); sourceMinusAllowance=4.58
+    mm (tolerance 0.01); sourceSocketSpan=76.6 mm (tolerance 0.01); sourceSocketWidth=42.3 mm (tolerance 0.01);
+    sourceSocketThickness=9.43 mm (tolerance 0.01); pcbHalfLength=31.575 mm (tolerance 0.01); pcbPlacedThickness=1.6
+    mm (tolerance 0.01); holeAxisOffset=0.25 mm (tolerance 0.01); studHeight=4.6 mm (tolerance 0.01); coreHalfWidth=18
+    mm (tolerance 1); coreHalfLength=23 mm (tolerance 2); socketLeftX=-21 mm (tolerance 1); socketInnerX=4 mm (tolerance
+    2); connectorRootY=31.5 mm (tolerance 0.05); plugTopZ=-18.6 mm (tolerance 1). V2 routing now enters power bay
+    z 3..19 and continues via the sled keel channel to alcove z 107..117. The inherited shell-duct wording is historical;
+    12 mm F-F standoffs replace spacers without a geometry or pose change. Keep source proxy limitations recorded.'
+- name: motorCover1
+  kind: modelled
+  design: sprite-aleph-v2-motor-cover
+  material: PLA
+  intent: 'Reuse sources/sprite-drone-motor-cover-main.py VERBATIM with every acceptance requirement from sources/sprite-drone-motor-cover-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Printed motor
+    cover of the Sprite FPV drone, one design placed four times (motorCover1..4) by 90 deg turns about the fuselage
+    axis. It is an open C ring around the motor axis at the +x+y tip of the 6 mm carbon X plate (013_Main Frame.stl).
+    Its upper band (z -6..0) is the slot that takes the 6 mm plate: the band''s inner faces follow the plate tip
+    outline and touch the plate edge. That outline is a radius 11.5 circle, four radius 4 motor-screw lugs 9.5 mm
+    from the axis, and radius 3 corner blends. The lower skirt (z -10..-6) is a 1 mm wall that leaves a radius 13
+    motor clearance bore. The ring is open by 58 deg toward the fuselage axis, where the plate arm enters. Authoritative
+    source is 003_Motor Cover.stl, kept in its own source frame (reference ingest, datum keep): x, y = 66..94, z
+    = -10..0, volume 974 mm3, motor axis at x = y = 80. Parameter record: motorAxisOffset=80 mm (tolerance 0.05);
+    coverHeight=10 mm (tolerance 0.05); plateThickness=6 mm (tolerance 0.05); outerRadius=14 mm (tolerance 0.05);
+    plateTipRadius=11.5 mm (tolerance 0.05); lugOffset=9.5 mm (tolerance 0.05); lugRadius=4 mm (tolerance 0.05);
+    plateCornerRadius=3 mm (tolerance 0.05); motorClearanceRadius=13 mm (tolerance 0.05); openingHalfAngle=29 deg
+    (tolerance 0.5). '
+- name: motorCover2
+  kind: modelled
+  design: sprite-aleph-v2-motor-cover
+  material: PLA
+  intent: 'Reuse sources/sprite-drone-motor-cover-main.py VERBATIM with every acceptance requirement from sources/sprite-drone-motor-cover-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Printed motor
+    cover of the Sprite FPV drone, one design placed four times (motorCover1..4) by 90 deg turns about the fuselage
+    axis. It is an open C ring around the motor axis at the +x+y tip of the 6 mm carbon X plate (013_Main Frame.stl).
+    Its upper band (z -6..0) is the slot that takes the 6 mm plate: the band''s inner faces follow the plate tip
+    outline and touch the plate edge. That outline is a radius 11.5 circle, four radius 4 motor-screw lugs 9.5 mm
+    from the axis, and radius 3 corner blends. The lower skirt (z -10..-6) is a 1 mm wall that leaves a radius 13
+    motor clearance bore. The ring is open by 58 deg toward the fuselage axis, where the plate arm enters. Authoritative
+    source is 003_Motor Cover.stl, kept in its own source frame (reference ingest, datum keep): x, y = 66..94, z
+    = -10..0, volume 974 mm3, motor axis at x = y = 80. Parameter record: motorAxisOffset=80 mm (tolerance 0.05);
+    coverHeight=10 mm (tolerance 0.05); plateThickness=6 mm (tolerance 0.05); outerRadius=14 mm (tolerance 0.05);
+    plateTipRadius=11.5 mm (tolerance 0.05); lugOffset=9.5 mm (tolerance 0.05); lugRadius=4 mm (tolerance 0.05);
+    plateCornerRadius=3 mm (tolerance 0.05); motorClearanceRadius=13 mm (tolerance 0.05); openingHalfAngle=29 deg
+    (tolerance 0.5). '
+- name: motorCover3
+  kind: modelled
+  design: sprite-aleph-v2-motor-cover
+  material: PLA
+  intent: 'Reuse sources/sprite-drone-motor-cover-main.py VERBATIM with every acceptance requirement from sources/sprite-drone-motor-cover-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Printed motor
+    cover of the Sprite FPV drone, one design placed four times (motorCover1..4) by 90 deg turns about the fuselage
+    axis. It is an open C ring around the motor axis at the +x+y tip of the 6 mm carbon X plate (013_Main Frame.stl).
+    Its upper band (z -6..0) is the slot that takes the 6 mm plate: the band''s inner faces follow the plate tip
+    outline and touch the plate edge. That outline is a radius 11.5 circle, four radius 4 motor-screw lugs 9.5 mm
+    from the axis, and radius 3 corner blends. The lower skirt (z -10..-6) is a 1 mm wall that leaves a radius 13
+    motor clearance bore. The ring is open by 58 deg toward the fuselage axis, where the plate arm enters. Authoritative
+    source is 003_Motor Cover.stl, kept in its own source frame (reference ingest, datum keep): x, y = 66..94, z
+    = -10..0, volume 974 mm3, motor axis at x = y = 80. Parameter record: motorAxisOffset=80 mm (tolerance 0.05);
+    coverHeight=10 mm (tolerance 0.05); plateThickness=6 mm (tolerance 0.05); outerRadius=14 mm (tolerance 0.05);
+    plateTipRadius=11.5 mm (tolerance 0.05); lugOffset=9.5 mm (tolerance 0.05); lugRadius=4 mm (tolerance 0.05);
+    plateCornerRadius=3 mm (tolerance 0.05); motorClearanceRadius=13 mm (tolerance 0.05); openingHalfAngle=29 deg
+    (tolerance 0.5). '
+- name: motorCover4
+  kind: modelled
+  design: sprite-aleph-v2-motor-cover
+  material: PLA
+  intent: 'Reuse sources/sprite-drone-motor-cover-main.py VERBATIM with every acceptance requirement from sources/sprite-drone-motor-cover-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Printed motor
+    cover of the Sprite FPV drone, one design placed four times (motorCover1..4) by 90 deg turns about the fuselage
+    axis. It is an open C ring around the motor axis at the +x+y tip of the 6 mm carbon X plate (013_Main Frame.stl).
+    Its upper band (z -6..0) is the slot that takes the 6 mm plate: the band''s inner faces follow the plate tip
+    outline and touch the plate edge. That outline is a radius 11.5 circle, four radius 4 motor-screw lugs 9.5 mm
+    from the axis, and radius 3 corner blends. The lower skirt (z -10..-6) is a 1 mm wall that leaves a radius 13
+    motor clearance bore. The ring is open by 58 deg toward the fuselage axis, where the plate arm enters. Authoritative
+    source is 003_Motor Cover.stl, kept in its own source frame (reference ingest, datum keep): x, y = 66..94, z
+    = -10..0, volume 974 mm3, motor axis at x = y = 80. Parameter record: motorAxisOffset=80 mm (tolerance 0.05);
+    coverHeight=10 mm (tolerance 0.05); plateThickness=6 mm (tolerance 0.05); outerRadius=14 mm (tolerance 0.05);
+    plateTipRadius=11.5 mm (tolerance 0.05); lugOffset=9.5 mm (tolerance 0.05); lugRadius=4 mm (tolerance 0.05);
+    plateCornerRadius=3 mm (tolerance 0.05); motorClearanceRadius=13 mm (tolerance 0.05); openingHalfAngle=29 deg
+    (tolerance 0.5). '
+- name: camMountL
+  kind: modelled
+  design: sprite-aleph-v2-cam-mount-l
+  material: PLA
+  intent: 'Reuse sources/sprite-drone-cam-mount-l-main.py VERBATIM with every acceptance requirement from sources/sprite-drone-cam-mount-l-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Printed left
+    camera mount of the Sprite FPV drone (Assembly Guide step 11), body camMountL of the assembly sprite-drone,
+    in its own frame: the source frame of 012_Cam Mount L.stl (reference ingest, datum keep), which is its rest
+    pose: x = 10..16, y = -17.46..0.80, z = 233.84..250.53, volume 414 mm3. A 2 mm teardrop plate whose flat glue
+    face x = 10 is bonded (T-7000) to the side of a 20 mm DJI camera; a D4 hinge pin along x at y = -5.21, z = 244.54
+    (x = 12..16) is the camera tilt axis (joint camTilt); the lever tip carries a 1 mm boss with a D1.5 linkage
+    hole at y = -14.96, z = 236.34 for the bent servo wire (step 12). Authoritative: 012_Cam Mount L.stl (geometry,
+    mm) and the Assembly Guide (function); the other 13 STLs only fix the shared assembly frame. Parameter record:
+    glueFaceX=10.0 mm (tolerance 0.01); plateThickness=2.0 mm (tolerance 0.02); hubRadius=6.0 mm (tolerance 0.02);
+    leverTipRadius=2.5 mm (tolerance 0.02); pinAxisY=-5.205 mm (tolerance 0.02); pinAxisZ=244.5275 mm (tolerance
+    0.02); pinDiameter=4.0 mm (tolerance 0.01); pinLength=4.0 mm (tolerance 0.01); pinTipRadius=0.5 mm (tolerance
+    0.05); linkHoleY=-14.965 mm (tolerance 0.02); linkHoleZ=236.338 mm (tolerance 0.02); linkHoleDiameter=1.5 mm
+    (tolerance 0.01); bossHeight=1.0 mm (tolerance 0.02); bossFilletRadius=1.0 mm (tolerance 0.05); edgeFilletRadius=1.0
+    mm (tolerance 0.05). Assembly rest translation from this source frame is (0, +2.93, -0.54); assembled hinge
+    y -2.28, z 244.0. These corrected assembly joints override stale datum/joint prose in the part source.'
+- name: camMountR
+  kind: modelled
+  design: sprite-aleph-v2-cam-mount-r
+  material: PLA
+  intent: 'Reuse sources/sprite-drone-cam-mount-r-main.py VERBATIM with every acceptance requirement from sources/sprite-drone-cam-mount-r-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Printed right
+    camera mount of the Sprite FPV drone (Assembly Guide step 11): a D12 x 2 mm glue disc whose flat face at x =
+    -10 (camera side, normal +x) is bonded with T-7000 to the side of a 20 mm DJI camera, carrying a coaxial D4
+    x 4 mm hinge pin along x (x = -16..-12) at y = 15.0, z = 224.24 that is the camera''s tilt axle. Modelled in
+    its own frame, the source frame of 011_Cam Mount R.stl (reference ingest, datum keep): x = -16..-10, y = 9..21,
+    z = 218.25..230.25, volume 268 mm3. The STL is not at the assembled pose: the assembly joint camPair (rigid,
+    own-frame point [0, 15.0, 224.24], axis [1, 0, 0]) moves it by (0, -20.21, 20.30) onto the left mount''s pin
+    axis, 20.0 mm across the camera. Authoritative: 011_Cam Mount R.stl with its reference ingest (geometry) and
+    the Assembly Guide (function). Parameter record: glueFaceX=-10.0 mm (tolerance 0.01); discDiameter=12.0 mm (tolerance
+    0.01); discThickness=2.0 mm (tolerance 0.01); pinDiameter=4.0 mm (tolerance 0.01); pinLength=4.0 mm (tolerance
+    0.01); pinAxisY=15.0039 mm (tolerance 0.01); pinAxisZ=224.2474 mm (tolerance 0.01); discBackFillet=1.0 mm (tolerance
+    0.05); pinTipFillet=0.5 mm (tolerance 0.1).  Rest pose is set by the v1 camTiltR joint, preserving the revised
+    hinge y -2.28,z 244.'
+- name: rearCoverMount
+  kind: modelled
+  design: sprite-aleph-v2-rear-cover-mount
+  material: PLA
+  intent: 'Reuse sources/sprite-drone-rear-cover-mount-main.py VERBATIM with every acceptance requirement from sources/sprite-drone-rear-cover-mount-contract.yaml
+    and its brief, in its unchanged own source frame. No geometry edits or new holes. The following inherited v1/Sprite
+    feature description describes already-built geometry, not instructions to repeat modifications: Printed rear
+    cover mount of the Sprite FPV drone (Assembly Guide step 14): a 7 x 19.5 x 4 mm stadium (obround) tab glued
+    into the main shell at the rear of the top opening, carrying a D3.2 bore for the M2 heat-set insert of the top
+    cover rear screw (step 15 insert 2). Built in the source frame of 010_Rear Cover Mount.stl (reference ingest,
+    datum keep): x = -3.5..3.5, y = 31.5..35.5, z = 20.5..40, volume 462 mm3; the bore axis is x = 0, z = 36.5 along
+    y, concentric with the full-round top end; the perimeter of the y = 31.5 face carries a 1 mm fillet, the y =
+    35.5 seat face is flat and sharp-edged. Authoritative sources: the STL (reference model) and the Assembly Guide
+    text. Parameter record: tabWidth=7.0 mm (tolerance 0.1); tabLength=19.5 mm (tolerance 0.1); tabThickness=4.0
+    mm (tolerance 0.1); seatY=35.5 mm (tolerance 0.1); boreDiameter=3.2 mm (tolerance 0.05); boreZ=36.5 mm (tolerance
+    0.05); edgeFillet=1.0 mm (tolerance 0.1). V2 installed translation (0,0,-11.05) gives z 9.45..28.95 and bore
+    z 25.45, nominal cover screw 25.5 (0.05 difference inside 0.1 axis tolerance); own geometry remains unchanged.'
+- name: mountingSled
+  kind: modelled
+  design: sprite-aleph-v2-sled
+  material: PETG or ASA
+  intent: 'Own frame equals assembly: origin carbon frame top-face centre, x starboard, y toward cover, z noseward, mm;
+    no inherited shell +10 or cover +30 translation. One connected print, one source file, no decomposition; PETG
+    or ASA, height202 standing. Proposal4.1 and staging notes govern; illustrative sprite-aleph-v2-sled-mockup.py
+    supplies sled only: ignore mock-up shell, cover, lugs and D3.4 holes at(+/-19,+/-19). Base z0..3, faceted55.4x70.4
+    following shell inner outline minus0.3, D27 central opening and ONLY four countersunk M3 clamp holes at(+/-15,+/-15),
+    M3x16 through unchanged frame and rearMount into12mm M3 F-F standoffs, ESC on M3x6 below. Aleph wall x21.6..25.6,y-27..25,z11..117,
+    supported by column |y|<=15,z3..11 and flange. Four D2.5 holes along x at y=-24.75,21.75 and z=22,104 (82x46.5
+    pattern); tap M2.5 or short inserts; standoffs4mm body with no outer screw heads. Clip wall outer face to shell
+    inner facet minus0.4 at |y|>24.6, thinning edges to about2.1 but retain full4mm at holes. Optional lightening
+    windows only between interfaces. Flange y-31..-28.5,z11..117,x8 to wall with outboard facet clipping; keep port-of-x8
+    keel channel open,20 tall below heatsink; flange starts above rib-ring top10. Tray floor y-25..-22.5,x+/-25.5,z117..202;
+    lips |x|24..25.5 up to y-12.5; strap slots through floor at z145,178. Floor outer corners follow shell inner section
+    at0.4, chamfer up to0.7 by202. Bulkhead z117..119,y-31..19.5 spans tray width and joins flange/wall/tray; top
+    harness notch x-22..-6,y10..19.5. XT60 pocket on aft face x-22..-6,y+/-12,z109..117, in alcove107..117. Four shell-screw
+    pads on x axes (y,z)=(0,14),(-18,112), both sides: nominal9x9 y,z, abs(x)21.6..26.0, D4.0 insert holes depth4.2
+    inward from abs(x)26.0 for M3x4 inserts. Low port support x-26..-21.6,y+/-4.5,z3..19; starboard thickens wall
+    column. High port block x-26..-21.6,y-22.5..-13.5,z107.5..117 hangs from bulkhead; starboard thickens wall. Max
+    abs(x)<=26.0, above y14 <=25.6; local wall y<=25 (bulkhead19.5); quoted y-27 wall is clipped to facet. Preserve0.4
+    slide gap to shell flank pads at26.4; rib ring inner abs(x)26.5 passes sled by>=0.5. No battery cradle or separate
+    XT60 mount. Fit loaded Aleph and battery with no interference. Independent shellSlide +z0..250 and coverSlide
+    +z0..180 must pass; skirt band must stay clear. Use sections/faces/material/void probes at base, ring, pads, holes,
+    bulkhead, tray and nose-end stations, no mesh fidelity gate. Analytic nose, proposal 4.6: for t=(z-z0)/(z1-z0),
+    L=z1-z0, v=(2t^3-3t^2+1)v0+(3t^2-2t^3)v1+(t^3-t^2)L*m1; constant v0 before z0, start slope 0. W: (z0,v0,z1,v1,m1)=(202,30,249.3,13.1,-0.40).
+    C=(185,37.5,256.7,7.8,-0.72). K=(125,-37.5,249.3,-22.9,0.35). Use each law only on its stated domain; W past 249.3
+    is the retained Sprite brow/aperture geometry, not an extrapolated new tip. For z<=202 keep the blended faceted
+    body while only crown/keel vertices follow C/K. Facet vertices (+/-W,+/-23.4*W/30), (+/-17.6*W/30,C), (+/-17.6*W/30,K);
+    retain R6..R8 blends at body. Blend radial outline r=(1-b)*r_facet+b*r_ellipse, b=smoothstep(clamp((z-202)/23,0,1)),
+    smoothstep(t)=3t^2-2t^3. Ellipse pair has semi-axes (W,C) above y=0 and (W,-K) below, vertical tangents at (+/-W,0);
+    pure half-ellipses from 225. Wall is 2.0 normal to skin. Smooth non-ruled loft through 202,210,218,225,235,245,249.3,
+    without split lofts or source modules. Split past walls is S=15*(1-smoothstep(clamp((z-202)/14,0,1))), so y15
+    at202 and y0 from216. At202 seam steps down wall-end plane from y22 to15; no shell above y15 beyond202. Nest all
+    sections noseward for removal. Computed station values (mm, b dimensionless): z=202: W=30.00000, C=35.49690, K=-33.98627,
+    b=0.00000, split=15.00000; z=210: W=29.16289, C=33.27351, K=-32.78768, b=0.27879, split=5.90379; z=218: W=26.93954,
+    C=30.31955, K=-31.34353, b=0.77850, split=0.00000; z=225: W=24.19654, C=27.18648, K=-29.86047, b=1.00000, split=0.00000;
+    z=235: W=19.58424, C=21.91252, K=-27.35489, b=1.00000, split=0.00000; z=245: W=14.91510, C=15.81348, K=-24.35388,
+    b=1.00000, split=0.00000; z=249.3: W=13.10000, C=12.96875, K=-22.90000, b=1.00000, split=0.00000. Acceptance noseSmooth:
+    outline within0.3 of ellipse pair at225,235,245; tessellated dihedral<=15deg over205..248 except split/aperture
+    edges. apertureUnchanged: lip z249.3, keel y-22.9, half-width13.1, brow z256.7,y7.8 and inherited hinge seats
+    within0.1. No whole-part mesh fidelity band, historical total volume or CoM acceptance on either new skin; source
+    STLs govern unchanged local features only. Mandatory skirtBandClear: both mirrored bands abs(x)26.4..29.2,y14.8..22.2,z22..202
+    contain no shell or sled material except the two shell groove lips at abs(x)28..29.2,y14.8..16 and20..22.2. The
+    outer bound is the groove back face at abs(x)29.2; tongue outer face29.1 retains0.1 clearance. No shell material
+    above y15 past z202.'
+- name: mainShell
+  kind: modelled
+  design: sprite-aleph-v2-main-shell
+  material: PETG or ASA
+  intent: 'Own frame equals assembly: origin carbon frame top-face centre, x starboard, y toward cover, z noseward, mm;
+    no inherited shell +10 or cover +30 translation. New open-bottom sleeve, one source file, no modules or split
+    lofts, shell height249.3, footprint188x188 with v1 fairings. No floor, flare, clamp lugs or payload mounts. Keep
+    v1 source arm fairings (wall0.82, half-width6 at assembly z0,ridge25), nacelle rings centred(+/-80,+/-80), source
+    motor/frame interfaces; nacelle outer D17.09 at assembly z30. Main section60x75 from z0: x+/-30 for |y|<=23.4,
+    facets to(+/-17.6,+/-37.5),35.2-wide crown/keel, R6..R8 blends, wall2.0, inner56x71; prismatic to125. Roof lip
+    closes crown z0..22; rear-cover pocket ceiling y35.5,x+/-3.55,z9.45..22 for reused tab ending28.95 and screw nominal25.5.
+    Inner rib ring z3..10,1.5 thick following outline at abs(x)26.5..28 bears on sled base top3. Groove on BOTH walls
+    y16..20,abs(x)28..29.2,z22..202 open forward, nothing else on inner wall above14. Port grille60(z)x30(y),z33..93,y-16..14,
+    printed bars inherited from v1; fin louvers z21..32 and94..105,y-14..14. Grille top<=14, fan plenum>=4, Aleph-to-skin>=3;
+    D38 fan centred y3.6,z63, nominal83% face coverage is gross grille coverage, not net bar open area. Four D3.4
+    through-bores along x at outer flanks(+/-30,0,14),(+/-30,-18,112),90deg countersinks for ISO 10642 M3 x 8. ISO
+    10642 M3 x 8, head D6.0 nominal, D6.72 max,90deg. Each flank hole has a90deg countersink D6.4 at the outer skin
+    surface, depth1.5 to the D3.4 clearance bore through the3.6 skin and pad; heads sit flush to0.1 below the surface.
+    At each, D9 inner pad abs(x)26.4..28 yields3.6 total head material; low pair merges ring. Sled pad face26.0 across0.4
+    gap; screw tip abs(x)22,4mm engagement. No new vertical frame holes. Shell mounts no Aleph, pack or XT60; inherited
+    VTX/servo/rear-cover supports remain nose/closure interfaces as explicitly required. Reuse v1 fairing, grille/louver
+    and rear-pocket feature seeds with new dimensions; seed shell own z was assembly-10, so translate unchanged source
+    features by+10 before integration into this identity-frame part. Sprite camera U-rib assembly z242..246, open+y
+    notches abs(x)12.6..16.2, width4.1, r2 seats about(x,-2.28,244), floor y-4.29; servo ledge z214.85 unchanged;
+    local source servo floor reference y-29.27 superseded only by new keel/glue law. No shell material above split
+    S past202. Test shellSlide independently with fasteners removed and cover removed; preserve grille-to-fan, louvers-to-fins,
+    D27-to-power-bay, keel-channel-to-alcove passages. Analytic nose, proposal 4.6: for t=(z-z0)/(z1-z0), L=z1-z0,
+    v=(2t^3-3t^2+1)v0+(3t^2-2t^3)v1+(t^3-t^2)L*m1; constant v0 before z0, start slope 0. W: (z0,v0,z1,v1,m1)=(202,30,249.3,13.1,-0.40).
+    C=(185,37.5,256.7,7.8,-0.72). K=(125,-37.5,249.3,-22.9,0.35). Use each law only on its stated domain; W past 249.3
+    is the retained Sprite brow/aperture geometry, not an extrapolated new tip. For z<=202 keep the blended faceted
+    body while only crown/keel vertices follow C/K. Facet vertices (+/-W,+/-23.4*W/30), (+/-17.6*W/30,C), (+/-17.6*W/30,K);
+    retain R6..R8 blends at body. Blend radial outline r=(1-b)*r_facet+b*r_ellipse, b=smoothstep(clamp((z-202)/23,0,1)),
+    smoothstep(t)=3t^2-2t^3. Ellipse pair has semi-axes (W,C) above y=0 and (W,-K) below, vertical tangents at (+/-W,0);
+    pure half-ellipses from 225. Wall is 2.0 normal to skin. Smooth non-ruled loft through 202,210,218,225,235,245,249.3,
+    without split lofts or source modules. Split past walls is S=15*(1-smoothstep(clamp((z-202)/14,0,1))), so y15
+    at202 and y0 from216. At202 seam steps down wall-end plane from y22 to15; no shell above y15 beyond202. Nest all
+    sections noseward for removal. Computed station values (mm, b dimensionless): z=202: W=30.00000, C=35.49690, K=-33.98627,
+    b=0.00000, split=15.00000; z=210: W=29.16289, C=33.27351, K=-32.78768, b=0.27879, split=5.90379; z=218: W=26.93954,
+    C=30.31955, K=-31.34353, b=0.77850, split=0.00000; z=225: W=24.19654, C=27.18648, K=-29.86047, b=1.00000, split=0.00000;
+    z=235: W=19.58424, C=21.91252, K=-27.35489, b=1.00000, split=0.00000; z=245: W=14.91510, C=15.81348, K=-24.35388,
+    b=1.00000, split=0.00000; z=249.3: W=13.10000, C=12.96875, K=-22.90000, b=1.00000, split=0.00000. Acceptance noseSmooth:
+    outline within0.3 of ellipse pair at225,235,245; tessellated dihedral<=15deg over205..248 except split/aperture
+    edges. apertureUnchanged: lip z249.3, keel y-22.9, half-width13.1, brow z256.7,y7.8 and inherited hinge seats
+    within0.1. No whole-part mesh fidelity band, historical total volume or CoM acceptance on either new skin; source
+    STLs govern unchanged local features only. Mandatory skirtBandClear: both mirrored bands abs(x)26.4..29.2,y14.8..22.2,z22..202
+    contain no shell or sled material except the two shell groove lips at abs(x)28..29.2,y14.8..16 and20..22.2. The
+    outer bound is the groove back face at abs(x)29.2; tongue outer face29.1 retains0.1 clearance. No shell material
+    above y15 past z202.'
+- name: topCover
+  kind: modelled
+  design: sprite-aleph-v2-top-cover
+  material: PETG or ASA
+  intent: 'Own frame equals assembly: origin carbon frame top-face centre, x starboard, y toward cover, z noseward, mm;
+    no inherited shell +10 or cover +30 translation. One source file, new skin; seed v1 crown/screw bosses and Sprite
+    skirt/ledge/tongue scheme. Length z22..256.7=234.7, standing on rear end fits X1C. Width60, crown y37.5 to185
+    then C law, wall2.0 above split y22 flush with shell. Skirt thickness1.2,abs(x)26.6..27.8,y15..22,z22..202; ledge1.2
+    at y22..23.2,abs(x)26.6..28. Tongue abs(x)27.8..29.1,y16.05..19.95,z22..202:0.05 to groove sides,0.1 at groove
+    depth,0.2 skirt-to-wall,1.0 to sled wall. Tongue/skirt enter at202 and travel180 along-z to roof lip. Beyond202
+    hood owns entire section above S, sides down to15 at202 where skirt merges nose wall. Rear screw along y at x0,z25.5
+    into rearCoverMount; front atx0,z207.5 into vtxMount, front boss underside seats on neck top (about31.75 at207.5);
+    rederive boss/skin so they do not collide. Preserve inherited M2 clearance/boss details where compatible; do not
+    inherit v1 drop-on notches or absent tongue. CoverSlide translates cover ONLY +z0..180 after removing two retention
+    screws, clears everything including fixed regulator on pack; no regulator attached to cover. No whole-part mesh
+    fidelity or legacy volume gates. Analytic nose, proposal 4.6: for t=(z-z0)/(z1-z0), L=z1-z0, v=(2t^3-3t^2+1)v0+(3t^2-2t^3)v1+(t^3-t^2)L*m1;
+    constant v0 before z0, start slope 0. W: (z0,v0,z1,v1,m1)=(202,30,249.3,13.1,-0.40). C=(185,37.5,256.7,7.8,-0.72).
+    K=(125,-37.5,249.3,-22.9,0.35). Use each law only on its stated domain; W past 249.3 is the retained Sprite brow/aperture
+    geometry, not an extrapolated new tip. For z<=202 keep the blended faceted body while only crown/keel vertices
+    follow C/K. Facet vertices (+/-W,+/-23.4*W/30), (+/-17.6*W/30,C), (+/-17.6*W/30,K); retain R6..R8 blends at body.
+    Blend radial outline r=(1-b)*r_facet+b*r_ellipse, b=smoothstep(clamp((z-202)/23,0,1)), smoothstep(t)=3t^2-2t^3.
+    Ellipse pair has semi-axes (W,C) above y=0 and (W,-K) below, vertical tangents at (+/-W,0); pure half-ellipses
+    from 225. Wall is 2.0 normal to skin. Smooth non-ruled loft through 202,210,218,225,235,245,249.3, without split
+    lofts or source modules. Split past walls is S=15*(1-smoothstep(clamp((z-202)/14,0,1))), so y15 at202 and y0 from216.
+    At202 seam steps down wall-end plane from y22 to15; no shell above y15 beyond202. Nest all sections noseward for
+    removal. Computed station values (mm, b dimensionless): z=202: W=30.00000, C=35.49690, K=-33.98627, b=0.00000,
+    split=15.00000; z=210: W=29.16289, C=33.27351, K=-32.78768, b=0.27879, split=5.90379; z=218: W=26.93954, C=30.31955,
+    K=-31.34353, b=0.77850, split=0.00000; z=225: W=24.19654, C=27.18648, K=-29.86047, b=1.00000, split=0.00000; z=235:
+    W=19.58424, C=21.91252, K=-27.35489, b=1.00000, split=0.00000; z=245: W=14.91510, C=15.81348, K=-24.35388, b=1.00000,
+    split=0.00000; z=249.3: W=13.10000, C=12.96875, K=-22.90000, b=1.00000, split=0.00000. Acceptance noseSmooth:
+    outline within0.3 of ellipse pair at225,235,245; tessellated dihedral<=15deg over205..248 except split/aperture
+    edges. apertureUnchanged: lip z249.3, keel y-22.9, half-width13.1, brow z256.7,y7.8 and inherited hinge seats
+    within0.1. No whole-part mesh fidelity band, historical total volume or CoM acceptance on either new skin; source
+    STLs govern unchanged local features only. Mandatory skirtBandClear: both mirrored bands abs(x)26.4..29.2,y14.8..22.2,z22..202
+    contain no shell or sled material except the two shell groove lips at abs(x)28..29.2,y14.8..16 and20..22.2. The
+    outer bound is the groove back face at abs(x)29.2; tongue outer face29.1 retains0.1 clearance. No shell material
+    above y15 past z202.'
+- name: servoMount
+  kind: modelled
+  design: sprite-aleph-v2-servo-mount
+  material: PLA
+  intent: 'Own frame equals assembly: origin carbon frame top-face centre, x starboard, y toward cover, z noseward,
+    mm; no inherited shell +10 or cover +30 translation. Modify sources/sprite-drone-servo-mount-main.py only at
+    glue face and side outline per proposal4.6; keep source pose (identity). Curved glue face follows v2 inner keel
+    over z214.8..229.1: y-29.95 at214.8,-29.34 at218,-28.52 at222,-27.86 at225,-27.04 at228.5, about0.25..0.65 above
+    v1. Sides inside new inner section minus0.3. Preserve servo seat, servo position, lower/upper tab faces and
+    holes, ledge z214.85; backplate1.95,R8.5; D2.1 lower x-axis hole(y,z)=(-15.804,222.788), D1.8 upper(11.185,222.912),
+    seat tabFaceX0. Unchanged parameter record: rearZ=214.844 mm; frontZ=229.0 mm; tabFaceX=0.0 mm; plateXMin=-16.0
+    mm; plateYMax=13.781 mm; plateThickness=1.95 mm; plateCornerRadius=8.5 mm; postWidth=4.13 mm; postYMin=9.781
+    mm; postCornerRadius=1.0 mm; bossWidth=7.13 mm; bossTopY=-14.21 mm; bossFilletRadius=1.0 mm; chordTopY=-19.45
+    mm; chordThickness=1.0 mm; skinThickness=1.03 mm; windowCornerRadius=1.0 mm; lowerHoleDiameter=2.1 mm; lowerHoleY=-15.804
+    mm; lowerHoleZ=222.788 mm; upperHoleDiameter=1.8 mm; upperHoleY=11.185 mm; upperHoleZ=222.912 mm. Retain unaffected
+    local acceptance; replace only old glue-face/outline/bbox/volume/whole-mesh checks necessarily changed by new
+    keel; verify new glue contact and camSweep. Analytic nose, proposal 4.6: for t=(z-z0)/(z1-z0), L=z1-z0, v=(2t^3-3t^2+1)v0+(3t^2-2t^3)v1+(t^3-t^2)L*m1;
+    constant v0 before z0, start slope 0. W: (z0,v0,z1,v1,m1)=(202,30,249.3,13.1,-0.40). C=(185,37.5,256.7,7.8,-0.72).
+    K=(125,-37.5,249.3,-22.9,0.35). Use each law only on its stated domain; W past 249.3 is the retained Sprite
+    brow/aperture geometry, not an extrapolated new tip. For z<=202 keep the blended faceted body while only crown/keel
+    vertices follow C/K. Facet vertices (+/-W,+/-23.4*W/30), (+/-17.6*W/30,C), (+/-17.6*W/30,K); retain R6..R8 blends
+    at body. Blend radial outline r=(1-b)*r_facet+b*r_ellipse, b=smoothstep(clamp((z-202)/23,0,1)), smoothstep(t)=3t^2-2t^3.
+    Ellipse pair has semi-axes (W,C) above y=0 and (W,-K) below, vertical tangents at (+/-W,0); pure half-ellipses
+    from 225. Wall is 2.0 normal to skin. Smooth non-ruled loft through 202,210,218,225,235,245,249.3, without split
+    lofts or source modules. Split past walls is S=15*(1-smoothstep(clamp((z-202)/14,0,1))), so y15 at202 and y0
+    from216. At202 seam steps down wall-end plane from y22 to15; no shell above y15 beyond202. Nest all sections
+    noseward for removal. Computed station values (mm, b dimensionless): z=202: W=30.00000, C=35.49690, K=-33.98627,
+    b=0.00000, split=15.00000; z=210: W=29.16289, C=33.27351, K=-32.78768, b=0.27879, split=5.90379; z=218: W=26.93954,
+    C=30.31955, K=-31.34353, b=0.77850, split=0.00000; z=225: W=24.19654, C=27.18648, K=-29.86047, b=1.00000, split=0.00000;
+    z=235: W=19.58424, C=21.91252, K=-27.35489, b=1.00000, split=0.00000; z=245: W=14.91510, C=15.81348, K=-24.35388,
+    b=1.00000, split=0.00000; z=249.3: W=13.10000, C=12.96875, K=-22.90000, b=1.00000, split=0.00000. Acceptance
+    noseSmooth: outline within0.3 of ellipse pair at225,235,245; tessellated dihedral<=15deg over205..248 except
+    split/aperture edges. apertureUnchanged: lip z249.3, keel y-22.9, half-width13.1, brow z256.7,y7.8 and inherited
+    hinge seats within0.1. No whole-part mesh fidelity band, historical total volume or CoM acceptance on either
+    new skin; source STLs govern unchanged local features only.'
+- name: vtxMount
+  kind: modelled
+  design: sprite-aleph-v2-vtx-mount
+  material: PLA
+  intent: 'Own frame equals assembly: origin carbon frame top-face centre, x starboard, y toward cover, z noseward,
+    mm; no inherited shell +10 or cover +30 translation. Modify sources/sprite-aleph-vtx-mount-main.py to assembly
+    z203.5..212; source own z190..199 is rebased by+13 into this identity own frame. Outline follows v2 inner section
+    minus0.3 at each station, abs(x)<=26.2 above y14.8 for skirt passage. Neck top0.3 below cover inner crown (about
+    y31.75 at207.5); cover front boss seats here. Cover-screw M2 insert along y atx0,z207.5 (not207.0 from translation
+    alone); preserve D3.2 bore and bossR4 while rederiving y extent to neck. Keep source M2 D2.1 patterns20 and25.4
+    squares centred(x0,y-4.72); plate4 thick,z208..212, top layer2, slotWidth4,slotDepth3, skin1,arms6; keep pocket/window/ledge
+    topology where compatible with revised outline. Use source contract for unaffected detailed parameters and local
+    checks, excluding old blend198..214, clearances0.5 and old z offsets. Shift source slot-top edit check own198.7
+    to assembly211.7, above swept pocket tops210.5..211.5. No whole-part source mesh fidelity/old volume. Verify
+    perimeter sections, M2 bores, front screw axis and neck/boss clearance. Analytic nose, proposal 4.6: for t=(z-z0)/(z1-z0),
+    L=z1-z0, v=(2t^3-3t^2+1)v0+(3t^2-2t^3)v1+(t^3-t^2)L*m1; constant v0 before z0, start slope 0. W: (z0,v0,z1,v1,m1)=(202,30,249.3,13.1,-0.40).
+    C=(185,37.5,256.7,7.8,-0.72). K=(125,-37.5,249.3,-22.9,0.35). Use each law only on its stated domain; W past
+    249.3 is the retained Sprite brow/aperture geometry, not an extrapolated new tip. For z<=202 keep the blended
+    faceted body while only crown/keel vertices follow C/K. Facet vertices (+/-W,+/-23.4*W/30), (+/-17.6*W/30,C),
+    (+/-17.6*W/30,K); retain R6..R8 blends at body. Blend radial outline r=(1-b)*r_facet+b*r_ellipse, b=smoothstep(clamp((z-202)/23,0,1)),
+    smoothstep(t)=3t^2-2t^3. Ellipse pair has semi-axes (W,C) above y=0 and (W,-K) below, vertical tangents at (+/-W,0);
+    pure half-ellipses from 225. Wall is 2.0 normal to skin. Smooth non-ruled loft through 202,210,218,225,235,245,249.3,
+    without split lofts or source modules. Split past walls is S=15*(1-smoothstep(clamp((z-202)/14,0,1))), so y15
+    at202 and y0 from216. At202 seam steps down wall-end plane from y22 to15; no shell above y15 beyond202. Nest
+    all sections noseward for removal. Computed station values (mm, b dimensionless): z=202: W=30.00000, C=35.49690,
+    K=-33.98627, b=0.00000, split=15.00000; z=210: W=29.16289, C=33.27351, K=-32.78768, b=0.27879, split=5.90379;
+    z=218: W=26.93954, C=30.31955, K=-31.34353, b=0.77850, split=0.00000; z=225: W=24.19654, C=27.18648, K=-29.86047,
+    b=1.00000, split=0.00000; z=235: W=19.58424, C=21.91252, K=-27.35489, b=1.00000, split=0.00000; z=245: W=14.91510,
+    C=15.81348, K=-24.35388, b=1.00000, split=0.00000; z=249.3: W=13.10000, C=12.96875, K=-22.90000, b=1.00000,
+    split=0.00000. Acceptance noseSmooth: outline within0.3 of ellipse pair at225,235,245; tessellated dihedral<=15deg
+    over205..248 except split/aperture edges. apertureUnchanged: lip z249.3, keel y-22.9, half-width13.1, brow z256.7,y7.8
+    and inherited hinge seats within0.1. No whole-part mesh fidelity band, historical total volume or CoM acceptance
+    on either new skin; source STLs govern unchanged local features only.'
+- name: alephBase
+  kind: purchased
+  role: solid
+  catalog:
+    name: alephBase
+    kind: step
+    path: sources/aleph-base.step
+    scale: 1.0
+  description: 'Own aleph-stack frame: base sx0..88,sy0..52.5,service edge sy0,base bottom sz0,stack toward+sz.
+    Map assembly(x,y,z)=(17.6-sz,24.75-sy,107-sx), proper rotation shared by all stack bodies, no recentering. Preserve
+    source STEP internal components and relative coordinates at scale1 mm; four board axes sx3,85 crossed with sy3,49.5.'
+- name: alephCarrier
+  kind: purchased
+  role: solid
+  catalog:
+    name: alephCarrier
+    kind: step
+    path: sources/aleph-carrier.step
+    scale: 1.0
+  description: 'Own aleph-stack frame: base sx0..88,sy0..52.5,service edge sy0,base bottom sz0,stack toward+sz.
+    Map assembly(x,y,z)=(17.6-sz,24.75-sy,107-sx), proper rotation shared by all stack bodies, no recentering. Preserve
+    source STEP internal components and relative coordinates at scale1 mm; four board axes sx3,85 crossed with sy3,49.5.'
+- name: alephModule
+  kind: purchased
+  role: solid
+  catalog:
+    name: alephModule
+    kind: step
+    path: sources/aleph-module.step
+    scale: 1.0
+  description: 'Own aleph-stack frame: base sx0..88,sy0..52.5,service edge sy0,base bottom sz0,stack toward+sz.
+    Map assembly(x,y,z)=(17.6-sz,24.75-sy,107-sx), proper rotation shared by all stack bodies, no recentering. Preserve
+    source STEP internal components and relative coordinates at scale1 mm; four board axes sx3,85 crossed with sy3,49.5.'
+- name: alephHeatsink
+  kind: purchased
+  role: solid
+  catalog:
+    name: alephHeatsink
+    kind: box
+    min:
+    - 15.0
+    - 2.19
+    - 23.52
+    max:
+    - 73.0
+    - 40.19
+    - 41.52
+  description: 'Own aleph-stack frame: base sx0..88,sy0..52.5,service edge sy0,base bottom sz0,stack toward+sz.
+    Map assembly(x,y,z)=(17.6-sz,24.75-sy,107-sx), proper rotation shared by all stack bodies, no recentering. Catalog58x38x18
+    box min(15,2.19,23.52),max(73,40.19,41.52); assembled x-23.92..-5.92,y-15.44..22.56,z34..92. Fan face x-23.92;
+    nominal wall plenum4.08. Source49g is hardware mass, not density of a box. No resolved fins/fan.'
+- name: alephStandoff1
+  kind: purchased
+  role: solid
+  catalog:
+    name: alephStandoff1
+    kind: cylinder
+    point:
+    - 17.6
+    - -24.75
+    - 22
+    direction:
+    - 1
+    - 0
+    - 0
+    radius: 2.5
+    length: 4
+  description: Own frame=assembly. D5 x4 metal M2.5 male-female standoff envelope, x17.6..21.6. Threads/bores omitted;
+    brass or aluminium selection unresolved.
+- name: alephStandoff2
+  kind: purchased
+  role: solid
+  catalog:
+    name: alephStandoff2
+    kind: cylinder
+    point:
+    - 17.6
+    - 21.75
+    - 22
+    direction:
+    - 1
+    - 0
+    - 0
+    radius: 2.5
+    length: 4
+  description: Own frame=assembly. D5 x4 metal M2.5 male-female standoff envelope, x17.6..21.6. Threads/bores omitted;
+    brass or aluminium selection unresolved.
+- name: alephStandoff3
+  kind: purchased
+  role: solid
+  catalog:
+    name: alephStandoff3
+    kind: cylinder
+    point:
+    - 17.6
+    - -24.75
+    - 104
+    direction:
+    - 1
+    - 0
+    - 0
+    radius: 2.5
+    length: 4
+  description: Own frame=assembly. D5 x4 metal M2.5 male-female standoff envelope, x17.6..21.6. Threads/bores omitted;
+    brass or aluminium selection unresolved.
+- name: alephStandoff4
+  kind: purchased
+  role: solid
+  catalog:
+    name: alephStandoff4
+    kind: cylinder
+    point:
+    - 17.6
+    - 21.75
+    - 104
+    direction:
+    - 1
+    - 0
+    - 0
+    radius: 2.5
+    length: 4
+  description: Own frame=assembly. D5 x4 metal M2.5 male-female standoff envelope, x17.6..21.6. Threads/bores omitted;
+    brass or aluminium selection unresolved.
+- name: shellScrew1
+  kind: purchased
+  role: solid
+  catalog:
+    name: shellScrew1
+    kind: cylinder
+    point:
+    - 30
+    - 0
+    - 14
+    direction:
+    - -1
+    - 0
+    - 0
+    radius: 1.5
+    length: 8
+  description: 'Own frame=assembly. ISO 10642 M3 x 8 countersunk screw (head D6.0 nominal, D6.72 max,90deg), axial/shank proxy
+    from abs(x)30 to22, tip4mm into sled insert. Catalog cylinder cannot represent the90deg countersunk head: head
+    seating/flushness and insert engagement require local STEP checks; D9 shell pad supports the head. ISO 10642 M3
+    x 8, head D6.0 nominal, D6.72 max,90deg. Each flank hole has a90deg countersink D6.4 at the outer skin surface,
+    depth1.5 to the D3.4 clearance bore through the3.6 skin and pad; heads sit flush to0.1 below the surface. Screw
+    removed for shellSlide.'
+- name: shellScrew2
+  kind: purchased
+  role: solid
+  catalog:
+    name: shellScrew2
+    kind: cylinder
+    point:
+    - -30
+    - 0
+    - 14
+    direction:
+    - 1
+    - 0
+    - 0
+    radius: 1.5
+    length: 8
+  description: 'Own frame=assembly. ISO 10642 M3 x 8 countersunk screw (head D6.0 nominal, D6.72 max,90deg), axial/shank proxy
+    from abs(x)30 to22, tip4mm into sled insert. Catalog cylinder cannot represent the90deg countersunk head: head
+    seating/flushness and insert engagement require local STEP checks; D9 shell pad supports the head. ISO 10642 M3
+    x 8, head D6.0 nominal, D6.72 max,90deg. Each flank hole has a90deg countersink D6.4 at the outer skin surface,
+    depth1.5 to the D3.4 clearance bore through the3.6 skin and pad; heads sit flush to0.1 below the surface. Screw
+    removed for shellSlide.'
+- name: shellScrew3
+  kind: purchased
+  role: solid
+  catalog:
+    name: shellScrew3
+    kind: cylinder
+    point:
+    - 30
+    - -18
+    - 112
+    direction:
+    - -1
+    - 0
+    - 0
+    radius: 1.5
+    length: 8
+  description: 'Own frame=assembly. ISO 10642 M3 x 8 countersunk screw (head D6.0 nominal, D6.72 max,90deg), axial/shank proxy
+    from abs(x)30 to22, tip4mm into sled insert. Catalog cylinder cannot represent the90deg countersunk head: head
+    seating/flushness and insert engagement require local STEP checks; D9 shell pad supports the head. ISO 10642 M3
+    x 8, head D6.0 nominal, D6.72 max,90deg. Each flank hole has a90deg countersink D6.4 at the outer skin surface,
+    depth1.5 to the D3.4 clearance bore through the3.6 skin and pad; heads sit flush to0.1 below the surface. Screw
+    removed for shellSlide.'
+- name: shellScrew4
+  kind: purchased
+  role: solid
+  catalog:
+    name: shellScrew4
+    kind: cylinder
+    point:
+    - -30
+    - -18
+    - 112
+    direction:
+    - 1
+    - 0
+    - 0
+    radius: 1.5
+    length: 8
+  description: 'Own frame=assembly. ISO 10642 M3 x 8 countersunk screw (head D6.0 nominal, D6.72 max,90deg), axial/shank proxy
+    from abs(x)30 to22, tip4mm into sled insert. Catalog cylinder cannot represent the90deg countersunk head: head
+    seating/flushness and insert engagement require local STEP checks; D9 shell pad supports the head. ISO 10642 M3
+    x 8, head D6.0 nominal, D6.72 max,90deg. Each flank hole has a90deg countersink D6.4 at the outer skin surface,
+    depth1.5 to the D3.4 clearance bore through the3.6 skin and pad; heads sit flush to0.1 below the surface. Screw
+    removed for shellSlide.'
+- name: battery
+  kind: purchased
+  role: solid
+  catalog:
+    name: battery
+    kind: box
+    min:
+    - -24
+    - -22.5
+    - 120
+    max:
+    - 24
+    - 19.5
+    - 201
+  description: 'Own frame=assembly. One flat6S pack81x48x42 conservative fit envelope on sled floor; V5 1400 example78x42x39,222g.
+    No density/mass inference from envelope. Staging term construction envelope denotes a placed fit proxy: role
+    solid is intentional because schema role construction is never placed and cannot be jointed/clearance-tested.'
+- name: regulator
+  kind: purchased
+  role: solid
+  catalog:
+    name: regulator
+    kind: box
+    min:
+    - -15.9
+    - 19.5
+    - 139
+    max:
+    - 15.9
+    - 30.5
+    - 182.2
+  description: 'Own frame=assembly. Optional Pololu D42V110F18 reservation43.2x31.8x11 on pack with velcro, remains
+    fixed to sled/tray for cover removal. Always present in fit checks; no installed-mass assertion. Staging term
+    construction envelope denotes a placed fit proxy: role solid is intentional because schema role construction
+    is never placed and cannot be jointed/clearance-tested.'
+release_status: prototype
+joints:
+- name: rearMountOnFrame
+  kind: rigid
+  parent: mainFrame
+  child: rearMount
+  parent_frame:
+    origin:
+    - 0.0
+    - 0.0
+    - -6.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  child_frame:
+    origin:
+    - 0.0
+    - 0.0
+    - -6.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  description: Unchanged rear mount seat on frame bottom z-6; clamp now M3x16 through sled/frame into12mm F-F standoffs.
+- name: rearShellOnMount
+  kind: rigid
+  parent: rearMount
+  child: rearShell
+  parent_frame:
+    origin:
+    - 0.0
+    - 0.0
+    - -7.2
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  child_frame:
+    origin:
+    - 0.0
+    - 0.0
+    - -18.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  offset: -10.8
+  description: Parent datum [0,0,-7.2] lies in the rearMount envelope at the plate-underside plane. Offset -10.8
+    mm along +z reaches the unchanged child datum [0,0,-18.0]; the child keeps its identity assembly pose. Rear
+    shell locates on the short ring, side lands and pins.
+- name: motorCover1Tip
+  kind: rigid
+  parent: mainFrame
+  child: motorCover1
+  parent_frame:
+    origin:
+    - 80.0
+    - 80.0
+    - -3.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  child_frame:
+    origin:
+    - 80.0
+    - 80.0
+    - -3.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  description: +x+y arm tip, source pose
+- name: motorCover2Tip
+  kind: rigid
+  parent: mainFrame
+  child: motorCover2
+  parent_frame:
+    origin:
+    - -80.0
+    - 80.0
+    - -3.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 0.0
+    - 1.0
+    - 0.0
+  child_frame:
+    origin:
+    - 80.0
+    - 80.0
+    - -3.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  description: -x+y arm tip, the source pose turned +90 deg about z
+- name: motorCover3Tip
+  kind: rigid
+  parent: mainFrame
+  child: motorCover3
+  parent_frame:
+    origin:
+    - -80.0
+    - -80.0
+    - -3.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - -1.0
+    - 0.0
+    - 0.0
+  child_frame:
+    origin:
+    - 80.0
+    - 80.0
+    - -3.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  description: -x-y arm tip, the source pose turned 180 deg about z
+- name: motorCover4Tip
+  kind: rigid
+  parent: mainFrame
+  child: motorCover4
+  parent_frame:
+    origin:
+    - 80.0
+    - -80.0
+    - -3.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 0.0
+    - -1.0
+    - 0.0
+  child_frame:
+    origin:
+    - 80.0
+    - 80.0
+    - -3.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  description: +x-y arm tip, the source pose turned -90 deg about z
+- name: camTilt
+  kind: revolute
+  parent: mainShell
+  child: camMountL
+  parent_frame:
+    origin:
+    - 13.0
+    - -2.28
+    - 244.0
+    axis:
+    - 1.0
+    - 0.0
+    - 0.0
+    ref:
+    - 0.0
+    - 1.0
+    - 0.0
+  child_frame:
+    origin:
+    - 13.0
+    - -5.21
+    - 244.54
+    axis:
+    - 1.0
+    - 0.0
+    - 0.0
+    ref:
+    - 0.0
+    - 1.0
+    - 0.0
+  angle: 0.0
+  limits:
+  - 0.0
+  - 90.0
+  drive:
+    kind: motor
+    speed: 10.0
+    description: 9g servo through a bent-wire linkage to the left mount lever (steps 9, 12, 13); 10 rpm is an animation
+      default, the guide states no speed
+  description: Left camera mount on Sprite revised notch axis at assembled y-2.28,z244; rest translation(0,+2.93,-0.54)
+    from source.
+- name: camTiltR
+  kind: revolute
+  parent: mainShell
+  child: camMountR
+  parent_frame:
+    origin:
+    - -13.0
+    - -2.28
+    - 244.0
+    axis:
+    - 1.0
+    - 0.0
+    - 0.0
+    ref:
+    - 0.0
+    - 1.0
+    - 0.0
+  child_frame:
+    origin:
+    - -13.0
+    - 15.0
+    - 224.24
+    axis:
+    - 1.0
+    - 0.0
+    - 0.0
+    ref:
+    - 0.0
+    - 1.0
+    - 0.0
+  angle: 0.0
+  limits:
+  - 0.0
+  - 90.0
+  drive:
+    kind: free
+    description: follows camTilt through the camera glued between the mounts (camBody)
+  description: Right camera mount on same revised axis; rest translation(0,-17.28,+19.76) from source. Free, coupled1:1
+    through camBody.
+- name: launchPadStand
+  kind: rigid
+  parent: mainFrame
+  child: launchPad
+  parent_frame:
+    origin:
+    - 0.0
+    - 0.0
+    - -3.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  child_frame:
+    origin:
+    - 0.0
+    - 0.0
+    - -27.0
+    axis:
+    - 0.0
+    - 0.0
+    - 1.0
+    ref:
+    - 1.0
+    - 0.0
+    - 0.0
+  offset: -24.0
+  description: Pad-side datum at [0, 0, -27] lies inside its notched envelope; parent datum stays [0, 0, -3]. Offset
+    -24 along parent +z preserves identity source placement with no drop or rotation.
+- name: escOnStandoffs
+  kind: rigid
+  parent: rearMount
+  child: ark4in1Esc
+  parent_frame:
+    origin:
+    - 0
+    - 0
+    - -7.2
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  child_frame:
+    origin:
+    - 0
+    - 0
+    - -19
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  offset: -11.8
+  description: Unchanged v1 ESC identity pose. Nominal12mm F-F standoffs and M3x6 from below; offset-11.8 preserves
+    PCB top-19.0. Nominal standoff seat-19.2 differs0.2 and remains unresolved.
+- name: sledOnFrame
+  kind: rigid
+  parent: mainFrame
+  child: mountingSled
+  parent_frame:
+    origin:
+    - 15
+    - 15
+    - 0
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  child_frame:
+    origin:
+    - 15
+    - 15
+    - 0
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  description: Four clamp axes(+/-15,+/-15), D27 aligned; base bottom z0 seats on frame. One rigid datum represents
+    all four clamps.
+- name: shellOnSled
+  kind: rigid
+  parent: mountingSled
+  child: mainShell
+  parent_frame:
+    origin:
+    - 0
+    - 0
+    - 3
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  child_frame:
+    origin:
+    - 0
+    - 0
+    - 3
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  description: 'Installed rigid seat: rib ring bottom z3 on sled base; four flank screws(0,14),(-18,112) on both
+    sides. shellSlide is an independent +z0..250 transform of shell/nose group after removing cover and four screws,
+    not a live slider joint.'
+- name: coverOnShell
+  kind: rigid
+  parent: mainShell
+  child: topCover
+  parent_frame:
+    origin:
+    - 0
+    - 35.5
+    - 25.5
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  child_frame:
+    origin:
+    - 0
+    - 35.5
+    - 25.5
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  description: Installed rigid cover; rear/front M2 screws z25.5/207.5. coverSlide independently translates cover
+    ONLY +z0..180 after releasing screws; all payload including regulator remains fixed.
+- name: servoMountGlue
+  kind: rigid
+  parent: mainShell
+  child: servoMount
+  parent_frame:
+    origin:
+    - 0
+    - -20
+    - 222
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  child_frame:
+    origin:
+    - 0
+    - -20
+    - 222
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  description: Identity pose; new glue face follows v2 keel, servo seat unchanged.
+- name: vtxMountGlue
+  kind: rigid
+  parent: mainShell
+  child: vtxMount
+  parent_frame:
+    origin:
+    - 0
+    - 30
+    - 207.5
+    axis:
+    - 0
+    - 1
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  child_frame:
+    origin:
+    - 0
+    - 30
+    - 207.5
+    axis:
+    - 0
+    - 1
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  description: Identity frame/pose for rebased modified VTX; glue/support contour follows inner section.
+- name: rearCoverMountGlue
+  kind: rigid
+  parent: mainShell
+  child: rearCoverMount
+  parent_frame:
+    origin:
+    - 0
+    - 33.5
+    - 25.45
+    axis:
+    - 0
+    - 1
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  child_frame:
+    origin:
+    - 0
+    - 33.5
+    - 36.5
+    axis:
+    - 0
+    - 1
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  description: Translation z-11.05 puts source20.5..40 at9.45..28.95; nominal cover screw25.5 differs0.05 within0.1
+    tolerance.
+- name: alephBaseOnSled
+  kind: rigid
+  parent: mountingSled
+  child: alephBase
+  parent_frame:
+    origin:
+    - 17.6
+    - 21.75
+    - 104
+    axis:
+    - -1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - -1
+  child_frame:
+    origin:
+    - 3
+    - 3
+    - 0
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  description: 'Own aleph-stack frame: base sx0..88,sy0..52.5,service edge sy0,base bottom sz0,stack toward+sz.
+    Map assembly(x,y,z)=(17.6-sz,24.75-sy,107-sx), proper rotation shared by all stack bodies, no recentering. Virtual
+    shared assembly datum; physical contacts are standoffs/base/carrier/module/lid in sequence, not direct glue
+    to wall.'
+- name: alephCarrierOnSled
+  kind: rigid
+  parent: mountingSled
+  child: alephCarrier
+  parent_frame:
+    origin:
+    - 5.600000000000001
+    - -1.5
+    - 63
+    axis:
+    - -1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - -1
+  child_frame:
+    origin:
+    - 44
+    - 26.25
+    - 12
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  description: 'Own aleph-stack frame: base sx0..88,sy0..52.5,service edge sy0,base bottom sz0,stack toward+sz.
+    Map assembly(x,y,z)=(17.6-sz,24.75-sy,107-sx), proper rotation shared by all stack bodies, no recentering. Virtual
+    shared assembly datum; physical contacts are standoffs/base/carrier/module/lid in sequence, not direct glue
+    to wall.'
+- name: alephModuleOnSled
+  kind: rigid
+  parent: mountingSled
+  child: alephModule
+  parent_frame:
+    origin:
+    - -2.3999999999999986
+    - -1.5
+    - 63
+    axis:
+    - -1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - -1
+  child_frame:
+    origin:
+    - 44
+    - 26.25
+    - 20
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  description: 'Own aleph-stack frame: base sx0..88,sy0..52.5,service edge sy0,base bottom sz0,stack toward+sz.
+    Map assembly(x,y,z)=(17.6-sz,24.75-sy,107-sx), proper rotation shared by all stack bodies, no recentering. Virtual
+    shared assembly datum; physical contacts are standoffs/base/carrier/module/lid in sequence, not direct glue
+    to wall.'
+- name: alephHeatsinkOnSled
+  kind: rigid
+  parent: mountingSled
+  child: alephHeatsink
+  parent_frame:
+    origin:
+    - -5.919999999999998
+    - 3.5599999999999987
+    - 63
+    axis:
+    - -1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - -1
+  child_frame:
+    origin:
+    - 44
+    - 21.19
+    - 23.52
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  description: 'Own aleph-stack frame: base sx0..88,sy0..52.5,service edge sy0,base bottom sz0,stack toward+sz.
+    Map assembly(x,y,z)=(17.6-sz,24.75-sy,107-sx), proper rotation shared by all stack bodies, no recentering. Virtual
+    shared assembly datum; physical contacts are standoffs/base/carrier/module/lid in sequence, not direct glue
+    to wall.'
+- name: alephStandoff1OnWall
+  kind: rigid
+  parent: mountingSled
+  child: alephStandoff1
+  parent_frame:
+    origin:
+    - 21.6
+    - -24.75
+    - 22
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  child_frame:
+    origin:
+    - 21.6
+    - -24.75
+    - 22
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  description: D5x4 body seats on inner sled wall, no fastener on outer face.
+- name: alephStandoff2OnWall
+  kind: rigid
+  parent: mountingSled
+  child: alephStandoff2
+  parent_frame:
+    origin:
+    - 21.6
+    - 21.75
+    - 22
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  child_frame:
+    origin:
+    - 21.6
+    - 21.75
+    - 22
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  description: D5x4 body seats on inner sled wall, no fastener on outer face.
+- name: alephStandoff3OnWall
+  kind: rigid
+  parent: mountingSled
+  child: alephStandoff3
+  parent_frame:
+    origin:
+    - 21.6
+    - -24.75
+    - 104
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  child_frame:
+    origin:
+    - 21.6
+    - -24.75
+    - 104
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  description: D5x4 body seats on inner sled wall, no fastener on outer face.
+- name: alephStandoff4OnWall
+  kind: rigid
+  parent: mountingSled
+  child: alephStandoff4
+  parent_frame:
+    origin:
+    - 21.6
+    - 21.75
+    - 104
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  child_frame:
+    origin:
+    - 21.6
+    - 21.75
+    - 104
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  description: D5x4 body seats on inner sled wall, no fastener on outer face.
+- name: shellScrew1InPad
+  kind: rigid
+  parent: mountingSled
+  child: shellScrew1
+  parent_frame:
+    origin:
+    - 26
+    - 0
+    - 14
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  child_frame:
+    origin:
+    - 26
+    - 0
+    - 14
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  description: Coaxial with shell D3.4 and sled insert D4.0 bores within0.1; installed screw removed for shellSlide.
+- name: shellScrew2InPad
+  kind: rigid
+  parent: mountingSled
+  child: shellScrew2
+  parent_frame:
+    origin:
+    - -26
+    - 0
+    - 14
+    axis:
+    - -1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  child_frame:
+    origin:
+    - -26
+    - 0
+    - 14
+    axis:
+    - -1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  description: Coaxial with shell D3.4 and sled insert D4.0 bores within0.1; installed screw removed for shellSlide.
+- name: shellScrew3InPad
+  kind: rigid
+  parent: mountingSled
+  child: shellScrew3
+  parent_frame:
+    origin:
+    - 26
+    - -18
+    - 112
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  child_frame:
+    origin:
+    - 26
+    - -18
+    - 112
+    axis:
+    - 1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  description: Coaxial with shell D3.4 and sled insert D4.0 bores within0.1; installed screw removed for shellSlide.
+- name: shellScrew4InPad
+  kind: rigid
+  parent: mountingSled
+  child: shellScrew4
+  parent_frame:
+    origin:
+    - -26
+    - -18
+    - 112
+    axis:
+    - -1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  child_frame:
+    origin:
+    - -26
+    - -18
+    - 112
+    axis:
+    - -1
+    - 0
+    - 0
+    ref:
+    - 0
+    - 0
+    - 1
+  description: Coaxial with shell D3.4 and sled insert D4.0 bores within0.1; installed screw removed for shellSlide.
+- name: batteryOnTray
+  kind: rigid
+  parent: mountingSled
+  child: battery
+  parent_frame:
+    origin:
+    - 0
+    - -22.5
+    - 160
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  child_frame:
+    origin:
+    - 0
+    - -22.5
+    - 160
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  description: Flat pack seats on tray, retained by straps at145,178.
+- name: regulatorOnTray
+  kind: rigid
+  parent: mountingSled
+  child: regulator
+  parent_frame:
+    origin:
+    - 0
+    - 19.5
+    - 160
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  child_frame:
+    origin:
+    - 0
+    - 19.5
+    - 160
+    axis:
+    - 0
+    - 0
+    - 1
+    ref:
+    - 1
+    - 0
+    - 0
+  description: Reservation on pack/velcro follows fixed tray; no attachment to cover.
+transmissions:
+- name: camBody
+  kind: other
+  driver: camTilt
+  driven: camTiltR
+  ratio: 1.0
+  description: both mounts are glued to the 20 mm camera (step 11), so the right mount turns with the left about
+    the same axis
+parameters:
+- name: bodyWidth
+  value: 60
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: bodyHeight
+  value: 75
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: skinWall
+  value: 2
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: wallEndZ
+  value: 202
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: shellTipZ
+  value: 249.3
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: coverBrowZ
+  value: 256.7
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: coverRearZ
+  value: 22
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: shellSlideTravel
+  value: 250
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: coverSlideTravel
+  value: 180
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: sledWallThickness
+  value: 4
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: alephBoardPlaneX
+  value: 17.6
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: alephStandoffLength
+  value: 4
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: clampPitch
+  value: 30
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: motorAxisOffset
+  value: 80
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: propDiameter
+  value: 127
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: grilleTopY
+  value: 14
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: fanPlenumMin
+  value: 4
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: alephToSkinMin
+  value: 3
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: propTipToBodyMin
+  value: 11
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: shellScrewAxisTolerance
+  value: 0.1
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: batteryLength
+  value: 81
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: batteryWidth
+  value: 48
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: batteryHeight
+  value: 42
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: rearCoverScrewZ
+  value: 25.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: frontCoverScrewZ
+  value: 207.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: cameraHingeZ
+  value: 244
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: cameraHingeY
+  value: -2.28
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5
+- name: shellPrintHeight
+  value: 249.3
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5; sources/sprite-aleph-proposal.md print envelope
+- name: coverPrintHeight
+  value: 234.7
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5; sources/sprite-aleph-proposal.md print envelope
+- name: sledPrintHeight
+  value: 202
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5; sources/sprite-aleph-proposal.md print envelope
+- name: x1cBuildX
+  value: 256
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5; sources/sprite-aleph-proposal.md print envelope
+- name: x1cBuildY
+  value: 256
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5; sources/sprite-aleph-proposal.md print envelope
+- name: x1cBuildZ
+  value: 256
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  source: sources/sprite-aleph-v2-proposal.md sections4..5; sources/sprite-aleph-proposal.md print envelope
+- name: noseWidthHalfZ202
+  value: 30
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseCrownZ202
+  value: 35.496895
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseKeelZ202
+  value: -33.986266
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseEllipseBlendZ202
+  value: 0.0
+  unit: ''
+  provenance: derived
+  tolerance: 1.0e-05
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseSplitZ202
+  value: 15.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseWidthHalfZ210
+  value: 29.162893
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseCrownZ210
+  value: 33.273506
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseKeelZ210
+  value: -32.787682
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseEllipseBlendZ210
+  value: 0.278787
+  unit: ''
+  provenance: derived
+  tolerance: 1.0e-05
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseSplitZ210
+  value: 5.90379
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseWidthHalfZ218
+  value: 26.939544
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseCrownZ218
+  value: 30.319545
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseKeelZ218
+  value: -31.343531
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseEllipseBlendZ218
+  value: 0.778499
+  unit: ''
+  provenance: derived
+  tolerance: 1.0e-05
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseSplitZ218
+  value: 0.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseWidthHalfZ225
+  value: 24.196536
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseCrownZ225
+  value: 27.186479
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseKeelZ225
+  value: -29.860471
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseEllipseBlendZ225
+  value: 1.0
+  unit: ''
+  provenance: derived
+  tolerance: 1.0e-05
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseSplitZ225
+  value: 0.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseWidthHalfZ235
+  value: 19.584238
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseCrownZ235
+  value: 21.912521
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseKeelZ235
+  value: -27.354889
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseEllipseBlendZ235
+  value: 1.0
+  unit: ''
+  provenance: derived
+  tolerance: 1.0e-05
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseSplitZ235
+  value: 0.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseWidthHalfZ245
+  value: 14.915101
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseCrownZ245
+  value: 15.813484
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseKeelZ245
+  value: -24.353882
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseEllipseBlendZ245
+  value: 1.0
+  unit: ''
+  provenance: derived
+  tolerance: 1.0e-05
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseSplitZ245
+  value: 0.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseWidthHalfZ249p3
+  value: 13.1
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseCrownZ249p3
+  value: 12.968749
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseKeelZ249p3
+  value: -22.9
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseEllipseBlendZ249p3
+  value: 1.0
+  unit: ''
+  provenance: derived
+  tolerance: 1.0e-05
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+- name: noseSplitZ249p3
+  value: 0.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  source: sources/sprite-aleph-v2-proposal.md section4.6
+  formula: Hermite W/C/K and clamped smoothstep section/split laws as stated in mainShell/topCover intents
+acceptance:
+  bbox_tolerance: 0.5
+  clearances:
+  - name: sledSeat
+    a: mountingSled
+    b: mainFrame
+    min_gap: 0
+    interference_tolerance: 1.0
+    max_gap: 0.3
+    description: Designed seat contact; separately verify named local interface, not just whole-body minimum.
+  - name: shellRibSeat
+    a: mainShell
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0
+    max_gap: 0.3
+    description: Designed seat contact; separately verify named local interface, not just whole-body minimum.
+  - name: rearMountSeat
+    a: rearMount
+    b: mainFrame
+    min_gap: 0
+    interference_tolerance: 1.0
+    max_gap: 0.3
+    description: Designed seat contact; separately verify named local interface, not just whole-body minimum.
+  - name: topCoverSeat
+    a: topCover
+    b: mainShell
+    min_gap: 0
+    interference_tolerance: 1.0
+    max_gap: 0.3
+    description: Designed seat contact; separately verify named local interface, not just whole-body minimum.
+  - name: servoMountSeat
+    a: servoMount
+    b: mainShell
+    min_gap: 0
+    interference_tolerance: 1.0
+    max_gap: 0.3
+    description: Designed seat contact; separately verify named local interface, not just whole-body minimum.
+  - name: rearCoverMountSeat
+    a: rearCoverMount
+    b: mainShell
+    min_gap: 0
+    interference_tolerance: 1.0
+    max_gap: 0.3
+    description: Designed seat contact; separately verify named local interface, not just whole-body minimum.
+  - name: alephBaseToSkin
+    a: alephBase
+    b: mainShell
+    min_gap: 3
+    interference_tolerance: 1.0e-06
+    description: 'alephToSkin: physical stack clears shell skin; no shell payload bosses.'
+  - name: alephBaseToCover
+    a: alephBase
+    b: topCover
+    min_gap: 3
+    interference_tolerance: 1.0e-06
+    description: alephToSkin above split; include connector tops.
+  - name: alephBaseToSled
+    a: alephBase
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: No overlap with sled; stack supported through metal standoffs.
+  - name: alephCarrierToSkin
+    a: alephCarrier
+    b: mainShell
+    min_gap: 3
+    interference_tolerance: 1.0e-06
+    description: 'alephToSkin: physical stack clears shell skin; no shell payload bosses.'
+  - name: alephCarrierToCover
+    a: alephCarrier
+    b: topCover
+    min_gap: 3
+    interference_tolerance: 1.0e-06
+    description: alephToSkin above split; include connector tops.
+  - name: alephCarrierToSled
+    a: alephCarrier
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: No overlap with sled; stack supported through metal standoffs.
+  - name: alephModuleToSkin
+    a: alephModule
+    b: mainShell
+    min_gap: 3
+    interference_tolerance: 1.0e-06
+    description: 'alephToSkin: physical stack clears shell skin; no shell payload bosses.'
+  - name: alephModuleToCover
+    a: alephModule
+    b: topCover
+    min_gap: 3
+    interference_tolerance: 1.0e-06
+    description: alephToSkin above split; include connector tops.
+  - name: alephModuleToSled
+    a: alephModule
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: No overlap with sled; stack supported through metal standoffs.
+  - name: fanPlenum
+    a: alephHeatsink
+    b: mainShell
+    min_gap: 4
+    interference_tolerance: 1.0e-06
+    description: Additionally probe fan-face x-23.92 to port wall x-28, nominal4.08; include grille bars and skirt-fed
+      upper8.6mm.
+  - name: heatsinkToCover
+    a: alephHeatsink
+    b: topCover
+    min_gap: 2.5
+    interference_tolerance: 1.0e-06
+    description: >-
+      Fan face x -23.92 to the cover skirt inner face x -26.6 over the fan's top band y 15..22.56: designed 2.68 (proposal 4.2/4.3: skirt x 26.6..27.8, plenum 4.1 to the port wall). Airflow is governed by fanPlenum.
+  - name: heatsinkToSled
+    a: alephHeatsink
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+  - name: standoff1WallSeat
+    a: alephStandoff1
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    max_gap: 0.1
+    description: Only designed end contact atx21.6.
+  - name: standoff1BaseSeat
+    a: alephStandoff1
+    b: alephBase
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    max_gap: 0.1
+    description: Only designed end contact atx17.6; catalog D5 body excludes threads.
+  - name: standoff2WallSeat
+    a: alephStandoff2
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    max_gap: 0.1
+    description: Only designed end contact atx21.6.
+  - name: standoff2BaseSeat
+    a: alephStandoff2
+    b: alephBase
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    max_gap: 0.1
+    description: Only designed end contact atx17.6; catalog D5 body excludes threads.
+  - name: standoff3WallSeat
+    a: alephStandoff3
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    max_gap: 0.1
+    description: Only designed end contact atx21.6.
+  - name: standoff3BaseSeat
+    a: alephStandoff3
+    b: alephBase
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    max_gap: 0.1
+    description: Only designed end contact atx17.6; catalog D5 body excludes threads.
+  - name: standoff4WallSeat
+    a: alephStandoff4
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    max_gap: 0.1
+    description: Only designed end contact atx21.6.
+  - name: standoff4BaseSeat
+    a: alephStandoff4
+    b: alephBase
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    max_gap: 0.1
+    description: Only designed end contact atx17.6; catalog D5 body excludes threads.
+  - name: batteryEnvelopeClear
+    a: battery
+    b: mainShell
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: batteryCleartopCover
+    a: battery
+    b: topCover
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: batteryClearmountingSled
+    a: battery
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: batteryClearalephBase
+    a: battery
+    b: alephBase
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: batteryClearalephCarrier
+    a: battery
+    b: alephCarrier
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: batteryClearalephModule
+    a: battery
+    b: alephModule
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: batteryClearalephHeatsink
+    a: battery
+    b: alephHeatsink
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: batteryClearvtxMount
+    a: battery
+    b: vtxMount
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: regulatorClearmainShell
+    a: regulator
+    b: mainShell
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: regulatorEnvelopeClear
+    a: regulator
+    b: topCover
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: regulatorClearmountingSled
+    a: regulator
+    b: mountingSled
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: regulatorClearalephBase
+    a: regulator
+    b: alephBase
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: regulatorClearalephCarrier
+    a: regulator
+    b: alephCarrier
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: regulatorClearalephModule
+    a: regulator
+    b: alephModule
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: regulatorClearalephHeatsink
+    a: regulator
+    b: alephHeatsink
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: regulatorClearvtxMount
+    a: regulator
+    b: vtxMount
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+    description: Conservative placed reservation, zero overlap; designed boundary contact on tray/pack permitted.
+  - name: regulatorClearBattery
+    a: regulator
+    b: battery
+    min_gap: 0
+    interference_tolerance: 1.0e-06
+  - name: cameraGap
+    a: camMountL
+    b: camMountR
+    min_gap: 19.9
+    max_gap: 20.1
+    description: the 20 mm camera between the glue faces
+  - name: escToBosses
+    a: ark4in1Esc
+    b: rearMount
+    min_gap: 1
+    interference_tolerance: 1.0e-06
+    description: Includes retained short ring and cross-bore bosses; nominal gaps1.4 and1.1.
+  - name: escSlotClearance
+    a: ark4in1Esc
+    b: rearShell
+    min_gap: 1
+    interference_tolerance: 1.0e-06
+    max_gap: 2
+    description: Minimum body separation guard; additionally inspect each of two slot-edge perimeters against PCB/socket/plug
+      sections for the full1..2 band.
+  - name: escToFrame
+    a: ark4in1Esc
+    b: mainFrame
+    min_gap: 0.0
+    interference_tolerance: 1.0e-06
+  - name: escToLaunchPad
+    a: ark4in1Esc
+    b: launchPad
+    min_gap: 1.0
+    interference_tolerance: 1.0e-06
+    description: Notched stand at identity; reviewer measured 1.5 mm to external plugs and 1.75 mm to PCB; verify
+      at least 1.0 mm on rebuilt geometry.
+  - name: coverVtxSeat
+    a: topCover
+    b: vtxMount
+    min_gap: 0
+    interference_tolerance: 1.0
+    max_gap: 0.3
+    description: Front screw boss seats on neck; skin above neck has0.3 margin.
+  motions:
+  - name: camSweep
+    drive: camTilt
+    range:
+    - 0.0
+    - 90.0
+    steps: 10
+    interference_tolerance: 2.0
+    pairs:
+    - - camMountL
+      - mainShell
+    - - camMountR
+      - mainShell
+    - - camMountL
+      - servoMount
+    - - camMountR
+      - servoMount
+    - - camMountL
+      - topCover
+    - - camMountR
+      - topCover
+    description: full stated tilt with the pins on the measured notch seats; source meshes leave at most 0.60 (L)
+      and 0.76 (R) mm3 against the shell and 0 against the servo mount and top cover at every pose
+operating_cases:
+- id: sixSNominal
+  values:
+    packVoltage: 22.2
+  units:
+    packVoltage: V
+  source: sources/6s_power_propulsion_and_fc_baseline.md Power architecture; selected6S in proposal section9
+  description: Selected direct6S v2 configuration; electrical packaging context, not a propulsion or thermal prediction.
+- id: sixSFullyCharged
+  values:
+    packVoltage: 25.2
+    alephInputOperatingMax: 28.0
+  units:
+    packVoltage: V
+    alephInputOperatingMax: V
+  source: sources/6s_power_propulsion_and_fc_baseline.md Power architecture
+  description: Steady-state source voltages only; transient qualification unresolved.
+- id: optionalRegulatorReservation
+  values:
+    regulatedVoltage: 18.0
+    avionicsPowerAllowance: 60.0
+  units:
+    regulatedVoltage: V
+    avionicsPowerAllowance: W
+  source: sources/6s_power_propulsion_and_fc_baseline.md Power architecture; sources/sprite-aleph-v2-proposal.md
+    section9
+  description: Optional18V board reserved on pack, fixed to tray for service checks;60W is planning output allowance,
+    not measured heat dissipation.
+observables:
+- id: camTiltRange
+  quantity: joint_range
+  unit: deg
+  joint: camTilt
+  motion: camSweep
+  expected:
+    expected: 90.0
+    tolerance: 0.01
+    provenance: stated
+    note: 'guide step 13: maximum tilt at or close to 90 deg'
+simulations: []
+fluid_volumes: []
+boundaries: []
+open_questions:
+- "Changed (revision 1, reviewer notes): Amendment 6 corrects heatsinkToCover.min_gap from 3 to 2.5 mm and documents the designed 2.68 mm skirt gap fixed by proposal sections 4.2/4.3, consistent with the reviewer-reported OpenCascade minimum of 2.680 mm. The 3 mm entry was a drafting error; fanPlenum remains the airflow requirement at >=4 mm."
+- 'Changed (revision 1, reviewer notes): Amendment 5 aligns vtxMount intent to z203.5..212 (8.5 mm). The unchanged
+  R4 boss on the verified screw axis207.5 sets the bottom203.5, and plate top212 sets the top. The original
+  extent shift+3 differed from the screw shift+3.5; pack end201 needs no material below203.5, so the revised
+  bottom adds clearance without moving any feature or interface.'
+- 'Changed (revision 1, reviewer notes): Corrected skirtBandClear outer bound from29.3 to29.2 and specified the
+  lips-only exception to resolve the groove back-wall conflict; reviewer notes supersede proposal section8.4. Mandatory
+  skirtBandClear: both mirrored bands abs(x)26.4..29.2,y14.8..22.2,z22..202 contain no shell or sled material except
+  the two shell groove lips at abs(x)28..29.2,y14.8..16 and20..22.2. The outer bound is the groove back face at
+  abs(x)29.2; tongue outer face29.1 retains0.1 clearance. No shell material above y15 past z202.'
+- 'Changed (revision 1, reviewer notes): Replaced the unspecified shell screw head diameter/depth with the selected
+  hardware and countersink dimensions to resolve the flank-fastener drafting question. ISO 10642 M3 x 8, head D6.0
+  nominal, D6.72 max,90deg. Each flank hole has a90deg countersink D6.4 at the outer skin surface, depth1.5 to the
+  D3.4 clearance bore through the3.6 skin and pad; heads sit flush to0.1 below the surface.'
+- 'Draft geometry is unbuilt: exported STEP, section/probe/face checks, all paired clearances, camera sweep, source
+  acceptance and independent service/passage checks remain to be verified; assembly check validates schema and links
+  only.'
+- AssemblyAcceptance has no rigid-body removal transform, local forbidden-region, axis-coaxiality, normal-wall,
+  passage or dihedral test field. Keep installed joints rigid; shellSlide(+z0..250), coverSlide(+z0..180), skirtBandClear,
+  grilleTop, propTipToBody, shellScrewsCoaxial, noseSmooth and apertureUnchanged are mandatory downstream independent
+  OpenCascade checks specified in the brief and part intents, not certified by the camSweep evaluator.
+- Nominal12mm F-F standoffs from rearMount underside-7.2 end at-19.2, while unchanged v1 PCB top/ESC joint is-19.0.
+  Resolve the0.2mm seating datum and hardware engagement without silently moving ESC or changing reused geometry;
+  source ESC total-thickness/proxy ambiguities also remain.
+- 'Aleph4mm M2.5 male-female standoffs are the assumed hardware: confirm body diameter5, material brass/aluminium,
+  thread lengths and matching male-female base-to-carrier posts. Choose tapped D2.5 wall holes or short inserts
+  before manufacture; fallback M2.5x18 counterbored fastening is not the default.'
+- Strap slot width/length and strap stock, XT60 exact retention/pocket clearances, wire insulation diameters, simultaneous
+  two10AWG plus8-pin harness routing/bend radii and strain relief are unspecified. Preserve stated envelopes/stations
+  and verify D27-power-bay-keel-channel-alcove routes with actual hardware.
+- Countersunk screw catalog cylinders represent shank/axis only; actual M3x4 heat-set insert fit needs hardware
+  confirmation and the specified ISO 10642 M3 x 8 head seating needs local90deg countersink/flushness checks. The
+  nominal0.4 pad gap and4mm engagement must be checked under clamping, not inferred from the cylinder.
+- 'Brow continuation249.3..256.7 has no separate new width law: preserve Sprite aperture/brow source features with
+  C ending7.8 at256.7; do not extrapolate W beyond249.3. Verify a smooth local join while retaining0.1 aperture
+  and hinge tolerances.'
+- Rear-cover tab translated-11.05 gives exact span9.45..28.95 and inherited bore25.45, versus nominal rear screw25.5;
+  retain both within0.1 axis tolerance. VTX seed translated+13 yields old insert207.0, so the modified bore must
+  independently move to207.5; verify neck/boss seating against normal-offset crown.
+- Shell mounts no main payload means sled carries Aleph, pack and XT60; staging explicitly retains nose servo/VTX
+  and closure mounts on shell. Service sweep moves shell and attached nose hardware together with cover/screws removed;
+  cover sweep moves only cover. Verify no group collision with loaded fixed sled and tail, including hardware absent
+  from envelope models.
+- Motor and prop SKU, motorBoltPattern interpretation and hardware, physical camera/servo/VTX envelopes and exact
+  bent-wire linkage remain unqualified. Preserve v1 camera mounts,0..90deg range and1:1 camBody coupling;10rpm is
+  only inherited animation default. D127 prop circles at(+/-80,+/-80),z47..59 are independent construction checks,
+  not physical prop models.
+- 'Exact filament PETG or ASA for sled/shell/cover, densities, print orientation/supports, tolerances and insert
+  pullout strength are not qualified; reused mounts retain source PLA defaults. No all-up mass/CG gate: proposal258g
+  prints,890g all-up and z87 CG are planning estimates; missing motors/wiring and conservative envelope solids preclude
+  physical mass inference.'
+- Optional regulator choice, actual pack dimensions including straps/leads, net grille open area and cooling, direct6S
+  transient/startup/load qualification and installed propulsion performance remain open. Baseline22.2/25.2V,28V
+  limit,18V and60W planning allowance are context only; its7-inch propulsion,2200mAh pack and legacy FC recommendations
+  are superseded. No simulation, heat load or fluid-domain result is invented.
+references:
+- path: sources/001_Main Shell.stl
+  kind: mesh
+  role: authoritative
+  sha256: 6df95eba3642a4f526ccbd42980e2ad874ecd58a1c99eee5f74fc80307d8800f
+  note: Authoritative only for unchanged local aperture/hinge/seat/pattern details; never a whole-part fidelity
+    target for v2 changed geometry.
+- path: sources/002_Rear Shell.stl
+  kind: mesh
+  role: authoritative
+  sha256: 8df2c693c1bfe5936110752dad7d9ad4016e68e3cc515c79abf74f03959531fb
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/003_Motor Cover.stl
+  kind: mesh
+  role: authoritative
+  sha256: 89f6df6ff413fb5ad226271e7677da5a65aa467fc3631b21299f49b8d0f00614
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/004_Top Cover.stl
+  kind: mesh
+  role: authoritative
+  sha256: 67bf8c98719f81f21269cda882885fd6c210cdf7b9599f6db21af188f50d0121
+  note: Authoritative only for unchanged local aperture/hinge/seat/pattern details; never a whole-part fidelity
+    target for v2 changed geometry.
+- path: sources/005_Rear Mount.stl
+  kind: mesh
+  role: authoritative
+  sha256: d3ddcbb98abdafee99305d60246ce05d4dd58ac23d9631a34c3d2262d59a6d35
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/006_ESC Mount.stl
+  kind: mesh
+  role: authoritative
+  sha256: 2796cd2ff172890b660327d1584053da930f1be6cec8447224511886554316c1
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/007_VTX Mount.stl
+  kind: mesh
+  role: authoritative
+  sha256: 891d928ab8eb4809856e5e6066764ff3418c4db737eaa2d18be2d4a1e3faff07
+  note: Authoritative only for unchanged local aperture/hinge/seat/pattern details; never a whole-part fidelity
+    target for v2 changed geometry.
+- path: sources/008_Servo Mount.stl
+  kind: mesh
+  role: authoritative
+  sha256: b0589a1cf8eff4935e02d5522f8c3a37b5129bcf83e93f193654d3b23d71d883
+  note: Authoritative only for unchanged local aperture/hinge/seat/pattern details; never a whole-part fidelity
+    target for v2 changed geometry.
+- path: sources/009_XT60M Mount.stl
+  kind: mesh
+  role: authoritative
+  sha256: ebeb54fc395d575d928b9a64cbb574091b8a5343d2786930fd42e1cc1aceb975
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/010_Rear Cover Mount.stl
+  kind: mesh
+  role: authoritative
+  sha256: 2d248094349ad789cfaca80f120e4c9472efe98e7b946b35f5080030ea3294fc
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/011_Cam Mount R.stl
+  kind: mesh
+  role: authoritative
+  sha256: b45a882531eb5a702e08c5b53c99252f57011c52cd193881fbdbeb051b5f2c09
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/012_Cam Mount L.stl
+  kind: mesh
+  role: authoritative
+  sha256: 130a25c3fdfaf632e27597a27de6191ade19f0b36cfa419e7a49ad6e893b4bd8
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/013_Main Frame.stl
+  kind: mesh
+  role: authoritative
+  sha256: b07771cb8994b6da399b760fe826abaa73172648f6fbb36d10a627d25b107977
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/014_Launch Pad.stl
+  kind: mesh
+  role: authoritative
+  sha256: 3bac64a4acc13f6116d2483a92a69e83c32fb35a1806c74cc90e0576d19a47d2
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/6s_power_propulsion_and_fc_baseline.md
+  kind: text
+  role: illustrative
+  sha256: 16ce2b50dcbbe6279273600676aeb65bcff6dca74fd3ce8dd5bcd1340aa3dba4
+  note: Electrical context/reservation only;7-inch propulsion,large packs,legacy FC are not selected v2 configuration.
+- path: sources/ARK_4_IN_1_ESC_CON_Rev_4_0.step
+  kind: cad
+  role: authoritative
+  sha256: ff753318ee1d77ca7b248c50790bfa9b92bf79ccbc55fc5d4cb2a0ba125b8e96
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/Assembly Guide.pdf
+  kind: drawing
+  role: authoritative
+  sha256: cd70e81f99c9b4546fac8d3d3d0395130077021092b011f438c70bc40d1f2c0c
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/aleph-base.step
+  kind: cad
+  role: authoritative
+  sha256: 6a5d8f5c013b96fe0f3663064bbbdd4733588ec636945175586033de0467973e
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/aleph-carrier.step
+  kind: cad
+  role: authoritative
+  sha256: b503f699fbb7ba27a0e95d1d1f89e449ce89de3061ba9d480b63a0eeb8f57d40
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/aleph-module.step
+  kind: cad
+  role: authoritative
+  sha256: 2b72f3ba9edae3db896e891a5e8a29719be4d4e3362df26856bab82effcc9fec
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/guide-page-1.png
+  kind: image
+  role: illustrative
+  sha256: f150063bab17fccc7e62a9ac0fde6dfbc6119192611459d3c6e9250c7a2f7a5f
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/guide-page-2.png
+  kind: image
+  role: illustrative
+  sha256: a1b15b0e74e7fde382be12908d00f07de41255891883a9dffd2b4eda45874e0c
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/guide-page-3.png
+  kind: image
+  role: illustrative
+  sha256: c40ab654d15c62e7dcf598418fce8ccbc8789154d946e3dc70482905c9e90d9d
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/guide-page-4.png
+  kind: image
+  role: illustrative
+  sha256: d62ea9168d822e0bb8dce1547806cc4e04f55bbd903f62e41ce03c03c4f1978f
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/guide-page-5.png
+  kind: image
+  role: illustrative
+  sha256: 70e9ee62ee314de94c1a666a45370ef2782930d8a0f2419e002abd168ade4397
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/guide-page-6.png
+  kind: image
+  role: illustrative
+  sha256: 81eb2655f1dded977f11bfd44c714858cca6c0f5dedd2a5ab3e095385816cb9c
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/guide-page-7.png
+  kind: image
+  role: illustrative
+  sha256: 9b8afcdeec9ff2cee877c8fe9bd94a1e4fa2860b9c9a2cb51be3e107a23a1e6f
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/guide-page-8.png
+  kind: image
+  role: illustrative
+  sha256: d75efc51a60944630bfeef5e8b63986b4ba7faf44532156087c4b99ebf66046d
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/guide-page-9.png
+  kind: image
+  role: illustrative
+  sha256: 18116618c167117b2a4a2f8e829fafbda0a15c640fbf0e1b5d2ca283e1a5ea18
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-assembly.yaml
+  kind: text
+  role: authoritative
+  sha256: 0f4274d25ac3540d991358fd04ccee173da5213c8c23a83ff3a0f39b41a3adf7
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-esc-envelope-brief.md
+  kind: text
+  role: authoritative
+  sha256: fe7d663efdec5104035f82cbe58c6663bbc36b23be64b9852a2dde594862ac2b
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-esc-envelope-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: bf00e4ed85bb2dbac8426d1873bc70db792ac3037ff68ca1ff9aae161ddcdb13
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-esc-envelope-main.py
+  kind: text
+  role: authoritative
+  sha256: 0778ce40e751b9de31b8b228e4ba63cf96295d9998bcdb1552aa397a9082132f
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-aleph-launch-pad-brief.md
+  kind: text
+  role: authoritative
+  sha256: dc83bf9a8ed187dadece3e2ba04ae9c7f88a0a55ea801b975f09b0f108a9c6d6
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-launch-pad-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: 0f24d5a5cc3c0e94f41a5199f4b535d04aea87be409e6f772d16ac6a3897265b
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-launch-pad-main.py
+  kind: text
+  role: authoritative
+  sha256: b74baed171a924880d60c2f3e13035b6dc6a613d6fe9c93586edf3deb26270dd
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-aleph-main-frame-brief.md
+  kind: text
+  role: authoritative
+  sha256: ce9566ff63bd1214ac3f628306c628f7e9fb60b05d493276ae3954c45c334a43
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-main-frame-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: f420f44a28908f914df3bfc7e60e48d5ec8ac2c35a58d5fcff792388bcf7d017
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-main-frame-main.py
+  kind: text
+  role: authoritative
+  sha256: 9835aaaa33b1f72a7f762c259aa2ec0e1e15c01bc16cf0d7b97166ec094c7633
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-aleph-main-shell-brief.md
+  kind: text
+  role: authoritative
+  sha256: 729b7141499fa44aa4191d48efcfeffa37de39a4d5881688342163ecc6463e22
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-main-shell-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: a5c5133d3fd20a6b36ba855e430e7598837031cd591f9e2a4bc6b8b691b34c92
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-main-shell-main.py
+  kind: text
+  role: authoritative
+  sha256: abd62e827a23435e70e0fa11bc0be9f77a1bf670f46399b2c2aadf0d34ed2f23
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-aleph-proposal.md
+  kind: text
+  role: illustrative
+  sha256: 13dee2473d5184bcb3b48ed8fbf187c2ca03d6776a84dda5ff57979f79b00faf
+  note: Historical v1 only; v2 proposal supersedes disagreements.
+- path: sources/sprite-aleph-rear-mount-brief.md
+  kind: text
+  role: authoritative
+  sha256: 666635f05cc98cee42226dbc5187bfb60e7b4b8ea95819cdbf7456d534c2087e
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-rear-mount-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: d5241fac2083343ac8c2a55b8352abd698306989e1041927e62150fc4a5dcf5e
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-rear-mount-main.py
+  kind: text
+  role: authoritative
+  sha256: f6c4b73b2aadeb087b44794c19c242c9d2842abd5e8811161fa88f009c63c91d
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-aleph-rear-shell-brief.md
+  kind: text
+  role: authoritative
+  sha256: 026130dd58f9f251ccfaad4e3620aa40f79a0f8c797ffcfd90d6acc97155eb85
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-rear-shell-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: 4c1d764b27489f15a8c550485c615ce6668aa52023d256bc48b5d3375132f877
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-rear-shell-main.py
+  kind: text
+  role: authoritative
+  sha256: c1c325cf5a7a3c7ce29dbe31470c3c944056122fd0badf3cd980bebe7b9ff301
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-aleph-top-cover-brief.md
+  kind: text
+  role: authoritative
+  sha256: 5bdeac11eae4e1ce049fa008931e904558c45c6f15cba4300a18dfedb10f00a5
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-top-cover-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: fa69dd92d7f4a157e3e82e8ce7b3f0a53ecc06c67a62d1481612fcb53fc39482
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-top-cover-main.py
+  kind: text
+  role: authoritative
+  sha256: 719b0326a7f73b2d38dc10bdf7f97a83d95cc8042f395954d19f3a7567730f9c
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-aleph-v2-nose.png
+  kind: image
+  role: illustrative
+  sha256: f23f1bd0d885cdea5c55a93dc32283306dbc6bcd169e6e30933425e4329db48a
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-v2-plan-view.png
+  kind: image
+  role: illustrative
+  sha256: 1c09cbcb27fe777c6134e541b918d9cd306e8f6fa12b75c206571566b538451b
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-v2-proposal.md
+  kind: text
+  role: authoritative
+  sha256: b460f01741d5a7a7e0c38f28e10bb752217dad422ac26a87ee010cf253cf2d93
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-v2-sections.png
+  kind: image
+  role: illustrative
+  sha256: 2298355d04a9dfaf082217b56bed1fe14b1bd60b99491a8232910c5b52442e0d
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-v2-side-elevation.png
+  kind: image
+  role: illustrative
+  sha256: 8f9bd93ec2f51c910bdec5754c1f7a07bb07e2aa7fe0aacbb9117122d2ddfb06
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-v2-sled-mockup.py
+  kind: text
+  role: illustrative
+  sha256: b9d15cb87253f4b3d77fbb3aaf6273ec31779970df838d6202771d2e42ed71cc
+  note: Sled illustration only; discard shell/cover/lugs and old(+/-19,+/-19) holes.
+- path: sources/sprite-aleph-v2-staging-notes.md
+  kind: text
+  role: authoritative
+  sha256: 5d23c8d442c131370ababa3f26c8cd93a50712952407540ceea4ba9a29887581
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-vtx-mount-brief.md
+  kind: text
+  role: authoritative
+  sha256: eb427da54e30e0165c5f2ace82fcbf2b193774bd4abc3cd7f79e7220cee97057
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-vtx-mount-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: c8781370758151ac8896c8a33d64c622aa62fbefd9fa0ba216b9f2a9ca9283d4
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-aleph-vtx-mount-main.py
+  kind: text
+  role: authoritative
+  sha256: 27bb2c1a0756b2ac830a538f70e9c05f72643c39d3a49c0613a97953b5177b64
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-assembly-brief.md
+  kind: text
+  role: authoritative
+  sha256: fe43634a438de39ad069adb6a37e2a5086d2199cf4edd2ec0632cc35b26c5cb6
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-assembly.yaml
+  kind: text
+  role: authoritative
+  sha256: 39614a8170ba91c6448e57cc47e2230e527826fa6758c19e85531dbf2ccc8ed2
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-cam-mount-l-brief.md
+  kind: text
+  role: authoritative
+  sha256: eb8cf77c6f3a282b4b7c0f91d231344812cf3d85bd0a92f67c078de5605edb7d
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-cam-mount-l-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: e4883cff7a8f91d6c2fcabe75147b6a5f9406d1e205b10923df2d8ec5da19375
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-cam-mount-l-main.py
+  kind: text
+  role: authoritative
+  sha256: f951574d8ec145ce3567ad2b449a3b5b2f82fb29a10cb82b504baf84c1b98842
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-cam-mount-r-brief.md
+  kind: text
+  role: authoritative
+  sha256: f53f5f6eab7c58774d5bf9012050e86258f9572a6d65323e934b7693fb3e4f12
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-cam-mount-r-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: 515301166b8ba693ca734afe906176b8a2ca51e3f6d9d7f4698c49d360af3388
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-cam-mount-r-main.py
+  kind: text
+  role: authoritative
+  sha256: de848a47826a5dcd2abca9201234e6488f9b7a436b4a372a91b4eed75ce19d39
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-launch-pad-brief.md
+  kind: text
+  role: authoritative
+  sha256: 0c6909fdeb872d3b73abc18ad04a9ba2a27c7c6e9899e60571264068d9d45145
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-launch-pad-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: b26a3b53f228400dbb57891c95615a0fa11cb2df3ef9db7463a593e69023409b
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-launch-pad-main.py
+  kind: text
+  role: authoritative
+  sha256: 2c6ef076b0867ba036ad4885d029028b494b187aa7eca9d941e764d77901d60a
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-main-frame-brief.md
+  kind: text
+  role: authoritative
+  sha256: 656396d4eb24d32a6603f78618956f5446fa862da31d224808ebcc092a7de4c9
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-main-frame-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: 0265ba7d2895c2ac83674afa81efcd44cd75f6362ec9f6b8b19c8e5c96c69685
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-main-frame-main.py
+  kind: text
+  role: authoritative
+  sha256: fa08f4e096da90765a6f12fc4240583b50b0e2f636bf773f77dc80b1dc8f0261
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-main-shell-brief.md
+  kind: text
+  role: authoritative
+  sha256: b5ac1d928baa939bf54f0c61083bcec0250fbf2999d3d0574b875bf650abe8b6
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-main-shell-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: d6d3bc608c5cd5be4e9aef1d82b8a54e4e3f71d7a91cb9a6a7113475ecfc099a
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-main-shell-main.py
+  kind: text
+  role: authoritative
+  sha256: 08d1431d6b23ab1c4530fd57448fa0e6277bc723d92f8e485f2786903243d138
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-motor-cover-brief.md
+  kind: text
+  role: authoritative
+  sha256: 48743b5034e40e76f534dfbe67c42eb4b8e5760ce2d27da5449df3c76f599410
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-motor-cover-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: fc2746373c90d09d6f12e2e4f783d7b3650edecee689033fa2de935f4fb67536
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-motor-cover-main.py
+  kind: text
+  role: authoritative
+  sha256: 1da0a03d9922119e67a2cb476c629023deae9cbbf2f2169ed31d7721a72ac30b
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-rear-cover-mount-brief.md
+  kind: text
+  role: authoritative
+  sha256: 348aeba32dfce4fc443a55913bea31c2aad6ae87d3d8bf6eaca03c41b414635c
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-rear-cover-mount-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: b371be5d196ef9f7056b7bb1c5dca7978e1979ed2806ee55c9a9f2b2f088c8f7
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-rear-cover-mount-main.py
+  kind: text
+  role: authoritative
+  sha256: df6cec52ccf9a5c7b6f6f84f84e807c168b3e4d7d2d834bb008195a0b59933a3
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-rear-mount-brief.md
+  kind: text
+  role: authoritative
+  sha256: 22fb0d6e3c23b282144a619c221de2afaeebb128778e3c471cff5be614559f6f
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-rear-mount-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: db8952e8ea1b0ac5de2e3e36aaf25e63b29df5f0bdae13d26237dba80794278a
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-rear-mount-main.py
+  kind: text
+  role: authoritative
+  sha256: 9d7818017aa30e0bc9ba5bbce96c6c9c030c0257938d672d70727f2e1521c322
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-rear-shell-brief.md
+  kind: text
+  role: authoritative
+  sha256: d6794ccbc4e942db1f974df10beb3e31586636380fab9bb3960cb239b437e3f7
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-rear-shell-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: 3a4514dc2f2bd31e2e6dda0dcbccf2c6a5ec219e401ffd9be48b9a8f3dd0239a
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-rear-shell-main.py
+  kind: text
+  role: authoritative
+  sha256: cac76b3ba24c909f68e46fe8b972f86223ca5618ef8e4ed99fefea861cb4c4d8
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-servo-mount-brief.md
+  kind: text
+  role: authoritative
+  sha256: 7c04ffb564ff0e23666ab6b0fe8bd96af5dc5ced7fec51e5f4c8b4a63e212064
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-servo-mount-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: 2e0faab120b3f3a1099f4920515f57539f240dad767207155c2fd8ef928ea831
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-servo-mount-main.py
+  kind: text
+  role: authoritative
+  sha256: e56ab335baca03f47a0ff62fa683ba1ea7062401f6c1dfc93b04f47f6bbb89c0
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-top-cover-brief.md
+  kind: text
+  role: authoritative
+  sha256: 96f44370a92a6129a4a0fb1088a52c6cd1fd12cd8339bb4d2efdfd3302c4cd9e
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-top-cover-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: a85a4892df7c1778f9da3b4d293640bc2e0b726c265daa1b3cead3f70da707a7
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-top-cover-main.py
+  kind: text
+  role: authoritative
+  sha256: 849c52fb4d7f7488dcd66a284d0e3c23217d1ccb31adef391e09de08da7247d7
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'
+- path: sources/sprite-drone-vtx-mount-brief.md
+  kind: text
+  role: authoritative
+  sha256: 444f43732f3a307f439319645b4fa046d253f61ab81b6364117d27b50612fe76
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-vtx-mount-contract.yaml
+  kind: text
+  role: authoritative
+  sha256: bfba59bcb90285d9baedd0a9daca760a5c28f63288aa46bfa6e383812b6cc7ee
+  note: Supplied local source; precedence is v2 proposal/staging, built v1, then Sprite for unchanged details.
+- path: sources/sprite-drone-vtx-mount-main.py
+  kind: text
+  role: authoritative
+  sha256: 5052b81c1ef48e88ef71f115fc495883c8692fe31de5b606d4bea860a52f85aa
+  note: 'Passing source seed: reuse verbatim only for staging reuse parts; changes limited to approved v2 intent.'

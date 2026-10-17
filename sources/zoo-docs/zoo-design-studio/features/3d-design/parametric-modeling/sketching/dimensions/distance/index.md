@@ -1,0 +1,52 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/distance
+Title: Distance
+
+# Distance
+
+Control sketch spacing with distance dimensions in Zoo Design Studio.
+
+Distance dimensions define controlled spacing between points, lines, and other sketch entities. Use
+them to size profiles, preserve offset relationships, and communicate measured design intent as the
+sketch regenerates.
+
+Create a distance dimension by selecting a line when you want to control that segment's length, or by
+selecting two points or references when you want to control the spacing between them. Double-click an
+existing dimension label to edit its value.
+
+## Adding a Dimension to a Line
+
+The Distance tool can control the measured length of a selected sketch segment.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/distance/dimensions-line.gif"
+  alt="Adding a distance dimension to a line"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Distance dimensions can control the length of a selected sketch line
+</div>
+
+## Adding Dimensions to a Rectangle
+
+Use the Distance tool to add width and height dimensions to a closed four-sided profile.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/distance/dimensions-rectangle.gif"
+  alt="Adding dimensions to a rectangle"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Add dimensions to rectangular profiles to control width and height
+</div>
+
+This section covers the primary distance dimension types used in Zoo Design Studio:
+[Vertical Distance](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/distance/vertical-distance),
+[Horizontal Distance](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/distance/horizontal-distance),
+and [Absolute Distance](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/distance/absolute-distance).
+
+Vertical and horizontal distance dimensions control offset along the sketch axes, which is useful for
+layout-driven geometry and fully defined profiles. Absolute distance controls the direct separation
+between references when the design intent depends on true point-to-point measurement instead of axis-
+aligned spacing.

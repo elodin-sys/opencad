@@ -1,0 +1,908 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/four-bar/parts/rocker/contract.yaml: 5 parameters {'stated': 4, 'derived': 1}; sources unresolved {}; unanchored 4",
+        "open questions: 4 (blocking []); interfaces 3, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 4,
+          "derived": 1
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "Material, density and process are not stated in the spec; no mass claim is made (density left null).",
+          "No fit or tolerance class is stated for the \u00d86 pin holes; they are modelled at nominal 6.000 mm.",
+          "No edge breaks (chamfers, fillets) are stated for the plate or the hole edges; all edges are modelled sharp.",
+          "At O4 the rocker (assembly layer z 10..15) runs 10 mm above the ground's top face with no stated spacer, boss or pin length; the pin hardware is not part of this part."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [
+          "linkLength",
+          "endRadius",
+          "linkThickness",
+          "holeDiameter"
+        ],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "holeO4",
+          "bottom",
+          "holeB",
+          "mirrorY"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/build123d/four-bar/parts/rocker/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/build123d/four-bar/parts/rocker/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -8.0,
+            -8.0,
+            0.0
+          ],
+          "expected_max": [
+            88.0,
+            8.0,
+            5.0
+          ],
+          "measured_min": [
+            -8.0,
+            -8.0,
+            0.0
+          ],
+          "measured_max": [
+            88.0,
+            8.0,
+            5.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -8.0,
+            -8.0,
+            0.0
+          ],
+          "expected_max": [
+            88.0,
+            8.0,
+            5.0
+          ],
+          "measured_min": [
+            -8.0,
+            -8.0,
+            0.0
+          ],
+          "measured_max": [
+            88.0,
+            8.0,
+            5.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/four-bar/parts/rocker/inspect.json volume = 7122.5643 vs 7122.566",
+        "results/build123d/four-bar/parts/rocker/inspect.json surface_area = 4088.8487 vs 4088.849",
+        "results/build123d/four-bar/parts/rocker/inspect.json center_of_mass = [40.0, 0.0, 2.5] vs [40.0, 0.0, 2.5]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 7122.566,
+          "measured": 7122.5643,
+          "error": 0.0017,
+          "band": 14.2451,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 4088.849,
+          "measured": 4088.8487,
+          "error": 0.0003,
+          "band": 40.8885,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            40.0,
+            0.0,
+            2.5
+          ],
+          "measured": [
+            40.0,
+            0.0,
+            2.5
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/build123d/four-bar/parts/rocker/inspect.json features: 3/3 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared",
+        "symmetry mirrorY: max 0.001 mm at (87.9, 1.2, 3.2), p95 0.000 (tol 0.1 / 0.05) [fine STEP tessellation]"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "holeO4": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "holeB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "endO4": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "endB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "holeO4": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "bottom": {
+            "ok": true,
+            "kind": "face"
+          },
+          "holeB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "mirrorY": {
+            "ok": true,
+            "kind": "symmetry"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/build123d/four-bar/parts/rocker/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/build123d/four-bar/parts/rocker/inspect.json agreement engine=7122.564334552483 step=7122.564334552613 stl=7122.174235070626 (rel tol 0.002; independent=False)",
+        "results/build123d/four-bar/parts/rocker/inspect.json agreement.manifold = 7122.174235070626 (Manifold kernel witness, rel vs STEP 5.476952733083478e-05; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 7122.564334552483,
+        "kcl": 7122.564334552483,
+        "step": 7122.564334552613,
+        "stl": 7122.174235070626,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "manifold": 7122.174235070626,
+        "manifold_vs_step_rel": 5.476952733083478e-05,
+        "engine_vs_step_rel": 1.8259960352004037e-14,
+        "kcl_vs_step_rel": 1.8259960352004037e-14,
+        "stl_vs_step_rel": 5.476952733083478e-05,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/build123d/four-bar/parts/rocker/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 6/6 values; infeasible refused 2/2; interfaces pinned 4"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "endRadius",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 1067.035,
+                "measured": 1067.035128471579,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  2.0,
+                  2.0,
+                  0.0
+                ],
+                "measured": [
+                  2.0,
+                  2.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 3,
+                "driven": [
+                  "bottom",
+                  "endB",
+                  "endO4",
+                  "lengthX",
+                  "thicknessZ",
+                  "top",
+                  "web_x",
+                  "widthY"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 5.0,
+                  "volume": 4109.954508203808,
+                  "bbox_size": [
+                    90.0,
+                    10.0,
+                    5.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -6.0,
+                        -6.0,
+                        -0.0
+                      ],
+                      "measured": [
+                        -6.0,
+                        -6.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -3012.6098263488057,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 8.0,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 11.0,
+                  "volume": 10417.917499499476,
+                  "bbox_size": [
+                    102.0,
+                    22.0,
+                    5.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        6.0,
+                        6.0,
+                        0.0
+                      ],
+                      "measured": [
+                        6.0,
+                        6.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 3295.3531649468623,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -6.0,
+                  "value": 2.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: link width must clear the pin bore\", \"class\": \"program\", \"timings\": {\"failed_s\": 13.833, \"main_s\": 13.833}}"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "linkThickness",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 1424.513,
+                "measured": 1424.5128669105216,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 3,
+                "driven": [
+                  "bottom",
+                  "endB",
+                  "endO4",
+                  "lengthX",
+                  "thicknessZ",
+                  "top",
+                  "web_x",
+                  "widthY"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 3.0,
+                  "volume": 4273.538600731567,
+                  "bbox_size": [
+                    96.0,
+                    16.0,
+                    3.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -2.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        -2.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -2849.025733821046,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 5.0,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 8.0,
+                  "volume": 11396.10293528418,
+                  "bbox_size": [
+                    96.0,
+                    16.0,
+                    8.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        3.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        3.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 4273.5386007315665,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -5.0,
+                  "value": 0.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: linkThickness must be positive\", \"class\": \"program\", \"timings\": {\"failed_s\": 13.496, \"main_s\": 13.496}}"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "f8961a38a87a93c0acaa2f169d136dfe019bbeaef6e9020739ac4f9a67939090",
+          "re_export_sha256": "f8961a38a87a93c0acaa2f169d136dfe019bbeaef6e9020739ac4f9a67939090",
+          "ok": true
+        },
+        "sweep": {
+          "values": 6,
+          "passed": 6
+        },
+        "infeasible": {
+          "declared": 2,
+          "refused": 2
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/four-bar/parts/rocker/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=6",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "build123d",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "build123d"
+          ],
+          "forbidden_imports": [],
+          "asserts": 6,
+          "sketch_blocks": 10,
+          "feature_ops": 10,
+          "construction_ops": {
+            "calls": 10,
+            "has_result": true
+          },
+          "parameters": {
+            "linkLength": {
+              "found": true,
+              "value": 80.0,
+              "expected": 80.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "endRadius": {
+              "found": true,
+              "value": 8.0,
+              "expected": 8.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "linkWidth": {
+              "found": true,
+              "value": 16.0,
+              "expected": 16.0,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            },
+            "linkThickness": {
+              "found": true,
+              "value": 5.0,
+              "expected": 5.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "holeDiameter": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 38,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/four-bar/parts/rocker/export.json step.deterministic = True sha256 f8961a38a87a; stl=present; glb=present",
+        "results/build123d/four-bar/parts/rocker/inspect.json valid = True solids = 1 (expected 1)",
+        "results/build123d/four-bar/parts/rocker/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = False; manifold witness = 7122.174235070626"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/four-bar/parts/rocker/export/four-bar-rocker.step",
+            "sha256": "f8961a38a87a93c0acaa2f169d136dfe019bbeaef6e9020739ac4f9a67939090",
+            "bytes": 37398,
+            "deterministic": true,
+            "second_sha256": "f8961a38a87a93c0acaa2f169d136dfe019bbeaef6e9020739ac4f9a67939090",
+            "determinism_source": "edit restore re-export"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/four-bar/parts/rocker/export/four-bar-rocker.stl",
+            "sha256": "4c75ba1a5a0ab15075058ea9e5ac1cf7b10a745fa05c25ff9e45f96c869aa497",
+            "bytes": 29284
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/four-bar/parts/rocker/export/four-bar-rocker.glb",
+            "sha256": "c63161bcea552ddb78120727667c08d8a9b34da67f9338b8f3f72e0a7fd4f19d",
+            "bytes": 11256
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 7122.174235070626,
+          "faces": 584,
+          "vertices": 290,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 7122.174235070626,
+          "surface_area": 4088.388111222952,
+          "bbox_min": [
+            -8.0,
+            -7.999997615814209,
+            0.0
+          ],
+          "bbox_max": [
+            88.0,
+            7.999997615814209,
+            5.0
+          ],
+          "center_of_mass": [
+            40.00000093778609,
+            -1.1703066668814382e-06,
+            2.5
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 4d9d5c8c-ff02-4a6a-933e-88e299d2d7c4; engine versions ['0.12.0']; engine calls 10; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 10,
+        "allow_errors": false,
+        "engine_versions": [
+          "0.12.0"
+        ],
+        "zoo_versions": [
+          "0.12.0"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/build123d/four-bar/parts/rocker/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/four-bar/parts/rocker/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 10, 'has_result': True} lines = 38"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "build123d"
+        ],
+        "construction_ops": {
+          "calls": 10,
+          "has_result": true
+        },
+        "sketch_blocks": 10,
+        "feature_ops": 10
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

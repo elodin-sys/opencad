@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Sketching 2D shapes - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/sketch2d.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="sketching-2d-shapes"><a class="header" href="#sketching-2d-shapes">Sketching 2D shapes</a></h1>
+<p><strong>WARNING</strong>: This chapter covers the old syntax for our previous sketch library (that didn't support constraint solvers). If you're new to KCL, you should probably skip this chapter and read the new chapter on sketch blocks. If you've already got old KCL code that used the old syntax for sketching, don't worry, you can keep using the old syntax, and this chapter will explain it. But new users shouldn't worry about this, unless they're working with old code.</p>
+<ul>
+<li><a href="#your-first-triangle">Your first triangle</a>
+<ul>
+<li><a href="#1-choose-a-plane">1: Choose a plane</a></li>
+<li><a href="#2-start-sketching">2: Start sketching</a></li>
+<li><a href="#3-add-paths">3: Add paths</a></li>
+<li><a href="#4-add-more-lines-joining-on-from-previous-lines">4: Add more lines, joining on from previous lines.</a></li>
+<li><a href="#5-join-back-to-the-start">5: Join back to the start</a></li>
+<li><a href="#6-close-the-sketch">6: Close the sketch</a></li>
+</ul>
+</li>
+<li><a href="#enhancements">Enhancements</a>
+<ul>
+<li><a href="#closing-shapes">Closing shapes</a></li>
+<li><a href="#x-and-y-lines">X and Y lines</a></li>
+</ul>
+</li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<p>Let's use KCL to sketch some basic 2D shapes. <strong>Sketching</strong> is a core workflow for mechanical engineers, designers, and hobbyists. The basic steps of sketching are:</p>
+<ol>
+<li>Choose a plane to sketch on</li>
+<li>Start sketching at a certain point</li>
+<li>Draw a line from the current point to somewhere</li>
+<li>Add new lines, joining on from the previous lines</li>
+<li>Eventually, one line loops back to the starting point.</li>
+<li>Close the sketch, creating a 2D shape.</li>
+</ol>
+<p>You can do each of these steps in KCL. Let's see how!</p>
+<h2 id="your-first-triangle"><a class="header" href="#your-first-triangle">Your first triangle</a></h2>
+<p>Let's sketch a really simple triangle. We'll sketch a right-angled triangle, with side lengths 3 and 4.</p>
+<p>Just copy this code into the KCL editor:</p>
+<pre><code class="language-kcl">startSketchOn(XY)
+  |&gt; startProfile(at = [0, 0])
+  |&gt; line(end = [3, 0])
+  |&gt; line(end = [0, 4])
+  |&gt; line(endAbsolute = [0, 0])
+  |&gt; close()
+</code></pre>
+<p>Your screen should look something like this:</p>
+<p><img src="images/static/triangle_closed.png" alt="Result of running program 1" /></p>
+<p>Congratulations, you've sketched your first triangle! Rendering your first triangle is a <a href="https://rampantgames.com/blog/?p=7745">big deal in graphics programming</a>, and sketching your first triangle is a big deal in KCL.</p>
+<p>Let's break this code down line-by-line and see how it corresponds to each step of sketching from above. Note that each step in creating this triangle uses the pipeline syntax <code>|&gt;</code>. This means every function call is being piped into the next function call.</p>
+<h3 id="1-choose-a-plane"><a class="header" href="#1-choose-a-plane">1: Choose a plane</a></h3>
+<p>In KCL, there's six basic built-in planes you can use: XY, YZ, XZ, and negative versions of each (-XY, -YZ and -XZ). You can use one of these standard planes, or define your own (we'll get to that later). Those six standard planes can be used just like normal variables you define, except they're pre-defined by KCL in its standard library. You can pass them into functions, like the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-startSketchOn"><code>startSketchOn</code></a> function. So, line 1, <code>startSketchOn(XY)</code> is where you choose a plane, and start sketching on it.</p>
+<p><code>startSketchOn</code> takes one argument, the plane to sketch on. It's the special unlabeled first parameter. We'll go over some other planes you can sketch on in the chapter about <a href="sketch_on_face.html">sketch on face</a>.</p>
+<h3 id="2-start-sketching"><a class="header" href="#2-start-sketching">2: Start sketching</a></h3>
+<p>Sketches contain profiles -- basically, a sequence of lines, laid out top-to-tail (i.e. one line starts where the previous line ends). We have to start the profile somewhere, so we use <code>startProfile(at = [0, 0])</code>. The <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-startProfile"><code>startProfile</code></a> takes two parameters:</p>
+<ol>
+<li>The sketch we're adding a profile with. This is one of those special unlabeled first parameters, so we don't need a label. We're setting it to the sketch from <code>startSketchOn(XY)</code>, which is being piped in via the <code>|&gt;</code>. If you don't set this first parameter, it defaults to <code>%</code>, i.e. the previous pipeline expression. And that's exactly what we want! So we're leaving it unset.</li>
+<li>The <code>at</code> parameter indicates where the profile starts. For this example, we'll start at the origin of the XY plane, i.e. the point <code>[0, 0]</code>.</li>
+</ol>
+<h3 id="3-add-paths"><a class="header" href="#3-add-paths">3: Add paths</a></h3>
+<p>A profile is a sequence of paths. A path is some sort of curve between two points, possibly straight lines, circular arcs, parabolae, or something else. For this triangle, we're adding 3 paths, which are all straight lines. The <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-line"><code>line</code></a> call says to draw a line starting at the previous end point. Currently, this is <code>[0, 0]</code> from the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-startProfile"><code>startProfile</code></a> call. So this line starts at <code>[0, 0]</code>. Where does it end? Well, the <code>line</code> call says that <code>end = [3, 0]</code>, which means "extend this line 3 units along the X axis, and 0 units along the Y axis". This is a <em>relative</em> distance, because it's telling you how far to move from the previous point. So, this line goes from <code>[0, 0]</code> to <code>[3, 0]</code>.</p>
+<h3 id="4-add-more-lines-joining-on-from-previous-lines"><a class="header" href="#4-add-more-lines-joining-on-from-previous-lines">4: Add more lines, joining on from previous lines.</a></h3>
+<p>The next call is <code>line(end = [0, 4])</code>. It draws a line from the previous line's end (<code>[3, 0]</code>), extending a distance of 0 along X and 4 along Y. So it goes from <code>[3, 0]</code> to <code>[3, 4]</code>.</p>
+<h3 id="5-join-back-to-the-start"><a class="header" href="#5-join-back-to-the-start">5: Join back to the start</a></h3>
+<p>Our third line heads back to the start of the profile, i.e. <code>[0, 0]</code>. We do this by calling <code>line(endAbsolute = [0, 0])</code>. Note that this uses <code>endAbsolute =</code>, not <code>end =</code> like the previous lines. The <code>end =</code> arguments were <em>relative</em> distances: they said how far away the new point is, along both X and Y axes, from the previous point. This one is different: this is an <em>absolute</em> point, not a <em>relative</em> distance. The array <code>[0, 0]</code> isn't saying to move 0 along X and 0 along Y. It's saying, draw a line that ends at the specific point <code>[0, 0]</code>, i.e. the origin of the plane.</p>
+<p>Because this is the same point that our profile starts at, this line has looped our profile back to its start.</p>
+<p>We could have also used a relative line here, and looped back to the start with <code>line(end = [-3, -4])</code>. That would achieve the same thing. But this requires manual calculation. You, the programmer, have to look at all the previous lines and figure out how where the last line starts, and then "undo" all that distance by putting a line with the negative X and Y distances (so that the line goes back to the origin). In our example, this was easy, but in real-world designs this might be very tough! And even when it's easy, using an absolute point here communicates our intent better. We're just want to draw a line that returns to the start point. We don't really care about the distance here.</p>
+<p>It doesn't really matter which one you use, although note that Zoo Design Studio will usually prefer relative lines for almost everything. Closing a sketch is the one exception where Zoo Design Studio will use an absolute line.</p>
+<p>Now, if we stopped our program here, you could see all three lines:</p>
+<p><img src="images/static/triangle_open.png" alt="Result of running program 1" /></p>
+<p>Note that the <em>relative</em> lines (i.e. the first two line calls, with <code>end =</code>) have arrows showing where they're going. This last line, which ends at an <em>absolute</em> point, does not.</p>
+<h3 id="6-close-the-sketch"><a class="header" href="#6-close-the-sketch">6: Close the sketch</a></h3>
+<p>The last function being called is <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-close"><code>close</code></a>. It takes one argument, the sketch to close. As in the previous functions, it's an unlabeled first parameter, so you could write <code>close(%)</code>, but <code>close()</code> will do the exact same thing.</p>
+<p>Once we add the <code>close()</code> call, the rendering changes from just 3 lines (like in the second image in this page) to a filled-in shape (like in the first image on this page).</p>
+<h2 id="enhancements"><a class="header" href="#enhancements">Enhancements</a></h2>
+<p>This code totally achieved our goal: it sketches a right-angled triangle with sides of length 3 and 4. Mission accomplished.</p>
+<p>Of course, in programming, there's usually several different ways to achieve a goal. KCL is no different! Let's look at some different ways we could have sketched this shape.</p>
+<h3 id="closing-shapes"><a class="header" href="#closing-shapes">Closing shapes</a></h3>
+<p>One important principle in programming is "don't repeat yourself" (DRY). Look back at this code: it uses the point <code>[0, 0]</code> twice. Once when we start the sketch, and once when we close the sketch. There's nothing necessarily wrong with this, but if you want to change the triangle later, you'll have to change this in two different places. And if you make a typo in one of the places, the model will break, because the sketch will be starting and finishing at a different point. This program doesn't have a bug currently, but by repeating this value twice, we introduce a <em>potential</em> bug in the future. I'd call this program <em>brittle</em> -- it's not broken, but it could break in the future. If we could define the point <code>[0, 0]</code> just once, the program would be more resilient, i.e. less likely to break if you change something in the future.</p>
+<p>Here's a few ways to make this code less repetitive, less brittle, and DRY-er.</p>
+<p>Firstly, you could replace <code>[0, 0]</code> with a variable like <code>start</code>, and use it in both places.</p>
+<pre><code class="language-kcl">start = [0, 0]
+startSketchOn(XY)
+  |&gt; startProfile(at = start)
+  |&gt; line(end = [3, 0])
+  |&gt; line(end = [0, 4])
+  |&gt; line(endAbsolute = start)
+  |&gt; close()
+</code></pre>
+<p>Next, we could use a helper function <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-profileStart"><code>profileStart</code></a> instead.</p>
+<pre><code class="language-kcl">startSketchOn(XY)
+  |&gt; startProfile(at = [0, 0])
+  |&gt; line(end = [3, 0])
+  |&gt; line(end = [0, 4])
+  |&gt; line(endAbsolute = profileStart())
+  |&gt; close()
+</code></pre>
+<p>The <code>profileStart</code> function takes in the current profile, and returns its start value. It takes a single unlabeled parameter, which we're setting to % (the left-hand side of the |&gt;). Like always, if the special unlabeled argument is set to %, you can just omit the %, because that's the default.</p>
+<h3 id="x-and-y-lines"><a class="header" href="#x-and-y-lines">X and Y lines</a></h3>
+<p>The first line of our triangle is parallel to the X axis, and the second line is parallel to the Y axis. This means we could simplify our code somewhat by using the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-xLine"><code>xLine</code></a> and <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-yLine"><code>yLine</code></a> functions:</p>
+<pre><code class="language-kcl">startSketchOn(XY)
+  |&gt; startProfile(at = [0, 0])
+  |&gt; xLine(length = 3)
+  |&gt; yLine(length = 4)
+  |&gt; line(endAbsolute = profileStart())
+  |&gt; close()
+</code></pre>
+<p><code>xLine</code> takes an unlabeled first parameter for the sketch (which, as before, we're setting to % and can therefore omit) and then a <code>length</code> parameter, which tells KCL to draw a flat line, parallel to the X axis, with the given length. Basically,<code>xLine(length = n)</code> is a neater way to write a horizontal line like <code>line(end = [n, 0])</code>. You can use whichever one you prefer. The <code>yLine</code> function works the same way, but for vertical lines.</p>
+<p>These examples use <em>relative</em> xLine and yLine -- i.e. lines that end a certain <em>distance away from the previous point</em>. If you want to instead draw a line to a specific point along the X axis (like <code>x = 3</code>), you could use <code>xLine(endAbsolute = 3)</code>.</p>
+<h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
+<p>We've written our first triangle. We learned:</p>
+<ul>
+<li>Sketches are on some plane, and KCL includes standard planes XY, YZ and XZ (and their negative versions, which point the third axis in the opposite direction).</li>
+<li>Sketches contain profiles, which are made of sequential paths. In our example, there's one profile, a triangle, made of three paths (3 straight lines).</li>
+<li>Lines start at the end of the previous point (the first line starts at the <code>startProfile(at=)</code> point)</li>
+<li>Lines can end either a certain distance away along X and Y (a <em>relative</em> end), or at a particular point along the plane (an <em>absolute</em> end)</li>
+<li>The <code>close</code> function turns a sequence of paths that form a loop into a single 2D shape.</li>
+</ul>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="interop.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="sketch2d_curves.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="interop.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="sketch2d_curves.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

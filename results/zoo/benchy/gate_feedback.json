@@ -1,0 +1,1128 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/benchy/contract.yaml: 48 parameters {'stated': 23, 'inferred': 25}; sources unresolved {}; unanchored 0",
+        "open questions: 17 (blocking []); interfaces 3, unenforced ['printDatum', 'caliperSet'] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 23,
+          "inferred": 25
+        },
+        "soft_values": 25,
+        "open_questions": [
+          "Exact hull outer mould line, keel outline, transom rake, waterlines, sheer and NURBS/control points are unavailable. Provisional endpoints do not uniquely define the spoon hull or locate its 40 degree tangent.",
+          "Deck height, gunwale section/radii and inner bow-well shape are unstated. Adopted heights/thickness are assumptions; no thin-gunwale solid probe has sufficient uncertainty clearance.",
+          "Cabin outer envelope, taper, walls/interior and roof beam/thickness/overhangs are unspecified. Rectangular shell is provisional; roof solid probes lack clearance from uncertain slab placement.",
+          "Side-opening sizes, exact arch, trim and positions are unstated. Two mirrored openings use inferred dimensions; the photograph provides no calibrated measurements.",
+          "Front/rear window elevations, wall through-depths and front trim are unstated. Official clear sizes are retained; common height and wall stations are provisional.",
+          "Chimney height above roof, station, stem diameter, collar height and fillets are unstated. The 11 mm bore must remain blind at z=37; section review is required because no robust floor/rim solid probe follows from stated dimensions.",
+          "Hawsepipe station/elevation/direction, flange OD and projection convention against curved hull are unstated. A transverse mirrored pair is assumed; thin flanges lack safe solid-probe clearance.",
+          "Cargo-box station and corner radii are unspecified. A centred rectangular pocket is adopted; clear dimensions and floor z=6.50 are constrained, rounded exterior unresolved.",
+          "Stern nameplate outline, font, letterforms, placement and exact letter height (only less than 2 mm stated) are unresolved. Cosmetic geometry deferred; retain 0.10 mm extrusion if later specified, inside the finished envelope.",
+          "Boat-wheel geometry, size and position are unspecified; cosmetic feature deferred.",
+          "Fishing-rod-holder diameter, blind depth, slant and position, plus identities/counts of photographed deck fittings, are unresolved; cosmetic features deferred.",
+          "Bottom lettering content, font, outlines and depth are unspecified; cosmetic first-layer details deferred. Print layer lines/apparent roof slats are not CAD geometry.",
+          "Material, density and physical print tolerances are unknown; no mass, shrinkage compensation or guaranteed control-print match is claimed.",
+          "Confirm whether 15.55 cm3 includes every cavity, wheel, holder, flange and letter as modelled. The 10% finished-volume and 20000..31000 mm3 filled-blockout bands allow reconstruction uncertainty, not shape identity.",
+          "No reference mesh/coordinate table was ingested; surface area, centre of mass and deviation cannot be assigned. Official STL triangulation deviation 0.001 mm is not a reconstruction tolerance.",
+          "Probes/sections establish selected topology only. Caliper spans/diameters, angles, flange projections and full mirrored surface symmetry require STEP review. Thin annular features lack safe solid probes. Add centres if later specifying repeated coplanar datum faces.",
+          "The length edit's approximately +550 mm3 is a first-order hull estimate with 10% tolerance, not an analytic derivative. The height estimate depends on the provisional cabin; both await native-model verification."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [
+          "printDatum",
+          "caliperSet"
+        ],
+        "interface_checks": [
+          "mirrorY"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/zoo/benchy/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/zoo/benchy/verify.json engine bbox.max_error = 0.021"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            0.0,
+            -15.5,
+            0.0
+          ],
+          "expected_max": [
+            60.0,
+            15.5,
+            48.0
+          ],
+          "measured_min": [
+            -0.0,
+            -15.5,
+            -0.0
+          ],
+          "measured_max": [
+            60.0,
+            15.5,
+            48.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            0.0,
+            -15.5,
+            0.0
+          ],
+          "expected_max": [
+            60.0,
+            15.5,
+            48.0
+          ],
+          "measured_min": [
+            -0.0,
+            -15.5,
+            0.0
+          ],
+          "measured_max": [
+            60.021,
+            15.5,
+            48.02
+          ],
+          "max_error": 0.021,
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/zoo/benchy/inspect.json volume = 15141.5594 vs 15550.0",
+        "results/zoo/benchy/inspect.json surface_area = None vs None",
+        "results/zoo/benchy/inspect.json center_of_mass = None vs None"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 15550.0,
+          "measured": 15141.5594,
+          "error": 408.4406,
+          "band": 1555.0,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": false,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": false,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/zoo/benchy/inspect.json features: 11/11 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared",
+        "symmetry mirrorY: max 0.009 mm at (26.6, 10.2, 0.5), p95 0.000 (tol 0.1 / 0.05) [fine STEP tessellation]"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {},
+        "interfaces": {
+          "mirrorY": {
+            "ok": true,
+            "kind": "symmetry"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/zoo/benchy/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/zoo/benchy/inspect.json agreement engine=15137.439346866026 step=15141.559357293758 stl=15137.444112123005 (rel tol 0.002; independent=True)",
+        "results/zoo/benchy/inspect.json agreement.manifold = 15137.44378998566 (Manifold kernel witness, rel vs STEP 0.00027180604130545095; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 15137.439346866026,
+        "kcl": 15137.439346866026,
+        "step": 15141.559357293758,
+        "stl": 15137.444112123005,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": true,
+        "manifold": 15137.44378998566,
+        "manifold_vs_step_rel": 0.00027180604130545095,
+        "engine_vs_step_rel": 0.00027209948001476083,
+        "kcl_vs_step_rel": 0.00027209948001476083,
+        "stl_vs_step_rel": 0.0002717847662612576,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/zoo/benchy/edit.json 3/3 edit tests ok; restore.ok = True",
+        "sweep 0/0 values; infeasible refused 0/0; interfaces pinned 1"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "overallLength",
+            "delta": 3.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 550.0,
+                "measured": 568.5970806090991,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  3.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  2.9999999999901448,
+                  3.552713678800501e-15,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 1,
+                "driven": [
+                  "centreline",
+                  "keelBottom"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "overallHeight",
+            "delta": 2.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 270.0,
+                "measured": 271.99998219179724,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  2.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  2.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 1,
+                "driven": [
+                  "centreline",
+                  "chimneyAxial",
+                  "chimneyCollar",
+                  "chimneyTop",
+                  "frontWindow",
+                  "rearWindow"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "cargoBoxDepth",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -56.0,
+                "measured": -55.99999888687489,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 1,
+                "driven": [
+                  "cargoBoxTop",
+                  "cargoCavity"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "eb459fc60a40c74016c6453c60f3c5309234118788752f8c5a971957e5b74c67",
+          "re_export_sha256": "eb459fc60a40c74016c6453c60f3c5309234118788752f8c5a971957e5b74c67",
+          "ok": true
+        },
+        "sweep": {
+          "values": 0,
+          "passed": 0
+        },
+        "infeasible": {
+          "declared": 0,
+          "refused": 0
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/zoo/benchy/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=101",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 101,
+          "sketch_blocks": 7,
+          "feature_ops": 18,
+          "parameters": {
+            "overallLength": {
+              "found": true,
+              "value": 60.0,
+              "unit": "mm",
+              "expected": 60.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "overallWidth": {
+              "found": true,
+              "value": 31.0,
+              "unit": "mm",
+              "expected": 31.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "overallHeight": {
+              "found": true,
+              "value": 48.0,
+              "unit": "mm",
+              "expected": 48.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "bridgeRoofLength": {
+              "found": true,
+              "value": 23.0,
+              "unit": "mm",
+              "expected": 23.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "chimneyInnerDiameter": {
+              "found": true,
+              "value": 3.0,
+              "unit": "mm",
+              "expected": 3.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "chimneyOuterDiameter": {
+              "found": true,
+              "value": 7.0,
+              "unit": "mm",
+              "expected": 7.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "chimneyHoleDepth": {
+              "found": true,
+              "value": 11.0,
+              "unit": "mm",
+              "expected": 11.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cargoBoxTopHeight": {
+              "found": true,
+              "value": 15.5,
+              "unit": "mm",
+              "expected": 15.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cargoBoxOuterA": {
+              "found": true,
+              "value": 12.0,
+              "unit": "mm",
+              "expected": 12.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cargoBoxOuterB": {
+              "found": true,
+              "value": 10.81,
+              "unit": "mm",
+              "expected": 10.81,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cargoBoxInnerA": {
+              "found": true,
+              "value": 8.0,
+              "unit": "mm",
+              "expected": 8.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cargoBoxInnerB": {
+              "found": true,
+              "value": 7.0,
+              "unit": "mm",
+              "expected": 7.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cargoBoxDepth": {
+              "found": true,
+              "value": 9.0,
+              "unit": "mm",
+              "expected": 9.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hawsepipeInnerDiameter": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hawsepipeFlangeDepth": {
+              "found": true,
+              "value": 0.3,
+              "unit": "mm",
+              "expected": 0.3,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "frontWindowWidth": {
+              "found": true,
+              "value": 10.5,
+              "unit": "mm",
+              "expected": 10.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "frontWindowHeight": {
+              "found": true,
+              "value": 9.5,
+              "unit": "mm",
+              "expected": 9.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "rearWindowInnerDiameter": {
+              "found": true,
+              "value": 9.0,
+              "unit": "mm",
+              "expected": 9.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "rearWindowOuterDiameter": {
+              "found": true,
+              "value": 12.0,
+              "unit": "mm",
+              "expected": 12.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "rearWindowFlangeDepth": {
+              "found": true,
+              "value": 0.3,
+              "unit": "mm",
+              "expected": 0.3,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "bowOverhangAngle": {
+              "found": true,
+              "value": 40.0,
+              "unit": "deg",
+              "expected": 40.0,
+              "expected_unit": "deg",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "bridgeRoofAngle": {
+              "found": true,
+              "value": 5.5,
+              "unit": "deg",
+              "expected": 5.5,
+              "expected_unit": "deg",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "nameplateThickness": {
+              "found": true,
+              "value": 0.1,
+              "unit": "mm",
+              "expected": 0.1,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hullKeelLength": {
+              "found": true,
+              "value": 40.0,
+              "unit": "mm",
+              "expected": 40.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hullKeelWidth": {
+              "found": true,
+              "value": 20.0,
+              "unit": "mm",
+              "expected": 20.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hullKeelCenterX": {
+              "found": true,
+              "value": 25.0,
+              "unit": "mm",
+              "expected": 25.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hullSternWidth": {
+              "found": true,
+              "value": 22.0,
+              "unit": "mm",
+              "expected": 22.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "deckHeight": {
+              "found": true,
+              "value": 10.0,
+              "unit": "mm",
+              "expected": 10.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "sternGunwaleHeight": {
+              "found": true,
+              "value": 11.5,
+              "unit": "mm",
+              "expected": 11.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "bowGunwaleHeight": {
+              "found": true,
+              "value": 24.0,
+              "unit": "mm",
+              "expected": 24.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hullWallThickness": {
+              "found": true,
+              "value": 1.6,
+              "unit": "mm",
+              "expected": 1.6,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cabinCenterX": {
+              "found": true,
+              "value": 31.0,
+              "unit": "mm",
+              "expected": 31.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cabinLength": {
+              "found": true,
+              "value": 20.0,
+              "unit": "mm",
+              "expected": 20.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cabinWidth": {
+              "found": true,
+              "value": 18.0,
+              "unit": "mm",
+              "expected": 18.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cabinWallThickness": {
+              "found": true,
+              "value": 2.0,
+              "unit": "mm",
+              "expected": 2.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "bridgeRoofWidth": {
+              "found": true,
+              "value": 20.0,
+              "unit": "mm",
+              "expected": 20.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "bridgeRoofThickness": {
+              "found": true,
+              "value": 2.5,
+              "unit": "mm",
+              "expected": 2.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "chimneyCenterX": {
+              "found": true,
+              "value": 25.0,
+              "unit": "mm",
+              "expected": 25.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "chimneyHeightAboveRoof": {
+              "found": true,
+              "value": 10.0,
+              "unit": "mm",
+              "expected": 10.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "chimneyStemDiameter": {
+              "found": true,
+              "value": 5.5,
+              "unit": "mm",
+              "expected": 5.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "chimneyCollarHeight": {
+              "found": true,
+              "value": 2.0,
+              "unit": "mm",
+              "expected": 2.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cargoBoxCenterX": {
+              "found": true,
+              "value": 15.0,
+              "unit": "mm",
+              "expected": 15.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hawsepipeCenterX": {
+              "found": true,
+              "value": 52.0,
+              "unit": "mm",
+              "expected": 52.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hawsepipeCenterZ": {
+              "found": true,
+              "value": 18.0,
+              "unit": "mm",
+              "expected": 18.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hawsepipeOuterDiameter": {
+              "found": true,
+              "value": 6.0,
+              "unit": "mm",
+              "expected": 6.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "windowCenterHeight": {
+              "found": true,
+              "value": 27.0,
+              "unit": "mm",
+              "expected": 27.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "sideOpeningWidth": {
+              "found": true,
+              "value": 9.0,
+              "unit": "mm",
+              "expected": 9.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "sideOpeningHeight": {
+              "found": true,
+              "value": 22.0,
+              "unit": "mm",
+              "expected": 22.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 634,
+          "ok": true,
+          "dialect_ok": true,
+          "unit_ok": true,
+          "legacy": [],
+          "construction_ops": {
+            "sketch_blocks": 7,
+            "feature_ops": 18
+          }
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/zoo/benchy/export.json step.deterministic = True sha256 eb459fc60a40; stl=present; glb=present",
+        "results/zoo/benchy/inspect.json valid = True solids = 1 (expected 1)",
+        "results/zoo/benchy/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = True; manifold witness = 15137.44378998566"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/zoo/benchy/export/benchy.step",
+            "sha256": "eb459fc60a40c74016c6453c60f3c5309234118788752f8c5a971957e5b74c67",
+            "bytes": 507238,
+            "deterministic": true,
+            "second_sha256": "eb459fc60a40c74016c6453c60f3c5309234118788752f8c5a971957e5b74c67",
+            "determinism_source": "edit restore re-export"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/zoo/benchy/export/benchy.stl",
+            "sha256": "d81b2a85885f75b4c830391049d05993110c619faa098f0e450e51464a1e150b",
+            "bytes": 3260816
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/zoo/benchy/export/benchy.glb",
+            "sha256": "48fa03cd30e9a045e29b255f27ac29ea122024b39a82017cfdc7413ae03e1c0a",
+            "bytes": 1464528
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 15137.44378998566,
+          "faces": 15394,
+          "vertices": 7689,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 15137.444112123005,
+          "surface_area": 10091.049125318918,
+          "bbox_min": [
+            -3.5527137e-15,
+            -15.5,
+            0.0
+          ],
+          "bbox_max": [
+            60.0,
+            15.5,
+            48.0
+          ],
+          "center_of_mass": [
+            26.80008189379695,
+            9.519752201608597e-05,
+            12.359850941526158
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a14767-aed2-7a10-8430-f5f17e7ef9b1; engine versions ['zoo 0.2.204 (105efcaaacd061157ad86e5aee54394f575bd650)']; engine calls 8; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 8,
+        "allow_errors": false,
+        "engine_versions": [
+          "zoo 0.2.204 (105efcaaacd061157ad86e5aee54394f575bd650)"
+        ],
+        "zoo_versions": [
+          "zoo 0.2.204 (105efcaaacd061157ad86e5aee54394f575bd650)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/zoo/benchy/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present, no traced geometry",
+      "ok": true,
+      "evidence": [
+        "results/zoo/benchy/verify.json hygiene.forbidden_imports = [] construction_ops = {'sketch_blocks': 7, 'feature_ops': 18} lines = 634"
+      ],
+      "failure_means": "the deliverable is a re-export or a trace of the reference, not a design",
+      "knob": "rebuild from construction with dimensions as parameters; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "construction_ops": {
+          "sketch_blocks": 7,
+          "feature_ops": 18
+        },
+        "sketch_blocks": 7,
+        "feature_ops": 18,
+        "source_size": null
+      }
+    }
+  ],
+  "retry": {
+    "attempted": true,
+    "corrections": 1,
+    "reason": [
+      "edit_robustness"
+    ],
+    "gates_before": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": true,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": false,
+      "source_hygiene": true,
+      "export_integrity": true,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "gates_after": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": true,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": true,
+      "source_hygiene": true,
+      "export_integrity": true,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "history": [
+      {
+        "key": "correction-1",
+        "role": "correction",
+        "failed_after": [],
+        "retryable_after": [],
+        "signature": "|ok|-",
+        "kcl_changed": true,
+        "incomplete": false,
+        "failing_count": 0,
+        "failing_items": [],
+        "reverted_to_checkpoint": false,
+        "budget_s": 900.0,
+        "contract_changed": false
+      }
+    ],
+    "stopped": "gates pass",
+    "stuck_class": null
+  }
+}

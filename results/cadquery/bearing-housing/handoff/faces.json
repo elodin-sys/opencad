@@ -1,0 +1,177 @@
+{
+  "named_faces": {
+    "bottom_face": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 3160.954156170374,
+      "ok": true,
+      "position": 0.0,
+      "area_expected": 3161.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 7.709904987739826e-12,
+      "centroid_uv": [
+        -3.4994229736184934e-13,
+        -7.701959186368918e-12
+      ]
+    },
+    "counterbore_floor": {
+      "plane": "z",
+      "at": 12.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1581.0065029190637,
+      "ok": true,
+      "position": 12.0,
+      "area_expected": 1581.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.3502983706728935e-15,
+      "centroid_uv": [
+        1.7763568394002505e-15,
+        1.5389797952876481e-15
+      ]
+    },
+    "flange_top_left": {
+      "plane": "z",
+      "at": 11.0,
+      "normal": "+",
+      "found": 1,
+      "area": 369.23208259182934,
+      "ok": true,
+      "position": 11.0,
+      "area_expected": 369.2,
+      "area_ok": true,
+      "center_expected": [
+        -34.38,
+        0.0
+      ],
+      "center_error": 0.0012755576156635584,
+      "centroid_uv": [
+        -34.381275557615666,
+        -2.623186041987319e-12
+      ]
+    },
+    "flange_top_right": {
+      "plane": "z",
+      "at": 11.0,
+      "normal": "+",
+      "found": 1,
+      "area": 369.23208259141177,
+      "ok": true,
+      "position": 11.0,
+      "area_expected": 369.2,
+      "area_ok": true,
+      "center_expected": [
+        34.38,
+        0.0
+      ],
+      "center_error": 0.0012755576150951242,
+      "centroid_uv": [
+        34.3812755576151,
+        -4.624675335709031e-12
+      ]
+    },
+    "boss_top": {
+      "plane": "z",
+      "at": 26.0,
+      "normal": "+",
+      "found": 1,
+      "area": 348.02868856660825,
+      "ok": true,
+      "position": 26.0,
+      "area_expected": 348.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 5.1537890883897896e-14,
+      "centroid_uv": [
+        -4.973799150320701e-14,
+        1.3501348006309334e-14
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "bottom_face",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": 3161.0,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "counterbore_floor",
+      "plane": "z",
+      "at": 12.0,
+      "normal": "+",
+      "area": 1581.0,
+      "area_tolerance_rel": 0.001,
+      "tolerance": 0.01,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "flange_top_left",
+      "plane": "z",
+      "at": 11.0,
+      "normal": "+",
+      "area": 369.2,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        -34.38,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "flange_top_right",
+      "plane": "z",
+      "at": 11.0,
+      "normal": "+",
+      "area": 369.2,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        34.38,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "boss_top",
+      "plane": "z",
+      "at": 26.0,
+      "normal": "+",
+      "area": 348.0,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 9
+}

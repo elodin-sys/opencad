@@ -1,0 +1,10 @@
+Source URL: https://zoo.dev/docs/glossary/host
+Title: Host
+
+# Host
+
+A computer or piece of software allowing others to make requests of it.
+
+When discussing [APIs](/docs/glossary/application-programming-interface-api), a "host" is a machine or application that has some functionality added to it allowing it to take requests from one or more [clients](/docs/glossary/client). A host may fetch some data or resources for the client, do some work on its behalf, or usually some combination of the two.
+
+With Zoo, we are the host and your software (and a lot of others!) is the client. That's why we've assembled a team of software infrastructure experts to make our API services fast and ready to scale.

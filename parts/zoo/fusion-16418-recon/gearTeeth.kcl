@@ -1,0 +1,620 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import toothCount, toothPhase, toothPitchDeg, rootDiameter, rootRadius, tipCircleRadius, tipFilletDiameter, tipFilletRadius, tipOuterRadius, discThickness, envelopeMinY, envelopeSizeY, envelopeSizeX, envelopeSizeZ, gearModule, hexBossVertex from "params.kcl"
+
+assert(toothCount, isGreaterThan = 2, error = "need at least three teeth")
+assert(abs(toothCount - floor(toothCount)), isLessThan = 0.0000001, error = "toothCount must be an integer")
+assert(rootDiameter, isGreaterThan = 0mm, error = "root diameter must be positive")
+assert(rootRadius, isGreaterThan = hexBossVertex, error = "tooth spaces must stay outside the hex boss")
+assert(tipFilletDiameter, isGreaterThan = 0mm, error = "tip fillet diameter must be positive")
+assert(tipFilletRadius, isGreaterThan = 0mm, error = "tip fillet radius must be positive")
+assert(tipCircleRadius, isGreaterThan = rootRadius, error = "tip-circle axes must sit outside the root")
+assert(tipOuterRadius, isGreaterThan = tipCircleRadius, error = "addendum must sit outside the tip-circle axes")
+assert(discThickness, isGreaterThan = 0mm, error = "disc thickness must be positive")
+assert(envelopeSizeY, isGreaterThan = discThickness, error = "hex boss must stand above the disc")
+assert(toothPitchDeg, isGreaterThan = 0deg, error = "tooth pitch must be positive")
+assert(gearModule, isGreaterThan = 0mm, error = "gear module must be positive")
+assert(envelopeSizeX, isGreaterThan = 0mm, error = "envelope width must be positive")
+assert(envelopeSizeZ, isGreaterThan = 0mm, error = "envelope depth must be positive")
+assert(tipOuterRadius, isLessThan = envelopeSizeX, error = "disc must fit in the X envelope")
+assert(tipOuterRadius, isLessThan = envelopeSizeZ, error = "disc must fit in the Z envelope")
+assert(abs(toothCount - 36), isLessThan = 0.5, error = "the toothed outline below is written out for 36 teeth")
+
+// Flanks meet the root at about +-0.3 pitch (~3 deg at 10 deg), leaving a ~4 deg space.
+rootHalfAngle = toothPitchDeg * 0.3
+
+fn xz(@radius, ang) {
+  return [radius * cos(ang), radius * sin(ang)]
+}
+
+fn outerTangent(@rootPt, centre, fillet) {
+  vx = (centre[0] - rootPt[0]): number(_)
+  vz = (centre[1] - rootPt[1]): number(_)
+  rr = fillet: number(_)
+  d2 = vx * vx + vz * vz
+  assert(d2, isGreaterThan = rr * rr, error = "root point lies inside the tip circle")
+  a = rr * rr / d2
+  s = rr / d2 * sqrt(d2 - (rr * rr))
+  firstX = centre[0]: number(_) - (a * vx) + s * (0 - vz)
+  firstZ = centre[1]: number(_) - (a * vz) + s * vx
+  secondX = centre[0]: number(_) - (a * vx) - (s * (0 - vz))
+  secondZ = centre[1]: number(_) - (a * vz) - (s * vx)
+  return if firstX * firstX + firstZ * firstZ > secondX * secondX + secondZ * secondZ {
+    [firstX: mm, firstZ: mm]
+  } else {
+    [secondX: mm, secondZ: mm]
+  }
+}
+
+// Tooth k about a = toothPhase + k*toothPitchDeg: [rootMinus, tipMinus, tipPlus, rootPlus, tipCentre].
+fn toothPts(@k) {
+  a = toothPhase + k * toothPitchDeg
+  c = xz(tipCircleRadius, ang = a)
+  rm = xz(rootRadius, ang = a - rootHalfAngle)
+  rp = xz(rootRadius, ang = a + rootHalfAngle)
+  return [
+    rm,
+    outerTangent(rm, centre = c, fillet = tipFilletRadius),
+    outerTangent(rp, centre = c, fillet = tipFilletRadius),
+    rp,
+    c
+  ]
+}
+
+// Seating at datum A: sketch X = world +X, sketch Y = world +Z, extrude +Y.
+seatingPlane = {
+  origin = { x = 0mm, y = envelopeMinY, z = 0mm },
+  xAxis = { x = 1, y = 0, z = 0 },
+  yAxis = { x = 0, y = 0, z = 1 }
+}
+
+t0 = toothPts(0)
+t1 = toothPts(1)
+t2 = toothPts(2)
+t3 = toothPts(3)
+t4 = toothPts(4)
+t5 = toothPts(5)
+t6 = toothPts(6)
+t7 = toothPts(7)
+t8 = toothPts(8)
+t9 = toothPts(9)
+t10 = toothPts(10)
+t11 = toothPts(11)
+t12 = toothPts(12)
+t13 = toothPts(13)
+t14 = toothPts(14)
+t15 = toothPts(15)
+t16 = toothPts(16)
+t17 = toothPts(17)
+t18 = toothPts(18)
+t19 = toothPts(19)
+t20 = toothPts(20)
+t21 = toothPts(21)
+t22 = toothPts(22)
+t23 = toothPts(23)
+t24 = toothPts(24)
+t25 = toothPts(25)
+t26 = toothPts(26)
+t27 = toothPts(27)
+t28 = toothPts(28)
+t29 = toothPts(29)
+t30 = toothPts(30)
+t31 = toothPts(31)
+t32 = toothPts(32)
+t33 = toothPts(33)
+t34 = toothPts(34)
+t35 = toothPts(35)
+
+// One closed outline (36 x flank, tip arc, flank, root arc) extruded once: single caps at y = envelopeMinY
+// and envelopeMinY + discThickness, one partial root cylinder, 36 tip-fillet cylinders, no boolean seams.
+export fn toothedDisc() {
+  outline = sketch(on = seatingPlane) {
+    fm0 = line(start = t0[0], end = t0[1])
+    ta0 = arc(
+      start = t0[1],
+      end = t0[2],
+      center = t0[4],
+      direction = CCW,
+    )
+    fp0 = line(start = t0[2], end = t0[3])
+    ra0 = arc(
+      start = t0[3],
+      end = t1[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm1 = line(start = t1[0], end = t1[1])
+    ta1 = arc(
+      start = t1[1],
+      end = t1[2],
+      center = t1[4],
+      direction = CCW,
+    )
+    fp1 = line(start = t1[2], end = t1[3])
+    ra1 = arc(
+      start = t1[3],
+      end = t2[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm2 = line(start = t2[0], end = t2[1])
+    ta2 = arc(
+      start = t2[1],
+      end = t2[2],
+      center = t2[4],
+      direction = CCW,
+    )
+    fp2 = line(start = t2[2], end = t2[3])
+    ra2 = arc(
+      start = t2[3],
+      end = t3[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm3 = line(start = t3[0], end = t3[1])
+    ta3 = arc(
+      start = t3[1],
+      end = t3[2],
+      center = t3[4],
+      direction = CCW,
+    )
+    fp3 = line(start = t3[2], end = t3[3])
+    ra3 = arc(
+      start = t3[3],
+      end = t4[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm4 = line(start = t4[0], end = t4[1])
+    ta4 = arc(
+      start = t4[1],
+      end = t4[2],
+      center = t4[4],
+      direction = CCW,
+    )
+    fp4 = line(start = t4[2], end = t4[3])
+    ra4 = arc(
+      start = t4[3],
+      end = t5[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm5 = line(start = t5[0], end = t5[1])
+    ta5 = arc(
+      start = t5[1],
+      end = t5[2],
+      center = t5[4],
+      direction = CCW,
+    )
+    fp5 = line(start = t5[2], end = t5[3])
+    ra5 = arc(
+      start = t5[3],
+      end = t6[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm6 = line(start = t6[0], end = t6[1])
+    ta6 = arc(
+      start = t6[1],
+      end = t6[2],
+      center = t6[4],
+      direction = CCW,
+    )
+    fp6 = line(start = t6[2], end = t6[3])
+    ra6 = arc(
+      start = t6[3],
+      end = t7[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm7 = line(start = t7[0], end = t7[1])
+    ta7 = arc(
+      start = t7[1],
+      end = t7[2],
+      center = t7[4],
+      direction = CCW,
+    )
+    fp7 = line(start = t7[2], end = t7[3])
+    ra7 = arc(
+      start = t7[3],
+      end = t8[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm8 = line(start = t8[0], end = t8[1])
+    ta8 = arc(
+      start = t8[1],
+      end = t8[2],
+      center = t8[4],
+      direction = CCW,
+    )
+    fp8 = line(start = t8[2], end = t8[3])
+    ra8 = arc(
+      start = t8[3],
+      end = t9[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm9 = line(start = t9[0], end = t9[1])
+    ta9 = arc(
+      start = t9[1],
+      end = t9[2],
+      center = t9[4],
+      direction = CCW,
+    )
+    fp9 = line(start = t9[2], end = t9[3])
+    ra9 = arc(
+      start = t9[3],
+      end = t10[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm10 = line(start = t10[0], end = t10[1])
+    ta10 = arc(
+      start = t10[1],
+      end = t10[2],
+      center = t10[4],
+      direction = CCW,
+    )
+    fp10 = line(start = t10[2], end = t10[3])
+    ra10 = arc(
+      start = t10[3],
+      end = t11[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm11 = line(start = t11[0], end = t11[1])
+    ta11 = arc(
+      start = t11[1],
+      end = t11[2],
+      center = t11[4],
+      direction = CCW,
+    )
+    fp11 = line(start = t11[2], end = t11[3])
+    ra11 = arc(
+      start = t11[3],
+      end = t12[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm12 = line(start = t12[0], end = t12[1])
+    ta12 = arc(
+      start = t12[1],
+      end = t12[2],
+      center = t12[4],
+      direction = CCW,
+    )
+    fp12 = line(start = t12[2], end = t12[3])
+    ra12 = arc(
+      start = t12[3],
+      end = t13[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm13 = line(start = t13[0], end = t13[1])
+    ta13 = arc(
+      start = t13[1],
+      end = t13[2],
+      center = t13[4],
+      direction = CCW,
+    )
+    fp13 = line(start = t13[2], end = t13[3])
+    ra13 = arc(
+      start = t13[3],
+      end = t14[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm14 = line(start = t14[0], end = t14[1])
+    ta14 = arc(
+      start = t14[1],
+      end = t14[2],
+      center = t14[4],
+      direction = CCW,
+    )
+    fp14 = line(start = t14[2], end = t14[3])
+    ra14 = arc(
+      start = t14[3],
+      end = t15[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm15 = line(start = t15[0], end = t15[1])
+    ta15 = arc(
+      start = t15[1],
+      end = t15[2],
+      center = t15[4],
+      direction = CCW,
+    )
+    fp15 = line(start = t15[2], end = t15[3])
+    ra15 = arc(
+      start = t15[3],
+      end = t16[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm16 = line(start = t16[0], end = t16[1])
+    ta16 = arc(
+      start = t16[1],
+      end = t16[2],
+      center = t16[4],
+      direction = CCW,
+    )
+    fp16 = line(start = t16[2], end = t16[3])
+    ra16 = arc(
+      start = t16[3],
+      end = t17[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm17 = line(start = t17[0], end = t17[1])
+    ta17 = arc(
+      start = t17[1],
+      end = t17[2],
+      center = t17[4],
+      direction = CCW,
+    )
+    fp17 = line(start = t17[2], end = t17[3])
+    ra17 = arc(
+      start = t17[3],
+      end = t18[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm18 = line(start = t18[0], end = t18[1])
+    ta18 = arc(
+      start = t18[1],
+      end = t18[2],
+      center = t18[4],
+      direction = CCW,
+    )
+    fp18 = line(start = t18[2], end = t18[3])
+    ra18 = arc(
+      start = t18[3],
+      end = t19[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm19 = line(start = t19[0], end = t19[1])
+    ta19 = arc(
+      start = t19[1],
+      end = t19[2],
+      center = t19[4],
+      direction = CCW,
+    )
+    fp19 = line(start = t19[2], end = t19[3])
+    ra19 = arc(
+      start = t19[3],
+      end = t20[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm20 = line(start = t20[0], end = t20[1])
+    ta20 = arc(
+      start = t20[1],
+      end = t20[2],
+      center = t20[4],
+      direction = CCW,
+    )
+    fp20 = line(start = t20[2], end = t20[3])
+    ra20 = arc(
+      start = t20[3],
+      end = t21[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm21 = line(start = t21[0], end = t21[1])
+    ta21 = arc(
+      start = t21[1],
+      end = t21[2],
+      center = t21[4],
+      direction = CCW,
+    )
+    fp21 = line(start = t21[2], end = t21[3])
+    ra21 = arc(
+      start = t21[3],
+      end = t22[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm22 = line(start = t22[0], end = t22[1])
+    ta22 = arc(
+      start = t22[1],
+      end = t22[2],
+      center = t22[4],
+      direction = CCW,
+    )
+    fp22 = line(start = t22[2], end = t22[3])
+    ra22 = arc(
+      start = t22[3],
+      end = t23[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm23 = line(start = t23[0], end = t23[1])
+    ta23 = arc(
+      start = t23[1],
+      end = t23[2],
+      center = t23[4],
+      direction = CCW,
+    )
+    fp23 = line(start = t23[2], end = t23[3])
+    ra23 = arc(
+      start = t23[3],
+      end = t24[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm24 = line(start = t24[0], end = t24[1])
+    ta24 = arc(
+      start = t24[1],
+      end = t24[2],
+      center = t24[4],
+      direction = CCW,
+    )
+    fp24 = line(start = t24[2], end = t24[3])
+    ra24 = arc(
+      start = t24[3],
+      end = t25[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm25 = line(start = t25[0], end = t25[1])
+    ta25 = arc(
+      start = t25[1],
+      end = t25[2],
+      center = t25[4],
+      direction = CCW,
+    )
+    fp25 = line(start = t25[2], end = t25[3])
+    ra25 = arc(
+      start = t25[3],
+      end = t26[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm26 = line(start = t26[0], end = t26[1])
+    ta26 = arc(
+      start = t26[1],
+      end = t26[2],
+      center = t26[4],
+      direction = CCW,
+    )
+    fp26 = line(start = t26[2], end = t26[3])
+    ra26 = arc(
+      start = t26[3],
+      end = t27[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm27 = line(start = t27[0], end = t27[1])
+    ta27 = arc(
+      start = t27[1],
+      end = t27[2],
+      center = t27[4],
+      direction = CCW,
+    )
+    fp27 = line(start = t27[2], end = t27[3])
+    ra27 = arc(
+      start = t27[3],
+      end = t28[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm28 = line(start = t28[0], end = t28[1])
+    ta28 = arc(
+      start = t28[1],
+      end = t28[2],
+      center = t28[4],
+      direction = CCW,
+    )
+    fp28 = line(start = t28[2], end = t28[3])
+    ra28 = arc(
+      start = t28[3],
+      end = t29[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm29 = line(start = t29[0], end = t29[1])
+    ta29 = arc(
+      start = t29[1],
+      end = t29[2],
+      center = t29[4],
+      direction = CCW,
+    )
+    fp29 = line(start = t29[2], end = t29[3])
+    ra29 = arc(
+      start = t29[3],
+      end = t30[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm30 = line(start = t30[0], end = t30[1])
+    ta30 = arc(
+      start = t30[1],
+      end = t30[2],
+      center = t30[4],
+      direction = CCW,
+    )
+    fp30 = line(start = t30[2], end = t30[3])
+    ra30 = arc(
+      start = t30[3],
+      end = t31[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm31 = line(start = t31[0], end = t31[1])
+    ta31 = arc(
+      start = t31[1],
+      end = t31[2],
+      center = t31[4],
+      direction = CCW,
+    )
+    fp31 = line(start = t31[2], end = t31[3])
+    ra31 = arc(
+      start = t31[3],
+      end = t32[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm32 = line(start = t32[0], end = t32[1])
+    ta32 = arc(
+      start = t32[1],
+      end = t32[2],
+      center = t32[4],
+      direction = CCW,
+    )
+    fp32 = line(start = t32[2], end = t32[3])
+    ra32 = arc(
+      start = t32[3],
+      end = t33[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm33 = line(start = t33[0], end = t33[1])
+    ta33 = arc(
+      start = t33[1],
+      end = t33[2],
+      center = t33[4],
+      direction = CCW,
+    )
+    fp33 = line(start = t33[2], end = t33[3])
+    ra33 = arc(
+      start = t33[3],
+      end = t34[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm34 = line(start = t34[0], end = t34[1])
+    ta34 = arc(
+      start = t34[1],
+      end = t34[2],
+      center = t34[4],
+      direction = CCW,
+    )
+    fp34 = line(start = t34[2], end = t34[3])
+    ra34 = arc(
+      start = t34[3],
+      end = t35[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    fm35 = line(start = t35[0], end = t35[1])
+    ta35 = arc(
+      start = t35[1],
+      end = t35[2],
+      center = t35[4],
+      direction = CCW,
+    )
+    fp35 = line(start = t35[2], end = t35[3])
+    ra35 = arc(
+      start = t35[3],
+      end = t0[0],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+  }
+  disc = extrude(region(point = xz(rootRadius * 0.5, ang = 0deg), sketch = outline), length = discThickness, direction = [0, 1, 0])
+  hide(outline)
+  return disc
+}

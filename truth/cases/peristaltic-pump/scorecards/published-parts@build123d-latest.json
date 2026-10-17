@@ -1,0 +1,127 @@
+{
+  "case": "peristaltic-pump",
+  "arm": "published-parts",
+  "design": "peristaltic-pump",
+  "kind": "machine",
+  "mode": "analysis",
+  "backend": "build123d",
+  "truth_class": "A",
+  "scored_at": "2026-09-25T09:47:09Z",
+  "verdict": "FAIL",
+  "error": null,
+  "accuracy_score": null,
+  "summary": {
+    "required_pass": 0,
+    "required_total": 0,
+    "optional_pass": 0,
+    "optional_total": 0,
+    "performance_pass": 1,
+    "performance_scored": 2,
+    "performance_total": 2
+  },
+  "checks": [],
+  "performance": [
+    {
+      "id": "flowRate",
+      "kind": "performance",
+      "quantity": "flow_rate",
+      "unit": "mL/min",
+      "case": "rotor108",
+      "evidence": "A",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "status": "scored",
+      "prediction": 6.1086165056559985,
+      "reference": 1.62,
+      "error": 4.488616505655998,
+      "relative_error": 2.7707509294172827,
+      "u_meas": 0.08,
+      "u_numerical": 0.0,
+      "u_input": 0.0,
+      "z": 56.107706320699975,
+      "z_max": 2.0,
+      "ok": false
+    },
+    {
+      "id": "driveRatio",
+      "kind": "performance",
+      "quantity": "transmission_ratio",
+      "unit": "",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "status": "scored",
+      "prediction": 0.25,
+      "reference": 0.25,
+      "error": 0.0,
+      "tolerance": 1e-09,
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": "10 pass, 0 fail, 4 n/a",
+    "failed": []
+  },
+  "simulations": {
+    "peristaltic": {
+      "status": "ok",
+      "solver": {
+        "name": "reduced:peristaltic"
+      },
+      "reason": null
+    }
+  },
+  "hash_binding": {
+    "manifest_sha256": "45bc6edc1f4850fce97b8c7e0fa473c943babadcd6a01e793d82f3024623be51",
+    "truth_files": {
+      "truth/raw/behrens-dataset1.zip": "911b2bbc88d019485613f0cf44aedc195d67909fe26fb1d313e6bcd587218dbd"
+    },
+    "input_files": {
+      "inputs/behrens-pump-packet.md": "bdab3462725e9554f44290ad423461456b135361fc6bab52adb83e5a7b961bae",
+      "inputs/1-gear-box-base.step": "d63eaba9c1df2347b1a3cc5805a3f3ed12b02543237d9153ffa7a46b2dab9288",
+      "inputs/2-small-gear-with-shelf.step": "943cf69986d0810e5d4dd4b4f1307508561b4f0620361e9e163c47bf6ead20d7",
+      "inputs/3-stacked-gear.step": "971d50c72c09b05d80cafb364090821e1777ec649e82339345000e8397d878dc",
+      "inputs/4-gear-box-upper-case.step": "41f6a78782749909ac611119009a52841b0666f8ea1c0d71bf764aec6700fa3d",
+      "inputs/5-large-gear.step": "47a710ed206130d114428870aeb2fa7ac577d3ae4f2cbba6491e986152cc01a3",
+      "inputs/6.1-peristaltic-pump-stator-3mm.step": "6b531c2802d6d9605d8659b4cf54d25659df54942c976bdcff04cbbd7672bd16",
+      "inputs/7.1-peristaltic-pump-lid-3mm.step": "a1a12d25456202fc4cc002c5363d7d1b463c31409ec005a6697ce4d167095c82",
+      "inputs/8-peristaltic-pump-clamp.step": "f948d46506a753fc7d160b323e1d5971ae638f2004d152bb3e3ec31e09f24994",
+      "inputs/9-peristaltic-pump-rotor.step": "996c2325ecae541f8a0b060d69add927e81f9233b26cdd3ddab105f1a90e562f"
+    },
+    "step_sha256": "2a870ecc0afad3061257fc610fb5184eef5f1e02fbc6ac46519c75fd697caed7",
+    "assembly_source": {
+      "checkpoint.py": "2974eefd511a82ac197ca694b666232b03fcfbbb4603a00b74e302bcbf5ed3ba",
+      "main.py": "a2b3954a8aad31ff37d4e93103011310c63b9052e83db790874636e654a08458"
+    },
+    "design_bundle": {
+      "assembly.yaml": "feb94949be498d2e04f09a8062c9749e4ef0a2d499305b786699bad18793b18d",
+      "brief.md": "c4770c49f95be3ba40628bc016f2699a6361415f235c3d32197c12e6b982e6d9",
+      "sources/1-gear-box-base.step": "d63eaba9c1df2347b1a3cc5805a3f3ed12b02543237d9153ffa7a46b2dab9288",
+      "sources/2-small-gear-with-shelf.step": "943cf69986d0810e5d4dd4b4f1307508561b4f0620361e9e163c47bf6ead20d7",
+      "sources/3-stacked-gear.step": "971d50c72c09b05d80cafb364090821e1777ec649e82339345000e8397d878dc",
+      "sources/4-gear-box-upper-case.step": "41f6a78782749909ac611119009a52841b0666f8ea1c0d71bf764aec6700fa3d",
+      "sources/5-large-gear.step": "47a710ed206130d114428870aeb2fa7ac577d3ae4f2cbba6491e986152cc01a3",
+      "sources/6.1-peristaltic-pump-stator-3mm.step": "6b531c2802d6d9605d8659b4cf54d25659df54942c976bdcff04cbbd7672bd16",
+      "sources/7.1-peristaltic-pump-lid-3mm.step": "a1a12d25456202fc4cc002c5363d7d1b463c31409ec005a6697ce4d167095c82",
+      "sources/8-peristaltic-pump-clamp.step": "f948d46506a753fc7d160b323e1d5971ae638f2004d152bb3e3ec31e09f24994",
+      "sources/9-peristaltic-pump-rotor.step": "996c2325ecae541f8a0b060d69add927e81f9233b26cdd3ddab105f1a90e562f",
+      "sources/behrens-pump-packet.md": "bdab3462725e9554f44290ad423461456b135361fc6bab52adb83e5a7b961bae"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-25T09:47:09Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "29790d0e8b017f5f76f393e43c64fe2e2c471679",
+      "dirty": true
+    }
+  }
+}

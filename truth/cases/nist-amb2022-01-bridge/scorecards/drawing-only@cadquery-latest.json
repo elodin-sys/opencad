@@ -1,0 +1,750 @@
+{
+  "case": "nist-amb2022-01-bridge",
+  "arm": "drawing-only",
+  "design": "nist-amb2022-01-bridge",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/nist-amb2022-01-bridge",
+  "truth_class": "B",
+  "role": "validation",
+  "scored_at": "2026-09-20T06:39:58Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 14,
+    "required_total": 14,
+    "optional_pass": 1,
+    "optional_total": 1
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        75,
+        5,
+        12.5
+      ],
+      "measured": [
+        75.0,
+        5.000000000000001,
+        12.5
+      ],
+      "error": 8.881784197001252e-16,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "3679.06 mm3 net (main body minus the five sealed pockets); 0.6 % allows for the undocumented thin-wall widths",
+      "expected": 3679.060003280461,
+      "measured": 3678.099999999998,
+      "error": 0.9600032804628427,
+      "band": 22.074360019682764,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "center_of_mass",
+      "kind": "center_of_mass",
+      "required": true,
+      "note": "",
+      "expected": [
+        36.91807961243961,
+        2.5006336665814612,
+        6.671963759208492
+      ],
+      "measured": [
+        36.91975476468829,
+        2.5002610043228883,
+        6.672922160898293
+      ],
+      "error": 0.0016751522486799786,
+      "ok": true
+    },
+    {
+      "id": "legs_section_z3",
+      "kind": "section",
+      "required": true,
+      "note": "thirteen downward members (block + 12 legs) at mid-leg height; L10 ring carries five sealed pockets",
+      "plane": "z",
+      "at": 3.0,
+      "measured": {
+        "area": 235.15,
+        "loops": 13,
+        "holes": 5
+      },
+      "checks": {
+        "area": {
+          "expected": 235.39,
+          "measured": 235.15,
+          "ok": true
+        },
+        "loops": {
+          "expected": 13,
+          "measured": 13,
+          "ok": true
+        },
+        "holes": {
+          "expected": 5,
+          "measured": 5,
+          "ok": true
+        },
+        "regions": {
+          "expected_count": 13,
+          "measured_count": 13,
+          "rows": [
+            {
+              "expected": {
+                "center": [
+                  10.11,
+                  2.5
+                ],
+                "size": [
+                  19,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  10.110328638497652,
+                  2.5
+                ],
+                "size": [
+                  19.0,
+                  5.0
+                ],
+                "area": 88.75
+              },
+              "center_error": 0.00032863849765263353,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  22.25,
+                  2.5
+                ],
+                "size": [
+                  2.5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  22.25,
+                  2.5
+                ],
+                "size": [
+                  2.5,
+                  5.0
+                ],
+                "area": 12.499999999999998
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  25.75,
+                  2.5
+                ],
+                "size": [
+                  0.5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  25.75,
+                  2.5
+                ],
+                "size": [
+                  0.5,
+                  5.0
+                ],
+                "area": 2.5
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  30.5,
+                  2.5
+                ],
+                "size": [
+                  5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  30.499999999999996,
+                  2.5210526315789474
+                ],
+                "size": [
+                  5.0,
+                  5.0
+                ],
+                "area": 11.399999999999999
+              },
+              "center_error": 0.021052631578947434,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  36.25,
+                  2.5
+                ],
+                "size": [
+                  2.5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  36.25,
+                  2.5
+                ],
+                "size": [
+                  2.5,
+                  5.0
+                ],
+                "area": 12.499999999999998
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  39.75,
+                  2.5
+                ],
+                "size": [
+                  0.5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  39.75,
+                  2.5
+                ],
+                "size": [
+                  0.5,
+                  5.0
+                ],
+                "area": 2.5
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  44.5,
+                  2.5
+                ],
+                "size": [
+                  5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  44.5,
+                  2.5
+                ],
+                "size": [
+                  5.0,
+                  5.0
+                ],
+                "area": 24.999999999999996
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  50.25,
+                  2.5
+                ],
+                "size": [
+                  2.5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  50.25,
+                  2.5
+                ],
+                "size": [
+                  2.5,
+                  5.0
+                ],
+                "area": 12.499999999999998
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  53.75,
+                  2.5
+                ],
+                "size": [
+                  0.5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  53.75,
+                  2.5
+                ],
+                "size": [
+                  0.5,
+                  5.0
+                ],
+                "area": 2.5
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  58.5,
+                  2.5
+                ],
+                "size": [
+                  5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  58.5,
+                  2.5
+                ],
+                "size": [
+                  5.0,
+                  5.0
+                ],
+                "area": 24.999999999999996
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  64.25,
+                  2.5
+                ],
+                "size": [
+                  2.5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  64.25,
+                  2.5
+                ],
+                "size": [
+                  2.5,
+                  5.0
+                ],
+                "area": 12.499999999999998
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  67.75,
+                  2.5
+                ],
+                "size": [
+                  0.5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  67.75,
+                  2.5
+                ],
+                "size": [
+                  0.5,
+                  5.0
+                ],
+                "area": 2.5
+              },
+              "center_error": 0.0,
+              "ok": true
+            },
+            {
+              "expected": {
+                "center": [
+                  72.5,
+                  2.5
+                ],
+                "size": [
+                  5,
+                  5
+                ]
+              },
+              "measured": {
+                "center": [
+                  72.5,
+                  2.5
+                ],
+                "size": [
+                  5.0,
+                  5.0
+                ],
+                "area": 24.999999999999996
+              },
+              "center_error": 0.0,
+              "ok": true
+            }
+          ],
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "overhang_section_z6",
+      "kind": "section",
+      "required": true,
+      "note": "inside the 45 deg overhang band (z 5..7): every member has grown by 1 mm on its +x side",
+      "plane": "z",
+      "at": 6.0,
+      "measured": {
+        "area": 308.75000000000034,
+        "loops": 13,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 308.75,
+          "measured": 308.75000000000034,
+          "ok": true
+        },
+        "loops": {
+          "expected": 13,
+          "measured": 13,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "bridge_section_z9",
+      "kind": "section",
+      "required": true,
+      "note": "solid bridge: 75 x 5 minus the two nose taper triangles",
+      "plane": "z",
+      "at": 9.0,
+      "measured": {
+        "area": 368.75,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 368.75,
+          "measured": 368.75,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "tabs_section",
+      "kind": "section",
+      "required": true,
+      "note": "eleven 1 x 5 tabs",
+      "plane": "z",
+      "at": 12.3,
+      "measured": {
+        "area": 55.0,
+        "loops": 11,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 55.0,
+          "measured": 55.0,
+          "ok": true
+        },
+        "loops": {
+          "expected": 11,
+          "measured": 11,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "l10_cavity_section",
+      "kind": "section",
+      "required": true,
+      "note": "through the hollow leg: 5 x 12.5 minus the 4 x 4 cavity plus four thin walls",
+      "plane": "x",
+      "at": 30.5,
+      "measured": {
+        "area": 46.400000000000006,
+        "loops": 1,
+        "holes": 5
+      },
+      "checks": {
+        "area": {
+          "expected": 46.64,
+          "measured": 46.400000000000006,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 5,
+          "measured": 5,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "block_section_x10",
+      "kind": "section",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": 10.0,
+      "measured": {
+        "area": 60.0,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 60.0,
+          "measured": 60.0,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "bottom_face",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 13,
+      "area": 248.74999999999997,
+      "expected_area": 248.75,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "bridge_top_face",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 12.0,
+      "normal": "+",
+      "found": 11,
+      "area": 313.75,
+      "expected_area": 313.75,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "tab_tops",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 12.5,
+      "normal": "+",
+      "found": 11,
+      "area": 55.0,
+      "expected_area": 55.0,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "deviation_vs_nist_mesh",
+      "kind": "deviation",
+      "required": true,
+      "note": "",
+      "measured": {
+        "p95": 4.869289383706755e-13,
+        "hausdorff_estimate": 0.12910008430480957,
+        "silhouette_iou_min": 1.0,
+        "volume_ratio": 0.9997390640317261
+      },
+      "checks": {
+        "p95": {
+          "max": 0.15,
+          "measured": 4.869289383706755e-13,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 0.6,
+          "measured": 0.12910008430480957,
+          "ok": true
+        },
+        "silhouette_iou": {
+          "min": 0.98,
+          "measured": 1.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "deviation_vs_nist_step_variant",
+      "kind": "deviation",
+      "required": false,
+      "note": "documented discrepancy: the STEP has legs from z = 0.6 and 0.25 mm tabs; this optional check records how far the drawing-faithful model sits from it",
+      "measured": {
+        "p95": 0.5948846014803898,
+        "hausdorff_estimate": 0.6000000238418579,
+        "silhouette_iou_min": 0.9717812766917535,
+        "volume_ratio": 1.0304792827402112
+      },
+      "checks": {
+        "p95": {
+          "max": 0.8,
+          "measured": 0.5948846014803898,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [
+    {
+      "name": "part_deflection_after_partial_cut",
+      "value": 0.0,
+      "uncertainty": null,
+      "units": "mm (CMM ridge heights, see NIST 3.4)",
+      "note": "NIST measured ridge-height deflection after EDM partial separation; requires a build-process model, never a CAD comparison"
+    }
+  ],
+  "hash_binding": {
+    "manifest_sha256": "bde90eb854d783c5af7ff52447c78bedcdbf75a538747edf364f312a07da2e23",
+    "truth_files": {
+      "truth/AMB2022-01-AMMT-PartCAD.STL": "d92f368a35952ff877624f3d15fb0e38c099e2528cfd96bf1d76a868a088e1f4",
+      "truth/AMB2022-01-AMMT-PartCAD.STEP": "623ee615d015bb231accdff3594592c3c7c563d98c463bd21680da2c0005d055"
+    },
+    "input_files": {
+      "inputs/nist-amb2022-01-description.md": "ad20b8b64ceffc5122b055fd97c5e12b4b89b3cd2d52876ba74afb4d66cf2094",
+      "inputs/nist-figure3-drawing.png": "a2377f44a5d37ee5e2193817bc33f079d664fae8c9df7bd675480f9e97b37d49",
+      "inputs/nist-figure4-legs-thinwalls.png": "a55dce91299778420a4970d51478be5856a89b291644459d93b7cb71524b7417",
+      "inputs/nist-figure1-overview.png": "8cfc5aa92c73cb51cae87d1238b865d1c33565d5757e27244c19eb1e90e62142",
+      "inputs/AMB2022-01-AMMT-PartCAD.STL": "d92f368a35952ff877624f3d15fb0e38c099e2528cfd96bf1d76a868a088e1f4"
+    },
+    "source": {
+      "main.py": "ed207627bafeac5df3aeacacc96bff68952066aaf7ad6f7445868a95aa168b20"
+    },
+    "kcl": {},
+    "step_sha256": "91b2b81c8b0248d626f99406a924ba7cef2c11081ca974108696c98664e89376",
+    "design_bundle": {
+      "brief.md": "01db17fe426e80243d4d783ab7f4b059c0c994ee7cec083feeaaa7b7f20f09b2",
+      "contract.yaml": "4fbd6c7b0afd860a0ae975b4ed1652a14dba1077618f97481ac2e5c6036d5d5a",
+      "sources/nist-amb2022-01-description.md": "ad20b8b64ceffc5122b055fd97c5e12b4b89b3cd2d52876ba74afb4d66cf2094",
+      "sources/nist-figure1-overview.png": "8cfc5aa92c73cb51cae87d1238b865d1c33565d5757e27244c19eb1e90e62142",
+      "sources/nist-figure3-drawing.png": "a2377f44a5d37ee5e2193817bc33f079d664fae8c9df7bd675480f9e97b37d49",
+      "sources/nist-figure4-legs-thinwalls.png": "a55dce91299778420a4970d51478be5856a89b291644459d93b7cb71524b7417"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-20T06:40:00Z",
+    "skillkat_version": "0.1.0",
+    "backend": "cadquery",
+    "engine_version": "2.8.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2750651461ce329095e189d2b6e635ac797b95cd",
+      "dirty": true
+    }
+  },
+  "backend": "cadquery"
+}

@@ -1,0 +1,600 @@
+{
+  "case": "gear-pair",
+  "arm": "spec-only",
+  "design": "gear-pair",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/build123d/gear-pair",
+  "truth_class": "C",
+  "role": "validation",
+  "scored_at": "2026-09-20T10:04:37Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 16,
+    "required_total": 16,
+    "optional_pass": 0,
+    "optional_total": 0
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "carrier -25..85 in x but the wheel tips reach ~102; wheel tips ~+-42 in y (phased half a pitch); z -5..8",
+      "expected": [
+        126.92,
+        83.84,
+        13.0
+      ],
+      "measured": [
+        126.92174552595046,
+        83.8434910519028,
+        13.0
+      ],
+      "error": 0.0034910519027988585,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 3,
+      "measured": 3,
+      "ok": true
+    },
+    {
+      "id": "pinion",
+      "kind": "solid",
+      "required": true,
+      "note": "the pinion body, volume vs the independent involute",
+      "measured": {
+        "volume": 9547.102403720215,
+        "bbox_min": [
+          -22.00000000000007,
+          -22.00000000000007,
+          0.0
+        ],
+        "bbox_max": [
+          22.00000000000007,
+          22.00000000000007,
+          8.0
+        ],
+        "center_of_mass": [
+          -6.015683921920257e-12,
+          -3.5282889291501254e-12,
+          4.0
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 9510.58799168656,
+        "measured": 9547.102403720215,
+        "band": 95.1058799168656,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "wheel",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 39388.64196866667,
+        "bbox_min": [
+          18.07825447404975,
+          -41.92174552595,
+          0.0
+        ],
+        "bbox_max": [
+          101.92174552595046,
+          41.9217455259528,
+          8.0
+        ],
+        "center_of_mass": [
+          59.99999999999915,
+          -1.2815493966881894e-11,
+          4.0
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 39314.53274916626,
+        "measured": 39388.64196866667,
+        "band": 393.1453274916626,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "carrier",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 27107.300918301276,
+        "bbox_min": [
+          -25.0,
+          -25.0,
+          -5.0
+        ],
+        "bbox_max": [
+          85.0,
+          25.0,
+          0.0
+        ],
+        "center_of_mass": [
+          29.878310559350368,
+          1.4522145151843128e-16,
+          -2.4999999999999996
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 27107.300918301276,
+        "measured": 27107.300918301276,
+        "band": 135.53650459150637,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "pinion_bore",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          4.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          4.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 8.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 8.0,
+          "measured": 8.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "wheel_bore",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          60.0,
+          0.0,
+          4.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          60.0,
+          0.0,
+          4.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "length": 8.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 8.0,
+          "measured": 8.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "carrier_pinion_hole",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "carrier_wheel_hole",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          60.0,
+          0.0,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          60.0,
+          0.0,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pinion_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 20,
+      "measured": 20,
+      "tip_radius": 22.000000000004466,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "wheel_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 40,
+      "measured": 40,
+      "tip_radius": 42.00000000001012,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "pinion_profile",
+      "kind": "profile2d",
+      "required": true,
+      "note": "tooth profile vs the independent involute; the chord/stagger of a gear outline are not meaningful, only p95 and area",
+      "plane": "z",
+      "at": 4.0,
+      "reference_points": 920,
+      "candidate_samples": 6020,
+      "chord_definition": "farthest_pair",
+      "reference_closed": true,
+      "reference": {
+        "area": 1217.097841821424,
+        "chord": 44.00000093057062,
+        "stagger_deg": 35.66670569194905,
+        "landmark_chord": 0.25719039197061766,
+        "landmark_stagger_deg": -95.63170070799671,
+        "max_thickness": 44.00000093057063,
+        "bbox_min": [
+          -21.999628,
+          -21.999628
+        ],
+        "bbox_max": [
+          21.999628,
+          21.999628
+        ]
+      },
+      "measured": {
+        "area": 1222.168429855085,
+        "chord": 44.00000000000736,
+        "stagger_deg": 55.73809347487863,
+        "bbox_min": [
+          -21.999993134912618,
+          -21.999993134912618
+        ],
+        "bbox_max": [
+          21.999993134912618,
+          21.999993134912618
+        ],
+        "d_c2r_max": 0.026694492469601743,
+        "d_r2c_max": 0.033501288779121195,
+        "section_iou": 0.9957926790273172
+      },
+      "checks": {
+        "p95": {
+          "max": 0.1,
+          "measured": 0.033225907345792505,
+          "ok": true
+        },
+        "area": {
+          "expected": 1217.097841821424,
+          "measured": 1222.168429855085,
+          "ok": true
+        },
+        "chord": {
+          "expected": 44.00000093057062,
+          "measured": 44.00000000000736,
+          "ok": true
+        },
+        "stagger_deg": {
+          "expected": 35.66670569194905,
+          "measured": 55.73809347487863,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "gear_mesh",
+      "kind": "gear_mesh",
+      "required": true,
+      "note": "rotate the pinion through one pitch, the wheel at half speed opposite; no interference, flank gap within the backlash band",
+      "measured": {
+        "max_interference": 0.0,
+        "gap_min": 0.046909546158536077,
+        "gap_max": 0.04700777292882576
+      },
+      "poses": [
+        [
+          0.0,
+          0.0,
+          0.047,
+          true
+        ],
+        [
+          3.0,
+          0.0,
+          0.0469,
+          true
+        ],
+        [
+          6.0,
+          0.0,
+          0.0469,
+          true
+        ],
+        [
+          9.0,
+          0.0,
+          0.047,
+          true
+        ],
+        [
+          12.0,
+          0.0,
+          0.0469,
+          true
+        ],
+        [
+          15.0,
+          0.0,
+          0.0469,
+          true
+        ],
+        [
+          16.5,
+          0.0,
+          0.047,
+          true
+        ],
+        [
+          18.0,
+          0.0,
+          0.047,
+          true
+        ]
+      ],
+      "expected": {
+        "interference": 0.0,
+        "backlash_max": 0.15
+      },
+      "ok": true
+    },
+    {
+      "id": "gears_separate",
+      "kind": "clearance",
+      "required": true,
+      "note": "separate solids in contact range, never fused",
+      "measured": {
+        "gap": 0.04700777292690892,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": 0.15
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "pinion_on_carrier",
+      "kind": "clearance",
+      "required": true,
+      "note": "",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": 0.05
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "gear_tops",
+      "kind": "face",
+      "required": true,
+      "note": "both gear top faces at z = 8",
+      "plane": "z",
+      "at": 8.0,
+      "normal": "+",
+      "found": 2,
+      "area": 6116.9680465366355,
+      "expected_area": null,
+      "mode": "sum",
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "999d906e78342ebb553cbdb1c8e292fbfd2999cb765cd395e405fdd35743eff4",
+    "truth_files": {
+      "truth/pair.step": "85d8e1aa388b4b93f0ba7c42d85f823b012f206aca256802d32c65f0e6734b05",
+      "truth/pinion.step": "509dd6c5088bdf0b085a219074a69d6d9c03c01f41ca71cdf179df5a0fbc6781",
+      "truth/wheel.step": "53b7b6c829d19ffd600db499846d7cbf6980b26f46b5c07664302c890188b894",
+      "truth/carrier.step": "84ad390aa46d547f53228b4b91b1de0fda851cf42554a2980ea9402c1f77dc9c",
+      "truth/pair.stl": "d7d0a6abd8b982cf5c3d8468f41deb1736f84e248f858fd3030959cec04c0118",
+      "truth/pinion-profile.csv": "8b287638750fa21bca88e24a5b12393a86efd0c1bab9636be4fcb8cd0d4531d4",
+      "truth/wheel-profile.csv": "29f23f2c10459bcf34d2aaef466c4312f307ca9a9996f17485a4855bd734e69d",
+      "truth/gear-spec.yaml": "a3caf233bacb8a307f425ba699dff5f4ad469655db49b17bdd1a0197186855dd",
+      "truth/pair-19t.step": "17f2e7293522a824b46b5cde1dda842ba74720b6f07617756377c79300e999bf"
+    },
+    "input_files": {
+      "inputs/gear-pair-spec.md": "0acea6d35513df93499f95e7242721b64488c45819f6e58ebd09ed627fb09d87"
+    },
+    "source": {
+      "main.py": "9f9b446204144b6a99bc67f148f6e4e209b312e4bbbeb364c13fd1c51320468e"
+    },
+    "kcl": {},
+    "step_sha256": "815d18ddbcf34ec952cae998051e3afab18fca880b222aec99f29498b11b1f0d",
+    "design_bundle": {
+      "brief.md": "f4337c2b5c8b92fcf313fcf3e4a37d32ffc53a73dfc55c3cf0d82f6f0952b966",
+      "contract.yaml": "5e52b651264afd71b2802862bde1ebb197d81e3d667a70564c30fc952b71bd87",
+      "sources/gear-pair-spec.md": "0acea6d35513df93499f95e7242721b64488c45819f6e58ebd09ed627fb09d87"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-20T10:04:40Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2750651461ce329095e189d2b6e635ac797b95cd",
+      "dirty": true
+    }
+  },
+  "backend": "build123d"
+}

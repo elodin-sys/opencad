@@ -1,0 +1,834 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+overallLength = 75mm // stated; +/-0.01 mm
+overallWidth = 5mm // stated; +/-0.01 mm
+bodyHeight = 12mm // stated; +/-0.01 mm
+noseAngle = 45deg // stated; +/-0.1 deg
+noseLength = 2.5mm // derived; +/-0.1 mm
+legCount = 12 // stated; +/-0.01
+largeLegWidth = 5mm // measured; +/-0.1 mm
+mediumLegWidth = 2.5mm // measured; +/-0.1 mm
+smallLegWidth = 0.5mm // measured; +/-0.1 mm
+gapWidth = 2mm // measured; +/-0.1 mm
+overhangAngle = 45deg // stated; +/-0.1 deg
+legMergeHeight = 7mm // stated; +/-0.01 mm
+gapLowHeight = 5mm // derived; +/-0.1 mm
+legGroupCount = 4 // derived; +/-0.01
+legGroupPitch = 14mm // derived; +/-0.15 mm
+endBlockLength = 19mm // derived; +/-0.15 mm
+tabCount = 11 // stated; +/-0.01
+tabWidth = 1mm // measured; +/-0.1 mm
+tabPitch = 7mm // measured; +/-0.1 mm
+tabHeight = 0.5mm // measured; +/-0.1 mm
+firstTabX = 4mm // derived; +/-0.15 mm
+l10StartX = 28mm // derived; +/-0.15 mm
+l10OuterWallThickness = 0.5mm // stated; +/-0.1 mm
+l10BaseThickness = 1mm // stated; +/-0.01 mm
+thinWallHeight = 4mm // stated; +/-0.01 mm
+l10CavityLength = 4mm // derived; +/-0.2 mm
+l10CavityWidth = 4mm // derived; +/-0.2 mm
+l10CavityStartX = 28.5mm // derived; +/-0.15 mm
+l10CeilingZ = 5mm // derived; +/-0.02 mm
+thinWallCount = 4 // stated; +/-0.01
+singleTrackWidth = 0.1mm // INFERRED; +/-0.08 mm
+doubleTrackWidth = 0.2mm // INFERRED; +/-0.15 mm
+wall1CenterY = 1.25mm // measured; +/-0.2 mm
+wall2CenterY = 2mm // measured; +/-0.2 mm
+wall3CenterY = 2.85mm // measured; +/-0.2 mm
+wall4CenterY = 3.6mm // measured; +/-0.2 mm
+
+
+// Datums A:z=0, B:y=0, C:x=0, D:x=overallLength.
+// Local elevation [u,v] is world [x,z]; its normal is -y.
+// Explicit extrusion direction +y establishes the requested min-datum frame.
+aBuildPlate = XY
+bLongSide = {
+  origin = { x = 0mm, y = 0mm, z = 0mm },
+  xAxis = { x = 1, y = 0, z = 0 },
+  yAxis = { x = 0, y = 0, z = 1 }
+}
+cTipPlane = YZ
+dFarEnd = offsetPlane(YZ, offset = overallLength)
+actualTopZ = bodyHeight + tabHeight
+
+// OQ1: Physical track widths are INFERRED (single 0.10 +/-0.08 mm,
+// double 0.20 +/-0.15 mm); each double-track member is one physical wall.
+// OQ2: Wall centers have +/-0.20 mm image-registration uncertainty.
+// OQ3: Alloy/density are unspecified; no mass or powder density is assigned.
+// Figure 3 controls the external dimensions. No reference geometry is imported.
+// Redundant nominal dimensions are checked externally, never equality-locked.
+actualNoseLength = overallWidth / (2 * tan(noseAngle))
+actualRoofHighZ = gapLowHeight + gapWidth * tan(overhangAngle)
+actualCeilingZ = l10BaseThickness + thinWallHeight
+cavityX0 = l10StartX + l10OuterWallThickness
+cavityX1 = l10StartX + largeLegWidth - l10OuterWallThickness
+cavityY0 = l10OuterWallThickness
+cavityY1 = overallWidth - l10OuterWallThickness
+cavityLengthActual = cavityX1 - cavityX0
+cavityWidthActual = cavityY1 - cavityY0
+
+// Triplets are medium, small, large in +x; gap roofs rise toward +x.
+tripletOffsets = [
+  0mm,
+  gapWidth + mediumLegWidth,
+  2 * gapWidth + mediumLegWidth + smallLegWidth
+]
+allGapStarts = flatten(map(
+  [0..<legGroupCount],
+  f = fn(@j) {
+    return map(
+      tripletOffsets,
+      f = fn(@d) {
+        return endBlockLength + j * legGroupPitch + d
+      },
+    )
+  },
+))
+gapStarts = slice(allGapStarts, end = legCount)
+footStarts = map(
+  gapStarts,
+  f = fn(@a) {
+    return a + gapWidth
+  },
+)
+footEnds = concat(slice(gapStarts, start = 1), items = [overallLength])
+tabStarts = map(
+  [0..<tabCount],
+  f = fn(@i) {
+    return firstTabX + i * tabPitch
+  },
+)
+tabEnds = map(
+  tabStarts,
+  f = fn(@x) {
+    return x + tabWidth
+  },
+)
+wallCenters = [
+  wall1CenterY,
+  wall2CenterY,
+  wall3CenterY,
+  wall4CenterY
+]
+trackWidths = [
+  singleTrackWidth,
+  doubleTrackWidth,
+  singleTrackWidth,
+  doubleTrackWidth
+]
+wallLow = map(
+  [0..<thinWallCount],
+  f = fn(@i) {
+    return wallCenters[i] - (trackWidths[i] / 2)
+  },
+)
+wallHigh = map(
+  [0..<thinWallCount],
+  f = fn(@i) {
+    return wallCenters[i] + trackWidths[i] / 2
+  },
+)
+pocketLow = concat([cavityY0], items = wallHigh)
+pocketHigh = concat(wallLow, items = [cavityY1])
+
+positiveDimensions = map(
+  [
+    overallLength,
+    overallWidth,
+    bodyHeight,
+    noseLength,
+    largeLegWidth,
+    mediumLegWidth,
+    smallLegWidth,
+    gapWidth,
+    legMergeHeight,
+    gapLowHeight,
+    legGroupPitch,
+    endBlockLength,
+    tabWidth,
+    tabPitch,
+    tabHeight,
+    firstTabX,
+    l10StartX,
+    l10OuterWallThickness,
+    l10BaseThickness,
+    thinWallHeight,
+    l10CavityLength,
+    l10CavityWidth,
+    l10CavityStartX,
+    l10CeilingZ,
+    singleTrackWidth,
+    doubleTrackWidth
+  ],
+  f = fn(@d) {
+    assert(d, isGreaterThan = 0mm)
+    return d
+  },
+)
+countChecks = map(
+  [
+    legCount,
+    legGroupCount,
+    tabCount,
+    thinWallCount
+  ],
+  f = fn(@n) {
+    assert(n, isGreaterThan = 0)
+    assertIs(n == floor(n), error = "Counts must be positive integers")
+    return n
+  },
+)
+assert(noseAngle, isGreaterThan = 0deg, isLessThan = 90deg)
+assert(overhangAngle, isGreaterThan = 0deg, isLessThan = 90deg)
+assert(actualNoseLength, isGreaterThan = 0mm, isLessThan = endBlockLength)
+assert(noseLength, isLessThan = endBlockLength)
+assert(actualRoofHighZ, isLessThan = bodyHeight)
+assert(legMergeHeight, isLessThan = bodyHeight)
+assert(tabWidth, isLessThan = tabPitch)
+assert(firstTabX, isGreaterThan = actualNoseLength)
+assert(tabEnds[tabCount - 1], isLessThanOrEqual = overallLength)
+assert(2 * l10OuterWallThickness, isLessThan = min([largeLegWidth, overallWidth]))
+assert(actualCeilingZ, isLessThan = bodyHeight)
+assert(l10CeilingZ, isLessThan = bodyHeight)
+assert(l10CavityStartX, isGreaterThan = l10StartX)
+assert(l10CavityStartX + l10CavityLength, isLessThan = l10StartX + largeLegWidth)
+assert(l10CavityWidth, isLessThan = overallWidth)
+assert(cavityX0, isGreaterThan = footStarts[2])
+assert(cavityX1, isLessThan = footEnds[2])
+footChecks = map(
+  [0..<legCount],
+  f = fn(@i) {
+    assert(footEnds[i] - footStarts[i], isGreaterThan = 0mm)
+    return footEnds[i]
+  },
+)
+pocketChecks = map(
+  [0..thinWallCount],
+  f = fn(@i) {
+    assert(pocketHigh[i] - pocketLow[i], isGreaterThan = 0mm)
+    return pocketHigh[i]
+  },
+)
+
+// One native elevation sketch; every vertex is dimensioned from the datum.
+// Coincident endpoint handles connect segments without duplicate dimensions.
+// The 37 inspection interface names correspond to the nominal 12-foot,
+// 11-tab, four-wall topology. Pattern counts determine the placement arrays.
+elevation = sketch(on = bLongSide) {
+  buildPlateEndBlock = line(start = [var 0mm, var 0mm], end = [var 19mm, var 0mm])
+  gap01Left = line(start = [var 19mm, var 0mm], end = [var 19mm, var 5mm])
+  gap01Roof = line(start = [var 19mm, var 5mm], end = [var 21mm, var 7mm])
+  gap01Right = line(start = [var 21mm, var 7mm], end = [var 21mm, var 0mm])
+  buildPlateL12 = line(start = [var 21mm, var 0mm], end = [var 23.5mm, var 0mm])
+  gap02Left = line(start = [var 23.5mm, var 0mm], end = [var 23.5mm, var 5mm])
+  gap02Roof = line(start = [var 23.5mm, var 5mm], end = [var 25.5mm, var 7mm])
+  gap02Right = line(start = [var 25.5mm, var 7mm], end = [var 25.5mm, var 0mm])
+  buildPlateL11 = line(start = [var 25.5mm, var 0mm], end = [var 26mm, var 0mm])
+  gap03Left = line(start = [var 26mm, var 0mm], end = [var 26mm, var 5mm])
+  gap03Roof = line(start = [var 26mm, var 5mm], end = [var 28mm, var 7mm])
+  gap03Right = line(start = [var 28mm, var 7mm], end = [var 28mm, var 0mm])
+  buildPlateL10 = line(start = [var 28mm, var 0mm], end = [var 33mm, var 0mm])
+  gap04Left = line(start = [var 33mm, var 0mm], end = [var 33mm, var 5mm])
+  gap04Roof = line(start = [var 33mm, var 5mm], end = [var 35mm, var 7mm])
+  gap04Right = line(start = [var 35mm, var 7mm], end = [var 35mm, var 0mm])
+  buildPlateL9 = line(start = [var 35mm, var 0mm], end = [var 37.5mm, var 0mm])
+  gap05Left = line(start = [var 37.5mm, var 0mm], end = [var 37.5mm, var 5mm])
+  gap05Roof = line(start = [var 37.5mm, var 5mm], end = [var 39.5mm, var 7mm])
+  gap05Right = line(start = [var 39.5mm, var 7mm], end = [var 39.5mm, var 0mm])
+  buildPlateL8 = line(start = [var 39.5mm, var 0mm], end = [var 40mm, var 0mm])
+  gap06Left = line(start = [var 40mm, var 0mm], end = [var 40mm, var 5mm])
+  gap06Roof = line(start = [var 40mm, var 5mm], end = [var 42mm, var 7mm])
+  gap06Right = line(start = [var 42mm, var 7mm], end = [var 42mm, var 0mm])
+  buildPlateL7 = line(start = [var 42mm, var 0mm], end = [var 47mm, var 0mm])
+  gap07Left = line(start = [var 47mm, var 0mm], end = [var 47mm, var 5mm])
+  gap07Roof = line(start = [var 47mm, var 5mm], end = [var 49mm, var 7mm])
+  gap07Right = line(start = [var 49mm, var 7mm], end = [var 49mm, var 0mm])
+  buildPlateL6 = line(start = [var 49mm, var 0mm], end = [var 51.5mm, var 0mm])
+  gap08Left = line(start = [var 51.5mm, var 0mm], end = [var 51.5mm, var 5mm])
+  gap08Roof = line(start = [var 51.5mm, var 5mm], end = [var 53.5mm, var 7mm])
+  gap08Right = line(start = [var 53.5mm, var 7mm], end = [var 53.5mm, var 0mm])
+  buildPlateL5 = line(start = [var 53.5mm, var 0mm], end = [var 54mm, var 0mm])
+  gap09Left = line(start = [var 54mm, var 0mm], end = [var 54mm, var 5mm])
+  gap09Roof = line(start = [var 54mm, var 5mm], end = [var 56mm, var 7mm])
+  gap09Right = line(start = [var 56mm, var 7mm], end = [var 56mm, var 0mm])
+  buildPlateL4 = line(start = [var 56mm, var 0mm], end = [var 61mm, var 0mm])
+  gap10Left = line(start = [var 61mm, var 0mm], end = [var 61mm, var 5mm])
+  gap10Roof = line(start = [var 61mm, var 5mm], end = [var 63mm, var 7mm])
+  gap10Right = line(start = [var 63mm, var 7mm], end = [var 63mm, var 0mm])
+  buildPlateL3 = line(start = [var 63mm, var 0mm], end = [var 65.5mm, var 0mm])
+  gap11Left = line(start = [var 65.5mm, var 0mm], end = [var 65.5mm, var 5mm])
+  gap11Roof = line(start = [var 65.5mm, var 5mm], end = [var 67.5mm, var 7mm])
+  gap11Right = line(start = [var 67.5mm, var 7mm], end = [var 67.5mm, var 0mm])
+  buildPlateL2 = line(start = [var 67.5mm, var 0mm], end = [var 68mm, var 0mm])
+  gap12Left = line(start = [var 68mm, var 0mm], end = [var 68mm, var 5mm])
+  gap12Roof = line(start = [var 68mm, var 5mm], end = [var 70mm, var 7mm])
+  gap12Right = line(start = [var 70mm, var 7mm], end = [var 70mm, var 0mm])
+  buildPlateL1 = line(start = [var 70mm, var 0mm], end = [var 75mm, var 0mm])
+  farEndX75 = line(start = [var 75mm, var 0mm], end = [var 75mm, var 12.5mm])
+  tabTop11 = line(start = [var 75mm, var 12.5mm], end = [var 74mm, var 12.5mm])
+  tab11Left = line(start = [var 74mm, var 12.5mm], end = [var 74mm, var 12mm])
+  tabValley10 = line(start = [var 74mm, var 12mm], end = [var 68mm, var 12mm])
+  tab10Right = line(start = [var 68mm, var 12mm], end = [var 68mm, var 12.5mm])
+  tabTop10 = line(start = [var 68mm, var 12.5mm], end = [var 67mm, var 12.5mm])
+  tab10Left = line(start = [var 67mm, var 12.5mm], end = [var 67mm, var 12mm])
+  tabValley09 = line(start = [var 67mm, var 12mm], end = [var 61mm, var 12mm])
+  tab09Right = line(start = [var 61mm, var 12mm], end = [var 61mm, var 12.5mm])
+  tabTop09 = line(start = [var 61mm, var 12.5mm], end = [var 60mm, var 12.5mm])
+  tab09Left = line(start = [var 60mm, var 12.5mm], end = [var 60mm, var 12mm])
+  tabValley08 = line(start = [var 60mm, var 12mm], end = [var 54mm, var 12mm])
+  tab08Right = line(start = [var 54mm, var 12mm], end = [var 54mm, var 12.5mm])
+  tabTop08 = line(start = [var 54mm, var 12.5mm], end = [var 53mm, var 12.5mm])
+  tab08Left = line(start = [var 53mm, var 12.5mm], end = [var 53mm, var 12mm])
+  tabValley07 = line(start = [var 53mm, var 12mm], end = [var 47mm, var 12mm])
+  tab07Right = line(start = [var 47mm, var 12mm], end = [var 47mm, var 12.5mm])
+  tabTop07 = line(start = [var 47mm, var 12.5mm], end = [var 46mm, var 12.5mm])
+  tab07Left = line(start = [var 46mm, var 12.5mm], end = [var 46mm, var 12mm])
+  tabValley06 = line(start = [var 46mm, var 12mm], end = [var 40mm, var 12mm])
+  tab06Right = line(start = [var 40mm, var 12mm], end = [var 40mm, var 12.5mm])
+  tabTop06 = line(start = [var 40mm, var 12.5mm], end = [var 39mm, var 12.5mm])
+  tab06Left = line(start = [var 39mm, var 12.5mm], end = [var 39mm, var 12mm])
+  tabValley05 = line(start = [var 39mm, var 12mm], end = [var 33mm, var 12mm])
+  tab05Right = line(start = [var 33mm, var 12mm], end = [var 33mm, var 12.5mm])
+  tabTop05 = line(start = [var 33mm, var 12.5mm], end = [var 32mm, var 12.5mm])
+  tab05Left = line(start = [var 32mm, var 12.5mm], end = [var 32mm, var 12mm])
+  tabValley04 = line(start = [var 32mm, var 12mm], end = [var 26mm, var 12mm])
+  tab04Right = line(start = [var 26mm, var 12mm], end = [var 26mm, var 12.5mm])
+  tabTop04 = line(start = [var 26mm, var 12.5mm], end = [var 25mm, var 12.5mm])
+  tab04Left = line(start = [var 25mm, var 12.5mm], end = [var 25mm, var 12mm])
+  tabValley03 = line(start = [var 25mm, var 12mm], end = [var 19mm, var 12mm])
+  tab03Right = line(start = [var 19mm, var 12mm], end = [var 19mm, var 12.5mm])
+  tabTop03 = line(start = [var 19mm, var 12.5mm], end = [var 18mm, var 12.5mm])
+  tab03Left = line(start = [var 18mm, var 12.5mm], end = [var 18mm, var 12mm])
+  tabValley02 = line(start = [var 18mm, var 12mm], end = [var 12mm, var 12mm])
+  tab02Right = line(start = [var 12mm, var 12mm], end = [var 12mm, var 12.5mm])
+  tabTop02 = line(start = [var 12mm, var 12.5mm], end = [var 11mm, var 12.5mm])
+  tab02Left = line(start = [var 11mm, var 12.5mm], end = [var 11mm, var 12mm])
+  tabValley01 = line(start = [var 11mm, var 12mm], end = [var 5mm, var 12mm])
+  tab01Right = line(start = [var 5mm, var 12mm], end = [var 5mm, var 12.5mm])
+  tabTop01 = line(start = [var 5mm, var 12.5mm], end = [var 4mm, var 12.5mm])
+  tab01Left = line(start = [var 4mm, var 12.5mm], end = [var 4mm, var 12mm])
+  noseTop = line(start = [var 4mm, var 12mm], end = [var 0mm, var 12mm])
+  tipBeforeTaper = line(start = [var 0mm, var 12mm], end = [var 0mm, var 0mm])
+  coincident([
+    buildPlateEndBlock.end,
+    gap01Left.start
+  ])
+  horizontalDistance([ORIGIN, buildPlateEndBlock.end]) == endBlockLength
+  verticalDistance([ORIGIN, buildPlateEndBlock.end]) == 0mm
+  coincident([gap01Left.end, gap01Roof.start])
+  horizontalDistance([ORIGIN, gap01Left.end]) == gapStarts[0]
+  verticalDistance([ORIGIN, gap01Left.end]) == gapLowHeight
+  coincident([gap01Roof.end, gap01Right.start])
+  horizontalDistance([ORIGIN, gap01Roof.end]) == footStarts[0]
+  verticalDistance([ORIGIN, gap01Roof.end]) == actualRoofHighZ
+  coincident([gap01Right.end, buildPlateL12.start])
+  horizontalDistance([ORIGIN, gap01Right.end]) == footStarts[0]
+  verticalDistance([ORIGIN, gap01Right.end]) == 0mm
+  coincident([buildPlateL12.end, gap02Left.start])
+  horizontalDistance([ORIGIN, buildPlateL12.end]) == footEnds[0]
+  verticalDistance([ORIGIN, buildPlateL12.end]) == 0mm
+  coincident([gap02Left.end, gap02Roof.start])
+  horizontalDistance([ORIGIN, gap02Left.end]) == gapStarts[1]
+  verticalDistance([ORIGIN, gap02Left.end]) == gapLowHeight
+  coincident([gap02Roof.end, gap02Right.start])
+  horizontalDistance([ORIGIN, gap02Roof.end]) == footStarts[1]
+  verticalDistance([ORIGIN, gap02Roof.end]) == actualRoofHighZ
+  coincident([gap02Right.end, buildPlateL11.start])
+  horizontalDistance([ORIGIN, gap02Right.end]) == footStarts[1]
+  verticalDistance([ORIGIN, gap02Right.end]) == 0mm
+  coincident([buildPlateL11.end, gap03Left.start])
+  horizontalDistance([ORIGIN, buildPlateL11.end]) == footEnds[1]
+  verticalDistance([ORIGIN, buildPlateL11.end]) == 0mm
+  coincident([gap03Left.end, gap03Roof.start])
+  horizontalDistance([ORIGIN, gap03Left.end]) == gapStarts[2]
+  verticalDistance([ORIGIN, gap03Left.end]) == gapLowHeight
+  coincident([gap03Roof.end, gap03Right.start])
+  horizontalDistance([ORIGIN, gap03Roof.end]) == footStarts[2]
+  verticalDistance([ORIGIN, gap03Roof.end]) == actualRoofHighZ
+  coincident([gap03Right.end, buildPlateL10.start])
+  horizontalDistance([ORIGIN, gap03Right.end]) == footStarts[2]
+  verticalDistance([ORIGIN, gap03Right.end]) == 0mm
+  coincident([buildPlateL10.end, gap04Left.start])
+  horizontalDistance([ORIGIN, buildPlateL10.end]) == footEnds[2]
+  verticalDistance([ORIGIN, buildPlateL10.end]) == 0mm
+  coincident([gap04Left.end, gap04Roof.start])
+  horizontalDistance([ORIGIN, gap04Left.end]) == gapStarts[3]
+  verticalDistance([ORIGIN, gap04Left.end]) == gapLowHeight
+  coincident([gap04Roof.end, gap04Right.start])
+  horizontalDistance([ORIGIN, gap04Roof.end]) == footStarts[3]
+  verticalDistance([ORIGIN, gap04Roof.end]) == actualRoofHighZ
+  coincident([gap04Right.end, buildPlateL9.start])
+  horizontalDistance([ORIGIN, gap04Right.end]) == footStarts[3]
+  verticalDistance([ORIGIN, gap04Right.end]) == 0mm
+  coincident([buildPlateL9.end, gap05Left.start])
+  horizontalDistance([ORIGIN, buildPlateL9.end]) == footEnds[3]
+  verticalDistance([ORIGIN, buildPlateL9.end]) == 0mm
+  coincident([gap05Left.end, gap05Roof.start])
+  horizontalDistance([ORIGIN, gap05Left.end]) == gapStarts[4]
+  verticalDistance([ORIGIN, gap05Left.end]) == gapLowHeight
+  coincident([gap05Roof.end, gap05Right.start])
+  horizontalDistance([ORIGIN, gap05Roof.end]) == footStarts[4]
+  verticalDistance([ORIGIN, gap05Roof.end]) == actualRoofHighZ
+  coincident([gap05Right.end, buildPlateL8.start])
+  horizontalDistance([ORIGIN, gap05Right.end]) == footStarts[4]
+  verticalDistance([ORIGIN, gap05Right.end]) == 0mm
+  coincident([buildPlateL8.end, gap06Left.start])
+  horizontalDistance([ORIGIN, buildPlateL8.end]) == footEnds[4]
+  verticalDistance([ORIGIN, buildPlateL8.end]) == 0mm
+  coincident([gap06Left.end, gap06Roof.start])
+  horizontalDistance([ORIGIN, gap06Left.end]) == gapStarts[5]
+  verticalDistance([ORIGIN, gap06Left.end]) == gapLowHeight
+  coincident([gap06Roof.end, gap06Right.start])
+  horizontalDistance([ORIGIN, gap06Roof.end]) == footStarts[5]
+  verticalDistance([ORIGIN, gap06Roof.end]) == actualRoofHighZ
+  coincident([gap06Right.end, buildPlateL7.start])
+  horizontalDistance([ORIGIN, gap06Right.end]) == footStarts[5]
+  verticalDistance([ORIGIN, gap06Right.end]) == 0mm
+  coincident([buildPlateL7.end, gap07Left.start])
+  horizontalDistance([ORIGIN, buildPlateL7.end]) == footEnds[5]
+  verticalDistance([ORIGIN, buildPlateL7.end]) == 0mm
+  coincident([gap07Left.end, gap07Roof.start])
+  horizontalDistance([ORIGIN, gap07Left.end]) == gapStarts[6]
+  verticalDistance([ORIGIN, gap07Left.end]) == gapLowHeight
+  coincident([gap07Roof.end, gap07Right.start])
+  horizontalDistance([ORIGIN, gap07Roof.end]) == footStarts[6]
+  verticalDistance([ORIGIN, gap07Roof.end]) == actualRoofHighZ
+  coincident([gap07Right.end, buildPlateL6.start])
+  horizontalDistance([ORIGIN, gap07Right.end]) == footStarts[6]
+  verticalDistance([ORIGIN, gap07Right.end]) == 0mm
+  coincident([buildPlateL6.end, gap08Left.start])
+  horizontalDistance([ORIGIN, buildPlateL6.end]) == footEnds[6]
+  verticalDistance([ORIGIN, buildPlateL6.end]) == 0mm
+  coincident([gap08Left.end, gap08Roof.start])
+  horizontalDistance([ORIGIN, gap08Left.end]) == gapStarts[7]
+  verticalDistance([ORIGIN, gap08Left.end]) == gapLowHeight
+  coincident([gap08Roof.end, gap08Right.start])
+  horizontalDistance([ORIGIN, gap08Roof.end]) == footStarts[7]
+  verticalDistance([ORIGIN, gap08Roof.end]) == actualRoofHighZ
+  coincident([gap08Right.end, buildPlateL5.start])
+  horizontalDistance([ORIGIN, gap08Right.end]) == footStarts[7]
+  verticalDistance([ORIGIN, gap08Right.end]) == 0mm
+  coincident([buildPlateL5.end, gap09Left.start])
+  horizontalDistance([ORIGIN, buildPlateL5.end]) == footEnds[7]
+  verticalDistance([ORIGIN, buildPlateL5.end]) == 0mm
+  coincident([gap09Left.end, gap09Roof.start])
+  horizontalDistance([ORIGIN, gap09Left.end]) == gapStarts[8]
+  verticalDistance([ORIGIN, gap09Left.end]) == gapLowHeight
+  coincident([gap09Roof.end, gap09Right.start])
+  horizontalDistance([ORIGIN, gap09Roof.end]) == footStarts[8]
+  verticalDistance([ORIGIN, gap09Roof.end]) == actualRoofHighZ
+  coincident([gap09Right.end, buildPlateL4.start])
+  horizontalDistance([ORIGIN, gap09Right.end]) == footStarts[8]
+  verticalDistance([ORIGIN, gap09Right.end]) == 0mm
+  coincident([buildPlateL4.end, gap10Left.start])
+  horizontalDistance([ORIGIN, buildPlateL4.end]) == footEnds[8]
+  verticalDistance([ORIGIN, buildPlateL4.end]) == 0mm
+  coincident([gap10Left.end, gap10Roof.start])
+  horizontalDistance([ORIGIN, gap10Left.end]) == gapStarts[9]
+  verticalDistance([ORIGIN, gap10Left.end]) == gapLowHeight
+  coincident([gap10Roof.end, gap10Right.start])
+  horizontalDistance([ORIGIN, gap10Roof.end]) == footStarts[9]
+  verticalDistance([ORIGIN, gap10Roof.end]) == actualRoofHighZ
+  coincident([gap10Right.end, buildPlateL3.start])
+  horizontalDistance([ORIGIN, gap10Right.end]) == footStarts[9]
+  verticalDistance([ORIGIN, gap10Right.end]) == 0mm
+  coincident([buildPlateL3.end, gap11Left.start])
+  horizontalDistance([ORIGIN, buildPlateL3.end]) == footEnds[9]
+  verticalDistance([ORIGIN, buildPlateL3.end]) == 0mm
+  coincident([gap11Left.end, gap11Roof.start])
+  horizontalDistance([ORIGIN, gap11Left.end]) == gapStarts[10]
+  verticalDistance([ORIGIN, gap11Left.end]) == gapLowHeight
+  coincident([gap11Roof.end, gap11Right.start])
+  horizontalDistance([ORIGIN, gap11Roof.end]) == footStarts[10]
+  verticalDistance([ORIGIN, gap11Roof.end]) == actualRoofHighZ
+  coincident([gap11Right.end, buildPlateL2.start])
+  horizontalDistance([ORIGIN, gap11Right.end]) == footStarts[10]
+  verticalDistance([ORIGIN, gap11Right.end]) == 0mm
+  coincident([buildPlateL2.end, gap12Left.start])
+  horizontalDistance([ORIGIN, buildPlateL2.end]) == footEnds[10]
+  verticalDistance([ORIGIN, buildPlateL2.end]) == 0mm
+  coincident([gap12Left.end, gap12Roof.start])
+  horizontalDistance([ORIGIN, gap12Left.end]) == gapStarts[11]
+  verticalDistance([ORIGIN, gap12Left.end]) == gapLowHeight
+  coincident([gap12Roof.end, gap12Right.start])
+  horizontalDistance([ORIGIN, gap12Roof.end]) == footStarts[11]
+  verticalDistance([ORIGIN, gap12Roof.end]) == actualRoofHighZ
+  coincident([gap12Right.end, buildPlateL1.start])
+  horizontalDistance([ORIGIN, gap12Right.end]) == footStarts[11]
+  verticalDistance([ORIGIN, gap12Right.end]) == 0mm
+  coincident([buildPlateL1.end, farEndX75.start])
+  horizontalDistance([ORIGIN, buildPlateL1.end]) == footEnds[11]
+  verticalDistance([ORIGIN, buildPlateL1.end]) == 0mm
+  coincident([farEndX75.end, tabTop11.start])
+  horizontalDistance([ORIGIN, farEndX75.end]) == overallLength
+  verticalDistance([ORIGIN, farEndX75.end]) == actualTopZ
+  coincident([tabTop11.end, tab11Left.start])
+  horizontalDistance([ORIGIN, tabTop11.end]) == tabStarts[10]
+  verticalDistance([ORIGIN, tabTop11.end]) == actualTopZ
+  coincident([tab11Left.end, tabValley10.start])
+  horizontalDistance([ORIGIN, tab11Left.end]) == tabStarts[10]
+  verticalDistance([ORIGIN, tab11Left.end]) == bodyHeight
+  coincident([tabValley10.end, tab10Right.start])
+  horizontalDistance([ORIGIN, tabValley10.end]) == tabEnds[9]
+  verticalDistance([ORIGIN, tabValley10.end]) == bodyHeight
+  coincident([tab10Right.end, tabTop10.start])
+  horizontalDistance([ORIGIN, tab10Right.end]) == tabEnds[9]
+  verticalDistance([ORIGIN, tab10Right.end]) == actualTopZ
+  coincident([tabTop10.end, tab10Left.start])
+  horizontalDistance([ORIGIN, tabTop10.end]) == tabStarts[9]
+  verticalDistance([ORIGIN, tabTop10.end]) == actualTopZ
+  coincident([tab10Left.end, tabValley09.start])
+  horizontalDistance([ORIGIN, tab10Left.end]) == tabStarts[9]
+  verticalDistance([ORIGIN, tab10Left.end]) == bodyHeight
+  coincident([tabValley09.end, tab09Right.start])
+  horizontalDistance([ORIGIN, tabValley09.end]) == tabEnds[8]
+  verticalDistance([ORIGIN, tabValley09.end]) == bodyHeight
+  coincident([tab09Right.end, tabTop09.start])
+  horizontalDistance([ORIGIN, tab09Right.end]) == tabEnds[8]
+  verticalDistance([ORIGIN, tab09Right.end]) == actualTopZ
+  coincident([tabTop09.end, tab09Left.start])
+  horizontalDistance([ORIGIN, tabTop09.end]) == tabStarts[8]
+  verticalDistance([ORIGIN, tabTop09.end]) == actualTopZ
+  coincident([tab09Left.end, tabValley08.start])
+  horizontalDistance([ORIGIN, tab09Left.end]) == tabStarts[8]
+  verticalDistance([ORIGIN, tab09Left.end]) == bodyHeight
+  coincident([tabValley08.end, tab08Right.start])
+  horizontalDistance([ORIGIN, tabValley08.end]) == tabEnds[7]
+  verticalDistance([ORIGIN, tabValley08.end]) == bodyHeight
+  coincident([tab08Right.end, tabTop08.start])
+  horizontalDistance([ORIGIN, tab08Right.end]) == tabEnds[7]
+  verticalDistance([ORIGIN, tab08Right.end]) == actualTopZ
+  coincident([tabTop08.end, tab08Left.start])
+  horizontalDistance([ORIGIN, tabTop08.end]) == tabStarts[7]
+  verticalDistance([ORIGIN, tabTop08.end]) == actualTopZ
+  coincident([tab08Left.end, tabValley07.start])
+  horizontalDistance([ORIGIN, tab08Left.end]) == tabStarts[7]
+  verticalDistance([ORIGIN, tab08Left.end]) == bodyHeight
+  coincident([tabValley07.end, tab07Right.start])
+  horizontalDistance([ORIGIN, tabValley07.end]) == tabEnds[6]
+  verticalDistance([ORIGIN, tabValley07.end]) == bodyHeight
+  coincident([tab07Right.end, tabTop07.start])
+  horizontalDistance([ORIGIN, tab07Right.end]) == tabEnds[6]
+  verticalDistance([ORIGIN, tab07Right.end]) == actualTopZ
+  coincident([tabTop07.end, tab07Left.start])
+  horizontalDistance([ORIGIN, tabTop07.end]) == tabStarts[6]
+  verticalDistance([ORIGIN, tabTop07.end]) == actualTopZ
+  coincident([tab07Left.end, tabValley06.start])
+  horizontalDistance([ORIGIN, tab07Left.end]) == tabStarts[6]
+  verticalDistance([ORIGIN, tab07Left.end]) == bodyHeight
+  coincident([tabValley06.end, tab06Right.start])
+  horizontalDistance([ORIGIN, tabValley06.end]) == tabEnds[5]
+  verticalDistance([ORIGIN, tabValley06.end]) == bodyHeight
+  coincident([tab06Right.end, tabTop06.start])
+  horizontalDistance([ORIGIN, tab06Right.end]) == tabEnds[5]
+  verticalDistance([ORIGIN, tab06Right.end]) == actualTopZ
+  coincident([tabTop06.end, tab06Left.start])
+  horizontalDistance([ORIGIN, tabTop06.end]) == tabStarts[5]
+  verticalDistance([ORIGIN, tabTop06.end]) == actualTopZ
+  coincident([tab06Left.end, tabValley05.start])
+  horizontalDistance([ORIGIN, tab06Left.end]) == tabStarts[5]
+  verticalDistance([ORIGIN, tab06Left.end]) == bodyHeight
+  coincident([tabValley05.end, tab05Right.start])
+  horizontalDistance([ORIGIN, tabValley05.end]) == tabEnds[4]
+  verticalDistance([ORIGIN, tabValley05.end]) == bodyHeight
+  coincident([tab05Right.end, tabTop05.start])
+  horizontalDistance([ORIGIN, tab05Right.end]) == tabEnds[4]
+  verticalDistance([ORIGIN, tab05Right.end]) == actualTopZ
+  coincident([tabTop05.end, tab05Left.start])
+  horizontalDistance([ORIGIN, tabTop05.end]) == tabStarts[4]
+  verticalDistance([ORIGIN, tabTop05.end]) == actualTopZ
+  coincident([tab05Left.end, tabValley04.start])
+  horizontalDistance([ORIGIN, tab05Left.end]) == tabStarts[4]
+  verticalDistance([ORIGIN, tab05Left.end]) == bodyHeight
+  coincident([tabValley04.end, tab04Right.start])
+  horizontalDistance([ORIGIN, tabValley04.end]) == tabEnds[3]
+  verticalDistance([ORIGIN, tabValley04.end]) == bodyHeight
+  coincident([tab04Right.end, tabTop04.start])
+  horizontalDistance([ORIGIN, tab04Right.end]) == tabEnds[3]
+  verticalDistance([ORIGIN, tab04Right.end]) == actualTopZ
+  coincident([tabTop04.end, tab04Left.start])
+  horizontalDistance([ORIGIN, tabTop04.end]) == tabStarts[3]
+  verticalDistance([ORIGIN, tabTop04.end]) == actualTopZ
+  coincident([tab04Left.end, tabValley03.start])
+  horizontalDistance([ORIGIN, tab04Left.end]) == tabStarts[3]
+  verticalDistance([ORIGIN, tab04Left.end]) == bodyHeight
+  coincident([tabValley03.end, tab03Right.start])
+  horizontalDistance([ORIGIN, tabValley03.end]) == tabEnds[2]
+  verticalDistance([ORIGIN, tabValley03.end]) == bodyHeight
+  coincident([tab03Right.end, tabTop03.start])
+  horizontalDistance([ORIGIN, tab03Right.end]) == tabEnds[2]
+  verticalDistance([ORIGIN, tab03Right.end]) == actualTopZ
+  coincident([tabTop03.end, tab03Left.start])
+  horizontalDistance([ORIGIN, tabTop03.end]) == tabStarts[2]
+  verticalDistance([ORIGIN, tabTop03.end]) == actualTopZ
+  coincident([tab03Left.end, tabValley02.start])
+  horizontalDistance([ORIGIN, tab03Left.end]) == tabStarts[2]
+  verticalDistance([ORIGIN, tab03Left.end]) == bodyHeight
+  coincident([tabValley02.end, tab02Right.start])
+  horizontalDistance([ORIGIN, tabValley02.end]) == tabEnds[1]
+  verticalDistance([ORIGIN, tabValley02.end]) == bodyHeight
+  coincident([tab02Right.end, tabTop02.start])
+  horizontalDistance([ORIGIN, tab02Right.end]) == tabEnds[1]
+  verticalDistance([ORIGIN, tab02Right.end]) == actualTopZ
+  coincident([tabTop02.end, tab02Left.start])
+  horizontalDistance([ORIGIN, tabTop02.end]) == tabStarts[1]
+  verticalDistance([ORIGIN, tabTop02.end]) == actualTopZ
+  coincident([tab02Left.end, tabValley01.start])
+  horizontalDistance([ORIGIN, tab02Left.end]) == tabStarts[1]
+  verticalDistance([ORIGIN, tab02Left.end]) == bodyHeight
+  coincident([tabValley01.end, tab01Right.start])
+  horizontalDistance([ORIGIN, tabValley01.end]) == tabEnds[0]
+  verticalDistance([ORIGIN, tabValley01.end]) == bodyHeight
+  coincident([tab01Right.end, tabTop01.start])
+  horizontalDistance([ORIGIN, tab01Right.end]) == tabEnds[0]
+  verticalDistance([ORIGIN, tab01Right.end]) == actualTopZ
+  coincident([tabTop01.end, tab01Left.start])
+  horizontalDistance([ORIGIN, tabTop01.end]) == tabStarts[0]
+  verticalDistance([ORIGIN, tabTop01.end]) == actualTopZ
+  coincident([tab01Left.end, noseTop.start])
+  horizontalDistance([ORIGIN, tab01Left.end]) == tabStarts[0]
+  verticalDistance([ORIGIN, tab01Left.end]) == bodyHeight
+  coincident([noseTop.end, tipBeforeTaper.start])
+  horizontalDistance([ORIGIN, noseTop.end]) == 0mm
+  verticalDistance([ORIGIN, noseTop.end]) == bodyHeight
+  coincident([
+    tipBeforeTaper.end,
+    buildPlateEndBlock.start
+  ])
+  horizontalDistance([ORIGIN, tipBeforeTaper.end]) == 0mm
+  verticalDistance([ORIGIN, tipBeforeTaper.end]) == 0mm
+}
+
+elevationRegion = region(segments = [
+  elevation.buildPlateEndBlock,
+  elevation.gap01Left
+])
+externalPrism = extrude(
+  elevationRegion,
+  length = overallWidth,
+  direction = [0, 1, 0],
+  tagStart = $sideDatumY0,
+  tagEnd = $oppositeSideY5,
+)
+hide(elevation)
+
+// Cutters extend beyond the stock. Only their working flank planes intersect it.
+// Both working edges pass through [0, overallWidth/2] at +/-noseAngle.
+noseToolMargin = overallWidth
+noseToolX0 = -noseToolMargin
+noseToolX1 = actualNoseLength + noseToolMargin
+noseToolYLow = overallWidth / 2 - (noseToolX1 * tan(noseAngle)) - noseToolMargin
+noseToolYHigh = overallWidth / 2 + noseToolX1 * tan(noseAngle) + noseToolMargin
+noseToolPlane = offsetPlane(aBuildPlate, offset = -noseToolMargin)
+noseToolDepth = actualTopZ + 2 * noseToolMargin
+noseLower = sketch(on = noseToolPlane) {
+  flank = line(start = [var 7.5mm, var -5mm], end = [var -5mm, var 7.5mm])
+  back = line(start = [var -5mm, var 7.5mm], end = [var -5mm, var -10mm])
+  bottom = line(start = [var -5mm, var -10mm], end = [var 7.5mm, var -10mm])
+  front = line(start = [var 7.5mm, var -10mm], end = [var 7.5mm, var -5mm])
+  coincident([flank.end, back.start])
+  horizontalDistance([ORIGIN, flank.end]) == noseToolX0
+  verticalDistance([ORIGIN, flank.end]) == overallWidth / 2 - (noseToolX0 * tan(noseAngle))
+  coincident([back.end, bottom.start])
+  horizontalDistance([ORIGIN, back.end]) == noseToolX0
+  verticalDistance([ORIGIN, back.end]) == noseToolYLow
+  coincident([bottom.end, front.start])
+  horizontalDistance([ORIGIN, bottom.end]) == noseToolX1
+  verticalDistance([ORIGIN, bottom.end]) == noseToolYLow
+  coincident([front.end, flank.start])
+  horizontalDistance([ORIGIN, front.end]) == noseToolX1
+  verticalDistance([ORIGIN, front.end]) == overallWidth / 2 - (noseToolX1 * tan(noseAngle))
+}
+noseLowerTool = extrude(region(segments = [noseLower.flank, noseLower.back]), length = noseToolDepth)
+bodyWithLowerTaper = subtract(externalPrism, tools = [noseLowerTool])
+hide(noseLower)
+noseUpper = sketch(on = noseToolPlane) {
+  flank = line(start = [var -5mm, var -2.5mm], end = [var 7.5mm, var 10mm])
+  front = line(start = [var 7.5mm, var 10mm], end = [var 7.5mm, var 15mm])
+  top = line(start = [var 7.5mm, var 15mm], end = [var -5mm, var 15mm])
+  back = line(start = [var -5mm, var 15mm], end = [var -5mm, var -2.5mm])
+  coincident([flank.end, front.start])
+  horizontalDistance([ORIGIN, flank.end]) == noseToolX1
+  verticalDistance([ORIGIN, flank.end]) == overallWidth / 2 + noseToolX1 * tan(noseAngle)
+  coincident([front.end, top.start])
+  horizontalDistance([ORIGIN, front.end]) == noseToolX1
+  verticalDistance([ORIGIN, front.end]) == noseToolYHigh
+  coincident([top.end, back.start])
+  horizontalDistance([ORIGIN, top.end]) == noseToolX0
+  verticalDistance([ORIGIN, top.end]) == noseToolYHigh
+  coincident([back.end, flank.start])
+  horizontalDistance([ORIGIN, back.end]) == noseToolX0
+  verticalDistance([ORIGIN, back.end]) == overallWidth / 2 + noseToolX0 * tan(noseAngle)
+}
+noseUpperTool = extrude(region(segments = [noseUpper.flank, noseUpper.front]), length = noseToolDepth)
+externalBody = subtract(bodyWithLowerTaper, tools = [noseUpperTool])
+hide(noseUpper)
+
+// Five fully enclosed voids. Exact cutters run from the base to a flat ceiling.
+// Keeping five separate tools preserves four walls bonded to base, ceiling,
+// and both x end walls. Cutter cap tags become the cavity-facing interfaces.
+pocketPlane = offsetPlane(aBuildPlate, offset = l10BaseThickness)
+
+// Pocket 1: nominal x=28.5..32.5, y=0.5..1.2, z=1..5 mm.
+pocketSketch1 = sketch(on = pocketPlane) {
+  south = line(start = [var 28.5mm, var 0.5mm], end = [var 32.5mm, var 0.5mm])
+  east = line(start = [var 32.5mm, var 0.5mm], end = [var 32.5mm, var 1.2mm])
+  north = line(start = [var 32.5mm, var 1.2mm], end = [var 28.5mm, var 1.2mm])
+  west = line(start = [var 28.5mm, var 1.2mm], end = [var 28.5mm, var 0.5mm])
+  coincident([south.end, east.start])
+  horizontalDistance([ORIGIN, south.end]) == cavityX1
+  verticalDistance([ORIGIN, south.end]) == pocketLow[0]
+  coincident([east.end, north.start])
+  horizontalDistance([ORIGIN, east.end]) == cavityX1
+  verticalDistance([ORIGIN, east.end]) == pocketHigh[0]
+  coincident([north.end, west.start])
+  horizontalDistance([ORIGIN, north.end]) == cavityX0
+  verticalDistance([ORIGIN, north.end]) == pocketHigh[0]
+  coincident([west.end, south.start])
+  horizontalDistance([ORIGIN, west.end]) == cavityX0
+  verticalDistance([ORIGIN, west.end]) == pocketLow[0]
+}
+pocketRegion1 = region(segments = [
+  pocketSketch1.south,
+  pocketSketch1.east
+])
+pocketTool1 = extrude(
+  pocketRegion1,
+  length = thinWallHeight,
+  tagStart = $l10Pocket1Floor,
+  tagEnd = $l10Pocket1Ceiling,
+)
+pocketBody1 = subtract(externalBody, tools = [pocketTool1])
+hide(pocketSketch1)
+
+// Pocket 2: nominal x=28.5..32.5, y=1.3..1.9, z=1..5 mm.
+pocketSketch2 = sketch(on = pocketPlane) {
+  south = line(start = [var 28.5mm, var 1.3mm], end = [var 32.5mm, var 1.3mm])
+  east = line(start = [var 32.5mm, var 1.3mm], end = [var 32.5mm, var 1.9mm])
+  north = line(start = [var 32.5mm, var 1.9mm], end = [var 28.5mm, var 1.9mm])
+  west = line(start = [var 28.5mm, var 1.9mm], end = [var 28.5mm, var 1.3mm])
+  coincident([south.end, east.start])
+  horizontalDistance([ORIGIN, south.end]) == cavityX1
+  verticalDistance([ORIGIN, south.end]) == pocketLow[1]
+  coincident([east.end, north.start])
+  horizontalDistance([ORIGIN, east.end]) == cavityX1
+  verticalDistance([ORIGIN, east.end]) == pocketHigh[1]
+  coincident([north.end, west.start])
+  horizontalDistance([ORIGIN, north.end]) == cavityX0
+  verticalDistance([ORIGIN, north.end]) == pocketHigh[1]
+  coincident([west.end, south.start])
+  horizontalDistance([ORIGIN, west.end]) == cavityX0
+  verticalDistance([ORIGIN, west.end]) == pocketLow[1]
+}
+pocketRegion2 = region(segments = [
+  pocketSketch2.south,
+  pocketSketch2.east
+])
+pocketTool2 = extrude(
+  pocketRegion2,
+  length = thinWallHeight,
+  tagStart = $l10Pocket2Floor,
+  tagEnd = $l10Pocket2Ceiling,
+)
+pocketBody2 = subtract(pocketBody1, tools = [pocketTool2])
+hide(pocketSketch2)
+
+// Pocket 3: nominal x=28.5..32.5, y=2.1..2.8, z=1..5 mm.
+pocketSketch3 = sketch(on = pocketPlane) {
+  south = line(start = [var 28.5mm, var 2.1mm], end = [var 32.5mm, var 2.1mm])
+  east = line(start = [var 32.5mm, var 2.1mm], end = [var 32.5mm, var 2.8mm])
+  north = line(start = [var 32.5mm, var 2.8mm], end = [var 28.5mm, var 2.8mm])
+  west = line(start = [var 28.5mm, var 2.8mm], end = [var 28.5mm, var 2.1mm])
+  coincident([south.end, east.start])
+  horizontalDistance([ORIGIN, south.end]) == cavityX1
+  verticalDistance([ORIGIN, south.end]) == pocketLow[2]
+  coincident([east.end, north.start])
+  horizontalDistance([ORIGIN, east.end]) == cavityX1
+  verticalDistance([ORIGIN, east.end]) == pocketHigh[2]
+  coincident([north.end, west.start])
+  horizontalDistance([ORIGIN, north.end]) == cavityX0
+  verticalDistance([ORIGIN, north.end]) == pocketHigh[2]
+  coincident([west.end, south.start])
+  horizontalDistance([ORIGIN, west.end]) == cavityX0
+  verticalDistance([ORIGIN, west.end]) == pocketLow[2]
+}
+pocketRegion3 = region(segments = [
+  pocketSketch3.south,
+  pocketSketch3.east
+])
+pocketTool3 = extrude(
+  pocketRegion3,
+  length = thinWallHeight,
+  tagStart = $l10Pocket3Floor,
+  tagEnd = $l10Pocket3Ceiling,
+)
+pocketBody3 = subtract(pocketBody2, tools = [pocketTool3])
+hide(pocketSketch3)
+
+// Pocket 4: nominal x=28.5..32.5, y=2.9..3.5, z=1..5 mm.
+pocketSketch4 = sketch(on = pocketPlane) {
+  south = line(start = [var 28.5mm, var 2.9mm], end = [var 32.5mm, var 2.9mm])
+  east = line(start = [var 32.5mm, var 2.9mm], end = [var 32.5mm, var 3.5mm])
+  north = line(start = [var 32.5mm, var 3.5mm], end = [var 28.5mm, var 3.5mm])
+  west = line(start = [var 28.5mm, var 3.5mm], end = [var 28.5mm, var 2.9mm])
+  coincident([south.end, east.start])
+  horizontalDistance([ORIGIN, south.end]) == cavityX1
+  verticalDistance([ORIGIN, south.end]) == pocketLow[3]
+  coincident([east.end, north.start])
+  horizontalDistance([ORIGIN, east.end]) == cavityX1
+  verticalDistance([ORIGIN, east.end]) == pocketHigh[3]
+  coincident([north.end, west.start])
+  horizontalDistance([ORIGIN, north.end]) == cavityX0
+  verticalDistance([ORIGIN, north.end]) == pocketHigh[3]
+  coincident([west.end, south.start])
+  horizontalDistance([ORIGIN, west.end]) == cavityX0
+  verticalDistance([ORIGIN, west.end]) == pocketLow[3]
+}
+pocketRegion4 = region(segments = [
+  pocketSketch4.south,
+  pocketSketch4.east
+])
+pocketTool4 = extrude(
+  pocketRegion4,
+  length = thinWallHeight,
+  tagStart = $l10Pocket4Floor,
+  tagEnd = $l10Pocket4Ceiling,
+)
+pocketBody4 = subtract(pocketBody3, tools = [pocketTool4])
+hide(pocketSketch4)
+
+// Pocket 5: nominal x=28.5..32.5, y=3.7..4.5, z=1..5 mm.
+pocketSketch5 = sketch(on = pocketPlane) {
+  south = line(start = [var 28.5mm, var 3.7mm], end = [var 32.5mm, var 3.7mm])
+  east = line(start = [var 32.5mm, var 3.7mm], end = [var 32.5mm, var 4.5mm])
+  north = line(start = [var 32.5mm, var 4.5mm], end = [var 28.5mm, var 4.5mm])
+  west = line(start = [var 28.5mm, var 4.5mm], end = [var 28.5mm, var 3.7mm])
+  coincident([south.end, east.start])
+  horizontalDistance([ORIGIN, south.end]) == cavityX1
+  verticalDistance([ORIGIN, south.end]) == pocketLow[4]
+  coincident([east.end, north.start])
+  horizontalDistance([ORIGIN, east.end]) == cavityX1
+  verticalDistance([ORIGIN, east.end]) == pocketHigh[4]
+  coincident([north.end, west.start])
+  horizontalDistance([ORIGIN, north.end]) == cavityX0
+  verticalDistance([ORIGIN, north.end]) == pocketHigh[4]
+  coincident([west.end, south.start])
+  horizontalDistance([ORIGIN, west.end]) == cavityX0
+  verticalDistance([ORIGIN, west.end]) == pocketLow[4]
+}
+pocketRegion5 = region(segments = [
+  pocketSketch5.south,
+  pocketSketch5.east
+])
+pocketTool5 = extrude(
+  pocketRegion5,
+  length = thinWallHeight,
+  tagStart = $l10Pocket5Floor,
+  tagEnd = $l10Pocket5Ceiling,
+)
+pocketBody5 = subtract(pocketBody4, tools = [pocketTool5])
+hide(pocketSketch5)
+
+bridge = pocketBody5
+
+bridge

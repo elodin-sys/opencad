@@ -1,0 +1,626 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/bracket/contract.yaml: 6 parameters {'stated': 6}; sources unresolved {}; unanchored 0",
+        "open questions: 0 (blocking []); interfaces 1, unenforced ['hole_pattern'] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 6
+        },
+        "soft_values": 0,
+        "open_questions": [],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [
+          "hole_pattern"
+        ],
+        "interface_checks": []
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/bracket/inspect.json bbox.max_error = 0.0 (tol 0.02)",
+        "results/cadquery/bracket/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            80.0,
+            50.0,
+            6.0
+          ],
+          "measured_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            80.0,
+            50.0,
+            6.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.02,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            80.0,
+            50.0,
+            6.0
+          ],
+          "measured_min": [
+            -0.0,
+            -0.0,
+            0.0
+          ],
+          "measured_max": [
+            80.0,
+            50.0,
+            6.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.02,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/bracket/inspect.json volume = 23489.5354 vs 23489.535",
+        "results/cadquery/bracket/inspect.json surface_area = 9677.6327 vs 9677.63",
+        "results/cadquery/bracket/inspect.json center_of_mass = [40.0, 25.0, 3.0] vs [40.0, 25.0, 3.0]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 23489.535,
+          "measured": 23489.5354,
+          "error": 0.0004,
+          "band": 23.4895,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 9677.63,
+          "measured": 9677.6327,
+          "error": 0.0027,
+          "band": 9.6776,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            40.0,
+            25.0,
+            3.0
+          ],
+          "measured": [
+            40.0,
+            25.0,
+            3.0
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.02,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/bracket/inspect.json features: 3/3 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {},
+        "interfaces": {}
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/cadquery/bracket/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/bracket/inspect.json agreement engine=23489.535390714347 step=23489.53539071445 stl=23490.558302365727 (rel tol 0.002; independent=False)",
+        "results/cadquery/bracket/inspect.json agreement.manifold = 23490.558302365724 (Manifold kernel witness, rel vs STEP 4.354754720602047e-05; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 23489.535390714347,
+        "kcl": 23489.535390714347,
+        "step": 23489.53539071445,
+        "stl": 23490.558302365727,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "manifold": 23490.558302365724,
+        "manifold_vs_step_rel": 4.354754720602047e-05,
+        "engine_vs_step_rel": 4.3365441207847455e-15,
+        "kcl_vs_step_rel": 4.3365441207847455e-15,
+        "stl_vs_step_rel": 4.3547547206175346e-05,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/bracket/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 0/0 values; infeasible refused 0/0; interfaces pinned 0"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "plateThickness",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 3914.923,
+                "measured": 3914.92256511909,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "holeDiameter",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -188.496,
+                "measured": -188.49555921538558,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "b4d4f2ce6680a07ab6df30221afe42734a8060f240f8de95083f4d77abe23974",
+          "re_export_sha256": "b4d4f2ce6680a07ab6df30221afe42734a8060f240f8de95083f4d77abe23974",
+          "ok": true
+        },
+        "sweep": {
+          "values": 0,
+          "passed": 0
+        },
+        "infeasible": {
+          "declared": 0,
+          "refused": 0
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/bracket/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=6",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "import cadquery",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "cadquery"
+          ],
+          "forbidden_imports": [],
+          "asserts": 6,
+          "sketch_blocks": 9,
+          "feature_ops": 9,
+          "construction_ops": {
+            "calls": 9,
+            "has_result": true
+          },
+          "parameters": {
+            "plateWidth": {
+              "found": true,
+              "value": 80.0,
+              "expected": 80.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "plateHeight": {
+              "found": true,
+              "value": 50.0,
+              "expected": 50.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "plateThickness": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "holeDiameter": {
+              "found": true,
+              "value": 4.5,
+              "expected": 4.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "holeInset": {
+              "found": true,
+              "value": 10.0,
+              "expected": 10.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "cornerRadius": {
+              "found": true,
+              "value": 5.0,
+              "expected": 5.0,
+              "file": "main.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 33,
+          "numeric_literals": 17,
+          "source_size": {
+            "lines": 33,
+            "numeric_literals": 17,
+            "max_lines": 4000,
+            "max_literals": 6000,
+            "ok": true
+          },
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/bracket/export.json step.deterministic = True sha256 b4d4f2ce6680; stl=present; glb=present",
+        "results/cadquery/bracket/inspect.json valid = True solids = 1 (expected 1)",
+        "results/cadquery/bracket/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = False; manifold witness = 23490.558302365724"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/cadquery/bracket/export/bracket.step",
+            "sha256": "b4d4f2ce6680a07ab6df30221afe42734a8060f240f8de95083f4d77abe23974",
+            "bytes": 50732,
+            "deterministic": true,
+            "second_sha256": "b4d4f2ce6680a07ab6df30221afe42734a8060f240f8de95083f4d77abe23974",
+            "determinism_source": "edit restore re-export"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/cadquery/bracket/export/bracket.stl",
+            "sha256": "331eb6f1c00323bda624fdc452861fbf2e227851c89c071f179dea1790e10dfe",
+            "bytes": 39084
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/cadquery/bracket/export/bracket.glb",
+            "sha256": "1bd6111a075bd5259baf066aec11116a444b5ec6cb64d0eb956f21477fbdba9b",
+            "bytes": 14724
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 23490.558302365724,
+          "faces": 780,
+          "vertices": 384,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 23490.558302365727,
+          "surface_area": 9677.376453210341,
+          "bbox_min": [
+            -8.881784197001252e-16,
+            -8.881784197001252e-16,
+            0.0
+          ],
+          "bbox_max": [
+            80.0,
+            50.0,
+            6.0
+          ],
+          "center_of_mass": [
+            39.99999992653249,
+            24.999999943935457,
+            2.9999999999999996
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a13c66-6deb-7731-b4b2-143af9c8db8b; engine versions ['2.8.0']; engine calls 4; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 4,
+        "allow_errors": false,
+        "engine_versions": [
+          "2.8.0"
+        ],
+        "zoo_versions": [
+          "2.8.0"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/bracket/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = training-only; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "training-only",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present, no traced geometry",
+      "ok": true,
+      "evidence": [
+        "results/cadquery/bracket/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 9, 'has_result': True} lines = 33"
+      ],
+      "failure_means": "the deliverable is a re-export or a trace of the reference, not a design",
+      "knob": "rebuild from construction with dimensions as parameters; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "cadquery"
+        ],
+        "construction_ops": {
+          "calls": 9,
+          "has_result": true
+        },
+        "sketch_blocks": 9,
+        "feature_ops": 9,
+        "source_size": {
+          "lines": 33,
+          "numeric_literals": 17,
+          "max_lines": 4000,
+          "max_literals": 6000,
+          "ok": true
+        }
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

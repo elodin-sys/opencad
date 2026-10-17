@@ -1,0 +1,261 @@
+{
+  "case": "fusion-12944-assembly",
+  "scored_at": "2026-09-21T01:30:51Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "01188b0e-93ae-4c63-9b75-0484f32f3214",
+    "exit_code": 0,
+    "seconds": 114,
+    "commands": 5,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/build123d/fusion-12944-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 5,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/build123d/fusion-12944-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "Body two identity; body one Rx(180) + t=[0,-14.5,0]. assembly-check PASS: axis 0 deg, line dist 0, offset 0, anti-parallel, interference 0 mm3, gap 0.0365 mm; both agreements volume_rel=0 hausdorff=0.",
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 4.89,
+      "visual_check": "Visual: shank coaxial through the bore (front: hex concentric with the hole); plate mid-shank with a clear axial gap to the hex head and to the cross-hole (top/iso); no interpenetration; only the 0.0365 mm radial clearance."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "01188b0e-93ae-4c63-9b75-0484f32f3214",
+    "exit_code": 0,
+    "seconds": 114,
+    "commands": 5,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/build123d/fusion-12944-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 5,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/build123d/fusion-12944-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "Body two identity; body one Rx(180) + t=[0,-14.5,0]. assembly-check PASS: axis 0 deg, line dist 0, offset 0, anti-parallel, interference 0 mm3, gap 0.0365 mm; both agreements volume_rel=0 hausdorff=0.",
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 4.89,
+      "visual_check": "Visual: shank coaxial through the bore (front: hex concentric with the hole); plate mid-shank with a clear axial gap to the hex head and to the cross-hole (top/iso); no interpenetration; only the 0.0365 mm radial clearance."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "mode": "modelled",
+  "program_executes": true,
+  "solid_count": {
+    "measured": 2,
+    "expected": 2,
+    "ok": true
+  },
+  "export_agreement": {
+    "ok": true,
+    "bodies": {
+      "22303_e9723631_0014_1": {
+        "ok": true,
+        "volume_expected": 148190.97607994874,
+        "volume_measured": 148190.97610471927,
+        "volume_rel": 1.6715276929437668e-10,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 1.3896677489461243e-06,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 8.899290417642253e-08
+      },
+      "22303_e9723631_0013_1": {
+        "ok": true,
+        "volume_expected": 19943.659057378023,
+        "volume_measured": 19943.65905991197,
+        "volume_rel": 1.2705526199070002e-10,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 1.5185222385072108e-07,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 6.551987286673317e-08
+      }
+    }
+  },
+  "export_integrity": {
+    "ok": true,
+    "valid": true,
+    "solids": 2,
+    "expected_solids": 2,
+    "watertight": true,
+    "deterministic": true
+  },
+  "hygiene": {
+    "ok": true,
+    "has_result": true,
+    "has_placements": true,
+    "cad_refs": [],
+    "truth_refs": [],
+    "files": [
+      "/Users/danieldriscoll/dual/skillkat/parts/build123d/fusion-12944-assembly/main.py"
+    ]
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": true,
+  "offset_truth_mm": 0.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 0.0,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": 0.0,
+      "expected": 0.0,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 180.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 0.0,
+      "truth_interference": 0.0,
+      "max": 1.0,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.036499999999999325,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "22303_e9723631_0014_1": {
+        "origin": [
+          0.0,
+          -14.5,
+          0.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -14.5
+          ],
+          [
+            0.0,
+            0.0,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "22303_e9723631_0013_1": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/build123d/fusion-12944-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/build123d/fusion-12944-assembly/handoff/assembly.html",
+    "motion": "revolute",
+    "native_glb": "/Users/danieldriscoll/dual/skillkat/results/build123d/fusion-12944-assembly/handoff/assembly-native.glb"
+  }
+}

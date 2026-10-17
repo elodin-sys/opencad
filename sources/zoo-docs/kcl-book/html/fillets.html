@@ -1,0 +1,601 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Fillets, Chamfers and Edges - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/fillets.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="fillets-chamfers-and-edges"><a class="header" href="#fillets-chamfers-and-edges">Fillets, Chamfers and Edges</a></h1>
+<ul>
+<li><a href="#motivation-applying-a-fillet">Motivation: Applying a fillet</a></li>
+<li><a href="#relationships-between-edges">Relationships between edges</a></li>
+<li><a href="#edges-between-faces">Edges between faces</a></li>
+<li><a href="#chamfers">Chamfers</a>
+<ul>
+<li><a href="#advanced-chamfers">Advanced chamfers</a></li>
+</ul>
+</li>
+<li><a href="#measuring-geometry">Measuring geometry</a></li>
+</ul>
+<h2 id="motivation-applying-a-fillet"><a class="header" href="#motivation-applying-a-fillet">Motivation: Applying a fillet</a></h2>
+<p>When you manufacture a part, you often want to smooth off its sharp edges, so they're rounded and won't accidentally cut someone who holds it.
+Let's say we're modeling a cube, like this:</p>
+<pre><code class="language-kcl=cube_no_fillets">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+
+// Extrude a cube.
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+</code></pre>
+<p>It produces a cube like this:</p>
+<p><model-viewer
+            alt="A cube"
+            src="gltf/cube_no_fillets/output.gltf"
+            poster="images/dynamic/cube_no_fillets.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+What if we want to fillet one of its sides? Let's start simple and refer to one of the four bottom edges. Those edges were made by the four <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-line"><code>line</code></a> function calls, which were all assigned to variables (<code>line1</code>, <code>line2</code>, etc). The region preserves those variables under <code>.tags</code>, so we can reference the edge created from <code>line1</code> via <code>regionCube.tags.line1</code> and apply a fillet to it.</p>
+<pre><code class="language-kcl=cube_one_fillet">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+
+// Extrude a cube.
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Fillet one edge
+filletCube = fillet(extrudeCube, tags = regionCube.tags.line1, radius = 0.2)
+</code></pre>
+<p>The <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-fillet"><code>fillet</code></a> function accepts an argument <code>tags</code>, which expects edges to fillet. You can pass in a single edge, like we did, or an array of edges like <code>[regionCube.tags.line1, regionCube.tags.line2]</code>.</p>
+<p>That program should produce a cube with one filleted edge, like this:</p>
+<p><model-viewer
+            alt="A cube with one filleted edge"
+            src="gltf/cube_one_fillet/output.gltf"
+            poster="images/dynamic/cube_one_fillet.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Nice! We could fillet all four bottom sides if we wanted to:</p>
+<pre><code class="language-kcl=cube_four_fillets">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+
+// Extrude a cube.
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Fillet all bottom edges
+filletCube = fillet(
+  extrudeCube,
+  tags = [
+    regionCube.tags.line1,
+    regionCube.tags.line2,
+    regionCube.tags.line3,
+    regionCube.tags.line4,
+  ],
+  radius = 0.2,
+)
+</code></pre>
+<p><model-viewer
+            alt="A cube with four filleted edges"
+            src="gltf/cube_four_fillets/output.gltf"
+            poster="images/dynamic/cube_four_fillets.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer></p>
+<h2 id="relationships-between-edges"><a class="header" href="#relationships-between-edges">Relationships between edges</a></h2>
+<p>So far, we've assigned geometry (like a line) to a variable when we create it, and then use that variable to refer to it later (e.g. for fillets). What about edges we don't create directly, and therefore can't assign to a variable? For example, we've already filleted the four bottom edges, but how do we fillet the top four edges? We aren't creating them via <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-line"><code>line</code></a> calls. They're created by the CAD engine in the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-extrude"><code>extrude</code></a> call. If we didn't explicitly create them with a sketch function, how do we store them in a variable? Here's the secret --- you don't. KCL has a few helpful functions to access edges that you didn't create directly. Because we can refer to the bottom edges, we can use helper functions like <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-getOppositeEdge"><code>getOppositeEdge</code></a> to reference the top edges, like this:</p>
+<pre><code class="language-kcl=cube_two_opposite_fillets">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// This is all the same as previous examples.
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Note that here we're using `getOppositeEdge`.
+filletCube = fillet(
+  extrudeCube,
+  tags = [
+    // Fillet the bottom edge
+    regionCube.tags.line1,
+    // Fillet the top edge
+    getOppositeEdge(regionCube.tags.line1)
+  ],
+  radius = 0.2,
+)
+</code></pre>
+<p><model-viewer
+            alt="Cube with one filleted edge on the bottom and the opposite top edge too"
+            src="gltf/cube_two_opposite_fillets/output.gltf"
+            poster="images/dynamic/cube_two_opposite_fillets.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+We can fillet all four bottom edges <em>and</em> all four top edges by using <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-getOppositeEdge"><code>getOppositeEdge</code></a> on each:</p>
+<pre><code class="language-kcl=cube_eight_fillets">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Same as previous examples:
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Fillet edges
+filletCube = fillet(
+  extrudeCube,
+  tags = [
+    // Fillet the bottom four edges
+    regionCube.tags.line1,
+    regionCube.tags.line2,
+    regionCube.tags.line3,
+    regionCube.tags.line4,
+    // Fillet the top four edges
+    getOppositeEdge(regionCube.tags.line1),
+    getOppositeEdge(regionCube.tags.line2),
+    getOppositeEdge(regionCube.tags.line3),
+    getOppositeEdge(regionCube.tags.line4)
+  ],
+  radius = 0.2,
+)
+
+</code></pre>
+<p><model-viewer
+            alt="Cube with all top and bottom edge fillets"
+            src="gltf/cube_eight_fillets/output.gltf"
+            poster="images/dynamic/cube_eight_fillets.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+So, we've filleted the bottom horizontal edges, and the top horizontal edges. What about the side (vertical) edges, which connect the top and bottom face? We can use <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-getNextAdjacentEdge"><code>getNextAdjacentEdge</code></a> and <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-getPreviousAdjacentEdge"><code>getPreviousAdjacentEdge</code></a> to reference them:</p>
+<pre><code class="language-kcl=cube_next_prev_fillets">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+
+// Extrude a cube
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Fillet edges
+filletCube = fillet(
+  extrudeCube,
+  tags = [
+    // Bottom edge
+    regionCube.tags.line1,
+    // One side edge
+    getNextAdjacentEdge(regionCube.tags.line1),
+    // The other side edge
+    getPreviousAdjacentEdge(regionCube.tags.line1),
+  ],
+  radius = 0.2,
+)
+</code></pre>
+<p><model-viewer
+            alt="Cube with two side fillets and one bottom"
+            src="gltf/cube_next_prev_fillets/output.gltf"
+            poster="images/dynamic/cube_next_prev_fillets.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Here, we filleted the bottom side, <code>line1</code> just like we did before. But we've also filleted the sides adjacent to it. One side is "before" line1, one side is "after" line1, in Zoo's internal tracking of edges. We can use a similar trick to fillet all four vertical side edges:</p>
+<pre><code class="language-kcl=cube_next_prev_fillets_all_sides">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+
+// Extrude a cube
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Fillet edges
+filletCube = fillet(
+  extrudeCube,
+  tags = [
+    getNextAdjacentEdge(regionCube.tags.line1),
+    getPreviousAdjacentEdge(regionCube.tags.line1),
+    getNextAdjacentEdge(regionCube.tags.line3),
+    getPreviousAdjacentEdge(regionCube.tags.line3),
+  ],
+  radius = 0.2,
+)
+</code></pre>
+<p><model-viewer
+            alt="Cube with two side fillets and one bottom fillet"
+            src="gltf/cube_next_prev_fillets_all_sides/output.gltf"
+            poster="images/dynamic/cube_next_prev_fillets_all_sides.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer></p>
+<h2 id="edges-between-faces"><a class="header" href="#edges-between-faces">Edges between faces</a></h2>
+<p>Sometimes <code>getNextAdjacentEdge</code> and similar functions are a bit tricky to use. It can be hard to look at a model and figure out which is the next, or previous, or opposite, edge. There's another way to refer to edges: which faces does this edge touch? For this we use the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-getCommonEdge"><code>getCommonEdge</code></a> function.</p>
+<pre><code class="language-kcl=cube_common_edge">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// This is the same as previous examples
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Find the edge that borders the face from line4 and the face from line1.
+edge = getCommonEdge(faces = [
+  regionCube.tags.line4,
+  regionCube.tags.line1
+])
+
+// Then fillet it.
+fillet(extrudeCube, tags = edge, radius = 0.2)
+</code></pre>
+<p><a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-getCommonEdge"><code>getCommonEdge</code></a> takes a list of faces, and returns the edge that is shared between them -- their <em>common</em> edge. This is a pretty useful function, because usually it's easier to reference and name faces rather than edges.</p>
+<p>Notice in this example that the list of <code>faces</code> looks like a list of edges. We're passing in <code>line4</code> and <code>line1</code>, which we used to reference edges in the above examples. That's because KCL recognizes that <code>extrude</code> creates a face out of each edge (imagine each edge being dragged upwards, to create a face).</p>
+<p>There are other ways to refer to faces, but we'll see them later in this book.</p>
+<h2 id="chamfers"><a class="header" href="#chamfers">Chamfers</a></h2>
+<p>A <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-chamfer"><code>chamfer</code></a> is just like a fillet, except that fillets smooth away an edge to make it round, but chamfers just make a single cut across an edge. Here's an example of the difference. Compare this chamfered cube with the filleted cubes above:</p>
+<pre><code class="language-kcl=chamfered_cube">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Same as previous examples
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Apply a chamfer
+chamferedCube = chamfer(extrudeCube, tags = [getOppositeEdge(regionCube.tags.line1)], length = 0.2)
+</code></pre>
+<p><model-viewer
+            alt="A chamfered cube"
+            src="gltf/chamfered_cube/output.gltf"
+            poster="images/dynamic/chamfered_cube.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer></p>
+<h3 id="advanced-chamfers"><a class="header" href="#advanced-chamfers">Advanced chamfers</a></h3>
+<p>To define the chamfer, you only need to provide its <code>length</code>. But if you want more control of the chamfer angle, you can set the optional <code>secondLength</code> or <code>angle</code> parameters. Let's see how they work.</p>
+<p>Chamfering cuts away at two faces, creating a third face in between them. By default, the chamfer cuts away an even amount from both sides, creating a chamfered face at a 45 degree angle. The amount cut away from each face is the <code>length</code> parameter. But you can make a chamfer that cuts different amounts from each face, using the <code>secondLength</code> or <code>angle</code> parameters. This diagram shows the cross-section of a cube being chamfered:</p>
+<p><img src="images/static/advanced_chamfers.png" alt="How chamfer lengths really work" /></p>
+<p>Setting a second length which is much bigger or smaller than the first length means the chamfer will be "steep" -- the new face will be at a very sharp (or very obtuse) angle between the existing two faces. You can also set this angle explicitly, via the <code>angle</code> parameter. You can't use both <code>angle</code> and <code>secondLength</code> because they're essentially two different ways of setting the same property.</p>
+<h2 id="measuring-geometry"><a class="header" href="#measuring-geometry">Measuring geometry</a></h2>
+<p>So we've learned to use variables from sketch blocks to reference the lines we create, then use helper functions like <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-getOppositeEdge"><code>getOppositeEdge</code></a> to reference other geometry elsewhere in the model. But these variables aren't just used for altering edges. They provide a valuable way to query and measure your models. Let's see how.</p>
+<p>Let's say you've got a solid triangle, like this:</p>
+<pre><code class="language-kcl">// Make a triangle
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+sketch001 = sketch(on = YZ) {
+  line1 = line(start = [var 5.29mm, var -4.11mm], end = [var -4.31mm, var -4.11mm])
+  line2 = line(start = [var -4.31mm, var -4.11mm], end = [var 0.49mm, var 5.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.49mm, var 5.14mm], end = [var 5.29mm, var -4.11mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+  equalLength([line2, line3])
+  horizontal(line1)
+}
+
+// Extrude it
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 1)
+</code></pre>
+<p>Let's ask a simple question. How long is each side of the triangle?</p>
+<p>It sounds simple, but to actually calculate it, you'd have to break out a pencil and paper, then do some trigonometry. The problem is, the length doesn't appear anywhere in the <code>line</code> function call. The lines are defined by their start and end points, and the length is an implicit property of those. Defining lines as a start and end is helpful, but it means important properties, like length, can't be read from our source code.</p>
+<p>However, tags give us a simple way to refer to each line, and then query them for properties like length with the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-segLen"><code>segLen</code></a> function. Let's update our program:</p>
+<pre><code class="language-kcl">// Make a triangle
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+sketch001 = sketch(on = YZ) {
+  line1 = line(start = [var 5.29mm, var -4.11mm], end = [var -4.31mm, var -4.11mm])
+  line2 = line(start = [var -4.31mm, var -4.11mm], end = [var 0.49mm, var 5.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.49mm, var 5.14mm], end = [var 5.29mm, var -4.11mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+  equalLength([line2, line3])
+  horizontal(line1)
+}
+// Extrude it
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 1)
+
+// Measure its side lengths
+side1Len = segLen(extrude001.sketch.tags.line1)
+side2Len = segLen(extrude001.sketch.tags.line2)
+side3Len = segLen(extrude001.sketch.tags.line3)
+</code></pre>
+<p>Now you can open up the Variables pane and look at the <code>side1Len</code>, <code>side2Len</code> and <code>side3Len</code> variables to find each side's length. That's pretty useful! And if you want to use those lengths elsewhere in your code, you can! You could start drawing lines where the end is <code>[side1Len, 0]</code> for example, or plug those lengths into other calculations.</p>
+<p>There are other helpers too, like <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-segStart"><code>segStart</code></a> and <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-segEnd"><code>segEnd</code></a> to find a line's start and end, respectively. Take a look at the KCL <a href="https://zoo.dev/docs/kcl-std">standard library docs</a> to find them all.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="sketch3d.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="sketch_on_face.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="sketch3d.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="sketch_on_face.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

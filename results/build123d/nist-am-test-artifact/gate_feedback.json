@@ -1,0 +1,1787 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/nist-am-test-artifact/contract.yaml: 64 parameters {'stated': 49, 'derived': 3, 'measured': 9, 'inferred': 3}; sources unresolved {}; unanchored 0",
+        "open questions: 5 (blocking []); interfaces 8, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 49,
+          "derived": 3,
+          "measured": 9,
+          "inferred": 3
+        },
+        "soft_values": 3,
+        "open_questions": [
+          "Q1. The task summary says 34 cylindrical features, but the supplied table enumerates 35 (12 holes and 23 pins/bosses). Is 34 a counting error? This contract requires all 35 located cylinders.",
+          "Q2. The prose mentions lateral bosses, a hexagon and a lens; A-A, the inclined-plane table and z=-5 outline instead support eight blind cavities: two circles, two squares, two diamonds and two straight-edged rhombi. Are the alternative terms descriptive only? These eight cavities reproduce the supplied volume, area and COM; no extra unsupported boss or curved lens is added.",
+          "Q3. The small lateral diamond has no explicit diagonal or depth callout. Are its 3 mm diagonals and 3 mm depth nominal? They are measured from A-A and the section, use \u00b10.3 mm parameter tolerances, and agree with the aggregate table properties.",
+          "Q4. Exact-face sections disagree: at z=1 the table gives 1138 mm2/35 loops but the image gives 1124.79/34; at z=5 they give 599.24/19 versus 498.76/18; at z=-5 they give 9502.23/2 versus 9402.44/1. Confirm the intended coplanar-section convention if those exact stations are needed. Acceptance uses non-coplanar z=0.5,1.5,3.5,4.5,5.5,6.5,-5.5 instead.",
+          "Q5. Numeric GD&T values, material, density, manufacturing process, surface finish and edge-break requirements are not supplied. What values apply for fabrication? The drawing xx boxes remain unspecified; this contract uses digital reconstruction tolerances and makes no mass or manufacturability claim."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "datumTop",
+          "raisedTread_outerX",
+          "raisedTread_middleX",
+          "raisedTread_elbow",
+          "raisedTread_middleY",
+          "raisedTread_outerY",
+          "recessedTread_outerX",
+          "recessedTread_middleX",
+          "recessedTread_elbow",
+          "recessedTread_middleY",
+          "recessedTread_outerY",
+          "raisedX42",
+          "recessedX42",
+          "raisedX32",
+          "recessedX32",
+          "raisedX22",
+          "recessedX22",
+          "raisedX12",
+          "recessedX12",
+          "raisedY12",
+          "recessedY12",
+          "raisedY22Long",
+          "raisedY22Riser",
+          "recessedY22Long",
+          "recessedY22Riser",
+          "raisedY32",
+          "recessedY32",
+          "raisedY42",
+          "recessedY42",
+          "finePinA_cap",
+          "fineHoleA_floor",
+          "finePinB_cap",
+          "fineHoleB_floor",
+          "finePinC_cap",
+          "fineHoleC_floor",
+          "finePinD_cap",
+          "fineHoleD_floor",
+          "finePinE_cap",
+          "fineHoleE_floor",
+          "rectBoss1_cap",
+          "rectSlot1_floor",
+          "rectBoss2_cap",
+          "rectSlot2_floor",
+          "rectBoss3_cap",
+          "rectSlot3_floor",
+          "rectBoss4_cap",
+          "rectSlot4_floor",
+          "rectBoss5_cap",
+          "rectSlot5_floor",
+          "rectBoss6_cap",
+          "rectSlot6_floor",
+          "rectBoss7_cap",
+          "rectSlot7_floor",
+          "rectBoss8_cap",
+          "rectSlot8_floor",
+          "rectBoss9_cap",
+          "rectSlot9_floor",
+          "rectBoss10_cap",
+          "rectSlot10_floor",
+          "lateral_smallRound",
+          "lateral_largeRound",
+          "lateralSmallBacks",
+          "lateralLargeBacks",
+          "lateral_smallSquare_wall1",
+          "lateral_smallSquare_wall3",
+          "lateral_largeSquare_wall1",
+          "lateral_largeSquare_wall3"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/build123d/nist-am-test-artifact/inspect.json bbox.max_error = 0.0 (tol 0.03)",
+        "results/build123d/nist-am-test-artifact/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -70.71067811865474,
+            -70.71067811865474,
+            -10.0
+          ],
+          "expected_max": [
+            70.71067811865474,
+            70.71067811865474,
+            7.0
+          ],
+          "measured_min": [
+            -70.7107,
+            -70.7107,
+            -10.0
+          ],
+          "measured_max": [
+            70.7107,
+            70.7107,
+            7.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.03,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -70.71067811865474,
+            -70.71067811865474,
+            -10.0
+          ],
+          "expected_max": [
+            70.71067811865474,
+            70.71067811865474,
+            7.0
+          ],
+          "measured_min": [
+            -70.7107,
+            -70.7107,
+            -10.0
+          ],
+          "measured_max": [
+            70.7107,
+            70.7107,
+            7.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.03,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/nist-am-test-artifact/inspect.json volume = 100987.0617 vs 100987.061651834",
+        "results/build123d/nist-am-test-artifact/inspect.json surface_area = 28904.4338 vs 28904.433778012",
+        "results/build123d/nist-am-test-artifact/inspect.json center_of_mass = [0.2613, 0.8672, -4.637] vs [0.261256747, 0.867161542, -4.636979473]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 100987.061651834,
+          "measured": 100987.0617,
+          "error": 0.0,
+          "band": 50.4935,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 28904.433778012,
+          "measured": 28904.4338,
+          "error": 0.0,
+          "band": 28.9044,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            0.261256747,
+            0.867161542,
+            -4.636979473
+          ],
+          "measured": [
+            0.2613,
+            0.8672,
+            -4.637
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.02,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/build123d/nist-am-test-artifact/inspect.json features: 79/79 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "centerBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerCentralBoss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "upperCentralBoss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_px_20": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_px_30": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_px_40": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_px_50": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "hole_px": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_nx_20": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_nx_30": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_nx_40": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_nx_50": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "hole_nx": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_py_20": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_py_30": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_py_40": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_py_50": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "hole_py": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_ny_20": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_ny_30": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_ny_40": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "pin_ny_50": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "hole_ny": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "finePinA": {
+            "found": true,
+            "axis_offset": 0.00033905920000076655,
+            "axis_tolerance": 0.015,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "fineHoleA": {
+            "found": true,
+            "axis_offset": 0.00033905920000076655,
+            "axis_tolerance": 0.015,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "finePinB": {
+            "found": true,
+            "axis_offset": 0.00033905921340073904,
+            "axis_tolerance": 0.015,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "fineHoleB": {
+            "found": true,
+            "axis_offset": 0.00033905921340073904,
+            "axis_tolerance": 0.015,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "finePinC": {
+            "found": true,
+            "axis_offset": 0.0003390592270032404,
+            "axis_tolerance": 0.015,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "fineHoleC": {
+            "found": true,
+            "axis_offset": 0.0003390592270032404,
+            "axis_tolerance": 0.015,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "finePinD": {
+            "found": true,
+            "axis_offset": 0.00033905924040042294,
+            "axis_tolerance": 0.015,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "fineHoleD": {
+            "found": true,
+            "axis_offset": 0.00033905924040042294,
+            "axis_tolerance": 0.015,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "finePinE": {
+            "found": true,
+            "axis_offset": 0.00033905925379816435,
+            "axis_tolerance": 0.015,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "fineHoleE": {
+            "found": true,
+            "axis_offset": 0.00033905925379816435,
+            "axis_tolerance": 0.015,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lateral_smallRound": {
+            "found": true,
+            "axis_offset": 6.533669710909636e-10,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lateral_largeRound": {
+            "found": true,
+            "axis_offset": 1.8950513546726385e-10,
+            "axis_tolerance": 0.02,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "datumTop": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedTread_outerX": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedTread_middleX": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedTread_elbow": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedTread_middleY": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedTread_outerY": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedTread_outerX": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedTread_middleX": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedTread_elbow": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedTread_middleY": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedTread_outerY": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedX42": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedX42": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedX32": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedX32": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedX22": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedX22": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedX12": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedX12": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedY12": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedY12": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedY22Long": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedY22Riser": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedY22Long": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedY22Riser": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedY32": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedY32": {
+            "ok": true,
+            "kind": "face"
+          },
+          "raisedY42": {
+            "ok": true,
+            "kind": "face"
+          },
+          "recessedY42": {
+            "ok": true,
+            "kind": "face"
+          },
+          "finePinA_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "fineHoleA_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "finePinB_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "fineHoleB_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "finePinC_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "fineHoleC_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "finePinD_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "fineHoleD_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "finePinE_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "fineHoleE_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectBoss1_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectSlot1_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectBoss2_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectSlot2_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectBoss3_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectSlot3_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectBoss4_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectSlot4_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectBoss5_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectSlot5_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectBoss6_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectSlot6_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectBoss7_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectSlot7_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectBoss8_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectSlot8_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectBoss9_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectSlot9_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectBoss10_cap": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rectSlot10_floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "lateral_smallRound": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lateral_largeRound": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lateralSmallBacks": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "lateralLargeBacks": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "lateral_smallSquare_wall1": {
+            "ok": true,
+            "kind": "face"
+          },
+          "lateral_smallSquare_wall3": {
+            "ok": true,
+            "kind": "face"
+          },
+          "lateral_largeSquare_wall1": {
+            "ok": true,
+            "kind": "face"
+          },
+          "lateral_largeSquare_wall3": {
+            "ok": true,
+            "kind": "face"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/build123d/nist-am-test-artifact/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/build123d/nist-am-test-artifact/inspect.json agreement engine=100987.06165183414 step=100987.06165182835 stl=100982.98227840709 (rel tol 0.002; independent=False)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 100987.06165183414,
+        "kcl": 100987.06165183414,
+        "step": 100987.06165182835,
+        "stl": 100982.98227840709,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "engine_vs_step_rel": 5.735053744664676e-14,
+        "kcl_vs_step_rel": 5.735053744664676e-14,
+        "stl_vs_step_rel": 4.0395010554206227e-05,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/build123d/nist-am-test-artifact/edit.json 3/3 edit tests ok; restore.ok = True",
+        "sweep 0/0 values; infeasible refused 0/0; interfaces pinned 67"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "baseThickness",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 9871.194701202818,
+                "measured": 9871.194701202432,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 66,
+                "driven": [
+                  "axisX",
+                  "axisY",
+                  "baseBottom",
+                  "baseThicknessCheck",
+                  "belowFine",
+                  "bottomInterior",
+                  "centerBore",
+                  "datumTop",
+                  "hole_nx",
+                  "hole_ny",
+                  "hole_px",
+                  "hole_py",
+                  "lateralAndDeepStair",
+                  "positiveLow",
+                  "rampMid",
+                  "sideNorthEast",
+                  "sideNorthWest",
+                  "sideSouthEast",
+                  "sideSouthWest",
+                  "spanX",
+                  "spanY",
+                  "stepsAbove3",
+                  "stepsAbove4",
+                  "stepsAbove5",
+                  "stepsAbove6",
+                  "totalHeight"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "mainPinHeight",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 201.06192982974676,
+                "measured": 200.35258334146056,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 67,
+                "driven": [
+                  "axisX",
+                  "axisY",
+                  "belowFine",
+                  "bottomInterior",
+                  "lateralAndDeepStair",
+                  "pin_nx_20",
+                  "pin_nx_20_cap",
+                  "pin_nx_30",
+                  "pin_nx_30_cap",
+                  "pin_nx_40",
+                  "pin_nx_40_cap",
+                  "pin_nx_50",
+                  "pin_nx_50_cap",
+                  "pin_ny_20",
+                  "pin_ny_20_cap",
+                  "pin_ny_30",
+                  "pin_ny_30_cap",
+                  "pin_ny_40",
+                  "pin_ny_40_cap",
+                  "pin_ny_50",
+                  "pin_ny_50_cap",
+                  "pin_px_20",
+                  "pin_px_20_cap",
+                  "pin_px_30",
+                  "pin_px_30_cap",
+                  "pin_px_40",
+                  "pin_px_40_cap",
+                  "pin_px_50",
+                  "pin_px_50_cap",
+                  "pin_py_20",
+                  "pin_py_20_cap",
+                  "pin_py_30",
+                  "pin_py_30_cap",
+                  "pin_py_40",
+                  "pin_py_40_cap",
+                  "pin_py_50",
+                  "pin_py_50_cap",
+                  "positiveLow",
+                  "rampMid",
+                  "stepsAbove3",
+                  "stepsAbove4",
+                  "stepsAbove5",
+                  "stepsAbove6"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "rampRise",
+            "delta": 0.5,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 37.5,
+                "measured": 37.4782853115903,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 67,
+                "driven": [
+                  "rampHighEnd",
+                  "rampHighLanding",
+                  "rampLowEnd",
+                  "rampLowLanding",
+                  "rampRiseCheck",
+                  "rampSideNegative",
+                  "rampSidePositive",
+                  "rampSlope"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "4c1b667d5b3a5583bdca386d5a342210d52f69f8b55bbfd0db2098c0a8f8dcd0",
+          "re_export_sha256": "4c1b667d5b3a5583bdca386d5a342210d52f69f8b55bbfd0db2098c0a8f8dcd0",
+          "ok": true
+        },
+        "sweep": {
+          "values": 0,
+          "passed": 0
+        },
+        "infeasible": {
+          "declared": 0,
+          "refused": 0
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/nist-am-test-artifact/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=86",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "build123d",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "math",
+            "build123d"
+          ],
+          "forbidden_imports": [],
+          "asserts": 86,
+          "sketch_blocks": 39,
+          "feature_ops": 39,
+          "construction_ops": {
+            "calls": 39,
+            "has_result": true
+          },
+          "parameters": {
+            "baseSide": {
+              "found": true,
+              "value": 100.0,
+              "expected": 100.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "baseRotation": {
+              "found": true,
+              "value": 45.0,
+              "expected": 45.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "baseThickness": {
+              "found": true,
+              "value": 10.0,
+              "expected": 10.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "baseHalfDiagonal": {
+              "found": true,
+              "value": 70.71067811865474,
+              "expected": 70.71067811865474,
+              "file": "main.py",
+              "ok": true
+            },
+            "mainPinDiameter": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "mainPinHeight": {
+              "found": true,
+              "value": 7.0,
+              "expected": 7.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "pinFirstRadius": {
+              "found": true,
+              "value": 20.0,
+              "expected": 20.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "pinPitch": {
+              "found": true,
+              "value": 10.0,
+              "expected": 10.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "pinsPerArm": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "mainHoleDiameter": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "mainHoleRadius": {
+              "found": true,
+              "value": 60.0,
+              "expected": 60.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "centerHoleDiameter": {
+              "found": true,
+              "value": 10.0,
+              "expected": 10.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lowerBossDiameter": {
+              "found": true,
+              "value": 20.0,
+              "expected": 20.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lowerBossHeight": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "upperBossDiameter": {
+              "found": true,
+              "value": 15.0,
+              "expected": 15.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "upperBossHeight": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "stairInnerOffset": {
+              "found": true,
+              "value": 12.0,
+              "expected": 12.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "stairTread": {
+              "found": true,
+              "value": 10.0,
+              "expected": 10.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "stairFirstHeight": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "stairIncrement": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rampLowHeight": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rampRise": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rampRun": {
+              "found": true,
+              "value": 25.0,
+              "expected": 25.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rampLanding": {
+              "found": true,
+              "value": 2.5,
+              "expected": 2.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "rampWidth": {
+              "found": true,
+              "value": 5.0,
+              "expected": 5.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rampStartRadius": {
+              "found": true,
+              "value": 15.0,
+              "expected": 15.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "fineHeightDepth": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "fineSizeA": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "fineSizeB": {
+              "found": true,
+              "value": 1.5,
+              "expected": 1.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "fineSizeC": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "fineSizeD": {
+              "found": true,
+              "value": 0.5,
+              "expected": 0.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "fineSizeE": {
+              "found": true,
+              "value": 0.25,
+              "expected": 0.25,
+              "file": "main.py",
+              "ok": true
+            },
+            "fineFirstX": {
+              "found": true,
+              "value": 28.284,
+              "expected": 28.284,
+              "file": "main.py",
+              "ok": true
+            },
+            "fineFirstY": {
+              "found": true,
+              "value": 21.213,
+              "expected": 21.213,
+              "file": "main.py",
+              "ok": true
+            },
+            "finePitch": {
+              "found": true,
+              "value": 5.0,
+              "expected": 5.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectOuterInset": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectLengthRatio": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectStartV1": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectStartV2": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectStartV3": {
+              "found": true,
+              "value": 11.0,
+              "expected": 11.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectStartV4": {
+              "found": true,
+              "value": 14.0,
+              "expected": 14.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectStartV5": {
+              "found": true,
+              "value": 17.5,
+              "expected": 17.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectStartV6": {
+              "found": true,
+              "value": 19.5,
+              "expected": 19.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectStartV7": {
+              "found": true,
+              "value": 22.0,
+              "expected": 22.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectStartV8": {
+              "found": true,
+              "value": 23.0,
+              "expected": 23.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectStartV9": {
+              "found": true,
+              "value": 24.5,
+              "expected": 24.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "rectStartV10": {
+              "found": true,
+              "value": 25.0,
+              "expected": 25.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralCenterZ": {
+              "found": true,
+              "value": -5.0,
+              "expected": -5.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralFirstStation": {
+              "found": true,
+              "value": 40.0,
+              "expected": 40.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralPitch": {
+              "found": true,
+              "value": 10.0,
+              "expected": 10.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralSmallDiameter": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralSmallDepth": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralLargeDiameter": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralLargeDepth": {
+              "found": true,
+              "value": 5.0,
+              "expected": 5.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralSmallSquare": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralLargeSquare": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralSmallDiamond": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralSmallDiamondDepth": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralLargeDiamond": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralTallHeight": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralWideHeight": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralApexAngle": {
+              "found": true,
+              "value": 60.0,
+              "expected": 60.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralTallWidth": {
+              "found": true,
+              "value": 3.4641016151377535,
+              "expected": 3.4641016151377535,
+              "file": "main.py",
+              "ok": true
+            },
+            "lateralWideWidth": {
+              "found": true,
+              "value": 6.9282032302755105,
+              "expected": 6.9282032302755105,
+              "file": "main.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 357,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/nist-am-test-artifact/export.json step.deterministic = True sha256 4c1b667d5b3a; stl=present; glb=present",
+        "results/build123d/nist-am-test-artifact/inspect.json valid = True solids = 1 (expected 1)",
+        "results/build123d/nist-am-test-artifact/inspect.json mesh watertight = True components = 1 void_shells = 0"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/nist-am-test-artifact/export/nist-am-test-artifact.step",
+            "sha256": "4c1b667d5b3a5583bdca386d5a342210d52f69f8b55bbfd0db2098c0a8f8dcd0",
+            "bytes": 704764,
+            "deterministic": true,
+            "second_sha256": "4c1b667d5b3a5583bdca386d5a342210d52f69f8b55bbfd0db2098c0a8f8dcd0"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/nist-am-test-artifact/export/nist-am-test-artifact.stl",
+            "sha256": "36448ffcb30d3478198afdd95307d7081b23eda27590d9d1701bf6c508dfab0f",
+            "bytes": 258684
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/nist-am-test-artifact/export/nist-am-test-artifact.glb",
+            "sha256": "c4885618ed5e11b6751a4d7539bafb1945905ae03812ae8a2b6ef8e960e4d86b",
+            "bytes": 93764
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 5172,
+          "vertices": 2578,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 100982.98227840709,
+          "surface_area": 28901.6075253659,
+          "bbox_min": [
+            -70.71067810058594,
+            -70.71067810058594,
+            -10.0
+          ],
+          "bbox_max": [
+            70.71067810058594,
+            70.71067810058594,
+            7.0
+          ],
+          "center_of_mass": [
+            0.2610826922185683,
+            0.8675661446208892,
+            -4.637816187674833
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread a3dd8b85-6670-4c5b-a17d-1976cd904812; engine versions ['0.12.0']; engine calls 9; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 9,
+        "allow_errors": false,
+        "engine_versions": [
+          "0.12.0"
+        ],
+        "zoo_versions": [
+          "0.12.0"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/build123d/nist-am-test-artifact/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/nist-am-test-artifact/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 39, 'has_result': True} lines = 357"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "math",
+          "build123d"
+        ],
+        "construction_ops": {
+          "calls": 39,
+          "has_result": true
+        },
+        "sketch_blocks": 39,
+        "feature_ops": 39
+      }
+    }
+  ],
+  "retry": {
+    "attempted": true,
+    "corrections": 1,
+    "reason": [
+      "edit_robustness"
+    ],
+    "gates_before": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": true,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": false,
+      "source_hygiene": true,
+      "export_integrity": true,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "gates_after": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": true,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": true,
+      "source_hygiene": true,
+      "export_integrity": true,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "history": [
+      {
+        "key": "correction-1",
+        "role": "correction",
+        "failed_after": [],
+        "retryable_after": [],
+        "signature": "|ok",
+        "kcl_changed": true,
+        "incomplete": false
+      }
+    ],
+    "stopped": "gates pass",
+    "stuck_class": null
+  }
+}

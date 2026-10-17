@@ -1,0 +1,16 @@
+Source URL: https://zoo.dev/docs/glossary/cookie
+Title: Cookie
+
+# Cookie
+
+Data stored by a website in your browser
+
+A cookie is a small piece of data that a website or web service stores in your browser. Cookies can maintain a session, remember a preference, provide security, or support analytics and advertising.
+
+A cookie is not necessarily a tracker, and a tracker does not necessarily use cookies. Tracking technologies can also include pixels, scripts, and other forms of browser storage. Some trackers measure how people use a website or whether an advertising campaign resulted in a visit or signup.
+
+Zoo uses necessary cookies and browser storage for purposes such as authentication, security, and remembering privacy preferences. When you access certain Zoo API services, Zoo may provide a session cookie. Your browser or API client must preserve and return that cookie so the service can validate your session.
+
+With your permission, the zoo.dev website may also use optional analytics and advertising technologies to understand how visitors use the site, improve Zoo’s products, and measure campaigns. These optional technologies remain off unless you allow them.
+
+For more information about Zoo’s use of cookies and other technologies, including your available choices, see our [Privacy Policy](/privacy-policy).

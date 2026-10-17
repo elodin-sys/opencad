@@ -1,0 +1,127 @@
+{
+  "named_faces": {
+    "topFace": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "found": 1,
+      "area": 7175.013441486923,
+      "ok": true,
+      "position": 0.0,
+      "area_expected": 7176.605,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 4.955298840089084e-09,
+      "centroid_uv": [
+        -4.955298671394104e-09,
+        1.2930073678418808e-12
+      ]
+    },
+    "bottomFace": {
+      "plane": "z",
+      "at": -6.0,
+      "normal": "-",
+      "found": 1,
+      "area": 7175.013441486919,
+      "ok": true,
+      "position": -6.000000000000001,
+      "area_expected": 7176.605,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 4.955299010885927e-09,
+      "centroid_uv": [
+        -4.9552988379275575e-09,
+        1.3092443795770237e-12
+      ]
+    },
+    "bodyFlatPosX": {
+      "plane": "x",
+      "at": 25.0,
+      "normal": "+",
+      "found": 1,
+      "area": 168.353247018258,
+      "ok": true,
+      "position": 25.0,
+      "area_expected": 168.35,
+      "area_ok": true,
+      "centroid_uv": [
+        1.49918966130258e-12,
+        -3.0
+      ]
+    },
+    "bodyFlatNegX": {
+      "plane": "x",
+      "at": -25.0,
+      "normal": "-",
+      "found": 1,
+      "area": 168.353247018258,
+      "ok": true,
+      "position": -25.0,
+      "area_expected": 168.35,
+      "area_ok": true,
+      "centroid_uv": [
+        1.4997586506027005e-12,
+        -3.0
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "topFace",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "area": 7176.605,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "bottomFace",
+      "plane": "z",
+      "at": -6.0,
+      "normal": "-",
+      "area": 7176.605,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "bodyFlatPosX",
+      "plane": "x",
+      "at": 25.0,
+      "normal": "+",
+      "area": 168.35,
+      "area_tolerance_rel": 0.03,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "bodyFlatNegX",
+      "plane": "x",
+      "at": -25.0,
+      "normal": "-",
+      "area": 168.35,
+      "area_tolerance_rel": 0.03,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 62
+}

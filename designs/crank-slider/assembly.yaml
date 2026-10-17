@@ -1,0 +1,162 @@
+schema_version: 1
+kind: assembly
+name: crank-slider
+intent: >-
+  Offset crank-slider from sources/crank-slider-spec.md (authoritative, text only): four separate solids in stacked 5 mm
+  layers, a ground plate (z -5..0), a 30 mm crank and a 30 x 16 x 5 slider block (z 0..5) and a 100 mm connecting rod
+  (z 5..10). Three revolute pins (O ground to crank, the motor; A crank to rod; B rod to slider) and a prismatic guide
+  along +x on the line y = 10 (ground to slider) form one closed loop: the joint tree runs from the ground through the
+  crank pivot O, the crank pin A and the guide, and the wrist pin B is the loop's closing joint. Rest: crank at 0 deg
+  (A at (30, 0)), B at (129.498744, 10), rod at 5.739170 deg. The crank turns one full revolution; predict the slider
+  travel along the guide from rest as a series over the revolution and its stroke.
+units: {length: mm, angle: deg}
+frame:
+  origin: crank axis O on the ground plate's top face (z = 0)
+  axes:
+    x: parallel to the guide, from the crank axis toward the slider
+    y: from the crank axis toward the guide line y = 10 (completes a right-handed frame)
+    z: up, parallel to every pin axis
+  datums:
+    - {name: groundTop, description: ground plate top face z = 0 (the crank and slider seat)}
+    - {name: crankAxis, description: "crank axis O at x = y = 0, parallel to +z"}
+    - {name: guideLine, description: "guide line y = 10 on z = 0, parallel to +x (offset e = 10 from the crank axis)"}
+envelope: {min: [-40.0, -30.0, -5.0], max: [160.0, 40.0, 10.0], tolerance: 0.1}
+datum_part: ground
+parts:
+  - name: ground
+    kind: modelled
+    design: crank-slider-ground
+    intent: >-
+      Ground plate in its own frame, which is the assembly frame: origin on the crank axis O on the plate's top face, z up,
+      x parallel to the guide. Rectangular plate 200 (x) x 70 (y) x 5 (z) from corner (-40, -30, -5) to (160, 40, 0), with
+      one D6 through hole on the crank axis O at (0, 0) along z; no other features (no rail, slot or boss). Interfaces:
+      the top face z = 0 carries the crank's bottom face around O (revolute pivot, the motor) and the slider's bottom face
+      sliding along the guide line y = 10 parallel to +x (the slider spans x = 54..145 over a revolution). Volume
+      69858.63 mm3 (derived: 200 x 70 x 5 minus the D6 hole).
+  - name: crank
+    kind: modelled
+    design: crank-slider-crank
+    intent: >-
+      Crank link in its own frame: origin at the centre of hole O on the bottom face, z along the pin axes, +x from hole O
+      toward hole A. Stadium plate 5 thick (z = 0..5) and 16 wide (y = -8..8) with semicircular ends of radius 8 centred on
+      its two holes, overall x = -8..38; hole O at (0, 0) and crank pin hole A at (30, 0), both D6 through along z.
+      Interfaces: the bottom face z = 0 seats on the ground's top face with hole O on the crank axis (revolute pivot, the
+      motor); the top face z = 5 carries the rod's bottom face at hole A (revolute crank pin). Volume 3122.57 mm3
+      (derived: stadium 30 x 16 plus two R8 half discs, minus two D6 holes, times 5).
+  - name: rod
+    kind: modelled
+    design: crank-slider-rod
+    intent: >-
+      Connecting rod in its own frame: origin at the centre of hole A on the bottom face, z along the pin axes, +x from
+      hole A toward hole B. Stadium plate as the crank: 5 thick (z = 0..5), 16 wide (y = -8..8), semicircular ends of
+      radius 8 centred on its two holes, overall x = -8..108; hole A at (0, 0) and wrist pin hole B at (100, 0), both D6
+      through along z. Interfaces: the bottom face z = 0 lies on the crank's top face at A (revolute crank pin) and on the
+      slider's top face at B (revolute wrist pin). Volume 8722.57 mm3 (derived as the crank with a 100 mm centre distance).
+  - name: slider
+    kind: modelled
+    design: crank-slider-slider
+    intent: >-
+      Slider block in its own frame: origin at the centre of its hole on the bottom face, z along the pin axis, +x along
+      the guide. Box 30 (x = -15..15, along the guide) x 16 (y = -8..8) x 5 (z = 0..5) centred on the hole, with one D6
+      through hole on the origin along z. Interfaces: the bottom face z = 0 slides on the ground's top face along +x
+      (prismatic guide, no rotation); the top face z = 5 carries the rod's bottom face at the wrist pin B (revolute).
+      Volume 2258.63 mm3 (derived: 30 x 16 x 5 minus the D6 hole).
+parameters:
+  - {name: crankLength, value: 30.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/crank-slider-spec.md, Crank row", description: crank axis O to crank pin A}
+  - {name: rodLength, value: 100.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/crank-slider-spec.md, Connecting rod row", description: crank pin A to wrist pin B}
+  - {name: guideOffset, value: 10.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/crank-slider-spec.md, Guide row", description: "offset e of the guide line y = 10 from the crank axis"}
+  - {name: layerThickness, value: 5.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/crank-slider-spec.md, Frame (layers)", description: "ground z -5..0, crank and slider z 0..5, rod z 5..10; the pin frames sit on the layer faces"}
+  - name: restSliderX
+    value: 129.498743711
+    unit: mm
+    provenance: derived
+    tolerance: 0.001
+    formula: "crankLength + sqrt(rodLength**2 - guideOffset**2)"
+    description: "wrist pin B x on the guide at rest (the spec states 129.498744); the guide joint's rest offset"
+  - name: rodRestAngle
+    value: 5.739170477
+    unit: deg
+    provenance: derived
+    tolerance: 0.001
+    formula: "degrees(asin(guideOffset / rodLength))"
+    description: "rod direction A to B from +x at rest with the crank at 0 deg (the spec states 5.739170); the crank pin's rest angle"
+joints:
+  - name: crankPivot
+    kind: revolute
+    parent: ground
+    child: crank
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 0.0
+    angle: 0.0
+    drive: {kind: motor, speed: 60.0, description: "the crank is motor-driven through full revolutions; 60 rpm (one revolution per second) is defaulted for the animation only: the spec states no speed and no prediction depends on it"}
+    description: "pin O: the ground hole on the crank axis to the crank's hole O, the crank's bottom face on the ground's top face; rest angle 0 deg puts A at (30, 0)"
+  - name: crankPin
+    kind: revolute
+    parent: crank
+    child: rod
+    parent_frame: {origin: [30.0, 0.0, 5.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 0.0
+    angle: 5.739170477
+    description: "pin A: the crank's top face at hole A to the rod's bottom face at hole A; rest angle rodRestAngle (rod A to B from the crank's O to A) closes the loop"
+  - name: guide
+    kind: slider
+    parent: ground
+    child: slider
+    parent_frame: {origin: [0.0, 10.0, 0.0], axis: [1.0, 0.0, 0.0], ref: [0.0, 0.0, 1.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [1.0, 0.0, 0.0], ref: [0.0, 0.0, 1.0]}
+    offset: 129.498743711
+    angle: 0.0
+    description: "prismatic guide along +x on the line y = 10 of the ground's top face, no rotation: the slider's bottom face on the ground's top face; rest offset restSliderX puts B at (129.498744, 10)"
+  - name: wristPin
+    kind: revolute
+    parent: rod
+    child: slider
+    closure: true
+    parent_frame: {origin: [100.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0]}
+    child_frame: {origin: [0.0, 0.0, 5.0], axis: [0.0, 0.0, 1.0]}
+    description: "pin B, the loop's closing joint: the rod's bottom face at hole B to the slider's top face at its hole; both bodies are placed through the tree (rest relative angle -rodRestAngle follows from the loop)"
+observables:
+  - id: sliderTravel
+    quantity: joint_value
+    unit: mm
+    joint: guide
+    motion: crankTurn
+    description: slider displacement along the guide (+x) from rest, as a series over the one-revolution crank motion 0..360 deg
+  - id: stroke
+    quantity: joint_range
+    unit: mm
+    joint: guide
+    motion: crankTurn
+    expected:
+      expected: 60.332782
+      tolerance: 0.01
+      provenance: derived
+      note: >-
+        analytic identity sqrt((rodLength + crankLength)**2 - guideOffset**2) - sqrt((rodLength - crankLength)**2 -
+        guideOffset**2) = 129.614814 - 69.282032 (the dead centres at crank 4.41 and 188.21 deg); the band covers the
+        1 deg sampling of crankTurn, which reads 0.0012 mm short
+    description: total travel range (maximum minus minimum) of the guide joint over one crank revolution
+acceptance:
+  solid_count: 4
+  clearances:
+    - {name: crankOnGround, a: crank, b: ground, min_gap: 0.0, max_gap: 0.05, description: "the crank's bottom face z = 0 seats on the ground's top face"}
+    - {name: sliderOnGround, a: slider, b: ground, min_gap: 0.0, max_gap: 0.05, description: "the slider's bottom face z = 0 seats on the ground's top face"}
+    - {name: rodOnCrank, a: rod, b: crank, min_gap: 0.0, max_gap: 0.05, description: "the rod's bottom face z = 5 seats on the crank's top face at A"}
+    - {name: rodOnSlider, a: rod, b: slider, min_gap: 0.0, max_gap: 0.05, description: "the rod's bottom face z = 5 seats on the slider's top face at B"}
+    - {name: crankClearOfSlider, a: crank, b: slider, min_gap: 1.0, description: "the crank and the slider share the z 0..5 layer and never meet (the slider stays beyond x = 54)"}
+    - {name: rodClearOfGround, a: rod, b: ground, min_gap: 4.9, description: "the rod layer z 5..10 clears the ground's top face by the 5 mm crank and slider layer"}
+  motions:
+    - name: crankTurn
+      drive: crankPivot
+      range: [0.0, 360.0]
+      steps: 360
+      description: one full crank revolution from rest in 1 deg steps; the evaluator solves crankPin, guide and wristPin so the loop stays closed, and no pair may interfere
+references:
+  - {path: sources/crank-slider-spec.md, kind: text, role: authoritative, sha256: cd01ebc4dc4d7289a786bef3bca834eb565dd9f6109941bbcc2ec04b879c0d1c, note: text specification only (no images or CAD)}
+open_questions:
+  - The specification states no materials or densities; none is needed for the kinematic predictions, so no material, mass or centre of mass is declared.
+  - The specification states no crank speed; the motor drive defaults to 60 rpm (one revolution per second) for the animation only, since the sweep and both predictions are displacement-driven.
+  - No physical pins, bushings or retainers are specified (four separate solids); each revolute joint is the common axis of two D6 holes, and the ground plate has no rail or slot, so the guide exists only as the prismatic joint on the line y = 10.
+  - The seat bands (max_gap 0.05), the crank-to-slider min_gap 1.0 and the rod-to-ground min_gap 4.9 are drafter choices; the specification gives exact layers but no tolerances.

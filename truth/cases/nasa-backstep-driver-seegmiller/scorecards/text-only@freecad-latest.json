@@ -1,0 +1,377 @@
+{
+  "case": "nasa-backstep-driver-seegmiller",
+  "arm": "text-only",
+  "design": "nasa-backstep-driver-seegmiller",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/freecad/nasa-backstep-driver-seegmiller",
+  "truth_class": "C",
+  "role": "validation",
+  "scored_at": "2026-09-20T05:43:25Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 15,
+    "required_total": 15,
+    "optional_pass": 0,
+    "optional_total": 0
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        1968.5,
+        152.4,
+        114.3
+      ],
+      "measured": [
+        1968.5,
+        152.40000000000003,
+        114.30000000000003
+      ],
+      "error": 2.842170943040401e-14,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "",
+      "expected": 31708968.84,
+      "measured": 31708968.84,
+      "error": 0.0,
+      "band": 15854.48442,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "center_of_mass",
+      "kind": "center_of_mass",
+      "required": true,
+      "note": "",
+      "expected": [
+        -323.407,
+        76.2,
+        61.2849
+      ],
+      "measured": [
+        -323.40697674418607,
+        76.2,
+        61.28488372093022
+      ],
+      "error": 2.3255813914602186e-05,
+      "ok": true
+    },
+    {
+      "id": "upstream_section",
+      "kind": "section",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": -500.0,
+      "measured": {
+        "area": 15483.839999999995,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 15483.84,
+          "measured": 15483.839999999995,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "downstream_section",
+      "kind": "section",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": 300.0,
+      "measured": {
+        "area": 17419.319999999996,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 17419.32,
+          "measured": 17419.319999999996,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "below_step_top_section",
+      "kind": "section",
+      "required": true,
+      "note": "only the downstream channel exists below z = H",
+      "plane": "z",
+      "at": 6.35,
+      "measured": {
+        "area": 96773.99999999999,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 96774.0,
+          "measured": 96773.99999999999,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "inlet",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": -1333.5,
+      "normal": "-",
+      "found": 1,
+      "area": 15483.839999999998,
+      "expected_area": 15483.84,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        76.20000000000002,
+        63.49999999999998
+      ],
+      "ok": true
+    },
+    {
+      "id": "outlet",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": 635.0,
+      "normal": "+",
+      "found": 1,
+      "area": 17419.319999999996,
+      "expected_area": 17419.32,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        76.2,
+        57.14999999999998
+      ],
+      "ok": true
+    },
+    {
+      "id": "step_face",
+      "kind": "face",
+      "required": true,
+      "note": "the air volume's boundary at the step: outward normal points upstream into the step material",
+      "plane": "x",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 1935.4799999999998,
+      "expected_area": 1935.48,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        76.2,
+        6.349999999999983
+      ],
+      "ok": true
+    },
+    {
+      "id": "roof",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 114.3,
+      "normal": "+",
+      "found": 1,
+      "area": 299999.39999999997,
+      "expected_area": 299999.4,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        -349.25,
+        76.20000000000002
+      ],
+      "ok": true
+    },
+    {
+      "id": "upstream_floor",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 12.7,
+      "normal": "-",
+      "found": 1,
+      "area": 203225.4,
+      "expected_area": 203225.4,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        -666.75,
+        76.2
+      ],
+      "ok": true
+    },
+    {
+      "id": "downstream_floor",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 96773.99999999999,
+      "expected_area": 96774.0,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        317.5,
+        76.2
+      ],
+      "ok": true
+    },
+    {
+      "id": "side_wall_y0",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 208064.1,
+      "expected_area": 208064.1,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        -323.406976744186,
+        61.284883720930225
+      ],
+      "ok": true
+    },
+    {
+      "id": "side_wall_y_max",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 152.4,
+      "normal": "+",
+      "found": 1,
+      "area": 208064.10000000003,
+      "expected_area": 208064.1,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        -323.4069767441859,
+        61.284883720930225
+      ],
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [
+    {
+      "name": "reattachment_x_r_over_H",
+      "value": 6.26,
+      "uncertainty": 0.1,
+      "units": "H",
+      "note": "Driver-Seegmiller experiment, 0 deg roof; x_r = 79.5 +/- 1.3 mm at H = 12.7 mm; requires CFD with the documented inlet conditions"
+    }
+  ],
+  "hash_binding": {
+    "manifest_sha256": "dcad84629ebff690ed1dff13d122e7f3eb5b9176466a98ac70f5c04ad9dd919f",
+    "truth_files": {
+      "truth/dimensions.yaml": "6a9e8093934445a1d18247454ae9c7899627dc8e274c6f007209a5762f58d07c"
+    },
+    "input_files": {
+      "inputs/nasa-backstep-study01.md": "2aca80462b8cd0fd2554c59a156e6a1149921d26b51fbe763e393f3a065e05b2"
+    },
+    "source": {
+      "main.py": "ebd62b283a84433e06429342e7084c993c4d53f7d9e7262e2db370b2ed0236fd"
+    },
+    "kcl": {},
+    "step_sha256": "af0def5ba30969be38cf4d76e659cb6c894ff1080b29664703a9148126be066f",
+    "design_bundle": {
+      "brief.md": "1b68f9185cfa1b975bbffc41271a1c2e3b21f2d6ce08a70acec68bed3f197f49",
+      "contract.yaml": "ed9a1b6e95a379f970af22a8e2c741a4fc15658d638e6993eabc494b30f68eb7",
+      "sources/nasa-backstep-study01.md": "2aca80462b8cd0fd2554c59a156e6a1149921d26b51fbe763e393f3a065e05b2"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-20T05:43:25Z",
+    "skillkat_version": "0.1.0",
+    "backend": "freecad",
+    "engine_version": "['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2750651461ce329095e189d2b6e635ac797b95cd",
+      "dirty": true
+    }
+  },
+  "backend": "freecad"
+}

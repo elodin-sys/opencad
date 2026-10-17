@@ -1,0 +1,136 @@
+# KCL sample index
+
+126 samples from zoo.dev/aquarium, one line each: `slug` Title · file count · notable features · categories.
+Read a sample: `samples/<slug>/main.kcl` (multi-file samples import their siblings). Page: `zoo.dev/aquarium/<slug>`.
+Features in most samples are omitted from lines: extrude. Feature lookup: `by-feature.md`.
+Categories: Mech=Mechanical Components, Param=Parametric, Indust=Industrial & Manufacturing, Home=Home & Lifestyle, Print=3D Printable, Arch=Architecture & Construction, Edu=Science & Education, Auto=Automotive & Transportation, Art=Art & Design, Toys=Toys, Games, & Recreation, Elec=Electronics & Computing, Tools=Tools, Robot=Robotics & Automation, Aero=Aerospace, Med=Medical & Assistive.
+`!kcl<v>` marks the 5 samples whose `main.kcl` does not declare `kclVersion = 2.0` (sketch-block syntax under 1.0 or no version); set 2.0 when adapting them.
+
+- `angle-gauge` · 1f · - · Tools, Param
+- `artificial-heart` · 5f · sweep revolve subtract patternCircular3d patternLinear3d · Med
+- `axial-fan` PC Fan · 5f · revolve subtract fillet twist patternCircular3d · Elec, Mech
+- `ball-bearing` · 1f · revolve patternCircular3d offsetPlane rotate · Mech
+- `bench-for-kids` · 1f · fillet patternCircular3d patternLinear3d offsetPlane rotate · Home, Toys
+- `bench` · 1f · sweep shell patternLinear3d offsetPlane clone · Edu, Print
+- `bike-hub-washer` · 1f · revolve · Auto, Mech, Print
+- `blend-tutorial` Blend Trim Operations · 1f · blend split surfaces · Edu
+- `bone-plate` · 1f · revolve subtract clone · Med
+- `bottle` · 1f · shell sketchOnFace appearance · Home
+- `box` · 1f · - · Edu, Param
+- `bracket-with-slot` Adjustable L‑Bracket · 1f · loft subtract fillet appearance !kclunset · Mech, Param
+- `bracket` Shelf Bracket · 1f · hole:: fillet !kcl1.0 · Arch, Mech, Param
+- `c-shape-solid` C-Shape Solid (Abstract Geometry Demo) · 1f · - · Edu
+- `camshaft` · 1f · gear:: subtract patternTransform offsetPlane rotate · Auto, Mech
+- `car-wheel-assembly` · 6f · revolve intersect subtract patternCircular3d offsetPlane · Auto, Mech
+- `cassette` Sprocket Cassette · 1f · subtract pattern2d offsetPlane clone fn · Auto, Mech
+- `ceiling-fan` Ceiling Propeller · 1f · subtract patternCircular3d offsetPlane clone rotate · Home, Mech
+- `clock` · 1f · fillet sketchOnFace offsetPlane clone assert · Home
+- `coilover-assembly` · 5f · sweep helix union subtract fillet · Auto, Mech
+- `cold-plate` · 1f · sweep patternLinear3d offsetPlane appearance · Elec, Indust
+- `color-cube` · 1f · clone rotate appearance · Edu
+- `cone` · 1f · revolve · Edu, Param
+- `counterdrilled-weldment` · 1f · subtract chamfer patternCircular3d patternLinear3d offsetPlane · Indust
+- `countersunk-plate` Plate with countersunk holes · 1f · hole:: · Mech
+- `cpu-cooler` · 8f · sweep loft union subtract fillet · Elec, Mech
+- `crash-box` Crash-box with beam cutout and mounting holes · 1f · shell subtract fillet offsetPlane appearance · Auto
+- `curtain-wall-anchor-plate` · 1f · union subtract fillet patternLinear3d sketchOnFace · Arch, Mech
+- `cycloidal-gear` · 1f · subtract twist · Mech, Robot
+- `cylinder` · 1f · - · Edu, Param
+- `desk-edge-stopper` · 1f · subtract clone · Home, Print, Param
+- `dining-table` · 1f · offsetPlane clone · Home
+- `dodecahedron` · 1f · intersect clone rotate scale · Edu
+- `double-hook` · 1f · sweep appearance · Home, Print, Param
+- `enclosure` · 1f · shell fillet sketchOnFace clone · Elec, Print
+- `end-effector-gripper-fingers` End Effector Grippers · 1f · loft revolve union subtract fillet · Robot, Indust
+- `engine-valve` · 1f · revolve · Auto, Mech
+- `exhaust-manifold` · 1f · sweep fillet clone rotate · Auto, Mech
+- `field-monitor-stand` · 1f · subtract fillet patternLinear3d customPlane !kclunset · Elec, Print
+- `flange` · 1f · subtract sketchOnFace · Mech, Arch
+- `flat-bladed-impeller` Impeller (Flat-bladed) · 1f · subtract patternCircular3d sketchOnFace · Indust, Mech, Param
+- `focusrite-scarlett-mounting-bracket` · 1f · - · Elec, Print
+- `food-service-spatula` · 1f · subtract fillet offsetPlane appearance · Home, Tools
+- `fun-stacker-toy` Fun-Stacker! · 1f · revolve fillet appearance · Toys, Print
+- `gallows-bracket` · 1f · surfaces subtract patternLinear3d offsetPlane rotate · Arch
+- `gas-impeller` · 1f · revolve intersect twist patternCircular3d · Indust, Mech
+- `gdt-tutorial` GD&T Basics in Zoo Design Studio · 1f · gdt:: · Edu, Indust
+- `gear-rack` 100mm Gear Rack · 1f · patternLinear3d offsetPlane · Mech, Robot
+- `gingerbread-man-cookie-cutter` · 1f · shell mirror2d scale · Home, Tools, Print
+- `gingerbread-man` · 1f · subtract patternCircular3d patternLinear3d offsetPlane appearance · Art
+- `golf-tee` · 1f · revolve · Toys, Print, Param
+- `gridfinity-baseplate-magnets` Gridfinity Baseplate With Magnets · 1f · revolve fillet · Home, Print, Param
+- `gridfinity-baseplate` · 1f · revolve patternCircular3d patternLinear3d offsetPlane · Home, Print, Param
+- `gridfinity-bins-stacking-lip` Gridfinity Bins With A Stacking Lip · 1f · revolve shell subtract · Home, Print, Param
+- `gridfinity-bins` · 1f · revolve shell subtract patternCircular3d patternLinear3d · Home, Print, Param
+- `hammer` Claw Hammer · 1f · revolve union subtract offsetPlane appearance · Tools, Arch
+- `hand-trolley` · 5f · sweep revolve fillet patternCircular3d patternLinear3d · Auto, Indust
+- `helium-tank` · 1f · revolve subtract fillet patternLinear3d offsetPlane · Indust
+- `herringbone-gear` · 1f · gear:: subtract · Mech
+- `hex-nut-with-chamfer` Hex Nut with Chamfered Ends · 1f · intersect chamfer appearance · Mech
+- `hex-nut` · 1f · - · Mech
+- `i-beam` · 1f · - · Arch
+- `inner-thread` · 1f · sweep helix subtract · Mech, Edu
+- `lattice-cubic` cubic lattice model · 1f · revolve patternLinear3d offsetPlane clone rotate · Edu, Param
+- `lego` Lego Brick · 1f · patternLinear3d sketchOnFace · Toys, Print, Param
+- `linear-shelf-system` · 1f · patternLinear3d offsetPlane · Home, Param
+- `liquid-impeller` · 1f · revolve subtract patternCircular3d offsetPlane · Indust, Mech
+- `m4-hex-socket-countersunk-head-screw` · 1f · revolve subtract appearance · Mech
+- `m4-insert` M4 Heat-Set Insert · 1f · revolve appearance · Mech, Print
+- `manhole-cover` Vented Manhole Cover · 1f · subtract offsetPlane · Arch
+- `modular-shelf-grid` · 1f · patternLinear3d · Home, Param
+- `mounting-plate` · 1f · fillet · Mech, Indust
+- `multi-axis-robot` Robot Arm · 6f · chamfer sketchOnFace modules appearance !kcl1.0 · Robot, Indust
+- `parametric-shelf-unit` · 1f · patternLinear3d offsetPlane · Home, Param
+- `pillow-block-bearing` · 4f · revolve subtract fillet patternCircular3d patternLinear3d · Mech, Indust
+- `pipe-elbow-90deg` 90 Degree Pipe Elbow · 1f · revolve subtract patternCircular3d clone rotate · Arch, Mech
+- `pipe-flange-assembly` Pipe and Flange Assembly · 8f · union subtract fillet patternCircular3d · Arch, Mech
+- `pipe-straight` Horizontal Pipe Spool · 1f · subtract patternCircular3d clone rotate · Arch, Mech
+- `pipe-with-bend` · 1f · revolve · Arch, Mech
+- `pipe` · 1f · appearance · Arch, Mech
+- `planetary-gearset` Helical Planetary Gearset · 1f · gear:: patternCircular3d rotate · Mech, Auto
+- `propeller` · 1f · revolve intersect subtract fillet twist · Aero, Mech
+- `rack-blanking-panel` Rack Blanking Panel - 1U · 1f · subtract patternCircular3d · Elec
+- `radial-flow-centrifugal-impeller` Impeller (Radial-flow) · 1f · loft subtract patternCircular3d · Indust, Mech, Param
+- `rectangle-table` · 1f · patternLinear3d offsetPlane · Home
+- `round-table` · 1f · offsetPlane · Home
+- `router-template-cross-bar` Router Template for a Cross bar · 1f · sketchOnFace · Tools, Print
+- `router-template-slate` Router Template for a Slate · 1f · sketchOnFace · Tools, Print
+- `saturn-v` Saturn V Rocket · 1f · revolve offsetPlane clone rotate appearance · Aero, Edu, Param
+- `scrub-daddy-holder` Scrub Daddy Sponge Holder · 1f · subtract fillet patternCircular3d offsetPlane · Home, Print
+- `shaft-grommet` · 1f · revolve · Mech
+- `sheet-metal-bracket` · 1f · subtract fillet !kcl1.0 · Mech, Indust
+- `single-impeller-blade` Impeller Blade (Single) · 1f · loft twist offsetPlane · Aero, Mech
+- `snowman` Snowman (stylized) · 1f · revolve sketchOnFace offsetPlane rotate appearance · Art, Print
+- `socket-head-cap-screw` · 1f · fillet sketchOnFace appearance · Mech
+- `sphere` · 1f · revolve · Edu, Param
+- `spinning-highrise-tower` · 1f · patternTransform sketchOnFace offsetPlane appearance · Arch, Art, Param
+- `split-washer-flat-version` · 1f · subtract offsetPlane · Mech
+- `split-washer-spring-version` · 1f · sweep helix · Mech
+- `sprocket` · 1f · subtract rotate · Mech, Auto
+- `stylized-car` Stylized Toy Car · 1f · subtract patternLinear3d pattern2d offsetPlane clone · Toys, Art, Param
+- `stylized-cybertruck` Stylized Toy Cybertruck · 1f · intersect subtract offsetPlane clone rotate · Toys, Art, Param
+- `stylized-dump-truck` Stylized Toy Dump Truck · 1f · subtract pattern2d offsetPlane clone rotate · Toys, Art, Param
+- `stylized-firetruck` Stylized Toy Fire Truck · 1f · subtract pattern2d offsetPlane clone rotate · Toys, Art, Param
+- `stylized-mini-bus` Stylized Toy Mini-Bus · 1f · subtract pattern2d offsetPlane clone rotate · Toys, Art, Param
+- `stylized-pickup-truck` Stylized Toy Pickup Truck · 1f · subtract pattern2d offsetPlane clone rotate · Toys, Art, Param
+- `surgical-drill-guide` · 1f · subtract fillet chamfer sketchOnFace offsetPlane · Med
+- `t-slot-frame` T-Slotted Rectangle Frame · 1f · subtract patternLinear3d mirror2d rotate scale · Indust, Mech, Param
+- `t-slot-rail` T-Slotted Framing Rail · 1f · subtract mirror2d scale fn · Indust, Mech
+- `t-slot-rectangle` · 1f · subtract patternLinear3d mirror2d rotate scale · Indust, Mech, Param
+- `t-slot-shelf` T-Slotted Rectangle Frame with Shelf · 1f · subtract patternLinear3d mirror2d rotate · Indust, Mech, Param
+- `teapot` · 1f · sweep revolve subtract offsetPlane appearance · Home
+- `thermal-block-insert` · 1f · - · Arch, Param
+- `torus` · 1f · revolve · Edu, Param
+- `truss-structure` · 1f · union patternLinear3d offsetPlane · Arch, Edu
+- `tube-manifold` · 1f · revolve subtract patternLinear3d clone · Mech, Indust, Param
+- `usb-c` USB-C Connector Assembly · 1f · sweep shell fillet offsetPlane appearance · Elec, Param
+- `utility-sink` · 1f · sweep patternLinear3d pattern2d sketchOnFace offsetPlane · Arch, Home, Param
+- `v-block` · 1f · pattern2d sketchOnFace offsetPlane · Tools, Indust
+- `walkie-talkie` · 8f · loft subtract fillet chamfer patternLinear3d · Elec
+- `washer` · 1f · - · Mech
+- `wedge` · 1f · - · Edu, Param
+- `wheel-hub` Hub · 1f · revolve subtract chamfer patternCircular3d sketchOnFace · Auto, Mech
+- `wind-turbine-blade-root-inserts` Wind Turbine Blade · 1f · loft revolve surfaces subtract · Indust, Mech
+- `wing-spar` · 1f · subtract patternLinear3d offsetPlane · Aero
+- `zoo-logo` · 1f · fn · Art
+
+No KCL source on the page (community preview, not indexed): `b0a8d539-ca56-43e4-8eb5-150dbffbdb49`

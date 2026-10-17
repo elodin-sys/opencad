@@ -1,0 +1,307 @@
+{
+  "case": "fan-01",
+  "arm": "supplied-cad",
+  "design": "fan-01",
+  "kind": "machine",
+  "mode": "analysis",
+  "backend": "build123d",
+  "truth_class": "A",
+  "scored_at": "2026-09-28T01:03:01Z",
+  "verdict": "FAIL",
+  "error": null,
+  "accuracy_score": 100.0,
+  "summary": {
+    "required_pass": 2,
+    "required_total": 2,
+    "optional_pass": 0,
+    "optional_total": 0,
+    "performance_pass": 0,
+    "performance_scored": 4,
+    "performance_unresolved": 2,
+    "performance_total": 4,
+    "performance_by_split": {
+      "development": {
+        "required": 1,
+        "pass": 0,
+        "fail": 0,
+        "unresolved": 1,
+        "missing": 0
+      },
+      "held_out": {
+        "required": 2,
+        "pass": 0,
+        "fail": 2,
+        "unresolved": 0,
+        "missing": 0
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "rotor",
+      "kind": "solid",
+      "required": true,
+      "note": "the rotor body (a point in its hub ring, r 120.6 mm), volume as published",
+      "measured": {
+        "volume": 1176101.6951063105,
+        "bbox_min": [
+          -643.6053682208604,
+          -421.00000009995756,
+          1269.864418592224
+        ],
+        "bbox_max": [
+          -152.50735273310227,
+          -305.9999999,
+          1762.494289987266
+        ],
+        "center_of_mass": [
+          -399.9997209008428,
+          -372.543447526589,
+          1514.998940015306
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 1176101.8,
+        "measured": 1176101.6951063105,
+        "band": 5880.509,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "duct",
+      "kind": "solid",
+      "required": true,
+      "note": "the duct with nozzle, diffuser and flanges (a point in the nozzle lip), volume of the repaired solid (qualification.yaml; the published shell's own volume integral is not meaningful, its contact faces are inconsistently oriented)",
+      "measured": {
+        "volume": 3481742.027737341,
+        "bbox_min": [
+          -725.0,
+          -510.0000036,
+          1190.0
+        ],
+        "bbox_max": [
+          -74.99999999999994,
+          -135.9999232,
+          1840.0
+        ],
+        "center_of_mass": [
+          -400.34026137145696,
+          -374.0355253816699,
+          1515.0911727596922
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 3481742.0,
+        "measured": 3481742.027737341,
+        "band": 17408.71,
+        "ok": true
+      },
+      "ok": true
+    }
+  ],
+  "performance": [
+    {
+      "id": "dpts_q1403",
+      "kind": "performance",
+      "quantity": "pressure_rise_total_to_static",
+      "unit": "Pa",
+      "case": "q1403",
+      "evidence": "A",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": "mrfDesign",
+      "resolved": false,
+      "u_iteration": 2.662730646389093,
+      "u_discretisation": 4.858652971147722,
+      "gci": 0.051320479588613285,
+      "unresolved_because": [
+        "GCI 0.0513 > 0.05",
+        "a finest step refines only inside regions: the rest of the mesh is not assessed there"
+      ],
+      "status": "unresolved",
+      "prediction": 94.67278969516362,
+      "reference": 126.46,
+      "error": -31.78721030483638,
+      "relative_error": -0.251361776884678,
+      "u_meas": 2.98,
+      "u_numerical": 5.540455142789469,
+      "u_input": 0.0,
+      "z": 5.05278411289072,
+      "z_max": 2.0,
+      "ok": null,
+      "note": "not resolved by its mesh ladder: GCI 0.0513 > 0.05; a finest step refines only inside regions: the rest of the mesh is not assessed there",
+      "solver": "openfoam",
+      "model": "steady MRF simpleFoam, k-omega SST"
+    },
+    {
+      "id": "dpts_q1804",
+      "kind": "performance",
+      "quantity": "pressure_rise_total_to_static",
+      "unit": "Pa",
+      "case": "q1804",
+      "evidence": "A",
+      "split": "held_out",
+      "digitized": false,
+      "required": true,
+      "simulation": "mrfOffDesign",
+      "u_iteration": 1.0610758500989776,
+      "unresolved_because": [
+        "one mesh level: no discretisation estimate"
+      ],
+      "status": "scored",
+      "prediction": 84.11286017790272,
+      "reference": 63.95,
+      "error": 20.162860177902715,
+      "relative_error": 0.31529101138237237,
+      "u_meas": 7.52,
+      "u_numerical": 1.0610758500989776,
+      "u_input": 0.0,
+      "z": 2.6549326615379063,
+      "z_max": 2.0,
+      "ok": false,
+      "solver": "openfoam",
+      "model": "steady MRF simpleFoam, k-omega SST"
+    },
+    {
+      "id": "dpts_q0994",
+      "kind": "performance",
+      "quantity": "pressure_rise_total_to_static",
+      "unit": "Pa",
+      "case": "q0994",
+      "evidence": "A",
+      "split": "held_out",
+      "digitized": false,
+      "required": true,
+      "simulation": "mrfOffDesign",
+      "u_iteration": 2.4496756856299635,
+      "unresolved_because": [
+        "one mesh level: no discretisation estimate"
+      ],
+      "status": "scored",
+      "prediction": 116.01043065885605,
+      "reference": 134.68,
+      "error": -18.669569341143955,
+      "relative_error": -0.13862169097968483,
+      "u_meas": 1.36,
+      "u_numerical": 2.4496756856299635,
+      "u_input": 0.0,
+      "z": 6.663238182864071,
+      "z_max": 2.0,
+      "ok": false,
+      "solver": "openfoam",
+      "model": "steady MRF simpleFoam, k-omega SST"
+    },
+    {
+      "id": "torque_q1403",
+      "kind": "performance",
+      "quantity": "torque",
+      "unit": "N m",
+      "case": "q1403",
+      "evidence": "A",
+      "split": "development",
+      "digitized": false,
+      "required": false,
+      "simulation": "mrfDesign",
+      "resolved": false,
+      "u_iteration": 0.020362628369294825,
+      "u_discretisation": 0.03408518027777779,
+      "gci": 0.01718564585813819,
+      "unresolved_because": [
+        "a finest step refines only inside regions: the rest of the mesh is not assessed there"
+      ],
+      "status": "unresolved",
+      "prediction": 1.983351720333333,
+      "reference": 2.1418,
+      "error": -0.15844827966666686,
+      "relative_error": -0.0739790268310145,
+      "u_meas": 0.0428,
+      "u_numerical": 0.03970435931575553,
+      "u_input": 0.0,
+      "z": 2.7140643505134467,
+      "z_max": 2.0,
+      "ok": null,
+      "note": "not resolved by its mesh ladder: a finest step refines only inside regions: the rest of the mesh is not assessed there",
+      "solver": "openfoam",
+      "model": "steady MRF simpleFoam, k-omega SST"
+    }
+  ],
+  "pipeline_gates": {
+    "ok": false,
+    "summary": "11 pass, 1 fail, 2 n/a",
+    "failed": [
+      "refinement"
+    ]
+  },
+  "simulations": {
+    "mrfDesign": {
+      "status": "ok",
+      "solver": {
+        "name": "openfoam",
+        "image": "opencfd/openfoam-default:2412",
+        "runtime": "container",
+        "digest": "1ba02114b1c025c370f2e269a07677c16c9bea8d990fcd75ac8378aff9d41b50"
+      },
+      "reason": null
+    },
+    "mrfOffDesign": {
+      "status": "ok",
+      "solver": {
+        "name": "openfoam",
+        "image": "opencfd/openfoam-default:2412",
+        "runtime": "container",
+        "digest": "1ba02114b1c025c370f2e269a07677c16c9bea8d990fcd75ac8378aff9d41b50"
+      },
+      "reason": null
+    }
+  },
+  "hash_binding": {
+    "manifest_sha256": "df5a0aa8022dd49eb2131010509793db7dd5d16b11ab4a187af5547ab2eb7c7a",
+    "truth_files": {
+      "truth/characteristic.yaml": "6eea2d538de417e662536e9404b67e7b8a39690221d41835ad829403eeb1fcd0",
+      "truth/raw/characteristic/characteristic/characteristic_n1ug.mat": "98cb1646e41c54ad2b46d8a37ef21763870260e18356d084a8f8e283b4889d6c",
+      "truth/fan-rotor.step": "6a526e10e9e1f9634d9eee157ad6b9758669141a03354609033ca3fac681932c",
+      "truth/fan-duct.step": "9b70daad9041bb6d47d6d276d23de0b4747d370e0bae2ea5dd6442fad57b0f74",
+      "truth/fan-shaft.step": "8a2716709cddba77254aad4885ba238d406cdb7de0a71ce4ec5b245e8e5eb426",
+      "truth/fan-hub.step": "0b291d0c414b1ad6af321f45edcadaa7e23a332ad35a8247a00f859771da80c4"
+    },
+    "input_files": {
+      "inputs/fan01-packet.md": "6aca0573ce272e5a183a7ce4532700154e7fa6e5e642f544c1a768f277a30fa6",
+      "inputs/fan-rotor.step": "6a526e10e9e1f9634d9eee157ad6b9758669141a03354609033ca3fac681932c",
+      "inputs/fan-duct.step": "9b70daad9041bb6d47d6d276d23de0b4747d370e0bae2ea5dd6442fad57b0f74",
+      "inputs/fan-shaft.step": "8a2716709cddba77254aad4885ba238d406cdb7de0a71ce4ec5b245e8e5eb426",
+      "inputs/fan-hub.step": "0b291d0c414b1ad6af321f45edcadaa7e23a332ad35a8247a00f859771da80c4",
+      "inputs/figure-1-setup.png": "23729299c2297dd027068d32f3bd8e59cbc03eb44b7a608863951488d5ce7ec6"
+    },
+    "step_sha256": "35a341b57ee42f8a4d11c9f1814bd91aa0dafd0410c6d8423ea7e586129951cc",
+    "assembly_source": {
+      "checkpoint.py": "2ef93656b8892b059f08a13441e533fd2b7ed4801ca6e2695663f26301c58943",
+      "main.py": "2ef93656b8892b059f08a13441e533fd2b7ed4801ca6e2695663f26301c58943"
+    },
+    "design_bundle": {
+      "assembly.yaml": "417bd2a1e5ed779264f1ab309e61d0b59fa105a469c46548066899988936f7d5",
+      "brief.md": "07ffbacac7b594e68d1d54d4a370a8ecd83e0f099092a42e34f6b271234667c2",
+      "sources/fan-duct.step": "9b70daad9041bb6d47d6d276d23de0b4747d370e0bae2ea5dd6442fad57b0f74",
+      "sources/fan-hub.step": "0b291d0c414b1ad6af321f45edcadaa7e23a332ad35a8247a00f859771da80c4",
+      "sources/fan-rotor.step": "6a526e10e9e1f9634d9eee157ad6b9758669141a03354609033ca3fac681932c",
+      "sources/fan-shaft.step": "8a2716709cddba77254aad4885ba238d406cdb7de0a71ce4ec5b245e8e5eb426",
+      "sources/fan01-packet.md": "6aca0573ce272e5a183a7ce4532700154e7fa6e5e642f544c1a768f277a30fa6",
+      "sources/figure-1-setup.png": "23729299c2297dd027068d32f3bd8e59cbc03eb44b7a608863951488d5ce7ec6"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-28T01:03:01Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "f067337b8ab648471ad40a647b21672f74d56978",
+      "dirty": true
+    }
+  }
+}

@@ -1,0 +1,1364 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/aleph-stack/parts/carrier/contract.yaml: 62 parameters {'stated': 62}; sources unresolved {}; unanchored 57",
+        "open questions: 5 (blocking []); interfaces 4, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 62
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "The intent's numbers were taken as given; this draft did not re-measure sources/carrier.step.",
+          "Spacers are solid D5.1 cylinders; the M2.5 internal thread bore is not modelled. Should a screw bore (and the D3.7 hole) continue through the spacer?",
+          "Top-side envelopes are assumed to start on the board top (z = 1.57) and bottom-side envelopes on z = 0; the intent gives only their far z.",
+          "The SO-DIMM latches are envelopes to z = 10.86 over y 25.15..46.00; their real sprung shape and the module's insertion angle are not represented.",
+          "The two M.2 2230 slots under the module and every other component are omitted (the slots stay below z = 5.83)."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [
+          "mountHoleX0",
+          "mountHoleX1",
+          "mountHoleY0",
+          "mountHoleY1",
+          "spacerDiameter",
+          "seatHoleDiameter",
+          "spacerX0",
+          "spacerX1",
+          "spacerY",
+          "seatZ",
+          "sodimmX0",
+          "sodimmX1",
+          "sodimmY0",
+          "sodimmY1",
+          "sodimmTopZ",
+          "latchX0",
+          "latchX1",
+          "latchY0",
+          "usbTopX0",
+          "usbTopX1",
+          "usbTopY0",
+          "usbTopY1",
+          "usbTopZ",
+          "molexX0",
+          "molexX1",
+          "molexY0",
+          "molexY1",
+          "molexTopZ",
+          "ffcX0",
+          "ffcX1",
+          "ffcY0",
+          "ffcY1",
+          "ffcTopZ",
+          "erfX0",
+          "erfX1",
+          "erfY0",
+          "erfY1",
+          "erfBottomZ",
+          "usbBotX0",
+          "usbBotX1",
+          "usbBotY0",
+          "usbBotY1",
+          "usbBotZ",
+          "gctX0",
+          "gctX1",
+          "gctY0",
+          "gctY1",
+          "gctBottomZ",
+          "inductor1X0",
+          "inductor1X1",
+          "inductor1Y0",
+          "inductor1Y1",
+          "inductor2X0",
+          "inductor2X1",
+          "inductor2Y0",
+          "inductor2Y1",
+          "inductorBottomZ"
+        ],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "bottom",
+          "mountHole1",
+          "mountHole2",
+          "mountHole3",
+          "mountHole4",
+          "lengthX",
+          "widthY",
+          "seatA",
+          "seatB",
+          "spacerA",
+          "spacerB",
+          "seatHeight",
+          "erfMate",
+          "usbTopMouth",
+          "usbBotMouth"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/carrier/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/build123d/aleph-stack/parts/carrier/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            0.0,
+            -0.98,
+            -5.06
+          ],
+          "expected_max": [
+            88.96,
+            52.5,
+            10.86
+          ],
+          "measured_min": [
+            0.0,
+            -0.98,
+            -5.06
+          ],
+          "measured_max": [
+            88.96,
+            52.5,
+            10.86
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            0.0,
+            -0.98,
+            -5.06
+          ],
+          "expected_max": [
+            88.96,
+            52.5,
+            10.86
+          ],
+          "measured_min": [
+            0.0,
+            -0.98,
+            -5.06
+          ],
+          "measured_max": [
+            88.96,
+            52.5,
+            10.86
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/carrier/inspect.json volume = 14554.1014 vs 14554.1",
+        "results/build123d/aleph-stack/parts/carrier/inspect.json surface_area = 13312.5426 vs 13312.54",
+        "results/build123d/aleph-stack/parts/carrier/inspect.json center_of_mass = [42.2737, 30.6379, 2.4133] vs [42.274, 30.638, 2.413]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 14554.1,
+          "measured": 14554.1014,
+          "error": 0.0014,
+          "band": 43.6623,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 13312.54,
+          "measured": 13312.5426,
+          "error": 0.0026,
+          "band": 133.1254,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            42.274,
+            30.638,
+            2.413
+          ],
+          "measured": [
+            42.2737,
+            30.6379,
+            2.4133
+          ],
+          "errors": [
+            0.0003,
+            0.0001,
+            0.0003
+          ],
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/carrier/inspect.json features: 12/12 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "mountHole1": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "mountHole2": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "mountHole3": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "mountHole4": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "seatHoleA": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "seatHoleB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "spacerA": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "spacerB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner1": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner2": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner3": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner4": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "bottom": {
+            "ok": true,
+            "kind": "face"
+          },
+          "mountHole1": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "mountHole2": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "mountHole3": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "mountHole4": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lengthX": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "widthY": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "seatA": {
+            "ok": true,
+            "kind": "face"
+          },
+          "seatB": {
+            "ok": true,
+            "kind": "face"
+          },
+          "spacerA": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "spacerB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "seatHeight": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "erfMate": {
+            "ok": true,
+            "kind": "face"
+          },
+          "usbTopMouth": {
+            "ok": true,
+            "kind": "face"
+          },
+          "usbBotMouth": {
+            "ok": true,
+            "kind": "face"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/carrier/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/carrier/inspect.json agreement engine=14554.101374329486 step=14554.101374329486 stl=14553.164985886971 (rel tol 0.002; independent=False)",
+        "results/build123d/aleph-stack/parts/carrier/inspect.json agreement.manifold = 14553.164985886968 (Manifold kernel witness, rel vs STEP 6.433845817303192e-05; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 14554.101374329486,
+        "kcl": 14554.101374329486,
+        "step": 14554.101374329486,
+        "stl": 14553.164985886971,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "manifold": 14553.164985886968,
+        "manifold_vs_step_rel": 6.433845817303192e-05,
+        "engine_vs_step_rel": 0.0,
+        "kcl_vs_step_rel": 0.0,
+        "stl_vs_step_rel": 6.433845817278197e-05,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/carrier/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 3/3 values; infeasible refused 1/1; interfaces pinned 15"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "sodimmTopZ",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 511.855,
+                "measured": 511.8550000000014,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 15,
+                "driven": [
+                  "above_seat",
+                  "sodimmTop"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 9.5,
+                  "volume": 13857.978574329487,
+                  "bbox_size": [
+                    88.96,
+                    53.48,
+                    14.559999999999999
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -1.3599999999999994
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        -1.3599999999999994
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -696.1227999999992,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 10.86,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 12.0,
+                  "volume": 15137.616074329486,
+                  "bbox_size": [
+                    88.96,
+                    53.48,
+                    17.06
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        1.1400000000000006
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        1.1400000000000006
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 583.5146999999997,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -3.0,
+                  "value": 7.859999999999999,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: sodimmTopZ must stay above seatZ\", \"class\": \"program\", \"timings\": {\"failed_s\": 2.315, \"main_s\": 2.315}}"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "molexTopZ",
+            "delta": 0.5,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 26.8275,
+                "measured": 26.827499999999418,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 15,
+                "driven": [],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "4c1136eca0add903bf6821e9ce1e536ef5a5afe07903ca78c40540391bf7bd21",
+          "re_export_sha256": "4c1136eca0add903bf6821e9ce1e536ef5a5afe07903ca78c40540391bf7bd21",
+          "ok": true
+        },
+        "sweep": {
+          "values": 3,
+          "passed": 3
+        },
+        "infeasible": {
+          "declared": 1,
+          "refused": 1
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/carrier/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=19",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "build123d",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "build123d",
+            "params",
+            "build123d",
+            "params",
+            "bottomDevices",
+            "datum",
+            "topHeaders",
+            "build123d",
+            "params"
+          ],
+          "forbidden_imports": [],
+          "asserts": 19,
+          "sketch_blocks": 15,
+          "feature_ops": 15,
+          "construction_ops": {
+            "calls": 15,
+            "has_result": true
+          },
+          "parameters": {
+            "pcbLength": {
+              "found": true,
+              "value": 88.0,
+              "expected": 88.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "pcbWidth": {
+              "found": true,
+              "value": 52.5,
+              "expected": 52.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "pcbThickness": {
+              "found": true,
+              "value": 1.57,
+              "expected": 1.57,
+              "file": "params.py",
+              "ok": true
+            },
+            "cornerRadius": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "mountHoleDiameter": {
+              "found": true,
+              "value": 2.9,
+              "expected": 2.9,
+              "file": "params.py",
+              "ok": true
+            },
+            "mountHoleX0": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "mountHoleX1": {
+              "found": true,
+              "value": 85.0,
+              "expected": 85.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "mountHoleY0": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "mountHoleY1": {
+              "found": true,
+              "value": 49.5,
+              "expected": 49.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "spacerDiameter": {
+              "found": true,
+              "value": 5.1,
+              "expected": 5.1,
+              "file": "params.py",
+              "ok": true
+            },
+            "seatHoleDiameter": {
+              "found": true,
+              "value": 3.7,
+              "expected": 3.7,
+              "file": "params.py",
+              "ok": true
+            },
+            "spacerX0": {
+              "found": true,
+              "value": 12.2,
+              "expected": 12.2,
+              "file": "params.py",
+              "ok": true
+            },
+            "spacerX1": {
+              "found": true,
+              "value": 75.8,
+              "expected": 75.8,
+              "file": "params.py",
+              "ok": true
+            },
+            "spacerY": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "seatZ": {
+              "found": true,
+              "value": 8.13,
+              "expected": 8.13,
+              "file": "params.py",
+              "ok": true
+            },
+            "sodimmX0": {
+              "found": true,
+              "value": 5.95,
+              "expected": 5.95,
+              "file": "params.py",
+              "ok": true
+            },
+            "sodimmX1": {
+              "found": true,
+              "value": 82.05,
+              "expected": 82.05,
+              "file": "params.py",
+              "ok": true
+            },
+            "sodimmY0": {
+              "found": true,
+              "value": 46.0,
+              "expected": 46.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "sodimmY1": {
+              "found": true,
+              "value": 51.0,
+              "expected": 51.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "sodimmTopZ": {
+              "found": true,
+              "value": 10.86,
+              "expected": 10.86,
+              "file": "params.py",
+              "ok": true
+            },
+            "latchX0": {
+              "found": true,
+              "value": 9.1,
+              "expected": 9.1,
+              "file": "params.py",
+              "ok": true
+            },
+            "latchX1": {
+              "found": true,
+              "value": 78.9,
+              "expected": 78.9,
+              "file": "params.py",
+              "ok": true
+            },
+            "latchY0": {
+              "found": true,
+              "value": 25.15,
+              "expected": 25.15,
+              "file": "params.py",
+              "ok": true
+            },
+            "usbTopX0": {
+              "found": true,
+              "value": 77.14,
+              "expected": 77.14,
+              "file": "params.py",
+              "ok": true
+            },
+            "usbTopX1": {
+              "found": true,
+              "value": 88.96,
+              "expected": 88.96,
+              "file": "params.py",
+              "ok": true
+            },
+            "usbTopY0": {
+              "found": true,
+              "value": 7.97,
+              "expected": 7.97,
+              "file": "params.py",
+              "ok": true
+            },
+            "usbTopY1": {
+              "found": true,
+              "value": 16.71,
+              "expected": 16.71,
+              "file": "params.py",
+              "ok": true
+            },
+            "usbTopZ": {
+              "found": true,
+              "value": 4.68,
+              "expected": 4.68,
+              "file": "params.py",
+              "ok": true
+            },
+            "molexX0": {
+              "found": true,
+              "value": 0.88,
+              "expected": 0.88,
+              "file": "params.py",
+              "ok": true
+            },
+            "molexX1": {
+              "found": true,
+              "value": 5.78,
+              "expected": 5.78,
+              "file": "params.py",
+              "ok": true
+            },
+            "molexY0": {
+              "found": true,
+              "value": 6.7,
+              "expected": 6.7,
+              "file": "params.py",
+              "ok": true
+            },
+            "molexY1": {
+              "found": true,
+              "value": 17.65,
+              "expected": 17.65,
+              "file": "params.py",
+              "ok": true
+            },
+            "molexTopZ": {
+              "found": true,
+              "value": 6.36,
+              "expected": 6.36,
+              "file": "params.py",
+              "ok": true
+            },
+            "ffcX0": {
+              "found": true,
+              "value": 83.2,
+              "expected": 83.2,
+              "file": "params.py",
+              "ok": true
+            },
+            "ffcX1": {
+              "found": true,
+              "value": 87.45,
+              "expected": 87.45,
+              "file": "params.py",
+              "ok": true
+            },
+            "ffcY0": {
+              "found": true,
+              "value": 17.72,
+              "expected": 17.72,
+              "file": "params.py",
+              "ok": true
+            },
+            "ffcY1": {
+              "found": true,
+              "value": 32.12,
+              "expected": 32.12,
+              "file": "params.py",
+              "ok": true
+            },
+            "ffcTopZ": {
+              "found": true,
+              "value": 3.09,
+              "expected": 3.09,
+              "file": "params.py",
+              "ok": true
+            },
+            "erfX0": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "erfX1": {
+              "found": true,
+              "value": 12.0,
+              "expected": 12.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "erfY0": {
+              "found": true,
+              "value": 11.1,
+              "expected": 11.1,
+              "file": "params.py",
+              "ok": true
+            },
+            "erfY1": {
+              "found": true,
+              "value": 42.9,
+              "expected": 42.9,
+              "file": "params.py",
+              "ok": true
+            },
+            "erfBottomZ": {
+              "found": true,
+              "value": -5.06,
+              "expected": -5.06,
+              "file": "params.py",
+              "ok": true
+            },
+            "usbBotX0": {
+              "found": true,
+              "value": 42.16,
+              "expected": 42.16,
+              "file": "params.py",
+              "ok": true
+            },
+            "usbBotX1": {
+              "found": true,
+              "value": 50.9,
+              "expected": 50.9,
+              "file": "params.py",
+              "ok": true
+            },
+            "usbBotY0": {
+              "found": true,
+              "value": -0.98,
+              "expected": -0.98,
+              "file": "params.py",
+              "ok": true
+            },
+            "usbBotY1": {
+              "found": true,
+              "value": 10.85,
+              "expected": 10.85,
+              "file": "params.py",
+              "ok": true
+            },
+            "usbBotZ": {
+              "found": true,
+              "value": -3.11,
+              "expected": -3.11,
+              "file": "params.py",
+              "ok": true
+            },
+            "gctX0": {
+              "found": true,
+              "value": 62.31,
+              "expected": 62.31,
+              "file": "params.py",
+              "ok": true
+            },
+            "gctX1": {
+              "found": true,
+              "value": 71.25,
+              "expected": 71.25,
+              "file": "params.py",
+              "ok": true
+            },
+            "gctY0": {
+              "found": true,
+              "value": 0.27,
+              "expected": 0.27,
+              "file": "params.py",
+              "ok": true
+            },
+            "gctY1": {
+              "found": true,
+              "value": 7.98,
+              "expected": 7.98,
+              "file": "params.py",
+              "ok": true
+            },
+            "gctBottomZ": {
+              "found": true,
+              "value": -3.37,
+              "expected": -3.37,
+              "file": "params.py",
+              "ok": true
+            },
+            "inductor1X0": {
+              "found": true,
+              "value": 21.51,
+              "expected": 21.51,
+              "file": "params.py",
+              "ok": true
+            },
+            "inductor1X1": {
+              "found": true,
+              "value": 26.81,
+              "expected": 26.81,
+              "file": "params.py",
+              "ok": true
+            },
+            "inductor1Y0": {
+              "found": true,
+              "value": 5.43,
+              "expected": 5.43,
+              "file": "params.py",
+              "ok": true
+            },
+            "inductor1Y1": {
+              "found": true,
+              "value": 10.93,
+              "expected": 10.93,
+              "file": "params.py",
+              "ok": true
+            },
+            "inductor2X0": {
+              "found": true,
+              "value": 22.45,
+              "expected": 22.45,
+              "file": "params.py",
+              "ok": true
+            },
+            "inductor2X1": {
+              "found": true,
+              "value": 27.75,
+              "expected": 27.75,
+              "file": "params.py",
+              "ok": true
+            },
+            "inductor2Y0": {
+              "found": true,
+              "value": 24.63,
+              "expected": 24.63,
+              "file": "params.py",
+              "ok": true
+            },
+            "inductor2Y1": {
+              "found": true,
+              "value": 30.13,
+              "expected": 30.13,
+              "file": "params.py",
+              "ok": true
+            },
+            "inductorBottomZ": {
+              "found": true,
+              "value": -2.99,
+              "expected": -2.99,
+              "file": "params.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 264,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/carrier/export.json step.deterministic = True sha256 4c1136eca0ad; stl=present; glb=present",
+        "results/build123d/aleph-stack/parts/carrier/inspect.json valid = True solids = 1 (expected 1)",
+        "results/build123d/aleph-stack/parts/carrier/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = False; manifold witness = 14553.164985886968"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/aleph-stack/parts/carrier/export/aleph-stack-carrier.step",
+            "sha256": "4c1136eca0add903bf6821e9ce1e536ef5a5afe07903ca78c40540391bf7bd21",
+            "bytes": 216916,
+            "deterministic": true,
+            "second_sha256": "4c1136eca0add903bf6821e9ce1e536ef5a5afe07903ca78c40540391bf7bd21",
+            "determinism_source": "edit restore re-export"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/aleph-stack/parts/carrier/export/aleph-stack-carrier.stl",
+            "sha256": "4f8fa87286053548964595970d3e53d5920b81c4049ae81434dab9b9229e84a3",
+            "bytes": 66284
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/aleph-stack/parts/carrier/export/aleph-stack-carrier.glb",
+            "sha256": "181e9b86e788da4866a7e44f7ce8c504e5baeae5882aba4eb5135d3f0e8a83fa",
+            "bytes": 24540
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 14553.164985886968,
+          "faces": 1324,
+          "vertices": 656,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 14553.164985886971,
+          "surface_area": 13312.297376423863,
+          "bbox_min": [
+            0.0,
+            -0.9800000190734863,
+            -5.059999942779541
+          ],
+          "bbox_max": [
+            88.95999908447266,
+            52.5,
+            10.859999656677246
+          ],
+          "center_of_mass": [
+            42.27361757789745,
+            30.63987406299209,
+            2.4130352496282335
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread d817fc5d-667f-4c85-96b7-3aa682019d87; engine versions ['0.12.0']; engine calls 16; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 16,
+        "allow_errors": false,
+        "engine_versions": [
+          "0.12.0"
+        ],
+        "zoo_versions": [
+          "0.12.0"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/carrier/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/carrier/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 15, 'has_result': True} lines = 264"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "build123d",
+          "params",
+          "build123d",
+          "params",
+          "bottomDevices",
+          "datum",
+          "topHeaders",
+          "build123d",
+          "params"
+        ],
+        "construction_ops": {
+          "calls": 15,
+          "has_result": true
+        },
+        "sketch_blocks": 15,
+        "feature_ops": 15
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

@@ -1,0 +1,113 @@
+Source URL: https://zoo.dev/docs/kcl-book/units_of_measurement.html
+Title: Types and Units
+
+# Types and Units
+- [Function signatures](#function-signatures)
+- [Units of measurement](#units-of-measurement)
+- [Mixing units](#mixing-units)
+- [Units and function signatures](#units-and-function-signatures)
+- [Other types](#other-types)
+
+KCL tracks the type of each variable, and can help you avoid bugs by noticing when your types don't match. You may have noticed the very basic type checking already, for example trying to run `3 * true` will cause an error. But KCL supports more helpful type checks. Let's see how!
+
+## Function signatures
+Consider this KCL example.
+
+```kcl
+// Could take either two strings, or two numbers.
+fn makeMessage(prefix, suffix) {
+  return prefix + suffix
+}
+
+msg1 = makeMessage(prefix = "hello", suffix = " world")
+msg2 = makeMessage(prefix = 1, suffix = 3)
+```
+
+In this example, `makeMessage` takes two arguments and adds them together with `+`. If the two arguments are both strings, like in `msg1`, this will produce one concatenated string (like `"hello world"`). If the two args are numbers (like in `msg2`) this will add them together (in the example, producing 4).
+
+This might not be the goal, though! Maybe you designed `makeMessage` to only work with numbers, or only work with strings. You can add a type to the argument, and KCL will make sure it's only called with those arguments. Like this:
+
+```kcl
+// Note the types of arguments are given now.
+fn makeMessage(prefix: string, suffix: string) {
+  return prefix + suffix
+}
+
+msg1 = makeMessage(prefix = "hello", suffix = " world")
+msg2 = makeMessage(prefix = 1, suffix = 3)
+```
+
+In this example, `msg1` is defined successfully as "hello world", but KCL will exit with an error while running `msg2`, because the arguments being passed to it don't match the types the function declares.
+
+## Units of measurement
+KCL tracks the units that each distance uses. This can help you accurately translate your engineering requirements or formula into KCL, without pulling out a calculator to convert between inches and centimeters.
+
+For example, you can put a unit like `2cm` or `2mm` as the length of a line. Here's three different lines of length 20 centimeters, inches and millimeters.
+
+```kcl=lines_units
+sketch001 = sketch(on = XY) {
+  line1 = line(start = [var -13.35mm, var 10.75mm], end = [var 10.94mm, var 10.42mm])
+  line2 = line(start = [var -18.82mm, var 17.12mm], end = [var 25.39mm, var 11.53mm])
+  line3 = line(start = [var -25.48mm, var 24.01mm], end = [var 35.37mm, var 17.12mm])
+  distance([line3.start, line3.end]) == 2mm
+  distance([line2.start, line2.end]) == 2cm
+  distance([line1.start, line1.end]) == 2in
+  parallel([line1, line2, line3])
+}
+```
+
+![2D fallback: Three lines of length 20 mm and 20 cm and 20 inches](images/dynamic/lines_units.png "2D fallback: Three lines of length 20 mm and 20 cm and 20 inches")
+
+Other suffixes include metres (`m`), feet (`ft`) and yards (`yd`).
+
+In the previous examples, before this chapter, we always used general-purpose numbers with no units (like `length = 20`). Each KCL file has a default unit. You can set it by adding `@settings(defaultLengthUnit = in)` at the top of your KCL file. It has to go at the very top, before any code (although comments are permitted before it). If you don't set the default in `@settings`, your [user- or project-level settings](https://zoo.dev/docs/kcl-lang/settings) might set it. Otherwise, if you truly don't set anything, it'll default to millimeters.
+
+You can also set the units for angle measurements. For example, you can revolve a sketch either `180deg` or `3.14rad`.
+
+## Mixing units
+When you're doing arithmetic in KCL, you can mix and match numbers:
+
+```kcl
+y = 3cm // roughly 1.18 inches
+x = 10in - y
+```
+
+If you open the Variables pane, you'll see that `x` is 8.818 inches. KCL can track the numbers and types involved, letting you flexibly compare different units. However, KCL is not perfect at this (yet -- we're working on it!) For example, right now, KCL does not assume what output unit you want when multiplying two lengths. If you try `3cm * 2cm`, you'll get a warning: `Multiplying numbers which have unknown or incompatible units.` KCL warns you so that you can explicitly provide units if you want.
+
+```kcl
+// This causes a warning that KCL doesn't know what units `z` uses
+z = 10cm * 3cm
+```
+
+Multiplication is tricky because the above example could mean 30cm or could be trying to make an area, like a 10cm by 3cm rectangle of 30 square centimeters.
+
+Division, however, is simpler. `10cm/5cm` is a ratio of 2:1, so it returns an answer of 2, unitless. It's unitless because it's a ratio of two lengths, not a length itself.
+
+Similarly, multiplying or dividing a length by a unitless number gives you a length back, because you're applying a ratio to a length. For example, `3cm * 2_` is `6cm` and `10cm / 2_` is `5cm`.
+
+## Units and function signatures
+You can combine units of measurement and types! There are 3 kinds of number type:
+
+- A specific unit, like `number(mm)` or `number(deg)`.
+- Some kind of number, like `number(Length)`, which accepts centimeters or inches, but not degrees or radians. Similarly, `number(Angle)` accepts degrees or radians, but not centimeters or inches.
+- Any kind of number, i.e. just `number`.
+
+These can be used in function signatures. If you define a function that accepts, say, centimeters, and someone passes in inches, the inches will automatically be converted to centimeters. This works just like the above example of `10in - 3cm`, with the same limitations (sometimes you'll need to provide the type, like `x: number(cm)`).
+
+Here's a user-defined function `f` that accepts some angle -- either degrees or radians, but not centimeters (which is a length, not an angle).
+
+```kcl
+fn f(theta: number(Angle)) {
+  return cos(theta)
+}
+
+xArg = 360deg
+x = f(theta = xArg)
+yArg = (2 * PI): number(rad)
+y = f(theta = yArg)
+```
+
+If you try to run `f(theta = 2in)` you'll see an error that explains you're using the wrong type of number. But both `x` and `y` will correctly be 1 if you open the Variables panel, showing that their units are being tracked correctly.
+
+## Other types
+Arrays and functions have their own type. You can look up these details at the [types page in our docs](https://zoo.dev/docs/kcl-lang/types).

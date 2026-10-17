@@ -1,0 +1,189 @@
+{
+  "named_faces": {
+    "hubBottom": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 62.8318530717959,
+      "ok": true,
+      "position": 0.0,
+      "area_expected": 62.832,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.8506309728806432e-15,
+      "centroid_uv": [
+        1.7763568394002505e-15,
+        5.190292640122604e-16
+      ]
+    },
+    "hubTop": {
+      "plane": "z",
+      "at": 10.0,
+      "normal": "+",
+      "found": 1,
+      "area": 62.8318530717959,
+      "ok": true,
+      "position": 10.0,
+      "area_expected": 62.832,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.8506309728806432e-15,
+      "centroid_uv": [
+        1.7763568394002505e-15,
+        5.190292640122604e-16
+      ]
+    },
+    "bladeTops": {
+      "plane": "z",
+      "at": 9.0,
+      "normal": "+",
+      "found": 4,
+      "area": 112.15646577095767,
+      "mode": "sum",
+      "ok": true,
+      "position": 9.0,
+      "area_expected": 112.156,
+      "area_ok": true
+    },
+    "bladeTopPx": {
+      "plane": "z",
+      "at": 9.0,
+      "normal": "+",
+      "found": 1,
+      "area": 28.039116442736606,
+      "ok": true,
+      "position": 9.0,
+      "area_expected": 28.039,
+      "area_ok": true,
+      "center_expected": [
+        12.982,
+        0.0
+      ],
+      "center_error": 0.00013586946040788916,
+      "centroid_uv": [
+        12.981864130539591,
+        5.009811832916173e-14
+      ]
+    },
+    "bladeBottoms": {
+      "plane": "z",
+      "at": 1.0,
+      "normal": "-",
+      "found": 4,
+      "area": 112.15646577095764,
+      "mode": "sum",
+      "ok": true,
+      "position": 1.0,
+      "area_expected": 112.156,
+      "area_ok": true
+    },
+    "bladeBottomPx": {
+      "plane": "z",
+      "at": 1.0,
+      "normal": "-",
+      "found": 1,
+      "area": 28.039116442736667,
+      "ok": true,
+      "position": 1.0,
+      "area_expected": 28.039,
+      "area_ok": true,
+      "center_expected": [
+        12.982,
+        0.0
+      ],
+      "center_error": 0.00013586946040966552,
+      "centroid_uv": [
+        12.98186413053959,
+        -4.807790513194238e-14
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "hubBottom",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": 62.832,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "hubTop",
+      "plane": "z",
+      "at": 10.0,
+      "normal": "+",
+      "area": 62.832,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "bladeTopPx",
+      "plane": "z",
+      "at": 9.0,
+      "normal": "+",
+      "area": 28.039,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        12.982,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "bladeBottomPx",
+      "plane": "z",
+      "at": 1.0,
+      "normal": "-",
+      "area": 28.039,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        12.982,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "bladeTops",
+      "plane": "z",
+      "at": 9.0,
+      "normal": "+",
+      "area": 112.156,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "bladeBottoms",
+      "plane": "z",
+      "at": 1.0,
+      "normal": "-",
+      "area": 112.156,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": null,
+      "mode": "sum"
+    }
+  ],
+  "planar_faces_total": 18
+}

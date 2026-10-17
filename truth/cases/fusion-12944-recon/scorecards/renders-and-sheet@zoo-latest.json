@@ -1,0 +1,810 @@
+{
+  "case": "fusion-12944-recon",
+  "arm": "renders-and-sheet",
+  "design": "fusion-12944-recon",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/fusion-12944-recon",
+  "truth_class": "B",
+  "role": "validation",
+  "scored_at": "2026-09-19T07:20:44Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 22,
+    "required_total": 22,
+    "optional_pass": 0,
+    "optional_total": 0
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        126.7014,
+        15.0,
+        108.0
+      ],
+      "measured": [
+        126.702,
+        15.0000002058,
+        108.0
+      ],
+      "error": 0.0005999999999914962,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "",
+      "expected": 148190.97607994877,
+      "measured": 148323.23261326496,
+      "error": 132.25653331619105,
+      "band": 1481.9097607994877,
+      "ok": true
+    },
+    {
+      "id": "center_of_mass",
+      "kind": "center_of_mass",
+      "required": true,
+      "note": "",
+      "expected": [
+        1.4053035411080966e-06,
+        7.55359264327638,
+        1.3152875586324587e-07
+      ],
+      "measured": [
+        0.0008904444145136318,
+        7.553544839038746,
+        -2.8276280404270055e-11
+      ],
+      "error": 0.0008890391109725237,
+      "ok": true
+    },
+    {
+      "id": "hole_d174_m141_7p5_m3p53em14",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          -141.0,
+          7.5,
+          -0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 87.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -141.0,
+          7.5,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 86.99971,
+        "length": 15.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": -0.00029000000000678483,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 15.0,
+          "measured": 15.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d174_141_7p5_m1p84em13",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          141.0,
+          7.5,
+          -0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 87.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          141.0,
+          7.5,
+          0.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 86.99971,
+        "length": 15.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": -0.00029000000000678483,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 15.0,
+          "measured": 15.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d18_0_7p5_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          7.5,
+          0.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 9.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          7.5,
+          0.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 9.0,
+        "length": 15.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 15.0,
+          "measured": 15.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d10_m51p4_9p5_m42",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          -51.3507,
+          9.5,
+          -42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 5.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -51.351,
+          9.5,
+          -42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 5.0,
+        "length": 11.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0002999999999957481,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999957481,
+          "ok": true
+        },
+        "length": {
+          "expected": 11.0,
+          "measured": 11.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d10_m51p4_9p5_42",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          -51.3507,
+          9.5,
+          42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 5.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -51.351,
+          9.5,
+          42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 5.0,
+        "length": 11.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0002999999999957481,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999957481,
+          "ok": true
+        },
+        "length": {
+          "expected": 11.0,
+          "measured": 11.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d10_51p4_9p5_m42",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          51.3507,
+          9.5,
+          -42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 5.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          51.351,
+          9.5,
+          -42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 5.0,
+        "length": 11.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0002999999999957481,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999957481,
+          "ok": true
+        },
+        "length": {
+          "expected": 11.0,
+          "measured": 11.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d10_51p4_9p5_42",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          51.3507,
+          9.5,
+          42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 5.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          51.351,
+          9.5,
+          42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 5.0,
+        "length": 11.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0002999999999957481,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999957481,
+          "ok": true
+        },
+        "length": {
+          "expected": 11.0,
+          "measured": 11.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d24_51p4_7p5_m42",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          51.3507,
+          7.5,
+          -42.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 12.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          51.351,
+          7.5,
+          -42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 12.0,
+        "length": 15.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0002999999999957481,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999957481,
+          "ok": true
+        },
+        "length": {
+          "expected": 15.0,
+          "measured": 15.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d24_m51p4_7p5_m42",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          -51.3507,
+          7.5,
+          -42.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 12.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          -51.351,
+          7.5,
+          -42.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 12.0,
+        "length": 15.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0002999999999957481,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999957481,
+          "ok": true
+        },
+        "length": {
+          "expected": 15.0,
+          "measured": 15.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d24_m51p4_7p5_42",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          -51.3507,
+          7.5,
+          42.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 12.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          -51.351,
+          7.5,
+          42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 12.0,
+        "length": 15.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0002999999999957481,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999957481,
+          "ok": true
+        },
+        "length": {
+          "expected": 15.0,
+          "measured": 15.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d24_51p4_7p5_42",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          51.3507,
+          7.5,
+          42.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 12.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          51.351,
+          7.5,
+          42.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 12.0,
+        "length": 15.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0002999999999957481,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999957481,
+          "ok": true
+        },
+        "length": {
+          "expected": 15.0,
+          "measured": 15.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "face_yn_0",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 0.0,
+      "normal": "-",
+      "found": 2,
+      "area": 5951.366297743077,
+      "expected_area": 5952.327,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yn_3",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 3.0,
+      "normal": "-",
+      "found": 1,
+      "area": 4157.28505652768,
+      "expected_area": 4156.327,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yp_12",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 12.0,
+      "normal": "+",
+      "found": 1,
+      "area": 4157.28505652768,
+      "expected_area": 4156.327,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yp_15",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 15.0,
+      "normal": "+",
+      "found": 2,
+      "area": 6655.083045667194,
+      "expected_area": 6656.044,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_zp_54",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 54.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1540.53,
+      "expected_area": 1540.52,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_zn_m54",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": -54.0,
+      "normal": "-",
+      "found": 1,
+      "area": 1540.53,
+      "expected_area": 1540.52,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "deviation",
+      "kind": "deviation",
+      "required": true,
+      "note": "",
+      "measured": {
+        "p95": 0.043330060907487374,
+        "hausdorff_estimate": 0.12559741192499563,
+        "silhouette_iou_min": 0.9994006254447175,
+        "volume_ratio": 1.0013720245447393
+      },
+      "checks": {
+        "p95": {
+          "max": 0.2,
+          "measured": 0.043330060907487374,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 1.0,
+          "measured": 0.12559741192499563,
+          "ok": true
+        },
+        "silhouette_iou": {
+          "min": 0.98,
+          "measured": 0.9994006254447175,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": false,
+    "summary": {
+      "pass": 9,
+      "fail": 2,
+      "not_applicable": 1
+    },
+    "failed": [
+      "features",
+      "edit_robustness"
+    ]
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "e67395e2f821ff88a1d10bbebc3c4dfed1073d8c05f0f6df7cbbcff5afcc6897",
+    "truth_files": {
+      "truth/22303_e9723631_0014_1.step": "452872d4b6119ebbcad6f79f0c66cfd20719e278362a50cbf809b54b93598768",
+      "truth/22303_e9723631_0014_1.stl": "637c2876db30be71122b2b583cda24c291b22a1b88bfe3966692d7fabc4969a9"
+    },
+    "input_files": {
+      "inputs/part-brief.md": "def482e91661e934c0c45f0f2bc0e109c5b2b61cae7d5556e27385205cdec0bf",
+      "inputs/dimension-sheet.md": "d2fa6c8c40ab0e2b8a2ea1d7aac083922b8315c3072c1cf5c04ef7022809c708",
+      "inputs/renders/front.png": "cf01480c1ad346e0e3732cad97c7ea957759eac23febacc27c2a3193e6b0fdad",
+      "inputs/renders/iso-below.png": "dbe4e357a283f8c277b8bd95c6e546cd9226e8e6d96efbb9ba8d6815aff5f777",
+      "inputs/renders/iso.png": "4e81696ca175f97af16fc382bbf322e9ed71f5bfcb054beb6ef2bd8eb055f5d4",
+      "inputs/renders/iso2.png": "c20a5240025eef2e304ffe428dea619a25366480e2759169c23a17c47d03c3c7",
+      "inputs/renders/right.png": "e3e091f2a7e45f4ab9114548cc1d8250151fdcc39aa69fa818b860d60ca597b9",
+      "inputs/renders/section-x0.png": "3cb9e0711767d1111766e1e932e04b49fe19f3a1bdccbe4bce49e0c34776b141",
+      "inputs/renders/section-y7.5.png": "6646a693b71db350844cf159d6c4fb43d6cedd8d903b861b8c6a8be3e295460e",
+      "inputs/renders/section-z-0.png": "0071550d873ea971ea404e6fbf6d44b4ac2655422502f8a8c4af7f0715312ecc",
+      "inputs/renders/top.png": "c5b417abe796ee2a4bc8ab1fa48b3175c5730908cf2544e1c20a461dc4b22623",
+      "inputs/renders/render-notes.md": "099190bcedfa422c7d7d81397eada2c9e5d54e61f2dd2be8203fde4c7ddddde3"
+    },
+    "kcl": {
+      "main.kcl": "a61db442ec18c9869b52e4780ed5e96e4b36de6539a67fb81faa64c80263c8ec"
+    },
+    "step_sha256": "37c126e7694316fbccb2de1a11839ee52e5145963caa8b1625b9221b90b1e63d",
+    "design_bundle": {
+      "brief.md": "e02e9fb1e52ea627820c537b8ff2311527b3537362ff887d62dd6c45fdf66781",
+      "contract.yaml": "ea95f2f836d13832e1e92bb856026e74f10e57fa78cf53ebb9b4769d45ece342",
+      "sources/dimension-sheet.md": "d2fa6c8c40ab0e2b8a2ea1d7aac083922b8315c3072c1cf5c04ef7022809c708",
+      "sources/front.png": "cf01480c1ad346e0e3732cad97c7ea957759eac23febacc27c2a3193e6b0fdad",
+      "sources/iso-below.png": "dbe4e357a283f8c277b8bd95c6e546cd9226e8e6d96efbb9ba8d6815aff5f777",
+      "sources/iso.png": "4e81696ca175f97af16fc382bbf322e9ed71f5bfcb054beb6ef2bd8eb055f5d4",
+      "sources/iso2.png": "c20a5240025eef2e304ffe428dea619a25366480e2759169c23a17c47d03c3c7",
+      "sources/part-brief.md": "def482e91661e934c0c45f0f2bc0e109c5b2b61cae7d5556e27385205cdec0bf",
+      "sources/render-notes.md": "099190bcedfa422c7d7d81397eada2c9e5d54e61f2dd2be8203fde4c7ddddde3",
+      "sources/right.png": "e3e091f2a7e45f4ab9114548cc1d8250151fdcc39aa69fa818b860d60ca597b9",
+      "sources/section-x0.png": "3cb9e0711767d1111766e1e932e04b49fe19f3a1bdccbe4bce49e0c34776b141",
+      "sources/section-y7.5.png": "6646a693b71db350844cf159d6c4fb43d6cedd8d903b861b8c6a8be3e295460e",
+      "sources/section-z-0.png": "0071550d873ea971ea404e6fbf6d44b4ac2655422502f8a8c4af7f0715312ecc",
+      "sources/top.png": "c5b417abe796ee2a4bc8ab1fa48b3175c5730908cf2544e1c20a461dc4b22623"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-19T07:20:44Z",
+    "skillkat_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2f4eec8c6da2aed2a4ef51ba85099094dc7b9224",
+      "dirty": true
+    }
+  }
+}

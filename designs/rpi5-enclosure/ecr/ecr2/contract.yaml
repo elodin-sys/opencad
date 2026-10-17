@@ -1,0 +1,2219 @@
+schema_version: 1
+name: rpi5-enclosure
+intent: Design a two-piece FFF-printed enclosure (base and removable lid, two separate solids in one STEP) for a
+  Raspberry Pi 5 to the attached requirements document, in the board frame it defines (x along 85, y along 56, PCB
+  bottom at z = 0). The board must fit with 0.5 mm edge clearance and 20 mm headroom above the PCB; four standoffs
+  meet the PCB bottom at the Ø2.7 mounting holes (3.5,3.5) (61.5,3.5) (3.5,52.5) (61.5,52.5) with Ø2.5 x 5 pilot
+  holes; every listed cable-plug envelope (USB-C, 2x micro-HDMI on y = 0; 2x USB-A stacks and RJ45 on x = 85; micro-SD
+  under x = 0) passes through its wall opening; the lid closes on the base rim with zero interference and is held
+  by four Ø3 through holes into Ø2.5 corner-post pilots; walls and floor >= 2 mm (5th percentile of inward ray casts;
+  the Ø6.2 standoff bosses' 1.85 mm annuli are the accepted exception). Declare the base and lid as acceptance solids
+  by a contained point, the keep-outs and plug envelopes as acceptance hardware with no-interference clearances,
+  the standoff faces and pilot holes as faces and cylinders pinned by interfaces, and the wall minimum as a p05
+  thickness check. Headroom, wall thickness and standoff height are top-level parameters; the headroom parameter
+  gets a 10-value regeneration sweep (15..35, every value must build) and one infeasible negative value guarded
+  by an assert.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: FFF printing; no supports; overhangs <=45 deg; base prints on its floor exterior and lid inverted on its
+  ceiling exterior.
+release_status: prototype
+frame:
+  origin: Intersection of the extended PCB x=0 and y=0 straight edges at the board corner nearest USB-C (lower-left
+    in the drawing plan), on the PCB bottom z=0; use the virtual sharp corner, not a rounded outline point.
+  axes:
+    x: Along the 85 mm board edge from the USB-C-side virtual corner toward the USB-A/RJ45 edge at x=85.
+    y: Along the 56 mm board edge from the USB-C/micro-HDMI edge y=0 toward the GPIO-header edge y=56 (upward on
+      the plan).
+    z: 'Right-handed normal out of the component side: PCB bottom z=0, PCB top z=1.6; bottom-side components have
+      negative z.'
+  datums:
+  - name: A
+    description: PCB bottom plane z=0, reproduced by the four annular standoff seats.
+  - name: B
+    description: Virtual PCB edge plane x=0, the micro-SD side; x mounting columns are 3.5 and 61.5 from this plane.
+  - name: C
+    description: Virtual PCB edge plane y=0, USB-C/micro-HDMI side; mounting rows are 3.5 and 52.5 from this plane.
+  - name: D
+    description: Nominal base rim z=21.55 and parallel lid underside z=21.6; both translate with headroom and retain
+      their 0.05 mm gap.
+envelope:
+  min:
+  - -8.5
+  - -8.5
+  - -8.0
+  max:
+  - 93.5
+  - 64.5
+  - 25.6
+  tolerance: 0.1
+parameters:
+- name: boardLength
+  value: 85
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: "85 mm board edge"'
+  description: PCB extent along +x.
+- name: boardWidth
+  value: 56
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: "56 mm edge"'
+  description: PCB extent along +y.
+- name: pcbThickness
+  value: 1.6
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: "PCB top at z = 1.6"'
+  description: PCB top elevation above its bottom datum.
+- name: mountX
+  value: 3.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: mounting-hole coordinate list'
+  description: Near mounting-hole column x.
+- name: mountY
+  value: 3.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: mounting-hole coordinate list'
+  description: Near mounting-hole row y.
+- name: mountPitchX
+  value: 58
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: "58 x 49 centres"'
+  description: Mounting-hole column separation.
+- name: mountPitchY
+  value: 49
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: "58 x 49 centres"'
+  description: Mounting-hole row separation.
+- name: boardMountDiameter
+  value: 2.7
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: "Mounting holes Ø2.7 (M2.5)"'
+  description: Board mounting-hole diameter; board is evaluator hardware, not a deliverable solid.
+- name: underBoardDepth
+  value: 3
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: "reach z = -3.0"'
+  description: Bottom-component extent below z=0, expressed as a positive depth.
+- name: componentFreeRadius
+  value: 3.1
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: "within 3.1 mm of each hole centre"'
+  description: Radius excluded from the bottom-component keep-out around each mounting axis.
+- name: edgeClearance
+  value: 0.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Enclosure requirement 3: "Leave >= 0.5 mm"'
+  description: Minimum PCB-edge clearance; sets the rectangular cavity footprint.
+- name: headroom
+  value: 20
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: "20.0 mm of clear height above the PCB top"; requirement
+    9'
+  description: Lid underside elevation is pcbThickness + headroom; nominal fit is checked only at 20.
+  edit_test:
+    delta: 5
+    expect:
+      volume_delta: 4130.0
+      direction: increase
+      tolerance_rel: 0.02
+      bbox_delta:
+      - 0
+      - 0
+      - 5
+    sweep:
+      min: 15
+      max: 35
+      steps: 10
+    infeasible_deltas:
+    - -21
+- name: wallThickness
+  value: 3.0
+  unit: mm
+  provenance: inferred
+  tolerance: 0.2
+  rationale: 'Q1/Q4: choose 2.4 mm to leave a 0.4 mm modeling/printing margin over the 2.0 mm shell minimum; nozzle
+    and polymer are unspecified. Grow outer walls away from the fixed cavity.'
+  description: Common floor and straight-wall thickness, greater than the stated 2 mm minimum.
+- name: standoffHeight
+  value: 5
+  unit: mm
+  provenance: inferred
+  tolerance: 0.5
+  rationale: 'Q1: 5 mm permits the required 5 mm blind pilots to end at the floor top, clears components to z=-3
+    by 2 mm, and with a 2.4 mm floor contains the mandated base selector at z=-6.'
+  description: Height from the interior floor at -standoffHeight to the fixed PCB datum z=0.
+  edit_test:
+    delta: 1
+    expect:
+      volume_delta: 1234.763
+      direction: increase
+      tolerance_rel: 0.02
+      bbox_delta:
+      - 0
+      - 0
+      - 1
+- name: standoffDiameter
+  value: 6.2
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Requirement 7: "a boss capped at Ø6.2 around a Ø2.5 pilot leaves
+    a 1.85 mm annulus"; user intent specifies Ø6.2 bosses'
+  description: Four cylindrical standoff bosses; 1.85 mm radial annulus around each 2.5 mm pilot.
+- name: pilotDiameter
+  value: 2.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Enclosure requirements 2 and 6: "Ø2.5"'
+  description: Diameter of all four standoff pilots and all four corner-post pilots.
+- name: pilotDepth
+  value: 5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Requirements 2 and 6: ">= 5 mm deep"; user intent specifies "Ø2.5
+    x 5"'
+  description: Exact nominal blind-pilot depth; satisfies the source lower bound of 5 mm.
+- name: lidHoleDiameter
+  value: 3
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Requirement 6: "Ø3.0..3.4"; user intent specifies four Ø3 through
+    holes'
+  description: Four clearance holes through the lid; uses the exact user-intent diameter and the lower endpoint
+    of the source range.
+- name: lidThickness
+  value: 4
+  unit: mm
+  provenance: inferred
+  tolerance: 0.25
+  rationale: 'Q1: a 4 mm flat lid places the fixed selector 1 mm below its top and leaves 2 mm above the USB-A relief
+    at the minimum headroom of 15 mm.'
+  description: Flat lid thickness; nominal z range 21.6..25.6 contains the mandated lid selector at z=24.6.
+- name: cornerPostWidth
+  value: 8
+  unit: mm
+  provenance: inferred
+  tolerance: 0.5
+  rationale: 'Q1: 8 mm square posts leave 2.75 mm to a centered 2.5 mm pilot and 2.5 mm to a 3 mm lid hole. Their
+    inner corner is the cavity corner, and their overlap with the main wall is wallThickness squared.'
+  description: Square external corner posts, continued through the base height; lid outline covers them.
+- name: closureGap
+  value: 0.05
+  unit: mm
+  provenance: inferred
+  tolerance: 0.02
+  rationale: 'Q2: a 0.05 mm modeled separation keeps two removable solids with no fused or overlapping material,
+    within the required maximum closest gap of 0.1 mm.'
+  description: 'Nominal axial air gap: base rim is pcbThickness + headroom - closureGap.'
+- name: usbCx
+  value: 11.2
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: connector locations and requirement 4 plug boxes'
+  description: USB-C x center on y=0.
+- name: hdmi0X
+  value: 25.8
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: connector locations and requirement 4 plug boxes'
+  description: First micro-HDMI x center on y=0.
+- name: hdmi1X
+  value: 39.2
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: connector locations and requirement 4 plug boxes'
+  description: Second micro-HDMI x center on y=0.
+- name: usbAUpperY
+  value: 47
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: connector locations and requirement 4 plug boxes'
+  description: Upper stacked USB-A pair y center on x=85.
+- name: usbALowerY
+  value: 29.1
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: connector locations and requirement 4 plug boxes'
+  description: Lower stacked USB-A pair y center on x=85.
+- name: rj45Y
+  value: 10.2
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: connector locations and requirement 4 plug boxes'
+  description: RJ45 y center on x=85.
+- name: sdYMin
+  value: 22
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: connector locations and requirement 4 plug boxes'
+  description: Micro-SD access minimum y.
+- name: sdYMax
+  value: 34
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/rpi5-enclosure-requirements.md: Board frame: connector locations and requirement 4 plug boxes'
+  description: Micro-SD access maximum y.
+features:
+- id: base_shell
+  kind: shell
+  description: Rectangular cavity [-0.5,85.5] x [-0.5,56.5], straight 2.4 mm walls, 2.4 mm floor, and four square
+    external corner posts. Floor top is -standoffHeight; footprint O is defined in brief section 5.
+  parameters:
+  - boardLength
+  - boardWidth
+  - edgeClearance
+  - wallThickness
+  - standoffHeight
+  - headroom
+  - pcbThickness
+  - cornerPostWidth
+  - closureGap
+  verify:
+  - method: bbox
+  - method: section
+    section: floor_section
+  - method: section
+    section: pcb_level_section
+  - method: face
+    face: floor_exterior
+  - method: face
+    face: floor_interior
+  - method: dimension
+    dimension: floor_thickness
+- id: board_keepouts
+  kind: cavity
+  description: All PCB, lower-component and top-component hardware envelopes clear the enclosure; the expanded edge
+    envelope guarantees 0.5 mm lateral clearance.
+  parameters:
+  - boardLength
+  - boardWidth
+  - pcbThickness
+  - underBoardDepth
+  - componentFreeRadius
+  - edgeClearance
+  - headroom
+  verify:
+  - method: section
+    section: pcb_level_section
+  - method: void
+    points:
+    - - 42.5
+      - 28
+      - 0.8
+    - - 42.5
+      - 28
+      - -1.5
+    - - 42.5
+      - 28
+      - 10
+- id: standoff_bosses
+  kind: boss
+  count: 4
+  description: Four 6.2 mm bosses anchored in the floor and ending at z=0; exactly inside the component-free rings.
+  parameters:
+  - mountX
+  - mountY
+  - mountPitchX
+  - mountPitchY
+  - standoffDiameter
+  - standoffHeight
+  verify:
+  - method: cylinder
+    cylinder: standoff_1_boss
+  - method: cylinder
+    cylinder: standoff_2_boss
+  - method: cylinder
+    cylinder: standoff_3_boss
+  - method: cylinder
+    cylinder: standoff_4_boss
+  - method: section
+    section: standoff_section
+  - method: count
+    section: standoff_section
+    count: 5
+    note: Five material regions = shell + four annular bosses; section.holes=4.
+- id: pcb_seats_and_pilots
+  kind: hole
+  count: 4
+  description: Four separately named annular PCB seats at z=0, with fixed mounting axes and 2.5 x 5 blind pilots.
+    Do not model the 2.7 mm PCB holes as extra enclosure holes.
+  parameters:
+  - mountX
+  - mountY
+  - mountPitchX
+  - mountPitchY
+  - boardMountDiameter
+  - standoffDiameter
+  - pilotDiameter
+  - pilotDepth
+  verify:
+  - method: face
+    face: standoff_1_seat
+  - method: cylinder
+    cylinder: standoff_1_pilot
+  - method: dimension
+    dimension: standoff_1_pilot_depth
+  - method: face
+    face: standoff_2_seat
+  - method: cylinder
+    cylinder: standoff_2_pilot
+  - method: dimension
+    dimension: standoff_2_pilot_depth
+  - method: face
+    face: standoff_3_seat
+  - method: cylinder
+    cylinder: standoff_3_pilot
+  - method: dimension
+    dimension: standoff_3_pilot_depth
+  - method: face
+    face: standoff_4_seat
+  - method: cylinder
+    cylinder: standoff_4_pilot
+  - method: dimension
+    dimension: standoff_4_pilot_depth
+- id: lid
+  kind: extrude
+  description: Separate flat 4 mm plate with footprint O, below face at pcbThickness+headroom and four 3 mm through
+    holes. Apply source plug cutters to the lid at every headroom; they are inactive at nominal 20 and form USB-A
+    edge reliefs at 15.
+  parameters:
+  - headroom
+  - pcbThickness
+  - lidThickness
+  - cornerPostWidth
+  - lidHoleDiameter
+  verify:
+  - method: section
+    section: lid_section
+  - method: face
+    face: lid_underside
+  - method: face
+    face: lid_exterior
+  - method: dimension
+    dimension: lid_thickness
+  - method: solid
+    points:
+    - - 42.5
+      - 28
+      - 24.6
+- id: corner_post_fasteners
+  kind: hole
+  count: 4
+  description: Four square corner posts outside the PCB, each with a 2.5 x 5 blind pilot and a coaxial 3 mm lid
+    through hole. All posts are integral with the base floor/walls.
+  parameters:
+  - cornerPostWidth
+  - edgeClearance
+  - boardLength
+  - boardWidth
+  - pilotDiameter
+  - pilotDepth
+  - lidHoleDiameter
+  - lidThickness
+  - headroom
+  verify:
+  - method: cylinder
+    cylinder: corner_1_pilot
+  - method: cylinder
+    cylinder: corner_1_lid_hole
+  - method: dimension
+    dimension: corner_1_pilot_depth
+  - method: cylinder
+    cylinder: corner_2_pilot
+  - method: cylinder
+    cylinder: corner_2_lid_hole
+  - method: dimension
+    dimension: corner_2_pilot_depth
+  - method: cylinder
+    cylinder: corner_3_pilot
+  - method: cylinder
+    cylinder: corner_3_lid_hole
+  - method: dimension
+    dimension: corner_3_pilot_depth
+  - method: cylinder
+    cylinder: corner_4_pilot
+  - method: cylinder
+    cylinder: corner_4_lid_hole
+  - method: dimension
+    dimension: corner_4_pilot_depth
+- id: removable_closure
+  kind: other
+  description: Two separate solids; base rim and lid underside separated by closureGap=0.05 mm; independent clearance
+    check caps closest gap at 0.1 mm and forbids interference.
+  parameters:
+  - headroom
+  - closureGap
+  verify:
+  - method: face
+    face: base_rim
+  - method: face
+    face: lid_underside
+  - method: dimension
+    dimension: rim_lid_gap
+- id: fff_print_orientation
+  kind: other
+  description: 'Support-free construction: base extrusions and open-to-rim notches have vertical sides; print on
+    the floor exterior. Lid prints upside down on the flat exterior. No bridges or overhang roofs on the base. Shell
+    p05 must be >=2 mm; the 1.85 mm boss annuli are the explicit exception.'
+  parameters:
+  - wallThickness
+  - lidThickness
+  verify:
+  - method: face
+    face: floor_exterior
+  - method: face
+    face: lid_exterior
+  - method: section
+    section: all_ports_section
+- id: usb_c_plug_opening
+  kind: cut
+  description: Support-free open-top wall notch for usb_c_plug. Lower and side limits match the source box; opening
+    extends upward to the moving rim. Subtract the original plug box from the lid as well so the USB-A apertures
+    survive the headroom=15 case.
+  parameters:
+  - usbCx
+  - wallThickness
+  - headroom
+  verify:
+  - method: face
+    face: usb_c_plug_sill
+  - method: dimension
+    dimension: usb_c_plug_width
+  - method: void
+    points:
+    - &id001
+      - 11.2
+      - -1.7
+      - 5.1
+- id: hdmi0_plug_opening
+  kind: cut
+  description: Support-free open-top wall notch for hdmi0_plug. Lower and side limits match the source box; opening
+    extends upward to the moving rim. Subtract the original plug box from the lid as well so the USB-A apertures
+    survive the headroom=15 case.
+  parameters:
+  - hdmi0X
+  - wallThickness
+  - headroom
+  verify:
+  - method: face
+    face: hdmi0_plug_sill
+  - method: dimension
+    dimension: hdmi0_plug_width
+  - method: void
+    points:
+    - &id002
+      - 25.8
+      - -1.7
+      - 4.85
+- id: hdmi1_plug_opening
+  kind: cut
+  description: Support-free open-top wall notch for hdmi1_plug. Lower and side limits match the source box; opening
+    extends upward to the moving rim. Subtract the original plug box from the lid as well so the USB-A apertures
+    survive the headroom=15 case.
+  parameters:
+  - hdmi1X
+  - wallThickness
+  - headroom
+  verify:
+  - method: face
+    face: hdmi1_plug_sill
+  - method: dimension
+    dimension: hdmi1_plug_width
+  - method: void
+    points:
+    - &id003
+      - 39.2
+      - -1.7
+      - 4.85
+- id: usb_a_upper_plug_opening
+  kind: cut
+  description: Support-free open-top wall notch for usb_a_upper_plug. Lower and side limits match the source box;
+    opening extends upward to the moving rim. Subtract the original plug box from the lid as well so the USB-A apertures
+    survive the headroom=15 case.
+  parameters:
+  - usbAUpperY
+  - wallThickness
+  - headroom
+  verify:
+  - method: face
+    face: usb_a_upper_plug_sill
+  - method: dimension
+    dimension: usb_a_upper_plug_width
+  - method: void
+    points:
+    - &id004
+      - 86.7
+      - 47.0
+      - 10.100000000000001
+- id: usb_a_lower_plug_opening
+  kind: cut
+  description: Support-free open-top wall notch for usb_a_lower_plug. Lower and side limits match the source box;
+    opening extends upward to the moving rim. Subtract the original plug box from the lid as well so the USB-A apertures
+    survive the headroom=15 case.
+  parameters:
+  - usbALowerY
+  - wallThickness
+  - headroom
+  verify:
+  - method: face
+    face: usb_a_lower_plug_sill
+  - method: dimension
+    dimension: usb_a_lower_plug_width
+  - method: void
+    points:
+    - &id005
+      - 86.7
+      - 29.1
+      - 10.100000000000001
+- id: rj45_plug_opening
+  kind: cut
+  description: Support-free open-top wall notch for rj45_plug. Lower and side limits match the source box; opening
+    extends upward to the moving rim. Subtract the original plug box from the lid as well so the USB-A apertures
+    survive the headroom=15 case.
+  parameters:
+  - rj45Y
+  - wallThickness
+  - headroom
+  verify:
+  - method: face
+    face: rj45_plug_sill
+  - method: dimension
+    dimension: rj45_plug_width
+  - method: void
+    points:
+    - &id006
+      - 86.7
+      - 10.2
+      - 9.100000000000001
+- id: sd_card_slot_opening
+  kind: cut
+  description: Support-free open-top wall notch for sd_card_slot. Lower and side limits match the source box; opening
+    extends upward to the moving rim. Subtract the original plug box from the lid as well so the USB-A apertures
+    survive the headroom=15 case.
+  parameters:
+  - sdYMin
+  - sdYMax
+  - wallThickness
+  - headroom
+  verify:
+  - method: face
+    face: sd_card_slot_sill
+  - method: dimension
+    dimension: sd_card_slot_width
+  - method: void
+    points:
+    - &id007
+      - -1.7
+      - 28.0
+      - -1.5
+interfaces:
+- name: pcb_mount_1
+  description: Keep mounting axis (3.5, 3.5), seat z=0, and the 2.5 x 5 blind pilot fixed across headroom and standoff-height
+    edits. Pilot engagement is pinned by the individual cylinder length and axial range; separate face-to-face depth
+    dimensions are nominal acceptance checks.
+  checks:
+  - standoff_1_seat
+  - standoff_1_pilot
+- name: pcb_mount_2
+  description: Keep mounting axis (61.5, 3.5), seat z=0, and the 2.5 x 5 blind pilot fixed across headroom and standoff-height
+    edits. Pilot engagement is pinned by the individual cylinder length and axial range; separate face-to-face depth
+    dimensions are nominal acceptance checks.
+  checks:
+  - standoff_2_seat
+  - standoff_2_pilot
+- name: pcb_mount_3
+  description: Keep mounting axis (3.5, 52.5), seat z=0, and the 2.5 x 5 blind pilot fixed across headroom and standoff-height
+    edits. Pilot engagement is pinned by the individual cylinder length and axial range; separate face-to-face depth
+    dimensions are nominal acceptance checks.
+  checks:
+  - standoff_3_seat
+  - standoff_3_pilot
+- name: pcb_mount_4
+  description: Keep mounting axis (61.5, 52.5), seat z=0, and the 2.5 x 5 blind pilot fixed across headroom and
+    standoff-height edits. Pilot engagement is pinned by the individual cylinder length and axial range; separate
+    face-to-face depth dimensions are nominal acceptance checks.
+  checks:
+  - standoff_4_seat
+  - standoff_4_pilot
+- name: lid_fastener_1
+  description: Coaxial lid clearance and corner-post pilot at (-4.5, -4.5), outside PCB; diameter and depth fixed,
+    axial translation with headroom allowed. Individual cylinder lengths pin pilot depth and lid through length;
+    dimensions referencing the moving absolute rim plane are nominal checks only.
+  checks:
+  - corner_1_pilot
+  - corner_1_lid_hole
+- name: lid_fastener_2
+  description: Coaxial lid clearance and corner-post pilot at (89.5, -4.5), outside PCB; diameter and depth fixed,
+    axial translation with headroom allowed. Individual cylinder lengths pin pilot depth and lid through length;
+    dimensions referencing the moving absolute rim plane are nominal checks only.
+  checks:
+  - corner_2_pilot
+  - corner_2_lid_hole
+- name: lid_fastener_3
+  description: Coaxial lid clearance and corner-post pilot at (-4.5, 60.5), outside PCB; diameter and depth fixed,
+    axial translation with headroom allowed. Individual cylinder lengths pin pilot depth and lid through length;
+    dimensions referencing the moving absolute rim plane are nominal checks only.
+  checks:
+  - corner_3_pilot
+  - corner_3_lid_hole
+- name: lid_fastener_4
+  description: Coaxial lid clearance and corner-post pilot at (89.5, 60.5), outside PCB; diameter and depth fixed,
+    axial translation with headroom allowed. Individual cylinder lengths pin pilot depth and lid through length;
+    dimensions referencing the moving absolute rim plane are nominal checks only.
+  checks:
+  - corner_4_pilot
+  - corner_4_lid_hole
+- name: usb_c_plug_access
+  description: Preserve the source-box transverse opening width and sill; upward extent follows the rim. The matching
+    hardware/clearance pair enforces the complete 3D plug envelope at nominal headroom.
+  checks:
+  - usb_c_plug_sill
+  - usb_c_plug_width
+- name: hdmi0_plug_access
+  description: Preserve the source-box transverse opening width and sill; upward extent follows the rim. The matching
+    hardware/clearance pair enforces the complete 3D plug envelope at nominal headroom.
+  checks:
+  - hdmi0_plug_sill
+  - hdmi0_plug_width
+- name: hdmi1_plug_access
+  description: Preserve the source-box transverse opening width and sill; upward extent follows the rim. The matching
+    hardware/clearance pair enforces the complete 3D plug envelope at nominal headroom.
+  checks:
+  - hdmi1_plug_sill
+  - hdmi1_plug_width
+- name: usb_a_upper_plug_access
+  description: Preserve the source-box transverse opening width and sill; upward extent follows the rim. The matching
+    hardware/clearance pair enforces the complete 3D plug envelope at nominal headroom.
+  checks:
+  - usb_a_upper_plug_sill
+  - usb_a_upper_plug_width
+- name: usb_a_lower_plug_access
+  description: Preserve the source-box transverse opening width and sill; upward extent follows the rim. The matching
+    hardware/clearance pair enforces the complete 3D plug envelope at nominal headroom.
+  checks:
+  - usb_a_lower_plug_sill
+  - usb_a_lower_plug_width
+- name: rj45_plug_access
+  description: Preserve the source-box transverse opening width and sill; upward extent follows the rim. The matching
+    hardware/clearance pair enforces the complete 3D plug envelope at nominal headroom.
+  checks:
+  - rj45_plug_sill
+  - rj45_plug_width
+- name: sd_card_slot_access
+  description: Preserve the source-box transverse opening width and sill; upward extent follows the rim. The matching
+    hardware/clearance pair enforces the complete 3D plug envelope at nominal headroom.
+  checks:
+  - sd_card_slot_sill
+  - sd_card_slot_width
+- name: closure_pair
+  description: Nominal mating faces and gap. Absolute rim/lid elevations are intentionally not pinned across headroom
+    edits; closure is required by construction and by nominal clearance acceptance.
+  must_not_change: false
+  checks:
+  - base_rim
+  - lid_underside
+  - rim_lid_gap
+  - lid_closure
+- name: shell_floor
+  description: Floor thickness and named surfaces; floor translates down when standoffHeight grows.
+  must_not_change: false
+  checks:
+  - floor_exterior
+  - floor_interior
+  - floor_thickness
+acceptance:
+  bbox_tolerance: 0.1
+  volume:
+    expected: 65385.467
+    tolerance_rel: 0.005
+    provenance: measured (reference model)
+    note: 'ECR-2 reference: the passing STEP with its walls grown outward and floor grown downward to 3 mm, openings
+      extended (scripts/rpi5_ecr_deltas.py).'
+  surface_area:
+    expected: 42140.465
+    tolerance_rel: 0.01
+    provenance: measured (reference model)
+    note: ECR-2 reference geometry surface area (scripts/rpi5_ecr_deltas.py).
+  center_of_mass:
+    expected:
+    - 41.7019
+    - 29.017
+    - 9.2827
+    tolerance: 0.2
+    provenance: measured (reference model)
+    note: ECR-2 reference geometry centroid (scripts/rpi5_ecr_deltas.py).
+  solid_count: 2
+  sections:
+  - id: floor_section
+    plane: z
+    at: -6.2
+    expect:
+      area: 6016.0
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 0
+    description: Through full floor, below the blind pilot ends; filled outer footprint O, area Ao.
+  - id: standoff_section
+    plane: z
+    at: -2.5
+    expect:
+      area: 1179.128
+      area_tolerance_rel: 0.01
+      loops: 5
+      holes: 4
+    description: One shell region opened by the SD notch plus four annular standoffs; area Ar-12*w+4*pi*(rb^2-rp^2).
+  - id: pcb_level_section
+    plane: z
+    at: 0.8
+    expect:
+      area: 1078.0
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 0
+    description: One shell region with SD notch; the PCB rectangle is void; area Ar-12*w.
+  - id: all_ports_section
+    plane: z
+    at: 5
+    expect:
+      area: 826.0
+      area_tolerance_rel: 0.01
+      loops: 7
+      holes: 0
+    description: Seven open notches split the wall cross-section into seven regions; area Ar-96*w; corner pilots
+      start higher.
+  - id: rim_pilots_section
+    plane: z
+    at: 19
+    expect:
+      area: 806.365
+      area_tolerance_rel: 0.01
+      loops: 7
+      holes: 4
+    description: Seven rim regions with four corner-post pilot holes; area Ar-96*w-4*pi*rp^2.
+  - id: lid_section
+    plane: z
+    at: 23.6
+    expect:
+      area: 5816.126
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 4
+    description: One lid region with four through holes; area Ao-4*pi*rl^2.
+  faces:
+  - name: floor_exterior
+    plane: z
+    at: -8.0
+    normal: '-'
+    area: 6016.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 42.5
+    - 28
+  - name: floor_interior
+    plane: z
+    at: -5.0
+    normal: +
+    area: 4781.237178396008
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 42.7525765134
+    - 28
+  - name: base_rim
+    plane: z
+    at: 21.55
+    normal: +
+    area: 806.365
+    area_tolerance_rel: 0.01
+    tolerance: 0.01
+    mode: sum
+  - name: lid_underside
+    plane: z
+    at: 21.6
+    normal: '-'
+    area: 5816.125666117691
+    area_tolerance_rel: 0.01
+    tolerance: 0.01
+    mode: one
+    center:
+    - 42.5
+    - 28
+  - name: lid_exterior
+    plane: z
+    at: 25.6
+    normal: +
+    area: 5816.125666117691
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 42.5
+    - 28
+  - name: standoff_1_seat
+    plane: z
+    at: 0
+    normal: +
+    area: 25.281966879763864
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 3.5
+    - 3.5
+  - name: standoff_1_pilot_bottom
+    plane: z
+    at: -5.0
+    normal: +
+    area: 4.908738521234052
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 3.5
+    - 3.5
+  - name: standoff_2_seat
+    plane: z
+    at: 0
+    normal: +
+    area: 25.281966879763864
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 61.5
+    - 3.5
+  - name: standoff_2_pilot_bottom
+    plane: z
+    at: -5.0
+    normal: +
+    area: 4.908738521234052
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 61.5
+    - 3.5
+  - name: standoff_3_seat
+    plane: z
+    at: 0
+    normal: +
+    area: 25.281966879763864
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 3.5
+    - 52.5
+  - name: standoff_3_pilot_bottom
+    plane: z
+    at: -5.0
+    normal: +
+    area: 4.908738521234052
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 3.5
+    - 52.5
+  - name: standoff_4_seat
+    plane: z
+    at: 0
+    normal: +
+    area: 25.281966879763864
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 61.5
+    - 52.5
+  - name: standoff_4_pilot_bottom
+    plane: z
+    at: -5.0
+    normal: +
+    area: 4.908738521234052
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 61.5
+    - 52.5
+  - name: corner_1_pilot_bottom
+    plane: z
+    at: 16.55
+    normal: +
+    area: 4.908738521234052
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -4.5
+    - -4.5
+  - name: corner_2_pilot_bottom
+    plane: z
+    at: 16.55
+    normal: +
+    area: 4.908738521234052
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 89.5
+    - -4.5
+  - name: corner_3_pilot_bottom
+    plane: z
+    at: 16.55
+    normal: +
+    area: 4.908738521234052
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -4.5
+    - 60.5
+  - name: corner_4_pilot_bottom
+    plane: z
+    at: 16.55
+    normal: +
+    area: 4.908738521234052
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 89.5
+    - 60.5
+  - name: usb_c_plug_sill
+    plane: z
+    at: 1.6
+    normal: +
+    area: 39.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 11.2
+    - -2.0
+  - name: usb_c_plug_jamb_low
+    plane: x
+    at: 4.7
+    normal: +
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -2.0
+    - 11.575
+  - name: usb_c_plug_jamb_high
+    plane: x
+    at: 17.7
+    normal: '-'
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -2.0
+    - 11.575
+  - name: hdmi0_plug_sill
+    plane: z
+    at: 1.6
+    normal: +
+    area: 36.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 25.8
+    - -2.0
+  - name: hdmi0_plug_jamb_low
+    plane: x
+    at: 19.8
+    normal: +
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -2.0
+    - 11.575
+  - name: hdmi0_plug_jamb_high
+    plane: x
+    at: 31.8
+    normal: '-'
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -2.0
+    - 11.575
+  - name: hdmi1_plug_sill
+    plane: z
+    at: 1.6
+    normal: +
+    area: 36.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 39.2
+    - -2.0
+  - name: hdmi1_plug_jamb_low
+    plane: x
+    at: 33.2
+    normal: +
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -2.0
+    - 11.575
+  - name: hdmi1_plug_jamb_high
+    plane: x
+    at: 45.2
+    normal: '-'
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -2.0
+    - 11.575
+  - name: usb_a_upper_plug_sill
+    plane: z
+    at: 1.6
+    normal: +
+    area: 45.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 87.0
+    - 47.0
+  - name: usb_a_upper_plug_jamb_low
+    plane: y
+    at: 39.5
+    normal: +
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 87.0
+    - 11.575
+  - name: usb_a_upper_plug_jamb_high
+    plane: y
+    at: 54.5
+    normal: '-'
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 87.0
+    - 11.575
+  - name: usb_a_lower_plug_sill
+    plane: z
+    at: 1.6
+    normal: +
+    area: 45.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 87.0
+    - 29.1
+  - name: usb_a_lower_plug_jamb_low
+    plane: y
+    at: 21.6
+    normal: +
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 87.0
+    - 11.575
+  - name: usb_a_lower_plug_jamb_high
+    plane: y
+    at: 36.6
+    normal: '-'
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 87.0
+    - 11.575
+  - name: rj45_plug_sill
+    plane: z
+    at: 1.6
+    normal: +
+    area: 51.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 87.0
+    - 10.2
+  - name: rj45_plug_jamb_low
+    plane: y
+    at: 1.7
+    normal: +
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 87.0
+    - 11.575
+  - name: rj45_plug_jamb_high
+    plane: y
+    at: 18.7
+    normal: '-'
+    area: 59.85
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - 87.0
+    - 11.575
+  - name: sd_card_slot_sill
+    plane: z
+    at: -3.0
+    normal: +
+    area: 36.0
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -2.0
+    - 28.0
+  - name: sd_card_slot_jamb_low
+    plane: y
+    at: 22.0
+    normal: +
+    area: 73.65
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -2.0
+    - 9.275
+  - name: sd_card_slot_jamb_high
+    plane: y
+    at: 34.0
+    normal: '-'
+    area: 73.65
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: one
+    center:
+    - -2.0
+    - 9.275
+  cylinders:
+  - name: standoff_1_boss
+    point:
+    - 3.5
+    - 3.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 6.2
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: Stated/user-intent boss diameter; extent -standoffHeight..0. Its length may change in the standoffHeight
+      edit.
+    t_range:
+    - -5.0
+    - 0
+  - name: standoff_1_pilot
+    point:
+    - 3.5
+    - 3.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 2.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: 'Source requirement 2 and user intent: diameter 2.5, axis at the listed mounting center, blind
+      from z=0 to -5.'
+    t_range:
+    - -5.0
+    - 0
+  - name: standoff_2_boss
+    point:
+    - 61.5
+    - 3.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 6.2
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: Stated/user-intent boss diameter; extent -standoffHeight..0. Its length may change in the standoffHeight
+      edit.
+    t_range:
+    - -5.0
+    - 0
+  - name: standoff_2_pilot
+    point:
+    - 61.5
+    - 3.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 2.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: 'Source requirement 2 and user intent: diameter 2.5, axis at the listed mounting center, blind
+      from z=0 to -5.'
+    t_range:
+    - -5.0
+    - 0
+  - name: standoff_3_boss
+    point:
+    - 3.5
+    - 52.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 6.2
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: Stated/user-intent boss diameter; extent -standoffHeight..0. Its length may change in the standoffHeight
+      edit.
+    t_range:
+    - -5.0
+    - 0
+  - name: standoff_3_pilot
+    point:
+    - 3.5
+    - 52.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 2.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: 'Source requirement 2 and user intent: diameter 2.5, axis at the listed mounting center, blind
+      from z=0 to -5.'
+    t_range:
+    - -5.0
+    - 0
+  - name: standoff_4_boss
+    point:
+    - 61.5
+    - 52.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: pin
+    diameter: 6.2
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: Stated/user-intent boss diameter; extent -standoffHeight..0. Its length may change in the standoffHeight
+      edit.
+    t_range:
+    - -5.0
+    - 0
+  - name: standoff_4_pilot
+    point:
+    - 61.5
+    - 52.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 2.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: 'Source requirement 2 and user intent: diameter 2.5, axis at the listed mounting center, blind
+      from z=0 to -5.'
+    t_range:
+    - -5.0
+    - 0
+  - name: corner_1_pilot
+    point:
+    - -4.5
+    - -4.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 2.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: 5 mm blind pilot descending from moving base rim; no absolute axial t_range, so headroom may translate
+      the hole without moving its axis or changing engagement.
+  - name: corner_1_lid_hole
+    point:
+    - -4.5
+    - -4.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 3
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 4.0
+    length_tolerance: 0.05
+    description: 3 mm through hole in 4 mm lid, coaxial with the corresponding corner-post pilot; no t_range because
+      lid moves with headroom.
+  - name: corner_2_pilot
+    point:
+    - 89.5
+    - -4.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 2.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: 5 mm blind pilot descending from moving base rim; no absolute axial t_range, so headroom may translate
+      the hole without moving its axis or changing engagement.
+  - name: corner_2_lid_hole
+    point:
+    - 89.5
+    - -4.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 3
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 4.0
+    length_tolerance: 0.05
+    description: 3 mm through hole in 4 mm lid, coaxial with the corresponding corner-post pilot; no t_range because
+      lid moves with headroom.
+  - name: corner_3_pilot
+    point:
+    - -4.5
+    - 60.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 2.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: 5 mm blind pilot descending from moving base rim; no absolute axial t_range, so headroom may translate
+      the hole without moving its axis or changing engagement.
+  - name: corner_3_lid_hole
+    point:
+    - -4.5
+    - 60.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 3
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 4.0
+    length_tolerance: 0.05
+    description: 3 mm through hole in 4 mm lid, coaxial with the corresponding corner-post pilot; no t_range because
+      lid moves with headroom.
+  - name: corner_4_pilot
+    point:
+    - 89.5
+    - 60.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 2.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 5.0
+    length_tolerance: 0.05
+    description: 5 mm blind pilot descending from moving base rim; no absolute axial t_range, so headroom may translate
+      the hole without moving its axis or changing engagement.
+  - name: corner_4_lid_hole
+    point:
+    - 89.5
+    - 60.5
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 3
+    radius_tolerance: 0.025
+    axis_tolerance: 0.05
+    length: 4.0
+    length_tolerance: 0.05
+    description: 3 mm through hole in 4 mm lid, coaxial with the corresponding corner-post pilot; no t_range because
+      lid moves with headroom.
+  planes: []
+  dimensions:
+  - name: overall_x
+    axis: x
+    expected: 102.0
+    tolerance: 0.1
+    description: boardLength+2*(edgeClearance+cornerPostWidth).
+  - name: overall_y
+    axis: y
+    expected: 73.0
+    tolerance: 0.1
+    description: boardWidth+2*(edgeClearance+cornerPostWidth).
+  - name: overall_z
+    axis: z
+    expected: 33.6
+    tolerance: 0.1
+    description: pcbThickness+headroom+lidThickness+standoffHeight+wallThickness; includes both parts.
+  - name: floor_thickness
+    axis: z
+    expected: 3.0
+    tolerance: 0.05
+    description: wallThickness; source requirement >=2 mm.
+    between:
+    - floor_exterior
+    - floor_interior
+  - name: lid_thickness
+    axis: z
+    expected: 4.0
+    tolerance: 0.05
+    description: lidThickness; source requirement >=2 mm.
+    between:
+    - lid_underside
+    - lid_exterior
+  - name: rim_lid_gap
+    axis: z
+    expected: 0.05
+    tolerance: 0.01
+    description: closureGap=0.05; requirements also independently cap closest base/lid separation at 0.1 mm.
+    between:
+    - base_rim
+    - lid_underside
+  - name: standoff_1_pilot_depth
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: pilotDepth=5, meeting source >=5; both named face positions are fixed.
+    between:
+    - standoff_1_seat
+    - standoff_1_pilot_bottom
+  - name: standoff_1_height
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: standoffHeight; seat remains z=0 when floor moves.
+    between:
+    - floor_interior
+    - standoff_1_seat
+  - name: standoff_2_pilot_depth
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: pilotDepth=5, meeting source >=5; both named face positions are fixed.
+    between:
+    - standoff_2_seat
+    - standoff_2_pilot_bottom
+  - name: standoff_2_height
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: standoffHeight; seat remains z=0 when floor moves.
+    between:
+    - floor_interior
+    - standoff_2_seat
+  - name: standoff_3_pilot_depth
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: pilotDepth=5, meeting source >=5; both named face positions are fixed.
+    between:
+    - standoff_3_seat
+    - standoff_3_pilot_bottom
+  - name: standoff_3_height
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: standoffHeight; seat remains z=0 when floor moves.
+    between:
+    - floor_interior
+    - standoff_3_seat
+  - name: standoff_4_pilot_depth
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: pilotDepth=5, meeting source >=5; both named face positions are fixed.
+    between:
+    - standoff_4_seat
+    - standoff_4_pilot_bottom
+  - name: standoff_4_height
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: standoffHeight; seat remains z=0 when floor moves.
+    between:
+    - floor_interior
+    - standoff_4_seat
+  - name: corner_1_pilot_depth
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: pilotDepth=5; separation is invariant when both elevations move with headroom.
+    between:
+    - corner_1_pilot_bottom
+    - base_rim
+  - name: corner_2_pilot_depth
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: pilotDepth=5; separation is invariant when both elevations move with headroom.
+    between:
+    - corner_2_pilot_bottom
+    - base_rim
+  - name: corner_3_pilot_depth
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: pilotDepth=5; separation is invariant when both elevations move with headroom.
+    between:
+    - corner_3_pilot_bottom
+    - base_rim
+  - name: corner_4_pilot_depth
+    axis: z
+    expected: 5.0
+    tolerance: 0.05
+    description: pilotDepth=5; separation is invariant when both elevations move with headroom.
+    between:
+    - corner_4_pilot_bottom
+    - base_rim
+  - name: usb_c_plug_width
+    axis: x
+    expected: 13.0
+    tolerance: 0.05
+    description: Exact transverse extent of the corresponding source plug box; no extra lateral plug allowance is
+      assumed.
+    between:
+    - usb_c_plug_jamb_low
+    - usb_c_plug_jamb_high
+  - name: hdmi0_plug_width
+    axis: x
+    expected: 12.0
+    tolerance: 0.05
+    description: Exact transverse extent of the corresponding source plug box; no extra lateral plug allowance is
+      assumed.
+    between:
+    - hdmi0_plug_jamb_low
+    - hdmi0_plug_jamb_high
+  - name: hdmi1_plug_width
+    axis: x
+    expected: 12.0
+    tolerance: 0.05
+    description: Exact transverse extent of the corresponding source plug box; no extra lateral plug allowance is
+      assumed.
+    between:
+    - hdmi1_plug_jamb_low
+    - hdmi1_plug_jamb_high
+  - name: usb_a_upper_plug_width
+    axis: y
+    expected: 15.0
+    tolerance: 0.05
+    description: Exact transverse extent of the corresponding source plug box; no extra lateral plug allowance is
+      assumed.
+    between:
+    - usb_a_upper_plug_jamb_low
+    - usb_a_upper_plug_jamb_high
+  - name: usb_a_lower_plug_width
+    axis: y
+    expected: 15.0
+    tolerance: 0.05
+    description: Exact transverse extent of the corresponding source plug box; no extra lateral plug allowance is
+      assumed.
+    between:
+    - usb_a_lower_plug_jamb_low
+    - usb_a_lower_plug_jamb_high
+  - name: rj45_plug_width
+    axis: y
+    expected: 17.0
+    tolerance: 0.05
+    description: Exact transverse extent of the corresponding source plug box; no extra lateral plug allowance is
+      assumed.
+    between:
+    - rj45_plug_jamb_low
+    - rj45_plug_jamb_high
+  - name: sd_card_slot_width
+    axis: y
+    expected: 12.0
+    tolerance: 0.05
+    description: Exact transverse extent of the corresponding source plug box; no extra lateral plug allowance is
+      assumed.
+    between:
+    - sd_card_slot_jamb_low
+    - sd_card_slot_jamb_high
+  solids:
+  - name: base
+    contains_point:
+    - 42.5
+    - 28
+    - -6
+    volume:
+      expected: 42120.965
+      tolerance_rel: 0.005
+      provenance: measured (reference model)
+      note: ECR-2 reference geometry
+    description: Exact source-contained point; connected shell, floor, standoffs and square corner posts.
+  - name: lid
+    contains_point:
+    - 42.5
+    - 28
+    - 24.6
+    volume:
+      expected: 23264.503
+      tolerance_rel: 0.005
+      provenance: measured (reference model)
+      note: ECR-2 reference geometry
+    description: Exact source-contained point; separate flat cover with four through holes.
+  hardware:
+  - name: pcb_slab
+    kind: box
+    min:
+    - 0
+    - 0
+    - 0
+    max:
+    - 85
+    - 56
+    - 1.6
+    description: Source requirement 3 PCB slab, copied exactly; not exported as a body.
+  - name: bottom_components
+    kind: box
+    min:
+    - 0
+    - 0
+    - -3.0
+    max:
+    - 85
+    - 56
+    - 0
+    exclude_cylinders:
+    - point:
+      - 3.5
+      - 3.5
+      - -3
+      direction:
+      - 0
+      - 0
+      - 1
+      radius: 3.1
+      length: 3
+    - point:
+      - 61.5
+      - 3.5
+      - -3
+      direction:
+      - 0
+      - 0
+      - 1
+      radius: 3.1
+      length: 3
+    - point:
+      - 3.5
+      - 52.5
+      - -3
+      direction:
+      - 0
+      - 0
+      - 1
+      radius: 3.1
+      length: 3
+    - point:
+      - 61.5
+      - 52.5
+      - -3
+      direction:
+      - 0
+      - 0
+      - 1
+      radius: 3.1
+      length: 3
+    description: Source lower keep-out minus four component-free cylinders, radius 3.1, on the mounting axes. Cylinder
+      exclusions apply only to this bottom keep-out.
+  - name: top_components
+    kind: box
+    min:
+    - 0
+    - 0
+    - 1.6
+    max:
+    - 85
+    - 56
+    - 21.6
+    description: Source top envelope; checked at nominal headroom 20 only.
+  - name: board_edge_clearance
+    kind: box
+    min:
+    - -0.5
+    - -0.5
+    - 0
+    max:
+    - 85.5
+    - 56.5
+    - 21.6
+    description: Derived rectangular lateral expansion by edgeClearance, up to the nominal roof. This checks edge
+      clearance without incorrectly demanding a 0.5 mm gap from the standoffs that contact the PCB bottom.
+  - name: usb_c_plug
+    kind: box
+    min:
+    - 4.699999999999999
+    - -25.0
+    - 1.6
+    max:
+    - 17.7
+    - 0.0
+    - 8.6
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear
+      it.
+  - name: hdmi0_plug
+    kind: box
+    min:
+    - 19.8
+    - -25.0
+    - 1.6
+    max:
+    - 31.8
+    - 0.0
+    - 8.1
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear
+      it.
+  - name: hdmi1_plug
+    kind: box
+    min:
+    - 33.2
+    - -25.0
+    - 1.6
+    max:
+    - 45.2
+    - 0.0
+    - 8.1
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear
+      it.
+  - name: usb_a_upper_plug
+    kind: box
+    min:
+    - 85.0
+    - 39.5
+    - 1.6
+    max:
+    - 110.0
+    - 54.5
+    - 18.6
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear
+      it.
+  - name: usb_a_lower_plug
+    kind: box
+    min:
+    - 85.0
+    - 21.6
+    - 1.6
+    max:
+    - 110.0
+    - 36.6
+    - 18.6
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear
+      it.
+  - name: rj45_plug
+    kind: box
+    min:
+    - 85.0
+    - 1.6999999999999993
+    - 1.6
+    max:
+    - 110.0
+    - 18.7
+    - 16.6
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear
+      it.
+  - name: sd_card_slot
+    kind: box
+    min:
+    - -25.0
+    - 22.0
+    - -3.0
+    max:
+    - 0.0
+    - 34.0
+    - 0.0
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear
+      it.
+  clearances:
+  - name: clear_pcb_slab
+    a: all
+    b: pcb_slab
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Box contact at a datum boundary is permitted; positive-volume penetration
+      is not.
+  - name: clear_bottom_components
+    a: all
+    b: bottom_components
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Box contact at a datum boundary is permitted; positive-volume penetration
+      is not.
+  - name: clear_top_components
+    a: all
+    b: top_components
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Box contact at a datum boundary is permitted; positive-volume penetration
+      is not.
+  - name: clear_board_edge_clearance
+    a: all
+    b: board_edge_clearance
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Expanded footprint encodes the stated 0.5 mm edge clearance.
+  - name: clear_usb_c_plug
+    a: all
+    b: usb_c_plug
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Box contact at a datum boundary is permitted; positive-volume penetration
+      is not.
+  - name: clear_hdmi0_plug
+    a: all
+    b: hdmi0_plug
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Box contact at a datum boundary is permitted; positive-volume penetration
+      is not.
+  - name: clear_hdmi1_plug
+    a: all
+    b: hdmi1_plug
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Box contact at a datum boundary is permitted; positive-volume penetration
+      is not.
+  - name: clear_usb_a_upper_plug
+    a: all
+    b: usb_a_upper_plug
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Box contact at a datum boundary is permitted; positive-volume penetration
+      is not.
+  - name: clear_usb_a_lower_plug
+    a: all
+    b: usb_a_lower_plug
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Box contact at a datum boundary is permitted; positive-volume penetration
+      is not.
+  - name: clear_rj45_plug
+    a: all
+    b: rj45_plug
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Box contact at a datum boundary is permitted; positive-volume penetration
+      is not.
+  - name: clear_sd_card_slot
+    a: all
+    b: sd_card_slot
+    min_gap: 0
+    interference_tolerance: 0.0001
+    description: Zero material interference. Box contact at a datum boundary is permitted; positive-volume penetration
+      is not.
+  - name: lid_closure
+    a: base
+    b: lid
+    min_gap: 0
+    max_gap: 0.1
+    interference_tolerance: 0.0001
+    description: 'Source requirement 5: zero interference and closest gap <=0.1 mm; design gap 0.05 mm keeps the
+      solids separate.'
+  passages: []
+  thickness:
+  - name: shell_wall_floor_lid_p05
+    min: 3.0
+    stat: p05
+    samples: 6000
+    description: 'Verbatim requirement 7: minimum wall/floor thickness 2.0 mm using the fifth percentile of inward
+      STL ray casts. Include shell, floor, lid and opening edges; do not substitute a global minimum. The four 6.2/2.5
+      standoff annuli are the accepted 1.85 mm exception.'
+  probes:
+  - name: required_body_points
+    state: solid
+    points:
+    - - 42.5
+      - 28
+      - -6
+    - - 42.5
+      - 28
+      - 24.6
+    description: Exact two source selectors, also independently assigned to named acceptance solids.
+  - name: board_and_component_void
+    state: void
+    points:
+    - - 42.5
+      - 28
+      - 0.8
+    - - 42.5
+      - 28
+      - -1.5
+    - - 42.5
+      - 28
+      - 10
+    description: Interior probes well clear of inferred walls; hardware clearances check the complete volumes.
+  - name: plug_paths_void
+    state: void
+    points:
+    - *id001
+    - *id002
+    - *id003
+    - *id004
+    - *id005
+    - *id006
+    - *id007
+    description: One point in each wall opening, at the middle of the specified plug height and the middle of wall
+      thickness.
+  - name: standoff_material
+    state: solid
+    points:
+    - - 5.675
+      - 3.5
+      - -2.5
+    - - 63.675
+      - 3.5
+      - -2.5
+    - - 5.675
+      - 52.5
+      - -2.5
+    - - 63.675
+      - 52.5
+      - -2.5
+    description: 'Mid-annulus radial probes: (3.1+1.25)/2=2.175; 0.925 mm from both radial surfaces.'
+  - name: standoff_pilots_void
+    state: void
+    points:
+    - - 3.5
+      - 3.5
+      - -2.5
+    - - 61.5
+      - 3.5
+      - -2.5
+    - - 3.5
+      - 52.5
+      - -2.5
+    - - 61.5
+      - 52.5
+      - -2.5
+    description: Mid-depth points on all four 2.5 mm pilot axes.
+  - name: corner_pilots_void
+    state: void
+    points:
+    - - -4.5
+      - -4.5
+      - 19.05
+    - - 89.5
+      - -4.5
+      - 19.05
+    - - -4.5
+      - 60.5
+      - 19.05
+    - - 89.5
+      - 60.5
+      - 19.05
+    description: Nominal mid-depth points on all four corner-post pilot axes.
+  - name: lid_holes_void
+    state: void
+    points:
+    - - -4.5
+      - -4.5
+      - 23.6
+    - - 89.5
+      - -4.5
+      - 23.6
+    - - -4.5
+      - 60.5
+      - 23.6
+    - - 89.5
+      - 60.5
+      - 23.6
+    description: Nominal mid-thickness points on all four lid clearance axes.
+  - name: shell_material
+    state: solid
+    points:
+    - - 50
+      - -1.7
+      - 10
+    - - 42.5
+      - 57.7
+      - 10
+    description: Uninterrupted front/back walls; each probe is 1.2 mm from either side, greater than wallThickness
+      tolerance 0.2 mm.
+  cylinder_counts:
+  - name: standoff_boss_count
+    diameter: 6.2
+    radius_tolerance: 0.025
+    kind: pin
+    direction:
+    - 0
+    - 0
+    - 1
+    expected: 4
+    description: Only four circular bosses are modeled; corner posts are square.
+  - name: pilot_count
+    diameter: 2.5
+    radius_tolerance: 0.025
+    kind: hole
+    direction:
+    - 0
+    - 0
+    - 1
+    expected: 8
+    description: Four board standoff pilots plus four corner-post pilots.
+  - name: lid_clearance_count
+    diameter: 3
+    radius_tolerance: 0.025
+    kind: hole
+    direction:
+    - 0
+    - 0
+    - 1
+    expected: 4
+    description: Four through holes in the separate lid.
+  gears: []
+  meshes: []
+  deviation: null
+  blockout:
+    volume_min: 235000
+    volume_max: 275000
+  export_volume_tolerance_rel: 0.002
+references:
+- path: sources/rpi5-enclosure-requirements.md
+  kind: text
+  role: authoritative
+  sha256: 72e326f321f0ffa4158fc6d56004c15d300f2feaf60b46eae2e5a0fe399fa9fe
+  units: mm
+  revision: Provided requirements; no revision/date stated
+  note: Primary design authority, including exact keep-outs and plug boxes. User intent chooses exact 6.2 mm bosses
+    and 3 mm lid holes within its bounds.
+- path: sources/rpi5-drawing-01.png
+  kind: drawing
+  role: authoritative
+  sha256: 09a70271b05c4422065de1e566a25ea231fbc835438e1f59d5b5e036148cc7e3
+  units: mm
+  revision: RP-008347-DS-1 identifier per requirements; no separate revision shown
+  note: Authoritative board-interface drawing; explicitly approximate. Native raster is 2573 x 1819 px. Read board
+    and connector dimensions; do not infer enclosure geometry from it.
+open_questions:
+- 'Q1: Are the inferred 2.4 mm walls/floor, 5 mm standoff height, 4 mm lid, and 8 mm square external corner posts
+  acceptable? They select a concrete 102 x 73 x 33 mm enclosure; no external size or corner-post coordinates are
+  specified by the sources.'
+- 'Q2: Are open-top cable notches, closed above by the removable lid, and a nominal 0.05 mm rim gap acceptable?
+  The sources specify plug clearance and a maximum closure gap, but do not specify closed-window styling, a locating
+  lip, sealing, or ingress protection.'
+- 'Q3: What cable-plug and board manufacturing allowances should be added after physical fit inspection? The supplied
+  drawing explicitly calls its dimensions approximate; the contract preserves the supplied plug boxes and adds no
+  unrequested plug margin.'
+- 'Q4: Which FFF polymer, nozzle/layer settings, screw specification and screw lengths will be used? Material/density
+  and printer compensation are unspecified; the required 2.5 mm pilots, 3 mm lid holes and support-free geometry
+  still need print and assembly confirmation.'

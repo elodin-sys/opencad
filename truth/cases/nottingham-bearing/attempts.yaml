@@ -1,0 +1,45 @@
+attempts:
+- started: '2026-09-25T09:01:14Z'
+  arm: paper-text
+  design: nottingham-bearing
+  backend: build123d
+  kind: machine
+  mode: reconstruction
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/nottingham-bearing
+  stage_reached: scored
+  pipeline:
+    code: 0
+    gates:
+      pass: 11
+      fail: 0
+    failed: []
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 2
+      required_total: 2
+      optional_pass: 0
+      optional_total: 0
+      performance_pass: 5
+      performance_scored: 21
+      performance_total: 21
+    accuracy_score: 100.0
+    failed:
+    - p20c_n3000w10
+    - p20s_n3000w10
+    - p45c_n3000w10
+    - p20c_n3000w15
+    - hmin_n1000w10
+    - hminAngle_n1000w10
+    - hmin_n3000w10
+    - hminAngle_n3000w10
+    - hmin_n4000w10
+    - hmin_n3000w15
+    - hminAngle_n3000w15
+    - hmin_n2000w15
+    - hminAngle_n2000w15
+    - hmin_n4000w20
+    - tRatio_n3000w10
+    - tRatio_n4000w10
+  seconds: 45
+  finished: '2026-09-25T09:01:58Z'

@@ -1,0 +1,1557 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/rpi5-enclosure/contract.yaml: 29 parameters {'stated': 24, 'inferred': 5}; sources unresolved {}; unanchored 0",
+        "open questions: 4 (blocking []); interfaces 17, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 24,
+          "inferred": 5
+        },
+        "soft_values": 5,
+        "open_questions": [
+          "Q1: Are the inferred 2.4 mm walls/floor, 5 mm standoff height, 4 mm lid, and 8 mm square external corner posts acceptable? They select a concrete 102 x 73 x 33 mm enclosure; no external size or corner-post coordinates are specified by the sources.",
+          "Q2: Are open-top cable notches, closed above by the removable lid, and a nominal 0.05 mm rim gap acceptable? The sources specify plug clearance and a maximum closure gap, but do not specify closed-window styling, a locating lip, sealing, or ingress protection.",
+          "Q3: What cable-plug and board manufacturing allowances should be added after physical fit inspection? The supplied drawing explicitly calls its dimensions approximate; the contract preserves the supplied plug boxes and adds no unrequested plug margin.",
+          "Q4: Which FFF polymer, nozzle/layer settings, screw specification and screw lengths will be used? Material/density and printer compensation are unspecified; the required 2.5 mm pilots, 3 mm lid holes and support-free geometry still need print and assembly confirmation."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "standoff_1_seat",
+          "standoff_1_pilot",
+          "standoff_2_seat",
+          "standoff_2_pilot",
+          "standoff_3_seat",
+          "standoff_3_pilot",
+          "standoff_4_seat",
+          "standoff_4_pilot",
+          "corner_1_pilot",
+          "corner_1_lid_hole",
+          "corner_2_pilot",
+          "corner_2_lid_hole",
+          "corner_3_pilot",
+          "corner_3_lid_hole",
+          "corner_4_pilot",
+          "corner_4_lid_hole",
+          "usb_c_plug_sill",
+          "usb_c_plug_width",
+          "hdmi0_plug_sill",
+          "hdmi0_plug_width",
+          "hdmi1_plug_sill",
+          "hdmi1_plug_width",
+          "usb_a_upper_plug_sill",
+          "usb_a_upper_plug_width",
+          "usb_a_lower_plug_sill",
+          "usb_a_lower_plug_width",
+          "rj45_plug_sill",
+          "rj45_plug_width",
+          "sd_card_slot_sill",
+          "sd_card_slot_width"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/rpi5-enclosure/inspect.json bbox.max_error = 0.0 (tol 0.1)",
+        "results/rpi5-enclosure/verify.json engine bbox.max_error = 0.02"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -8.5,
+            -8.5,
+            -7.4
+          ],
+          "expected_max": [
+            93.5,
+            64.5,
+            25.6
+          ],
+          "measured_min": [
+            -8.5,
+            -8.5,
+            -7.4
+          ],
+          "measured_max": [
+            93.5,
+            64.5,
+            25.6
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.1,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -8.5,
+            -8.5,
+            -7.4
+          ],
+          "expected_max": [
+            93.5,
+            64.5,
+            25.6
+          ],
+          "measured_min": [
+            -8.5,
+            -8.5,
+            -7.4
+          ],
+          "measured_max": [
+            93.5,
+            64.5,
+            25.62
+          ],
+          "max_error": 0.02,
+          "tolerance": 0.1,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/rpi5-enclosure/inspect.json volume = 57990.2872 vs 57990.28723164135",
+        "results/rpi5-enclosure/inspect.json surface_area = 41529.1245 vs 41529.124534011804",
+        "results/rpi5-enclosure/inspect.json center_of_mass = [41.7706, 28.9082, 10.5686] vs [41.77060948660255, 28.908221057599153, 10.568635377038204]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 57990.28723164135,
+          "measured": 57990.2872,
+          "error": 0.0,
+          "band": 289.9514,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 41529.124534011804,
+          "measured": 41529.1245,
+          "error": 0.0,
+          "band": 415.2912,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            41.77060948660255,
+            28.908221057599153,
+            10.568635377038204
+          ],
+          "measured": [
+            41.7706,
+            28.9082,
+            10.5686
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.2,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall and gear check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/rpi5-enclosure/inspect.json features: 15/15 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "cylinders": {
+          "standoff_1_boss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "standoff_1_pilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "standoff_2_boss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "standoff_2_pilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "standoff_3_boss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "standoff_3_pilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "standoff_4_boss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "standoff_4_pilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner_1_pilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner_1_lid_hole": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner_2_pilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner_2_lid_hole": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner_3_pilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner_3_lid_hole": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner_4_pilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "corner_4_lid_hole": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "standoff_1_seat": {
+            "ok": true,
+            "kind": "face"
+          },
+          "standoff_1_pilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "standoff_2_seat": {
+            "ok": true,
+            "kind": "face"
+          },
+          "standoff_2_pilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "standoff_3_seat": {
+            "ok": true,
+            "kind": "face"
+          },
+          "standoff_3_pilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "standoff_4_seat": {
+            "ok": true,
+            "kind": "face"
+          },
+          "standoff_4_pilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "corner_1_pilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "corner_1_lid_hole": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "corner_2_pilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "corner_2_lid_hole": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "corner_3_pilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "corner_3_lid_hole": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "corner_4_pilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "corner_4_lid_hole": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "usb_c_plug_sill": {
+            "ok": true,
+            "kind": "face"
+          },
+          "usb_c_plug_width": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "hdmi0_plug_sill": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hdmi0_plug_width": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "hdmi1_plug_sill": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hdmi1_plug_width": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "usb_a_upper_plug_sill": {
+            "ok": true,
+            "kind": "face"
+          },
+          "usb_a_upper_plug_width": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "usb_a_lower_plug_sill": {
+            "ok": true,
+            "kind": "face"
+          },
+          "usb_a_lower_plug_width": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "rj45_plug_sill": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rj45_plug_width": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "sd_card_slot_sill": {
+            "ok": true,
+            "kind": "face"
+          },
+          "sd_card_slot_width": {
+            "ok": true,
+            "kind": "dimension"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/rpi5-enclosure/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/rpi5-enclosure/inspect.json agreement kcl=57988.37873147167 step=57990.28723147682 stl=57988.38156452513 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 57988.37873147167,
+        "step": 57990.28723147682,
+        "stl": 57988.38156452513,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "kcl_vs_step_rel": 3.291068377590626e-05,
+        "stl_vs_step_rel": 3.286182984540108e-05,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/rpi5-enclosure/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 10/10 values; infeasible refused 1/1; interfaces pinned 30"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "headroom",
+            "delta": 5.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 3560.0,
+                "measured": 3559.9999999999927,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  5.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  5.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 2,
+                "measured": 2,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 8,
+                "driven": [
+                  "base_rim",
+                  "corner_1_lid_hole",
+                  "corner_1_pilot",
+                  "corner_1_pilot_depth",
+                  "corner_2_lid_hole",
+                  "corner_2_pilot",
+                  "corner_2_pilot_depth",
+                  "corner_3_lid_hole",
+                  "corner_3_pilot",
+                  "corner_3_pilot_depth",
+                  "corner_4_lid_hole",
+                  "corner_4_pilot",
+                  "corner_4_pilot_depth",
+                  "floor_exterior",
+                  "floor_interior",
+                  "floor_section",
+                  "floor_thickness",
+                  "hdmi0_plug_sill",
+                  "hdmi0_plug_width",
+                  "hdmi1_plug_sill",
+                  "hdmi1_plug_width",
+                  "lid_exterior",
+                  "lid_section",
+                  "lid_thickness",
+                  "lid_underside",
+                  "pcb_level_section",
+                  "rim_lid_gap",
+                  "rj45_plug_sill",
+                  "rj45_plug_width",
+                  "sd_card_slot_sill",
+                  "sd_card_slot_width",
+                  "usb_a_lower_plug_sill",
+                  "usb_a_lower_plug_width",
+                  "usb_a_upper_plug_sill",
+                  "usb_a_upper_plug_width",
+                  "usb_c_plug_sill",
+                  "usb_c_plug_width"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 15.0,
+                  "volume": 54256.287231491704,
+                  "bbox_size": [
+                    102.0,
+                    73.0,
+                    28.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 2,
+                      "measured": 2,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -5.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        -5.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -3733.9999999851134,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 17.22222222222222,
+                  "volume": 56012.49363147684,
+                  "bbox_size": [
+                    102.0,
+                    73.0,
+                    30.2222
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 2,
+                      "measured": 2,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -2.7777777777777786
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        -2.777799999999999
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -1977.7935999999754,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 19.444444444444443,
+                  "volume": 57594.700031476794,
+                  "bbox_size": [
+                    102.0,
+                    73.0,
+                    32.4444
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 2,
+                      "measured": 2,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -0.5555555555555571
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        -0.5555999999999983
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -395.5872000000236,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 21.666666666666668,
+                  "volume": 59176.97763147687,
+                  "bbox_size": [
+                    102.0,
+                    73.0,
+                    34.6667
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 2,
+                      "measured": 2,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        1.6666666666666679
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        1.6666999999999987
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 1186.6904000000504,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 23.88888888888889,
+                  "volume": 60759.18403147678,
+                  "bbox_size": [
+                    102.0,
+                    73.0,
+                    36.8889
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 2,
+                      "measured": 2,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        3.8888888888888893
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        3.8888999999999996
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 2768.896799999966,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 26.11111111111111,
+                  "volume": 62341.390431476786,
+                  "bbox_size": [
+                    102.0,
+                    73.0,
+                    39.1111
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 2,
+                      "measured": 2,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        6.111111111111111
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        6.1111
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 4351.103199999969,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 28.333333333333336,
+                  "volume": 63923.596831476796,
+                  "bbox_size": [
+                    102.0,
+                    73.0,
+                    41.3333
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 2,
+                      "measured": 2,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        8.333333333333336
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        8.333300000000001
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 5933.309599999979,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 30.555555555555557,
+                  "volume": 65505.87443147676,
+                  "bbox_size": [
+                    102.0,
+                    73.0,
+                    43.5556
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 2,
+                      "measured": 2,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        10.555555555555557
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        10.555599999999998
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 7515.587199999944,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 32.77777777777778,
+                  "volume": 67088.08083147666,
+                  "bbox_size": [
+                    102.0,
+                    73.0,
+                    45.77779999999999
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 2,
+                      "measured": 2,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        12.777777777777779
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        12.777799999999992
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 9097.793599999844,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 35.0,
+                  "volume": 68670.2872314768,
+                  "bbox_size": [
+                    102.0,
+                    73.0,
+                    47.99999999999999
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 2,
+                      "measured": 2,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        15.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        14.999999999999993
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 10679.999999999985,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 10,
+              "passed": 10,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -21.0,
+                  "value": -1.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: zoo kcl export step failed (1):\nKCL execution failed: type: assert failed: Expected -1 to be greater than 0 but it wasn't: headroom must be positive"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "standoffHeight",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 1063.1628216039912,
+                "measured": 1063.162821552818,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 2,
+                "measured": 2,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 30,
+                "driven": [
+                  "floor_exterior",
+                  "floor_interior",
+                  "floor_section",
+                  "floor_thickness",
+                  "pcb_level_section",
+                  "standoff_1_boss",
+                  "standoff_2_boss",
+                  "standoff_3_boss",
+                  "standoff_4_boss",
+                  "standoff_section"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "175041e24060ec0f95787a54e8e6fb54e8c9d55f5babb554fe602880419362f9",
+          "re_export_sha256": "175041e24060ec0f95787a54e8e6fb54e8c9d55f5babb554fe602880419362f9",
+          "ok": true
+        },
+        "sweep": {
+          "values": 10,
+          "passed": 10
+        },
+        "infeasible": {
+          "declared": 1,
+          "refused": 1
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/rpi5-enclosure/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=63",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 63,
+          "sketch_blocks": 3,
+          "feature_ops": 11,
+          "parameters": {
+            "boardLength": {
+              "found": true,
+              "value": 85.0,
+              "unit": "mm",
+              "expected": 85.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "boardWidth": {
+              "found": true,
+              "value": 56.0,
+              "unit": "mm",
+              "expected": 56.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pcbThickness": {
+              "found": true,
+              "value": 1.6,
+              "unit": "mm",
+              "expected": 1.6,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "mountX": {
+              "found": true,
+              "value": 3.5,
+              "unit": "mm",
+              "expected": 3.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "mountY": {
+              "found": true,
+              "value": 3.5,
+              "unit": "mm",
+              "expected": 3.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "mountPitchX": {
+              "found": true,
+              "value": 58.0,
+              "unit": "mm",
+              "expected": 58.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "mountPitchY": {
+              "found": true,
+              "value": 49.0,
+              "unit": "mm",
+              "expected": 49.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "boardMountDiameter": {
+              "found": true,
+              "value": 2.7,
+              "unit": "mm",
+              "expected": 2.7,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "underBoardDepth": {
+              "found": true,
+              "value": 3.0,
+              "unit": "mm",
+              "expected": 3.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "componentFreeRadius": {
+              "found": true,
+              "value": 3.1,
+              "unit": "mm",
+              "expected": 3.1,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "edgeClearance": {
+              "found": true,
+              "value": 0.5,
+              "unit": "mm",
+              "expected": 0.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "headroom": {
+              "found": true,
+              "value": 20.0,
+              "unit": "mm",
+              "expected": 20.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "wallThickness": {
+              "found": true,
+              "value": 2.4,
+              "unit": "mm",
+              "expected": 2.4,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "standoffHeight": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "standoffDiameter": {
+              "found": true,
+              "value": 6.2,
+              "unit": "mm",
+              "expected": 6.2,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pilotDiameter": {
+              "found": true,
+              "value": 2.5,
+              "unit": "mm",
+              "expected": 2.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pilotDepth": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "lidHoleDiameter": {
+              "found": true,
+              "value": 3.0,
+              "unit": "mm",
+              "expected": 3.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "lidThickness": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cornerPostWidth": {
+              "found": true,
+              "value": 8.0,
+              "unit": "mm",
+              "expected": 8.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "closureGap": {
+              "found": true,
+              "value": 0.05,
+              "unit": "mm",
+              "expected": 0.05,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "usbCx": {
+              "found": true,
+              "value": 11.2,
+              "unit": "mm",
+              "expected": 11.2,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hdmi0X": {
+              "found": true,
+              "value": 25.8,
+              "unit": "mm",
+              "expected": 25.8,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "hdmi1X": {
+              "found": true,
+              "value": 39.2,
+              "unit": "mm",
+              "expected": 39.2,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "usbAUpperY": {
+              "found": true,
+              "value": 47.0,
+              "unit": "mm",
+              "expected": 47.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "usbALowerY": {
+              "found": true,
+              "value": 29.1,
+              "unit": "mm",
+              "expected": 29.1,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "rj45Y": {
+              "found": true,
+              "value": 10.2,
+              "unit": "mm",
+              "expected": 10.2,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "sdYMin": {
+              "found": true,
+              "value": 22.0,
+              "unit": "mm",
+              "expected": 22.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "sdYMax": {
+              "found": true,
+              "value": 34.0,
+              "unit": "mm",
+              "expected": 34.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 455,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/rpi5-enclosure/export.json step.deterministic = True sha256 175041e24060; stl=present; glb=present",
+        "results/rpi5-enclosure/inspect.json valid = True solids = 2 (expected 2)",
+        "results/rpi5-enclosure/inspect.json mesh watertight = True components = 2 void_shells = 0"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/rpi5-enclosure/export/rpi5-enclosure.step",
+            "sha256": "175041e24060ec0f95787a54e8e6fb54e8c9d55f5babb554fe602880419362f9",
+            "bytes": 170831,
+            "deterministic": true,
+            "second_sha256": "175041e24060ec0f95787a54e8e6fb54e8c9d55f5babb554fe602880419362f9"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/rpi5-enclosure/export/rpi5-enclosure.stl",
+            "sha256": "5bb0f00238eb6d4d88302f2186ba53bc9e02ad977a9355cb7d48f64b9fbc540d",
+            "bytes": 421841
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/rpi5-enclosure/export/rpi5-enclosure.glb",
+            "sha256": "f8087cea0c5478d0f3f718783f748fdf4fa3b2a7990d868cf35e184a1cdf584e",
+            "bytes": 310172
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 2,
+          "measured": 2,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 2406,
+          "vertices": 1199,
+          "watertight": true,
+          "winding_consistent": true,
+          "components": 2,
+          "void_shells": 0,
+          "solid_shells": 2,
+          "degenerate_faces": 0,
+          "volume": 57988.38156452513,
+          "surface_area": 41528.113570625865,
+          "bbox_min": [
+            -8.5,
+            -8.5,
+            -7.4
+          ],
+          "bbox_max": [
+            93.5,
+            64.5,
+            25.599998
+          ],
+          "center_of_mass": [
+            41.771144600412946,
+            28.90824804312911,
+            10.569618407758039
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0b32e-5a0f-7ab2-bd74-3e6f0c5c10e2; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 24; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 24,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/rpi5-enclosure/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = prototype; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "prototype",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/rpi5-enclosure/verify.json hygiene.forbidden_imports = [] sketch_blocks = 3 feature_ops = 11 lines = 455"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "sketch_blocks": 3,
+        "feature_ops": 11
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

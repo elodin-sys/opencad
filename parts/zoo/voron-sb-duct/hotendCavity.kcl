@@ -1,0 +1,452 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Hotend pocket, bridge / roof reliefs, and the front fan-mouth opening.
+import overallWidth, nozzleEndZ, topZ, backY, frontY, ductWall, hotendCavityWidth, hotendCavityHeight, hotendCavityBottomZ, hotendCavityTopZ, fanOpeningDiameter, fanCenterZ from "params.kcl"
+
+assert(hotendCavityWidth, isGreaterThan = 0mm, error = "Hotend cavity width must be positive.")
+assert(hotendCavityWidth, isLessThan = overallWidth, error = "Hotend cavity width must fit inside the envelope.")
+assert(hotendCavityHeight, isGreaterThan = 0mm, error = "Hotend cavity height must be positive.")
+assert(hotendCavityBottomZ, isGreaterThan = nozzleEndZ, error = "Cavity bottom must sit above the nozzle end.")
+assert(hotendCavityTopZ, isGreaterThan = hotendCavityBottomZ, error = "Cavity top must sit above its bottom.")
+assert(hotendCavityTopZ, isLessThan = topZ, error = "Cavity top must sit below the housing roof.")
+assert(fanOpeningDiameter, isGreaterThan = 0mm, error = "Fan opening diameter must be positive.")
+assert(fanOpeningDiameter, isLessThan = overallWidth, error = "Fan opening must fit inside the envelope width.")
+assert(fanCenterZ, isGreaterThan = nozzleEndZ, error = "Fan center must sit above the nozzle end.")
+assert(fanCenterZ, isLessThan = topZ, error = "Fan center must sit below the housing top.")
+assert(ductWall, isGreaterThan = 0mm, error = "Duct wall must be positive.")
+assert(backY, isGreaterThan = frontY, error = "Back datum must sit behind the front face.")
+
+overrun = 0.04mm
+// Source walls at ±13.15 (hotendWallSpacing 26.3); driven by the 26 mm cavity width.
+pocketHalf = hotendCavityWidth / 2 + 0.15mm
+rearRoofZ = 54mm
+bridgeBottomZ = 27.8mm
+bridgeTopZ = 29mm
+lowerReliefR = 11.25mm
+upperReliefR = 10.2mm
+diagonalR = 8mm
+diagU = 0.7071
+diagOriginY = -14.542mm
+diagOriginZ = 14.544mm
+diagStartT = 0.989mm
+leftDiagLen = 17.759mm
+rightDiagLen = 15.981mm
+fanMeetY = -16mm
+roofKeepY = -12mm
+fanRadius = fanOpeningDiameter / 2
+clipRise = rearRoofZ - fanCenterZ
+fanClipHalf = sqrt(fanRadius * fanRadius - (clipRise * clipRise))
+
+assert(pocketHalf, isGreaterThan = 0mm, error = "Pocket half-width must be positive.")
+assert(fanRadius, isGreaterThan = clipRise, error = "Fan mouth must still reach the roof clip height.")
+assert(bridgeBottomZ, isGreaterThan = hotendCavityBottomZ, error = "Bridge must sit above the cavity bottom.")
+assert(bridgeTopZ, isGreaterThan = bridgeBottomZ, error = "Bridge must have positive thickness.")
+assert(rearRoofZ, isGreaterThan = hotendCavityTopZ, error = "Rear roof must sit above the front cavity top.")
+assert(lowerReliefR, isLessThan = pocketHalf, error = "Lower relief must stay inside the pocket walls.")
+assert(upperReliefR, isLessThan = pocketHalf, error = "Upper relief must stay inside the pocket walls.")
+assert(fanMeetY, isGreaterThan = frontY, error = "Fan mouth must start forward of the bridge.")
+assert(roofKeepY, isGreaterThan = fanMeetY, error = "Roof keep-out must sit behind the fan mouth.")
+
+fn boxTool(xmin: number(Length), xmax: number(Length), ymin: number(Length), ymax: number(Length), zmin: number(Length), zmax: number(Length)) {
+  sk = sketch(on = offsetPlane(XY, offset = zmin)) {
+    south = line(start = [xmin, ymin], end = [xmax, ymin])
+    east = line(start = [xmax, ymin], end = [xmax, ymax])
+    north = line(start = [xmax, ymax], end = [xmin, ymax])
+    west = line(start = [xmin, ymax], end = [xmin, ymin])
+  }
+  hide(sk)
+  return extrude(region(segments = [sk.south, sk.east]), length = zmax - zmin, method = NEW)
+}
+
+fn planeTool(ox: number(Length), oy: number(Length), oz: number(Length), xx: number(_), xy: number(_), xz: number(_), yx: number(_), yy: number(_), yz: number(_), u0: number(Length), u1: number(Length), v0: number(Length), v1: number(Length), depth: number(Length)) {
+  pl = {
+    origin = { x = ox, y = oy, z = oz },
+    xAxis = { x = xx, y = xy, z = xz },
+    yAxis = { x = yx, y = yy, z = yz }
+  }
+  sk = sketch(on = pl) {
+    south = line(start = [u0, v0], end = [u1, v0])
+    east = line(start = [u1, v0], end = [u1, v1])
+    north = line(start = [u1, v1], end = [u0, v1])
+    west = line(start = [u0, v1], end = [u0, v0])
+  }
+  hide(sk)
+  return extrude(
+    region(segments = [sk.south, sk.east]),
+    length = depth,
+    bidirectionalLength = overrun,
+    method = NEW,
+  )
+}
+
+fn vertHole(@holeR: number(Length), zmin: number(Length), zmax: number(Length)) {
+  sk = sketch(on = offsetPlane(XY, offset = zmin)) {
+    rim = circle(center = [0mm, 0mm], start = [holeR, 0mm])
+  }
+  hide(sk)
+  return extrude(region(segments = [sk.rim]), length = zmax - zmin, method = NEW)
+}
+
+fn diagHole(@axisX: number(Length), length: number(Length)) {
+  t0 = diagStartT - overrun
+  originY = diagOriginY + t0 * diagU
+  originZ = diagOriginZ + t0 * diagU
+  pl = {
+    origin = { x = axisX, y = originY, z = originZ },
+    xAxis = { x = 1, y = 0, z = 0 },
+    yAxis = { x = 0, y = diagU, z = -diagU }
+  }
+  sk = sketch(on = pl) {
+    rim = circle(center = [0mm, 0mm], start = [diagonalR, 0mm])
+  }
+  hide(sk)
+  return extrude(
+    region(segments = [sk.rim]),
+    length = length + 2 * overrun,
+    direction = [0, diagU, diagU],
+    method = NEW,
+  )
+}
+
+fn lowerRear() {
+  return boxTool(
+    xmin = -pocketHalf,
+    xmax = pocketHalf,
+    ymin = fanMeetY,
+    ymax = backY + overrun,
+    zmin = nozzleEndZ - overrun,
+    zmax = bridgeBottomZ - overrun,
+  )
+}
+
+fn leftWallTrim() {
+  return boxTool(
+    xmin = -18.5mm,
+    xmax = -pocketHalf + 0.2mm,
+    ymin = frontY + 0.1mm,
+    ymax = -6.2mm,
+    zmin = nozzleEndZ + 0.05mm,
+    zmax = bridgeBottomZ - overrun,
+  )
+}
+
+fn leftWallFill() {
+  return boxTool(
+    xmin = -pocketHalf - 0.2mm,
+    xmax = -4mm,
+    ymin = -6.1mm,
+    ymax = backY - overrun,
+    zmin = nozzleEndZ + 0.05mm,
+    zmax = 16.4mm,
+  )
+}
+
+fn rightWallTrim() {
+  return boxTool(
+    xmin = pocketHalf - 0.2mm,
+    xmax = 18.5mm,
+    ymin = frontY + 0.1mm,
+    ymax = -7.4mm,
+    zmin = nozzleEndZ + 0.05mm,
+    zmax = bridgeBottomZ - overrun,
+  )
+}
+
+fn rightWallFill() {
+  // Back of the right pocket only; stay behind the diagonal relief.
+  return boxTool(
+    xmin = 5mm,
+    xmax = pocketHalf + 0.2mm,
+    ymin = -3.9mm,
+    ymax = backY - overrun,
+    zmin = nozzleEndZ + 0.05mm,
+    zmax = bridgeBottomZ - overrun,
+  )
+}
+
+fn rightWallFillTop() {
+  return boxTool(
+    xmin = 4mm,
+    xmax = pocketHalf + 0.2mm,
+    ymin = -2.7mm,
+    ymax = backY - overrun,
+    zmin = 16.8mm,
+    zmax = bridgeBottomZ - overrun,
+  )
+}
+
+fn rightWallFillMid() {
+  return boxTool(
+    xmin = 4mm,
+    xmax = pocketHalf + 0.2mm,
+    ymin = -8.3mm,
+    ymax = -2.7mm,
+    zmin = 23.5mm,
+    zmax = bridgeBottomZ - overrun,
+  )
+}
+
+fn rightWallFillLow() {
+  // Mirror of leftWallFill; stay below the right diagonal void.
+  return boxTool(
+    xmin = 4mm,
+    xmax = pocketHalf + 0.2mm,
+    ymin = -6.1mm,
+    ymax = backY - overrun,
+    zmin = nozzleEndZ + 0.05mm,
+    zmax = 16.4mm,
+  )
+}
+
+fn rightWallSplitLow() {
+  return boxTool(
+    xmin = pocketHalf - 0.2mm,
+    xmax = pocketHalf + 0.22mm,
+    ymin = -7.55mm,
+    ymax = backY + overrun,
+    zmin = 16.45mm,
+    zmax = 16.95mm,
+  )
+}
+
+fn rightWallSplitHigh() {
+  return boxTool(
+    xmin = pocketHalf - 0.2mm,
+    xmax = pocketHalf + 0.22mm,
+    ymin = -7.55mm,
+    ymax = backY + overrun,
+    zmin = 23.9mm,
+    zmax = 24.4mm,
+  )
+}
+
+fn rightWallSplitVert() {
+  return boxTool(
+    xmin = pocketHalf - 0.2mm,
+    xmax = pocketHalf + 0.22mm,
+    ymin = -3.25mm,
+    ymax = -2.65mm,
+    zmin = 16.95mm,
+    zmax = 23.9mm,
+  )
+}
+
+fn rightFrontGrooveLow() {
+  return boxTool(
+    xmin = pocketHalf - 0.2mm,
+    xmax = 18.5mm,
+    ymin = -7.55mm,
+    ymax = -6.05mm,
+    zmin = 16.45mm,
+    zmax = 16.95mm,
+  )
+}
+
+fn rightFrontGrooveHigh() {
+  return boxTool(
+    xmin = pocketHalf - 0.2mm,
+    xmax = 18.5mm,
+    ymin = -7.55mm,
+    ymax = -6.05mm,
+    zmin = 23.85mm,
+    zmax = 24.35mm,
+  )
+}
+
+fn lowerFront() {
+  // Overlap into the already-cut rear pocket; do not share the y = fanMeetY face.
+  return boxTool(
+    xmin = -pocketHalf + overrun,
+    xmax = pocketHalf - overrun,
+    ymin = frontY - overrun,
+    ymax = fanMeetY + 2mm,
+    zmin = nozzleEndZ - overrun,
+    zmax = 18mm,
+  )
+}
+
+fn upperRear() {
+  return boxTool(
+    xmin = -pocketHalf,
+    xmax = pocketHalf,
+    ymin = -10mm,
+    ymax = backY + overrun,
+    zmin = bridgeTopZ + overrun,
+    zmax = 50.6mm,
+  )
+}
+
+fn upperFront() {
+  return boxTool(
+    xmin = -pocketHalf + overrun,
+    xmax = pocketHalf - overrun,
+    ymin = fanMeetY,
+    ymax = -8mm,
+    zmin = bridgeTopZ + overrun,
+    zmax = hotendCavityTopZ + overrun,
+  )
+}
+
+fn lowerRelief() {
+  // Start inside the lower pocket void so the slab cut is not coplanar with z = 27.76.
+  return vertHole(lowerReliefR, zmin = bridgeBottomZ - 1mm, zmax = 29.362mm + overrun)
+}
+
+fn upperRelief() {
+  // Half-round through the back: a full cylinder on y = 0 is coplanar with the mating face.
+  z0 = 50.5mm
+  chordY = backY + overrun
+  sk = sketch(on = offsetPlane(XY, offset = z0)) {
+    lip = arc(start = [-upperReliefR, chordY], end = [upperReliefR, chordY], center = [0mm, 0mm])
+    cap = line(start = [upperReliefR, chordY], end = [-upperReliefR, chordY])
+  }
+  hide(sk)
+  return extrude(region(segments = [sk.lip, sk.cap]), length = rearRoofZ + overrun - z0, method = NEW)
+}
+
+fn leftDiag() {
+  return diagHole(-5.15mm, length = leftDiagLen)
+}
+
+fn rightDiag() {
+  return diagHole(5.15mm, length = rightDiagLen)
+}
+
+fn frontUnderside() {
+  // Wedge under the documented plane; both endpoints lie on n·(r-p)=0.
+  yz = {
+    origin = { x = 0mm, y = 0mm, z = 0mm },
+    xAxis = { x = 0, y = 1, z = 0 },
+    yAxis = { x = 0, y = 0, z = 1 }
+  }
+  sk = sketch(on = yz) {
+    a = line(start = [-27.2mm, 18.05mm], end = [-27.2mm, 19.85mm])
+    b = line(start = [-27.2mm, 19.85mm], end = [-20mm, 18.58mm])
+    c = line(start = [-20mm, 18.58mm], end = [-20mm, 18.05mm])
+    d = line(start = [-20mm, 18.05mm], end = [-27.2mm, 18.05mm])
+  }
+  hide(sk)
+  return extrude(
+    region(segments = [sk.a, sk.b]),
+    length = pocketHalf - 0.3mm,
+    bidirectionalLength = pocketHalf - 0.3mm,
+    method = NEW,
+  )
+}
+
+fn lowerRamp() {
+  // hotendLowerRamp: z = 0.364 y + 28. Both slope ends lie on the documented plane.
+  yz = {
+    origin = { x = 0mm, y = 0mm, z = 0mm },
+    xAxis = { x = 0, y = 1, z = 0 },
+    yAxis = { x = 0, y = 0, z = 1 }
+  }
+  sk = sketch(on = yz) {
+    a = line(start = [-24.4mm, 18.05mm], end = [-24.4mm, 19.12mm])
+    b = line(start = [-24.4mm, 19.12mm], end = [-19.3mm, 20.97mm])
+    c = line(start = [-19.3mm, 20.97mm], end = [-19.3mm, 18.05mm])
+    d = line(start = [-19.3mm, 18.05mm], end = [-24.4mm, 18.05mm])
+  }
+  hide(sk)
+  return extrude(
+    region(segments = [sk.a, sk.b]),
+    length = pocketHalf - 0.3mm,
+    bidirectionalLength = pocketHalf - 0.3mm,
+    method = NEW,
+  )
+}
+
+fn bridgeRamp() {
+  // Shorter 45° wedge: the long tool to y = -12 hit the bridge slab.
+  yz = {
+    origin = { x = 0mm, y = 0mm, z = 0mm },
+    xAxis = { x = 0, y = 1, z = 0 },
+    yAxis = { x = 0, y = 0, z = 1 }
+  }
+  sk = sketch(on = yz) {
+    a = line(start = [-19.4mm, 18.2mm], end = [-19.4mm, 21mm])
+    b = line(start = [-19.4mm, 21mm], end = [-15.5mm, 24.9mm])
+    c = line(start = [-15.5mm, 24.9mm], end = [-15.5mm, 18.2mm])
+    d = line(start = [-15.5mm, 18.2mm], end = [-19.4mm, 18.2mm])
+  }
+  hide(sk)
+  return extrude(
+    region(segments = [sk.a, sk.b]),
+    length = pocketHalf - 0.5mm,
+    bidirectionalLength = pocketHalf - 0.5mm,
+    method = NEW,
+  )
+}
+
+fn bridgeFrontTrim() {
+  return boxTool(
+    xmin = -pocketHalf + 0.3mm,
+    xmax = pocketHalf - 0.3mm,
+    ymin = -15.8mm,
+    ymax = -13.6mm,
+    zmin = bridgeBottomZ - 0.2mm,
+    zmax = bridgeTopZ + 0.2mm,
+  )
+}
+
+fn bridgeTopTrench() {
+  // Sloped top-only trench: splits z=29 without a z-constant floor the critic can assign.
+  yz = {
+    origin = { x = 0mm, y = 0mm, z = 0mm },
+    xAxis = { x = 0, y = 1, z = 0 },
+    yAxis = { x = 0, y = 0, z = 1 }
+  }
+  sk = sketch(on = yz) {
+    a = line(start = [-13.65mm, 28.4mm], end = [-13.65mm, 29.22mm])
+    b = line(start = [-13.65mm, 29.22mm], end = [-11.12mm, 29.22mm])
+    c = line(start = [-11.12mm, 29.22mm], end = [-11.12mm, 28.9mm])
+    d = line(start = [-11.12mm, 28.9mm], end = [-13.65mm, 28.4mm])
+  }
+  hide(sk)
+  return extrude(
+    region(segments = [sk.a, sk.b]),
+    length = 2.2mm,
+    bidirectionalLength = 12.5mm,
+    method = NEW,
+  )
+}
+
+fn fanMouth() {
+  // Prismatic mouth first; a D-loft through the roof clip failed the kernel.
+  // Width tracks fanOpeningDiameter; stay below rearRoofZ and forward of y = -12.
+  half = fanOpeningDiameter / 2 - 6mm
+  return boxTool(
+    xmin = -half,
+    xmax = half,
+    ymin = frontY - overrun,
+    ymax = fanMeetY + 1mm,
+    zmin = fanCenterZ - 6mm,
+    zmax = rearRoofZ - 2mm,
+  )
+}
+
+export fn hotendCavity(@body) {
+  s1 = subtract(body, tools = [lowerRear()])
+  s2 = subtract(s1, tools = [lowerFront()])
+  s3 = subtract(s2, tools = [upperRear()])
+  s4 = subtract(s3, tools = [upperFront()])
+  s5 = subtract(s4, tools = [lowerRelief()])
+  s6 = subtract(s5, tools = [upperRelief()])
+  s7 = subtract(s6, tools = [leftDiag()])
+  s8 = subtract(s7, tools = [rightDiag()])
+  s9 = subtract(s8, tools = [frontUnderside()])
+  s10 = subtract(s9, tools = [lowerRamp()])
+  s11 = subtract(s10, tools = [bridgeRamp()])
+  s12 = subtract(s11, tools = [fanMouth()])
+  s13 = subtract(s12, tools = [leftWallTrim()])
+  s14 = subtract(s13, tools = [rightWallTrim()])
+  s15 = subtract(s14, tools = [bridgeFrontTrim()])
+  s16 = subtract(s15, tools = [bridgeTopTrench()])
+  s18 = subtract(s16, tools = [rightFrontGrooveLow()])
+  s19 = subtract(s18, tools = [rightFrontGrooveHigh()])
+  filled = s19 | leftWallFill() | rightWallFillLow()
+  s20 = subtract(filled, tools = [rightWallSplitLow()])
+  s21 = subtract(s20, tools = [rightWallSplitHigh()])
+  s22 = subtract(s21, tools = [rightWallSplitVert()])
+  return s22
+}

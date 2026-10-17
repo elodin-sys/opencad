@@ -1,0 +1,131 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import envelopeMinY, envelopeSizeY, discThickness, hexFloorY, hexPocketFlat, hexPocketVertex, hexPocketAcross, hexPocketDepth, hexBossFlat, boreDiameter, boreRadius, boreLength from "params.kcl"
+
+assert(hexPocketFlat, isGreaterThan = 0mm, error = "hex pocket across-flats half-width must be positive")
+assert(hexPocketVertex, isGreaterThan = hexPocketFlat, error = "hex pocket vertex must sit outside the flats")
+assert(hexPocketFlat, isLessThan = hexBossFlat, error = "hex pocket must leave a wall inside the boss")
+assert(boreRadius, isGreaterThan = 0mm, error = "bore radius must be positive")
+assert(boreDiameter, isGreaterThan = 0mm, error = "bore diameter must be positive")
+assert(boreRadius, isLessThan = hexPocketFlat, error = "bore must stay inside the hex pocket")
+assert(hexFloorY, isGreaterThan = envelopeMinY, error = "hex floor must sit above the seating face")
+assert(hexFloorY, isLessThan = discThickness, error = "hex floor must sit below the disc top")
+assert(envelopeSizeY, isGreaterThan = hexFloorY, error = "hex socket must open through the boss cap")
+assert(hexPocketDepth, isGreaterThan = 0mm, error = "hex pocket depth must be positive")
+assert(boreLength, isGreaterThan = 0mm, error = "bore length must be positive")
+assert(hexPocketAcross, isGreaterThan = 0mm, error = "hex pocket across-flats must be positive")
+
+// Pointy-top hex cutter (vertices on +-Z). Circumradius hexPocketVertex; flats land at
+// +-hexPocketVertex*cos(30deg) ~= +-hexPocketFlat.
+fn hexPocketCutter() {
+  overrun = 0.05mm
+  hexCutLength = envelopeMinY + envelopeSizeY - hexFloorY + overrun
+  floorPlane = {
+    origin = { x = 0mm, y = hexFloorY, z = 0mm },
+    xAxis = { x = 1, y = 0, z = 0 },
+    yAxis = { x = 0, y = 0, z = 1 }
+  }
+  hexSketch = sketch(on = floorPlane) {
+    s1 = line(
+      start = [
+        hexPocketVertex * cos(90deg),
+        hexPocketVertex * sin(90deg)
+      ],
+      end = [
+        hexPocketVertex * cos(150deg),
+        hexPocketVertex * sin(150deg)
+      ],
+    )
+    s2 = line(
+      start = [
+        hexPocketVertex * cos(150deg),
+        hexPocketVertex * sin(150deg)
+      ],
+      end = [
+        hexPocketVertex * cos(210deg),
+        hexPocketVertex * sin(210deg)
+      ],
+    )
+    s3 = line(
+      start = [
+        hexPocketVertex * cos(210deg),
+        hexPocketVertex * sin(210deg)
+      ],
+      end = [
+        hexPocketVertex * cos(270deg),
+        hexPocketVertex * sin(270deg)
+      ],
+    )
+    s4 = line(
+      start = [
+        hexPocketVertex * cos(270deg),
+        hexPocketVertex * sin(270deg)
+      ],
+      end = [
+        hexPocketVertex * cos(330deg),
+        hexPocketVertex * sin(330deg)
+      ],
+    )
+    s5 = line(
+      start = [
+        hexPocketVertex * cos(330deg),
+        hexPocketVertex * sin(330deg)
+      ],
+      end = [
+        hexPocketVertex * cos(30deg),
+        hexPocketVertex * sin(30deg)
+      ],
+    )
+    s6 = line(
+      start = [
+        hexPocketVertex * cos(30deg),
+        hexPocketVertex * sin(30deg)
+      ],
+      end = [
+        hexPocketVertex * cos(90deg),
+        hexPocketVertex * sin(90deg)
+      ],
+    )
+  }
+  hexRegion = region(segments = [hexSketch.s1, hexSketch.s2])
+  hexCut = extrude(
+    hexRegion,
+    length = hexCutLength,
+    direction = [0, 1, 0],
+    method = NEW,
+  )
+  hide(hexSketch)
+  return hexCut
+}
+
+fn centerBoreCutter() {
+  overrun = 0.05mm
+  boreCutLength = hexFloorY - envelopeMinY + 2 * overrun
+  borePlane = {
+    origin = {
+      x = 0mm,
+      y = envelopeMinY - overrun,
+      z = 0mm
+    },
+    xAxis = { x = 1, y = 0, z = 0 },
+    yAxis = { x = 0, y = 0, z = 1 }
+  }
+  boreSketch = sketch(on = borePlane) {
+    rim = circle(center = [0mm, 0mm], start = [boreRadius, 0mm])
+  }
+  boreRegion = region(segments = [boreSketch.rim])
+  boreCut = extrude(
+    boreRegion,
+    length = boreCutLength,
+    direction = [0, 1, 0],
+    method = NEW,
+  )
+  hide(boreSketch)
+  return boreCut
+}
+
+export fn hexDrive(@body) {
+  hexCut = hexPocketCutter()
+  boreCut = centerBoreCutter()
+  return subtract(body, tools = [hexCut, boreCut])
+}

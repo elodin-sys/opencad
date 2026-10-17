@@ -1,0 +1,176 @@
+id: chiral-keyplate
+title: 'Square key plate with four identical rectangular slots in a C4 pinwheel: volume, bbox and COM
+  are mirror-invariant; the pattern is not'
+truth_class: D
+role: calibration
+source:
+  citation: opencad calibration fixture (no external publisher); geometry defined by inputs/chiral-keyplate-spec.md
+  urls: []
+  accessed: '2026-09-16'
+  revision: class D self-consistency; truth built by scripts/derive_chiral_truth.py
+  license: same as this repository
+intent: 'Model the square key plate described in the attached text spec as one solid. Frame: origin at
+  the plate centre in XY, z = 0 on the bottom face, +z through the thickness, +x and +y along the plate
+  edges. Cut four identical rectangular slots from the top as 4 mm-deep pockets in a C4 pinwheel whose
+  first slot is centred at (20, 8) mm with its long axis along x; the other three are 90 degree rotations
+  about z. The pinwheel is chiral — do not emit the mirrored arrangement, a centred cross, or any pattern
+  with a mirror plane. Name the four pocket floors. One solid; export STEP and STL.'
+inputs:
+- path: inputs/chiral-keyplate-spec.md
+  kind: text
+  sha256: 0036c51f5df296508a684f749dc85a5e789cc0b325273221082d1a28eff95798
+  note: millimetre text spec; the only input
+truth:
+- path: truth/chiral-keyplate.step
+  kind: cad
+  sha256: cbcb134a8a53e706d96636cbd8b97fb6194b2e700df62e90241ab4337b305e30
+  units: mm
+  note: OpenCascade construction from scripts/derive_chiral_truth.py
+- path: truth/chiral-keyplate.stl
+  kind: mesh
+  sha256: 66fd37ed2691d42d0a5e64a535d41ef2a9a6864e940e358d86ea2ad2e1507514
+  units: mm
+  note: tessellation of the truth STEP (0.02 mm deflection)
+- path: truth/chiral-keyplate-mirrored.stl
+  kind: mesh
+  sha256: 7a8a82cf47d0edef6657643fbebff8c4d95b305d4f48069e7b3e363866016857
+  units: mm
+  note: YZ-plane mirror (x -> -x) of the truth; same volume/bbox/COM, different pinwheel
+arms:
+- id: text-only
+  design: chiral-keyplate
+  inputs:
+  - inputs/chiral-keyplate-spec.md
+  notes: The pinwheel is chiral. Volume, bbox and COM will not catch a mirrored reconstruction; pocket-floor
+    centres, deviation p95 and not_matching against the mirrored mesh will. Silhouette IoU of this plate
+    is also mirror-invariant (blind pockets do not punch the outline).
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 80
+  - 80
+  - 8
+  tolerance: 0.05
+- id: volume
+  kind: volume
+  from:
+    file: truth/chiral-keyplate.step
+    measure: volume
+  tolerance_rel: 0.002
+- id: solid_count
+  kind: solid_count
+  expected: 1
+- id: center_of_mass
+  kind: center_of_mass
+  from:
+    file: truth/chiral-keyplate.step
+    measure: center_of_mass
+  tolerance: 0.05
+- id: below_slots
+  kind: section
+  plane: z
+  at: 2.0
+  expected:
+    area: 6400.0
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.002
+  note: below the pocket floors the plate is a solid square
+- id: through_slots
+  kind: section
+  plane: z
+  at: 6.0
+  expected:
+    area: 6016.0
+    loops: 1
+    holes: 4
+    regions:
+    - center:
+      - 0.0
+      - 0.0
+      size:
+      - 80.0
+      - 80.0
+  area_tolerance_rel: 0.002
+  tolerance: 0.2
+  note: one remaining loop with four holes; the solid-region centre is at the origin for both handednesses
+- id: slot_a_floor
+  kind: face
+  plane: z
+  at: 4.0
+  normal: +
+  expected: 96.0
+  center:
+  - 20.0
+  - 8.0
+  tolerance: 0.2
+  area_tolerance_rel: 0.01
+- id: slot_b_floor
+  kind: face
+  plane: z
+  at: 4.0
+  normal: +
+  expected: 96.0
+  center:
+  - -8.0
+  - 20.0
+  tolerance: 0.2
+  area_tolerance_rel: 0.01
+- id: slot_c_floor
+  kind: face
+  plane: z
+  at: 4.0
+  normal: +
+  expected: 96.0
+  center:
+  - -20.0
+  - -8.0
+  tolerance: 0.2
+  area_tolerance_rel: 0.01
+- id: slot_d_floor
+  kind: face
+  plane: z
+  at: 4.0
+  normal: +
+  expected: 96.0
+  center:
+  - 8.0
+  - -20.0
+  tolerance: 0.2
+  area_tolerance_rel: 0.01
+- id: plate_bottom
+  kind: face
+  plane: z
+  at: 0.0
+  normal: '-'
+  expected: 6400.0
+  tolerance: 0.05
+  area_tolerance_rel: 0.002
+- id: plate_top
+  kind: face
+  plane: z
+  at: 8.0
+  normal: +
+  expected: 6016.0
+  tolerance: 0.05
+  area_tolerance_rel: 0.002
+  note: top face is the plate outline minus the four slots; area is the same on the mirror
+- id: deviation_vs_truth
+  kind: deviation
+  reference: truth/chiral-keyplate.stl
+  p95_max: 0.05
+  hausdorff_max: 0.5
+  silhouette_iou_min: 0.99
+  note: silhouette IoU of this envelope is 1.0 even against the mirrored mesh; p95 is the check that sees
+    handedness
+- id: not_matching_mirror
+  kind: not_matching
+  reference: truth/chiral-keyplate-mirrored.stl
+  min_distance: 1.0
+  note: measured p95 between truth and the YZ mirror is 2.082 mm; min_distance is about half of that
+notes:
+- 'Class D calibration. The lesson is which checks detect a mirrored reconstruction: bbox, volume, COM,
+  solid_count, section area/loops/holes, plate top/bottom area and silhouette IoU do not; pocket-floor
+  centres, deviation p95 and not_matching against the mirrored mesh do.'
+- Truth and the mirrored mesh are generated by scripts/derive_chiral_truth.py (OpenCascade, no Zoo).

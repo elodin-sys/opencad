@@ -1,0 +1,372 @@
+{
+  "case": "fda-pump",
+  "arm": "supplied-cad",
+  "design": "fda-pump",
+  "kind": "machine",
+  "mode": "analysis",
+  "backend": "build123d",
+  "truth_class": "A",
+  "scored_at": "2026-09-27T16:18:56Z",
+  "verdict": "FAIL",
+  "error": null,
+  "accuracy_score": 100.0,
+  "summary": {
+    "required_pass": 2,
+    "required_total": 2,
+    "optional_pass": 0,
+    "optional_total": 0,
+    "performance_pass": 4,
+    "performance_scored": 6,
+    "performance_unresolved": 1,
+    "performance_total": 6,
+    "performance_by_split": {
+      "development": {
+        "required": 2,
+        "pass": 1,
+        "fail": 0,
+        "unresolved": 1,
+        "missing": 0
+      },
+      "held_out": {
+        "required": 4,
+        "pass": 3,
+        "fail": 1,
+        "unresolved": 0,
+        "missing": 0
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "rotor",
+      "kind": "solid",
+      "required": true,
+      "note": "the rotor body, scaled to mm (0.1 x the CAD volume)",
+      "measured": {
+        "volume": 9768.403890346883,
+        "bbox_min": [
+          -26.00000009999522,
+          -26.00000009999277,
+          0.0
+        ],
+        "bbox_max": [
+          26.000000099997706,
+          26.00000010000015,
+          19.0
+        ],
+        "center_of_mass": [
+          -1.2271991486810603e-05,
+          -1.4754947266154402e-09,
+          3.779857952402762
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 9768.34,
+        "measured": 9768.403890346883,
+        "band": 48.8417,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "flowDomain",
+      "kind": "solid",
+      "required": true,
+      "note": "the fluid body: housing chamber minus rotor, point in the straight inlet tube",
+      "measured": {
+        "volume": 78329.70784420539,
+        "bbox_min": [
+          -30.0000001,
+          -33.8,
+          -1e-07
+        ],
+        "bbox_max": [
+          245.0,
+          30.0000001,
+          300.0
+        ],
+        "center_of_mass": [
+          49.30425795362451,
+          -8.649283436457758,
+          86.39746262695634
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 78329.9,
+        "measured": 78329.70784420539,
+        "band": 391.6495,
+        "ok": true
+      },
+      "ok": true
+    }
+  ],
+  "performance": [
+    {
+      "id": "pressureRiseC1",
+      "kind": "performance",
+      "quantity": "pressure_rise",
+      "unit": "Pa",
+      "case": "C1",
+      "evidence": "A",
+      "split": "development",
+      "digitized": true,
+      "required": true,
+      "simulation": "cfd",
+      "u_iteration": 442.4718025408804,
+      "unresolved_because": [
+        "one mesh level: no discretisation estimate"
+      ],
+      "status": "scored",
+      "prediction": 23665.014687149996,
+      "reference": 22398.0,
+      "error": 1267.0146871499965,
+      "relative_error": 0.056568206409054224,
+      "u_meas": 1941.0,
+      "u_numerical": 442.4718025408804,
+      "u_input": 0.0,
+      "z": 0.636436738352849,
+      "z_max": 2.0,
+      "ok": true,
+      "solver": "openfoam",
+      "model": "steady MRF simpleFoam, k-omega SST"
+    },
+    {
+      "id": "pressureRiseC2",
+      "kind": "performance",
+      "quantity": "pressure_rise",
+      "unit": "Pa",
+      "case": "C2",
+      "evidence": "A",
+      "split": "held_out",
+      "digitized": false,
+      "required": true,
+      "simulation": "cfd",
+      "u_iteration": 694.4415741910782,
+      "unresolved_because": [
+        "one mesh level: no discretisation estimate"
+      ],
+      "status": "scored",
+      "prediction": 48717.17354805001,
+      "reference": 46529.0,
+      "error": 2188.1735480500065,
+      "relative_error": 0.047028166262975915,
+      "u_meas": 2133.0,
+      "u_numerical": 694.4415741910782,
+      "u_input": 0.0,
+      "z": 0.9754704519993438,
+      "z_max": 2.0,
+      "ok": true,
+      "solver": "openfoam",
+      "model": "steady MRF simpleFoam, k-omega SST"
+    },
+    {
+      "id": "pressureRiseC3",
+      "kind": "performance",
+      "quantity": "pressure_rise",
+      "unit": "Pa",
+      "case": "C3",
+      "evidence": "A",
+      "split": "held_out",
+      "digitized": true,
+      "required": true,
+      "simulation": "cfd",
+      "u_iteration": 684.9822753390148,
+      "unresolved_because": [
+        "one mesh level: no discretisation estimate"
+      ],
+      "status": "scored",
+      "prediction": 47785.48443285,
+      "reference": 41730.0,
+      "error": 6055.484432849997,
+      "relative_error": 0.14511105758087697,
+      "u_meas": 2458.0,
+      "u_numerical": 684.9822753390148,
+      "u_input": 0.0,
+      "z": 2.373155636190548,
+      "z_max": 2.0,
+      "ok": false,
+      "solver": "openfoam",
+      "model": "steady MRF simpleFoam, k-omega SST"
+    },
+    {
+      "id": "pressureRiseC4",
+      "kind": "performance",
+      "quantity": "pressure_rise",
+      "unit": "Pa",
+      "case": "C4",
+      "evidence": "A",
+      "split": "held_out",
+      "digitized": false,
+      "required": true,
+      "simulation": "cfd",
+      "u_iteration": 723.5064539591601,
+      "unresolved_because": [
+        "one mesh level: no discretisation estimate"
+      ],
+      "status": "scored",
+      "prediction": 7469.717367015,
+      "reference": 8266.0,
+      "error": -796.2826329850004,
+      "relative_error": -0.09633228078695867,
+      "u_meas": 2666.0,
+      "u_numerical": 723.5064539591601,
+      "u_input": 0.0,
+      "z": 0.2882544473342157,
+      "z_max": 2.0,
+      "ok": true,
+      "solver": "openfoam",
+      "model": "steady MRF simpleFoam, k-omega SST"
+    },
+    {
+      "id": "pressureRiseC5",
+      "kind": "performance",
+      "quantity": "pressure_rise",
+      "unit": "Pa",
+      "case": "C5",
+      "evidence": "A",
+      "split": "development",
+      "digitized": true,
+      "required": true,
+      "simulation": "cfdC5",
+      "resolved": false,
+      "u_iteration": 918.2159791430206,
+      "u_discretisation": 8025.723779935028,
+      "gci": 0.22146303651953342,
+      "unresolved_because": [
+        "GCI 0.221 > 0.05"
+      ],
+      "status": "unresolved",
+      "prediction": 36239.563522950004,
+      "reference": 35330.0,
+      "error": 909.563522950004,
+      "relative_error": 0.0257447926110955,
+      "u_meas": 2981.0,
+      "u_numerical": 8078.079151392871,
+      "u_input": 0.0,
+      "z": 0.1056335063013848,
+      "z_max": 2.0,
+      "ok": null,
+      "note": "not resolved by its mesh ladder: GCI 0.221 > 0.05",
+      "solver": "openfoam",
+      "model": "steady MRF simpleFoam, k-omega SST"
+    },
+    {
+      "id": "pressureRiseC6",
+      "kind": "performance",
+      "quantity": "pressure_rise",
+      "unit": "Pa",
+      "case": "C6",
+      "evidence": "A",
+      "split": "held_out",
+      "digitized": true,
+      "required": true,
+      "simulation": "cfd",
+      "u_iteration": 559.1565712592017,
+      "unresolved_because": [
+        "one mesh level: no discretisation estimate"
+      ],
+      "status": "scored",
+      "prediction": 35689.3994439,
+      "reference": 27731.0,
+      "error": 7958.399443900002,
+      "relative_error": 0.28698566383830376,
+      "u_meas": 4697.0,
+      "u_numerical": 559.1565712592017,
+      "u_input": 0.0,
+      "z": 1.6824780334122527,
+      "z_max": 2.0,
+      "ok": true,
+      "solver": "openfoam",
+      "model": "steady MRF simpleFoam, k-omega SST"
+    }
+  ],
+  "pipeline_gates": {
+    "ok": false,
+    "summary": "11 pass, 1 fail, 2 n/a",
+    "failed": [
+      "refinement"
+    ]
+  },
+  "simulations": {
+    "cfdC5": {
+      "status": "ok",
+      "solver": {
+        "name": "openfoam",
+        "image": "opencfd/openfoam-default:2412",
+        "runtime": "container",
+        "digest": null
+      },
+      "reason": null
+    },
+    "cfd": {
+      "status": "ok",
+      "solver": {
+        "name": "openfoam",
+        "image": "opencfd/openfoam-default:2412",
+        "runtime": "container",
+        "digest": "1ba02114b1c025c370f2e269a07677c16c9bea8d990fcd75ac8378aff9d41b50"
+      },
+      "reason": null
+    },
+    "euler": {
+      "status": "ok",
+      "solver": {
+        "name": "reduced:pump_euler"
+      },
+      "reason": null
+    }
+  },
+  "hash_binding": {
+    "manifest_sha256": "7dd995e916d5d5dc74803c7ac7324ce8a4433616f8ce8e893e09749070276df3",
+    "truth_files": {
+      "truth/pressure-head.yaml": "5db7846311d25a9cbf4690b8f252ae0b026c53c84dd832619f048de9351a75d5",
+      "truth/hariharan-fig5.png": "8ea4508e2544aa353a6c7ca86599c2b0af4c1082094f3bda45919dd2818f1f2d",
+      "truth/pump_housing.step": "c9cd9061f29473aa48cf422703992bb47675972ee91eaf048a5254fbc283d447",
+      "truth/pump_rotor.step": "fa7a064cb1ed1475b7a09f6094579177e996403dd24c4f10875b879f4f7e40c8"
+    },
+    "input_files": {
+      "inputs/fda-pump-packet.md": "793748e01192fdbe2aa3c7c6f85d91bb6024efde62638bb466bc955d52a95377",
+      "inputs/pump_housing.step": "c9cd9061f29473aa48cf422703992bb47675972ee91eaf048a5254fbc283d447",
+      "inputs/pump_rotor.step": "fa7a064cb1ed1475b7a09f6094579177e996403dd24c4f10875b879f4f7e40c8",
+      "inputs/coordinate_system.png": "fe11693f1ad0779ddbac38994541223399dff388a23fc52b0137366d31dc4245",
+      "inputs/front_view_with_dimensions.png": "f66eb511075ec0f7f5bc3430879ab2908690214e480c3e654cfe5e3c9bbaaaf7",
+      "inputs/side_view_with_dimensions.png": "ac754287f16c8479930d17e33e377c077629d438f69cdd1092d34a86d49dd28d",
+      "inputs/pump_and_rotor_iso.png": "29b102d2816a726816feb51686762d7d17f7839e0c38ed345666d65c2fe7ecd9",
+      "inputs/housing_rotor_clearance.png": "36b979f9dd5fa87ce29410fe676d5afd8ab4e7e84cd76ba246eeed460ad2f98f",
+      "inputs/outlet_tube_detail.png": "f49aa7536314378cf0b49636f4303525f87396a9219ced30afe6e7dbb4c2e49f",
+      "inputs/pump_experimental_setup.png": "eec0038ded8d1c5eeec7cfa58ef3cef013abd31b82d66bdf812e8e379d486b1b"
+    },
+    "step_sha256": "f6997f5cdf57bdae9bd86593186ecb18cd46bd2ee9c18373db7cf1263506611e",
+    "assembly_source": {
+      "main.py": "b38dd88d911203eb780fa0d759505c994481cfc2523b5cc55b2136154d68ace5"
+    },
+    "design_bundle": {
+      "assembly.yaml": "f89c2d50d8de276a618453aa48385c5219146a01ec01f20fa2771a3eba02f2bd",
+      "brief.md": "a71c977ff3b71a7b3c27c61b3c3eb48ac13022d4c6ae75d56debc21423580e32",
+      "sources/coordinate_system.png": "fe11693f1ad0779ddbac38994541223399dff388a23fc52b0137366d31dc4245",
+      "sources/fda-pump-packet.md": "793748e01192fdbe2aa3c7c6f85d91bb6024efde62638bb466bc955d52a95377",
+      "sources/front_view_with_dimensions.png": "f66eb511075ec0f7f5bc3430879ab2908690214e480c3e654cfe5e3c9bbaaaf7",
+      "sources/housing_rotor_clearance.png": "36b979f9dd5fa87ce29410fe676d5afd8ab4e7e84cd76ba246eeed460ad2f98f",
+      "sources/outlet_tube_detail.png": "f49aa7536314378cf0b49636f4303525f87396a9219ced30afe6e7dbb4c2e49f",
+      "sources/pump_and_rotor_iso.png": "29b102d2816a726816feb51686762d7d17f7839e0c38ed345666d65c2fe7ecd9",
+      "sources/pump_experimental_setup.png": "eec0038ded8d1c5eeec7cfa58ef3cef013abd31b82d66bdf812e8e379d486b1b",
+      "sources/pump_housing.step": "c9cd9061f29473aa48cf422703992bb47675972ee91eaf048a5254fbc283d447",
+      "sources/pump_rotor.step": "fa7a064cb1ed1475b7a09f6094579177e996403dd24c4f10875b879f4f7e40c8",
+      "sources/side_view_with_dimensions.png": "ac754287f16c8479930d17e33e377c077629d438f69cdd1092d34a86d49dd28d"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-27T16:18:56Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "f067337b8ab648471ad40a647b21672f74d56978",
+      "dirty": true
+    }
+  }
+}

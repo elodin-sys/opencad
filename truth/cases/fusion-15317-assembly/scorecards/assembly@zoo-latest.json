@@ -1,0 +1,160 @@
+{
+  "case": "fusion-15317-assembly",
+  "scored_at": "2026-09-19T15:47:43Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "claude-fable-5-1-thinking-max",
+    "order_id": "001-assemble",
+    "thread_id": "522af3c0-c044-4f8c-8b78-0dfdbd18ec4b",
+    "exit_code": 0,
+    "seconds": 235,
+    "commands": 6,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 6,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/work/assembly.yaml",
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble/result.md",
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble/metrics.json"
+      ],
+      "incomplete": false,
+      "notes": "Rev28 revolute: body two identity; body one translated [0, -14.7258, 0] with identity rotation (d1 already anti-parallel to d2). assembly-check PASS first try: axis angle 0, line distance 0, axial offset 0, flip anti-parallel, interference 0.1867 mm3 (coincident-face artifact at y=91.5727), gap 0.",
+      "engine_ledger_calls": 0,
+      "engine_ledger_seconds": 0
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "claude-fable-5-1-thinking-max",
+    "order_id": "001-assemble",
+    "thread_id": "522af3c0-c044-4f8c-8b78-0dfdbd18ec4b",
+    "exit_code": 0,
+    "seconds": 235,
+    "commands": 6,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 6,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/work/assembly.yaml",
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble/result.md",
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble/metrics.json"
+      ],
+      "incomplete": false,
+      "notes": "Rev28 revolute: body two identity; body one translated [0, -14.7258, 0] with identity rotation (d1 already anti-parallel to d2). assembly-check PASS first try: axis angle 0, line distance 0, axial offset 0, flip anti-parallel, interference 0.1867 mm3 (coincident-face artifact at y=91.5727), gap 0.",
+      "engine_ledger_calls": 0,
+      "engine_ledger_seconds": 0
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": true,
+  "offset_truth_mm": 0.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 3.659522043770007e-14,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": 4.466007177938991e-05,
+      "expected": 0.0,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 0.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 0.18669187589923572,
+      "truth_interference": 0.0,
+      "max": 1.0,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.0,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "22337_e2f65ed2_0003_1": {
+        "origin": [
+          0.0,
+          -14.7258,
+          0.0
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          1,
+          0
+        ],
+        "z_axis": [
+          0,
+          0,
+          1
+        ]
+      },
+      "22337_e2f65ed2_0003_2": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          1,
+          0
+        ],
+        "z_axis": [
+          0,
+          0,
+          1
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/handoff/assembly.html",
+    "motion": "revolute"
+  }
+}

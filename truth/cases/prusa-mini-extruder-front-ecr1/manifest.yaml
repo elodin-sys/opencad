@@ -1,0 +1,848 @@
+id: prusa-mini-extruder-front-ecr1
+title: Prusa MINI extruder front after ECR-1 (heat-set traps Ø6.5 x 9.8 -> Ø5.0 x 6.0) with every other
+  interface preserved
+truth_class: C
+role: validation
+source:
+  citation: Prusa Research, Original Prusa MINI / MINI+ printed parts, STEP/PRINTED PARTS/MINI-extruder-front.stp
+    (GitHub prusa3d/Original-Prusa-MINI, master); ECR-1 nominal derived from the request (class C)
+  urls:
+  - https://github.com/prusa3d/Original-Prusa-MINI/tree/master/STEP/PRINTED%20PARTS
+  - https://raw.githubusercontent.com/prusa3d/Original-Prusa-MINI/master/STEP/PRINTED%20PARTS/MINI-extruder-front.stp
+  accessed: '2026-09-17'
+  revision: master as of 2026-09-17
+  license: GNU GPL v3.0 (repository LICENSE); used as an internal benchmark reference
+intent: 'Score the design after the ECR-1 change request: the two traps carry the new size, every other
+  hole axis, depth and mating plane is unchanged.'
+inputs:
+- path: inputs/ecr-1-request.md
+  kind: text
+  sha256: 53735700795879ffdcc2826ed99be5fd98e211cc88d3168eda1b64b3ad4a3c79
+  note: feasible change request
+- path: inputs/ecr-2-infeasible-request.md
+  kind: text
+  sha256: 6388b7e01cb24783027ebc70aa0ee5b0a7926178e570f7ca5b9a7ca23b5b5536
+  note: deliberately infeasible request; must be refused
+truth:
+- path: truth/MINI-extruder-front.stp
+  kind: cad
+  sha256: 8146b4dc6e543acf365034561bcce7124ca653e2c0a3dd33a486617501c814d7
+  units: mm
+  note: pre-change reference for the preserved interfaces
+arms:
+- id: ecr1
+  design: prusa-mini-extruder-front
+  inputs:
+  - inputs/ecr-1-request.md
+  - inputs/ecr-2-infeasible-request.md
+  images: []
+  notes: Scored with `python -m opencad.truth score` after `python -m opencad ecr`; not a drafting run.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 53.0
+  - 14.001
+  - 63.72
+  tolerance: 0.1
+- id: solid_count
+  kind: solid_count
+  expected: 1
+- id: volume
+  kind: volume
+  required: false
+  from:
+    file: truth/MINI-extruder-front.stp
+    measure: volume
+  tolerance_rel: 0.05
+  note: 'diagnostic: the fan-duct lobe and embossed text are cosmetic'
+- id: center_of_mass
+  kind: center_of_mass
+  required: false
+  from:
+    file: truth/MINI-extruder-front.stp
+    measure: center_of_mass
+  tolerance: 1.0
+- id: hole_d26_m2_16p4_y11
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -2.0
+  - 11.0
+  - 16.4
+  direction:
+  - -0.0
+  - 1.0
+  - -0.0
+  radius: 13.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø26, extent 8..14 along the axis (partial arc)
+  length: 6.0
+  length_tolerance: 0.2
+- id: hole_d22p5_m2_0_y1p5
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -2.0
+  - 1.5
+  - 0.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 11.25
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø22.5, extent 0..3 along the axis (partial arc)
+  length: 3.0
+  length_tolerance: 0.2
+- id: hole_d16_m2_16p4_y5p5
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -2.0
+  - 5.5
+  - 16.4
+  direction:
+  - -0.0
+  - 1.0
+  - -0.0
+  radius: 8.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø16, extent 3..8 along the axis (partial arc)
+  length: 5.0
+  length_tolerance: 0.2
+- id: hole_d14_m2_0_y12p18
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -2.0
+  - 12.1806
+  - 0.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 7.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø14, extent 10.4..14 along the axis (partial arc)
+  length: 3.6388
+  length_tolerance: 0.2
+- id: hole_d12p68_21p17_m24p67_y7
+  kind: cylinder
+  required: false
+  cyl_kind: hole
+  point:
+  - 21.1721
+  - 7.0
+  - -24.6727
+  direction:
+  - 0.7071
+  - -0.0
+  - 0.7071
+  radius: 6.3421
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø12.7, extent -3.98..-0.975 along the axis (partial arc)
+- id: hole_d12p63_25p62_7p5_y7
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 25.6177
+  - 7.0
+  - 7.5
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 6.3152
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø12.6, extent -9..24 along the axis (partial arc)
+  length: 33.0
+  length_tolerance: 0.2
+- id: hole_d12_m2_16p4_y1p5
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -2.0
+  - 1.5
+  - 16.4
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 6.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø12, extent 0..3 along the axis (partial arc)
+  length: 3.0
+  length_tolerance: 0.2
+- id: hole_d11p5_26p02_m20p04_y7
+  kind: cylinder
+  required: false
+  cyl_kind: hole
+  point:
+  - 26.0232
+  - 7.0
+  - -20.036
+  direction:
+  - 0.1736
+  - -0.0
+  - 0.9848
+  radius: 5.75
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø11.5, extent -26.3..-4.08 along the axis (partial arc)
+- id: hole_d11p5_28p75_13p75_y7
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 28.75
+  - 7.0
+  - 13.7532
+  direction:
+  - -0.0
+  - -0.0
+  - 1.0
+  radius: 5.75
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø11.5, extent 0..27.5 along the axis (partial arc)
+  length: 27.5065
+  length_tolerance: 0.2
+- id: hole_d9p5_25p17_7p5_y5p5
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 25.1705
+  - 5.5
+  - 7.5
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 4.75
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø9.5, extent -9..24 along the axis (partial arc)
+  length: 33.0
+  length_tolerance: 0.2
+- id: hole_d9p5_25p17_7p5_y8p5
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 25.1705
+  - 8.5
+  - 7.5
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 4.75
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø9.5, extent -9..24 along the axis (partial arc)
+  length: 33.0
+  length_tolerance: 0.2
+- id: hole_d8p79_20p75_m24p25_y5p14
+  kind: cylinder
+  required: false
+  cyl_kind: hole
+  point:
+  - 20.7533
+  - 5.1435
+  - -24.254
+  direction:
+  - 0.7071
+  - -0.0
+  - 0.7071
+  radius: 4.3935
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø8.79, extent -3.98..-0.975 along the axis (partial arc)
+- id: hole_d8p79_20p75_m24p25_y8p86
+  kind: cylinder
+  required: false
+  cyl_kind: hole
+  point:
+  - 20.7533
+  - 8.8565
+  - -24.254
+  direction:
+  - 0.7071
+  - -0.0
+  - 0.7071
+  radius: 4.3935
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø8.79, extent -3.98..-0.975 along the axis (partial arc)
+- id: hole_d8_24p72_m22p26_y5p5
+  kind: cylinder
+  required: false
+  cyl_kind: hole
+  point:
+  - 24.7151
+  - 5.5
+  - -22.2635
+  direction:
+  - 0.1736
+  - -0.0
+  - 0.9848
+  radius: 4.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø8, extent -19..-16.2 along the axis (partial arc)
+- id: hole_d8_25p36_m18p58_y8p5
+  kind: cylinder
+  required: false
+  cyl_kind: hole
+  point:
+  - 25.3649
+  - 8.5
+  - -18.5782
+  direction:
+  - 0.1736
+  - -0.0
+  - 0.9848
+  radius: 4.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø8, extent -23.4..-4.41 along the axis (partial arc)
+- id: hole_d8_27p85_9p81_y5p5
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 27.8486
+  - 5.5
+  - 9.8125
+  direction:
+  - -0.0
+  - -0.0
+  - 1.0
+  radius: 4.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø8, extent 0..19.6 along the axis (partial arc)
+  length: 19.625
+  length_tolerance: 0.2
+- id: hole_d8_27p85_12p36_y8p5
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 27.8486
+  - 8.5
+  - 12.3559
+  direction:
+  - -0.0
+  - -0.0
+  - 1.0
+  radius: 4.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø8, extent 0..24.7 along the axis (partial arc)
+  length: 24.7117
+  length_tolerance: 0.2
+- id: hole_d6p5_m23p92_0_y11p25
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -23.9203
+  - 11.25
+  - 0.0
+  direction:
+  - -0.0
+  - 1.0
+  - -0.0
+  radius: 3.25
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø6.5, extent 8.5..14 along the axis (partial arc)
+  length: 5.5
+  length_tolerance: 0.2
+- id: hole_d5_m18p5_22_y4p9_ecr1
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -18.5
+  - 3.0
+  - 22.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 2.5
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: 'ECR-1: Ø5 x 6 deep from the back face'
+  length: 6.0
+  length_tolerance: 0.2
+- id: hole_d5_m17_m20_y4p9_ecr1
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -17.0
+  - 3.0
+  - -20.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 2.5
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: 'ECR-1: Ø5 x 6 deep from the back face'
+  length: 6.0
+  length_tolerance: 0.2
+- id: hole_d6p5_19p92_0_y11p25
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 19.9203
+  - 11.25
+  - 0.0
+  direction:
+  - -0.0
+  - 1.0
+  - -0.0
+  radius: 3.25
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø6.5, extent 8.5..14 along the axis
+  length: 5.5
+  length_tolerance: 0.2
+- id: hole_d6p5_20_17_y3p9
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 20.0
+  - 3.9
+  - 17.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 3.25
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø6.5, extent 0..7.8 along the axis
+  length: 7.8
+  length_tolerance: 0.2
+- id: hole_d5p5_22p09_m15_y2p32
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 22.0879
+  - 2.3244
+  - -15.0
+  direction:
+  - -0.0
+  - 1.0
+  - -0.0
+  radius: 2.75
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø5.5, extent 0..4.65 along the axis (partial arc)
+  length: 4.6488
+  length_tolerance: 0.2
+- id: hole_d4_14p71_30_y4p62
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 14.7082
+  - 4.6209
+  - 30.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 2.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø4, extent 0..9.24 along the axis (partial arc)
+  length: 9.2417
+  length_tolerance: 0.2
+- id: hole_d4_20p27_30_y10p74
+  kind: cylinder
+  required: false
+  cyl_kind: hole
+  point:
+  - 20.2742
+  - 10.7397
+  - 30.0
+  direction:
+  - 0.9538
+  - 0.3003
+  - -0.0
+  radius: 2.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø4, extent 20.1..25 along the axis (partial arc)
+- id: hole_d3p5_m18p5_22_y12p05
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -18.5
+  - 12.05
+  - 22.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 1.75
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø3.5, extent 10.1..14 along the axis
+  length: 3.9
+  length_tolerance: 0.2
+- id: hole_d3p5_m17_m20_y12p05
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -17.0
+  - 12.05
+  - -20.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 1.75
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø3.5, extent 10.1..14 along the axis
+  length: 3.9
+  length_tolerance: 0.2
+- id: hole_d3p4_m23p92_0_y3p91
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -23.9203
+  - 3.9066
+  - 0.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 1.7
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø3.4, extent 0..7.81 along the axis
+  length: 7.8131
+  length_tolerance: 0.2
+- id: hole_d3p4_m22_15_y9p3
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - -22.0
+  - 9.3
+  - 15.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 1.7
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø3.4, extent 4.6..14 along the axis
+  length: 9.4
+  length_tolerance: 0.2
+- id: hole_d3p4_8_28_y9p3
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 8.0
+  - 9.3
+  - 28.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 1.7
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø3.4, extent 4.6..14 along the axis
+  length: 9.4
+  length_tolerance: 0.2
+- id: hole_d3p4_12_m17_y9p3
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 12.0
+  - 9.3
+  - -17.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 1.7
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø3.4, extent 4.6..14 along the axis
+  length: 9.4
+  length_tolerance: 0.2
+- id: hole_d3p4_19p92_0_y3p91
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 19.9203
+  - 3.9066
+  - 0.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 1.7
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø3.4, extent 0..7.81 along the axis
+  length: 7.8131
+  length_tolerance: 0.2
+- id: hole_d3p4_20_17_y11p05
+  kind: cylinder
+  required: true
+  cyl_kind: hole
+  point:
+  - 20.0
+  - 11.05
+  - 17.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 1.7
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: hole Ø3.4, extent 8.1..14 along the axis
+  length: 5.9
+  length_tolerance: 0.2
+- id: pin_d11_m18p5_22_y11
+  kind: cylinder
+  required: false
+  cyl_kind: pin
+  point:
+  - -18.5
+  - 11.0
+  - 22.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 5.5
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: pin Ø11, extent 8..14 along the axis (partial arc)
+- id: pin_d10_8_28_y7
+  kind: cylinder
+  required: false
+  cyl_kind: pin
+  point:
+  - 8.0
+  - 7.0
+  - 28.0
+  direction:
+  - 0.0
+  - 1.0
+  - 0.0
+  radius: 5.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: pin Ø10, extent 0..14 along the axis (partial arc)
+- id: pin_d9p18_21p17_m24p67_y7
+  kind: cylinder
+  required: false
+  cyl_kind: pin
+  point:
+  - 21.1721
+  - 7.0
+  - -24.6727
+  direction:
+  - 0.7071
+  - -0.0
+  - 0.7071
+  radius: 4.5921
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: pin Ø9.18, extent -3.98..-0.975 along the axis (partial arc)
+- id: pin_d9p13_25p62_7p5_y7
+  kind: cylinder
+  required: false
+  cyl_kind: pin
+  point:
+  - 25.6177
+  - 7.0
+  - 7.5
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 4.5652
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: pin Ø9.13, extent -9..24 along the axis (partial arc)
+- id: pin_d6_25p17_7p88_y8p5
+  kind: cylinder
+  required: false
+  cyl_kind: pin
+  point:
+  - 25.1705
+  - 8.5
+  - 7.8789
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 3.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: pin Ø6, extent -8.24..24 along the axis (partial arc)
+- id: pin_d5p29_20p75_m24p25_y5p14
+  kind: cylinder
+  required: false
+  cyl_kind: pin
+  point:
+  - 20.7533
+  - 5.1435
+  - -24.254
+  direction:
+  - 0.7071
+  - -0.0
+  - 0.7071
+  radius: 2.6435
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: pin Ø5.29, extent -3.98..-0.975 along the axis (partial arc)
+- id: pin_d5p29_20p75_m24p25_y8p86
+  kind: cylinder
+  required: false
+  cyl_kind: pin
+  point:
+  - 20.7533
+  - 8.8565
+  - -24.254
+  direction:
+  - 0.7071
+  - -0.0
+  - 0.7071
+  radius: 2.6435
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  note: pin Ø5.29, extent -3.98..-0.975 along the axis (partial arc)
+- id: back_mating_face
+  kind: face
+  plane: y
+  at: 0.0
+  normal: '-'
+  mode: sum
+  expected: 2166.04
+  area_tolerance_rel: 0.03
+  tolerance: 0.05
+  required: true
+- id: front_face
+  kind: face
+  plane: y
+  at: 14.0
+  normal: +
+  mode: sum
+  expected: 2279.29
+  area_tolerance_rel: 0.05
+  tolerance: 0.05
+  required: true
+- id: bottom_face
+  kind: face
+  plane: z
+  at: -30.0
+  normal: '-'
+  mode: sum
+  expected: 573.52
+  area_tolerance_rel: 0.05
+  tolerance: 0.05
+  required: true
+- id: left_side_face
+  kind: face
+  plane: x
+  at: -26.5
+  normal: '-'
+  mode: sum
+  expected: 607.2
+  area_tolerance_rel: 0.05
+  tolerance: 0.05
+  required: true
+- id: right_side_faces
+  kind: face
+  plane: x
+  at: 26.5
+  normal: +
+  mode: sum
+  expected: 106.85
+  area_tolerance_rel: 0.15
+  tolerance: 0.05
+  required: false
+- id: section_y7
+  kind: section
+  plane: y
+  at: 7.0
+  required: true
+  expected:
+    area: 2186.594
+    holes: 11
+  area_tolerance_rel: 0.03
+  note: 'mid-plate: keyhole and every through hole'
+- id: section_y1p5
+  kind: section
+  plane: y
+  at: 1.5
+  required: false
+  expected:
+    area: 2203.295
+    holes: null
+  area_tolerance_rel: 0.05
+  note: back recesses
+- id: section_y12
+  kind: section
+  plane: y
+  at: 12.0
+  required: false
+  expected:
+    area: 2148.308
+    holes: null
+  area_tolerance_rel: 0.05
+  note: front counterbores and nut traps
+- id: volume_gain_vs_reference
+  kind: volume
+  from:
+    file: truth/MINI-extruder-front.stp
+    measure: volume
+  tolerance_rel: 0.05
+  required: false
+  note: reference volume plus the two-bore gain of 414.77 mm3 is the target; the reconstruction's own
+    cosmetic error dominates the band
+notes:
+- 'Analytic volume gain from ECR-1: 414.77 mm3 (two bores Ø6.5 x 9.8 replaced by Ø5.0 x 6.0).'

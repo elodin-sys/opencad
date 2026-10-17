@@ -1,0 +1,612 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Contract constants: nominal millimetres/degrees, kept literal for edit tests.
+overallLength = 75mm
+bodyWidth = 5mm
+bodyHeight = 12mm
+noseLength = 2.5mm
+legStraightHeight = 5mm
+overhangRise = 2mm
+gapWidth = 2mm
+wideLegWidth = 5mm
+mediumLegWidth = 2.5mm
+thinLegWidth = 0.5mm
+legPatternPitch = 14mm
+tabWidth = 1mm
+tabPitch = 7mm
+tabHeight = 0.5mm
+cavityLength = 4mm
+baseThickness = 1mm
+thinWallHeight = 4mm
+noseAngle = 45deg
+overhangAngle = 45deg
+legCount = 12
+tabCount = 11
+outerWallThickness = 0.5mm
+thinWallCount = 4
+singleWallCount = 2
+doubleWallCount = 2
+overallHeight = 12.5mm
+legMergeHeight = 7mm
+legPatternCount = 4
+endBlockLength = 19mm
+firstTabX = 4mm
+l10StartX = 28mm
+cavityStartX = 28.5mm
+cavityWidth = 4mm
+cavityCeilingZ = 5mm
+singleWall1Y = 1.3mm
+doubleWall1Y = 2.05mm
+singleWall2Y = 2.9mm
+doubleWall2Y = 3.65mm
+singleWallWidth = 0.1mm
+doubleWallWidth = 0.2mm
+
+// NIST Figure 3 fixes the external geometry. Figure 4 gives approximate wall
+// centre lines (+/-0.15 mm). Finished internal track widths are NOT dimensioned:
+// singleWallWidth is INFERRED 0.10 +/-0.075 mm;
+// doubleWallWidth is INFERRED 0.20 +/-0.15 mm, one merged rectangular wall.
+// No material density is specified. No build plate or skim-cut stock is modeled.
+// Nominal identities are verified externally, never locked between parameters:
+// 2*noseLength*tan(noseAngle) = bodyWidth;
+// tan(overhangAngle) = overhangRise/gapWidth;
+// legPatternPitch = 3*gapWidth+mediumLegWidth+thinLegWidth+wideLegWidth;
+// legCount = 3*legPatternCount; thinWallCount = singleWallCount+doubleWallCount;
+// overallHeight = bodyHeight+tabHeight; legMergeHeight = legStraightHeight+overhangRise;
+// cavityCeilingZ = baseThickness+thinWallHeight;
+// wideLegWidth = cavityLength+2*outerWallThickness.
+
+
+actualMergeZ = legStraightHeight + overhangRise
+actualCeilingZ = baseThickness + thinWallHeight
+actualTopZ = bodyHeight + tabHeight
+toolEpsilon = thinLegWidth / 1000
+anchoredFirstTabX = overallLength - tabWidth - ((tabCount - 1) * tabPitch)
+
+assert(overallLength, isGreaterThan = noseLength)
+assert(bodyWidth, isGreaterThan = 0mm)
+assert(noseLength, isGreaterThan = 0mm, isLessThan = endBlockLength)
+assert(legStraightHeight, isGreaterThan = 0mm)
+assert(overhangRise, isGreaterThan = 0mm)
+assert(bodyHeight, isGreaterThan = actualMergeZ)
+assert(gapWidth, isGreaterThan = 0mm)
+assert(wideLegWidth, isGreaterThan = 0mm)
+assert(mediumLegWidth, isGreaterThan = 0mm)
+assert(thinLegWidth, isGreaterThan = 0mm)
+assert(tabWidth, isGreaterThan = 0mm, isLessThan = tabPitch)
+assert(tabHeight, isGreaterThan = 0mm)
+assert(baseThickness, isGreaterThan = 0mm, isLessThan = cavityCeilingZ)
+assert(cavityCeilingZ, isLessThan = legMergeHeight)
+assert(legMergeHeight, isLessThan = bodyHeight)
+assert(actualCeilingZ, isLessThan = actualMergeZ)
+assert(thinWallHeight, isGreaterThan = 0mm)
+assert(cavityLength, isGreaterThan = 0mm)
+assert(cavityWidth, isGreaterThan = 0mm)
+assert(outerWallThickness, isGreaterThan = 0mm)
+assert(singleWallWidth, isGreaterThan = 0mm)
+assert(doubleWallWidth, isGreaterThan = 0mm)
+assert(noseAngle, isGreaterThan = 0deg, isLessThan = 90deg)
+assert(overhangAngle, isGreaterThan = 0deg, isLessThan = 90deg)
+assert(firstTabX, isGreaterThan = noseLength)
+assert(anchoredFirstTabX, isGreaterThan = noseLength)
+assert(l10StartX, isGreaterThan = endBlockLength)
+assert(cavityStartX, isGreaterThan = l10StartX)
+assert(cavityStartX + cavityLength, isLessThan = l10StartX + wideLegWidth)
+assert(outerWallThickness + cavityWidth, isLessThan = bodyWidth)
+assert(toolEpsilon, isGreaterThan = 0mm)
+assert(bodyWidth + 2 * toolEpsilon, isGreaterThan = 0mm)
+
+// The bodyHeight +1 mm edit intentionally leaves nominal overallHeight literal.
+// Guard the actual top for that edit; the nominal overallHeight is a reference.
+assert(actualTopZ, isGreaterThan = bodyHeight)
+assert(overallHeight, isGreaterThan = legMergeHeight)
+
+countChecks = map(
+  [
+    legCount,
+    tabCount,
+    legPatternCount,
+    thinWallCount,
+    singleWallCount,
+    doubleWallCount
+  ],
+  f = fn(@n) {
+    assert(n, isGreaterThan = 0)
+    assertIs(n == floor(n), error = "Pattern and wall counts must be positive integers")
+    return n
+  },
+)
+
+// A: build plane; B: y=0; C: far end; D: body top. +x points away from the nose.
+datumA = XY
+datumB = XZ
+datumC = offsetPlane(YZ, offset = overallLength)
+datumD = offsetPlane(XY, offset = bodyHeight)
+mergeReference = offsetPlane(XY, offset = legMergeHeight)
+ceilingReference = offsetPlane(XY, offset = cavityCeilingZ)
+heightReference = offsetPlane(XY, offset = overallHeight)
+frameAxesXy = sketch(on = datumA) {
+  axisX = line(start = [0mm, 0mm], end = [overallLength, 0mm], construction = true)
+  axisY = line(start = [0mm, 0mm], end = [0mm, bodyWidth], construction = true)
+}
+frameAxisZ = sketch(on = datumB) {
+  axisZ = line(start = [0mm, 0mm], end = [0mm, bodyHeight], construction = true)
+}
+
+// Pentagonal stock including temporary tab-height material. Top reliefs below
+// remove that material between tabs. Actual bottom tip is [0, bodyWidth/2, 0].
+bodySketch = sketch(on = datumA) {
+  noseLower = line(start = [0mm, bodyWidth / 2], end = [var 2.5mm, var 0mm])
+  sideY0 = line(start = [var 2.5mm, var 0mm], end = [var 75mm, var 0mm])
+  farEnd = line(start = [var 75mm, var 0mm], end = [var 75mm, var 5mm])
+  sideY5 = line(start = [var 75mm, var 5mm], end = [var 2.5mm, var 5mm])
+  noseUpper = line(start = [var 2.5mm, var 5mm], end = [0mm, bodyWidth / 2])
+  coincident([noseLower.end, sideY0.start])
+  coincident([sideY0.end, farEnd.start])
+  coincident([farEnd.end, sideY5.start])
+  coincident([sideY5.end, noseUpper.start])
+  horizontal(sideY0)
+  vertical(farEnd)
+  horizontal(sideY5)
+  vertical([noseLower.end, sideY5.end])
+  horizontalDistance([ORIGIN, noseLower.end]) == noseLength
+  verticalDistance([ORIGIN, noseLower.end]) == 0mm
+  horizontalDistance([ORIGIN, farEnd.start]) == overallLength
+  verticalDistance([farEnd.start, farEnd.end]) == bodyWidth
+}
+bodyRegion = region(segments = [
+  bodySketch.noseLower,
+  bodySketch.sideY0
+])
+bodyStock = extrude(
+  bodyRegion,
+  length = actualTopZ,
+  tagStart = $buildStockBottom,
+  tagEnd = $bodyTop,
+)
+
+// Three underside cutter seeds repeated four times. Local (u,v)=(world x,world z),
+// normal -y, starting beyond y=bodyWidth. Extend tools only outside y and below z=0.
+gapPlane = {
+  origin = {
+    x = 0mm,
+    y = bodyWidth + toolEpsilon,
+    z = 0mm
+  },
+  xAxis = { x = 1, y = 0, z = 0 },
+  yAxis = { x = 0, y = 0, z = 1 }
+}
+gapStartA = endBlockLength
+gapStartB = endBlockLength + gapWidth + mediumLegWidth
+gapStartC = endBlockLength + 2 * gapWidth + mediumLegWidth + thinLegWidth
+assert(legPatternPitch - (3 * gapWidth + mediumLegWidth + thinLegWidth), isGreaterThan = 0mm)
+assert(gapStartC + (legPatternCount - 1) * legPatternPitch + gapWidth, isLessThan = overallLength)
+
+gapSketchA = sketch(on = gapPlane) {
+  bottom = line(start = [var 19mm, var -0.0005mm], end = [var 21mm, var -0.0005mm])
+  right = line(start = [var 21mm, var -0.0005mm], end = [var 21mm, var 7mm])
+  ceiling = line(start = [var 21mm, var 7mm], end = [var 19mm, var 5mm])
+  left = line(start = [var 19mm, var 5mm], end = [var 19mm, var -0.0005mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, ceiling.start])
+  coincident([ceiling.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  vertical(right)
+  vertical(left)
+  coincident([
+    bottom.start,
+    [gapStartA, -toolEpsilon]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == gapWidth
+  verticalDistance([ORIGIN, ceiling.start]) == actualMergeZ
+  verticalDistance([ORIGIN, ceiling.end]) == legStraightHeight
+}
+gapToolA = extrude(region(segments = [gapSketchA.bottom, gapSketchA.right]), length = bodyWidth + 2 * toolEpsilon)
+
+gapSketchB = sketch(on = gapPlane) {
+  bottom = line(start = [var 23.5mm, var -0.0005mm], end = [var 25.5mm, var -0.0005mm])
+  right = line(start = [var 25.5mm, var -0.0005mm], end = [var 25.5mm, var 7mm])
+  ceiling = line(start = [var 25.5mm, var 7mm], end = [var 23.5mm, var 5mm])
+  left = line(start = [var 23.5mm, var 5mm], end = [var 23.5mm, var -0.0005mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, ceiling.start])
+  coincident([ceiling.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  vertical(right)
+  vertical(left)
+  coincident([
+    bottom.start,
+    [gapStartB, -toolEpsilon]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == gapWidth
+  verticalDistance([ORIGIN, ceiling.start]) == actualMergeZ
+  verticalDistance([ORIGIN, ceiling.end]) == legStraightHeight
+}
+gapToolB = extrude(region(segments = [gapSketchB.bottom, gapSketchB.right]), length = bodyWidth + 2 * toolEpsilon)
+
+gapSketchC = sketch(on = gapPlane) {
+  bottom = line(start = [var 26mm, var -0.0005mm], end = [var 28mm, var -0.0005mm])
+  right = line(start = [var 28mm, var -0.0005mm], end = [var 28mm, var 7mm])
+  ceiling = line(start = [var 28mm, var 7mm], end = [var 26mm, var 5mm])
+  left = line(start = [var 26mm, var 5mm], end = [var 26mm, var -0.0005mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, ceiling.start])
+  coincident([ceiling.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  vertical(right)
+  vertical(left)
+  coincident([
+    bottom.start,
+    [gapStartC, -toolEpsilon]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == gapWidth
+  verticalDistance([ORIGIN, ceiling.start]) == actualMergeZ
+  verticalDistance([ORIGIN, ceiling.end]) == legStraightHeight
+}
+gapToolC = extrude(region(segments = [gapSketchC.bottom, gapSketchC.right]), length = bodyWidth + 2 * toolEpsilon)
+
+gapTools = patternLinear3d(
+  [gapToolA, gapToolB, gapToolC],
+  instances = legPatternCount,
+  distance = legPatternPitch,
+  axis = X,
+)
+bodyWithLegs = subtract(bodyStock, tools = gapTools)
+
+// L10: five separate, fully enclosed tools retain four walls joined to both x ends,
+// the 1 mm base, and the flat z=5 ceiling. Increasing +y order is single/double/single/double.
+pocketSpans = [
+  [
+    outerWallThickness,
+    singleWall1Y - (singleWallWidth / 2)
+  ],
+  [
+    singleWall1Y + singleWallWidth / 2,
+    doubleWall1Y - (doubleWallWidth / 2)
+  ],
+  [
+    doubleWall1Y + doubleWallWidth / 2,
+    singleWall2Y - (singleWallWidth / 2)
+  ],
+  [
+    singleWall2Y + singleWallWidth / 2,
+    doubleWall2Y - (doubleWallWidth / 2)
+  ],
+  [
+    doubleWall2Y + doubleWallWidth / 2,
+    outerWallThickness + cavityWidth
+  ]
+]
+pocketChecks = map(
+  pocketSpans,
+  f = fn(@span) {
+    assert(span[0], isGreaterThan = 0mm)
+    assert(span[1], isGreaterThan = span[0], isLessThan = bodyWidth)
+    return span[1] - span[0]
+  },
+)
+cavityPlane = offsetPlane(XY, offset = baseThickness)
+
+pocketSketch1 = sketch(on = cavityPlane) {
+  bottom = line(start = [var 28.5mm, var 0.5mm], end = [var 32.5mm, var 0.5mm])
+  right = line(start = [var 32.5mm, var 0.5mm], end = [var 32.5mm, var 1.25mm])
+  top = line(start = [var 32.5mm, var 1.25mm], end = [var 28.5mm, var 1.25mm])
+  left = line(start = [var 28.5mm, var 1.25mm], end = [var 28.5mm, var 0.5mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  coincident([
+    bottom.start,
+    [cavityStartX, pocketSpans[0][0]]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == cavityLength
+  verticalDistance([bottom.start, left.start]) == pocketSpans[0][1] - pocketSpans[0][0]
+}
+pocketTool1 = extrude(
+  region(segments = [
+    pocketSketch1.bottom,
+    pocketSketch1.right
+  ]),
+  length = thinWallHeight,
+)
+
+pocketSketch2 = sketch(on = cavityPlane) {
+  bottom = line(start = [var 28.5mm, var 1.35mm], end = [var 32.5mm, var 1.35mm])
+  right = line(start = [var 32.5mm, var 1.35mm], end = [var 32.5mm, var 1.95mm])
+  top = line(start = [var 32.5mm, var 1.95mm], end = [var 28.5mm, var 1.95mm])
+  left = line(start = [var 28.5mm, var 1.95mm], end = [var 28.5mm, var 1.35mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  coincident([
+    bottom.start,
+    [cavityStartX, pocketSpans[1][0]]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == cavityLength
+  verticalDistance([bottom.start, left.start]) == pocketSpans[1][1] - pocketSpans[1][0]
+}
+pocketTool2 = extrude(
+  region(segments = [
+    pocketSketch2.bottom,
+    pocketSketch2.right
+  ]),
+  length = thinWallHeight,
+)
+
+pocketSketch3 = sketch(on = cavityPlane) {
+  bottom = line(start = [var 28.5mm, var 2.15mm], end = [var 32.5mm, var 2.15mm])
+  right = line(start = [var 32.5mm, var 2.15mm], end = [var 32.5mm, var 2.85mm])
+  top = line(start = [var 32.5mm, var 2.85mm], end = [var 28.5mm, var 2.85mm])
+  left = line(start = [var 28.5mm, var 2.85mm], end = [var 28.5mm, var 2.15mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  coincident([
+    bottom.start,
+    [cavityStartX, pocketSpans[2][0]]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == cavityLength
+  verticalDistance([bottom.start, left.start]) == pocketSpans[2][1] - pocketSpans[2][0]
+}
+pocketTool3 = extrude(
+  region(segments = [
+    pocketSketch3.bottom,
+    pocketSketch3.right
+  ]),
+  length = thinWallHeight,
+)
+
+pocketSketch4 = sketch(on = cavityPlane) {
+  bottom = line(start = [var 28.5mm, var 2.95mm], end = [var 32.5mm, var 2.95mm])
+  right = line(start = [var 32.5mm, var 2.95mm], end = [var 32.5mm, var 3.55mm])
+  top = line(start = [var 32.5mm, var 3.55mm], end = [var 28.5mm, var 3.55mm])
+  left = line(start = [var 28.5mm, var 3.55mm], end = [var 28.5mm, var 2.95mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  coincident([
+    bottom.start,
+    [cavityStartX, pocketSpans[3][0]]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == cavityLength
+  verticalDistance([bottom.start, left.start]) == pocketSpans[3][1] - pocketSpans[3][0]
+}
+pocketTool4 = extrude(
+  region(segments = [
+    pocketSketch4.bottom,
+    pocketSketch4.right
+  ]),
+  length = thinWallHeight,
+)
+
+pocketSketch5 = sketch(on = cavityPlane) {
+  bottom = line(start = [var 28.5mm, var 3.75mm], end = [var 32.5mm, var 3.75mm])
+  right = line(start = [var 32.5mm, var 3.75mm], end = [var 32.5mm, var 4.5mm])
+  top = line(start = [var 32.5mm, var 4.5mm], end = [var 28.5mm, var 4.5mm])
+  left = line(start = [var 28.5mm, var 4.5mm], end = [var 28.5mm, var 3.75mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  coincident([
+    bottom.start,
+    [cavityStartX, pocketSpans[4][0]]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == cavityLength
+  verticalDistance([bottom.start, left.start]) == pocketSpans[4][1] - pocketSpans[4][0]
+}
+pocketTool5 = extrude(
+  region(segments = [
+    pocketSketch5.bottom,
+    pocketSketch5.right
+  ]),
+  length = thinWallHeight,
+)
+
+bodyWithPockets = subtract(
+  bodyWithLegs,
+  tools = [
+    pocketTool1,
+    pocketTool2,
+    pocketTool3,
+    pocketTool4,
+    pocketTool5
+  ],
+)
+
+// Integral top tabs: the documented face-based feature pattern produced touching
+// solids in this runtime. Use the equivalent inverse pattern of top reliefs so
+// the tabs and bridge remain one material solid. Finished tab top is actualTopZ.
+// There is no machining/skim-cut allowance; the extra stock is construction only.
+topReliefPlane = offsetPlane(XY, offset = bodyHeight)
+leadingReliefWidth = anchoredFirstTabX + toolEpsilon
+interTabReliefWidth = tabPitch - tabWidth
+assert(leadingReliefWidth, isGreaterThan = 0mm)
+assert(interTabReliefWidth, isGreaterThan = 0mm)
+assert(tabCount, isGreaterThan = 1)
+
+topReliefLeading = sketch(on = topReliefPlane) {
+  bottom = line(start = [var -0.0005mm, var -0.0005mm], end = [var 4mm, var -0.0005mm])
+  right = line(start = [var 4mm, var -0.0005mm], end = [var 4mm, var 5.0005mm])
+  top = line(start = [var 4mm, var 5.0005mm], end = [var -0.0005mm, var 5.0005mm])
+  left = line(start = [var -0.0005mm, var 5.0005mm], end = [var -0.0005mm, var -0.0005mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  coincident([
+    bottom.start,
+    [-toolEpsilon, -toolEpsilon]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == leadingReliefWidth
+  verticalDistance([bottom.start, left.start]) == bodyWidth + 2 * toolEpsilon
+}
+topToolLeading = extrude(
+  region(segments = [
+    topReliefLeading.bottom,
+    topReliefLeading.right
+  ]),
+  length = tabHeight + toolEpsilon,
+)
+
+topReliefBetween = sketch(on = topReliefPlane) {
+  bottom = line(start = [var 5mm, var -0.0005mm], end = [var 11mm, var -0.0005mm])
+  right = line(start = [var 11mm, var -0.0005mm], end = [var 11mm, var 5.0005mm])
+  top = line(start = [var 11mm, var 5.0005mm], end = [var 5mm, var 5.0005mm])
+  left = line(start = [var 5mm, var 5.0005mm], end = [var 5mm, var -0.0005mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  coincident([
+    bottom.start,
+    [
+      anchoredFirstTabX + tabWidth,
+      -toolEpsilon
+    ]
+  ])
+  horizontalDistance([bottom.start, bottom.end]) == interTabReliefWidth
+  verticalDistance([bottom.start, left.start]) == bodyWidth + 2 * toolEpsilon
+}
+topToolBetween = extrude(
+  region(segments = [
+    topReliefBetween.bottom,
+    topReliefBetween.right
+  ]),
+  length = tabHeight + toolEpsilon,
+)
+
+interTabTools = patternLinear3d(
+  topToolBetween,
+  instances = tabCount - 1,
+  distance = tabPitch,
+  axis = X,
+)
+bridge = subtract(bodyWithPockets, tools = concat([topToolLeading], items = interTabTools))
+
+// Final native face handles. Booleans split creation tags, so engine face indices
+// were resolved from normal, plane, area AND x interval, then independently checked
+// by extruding each selected TaggedFace into a 0.01 mm diagnostic slab in scratch.
+// Engine indices differ from STEP traversal indices. native-face-bindings.json in
+// model-work records the measured association. Re-resolve after topology/count edits.
+// buildContactEndBlock: nominal x=[0,19], area=88.75 mm^2.
+buildContactEndBlock = faceId(bridge, index = 5)
+// buildContactL01: nominal x=[70,75], area=25 mm^2.
+buildContactL01 = faceId(bridge, index = 50)
+// buildContactL02: nominal x=[67.5,68], area=2.5 mm^2.
+buildContactL02 = faceId(bridge, index = 34)
+// buildContactL03: nominal x=[63,65.5], area=12.5 mm^2.
+buildContactL03 = faceId(bridge, index = 18)
+// buildContactL04: nominal x=[56,61], area=25 mm^2.
+buildContactL04 = faceId(bridge, index = 46)
+// buildContactL05: nominal x=[53.5,54], area=2.5 mm^2.
+buildContactL05 = faceId(bridge, index = 30)
+// buildContactL06: nominal x=[49,51.5], area=12.5 mm^2.
+buildContactL06 = faceId(bridge, index = 14)
+// buildContactL07: nominal x=[42,47], area=25 mm^2.
+buildContactL07 = faceId(bridge, index = 42)
+// buildContactL08: nominal x=[39.5,40], area=2.5 mm^2.
+buildContactL08 = faceId(bridge, index = 26)
+// buildContactL09: nominal x=[35,37.5], area=12.5 mm^2.
+buildContactL09 = faceId(bridge, index = 10)
+// buildContactL10: nominal x=[28,33], area=25 mm^2.
+buildContactL10 = faceId(bridge, index = 38)
+// buildContactL11: nominal x=[25.5,26], area=2.5 mm^2.
+buildContactL11 = faceId(bridge, index = 22)
+// buildContactL12: nominal x=[21,23.5], area=12.5 mm^2.
+buildContactL12 = faceId(bridge, index = 6)
+// tabTop01: nominal x=[4,5], area=5 mm^2.
+tabTop01 = faceId(bridge, index = 84)
+// tabTop02: nominal x=[11,12], area=5 mm^2.
+tabTop02 = faceId(bridge, index = 87)
+// tabTop03: nominal x=[18,19], area=5 mm^2.
+tabTop03 = faceId(bridge, index = 91)
+// tabTop04: nominal x=[25,26], area=5 mm^2.
+tabTop04 = faceId(bridge, index = 98)
+// tabTop05: nominal x=[32,33], area=5 mm^2.
+tabTop05 = faceId(bridge, index = 99)
+// tabTop06: nominal x=[39,40], area=5 mm^2.
+tabTop06 = faceId(bridge, index = 103)
+// tabTop07: nominal x=[46,47], area=5 mm^2.
+tabTop07 = faceId(bridge, index = 107)
+// tabTop08: nominal x=[53,54], area=5 mm^2.
+tabTop08 = faceId(bridge, index = 111)
+// tabTop09: nominal x=[60,61], area=5 mm^2.
+tabTop09 = faceId(bridge, index = 115)
+// tabTop10: nominal x=[67,68], area=5 mm^2.
+tabTop10 = faceId(bridge, index = 119)
+// tabTop11: nominal x=[74,75], area=5 mm^2.
+tabTop11 = faceId(bridge, index = 123)
+// sideY0: nominal x=[2.5,75], area=731.5 mm^2.
+sideY0 = faceId(bridge, index = 0)
+// sideY5: nominal x=[2.5,75], area=731.5 mm^2.
+sideY5 = faceId(bridge, index = 2)
+// farEnd: nominal x=[75,75], area=62.5 mm^2.
+farEnd = faceId(bridge, index = 1)
+
+buildPlateContacts = [
+  buildContactEndBlock,
+  buildContactL01,
+  buildContactL02,
+  buildContactL03,
+  buildContactL04,
+  buildContactL05,
+  buildContactL06,
+  buildContactL07,
+  buildContactL08,
+  buildContactL09,
+  buildContactL10,
+  buildContactL11,
+  buildContactL12
+]
+displacementTabTops = [
+  tabTop01,
+  tabTop02,
+  tabTop03,
+  tabTop04,
+  tabTop05,
+  tabTop06,
+  tabTop07,
+  tabTop08,
+  tabTop09,
+  tabTop10,
+  tabTop11
+]
+frameSideAndEndFaces = [sideY0, sideY5, farEnd]
+
+bridge

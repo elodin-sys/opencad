@@ -1,0 +1,170 @@
+schema_version: 1
+kind: assembly
+name: mixer-01
+intent: >-
+  Sealed magnetic-drive paddle mixer for water from sources/mixer-01-spec.md (authoritative): a D50 x 25 cylindrical
+  polypropylene housing with an axial D12 inlet tube in the lid, a radial D10 outlet tube in the side wall and a fixed D6
+  pin, a four-blade D40 acetal paddle impeller spinning on the pin, a purchased D30 x 40 motor body under the floor (it
+  drives the impeller through the floor by a magnetic coupling that is not modelled), and the derived water region between
+  the inlet (z = 48) and outlet (x = 58) port planes. At the design point (1500 rpm, 2.0 L/min) predict the static pressure
+  rise and the impeller torque from a steady MRF CFD on a three-level mesh ladder, an Euler-head estimate of the pressure
+  rise, and the water volume; the spec requires a static pressure rise of at least 500 Pa.
+units: {length: mm, angle: deg}
+frame:
+  origin: centre of the chamber floor's inside face, on the impeller and pin axis
+  axes: {x: "horizontal, toward the outlet tube", y: completes a right-handed frame, z: "impeller axis, up toward the inlet tube"}
+  datums:
+    - {name: A, description: chamber floor inside face z = 0}
+    - {name: B, description: impeller and pin axis x = y = 0}
+    - {name: C, description: "outlet tube axis y = 0, z = 12.5, along +x"}
+envelope: {min: [-28.0, -28.0, -43.0], max: [58.0, 28.0, 48.0], tolerance: 0.1}
+datum_part: housing
+parts:
+  - name: housing
+    kind: modelled
+    design: mixer-01-housing
+    intent: >-
+      Housing in its own frame, which is the assembly frame: origin at the centre of the chamber floor's inside face, +z up
+      the impeller axis, +x toward the outlet. One solid. Closed cylindrical chamber of inner radius 25.0 (D50) over
+      z 0..25; side wall 3.0 thick (outer radius 28.0) over z -3..28; floor 3.0 thick z -3..0; lid 3.0 thick z 25..28.
+      Inlet tube on the axis: inner diameter 12.0, outer diameter 16.0, z 28..48, open at z = 48; its D12 bore continues
+      through the lid into the chamber (bore z 25..48). Outlet tube on the axis y = 0, z = 12.5 along +x: inner diameter
+      10.0, outer diameter 14.0, from the side wall's outer face to its open end at x = 58; its D10 bore continues through
+      the side wall into the chamber. Fixed pin on the axis, diameter 6.0, from the floor z = 0 to a flat top at z = 12,
+      part of the same solid. No fillets or chamfers are stated. Interfaces: the pin carries the impeller (its D8 hub bore
+      with 1.0 radial clearance, the hub's bottom face 1.0 above the floor at z = 1); the floor's underside z = -3 is the
+      seat of the D30 motor face, centred on the axis; the open tube ends z = 48 and x = 58 are the fluid port planes.
+      Bounding box x -28..58, y -28..28, z -3..48; volume about 31076 mm3.
+    material: polypropylene
+    density_kg_m3: 900.0
+  - name: impeller
+    kind: modelled
+    design: mixer-01-impeller
+    intent: >-
+      Four-blade paddle impeller in its own frame: origin at the centre of the hub's bottom face, +z along the rotation
+      axis, one blade along +x. One solid. Hub: outer diameter 12.0, z 0..10, with a through bore of diameter 8.0 on the
+      axis (it rides on the housing's D6 pin with 1.0 radial clearance). Four flat radial blades at 0, 90, 180 and 270 deg
+      about +z, each 2.0 thick tangentially and centred on its radius line (|y| <= 1.0 for the +x blade), from the hub at
+      radius 6.0 (the roots merge into the hub) to tips on radius 20.0, over z 1..9 (8.0 tall). No fillets or chamfers
+      are stated. Interfaces: the D8 bore and the bottom face (1.0 above the housing floor when placed) run on the pin;
+      the whole outer surface is the rotating wetted wall. Bounding box x -20..20, y -20..20, z 0..10; volume about
+      1525.6 mm3 (hub 628.3, each blade 224.3).
+    material: acetal
+    density_kg_m3: 1410.0
+  - name: motor
+    kind: purchased
+    catalog: {name: motor, kind: cylinder, point: [0.0, 0.0, -40.0], direction: [0.0, 0.0, 1.0], radius: 15.0, length: 40.0}
+    description: >-
+      Purchased motor body in its own frame: origin at the centre of its top (output) face, +z along its shaft; a plain
+      D30 x 40 cylinder over z -40..0. It turns the impeller through the floor by a magnetic coupling that is not
+      modelled, so the body itself is stationary.
+  - name: water
+    kind: derived
+    role: fluid
+    material: water at 20 degC
+    description: >-
+      The water filling the chamber and both tube bores around the impeller and the pin, bounded by the housing and the
+      impeller and capped at the inlet plane z = 48 and the outlet plane x = 58 (built in the assembly source).
+parameters:
+  - {name: impellerLift, value: 1.0, unit: mm, provenance: stated, tolerance: 0.01, source: sources/mixer-01-spec.md Placement, description: "hub bottom face above the floor; the impeller origin sits at (0, 0, 1)"}
+  - {name: pinClearance, value: 1.0, unit: mm, provenance: derived, tolerance: 0.01, formula: "(hubBoreDiameter 8.0 - pinDiameter 6.0) / 2", description: radial clearance of the hub bore on the pin}
+  - {name: tipGap, value: 5.0, unit: mm, provenance: derived, tolerance: 0.01, formula: "chamberRadius 25.0 - bladeTipRadius 20.0", description: blade tip to chamber wall}
+  - {name: lidGap, value: 14.0, unit: mm, provenance: derived, tolerance: 0.01, formula: "lid underside 25.0 - hub top (1.0 + 10.0)", description: hub top to the lid}
+joints:
+  - name: motorMount
+    kind: rigid
+    parent: housing
+    child: motor
+    parent_frame: {origin: [0.0, 0.0, -3.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: the motor's top face against the floor's underside z = -3, on the axis
+  - name: impellerSpin
+    kind: revolute
+    parent: housing
+    child: impeller
+    parent_frame: {origin: [0.0, 0.0, 1.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    angle: 0.0
+    drive: {kind: motor, case_value: impellerRpm, description: "turned by the motor under the floor through the unmodelled magnetic coupling; positive about +z (counter-clockwise seen from above)"}
+    description: the impeller on the pin, its hub's bottom face 1.0 above the floor; at rest the +x blade points at the outlet
+  - name: waterFixed
+    kind: rigid
+    parent: housing
+    child: water
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: the derived water region is built in the assembly frame
+fluid_volumes:
+  - name: water
+    body: water
+    walls: [housing]
+    minus: [impeller]
+    caps:
+      - {name: inletCap, point: [0.0, 0.0, 48.0], normal: [0.0, 0.0, 1.0]}
+      - {name: outletCap, point: [58.0, 0.0, 12.5], normal: [1.0, 0.0, 0.0]}
+    seed: [12.3, 5.7, 17.1]
+    volume: {expected: 52425.0, tolerance_rel: 0.01, provenance: derived, note: "chamber 49087.4 + inlet bore 2601.2 + outlet bore 2601.7 - pin 339.3 - impeller 1525.6 (brief section 5); the spec states about 5.24e4"}
+    description: seed above the impeller between the axis and the wall, at least 6 mm from every wall
+boundaries:
+  - {name: inlet, role: inlet, body: water, select: plane, point: [0.0, 0.0, 48.0], normal: [0.0, 0.0, 1.0], area: {expected: 113.097, tolerance_rel: 0.01, provenance: derived, note: "pi x 6.0^2, the D12 inlet bore"}}
+  - {name: outlet, role: outlet, body: water, select: plane, point: [58.0, 0.0, 12.5], normal: [1.0, 0.0, 0.0], area: {expected: 78.540, tolerance_rel: 0.01, provenance: derived, note: "pi x 5.0^2, the D10 outlet bore"}}
+  - {name: impellerWall, role: rotating_wall, body: water, select: touching, touching: impeller, description: the impeller's whole wetted surface (rotating)}
+  - {name: housingWall, role: wall, body: water, select: rest, description: "every other wetted housing surface, stationary: chamber, lid, floor, both bores and the pin (also where they lie inside the rotating zone)"}
+operating_cases:
+  - {id: design, values: {impellerRpm: 1500.0, flowLMin: 2.0, inletTurbulencePct: 5.0}, units: {impellerRpm: rpm, flowLMin: L/min, inletTurbulencePct: "%"}, split: development, source: sources/mixer-01-spec.md Operating point, description: the design point}
+observables:
+  - {id: pressureRiseCfd, quantity: pressure_rise, unit: Pa, simulation: cfd, case: design, averaging: steady, min: 500.0, description: "static pressure, outlet plane minus inlet plane, area-averaged; the spec requires at least 500 Pa"}
+  - {id: impellerTorque, quantity: torque, unit: N m, simulation: cfd, case: design, body: impeller, averaging: steady, description: the torque the impeller absorbs about its axis}
+  - {id: pressureRiseEuler, quantity: pressure_rise, unit: Pa, simulation: euler, case: design, averaging: steady, description: "Euler-head estimate of the same static pressure rise, for comparison with the CFD"}
+  - {id: eulerHeadIdeal, quantity: euler_head, unit: m, simulation: euler, case: design, averaging: steady, description: the ideal Euler head (no hydraulic efficiency) behind the estimate}
+  - {id: waterVolume, quantity: fluid_volume, unit: mm3, body: water, description: the volume of the derived water region}
+simulations:
+  - id: cfd
+    physics: cfd_steady
+    solver: openfoam
+    cases: [design]
+    bodies: [water, impeller]
+    inputs:
+      fluidDensity: {value: 998.2, unit: kg/m3, provenance: stated, source: sources/mixer-01-spec.md Fluid}
+      fluidViscosity: {value: 1.002e-3, unit: Pa s, provenance: stated, source: sources/mixer-01-spec.md Fluid}
+    settings: {flow_key: flowLMin, speed_key: impellerRpm, turbulence_key: inletTurbulencePct, inlet_diameter_mm: 12.0, cell_mm: 1.5, surface_level: 1, iterations: 1500, processes: 4, timeout_s: 1200}
+    refinement: [1.0, 0.75, 0.5625, 0.421875]
+    outputs: [pressureRiseCfd, impellerTorque]
+    description: >-
+      Steady MRF (simpleFoam, k-omega SST) of the water region with the impeller rotating at the case speed; 1.5 mm
+      interior cells with walls one level finer at level 1.0, then three levels each refining everywhere at a constant
+      factor ratio 4/3; the grid-convergence index is taken over the finest three, and the finest level (about 498k
+      cells) is sized to solve within the spec's 20 minutes on 4 cores.
+  - id: euler
+    physics: reduced
+    solver: reduced:pump_euler
+    cases: [design]
+    bodies: [impeller]
+    inputs:
+      fluidDensity: {value: 998.2, unit: kg/m3, provenance: stated, source: sources/mixer-01-spec.md Fluid}
+      bladeCount: {value: 4.0, unit: "", provenance: stated, source: sources/mixer-01-spec.md Dimensions (impeller blades)}
+      bladeOutletAngle: {value: 90.0, unit: deg, provenance: stated, source: sources/mixer-01-spec.md Predictions item 2}
+      bladeOutletWidth: {value: 8.0, unit: mm, provenance: stated, source: sources/mixer-01-spec.md Predictions item 2}
+      hydraulicEfficiency: {value: 0.35, unit: "", provenance: inferred, rationale: "the spec states it is not known; radial blades without a volute or diffuser turn at most the reaction part (one half to two thirds) of the Euler work into static pressure, and open unshrouded paddles with a 5 mm tip gap in a flat chamber lose more of it, so 0.35 with a wide band (0.2..0.5)", uncertainty: 0.15}
+    settings: {flow_key: flowLMin, speed_key: impellerRpm}
+    outputs: [pressureRiseEuler, eulerHeadIdeal]
+    description: Euler-head estimate from the placed impeller's tip radius at the case speed and flow, for comparison with the CFD
+acceptance:
+  clearances:
+    - {name: impellerOnPin, a: impeller, b: housing, min_gap: 0.9, max_gap: 1.1, description: "at rest the nearest approach is 1.0: the hub bore to the pin (radial) and the hub's bottom face to the floor (tips 5.0 to the wall, 14.0 to the lid)"}
+    - {name: motorSeat, a: motor, b: housing, min_gap: 0.0, max_gap: 0.05, description: the motor's top face seats on the floor's underside z = -3}
+    - {name: impellerClearOfMotor, a: impeller, b: motor, min_gap: 3.5, description: "the floor separates them: hub bottom z = 1 to motor top z = -3"}
+  motions:
+    - {name: impellerTurn, drive: impellerSpin, range: [0.0, 360.0], steps: 36, pairs: [[impeller, housing], [impeller, motor]], description: "a full impeller turn free of interference with the housing (the water region is fluid, not checked)"}
+references:
+  - {path: sources/mixer-01-spec.md, kind: text, role: authoritative, sha256: 7c08f09900a1078122226978351d2ff7878b3adda1dc49b70bada1a4dcf2a8a1}
+open_questions:
+  - "The spec states the hydraulic efficiency is not known; the Euler estimate uses an inferred 0.35 with a standard uncertainty of 0.15, so it is a comparison only and the 500 Pa requirement is gated on the CFD prediction alone."
+  - "The spec places the impeller by translation only; its rest phase is taken as a blade along +x pointing at the outlet (angle 0). The frozen-rotor (MRF) CFD depends weakly on this phase."
+  - "The pin, the floor and the lid are stationary walls even where they lie inside the rotating (MRF) zone around the impeller; the zone's extent is the CFD adapter's choice."
+  - "The magnetic coupling and the motor's internals are not modelled; the motor is a stationary D30 x 40 cylinder whose material and mass the spec does not give, so the contract sets no assembly mass or centre of mass."
+  - "No fillets, chamfers, draft or tube-to-wall blends are stated; both parts are drafted with sharp edges. The blade tips are trimmed to radius 20.0 (a flat tip would reach 20.03 at its corners)."
+  - "The mesh ladder (cell 1.5 mm, walls one level finer, factor ratio 4/3) is [1.0, 0.75, 0.5625, 0.421875]; the 1200 s timeout enforces the spec's 20 minutes per level on 4 cores. If the finest three still do not converge (GCI above 0.05), a fifth 4/3 level (about 926k cells, about 1850 s) breaks that budget, so the next lever is the wall treatment or the ladder's shape rather than another level."
+  - "ECR 1, waterVolume: quantity `volume` -> `fluid_volume`. Evidence: for an observable without a simulation the evaluator measures `fluid_volume`, not `volume`, so the prediction came back unavailable and the assembly lint rejected the contract; the domains stage measured the sealed water region at 52,425 mm3 (domains.json fluids.water.volume), the centre of the analytic band."
+  - "ECR 1, cfd ladder: [1.0, 0.75, 0.5625] -> [1.0, 0.75, 0.5625, 0.421875], a finer fourth level at the same 4/3 factor ratio; the 1500 iterations and every setting are unchanged so the three run levels are reused. Evidence: 76,908, 143,786 and 267,558 cells (1.86x per level, cell-count ratio 1.23) in 670, 726 and 533 s on 4 processes; the pressure rise 3739, 3878, 4079 Pa diverges (+139, +201 Pa; GCI 0.288 at Fs 3, u_discretisation 1176 Pa) and the torque oscillates (4.793e-3, 4.650e-3, 4.738e-3 N m; GCI 0.178). At the finest level's 1.99 ms per cell the new level is about 498k cells and 990 s, inside the 1200 s timeout; starting finer at the same ratio needs a 0.3164 level (about 926k cells, 1850 s), over the spec's 20 minutes, and a smaller ratio would push the cell-count ratio further below 1.3. The GCI is now taken over [0.75, 0.5625, 0.421875] and the prediction is the 0.421875 level. The first two levels ran 2.5 to 4.4 times slower per cell beside an 8-process run of another machine, so the new level needs the cores to itself to stay inside the timeout."
+  - "The spec gives no outlet back-pressure or inlet turbulence length scale; the CFD adapter's defaults apply (static-pressure outlet, length scale from the 12.0 inlet diameter)."

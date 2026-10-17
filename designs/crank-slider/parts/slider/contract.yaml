@@ -1,0 +1,245 @@
+schema_version: 1
+name: crank-slider-slider
+intent: >-
+  Slider block of the offset crank-slider mechanism, drafted in its own frame: a 30 x 16 x 5 mm
+  block (30 along the guide) centred on one D6 through hole for the wrist pin B. Its bottom face
+  z = 0 slides on the ground's top face along +x (prismatic guide, no rotation); its top face
+  z = 5 carries the connecting rod's bottom face at the wrist pin B (revolute about +z).
+  Volume 2258.63 mm3 (30 x 16 x 5 minus the D6 hole). Authoritative source:
+  sources/crank-slider-spec.md (text only).
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of the D6 wrist-pin hole on the block's bottom face (z = 0); the block is centred on it (x = -15..15, y = -8..8)"
+  axes:
+    x: "along the guide and the 30 mm length; the slider translates along +x (parallel to the assembly's guide line y = 10)"
+    y: "across the guide, along the 16 mm width; mirror plane y = 0 lies on the guide line"
+    z: "along the wrist-pin axis, up through the 5 mm thickness from the bottom (guide) face z = 0 to the top (rod) face z = 5"
+  datums:
+    - name: A
+      description: "bottom face z = 0, outward normal -z: the prismatic guide face that slides on the ground's top face (assembly joint guide at own-frame [0, 0, 0], axis +x)"
+    - name: B
+      description: "wrist-pin axis: the D6 hole axis through the origin along +z (assembly joint wristPin at own-frame [0, 0, 5], axis +z)"
+    - name: C
+      description: "top face z = 5, outward normal +z: carries the connecting rod's bottom face"
+    - name: D
+      description: "mid-planes x = 0 and y = 0: the block is centred on the hole"
+
+envelope:
+  min: [-15, -8, 0]
+  max: [15, 8, 5]
+  tolerance: 0.05
+
+parameters:
+  - name: blockLength
+    value: 30
+    unit: mm
+    provenance: stated
+    source: "crank-slider-spec.md, parts table, Slider row: block 30 (along the guide) x 16 x 5 centred on B"
+    tolerance: 0.01
+    description: "block length along x (the guide), centred on the hole: x = -blockLength/2..blockLength/2"
+    edit_test:
+      delta: 4
+      expect:
+        volume_delta: 320
+        direction: increase
+        bbox_delta: [4, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [20, 30, 40]
+      infeasible_deltas: [-26]
+  - name: blockWidth
+    value: 16
+    unit: mm
+    provenance: stated
+    source: "crank-slider-spec.md, parts table, Slider row: block 30 x 16 x 5 centred on B"
+    tolerance: 0.01
+    description: "block width along y (across the guide), centred on the hole: y = -blockWidth/2..blockWidth/2"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 300
+        direction: increase
+        bbox_delta: [0, 2, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [10, 16, 22]
+      infeasible_deltas: [-12]
+  - name: blockThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "crank-slider-spec.md, parts table, Slider row (x 16 x 5) and layers: crank and slider z 0..5, rod z 5..10"
+    tolerance: 0.01
+    description: "block thickness along z, from the guide face z = 0 to the rod face z = blockThickness"
+  - name: holeDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "crank-slider-spec.md, parts table, Slider row: Ø6 hole at B"
+    tolerance: 0.01
+    description: "diameter of the wrist-pin through hole on the z axis"
+
+features:
+  - id: block
+    kind: extrude
+    description: "blockLength x blockWidth rectangle centred on the origin, extruded +z from z = 0 by blockThickness"
+    parameters: [blockLength, blockWidth, blockThickness]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[9, 4, 2.5], [-9, 4, 2.5], [-9, -4, 2.5], [9, -4, 2.5]]
+      - method: face
+        face: bottom
+      - method: face
+        face: top
+      - method: dimension
+        dimension: lengthX
+      - method: dimension
+        dimension: widthY
+      - method: dimension
+        dimension: thicknessZ
+  - id: pinHole
+    kind: hole
+    description: "D6 wrist-pin through hole on the z axis at the origin, full depth z = 0..blockThickness"
+    parameters: [holeDiameter, blockThickness]
+    verify:
+      - method: cylinder
+        cylinder: pinBore
+      - method: void
+        points: [[0, 0, 1.5], [0, 0, 3.5], [-1.5, 0, 2.5]]
+      - method: section
+        section: midZ
+      - method: section
+        section: acrossX
+
+interfaces:
+  - name: guide
+    description: "prismatic guide with the ground: bottom face z = 0 (datum A, normal -z) slides on the ground's top face along +x with no rotation; the mid-plane y = 0 lies on the guide line. The length and width edits move neither."
+    must_not_change: true
+    checks: [bottom, mirrorY]
+  - name: wristPin
+    description: "revolute pin B with the connecting rod: D6 bore on the z axis through the origin (datum B), top face z = 5 (datum C) carrying the rod's bottom face, block centred on the pin along the guide (x = 0). The length and width edits move none of these."
+    must_not_change: true
+    checks: [pinBore, top, mirrorX]
+
+acceptance:
+  volume:
+    expected: 2258.63
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "blockLength * blockWidth * blockThickness - pi/4 * holeDiameter^2 * blockThickness = 2400 - 45 pi = 2258.628"
+  surface_area:
+    expected: 1457.70
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "2 * (30 * 16 - 9 pi) + 2 * 5 * (30 + 16) + pi * 6 * 5 = 903.451 + 460 + 94.248 = 1457.699"
+  center_of_mass:
+    expected: [0, 0, 2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "block and hole centred on the origin in x and y (mirror planes x = 0, y = 0); prismatic through z = 0..5, so z = blockThickness / 2"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 2.5
+      expect:
+        area: 451.726
+        loops: 1
+        holes: 1
+      description: "mid-thickness section through the bore: 30 * 16 - 9 pi"
+    - id: acrossX
+      plane: x
+      at: 1
+      expect:
+        area: 51.716
+        loops: 2
+        holes: 0
+      description: "section across the width 1 mm off the pin axis (clear of the bore seam and its tessellation vertices); the through bore splits it into two islands: 2 * 5 * (8 - sqrt(9 - 1))"
+  faces:
+    - name: bottom
+      plane: z
+      at: 0
+      normal: "-"
+      center: [0, 0]
+      mode: one
+    - name: top
+      plane: z
+      at: 5
+      normal: "+"
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: pinBore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      length: 5
+      t_range: [0, 5]
+      description: "D6 wrist-pin through hole at B, full thickness"
+  dimensions:
+    - name: lengthX
+      axis: x
+      expected: 30
+      tolerance: 0.05
+      description: "block length along the guide (bbox extent)"
+    - name: widthY
+      axis: y
+      expected: 16
+      tolerance: 0.05
+      description: "block width across the guide (bbox extent)"
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "block thickness between the guide face and the rod face"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[9, 4, 2.5], [-9, 4, 2.5], [-9, -4, 2.5], [9, -4, 2.5]]
+      description: "one point per quadrant of the block"
+    - name: inBore
+      state: void
+      points: [[0, 0, 1.5], [0, 0, 3.5], [-1.5, 0, 2.5]]
+      description: "inside the wrist-pin bore, at least 1.5 mm from its wall and from both faces"
+  cylinder_counts:
+    - name: d6Holes
+      diameter: 6
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+      description: "exactly one D6 hole"
+  symmetry:
+    - name: mirrorX
+      plane: x
+      at: 0
+    - name: mirrorY
+      plane: y
+      at: 0
+  blockout:
+    volume_min: 2200
+    volume_max: 2450
+
+references:
+  - path: sources/crank-slider-spec.md
+    kind: text
+    role: authoritative
+    sha256: cd01ebc4dc4d7289a786bef3bca834eb565dd9f6109941bbcc2ec04b879c0d1c
+    units: mm
+    revision: "none stated"
+    note: "offset crank-slider design specification; Slider row, layers, part frames and joints"
+
+open_questions:
+  - "Material, density and process are not stated; no mass or manufacturing claim is made."
+  - "The D6 wrist-pin fit (clearance or press) and its hole tolerance are not stated; the bore is nominal 6.000 mm."
+  - "Edge breaks are not stated; the block is modelled with sharp edges."
+  - "The prismatic guide has no physical guide features in the spec (no rail, slot or key on the ground or the slider); the no-rotation constraint is kinematic only, and no running clearance to the ground's top face is stated."

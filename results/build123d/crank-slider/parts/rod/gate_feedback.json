@@ -1,0 +1,908 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/crank-slider/parts/rod/contract.yaml: 5 parameters {'stated': 4, 'derived': 1}; sources unresolved {}; unanchored 0",
+        "open questions: 3 (blocking []); interfaces 2, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 4,
+          "derived": 1
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "Material, density and process are not stated; mass properties use the analyzer's default density.",
+          "No fit or tolerance class is given for the D6 pin bores; the contract uses nominal 6.00 mm with a 0.02 mm digital radius tolerance.",
+          "Edge breaks (chamfers or fillets on the plate edges and bore mouths) are not stated; the contract assumes sharp edges."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "holeA",
+          "floor",
+          "mirrorY",
+          "holeB"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/build123d/crank-slider/parts/rod/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/build123d/crank-slider/parts/rod/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -8.0,
+            -8.0,
+            0.0
+          ],
+          "expected_max": [
+            108.0,
+            8.0,
+            5.0
+          ],
+          "measured_min": [
+            -8.0,
+            -8.0,
+            0.0
+          ],
+          "measured_max": [
+            108.0,
+            8.0,
+            5.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -8.0,
+            -8.0,
+            0.0
+          ],
+          "expected_max": [
+            108.0,
+            8.0,
+            5.0
+          ],
+          "measured_min": [
+            -8.0,
+            -8.0,
+            0.0
+          ],
+          "measured_max": [
+            108.0,
+            8.0,
+            5.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/crank-slider/parts/rod/inspect.json volume = 8722.5638 vs 8722.566",
+        "results/build123d/crank-slider/parts/rod/inspect.json surface_area = 4928.8485 vs 4928.849",
+        "results/build123d/crank-slider/parts/rod/inspect.json center_of_mass = [50.0, 0.0, 2.5] vs [50.0, 0.0, 2.5]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 8722.566,
+          "measured": 8722.5638,
+          "error": 0.0022,
+          "band": 8.7226,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 4928.849,
+          "measured": 4928.8485,
+          "error": 0.0005,
+          "band": 24.6442,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            50.0,
+            0.0,
+            2.5
+          ],
+          "measured": [
+            50.0,
+            0.0,
+            2.5
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/build123d/crank-slider/parts/rod/inspect.json features: 3/3 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared",
+        "symmetry mirrorY: max 0.001 mm at (108.0, 0.8, 3.9), p95 0.000 (tol 0.1 / 0.05) [fine STEP tessellation]"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "holeA": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "holeB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "endA": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "endB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "holeA": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "floor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "mirrorY": {
+            "ok": true,
+            "kind": "symmetry"
+          },
+          "holeB": {
+            "ok": true,
+            "kind": "cylinder"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/build123d/crank-slider/parts/rod/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/build123d/crank-slider/parts/rod/inspect.json agreement engine=8722.56384080492 step=8722.563840805076 stl=8722.173758233468 (rel tol 0.002; independent=False)",
+        "results/build123d/crank-slider/parts/rod/inspect.json agreement.manifold = 8722.173758233468 (Manifold kernel witness, rel vs STEP 4.472109103786327e-05; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 8722.56384080492,
+        "kcl": 8722.56384080492,
+        "step": 8722.563840805076,
+        "stl": 8722.173758233468,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "manifold": 8722.173758233468,
+        "manifold_vs_step_rel": 4.472109103786327e-05,
+        "engine_vs_step_rel": 1.7934301377438263e-14,
+        "kcl_vs_step_rel": 1.7934301377438263e-14,
+        "stl_vs_step_rel": 4.472109103786327e-05,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/build123d/crank-slider/parts/rod/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 6/6 values; infeasible refused 2/2; interfaces pinned 4"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "plateWidth",
+            "delta": 2.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 1267.035,
+                "measured": 1267.0350667531202,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  2.0,
+                  2.0,
+                  0.0
+                ],
+                "measured": [
+                  2.0,
+                  2.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 3,
+                "driven": [
+                  "deck",
+                  "endA",
+                  "endB",
+                  "floor",
+                  "lengthX",
+                  "midZ",
+                  "thicknessZ",
+                  "webX",
+                  "widthY"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 12.0,
+                  "volume": 6282.741486831588,
+                  "bbox_size": [
+                    112.0,
+                    12.0,
+                    5.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -4.0,
+                        -4.0,
+                        -0.0
+                      ],
+                      "measured": [
+                        -4.0,
+                        -4.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -2439.822353973488,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 16.0,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 20.0,
+                  "volume": 11288.04990082239,
+                  "bbox_size": [
+                    120.0,
+                    20.0,
+                    5.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        4.0,
+                        4.0,
+                        0.0
+                      ],
+                      "measured": [
+                        4.0,
+                        4.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 2565.4860600173142,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -12.0,
+                  "value": 4.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: plateWidth must exceed the pin bore\", \"class\": \"program\", \"timings\": {\"failed_s\": 21.644, \"main_s\": 21.644}}"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "plateThickness",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 1744.513,
+                "measured": 1744.5127681610156,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 1,
+                "driven": [
+                  "deck",
+                  "endA",
+                  "endB",
+                  "floor",
+                  "holeA",
+                  "holeB",
+                  "lengthX",
+                  "midZ",
+                  "thicknessZ",
+                  "throughA",
+                  "throughB",
+                  "webX",
+                  "widthY"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 3.0,
+                  "volume": 5233.538304483046,
+                  "bbox_size": [
+                    116.0,
+                    16.0,
+                    3.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -2.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        -2.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -3489.0255363220303,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 5.0,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 8.0,
+                  "volume": 13956.102145288118,
+                  "bbox_size": [
+                    116.0,
+                    16.0,
+                    8.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        3.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        3.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 5233.538304483041,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -5.0,
+                  "value": 0.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: plateThickness must be positive\", \"class\": \"program\", \"timings\": {\"failed_s\": 23.747, \"main_s\": 23.747}}"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "a5d188bfe45adc944d95416a0e744b8d70c6558e4979f751991b32f1b4abc378",
+          "re_export_sha256": "a5d188bfe45adc944d95416a0e744b8d70c6558e4979f751991b32f1b4abc378",
+          "ok": true
+        },
+        "sweep": {
+          "values": 6,
+          "passed": 6
+        },
+        "infeasible": {
+          "declared": 2,
+          "refused": 2
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/crank-slider/parts/rod/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=4",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "build123d",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "build123d"
+          ],
+          "forbidden_imports": [],
+          "asserts": 4,
+          "sketch_blocks": 11,
+          "feature_ops": 11,
+          "construction_ops": {
+            "calls": 11,
+            "has_result": true
+          },
+          "parameters": {
+            "centreDistance": {
+              "found": true,
+              "value": 100.0,
+              "expected": 100.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "plateWidth": {
+              "found": true,
+              "value": 16.0,
+              "expected": 16.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "plateThickness": {
+              "found": true,
+              "value": 5.0,
+              "expected": 5.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "holeDiameter": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "endRadius": {
+              "found": true,
+              "value": 8.0,
+              "expected": 8.0,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 41,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/crank-slider/parts/rod/export.json step.deterministic = True sha256 a5d188bfe45a; stl=present; glb=present",
+        "results/build123d/crank-slider/parts/rod/inspect.json valid = True solids = 1 (expected 1)",
+        "results/build123d/crank-slider/parts/rod/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = False; manifold witness = 8722.173758233468"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/crank-slider/parts/rod/export/crank-slider-rod.step",
+            "sha256": "a5d188bfe45adc944d95416a0e744b8d70c6558e4979f751991b32f1b4abc378",
+            "bytes": 37383,
+            "deterministic": true,
+            "second_sha256": "a5d188bfe45adc944d95416a0e744b8d70c6558e4979f751991b32f1b4abc378",
+            "determinism_source": "edit restore re-export"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/crank-slider/parts/rod/export/crank-slider-rod.stl",
+            "sha256": "405b16e718a1e0e4b34d2f8b57fbea0350c9b079a97867721b43f5fda9733f36",
+            "bytes": 29284
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/crank-slider/parts/rod/export/crank-slider-rod.glb",
+            "sha256": "6e042608b9fec7e2f0238ba1ffadf486e85c2d10631ab2e58ffd509cbce57f03",
+            "bytes": 11260
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 8722.173758233468,
+          "faces": 584,
+          "vertices": 290,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 8722.173758233468,
+          "surface_area": 4928.387920488089,
+          "bbox_min": [
+            -8.0,
+            -7.999997615814209,
+            0.0
+          ],
+          "bbox_max": [
+            108.0,
+            7.999997615814209,
+            5.0
+          ],
+          "center_of_mass": [
+            50.00000077071385,
+            -9.556250788142823e-07,
+            2.5
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 23822eb3-78a6-45c3-8eec-0a2ee0b4d211; engine versions ['0.12.0']; engine calls 10; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 10,
+        "allow_errors": false,
+        "engine_versions": [
+          "0.12.0"
+        ],
+        "zoo_versions": [
+          "0.12.0"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/build123d/crank-slider/parts/rod/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/crank-slider/parts/rod/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 11, 'has_result': True} lines = 41"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "build123d"
+        ],
+        "construction_ops": {
+          "calls": 11,
+          "has_result": true
+        },
+        "sketch_blocks": 11,
+        "feature_ops": 11
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

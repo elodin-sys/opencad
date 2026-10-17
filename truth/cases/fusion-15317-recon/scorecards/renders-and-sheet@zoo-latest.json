@@ -1,0 +1,608 @@
+{
+  "case": "fusion-15317-recon",
+  "arm": "renders-and-sheet",
+  "design": "fusion-15317-recon",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/fusion-15317-recon",
+  "truth_class": "B",
+  "role": "validation",
+  "scored_at": "2026-09-19T08:02:01Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 20,
+    "required_total": 20,
+    "optional_pass": 0,
+    "optional_total": 0
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        88.9,
+        32.544,
+        88.9
+      ],
+      "measured": [
+        88.90000020000001,
+        32.54400009999998,
+        88.90000020000001
+      ],
+      "error": 2.0000000233721948e-07,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "",
+      "expected": 93854.24814066986,
+      "measured": 93854.20940881045,
+      "error": 0.038731859414838254,
+      "band": 938.5424814066987,
+      "ok": true
+    },
+    {
+      "id": "center_of_mass",
+      "kind": "center_of_mass",
+      "required": true,
+      "note": "",
+      "expected": [
+        0.003883648397225696,
+        110.09813198657827,
+        -0.0014959663789264426
+      ],
+      "measured": [
+        0.003804719974167131,
+        110.10064802467615,
+        -0.0015030481666839382
+      ],
+      "error": 0.0025160380978803687,
+      "ok": true
+    },
+    {
+      "id": "hole_d11p1_0_118_18p9",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          118.1392,
+          18.9234
+        ],
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "radius": 5.5565,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          1.1261459320621725e-07,
+          118.139,
+          18.923
+        ],
+        "direction": [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        "radius": 5.5565,
+        "length": 84.78536022522918,
+        "kind": "hole"
+      },
+      "axis_offset": 0.000447213595505271,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.000447213595505271,
+          "ok": true
+        },
+        "length": {
+          "expected": 84.7851,
+          "measured": 84.78536022522918,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d11p1_0_118_m19p1",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          118.2045,
+          -19.05
+        ],
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "radius": 5.5565,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          118.20400000000001,
+          -19.05
+        ],
+        "direction": [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        "radius": 5.5565,
+        "length": 84.70486000000001,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0004999999999881766,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0004999999999881766,
+          "ok": true
+        },
+        "length": {
+          "expected": 84.7049,
+          "measured": 84.70486000000001,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d7p94_0_118_m19p1",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          118.2045,
+          -19.05
+        ],
+        "direction": [
+          1.0,
+          -0.0,
+          -0.0
+        ],
+        "radius": 3.969,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          118.20400000000001,
+          -19.05
+        ],
+        "direction": [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        "radius": 3.9690000000000003,
+        "length": 71.4365,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0004999999999881766,
+      "radius_error": 4.440892098500626e-16,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0004999999999881766,
+          "ok": true
+        },
+        "length": {
+          "expected": 71.436,
+          "measured": 71.4365,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d7p94_0_118_19p1",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          118.2045,
+          19.05
+        ],
+        "direction": [
+          1.0,
+          -0.0,
+          -0.0
+        ],
+        "radius": 3.969,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          118.20400000000001,
+          19.05
+        ],
+        "direction": [
+          1.0,
+          -0.0,
+          0.0
+        ],
+        "radius": 3.9690000000000003,
+        "length": 71.4365,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0004999999999881766,
+      "radius_error": 4.440892098500626e-16,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0004999999999881766,
+          "ok": true
+        },
+        "length": {
+          "expected": 71.436,
+          "measured": 71.4365,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d88p9_0_116_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          115.8235,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 44.45,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          115.823,
+          0.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 44.45,
+        "length": 19.049999999999983,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 19.05,
+          "measured": 19.049999999999983,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d50p8_0_99p6_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          99.5515,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 25.4,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          99.551,
+          0.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 25.4,
+        "length": 13.494,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 13.494,
+          "measured": 13.494,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "face_xp_m19p8",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": -19.844,
+      "normal": "+",
+      "found": 1,
+      "area": 867.7481452761162,
+      "expected_area": 867.763,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_xp_36p5",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": 36.512,
+      "normal": "+",
+      "found": 2,
+      "area": 51.46497198500845,
+      "expected_area": 51.45,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_xn_m36p5",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": -36.512,
+      "normal": "-",
+      "found": 2,
+      "area": 51.46497198500845,
+      "expected_area": 51.45,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_xn_19p8",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": 19.844,
+      "normal": "-",
+      "found": 1,
+      "area": 867.7481452761161,
+      "expected_area": 867.763,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yn_92p8",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 92.804,
+      "normal": "-",
+      "found": 1,
+      "area": 2026.8299163899912,
+      "expected_area": 2026.83,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yn_104",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 103.917,
+      "normal": "-",
+      "found": 1,
+      "area": 414.97988197492054,
+      "expected_area": 414.946,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yn_106",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 106.298,
+      "normal": "-",
+      "found": 1,
+      "area": 4180.3367025543575,
+      "expected_area": 4180.337,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yp_113",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 112.648,
+      "normal": "+",
+      "found": 1,
+      "area": 3407.2836769963687,
+      "expected_area": 3407.284,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "face_yp_125",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 125.348,
+      "normal": "+",
+      "found": 2,
+      "area": 2799.882941947979,
+      "expected_area": 2799.883,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "deviation",
+      "kind": "deviation",
+      "required": true,
+      "note": "",
+      "measured": {
+        "p95": 0.04022619743122312,
+        "hausdorff_estimate": 0.532114201393656,
+        "silhouette_iou_min": 0.9987025582681285,
+        "volume_ratio": 1.0001783012298016
+      },
+      "checks": {
+        "p95": {
+          "max": 0.2,
+          "measured": 0.04022619743122312,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 1.0,
+          "measured": 0.532114201393656,
+          "ok": true
+        },
+        "silhouette_iou": {
+          "min": 0.98,
+          "measured": 0.9987025582681285,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": false,
+    "summary": {
+      "pass": 9,
+      "fail": 2,
+      "not_applicable": 1
+    },
+    "failed": [
+      "features",
+      "edit_robustness"
+    ]
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "eeb1be53cccc1fea1440dbac9e7ad2b71c241e1fbe2ab3ab893b187a5db71cfd",
+    "truth_files": {
+      "truth/22337_e2f65ed2_0003_1.step": "6992c95be0d924720026eb24722b5f691750e7c066f62b3fd861e75372770ef1",
+      "truth/22337_e2f65ed2_0003_1.stl": "c99fa2ad3ac263edc230132a6ee5e7a02bfeb2f53fc929016916ed3733b6cf16"
+    },
+    "input_files": {
+      "inputs/part-brief.md": "fea46397ecd044590030f38633e3e60c28abea496e851cbc4baa47889d535a69",
+      "inputs/dimension-sheet.md": "055b0252cd087bedcd08c49afaaa4f9ef6fd05ba7f0d3834e70d8b336417e9ef",
+      "inputs/renders/front.png": "851b92e727e9151808661f83ccb064bf2f58d2db633f6f80d85c68a1be22a6d5",
+      "inputs/renders/iso-below.png": "85f3d7eddfaa93a6ef089e4a4a55db753289472b8ef7212850061cc365274503",
+      "inputs/renders/iso.png": "90103a8151088b33e7c6537ba1bdaba890f61b929c5699bc3e4e16c6d255617b",
+      "inputs/renders/iso2.png": "901ea7a39121072db27b185b6d2d2da6daceae1785d4c85e207703b4e5a5ae46",
+      "inputs/renders/right.png": "97c7ca216278f6f537f33bf4dbdfb995a2f58a3f26aeeba72086db3daa846c4e",
+      "inputs/renders/section-x0.png": "1de58db74d5b158a3a307c7bb60b4222ebb8a77ed6de9198d106294f94223b9e",
+      "inputs/renders/section-y109.076.png": "bd136eaae5c4e3b66eab7c7d466fc945dc9fc84173bea851848d008b67af7e8a",
+      "inputs/renders/section-z0.png": "16661511e33e3572ab42ccffec13991ffc2ed70a5435c6f83cdecac84e928351",
+      "inputs/renders/top.png": "3ebe6a6196abf14994269b4f6601334eb288c4a70d7bac339644d70eca04ddbc",
+      "inputs/renders/render-notes.md": "46cf083458c3f2a1ac64c26c809f10ab559471b94192782a9291f9dfa1da8ff6"
+    },
+    "kcl": {
+      "armBores.kcl": "c5f34385e031c43059b7f64a24a9b95caa67c4a414a231292587c1ec836ef673",
+      "datum.kcl": "bc3d100bedaf3fa2cd0ca185fd918f39a54927d3130c796a680d9a170bd17e9a",
+      "hubWaist.kcl": "680387ba226def0448ff3f8c31866c359b7b676339bf0f9940ca8b4a242dc942",
+      "main.kcl": "96d334044a91e020ae8ca197e3e51778686343a354dd925ee0df1caffe1cc425",
+      "params.kcl": "281689169980a2bd09ff11bf7fe1d1abfdd5801696dbc3db179e6fc79b1453c7",
+      "rimHoles.kcl": "414c9543aac101aae35c88a59f986d8667255df6f2fb72db7c4cbd3ed1fe8810",
+      "uSlot.kcl": "d0a28cdebc345c7d60fe35763b5138775b2f42d1910b704e46e5e66544f2c448"
+    },
+    "step_sha256": "19a2ccbb6d3aab8efe19aaa5972b4676dda53559fb09bf0ef289f48ccd3179b7",
+    "design_bundle": {
+      "brief.md": "313f6cf807a3252ca51cdb0477208575b44667fb0169086d418049b8573f7f8f",
+      "contract.yaml": "30cb112f2a30d87c779313933e4379f867d3d315b88676f00b8529d30d4be299",
+      "sources/dimension-sheet.md": "055b0252cd087bedcd08c49afaaa4f9ef6fd05ba7f0d3834e70d8b336417e9ef",
+      "sources/front.png": "851b92e727e9151808661f83ccb064bf2f58d2db633f6f80d85c68a1be22a6d5",
+      "sources/iso-below.png": "85f3d7eddfaa93a6ef089e4a4a55db753289472b8ef7212850061cc365274503",
+      "sources/iso.png": "90103a8151088b33e7c6537ba1bdaba890f61b929c5699bc3e4e16c6d255617b",
+      "sources/iso2.png": "901ea7a39121072db27b185b6d2d2da6daceae1785d4c85e207703b4e5a5ae46",
+      "sources/part-brief.md": "fea46397ecd044590030f38633e3e60c28abea496e851cbc4baa47889d535a69",
+      "sources/render-notes.md": "46cf083458c3f2a1ac64c26c809f10ab559471b94192782a9291f9dfa1da8ff6",
+      "sources/right.png": "97c7ca216278f6f537f33bf4dbdfb995a2f58a3f26aeeba72086db3daa846c4e",
+      "sources/section-x0.png": "1de58db74d5b158a3a307c7bb60b4222ebb8a77ed6de9198d106294f94223b9e",
+      "sources/section-y109.076.png": "bd136eaae5c4e3b66eab7c7d466fc945dc9fc84173bea851848d008b67af7e8a",
+      "sources/section-z0.png": "16661511e33e3572ab42ccffec13991ffc2ed70a5435c6f83cdecac84e928351",
+      "sources/top.png": "3ebe6a6196abf14994269b4f6601334eb288c4a70d7bac339644d70eca04ddbc"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-19T08:02:01Z",
+    "skillkat_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2f4eec8c6da2aed2a4ef51ba85099094dc7b9224",
+      "dirty": true
+    }
+  }
+}

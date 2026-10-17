@@ -1,0 +1,23 @@
+schema_version: 1
+kind: assembly
+name: new-assembly
+intent: "<intent>: REPLACE ME. What the machine is, what it does, and which sources are authoritative."
+units: {length: mm, angle: deg}
+frame:
+  origin: REPLACE ME
+  axes: {x: REPLACE ME, y: REPLACE ME, z: REPLACE ME}
+envelope: {min: [0, 0, 0], max: [1, 1, 1], tolerance: 0.1}
+datum_part: base
+parts:
+  - name: base
+    kind: modelled
+    design: new-assembly-base
+    intent: "REPLACE ME: the part's own frame, every dimension, and the interfaces it provides to the other parts."
+# joints form a tree from datum_part; a closed linkage adds one `closure: true` joint per loop (a four-bar's last pin):
+#   - {name: couplerPin, kind: revolute, parent: coupler, child: rocker, closure: true,
+#      parent_frame: {origin: [100.0, 0.0, 0.0]}, child_frame: {origin: [80.0, 0.0, 0.0]}}
+# an epicyclic mesh names the carrier's joint; a fixed ring is a rigid joint as the driver; a rack is a gear from a revolute to a slider:
+#   - {name: ringPlanet, kind: gear, driver: ringFixed, driven: planetSpin, carrier: carrierSpin, ratio: 4.0}
+# kinematic observables the evaluator measures (no simulation), at a drive value `at` or as a series over an acceptance `motion`:
+#   - {id: rockerAngle, quantity: joint_value, unit: deg, joint: rockerPivot, motion: crankTurn}
+#   - {id: couplerPointX, quantity: point_x, unit: mm, body: coupler, location: [60.0, 50.0, 0.0], motion: crankTurn}

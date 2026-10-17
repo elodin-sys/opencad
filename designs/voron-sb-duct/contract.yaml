@@ -1,0 +1,2793 @@
+# Reconstruction intent and acceptance; all coordinates use the supplied native frame.
+# Whole-part volume/surface/COM are diagnostic in brief.md, not exterior-style gates.
+schema_version: 1
+name: voron-sb-duct
+intent: 'Reconstruct the Voron Stealthburner printhead front housing (Rapido V2 variant) as editable, parameterized
+  KCL from the attached renders, section drawings and dimension sheet, in the reference frame (x symmetric about
+  0, back mating face y = 0 with the part extending to y = -27.4, z from 2.37 at the nozzle end to 61.5 at the top).
+  The interior matters most: two mirrored closed part-cooling ducts from the top fan inlets down to the forked nozzle
+  outlets (about 8 x 19 mm channels with ~1 mm walls, never connected to each other), the hotend cavity (about 26
+  x 35 mm, open to the back and the nozzle end) with the round hotend-fan opening on the front, and the screw holes.
+  Declare the duct probe points as void probes, the sections as acceptance sections, the ducts as passages and the
+  wall minimum as a thickness check. Cosmetic styling, text and grille are optional. One solid; export STEP and
+  STL. Reference CAD is evaluator-only.'
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: Printed housing; exact additive process and material unspecified.
+release_status: reconstruction
+frame:
+  origin: Intersection of the toolhead center plane x=0 and the back mating plane y=0 with the reference z=0 plane.
+    This lies in the open center, 2.367 mm below the lowest material. Do not move the bbox minimum to the origin.
+  axes:
+    x: Positive to the right in front.png; left/right duct routes straddle x=0. back.png uses horizontal -x.
+    y: Positive out through the back mating face toward the mating toolhead. Housing material extends into negative
+      y, from y=0 to the front at y=-27.4.
+    z: Positive upward away from the nozzle end toward the top inlet rim; lowest material z=2.367 and top z=61.5.
+  datums:
+  - name: A
+    description: Back mating patches on y=0, outward normal +y.
+  - name: B
+    description: Center reference plane x=0, halfway between envelope extrema x=-35.534 and +35.534; local hardware
+      and mouth details are not all symmetric.
+  - name: C
+    description: Top inlet-rim plane z=61.5; reference z=0 is 61.5 mm below this plane, not on the part.
+envelope:
+  min:
+  - -35.534
+  - -27.4
+  - 2.367
+  max:
+  - 35.534
+  - 0
+  - 61.5
+  tolerance: 0.1
+parameters:
+- name: overallWidth
+  value: 71.068
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Envelope x extent; width is centered about x=0.
+  source: sources/dimension-sheet.md
+- name: overallDepth
+  value: 27.4
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Distance from back datum y=0 to front y=-27.4.
+  source: sources/dimension-sheet.md
+- name: nozzleEndZ
+  value: 2.367
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Lowest material; preserve the native z offset.
+  source: sources/dimension-sheet.md
+- name: topZ
+  value: 61.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Upper inlet rim plane.
+  source: sources/dimension-sheet.md
+- name: backY
+  value: 0
+  unit: mm
+  provenance: stated
+  tolerance: 0.05
+  description: Back mating datum position.
+  source: sources/dimension-sheet.md
+- name: overallHeight
+  value: 59.133
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Envelope height, not an instruction to rebase the part.
+  formula: topZ - nozzleEndZ
+- name: halfWidth
+  value: 35.534
+  unit: mm
+  provenance: derived
+  tolerance: 0.05
+  description: Magnitude of both x envelope limits.
+  formula: overallWidth / 2
+- name: frontY
+  value: -27.4
+  unit: mm
+  provenance: derived
+  tolerance: 0.05
+  description: Front-facing plane.
+  formula: backY - overallDepth
+- name: ductCount
+  value: 2
+  unit: ''
+  provenance: stated
+  tolerance: 0.01
+  description: Two isolated mirrored part-cooling routes.
+  source: sources/voron-duct-description.md
+- name: outletsPerDuct
+  value: 2
+  unit: ''
+  provenance: stated
+  tolerance: 0.01
+  description: Each route forks into two nozzle outlets.
+  source: sources/voron-duct-description.md
+- name: ductWidth
+  value: 8
+  unit: mm
+  provenance: stated
+  tolerance: 2
+  description: Approximate interior x width at the middle duct stations, not the exterior wall width.
+  source: sources/voron-duct-description.md
+- name: ductDepth
+  value: 19
+  unit: mm
+  provenance: stated
+  tolerance: 2
+  description: Approximate interior y span at z=30..45.
+  source: sources/voron-duct-description.md
+- name: ductWall
+  value: 1
+  unit: mm
+  provenance: stated
+  tolerance: 0.25
+  description: Nominal closed duct wall; thickness acceptance remains p05 >= 0.75.
+  source: sources/voron-duct-description.md
+- name: wallMinimum
+  value: 0.75
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  description: Required fifth-percentile inward-ray thickness; not a claim that every local minimum is 0.75.
+  source: sources/voron-duct-description.md
+- name: hotendCavityWidth
+  value: 26
+  unit: mm
+  provenance: stated
+  tolerance: 2
+  description: Approximate hotend pocket width, independent of the larger front fan mouth.
+  source: sources/voron-duct-description.md
+- name: hotendCavityHeight
+  value: 35
+  unit: mm
+  provenance: stated
+  tolerance: 3
+  description: Approximate hotend pocket vertical extent.
+  source: sources/voron-duct-description.md
+- name: hotendCavityBottomZ
+  value: 9
+  unit: mm
+  provenance: stated
+  tolerance: 2
+  description: Approximate start of hotend pocket; nozzle access continues downward.
+  source: sources/voron-duct-description.md
+- name: hotendCavityTopZ
+  value: 44
+  unit: mm
+  provenance: derived
+  tolerance: 3
+  description: Approximate hotend pocket top, not the z=54 rear fan-transition roof.
+  formula: hotendCavityBottomZ + hotendCavityHeight
+- name: fanOpeningDiameter
+  value: 37.5
+  unit: mm
+  provenance: measured
+  tolerance: 1.5
+  description: Nominal front round opening width; loft into the rear rounded-rectangle opening instead of forcing
+    a full cylindrical bore.
+  source: sources/front.png
+- name: fanCenterZ
+  value: 43.3
+  unit: mm
+  provenance: measured
+  tolerance: 0.8
+  description: Nominal front fan-opening center height.
+  source: sources/front.png
+- name: ductMidCenterX
+  value: 22
+  unit: mm
+  provenance: measured
+  tolerance: 1
+  description: Positive magnitude of mirrored mid-height duct centerlines.
+  source: sources/section-z45.png
+- name: ductMidCenterY
+  value: -16.5
+  unit: mm
+  provenance: measured
+  tolerance: 1
+  description: Middle duct y center shared by both sides.
+  source: sources/section-z45.png
+- name: leftInletCenterX
+  value: -17.5
+  unit: mm
+  provenance: measured
+  tolerance: 1.5
+  description: Local top mouth estimate; retain mirror routing below the mouth transition, see open question Q2.
+  source: sources/top.png
+- name: rightInletCenterX
+  value: 11.75
+  unit: mm
+  provenance: measured
+  tolerance: 1.5
+  description: Local top mouth estimate; retain mirror routing below the mouth transition, see open question Q2.
+  source: sources/top.png
+- name: leftInletWidth
+  value: 15
+  unit: mm
+  provenance: measured
+  tolerance: 1.5
+  description: Local top mouth estimate; retain mirror routing below the mouth transition, see open question Q2.
+  source: sources/top.png
+- name: rightInletWidth
+  value: 13.5
+  unit: mm
+  provenance: measured
+  tolerance: 1.5
+  description: Local top mouth estimate; retain mirror routing below the mouth transition, see open question Q2.
+  source: sources/top.png
+- name: inletDepth
+  value: 8.2
+  unit: mm
+  provenance: measured
+  tolerance: 1
+  description: Local top mouth estimate; retain mirror routing below the mouth transition, see open question Q2.
+  source: sources/top.png
+- name: inletCenterY
+  value: -19
+  unit: mm
+  provenance: measured
+  tolerance: 1
+  description: Local top mouth estimate; retain mirror routing below the mouth transition, see open question Q2.
+  source: sources/top.png
+- name: topHoleAx
+  value: -6.963
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: First vertical screw axis x.
+  source: sources/dimension-sheet.md
+- name: topHoleAy
+  value: -3.939
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: First vertical screw axis y.
+  source: sources/dimension-sheet.md
+- name: topHoleBx
+  value: 3.939
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Second vertical screw axis x.
+  source: sources/dimension-sheet.md
+- name: topHoleBy
+  value: -6.963
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Second vertical screw axis y.
+  source: sources/dimension-sheet.md
+- name: topPilotDiameter
+  value: 2.7
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Both vertical pilot bores.
+  source: sources/dimension-sheet.md
+  edit_test:
+    delta: 0.2
+    expect:
+      volume_delta: -7.037167544041143
+      direction: decrease
+      tolerance_rel: 0.08
+      bbox_delta:
+      - 0
+      - 0
+      - 0
+    infeasible_deltas:
+    - 3.0
+- name: topCounterboreDiameter
+  value: 5
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Both vertical counterbores.
+  source: sources/dimension-sheet.md
+- name: topPilotStartZ
+  value: 54
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Bottom of vertical pilot bores.
+  source: sources/dimension-sheet.md
+- name: topBoreCylinderEndZ
+  value: 60.9
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Top of straight cylindrical counterbore; entry treatment reaches topZ.
+  source: sources/dimension-sheet.md
+- name: topCounterboreDepth
+  value: 2.9
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Length of straight counterbore; edit moves its floor while retaining the top entry.
+  source: sources/dimension-sheet.md
+  edit_test:
+    delta: 0.4
+    expect:
+      volume_delta: -11.127521179015048
+      direction: decrease
+      tolerance_rel: 0.08
+      bbox_delta:
+      - 0
+      - 0
+      - 0
+    sweep:
+      values:
+      - 2.5
+      - 2.9
+      - 3.3
+    infeasible_deltas:
+    - 5.0
+- name: upperMountHalfSpacing
+  value: 12.7
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Rear upper screw axes at x=+/-12.7.
+  source: sources/dimension-sheet.md
+- name: upperMountZ
+  value: 55.424
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Rear upper screw center height.
+  source: sources/dimension-sheet.md
+- name: upperMountDiameter
+  value: 4.6
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Rear upper bore diameters.
+  source: sources/dimension-sheet.md
+- name: upperMountLeftStartY
+  value: -6
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Left rear upper bore start.
+  source: sources/dimension-sheet.md
+- name: upperMountRightStartY
+  value: -5.861
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Right rear upper bore start.
+  source: sources/dimension-sheet.md
+- name: rearBoreEndY
+  value: -0.4
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: End of the straight upper/auxiliary rear bores before their entry chamfers.
+  source: sources/dimension-sheet.md
+- name: auxLowerX
+  value: -28
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Lower auxiliary rear screw axis x.
+  source: sources/dimension-sheet.md
+- name: auxLowerZ
+  value: 19
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Lower auxiliary rear screw axis z.
+  source: sources/dimension-sheet.md
+- name: auxUpperX
+  value: -25
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Upper auxiliary rear screw axis x.
+  source: sources/dimension-sheet.md
+- name: auxUpperZ
+  value: 35
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Upper auxiliary rear screw axis z.
+  source: sources/dimension-sheet.md
+- name: auxBoreDiameter
+  value: 4.7
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Both left auxiliary rear bores.
+  source: sources/dimension-sheet.md
+- name: auxLowerStartY
+  value: -4.2
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Lower auxiliary bore start.
+  source: sources/dimension-sheet.md
+- name: auxUpperStartY
+  value: -4.257
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Upper auxiliary bore start.
+  source: sources/dimension-sheet.md
+- name: lowerMountHalfSpacing
+  value: 16.25
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Lower mounting screw axes x=+/-16.25.
+  source: sources/dimension-sheet.md
+- name: lowerMountZ
+  value: 19.301
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Lower mounting screw axis height.
+  source: sources/dimension-sheet.md
+- name: lowerMountDiameter
+  value: 3.4
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Lower mounting bore diameter over the documented rear segment.
+  source: sources/dimension-sheet.md
+- name: lowerMountBoreLength
+  value: 7.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.2
+  description: Documented straight segment y=-7.5..0; forward continuation is visible but not dimensioned as the
+    same bore.
+  source: sources/dimension-sheet.md
+- name: rearCableNotchDiameter
+  value: 4.1
+  unit: mm
+  provenance: stated
+  tolerance: 0.15
+  description: Partial vertical cylindrical notch on the back edge, not a closed through-hole.
+  source: sources/dimension-sheet.md
+- name: topCounterboreFloorZ
+  value: 58
+  unit: mm
+  provenance: derived
+  tolerance: 0.15
+  description: Counterbore/pilot shoulder height.
+  formula: topBoreCylinderEndZ - topCounterboreDepth
+- name: topPilotLength
+  value: 4
+  unit: mm
+  provenance: derived
+  tolerance: 0.2
+  description: Pilot length remaining beneath the counterbore floor.
+  formula: topCounterboreFloorZ - topPilotStartZ
+features:
+- id: housingEnvelope
+  kind: profile
+  description: One connected housing in the native reference frame, with two separated lower legs and the source
+    silhouette. Envelope-only blockout is a full bounding prism before functional cuts.
+  parameters:
+  - overallWidth
+  - overallDepth
+  - nozzleEndZ
+  - topZ
+  - backY
+  - overallHeight
+  - halfWidth
+  - frontY
+  verify:
+  - method: bbox
+  - method: solid
+    points:
+    - - 0
+      - -10
+      - 58.8
+  - method: dimension
+    dimension: envelopeWidth
+  - method: dimension
+    dimension: envelopeDepth
+  - method: dimension
+    dimension: envelopeHeight
+  - method: dimension
+    dimension: frontToBack
+  optional: false
+- id: leftCoolingDuct
+  kind: channel
+  description: Closed curved part-cooling route, top inlet, descending side trunk, and two inward/downward nozzle
+    branches. Mirror the principal duct route about x=0; retain documented asymmetric local inlet/rail transitions.
+    Must satisfy passage connectivity and cross-duct isolation.
+  parameters:
+  - ductCount
+  - outletsPerDuct
+  - ductWidth
+  - ductDepth
+  - ductWall
+  - wallMinimum
+  - ductMidCenterX
+  - ductMidCenterY
+  - leftInletCenterX
+  - rightInletCenterX
+  - leftInletWidth
+  - rightInletWidth
+  - inletDepth
+  - inletCenterY
+  verify:
+  - method: void
+    points:
+    - - -20
+      - -18
+      - 55
+    - - -22
+      - -16
+      - 45
+    - - -24
+      - -14
+      - 30
+    - - -27
+      - -12
+      - 20
+    - - -22
+      - -8
+      - 7.5
+    - - -22
+      - -22
+      - 8
+  - method: section
+    section: sec_z10
+  - method: section
+    section: sec_z20
+  - method: section
+    section: sec_z30
+  - method: section
+    section: sec_z45
+  - method: section
+    section: sec_z55
+  - method: face
+    face: topInletRim
+  - method: face
+    face: nozzleBaseLeft
+  - method: plane
+    plane: leftOutletInnerLip
+  - method: plane
+    plane: leftOutletReturn
+  - method: void
+    points:
+    - - -15
+      - -19
+      - 60
+    - - -15
+      - -19
+      - 61
+    - - -15
+      - -19
+      - 62
+    note: Open actual top inlet; z=62 is deliberately above the part.
+  optional: false
+  count: 1
+- id: rightCoolingDuct
+  kind: channel
+  description: Closed curved part-cooling route, top inlet, descending side trunk, and two inward/downward nozzle
+    branches. Mirror the principal duct route about x=0; retain documented asymmetric local inlet/rail transitions.
+    Must satisfy passage connectivity and cross-duct isolation.
+  parameters:
+  - ductCount
+  - outletsPerDuct
+  - ductWidth
+  - ductDepth
+  - ductWall
+  - wallMinimum
+  - ductMidCenterX
+  - ductMidCenterY
+  - leftInletCenterX
+  - rightInletCenterX
+  - leftInletWidth
+  - rightInletWidth
+  - inletDepth
+  - inletCenterY
+  verify:
+  - method: void
+    points:
+    - - 20
+      - -18
+      - 55
+    - - 22
+      - -16
+      - 45
+    - - 24
+      - -14
+      - 30
+    - - 27
+      - -12
+      - 20
+    - - 22
+      - -8
+      - 7.5
+    - - 22
+      - -22
+      - 8
+  - method: section
+    section: sec_z10
+  - method: section
+    section: sec_z20
+  - method: section
+    section: sec_z30
+  - method: section
+    section: sec_z45
+  - method: section
+    section: sec_z55
+  - method: face
+    face: topInletRim
+  - method: face
+    face: nozzleBaseRight
+  - method: plane
+    plane: rightOutletInnerLip
+  - method: plane
+    plane: rightOutletReturn
+  - method: void
+    points:
+    - - 10
+      - -19
+      - 60
+    - - 10
+      - -19
+      - 61
+    - - 10
+      - -19
+      - 62
+    note: Open actual top inlet; z=62 is deliberately above the part.
+  optional: false
+  count: 1
+- id: nozzleForks
+  kind: channel
+  description: Two outlets per duct, four total. Ducts remain independent; neither opens into the hotend cavity.
+  parameters:
+  - outletsPerDuct
+  - ductWidth
+  - ductDepth
+  - ductWall
+  verify:
+  - method: section
+    section: sec_z10
+  - method: section
+    section: sec_x-22
+  - method: section
+    section: sec_x22
+  optional: false
+  count: 4
+- id: hotendPocket
+  kind: cavity
+  description: Rounded pocket, approximately 26 x 35 mm, open to the rear and nozzle end; rear fan-transition roof
+    at z=54 is a separate boundary.
+  parameters:
+  - hotendCavityWidth
+  - hotendCavityHeight
+  - hotendCavityBottomZ
+  - hotendCavityTopZ
+  verify:
+  - method: void
+    points:
+    - - 0
+      - -5
+      - 36
+    - - 0
+      - -5
+      - 20
+    - - 0
+      - -12
+      - 10
+    - - 0
+      - -20
+      - 10
+  - method: dimension
+    dimension: hotendWallSpacing
+  - method: face
+    face: hotendRearRoof
+  - method: section
+    section: sec_y-12
+  - method: section
+    section: sec_x0
+  - method: plane
+    plane: hotendLowerRamp
+  - method: plane
+    plane: hotendBridgeRamp
+  - method: plane
+    plane: hotendFrontUnderside
+  optional: false
+- id: hotendFanOpening
+  kind: loft
+  description: Round front mouth lofts to a smaller rear rounded rectangle and intersects the hotend access cavity.
+    The nominal front diameter does not describe a constant cylindrical bore.
+  parameters:
+  - fanOpeningDiameter
+  - fanCenterZ
+  verify:
+  - method: void
+    points:
+    - - 12
+      - -27
+      - 45
+    - - 12
+      - -24
+      - 45
+    - - -12
+      - -27
+      - 42
+    - - -12
+      - -24
+      - 42
+  - method: face
+    face: frontFanRim
+  - method: section
+    section: sec_y-20
+  - method: section
+    section: sec_y-12
+  optional: false
+- id: topSteppedFasteners
+  kind: hole
+  description: Two vertical stepped screw holes; preserve pilot axes and top entry positions through the two declared
+    independent edits.
+  parameters:
+  - topHoleAx
+  - topHoleAy
+  - topHoleBx
+  - topHoleBy
+  - topPilotDiameter
+  - topCounterboreDiameter
+  - topPilotStartZ
+  - topBoreCylinderEndZ
+  - topCounterboreDepth
+  - topCounterboreFloorZ
+  - topPilotLength
+  verify:
+  - method: cylinder
+    cylinder: topCounterboreA
+  - method: cylinder
+    cylinder: topCounterboreB
+  - method: cylinder
+    cylinder: topPilotA
+  - method: cylinder
+    cylinder: topPilotB
+  - method: face
+    face: topCounterboreFloorA
+  - method: face
+    face: topCounterboreFloorB
+  - method: face
+    face: topInletRim
+  - method: face
+    face: hotendRearRoof
+  - method: section
+    section: sec_z55
+  optional: false
+  count: 2
+- id: upperRearFasteners
+  kind: hole
+  description: Two upper rear screws and their located boss surfaces.
+  parameters:
+  - upperMountHalfSpacing
+  - upperMountZ
+  - upperMountDiameter
+  - upperMountLeftStartY
+  - upperMountRightStartY
+  - rearBoreEndY
+  verify:
+  - method: cylinder
+    cylinder: rearUpperLeftBore
+  - method: cylinder
+    cylinder: rearUpperRightBore
+  - method: cylinder
+    cylinder: upperLeftMountBoss
+  - method: face
+    face: upperLeftBoreSeat
+  - method: face
+    face: upperRightBoreSeat
+  optional: false
+  count: 2
+- id: leftAuxFasteners
+  kind: hole
+  description: Two auxiliary rear screw holes on the negative-x side; do not mirror onto the other side.
+  parameters:
+  - auxLowerX
+  - auxLowerZ
+  - auxUpperX
+  - auxUpperZ
+  - auxBoreDiameter
+  - auxLowerStartY
+  - auxUpperStartY
+  - rearBoreEndY
+  verify:
+  - method: cylinder
+    cylinder: rearAuxLowerBore
+  - method: cylinder
+    cylinder: rearAuxUpperBore
+  - method: face
+    face: auxLowerSeat
+  - method: face
+    face: auxUpperSeat
+  optional: false
+  count: 2
+- id: lowerMounts
+  kind: boss
+  description: Two lower mounting holes and unequal source boss blends. Rear cylindrical length is stated; front
+    access continuation is visible and must remain open.
+  parameters:
+  - lowerMountHalfSpacing
+  - lowerMountZ
+  - lowerMountDiameter
+  - lowerMountBoreLength
+  verify:
+  - method: cylinder
+    cylinder: lowerLeftMountBore
+  - method: cylinder
+    cylinder: lowerRightMountBore
+  - method: cylinder
+    cylinder: lowerLeftMountBoss
+  - method: cylinder
+    cylinder: lowerRightMountBoss
+  - method: cylinder
+    cylinder: lowerRightBossBlendA
+  - method: cylinder
+    cylinder: lowerRightBossBlendB
+  - method: section
+    section: sec_y-12
+  - method: section
+    section: sec_y-20
+  - method: void
+    points:
+    - - -16.25
+      - -26
+      - 19.301
+    - - 16.25
+      - -26
+      - 19.301
+    - - -16.25
+      - -20
+      - 19.301
+    - - 16.25
+      - -20
+      - 19.301
+    - - -16.25
+      - -12
+      - 19.301
+    - - 16.25
+      - -12
+      - 19.301
+    note: Located void centers of the two front-visible lower screw access paths, corroborated by front.png and
+      sections y=-20 and y=-12. No additional bore diameter or chamfer depth is inferred for this continuation.
+  optional: false
+  count: 2
+- id: rearCableRelief
+  kind: cut
+  description: Partial vertical back-edge cable notch, centered at x=0, y=0, spanning the stated cylinder z=54..60.9.
+  parameters:
+  - rearCableNotchDiameter
+  verify:
+  - method: cylinder
+    cylinder: rearCableNotch
+  optional: false
+- id: locatedCurvedTransitions
+  kind: loft
+  description: All remaining located partial concave/convex cylindrical patches from the dimension sheet. These
+    are trimmed transitions, not additional disconnected pins or complete drilled holes. Their angular limits must
+    follow section silhouettes.
+  parameters: []
+  verify:
+  - method: cylinder
+    cylinder: cavityLowerRelief
+  - method: cylinder
+    cylinder: cavityUpperRelief
+  - method: cylinder
+    cylinder: leftInletTurn
+  - method: cylinder
+    cylinder: rightRearRelief
+  - method: cylinder
+    cylinder: leftHotendDiagonalRelief
+  - method: cylinder
+    cylinder: rightHotendDiagonalRelief
+  - method: cylinder
+    cylinder: rightObliqueReliefA
+  - method: cylinder
+    cylinder: rightObliqueReliefB
+  - method: cylinder
+    cylinder: leftRailConcaveBlend
+  - method: cylinder
+    cylinder: rightDuctConvexTurn
+  - method: cylinder
+    cylinder: rightCavityConvexBlend
+  - method: cylinder
+    cylinder: rightInletConvexTurn
+  - method: cylinder
+    cylinder: leftRailLowerBlend
+  - method: cylinder
+    cylinder: leftRailUpperBlend
+  optional: false
+- id: rearMatingPatches
+  kind: profile
+  description: Preserve five individually named coplanar mating patches and offset rail seats.
+  parameters:
+  - backY
+  verify:
+  - method: face
+    face: backLeftMain
+  - method: face
+    face: backRightMain
+  - method: face
+    face: backRightMount
+  - method: face
+    face: backLeftOutletLip
+  - method: face
+    face: backRightOutletLip
+  - method: face
+    face: leftMountRail
+  - method: face
+    face: leftRearRailSeat
+  - method: face
+    face: rightRearSeat
+  optional: false
+- id: nozzleUndersides
+  kind: profile
+  description: Located inclined material surfaces and low support lands around the four angled air outlets.
+  parameters:
+  - nozzleEndZ
+  verify:
+  - method: plane
+    plane: leftNozzleBottom
+  - method: plane
+    plane: rightNozzleBottom
+  - method: face
+    face: nozzleBaseLeft
+  - method: face
+    face: nozzleBaseRight
+  optional: false
+- id: cosmeticOuterFacets
+  kind: chamfer
+  description: Optional exterior facets, small chamfers and fillets visible in front/back/left/right/isometric views.
+    Functional walls, located cylindrical transitions, envelope, and port lips remain mandatory.
+  parameters: []
+  verify:
+  - method: bbox
+    note: No cosmetic face count or exact exterior deviation is imposed.
+  optional: true
+- id: cosmeticTextAndArrows
+  kind: cut
+  description: Optional top P-RPDV2 marking and two curved front arrows/recesses. Text font, relief depth and stroke
+    width are not specified.
+  parameters: []
+  verify:
+  - method: bbox
+    note: Marking appearance has no hard acceptance value.
+  optional: true
+- id: cosmeticFanGrille
+  kind: rib
+  description: 'Central hub REQUIRED, vanes optional. The fan opening carries a solid central hub, about 16 mm wide (x -8..8)
+    and 15 mm tall (z ~36..51, centred a little above the bore axis), running the full depth of the opening from the front
+    face to the bore floor at y = -19.2; it is drawn in the y=-20 section and the front/isometric views. The scored sections
+    z=45 (566 mm2, 8 % band: the hub is ~130 mm2 of it) and y=-20 pass through the hub, so a part without it cannot meet
+    them; the description calls the grille cosmetic, this contract does not. The four swept vanes joining the hub to the
+    rim are optional; with or without them the round front opening and both part-cooling ducts stay as drawn.'
+  parameters: []
+  verify:
+  - method: section
+    section: sec_z45
+    note: The hub is a third material island at z=45 between the two side regions; the area band includes it.
+  - method: solid
+    points:
+    - [0, -23, 41]
+    - [0, -23, 45]
+    - [4, -23, 43]
+    - [-4, -23, 43]
+    note: Hub material at mid-depth of the opening (see probe fanHubSolid).
+  optional: false
+  count: 4
+interfaces:
+- name: nativeDatums
+  description: Back plane and native envelope positions survive later internal edits.
+  must_not_change: true
+  checks:
+  - envelopeWidth
+  - envelopeDepth
+  - envelopeHeight
+  - frontToBack
+  - backLeftMain
+  - backRightMain
+  - backRightMount
+  - backLeftOutletLip
+  - backRightOutletLip
+  - frontFanRim
+- name: coolingInletsAndOutlets
+  description: Common top rim, separate lower lips, and functional duct sections remain in place. Connectivity/isolation
+    additionally run as global acceptance passages.
+  must_not_change: true
+  checks:
+  - topInletRim
+  - nozzleBaseLeft
+  - nozzleBaseRight
+  - leftOutletInnerLip
+  - rightOutletInnerLip
+  - leftOutletReturn
+  - rightOutletReturn
+  - sec_z10
+  - sec_z20
+  - sec_z30
+  - sec_z45
+  - sec_z55
+- name: hotendAccess
+  description: Retain rear/nozzle access and cavity support faces.
+  must_not_change: true
+  checks:
+  - hotendLeftWall
+  - hotendRightWall
+  - hotendWallSpacing
+  - hotendRearRoof
+  - hotendBridgeBottom
+  - hotendBridgeTopLeft
+  - hotendBridgeTopRight
+  - sec_y-12
+  - sec_x0
+- name: topScrewInterface
+  description: Top pilot/counterbore axes and seats; only the two declared driven dimensions vary during their edits.
+  must_not_change: true
+  checks:
+  - topPilotA
+  - topPilotB
+  - topCounterboreA
+  - topCounterboreB
+  - topCounterboreFloorA
+  - topCounterboreFloorB
+- name: rearScrewInterfaces
+  description: Upper, lower and auxiliary rear screw axes and material bosses stay fixed.
+  must_not_change: true
+  checks:
+  - rearUpperLeftBore
+  - rearUpperRightBore
+  - rearAuxLowerBore
+  - rearAuxUpperBore
+  - lowerLeftMountBore
+  - lowerRightMountBore
+  - upperLeftMountBoss
+  - lowerLeftMountBoss
+  - lowerRightMountBoss
+- name: rearCableInterface
+  description: Preserve the partial open back-edge cable notch.
+  must_not_change: true
+  checks:
+  - rearCableNotch
+acceptance:
+  bbox_tolerance: 0.1
+  volume: null
+  surface_area: null
+  center_of_mass: null
+  solid_count: 1
+  sections:
+  - id: sec_x-22
+    plane: x
+    at: -22
+    expect:
+      area: 869.5
+      area_tolerance_rel: 0.18
+      loops: 1
+      holes: 2
+    description: Left longitudinal wall and two fork-branch holes; main duct opens upward at this x station. Image
+      label 870.48 mm2. Table and drawing differ by 0.11%.
+  - id: sec_x0
+    plane: x
+    at: 0
+    expect:
+      area: 369.1
+      area_tolerance_rel: 0.55
+      holes: 0
+      islands_min: 2
+    description: Roof and lower bridge are mandatory; the third reference region is the optional grille hub. Image
+      label 368.74 mm2. The 55% area band allows removal of the hub, not removal of the roof or bridge.
+  - id: sec_x22
+    plane: x
+    at: 22
+    expect:
+      area: 733.52
+      area_tolerance_rel: 0.18
+      loops: 1
+      holes: 3
+    description: 'Right longitudinal section: a closed upper duct section plus two fork-branch holes. Image label
+      734.37 mm2. Local inlet transitions are asymmetric in the source.'
+  - id: sec_y-5
+    plane: y
+    at: -5
+    expect:
+      area: 1726.99
+      area_tolerance_rel: 0.12
+      islands_min: 2
+    description: 'Use the dimension-sheet area. Its loops=3 and holes=6 are recorded as diagnostic counts only:
+      the image caption instead reports 55.37 mm2 and 5 regions with visibly open contours. Resolve Q1 before enforcing
+      exact topology here.'
+  - id: sec_y-12
+    plane: y
+    at: -12
+    expect:
+      area: 1412.07
+      area_tolerance_rel: 0.06
+      loops: 1
+      holes: 5
+    description: One connected material region, two duct holes, central fan-transition hole, and two lower mounting
+      holes. Image label 1414.64 mm2.
+  - id: sec_y-20
+    plane: y
+    at: -20
+    expect:
+      area: 1459.74
+      area_tolerance_rel: 0.08
+      islands_min: 1
+    description: 'Image area 1461.32 mm2: one connected body (ducts, chin, shoulders and the required central hub, which is
+      about 230 mm2 of this station) plus two isolated cosmetic rib islands of ~4 mm2 near the top that are not imposed
+      (loops=3, holes=6 in the image). The hub is not optional here: without it the station reads ~230 mm2 low, and a part
+      that reaches the band without it carries that much material somewhere the drawing shows air. Hole count is not
+      imposed (vanes and ribs vary it).'
+  - id: sec_z10
+    plane: z
+    at: 10
+    expect:
+      area: 435.42
+      area_tolerance_rel: 0.08
+      holes: 4
+      islands_min: 2
+    description: Two functional side bodies containing four separate branch holes. Reference loops=3 includes a
+      tiny 0.82 x 0.25 mm region; do not require that cosmetic island. Image label 436.53 mm2.
+  - id: sec_z20
+    plane: z
+    at: 20
+    expect:
+      area: 765.96
+      area_tolerance_rel: 0.25
+      loops: 3
+      holes: 2
+    description: Three material regions and two duct holes before the lower fork. Image label 618.29 mm2 conflicts
+      with the table by 19.28%; the 25% band covers that disclosed source discrepancy, Q1.
+  - id: sec_z30
+    plane: z
+    at: 30
+    expect:
+      area: 739.16
+      area_tolerance_rel: 0.08
+      loops: 2
+      holes: 2
+    description: Two side material regions and two enclosed duct holes. Image label 739.93 mm2. Thin cosmetic vane
+      stubs do not change the two duct holes.
+  - id: sec_z45
+    plane: z
+    at: 45
+    expect:
+      area: 565.96
+      area_tolerance_rel: 0.08
+      holes: 2
+      islands_min: 2
+    description: Exactly two enclosed duct holes. Reference loops=3 includes the optional central grille hub; at
+      least the two side material regions must remain. Image label 566.26 mm2.
+  - id: sec_z55
+    plane: z
+    at: 55
+    expect:
+      area: 821.64
+      area_tolerance_rel: 0.15
+      loops: 1
+      holes: 4
+    description: Upper connected shell with two duct voids and two vertical pilot bores. Image label 821.63 mm2.
+  faces:
+  - name: backLeftMain
+    plane: y
+    at: 0
+    normal: +
+    center:
+    - -16.22
+    - 40.42
+    mode: one
+    area: 422.38
+    area_tolerance_rel: 0.35
+    tolerance: 1.5
+  - name: backRightMain
+    plane: y
+    at: 0
+    normal: +
+    center:
+    - 11.67
+    - 49.48
+    mode: one
+    area: 214.31
+    area_tolerance_rel: 0.35
+    tolerance: 1.5
+  - name: backRightMount
+    plane: y
+    at: 0
+    normal: +
+    center:
+    - 16.47
+    - 19.74
+    mode: one
+    area: 27.8
+    area_tolerance_rel: 0.35
+    tolerance: 1.5
+  - name: backLeftOutletLip
+    plane: y
+    at: 0
+    normal: +
+    center:
+    - -18.22
+    - 3.97
+    mode: one
+    area: 12.67
+    area_tolerance_rel: 0.35
+    tolerance: 1.5
+  - name: backRightOutletLip
+    plane: y
+    at: 0
+    normal: +
+    center:
+    - 18.22
+    - 3.97
+    mode: one
+    area: 12.67
+    area_tolerance_rel: 0.35
+    tolerance: 1.5
+  - name: frontFanRim
+    plane: y
+    at: -27.4
+    normal: '-'
+    mode: one
+    area: 1661.02
+    area_tolerance_rel: 0.35
+    tolerance: 0.1
+  - name: topInletRim
+    plane: z
+    at: 61.5
+    normal: +
+    center:
+    - -0.39
+    - -14.07
+    mode: one
+    area: 955.18
+    area_tolerance_rel: 0.35
+    tolerance: 1.5
+  - name: nozzleBaseLeft
+    plane: z
+    at: 2.367
+    normal: '-'
+    center:
+    - -17.14
+    - -10.47
+    mode: one
+    area: 34.67
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: nozzleBaseRight
+    plane: z
+    at: 2.367
+    normal: '-'
+    center:
+    - 17.14
+    - -10.47
+    mode: one
+    area: 34.67
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: hotendLeftWall
+    plane: x
+    at: -13.15
+    normal: +
+    center:
+    - -3.72
+    - 21.65
+    mode: one
+    area: 59.84
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: hotendRightWall
+    plane: x
+    at: 13.15
+    normal: '-'
+    center:
+    - -5.66
+    - 20.23
+    mode: one
+    area: 29.82
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: leftMountRail
+    plane: x
+    at: -14.465
+    normal: '-'
+    center:
+    - -2.33
+    - 37.13
+    mode: one
+    area: 113.73
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: leftRearRailSeat
+    plane: y
+    at: -4.665
+    normal: +
+    center:
+    - -17.18
+    - 37.21
+    mode: one
+    area: 144.43
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: rightRearSeat
+    plane: y
+    at: -3.8
+    normal: +
+    center:
+    - 21.82
+    - 25.9
+    mode: one
+    area: 301.52
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: upperLeftBoreSeat
+    plane: y
+    at: -6
+    normal: +
+    center:
+    - -12.7
+    - 55.42
+    mode: one
+    area: 16.62
+    area_tolerance_rel: 0.3
+    tolerance: 0.5
+  - name: upperRightBoreSeat
+    plane: y
+    at: -5.861
+    normal: +
+    center:
+    - 12.7
+    - 55.42
+    mode: one
+    area: 16.62
+    area_tolerance_rel: 0.3
+    tolerance: 0.5
+  - name: auxLowerSeat
+    plane: y
+    at: -4.2
+    normal: +
+    center:
+    - -28
+    - 19
+    mode: one
+    area: 9.31
+    area_tolerance_rel: 0.35
+    tolerance: 0.5
+  - name: auxUpperSeat
+    plane: y
+    at: -4.2
+    normal: +
+    center:
+    - -24.98
+    - 35
+    mode: one
+    area: 9.24
+    area_tolerance_rel: 0.35
+    tolerance: 0.5
+  - name: hotendRearRoof
+    plane: z
+    at: 54
+    normal: '-'
+    center:
+    - 0.12
+    - -4.23
+    mode: one
+    area: 141.02
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: hotendBridgeBottom
+    plane: z
+    at: 27.8
+    normal: '-'
+    center:
+    - -1.11
+    - -8.52
+    mode: one
+    area: 85.83
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: hotendBridgeTopRight
+    plane: z
+    at: 29
+    normal: +
+    center:
+    - 3
+    - -10.41
+    mode: one
+    area: 24.55
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: hotendBridgeTopLeft
+    plane: z
+    at: 29
+    normal: +
+    center:
+    - -8.06
+    - -8.52
+    mode: one
+    area: 10.01
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: lowerMountUndersideLeft
+    plane: z
+    at: 16.001
+    normal: '-'
+    center:
+    - -16.75
+    - -9.75
+    mode: one
+    area: 54.8
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: lowerMountUndersideRight
+    plane: z
+    at: 16.001
+    normal: '-'
+    center:
+    - 16.66
+    - -12.01
+    mode: one
+    area: 40.96
+    area_tolerance_rel: 0.3
+    tolerance: 1
+  - name: topCounterboreFloorA
+    plane: z
+    at: 58
+    normal: +
+    center:
+    - -6.96
+    - -3.94
+    mode: one
+    area: 13.91
+    area_tolerance_rel: 0.3
+    tolerance: 0.6
+  - name: topCounterboreFloorB
+    plane: z
+    at: 58
+    normal: +
+    center:
+    - 3.94
+    - -6.96
+    mode: one
+    area: 13.91
+    area_tolerance_rel: 0.3
+    tolerance: 0.6
+  cylinders:
+  - name: cavityLowerRelief
+    point:
+    - 0.0
+    - -0.0
+    - 28.581
+    direction:
+    - -0.0
+    - -0.0
+    - 1.0
+    kind: hole
+    diameter: 22.5
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 1.562
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 1. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: 27.8 .. 29.362
+      (from axis point [0.0, -0.0, 0.0]).'
+  - name: cavityUpperRelief
+    point:
+    - -0.0
+    - 0.0
+    - 52.308
+    direction:
+    - -0.0
+    - 0.0
+    - 1.0
+    kind: hole
+    diameter: 20.4
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 3.384
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 2. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: 50.616 .. 54
+      (from axis point [0.0, -0.0, 0.0]).'
+  - name: leftInletTurn
+    point:
+    - -18.034
+    - -21.953
+    - 54.064
+    direction:
+    - 1.0
+    - 0.0
+    - -0.0
+    kind: hole
+    diameter: 20.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 13.403
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 3. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -24.736 .. -11.333
+      (from axis point [0.0, -21.953, 54.064]).'
+  - name: rightRearRelief
+    point:
+    - 18.491
+    - -3.205
+    - 17.626
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: hole
+    diameter: 20.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 1.191
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 4. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -3.8 .. -2.609
+      (from axis point [18.491, 0.0, 17.626]).'
+  - name: leftHotendDiagonalRelief
+    point:
+    - -5.15
+    - -7.564
+    - 21.521
+    direction:
+    - 0.0
+    - 0.7071
+    - 0.7071
+    kind: hole
+    diameter: 16.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 17.759
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 5. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: 0.989 .. 18.748
+      (from axis point [-5.15, -14.542, 14.544]).'
+  - name: rightHotendDiagonalRelief
+    point:
+    - 5.15
+    - -8.193
+    - 20.893
+    direction:
+    - 0.0
+    - 0.7071
+    - 0.7071
+    kind: hole
+    diameter: 16.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 15.981
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 6. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: 0.989 .. 16.969
+      (from axis point [5.15, -14.542, 14.544]).'
+  - name: topCounterboreA
+    point:
+    - -6.963
+    - -3.939
+    - 0
+    direction:
+    - -0.0
+    - 0.0
+    - 1.0
+    kind: hole
+    diameter: 5.0
+    radius_tolerance: 0.1
+    axis_tolerance: 0.2
+    length: 2.9
+    length_tolerance: 0.6
+    description: 'sources/dimension-sheet.md, cylindrical row 7. Full circular bore segment. Source axis extent:
+      58 .. 60.9 (from axis point [-6.963, -3.939, -0.0]).'
+    t_range:
+    - 58
+    - 60.9
+  - name: topCounterboreB
+    point:
+    - 3.939
+    - -6.963
+    - 0
+    direction:
+    - -0.0
+    - 0.0
+    - 1.0
+    kind: hole
+    diameter: 5.0
+    radius_tolerance: 0.1
+    axis_tolerance: 0.2
+    length: 2.9
+    length_tolerance: 0.6
+    description: 'sources/dimension-sheet.md, cylindrical row 8. Full circular bore segment. Source axis extent:
+      58 .. 60.9 (from axis point [3.939, -6.963, 0.0]).'
+    t_range:
+    - 58
+    - 60.9
+  - name: rearAuxLowerBore
+    point:
+    - -28.0
+    - -2.3
+    - 19.0
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: hole
+    diameter: 4.7
+    radius_tolerance: 0.1
+    axis_tolerance: 0.2
+    length: 3.8
+    length_tolerance: 0.6
+    description: 'sources/dimension-sheet.md, cylindrical row 9. Full circular bore segment. Source axis extent:
+      -4.2 .. -0.4 (from axis point [-28.0, 0.0, 19.0]).'
+  - name: rearAuxUpperBore
+    point:
+    - -25.0
+    - -2.329
+    - 35.0
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: hole
+    diameter: 4.7
+    radius_tolerance: 0.1
+    axis_tolerance: 0.2
+    length: 3.857
+    length_tolerance: 0.6
+    description: 'sources/dimension-sheet.md, cylindrical row 10. Full circular bore segment. Source axis extent:
+      -4.257 .. -0.4 (from axis point [-25.0, 0.0, 35.0]).'
+  - name: rearUpperLeftBore
+    point:
+    - -12.7
+    - -3.2
+    - 55.424
+    direction:
+    - -0.0
+    - 1.0
+    - -0.0
+    kind: hole
+    diameter: 4.6
+    radius_tolerance: 0.1
+    axis_tolerance: 0.2
+    length: 5.6
+    length_tolerance: 0.6
+    description: 'sources/dimension-sheet.md, cylindrical row 11. Full circular bore segment. Source axis extent:
+      -6 .. -0.4 (from axis point [-12.7, 0.0, 55.424]).'
+  - name: rearUpperRightBore
+    point:
+    - 12.7
+    - -3.131
+    - 55.424
+    direction:
+    - -0.0
+    - 1.0
+    - -0.0
+    kind: hole
+    diameter: 4.6
+    radius_tolerance: 0.1
+    axis_tolerance: 0.2
+    length: 5.461
+    length_tolerance: 0.6
+    description: 'sources/dimension-sheet.md, cylindrical row 12. Full circular bore segment. Source axis extent:
+      -5.861 .. -0.4 (from axis point [12.7, 0.0, 55.424]).'
+  - name: rearCableNotch
+    point:
+    - 0.0
+    - 0.0
+    - 57.45
+    direction:
+    - 0.0
+    - 0.0
+    - 1.0
+    kind: hole
+    diameter: 4.1
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 6.9
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 13. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: 54 .. 60.9 (from
+      axis point [0.0, -0.0, 0.0]).'
+  - name: rightObliqueReliefA
+    point:
+    - 20.102
+    - -3.583
+    - 15.573
+    direction:
+    - 0.564
+    - 0.6326
+    - 0.5308
+    kind: hole
+    diameter: 4.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 4.212
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 14. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: 15.231 .. 19.443
+      (from axis point [10.323, -14.55, 6.37]).'
+  - name: rightObliqueReliefB
+    point:
+    - 21.417
+    - -3.196
+    - 14.219
+    direction:
+    - 0.791
+    - 0.607
+    - 0.0766
+    kind: hole
+    diameter: 4.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 3.247
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 15. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: 14.467 .. 17.714
+      (from axis point [8.688, -12.962, 12.986]).'
+  - name: leftRailConcaveBlend
+    point:
+    - -18.349
+    - -2.332
+    - 33.855
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: hole
+    diameter: 3.984
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 4.665
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 16. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -4.665 .. -0
+      (from axis point [-18.349, 0.0, 33.855]).'
+  - name: lowerLeftMountBore
+    point:
+    - -16.25
+    - -3.75
+    - 19.301
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: hole
+    diameter: 3.4
+    radius_tolerance: 0.1
+    axis_tolerance: 0.2
+    length: 7.5
+    length_tolerance: 0.6
+    description: 'sources/dimension-sheet.md, cylindrical row 17. Full circular bore segment. Source axis extent:
+      -7.5 .. 0 (from axis point [-16.25, 0.0, 19.301]).'
+  - name: lowerRightMountBore
+    point:
+    - 16.25
+    - -3.75
+    - 19.301
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: hole
+    diameter: 3.4
+    radius_tolerance: 0.1
+    axis_tolerance: 0.2
+    length: 7.5
+    length_tolerance: 0.6
+    description: 'sources/dimension-sheet.md, cylindrical row 18. Full circular bore segment. Source axis extent:
+      -7.5 .. 0 (from axis point [16.25, 0.0, 19.301]).'
+  - name: topPilotA
+    point:
+    - -6.963
+    - -3.939
+    - 0
+    direction:
+    - -0.0
+    - 0.0
+    - 1.0
+    kind: hole
+    diameter: 2.7
+    radius_tolerance: 0.1
+    axis_tolerance: 0.2
+    length: 4.0
+    length_tolerance: 0.6
+    description: 'sources/dimension-sheet.md, cylindrical row 19. Full circular bore segment. Source axis extent:
+      54 .. 58 (from axis point [-6.963, -3.939, -0.0]).'
+    t_range:
+    - 54
+    - 58
+  - name: topPilotB
+    point:
+    - 3.939
+    - -6.963
+    - 0
+    direction:
+    - -0.0
+    - 0.0
+    - 1.0
+    kind: hole
+    diameter: 2.7
+    radius_tolerance: 0.1
+    axis_tolerance: 0.2
+    length: 4.0
+    length_tolerance: 0.6
+    description: 'sources/dimension-sheet.md, cylindrical row 20. Full circular bore segment. Source axis extent:
+      54 .. 58 (from axis point [3.939, -6.963, 0.0]).'
+    t_range:
+    - 54
+    - 58
+  - name: rightDuctConvexTurn
+    point:
+    - 22.774
+    - -33.8
+    - 36.775
+    direction:
+    - 1.0
+    - -0.0
+    - -0.0
+    kind: pin
+    diameter: 60.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 10.704
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 21. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: 17.422 .. 28.126
+      (from axis point [-0.0, -33.8, 36.775]).'
+  - name: rightCavityConvexBlend
+    point:
+    - 10.658
+    - -1.9
+    - 40.871
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: pin
+    diameter: 16.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 3.8
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 22. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -3.8 .. 0 (from
+      axis point [10.658, 0.0, 40.871]).'
+  - name: upperLeftMountBoss
+    point:
+    - -12.7
+    - -2.332
+    - 55.424
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: pin
+    diameter: 11.4
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 4.665
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 23. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -4.665 .. 0 (from
+      axis point [-12.7, 0.0, 55.424]).'
+  - name: rightInletConvexTurn
+    point:
+    - 15.093
+    - -8.519
+    - 59.745
+    direction:
+    - 1.0
+    - -0.0
+    - 0.0
+    kind: pin
+    diameter: 10.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 9.057
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 24. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: 10.564 .. 19.621
+      (from axis point [-0.0, -8.519, 59.745]).'
+  - name: lowerLeftMountBoss
+    point:
+    - -16.25
+    - -2.332
+    - 19.301
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: pin
+    diameter: 9.4
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 4.665
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 25. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -4.665 .. -0
+      (from axis point [-16.25, 0.0, 19.301]).'
+  - name: lowerRightBossBlendA
+    point:
+    - 15.902
+    - -3.092
+    - 20.001
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: pin
+    diameter: 8.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 6.184
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 26. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -6.184 .. 0 (from
+      axis point [15.902, 0.0, 20.001]).'
+  - name: lowerRightBossBlendB
+    point:
+    - 17.15
+    - -1.9
+    - 19.068
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: pin
+    diameter: 8.0
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 3.8
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 27. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -3.8 .. 0 (from
+      axis point [17.15, 0.0, 19.068]).'
+  - name: lowerRightMountBoss
+    point:
+    - 16.25
+    - -1.9
+    - 19.301
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: pin
+    diameter: 6.437
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 3.8
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 28. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -3.8 .. 0 (from
+      axis point [16.25, 0.0, 19.301]).'
+  - name: leftRailLowerBlend
+    point:
+    - -21.775
+    - -2.332
+    - 27.388
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: pin
+    diameter: 3.984
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 4.665
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 29. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -4.665 .. -0
+      (from axis point [-21.775, 0.0, 27.388]).'
+  - name: leftRailUpperBlend
+    point:
+    - -20.147
+    - -2.332
+    - 41.463
+    direction:
+    - 0.0
+    - 1.0
+    - -0.0
+    kind: pin
+    diameter: 3.984
+    radius_tolerance: 0.3
+    axis_tolerance: 0.5
+    length: 4.665
+    length_tolerance: 1.0
+    description: 'sources/dimension-sheet.md, cylindrical row 30. Partial cylindrical surface only: do not replace
+      it by a full bore or an added full pin. Angular extent is not specified. Source axis extent: -4.665 .. -0
+      (from axis point [-20.147, 0.0, 41.463]).'
+  planes:
+  - name: leftNozzleBottom
+    point:
+    - -27.948
+    - -27.5
+    - 4.853
+    normal:
+    - -0.2416
+    - 0
+    - -0.9704
+    tolerance: 0.75
+    angle_tolerance_deg: 3
+    description: sources/dimension-sheet.md, Inclined planar faces. Functional nozzle/clearance surface; given point
+      lies on the infinite supporting plane and may be outside the trimmed face. No area constraint on optional
+      exterior styling.
+  - name: rightNozzleBottom
+    point:
+    - 27.948
+    - -27.5
+    - 4.853
+    normal:
+    - 0.2416
+    - 0
+    - -0.9704
+    tolerance: 0.75
+    angle_tolerance_deg: 3
+    description: sources/dimension-sheet.md, Inclined planar faces. Functional nozzle/clearance surface; given point
+      lies on the infinite supporting plane and may be outside the trimmed face. No area constraint on optional
+      exterior styling.
+  - name: leftOutletInnerLip
+    point:
+    - -15.756
+    - 0
+    - 4.61
+    normal:
+    - 0.971
+    - 0
+    - -0.2391
+    tolerance: 0.75
+    angle_tolerance_deg: 3
+    description: sources/dimension-sheet.md, Inclined planar faces. Functional nozzle/clearance surface; given point
+      lies on the infinite supporting plane and may be outside the trimmed face. No area constraint on optional
+      exterior styling.
+  - name: rightOutletInnerLip
+    point:
+    - 15.756
+    - 0
+    - 4.61
+    normal:
+    - -0.971
+    - 0
+    - -0.2391
+    tolerance: 0.75
+    angle_tolerance_deg: 3
+    description: sources/dimension-sheet.md, Inclined planar faces. Functional nozzle/clearance surface; given point
+      lies on the infinite supporting plane and may be outside the trimmed face. No area constraint on optional
+      exterior styling.
+  - name: leftOutletReturn
+    point:
+    - -14.635
+    - -27.433
+    - 9.123
+    normal:
+    - 0.7527
+    - 0.0698
+    - 0.6547
+    tolerance: 0.75
+    angle_tolerance_deg: 3
+    description: sources/dimension-sheet.md, Inclined planar faces. Functional nozzle/clearance surface; given point
+      lies on the infinite supporting plane and may be outside the trimmed face. No area constraint on optional
+      exterior styling.
+  - name: rightOutletReturn
+    point:
+    - 14.635
+    - -27.433
+    - 9.123
+    normal:
+    - -0.7527
+    - 0.0698
+    - 0.6547
+    tolerance: 0.75
+    angle_tolerance_deg: 3
+    description: sources/dimension-sheet.md, Inclined planar faces. Functional nozzle/clearance surface; given point
+      lies on the infinite supporting plane and may be outside the trimmed face. No area constraint on optional
+      exterior styling.
+  - name: hotendLowerRamp
+    point:
+    - 0
+    - -20.256
+    - 20.625
+    normal:
+    - 0
+    - 0.342
+    - -0.9397
+    tolerance: 0.75
+    angle_tolerance_deg: 3
+    description: sources/dimension-sheet.md, Inclined planar faces. Functional nozzle/clearance surface; given point
+      lies on the infinite supporting plane and may be outside the trimmed face. No area constraint on optional
+      exterior styling.
+  - name: hotendBridgeRamp
+    point:
+    - 0
+    - -19.557
+    - 20.843
+    normal:
+    - 0
+    - 0.7071
+    - -0.7071
+    tolerance: 0.75
+    angle_tolerance_deg: 3
+    description: sources/dimension-sheet.md, Inclined planar faces. Functional nozzle/clearance surface; given point
+      lies on the infinite supporting plane and may be outside the trimmed face. No area constraint on optional
+      exterior styling.
+  - name: hotendFrontUnderside
+    point:
+    - 0
+    - -15.748
+    - 17.818
+    normal:
+    - 0
+    - -0.1762
+    - -0.9844
+    tolerance: 0.75
+    angle_tolerance_deg: 3
+    description: sources/dimension-sheet.md, Inclined planar faces. Functional nozzle/clearance surface; given point
+      lies on the infinite supporting plane and may be outside the trimmed face. No area constraint on optional
+      exterior styling.
+  dimensions:
+  - name: envelopeWidth
+    axis: x
+    expected: 71.068
+    tolerance: 0.1
+    description: overallWidth; stated bbox size from dimension-sheet.md.
+  - name: envelopeDepth
+    axis: y
+    expected: 27.4
+    tolerance: 0.1
+    description: overallDepth; stated bbox size.
+  - name: envelopeHeight
+    axis: z
+    expected: 59.133
+    tolerance: 0.1
+    description: topZ - nozzleEndZ.
+  - name: frontToBack
+    axis: y
+    expected: 27.4
+    tolerance: 0.1
+    between:
+    - frontFanRim
+    - backLeftMain
+    description: backY - frontY; pin depth using actual material datum faces.
+  - name: hotendWallSpacing
+    axis: x
+    expected: 26.3
+    tolerance: 0.5
+    between:
+    - hotendLeftWall
+    - hotendRightWall
+    description: 13.15 - (-13.15), from the two listed cavity walls; supports the about-26 mm pocket width.
+  solids:
+  - name: housing
+    contains_point:
+    - 0
+    - -10
+    - 58.8
+    description: Only connected material body; all walls, lips and bosses must belong to it. Optional grille must
+      join it if retained.
+  hardware: []
+  clearances: []
+  passages:
+  - name: leftDuctMid45
+    point_a: [-20, -18, 55]
+    point_b: [-22, -16, 45]
+    pitch: 0.4
+    seal_radius: 3.2
+    expect_connected: true
+    volume_min: 3474.3
+    volume_max: 5211.4
+    description: 'Sealed part-cooling duct: air from the inlet chamber under the top mouth (section z=55) must reach this station through the duct alone. Ports: no plugs. Every opening is shut by the 3.2 mm closing radius alone, exactly as the scorer measures it: the outlet lips are narrower than 6.4 mm, and each inlet channel narrows to a neck under 6.4 mm between the z=55 station and the top mouth (in the drawings the sealed duct ends at z~56; the mouth above the neck is open air), so the sealed volume is the duct from that neck to the outlets. A channel that stays 8 mm wide up to the top face leaks to the exterior and fails. The drawn channel is ~8 x 19 mm with ~1 mm walls below the neck, so the duct itself stays open. Air volume band: reference-class duct ~4300 mm3, +-20 %. Station: section z=45 channel centre.'
+  - name: leftDuctTrunk30
+    point_a: [-20, -18, 55]
+    point_b: [-24, -14, 30]
+    pitch: 0.4
+    seal_radius: 3.2
+    expect_connected: true
+    volume_min: 3474.3
+    volume_max: 5211.4
+    description: 'As leftDuctMid45; station: section z=30 channel centre.'
+  - name: leftDuctLower20
+    point_a: [-20, -18, 55]
+    point_b: [-27, -12, 20]
+    pitch: 0.4
+    seal_radius: 3.2
+    expect_connected: true
+    volume_min: 3474.3
+    volume_max: 5211.4
+    description: 'As leftDuctMid45; station: section z=20 channel centre.'
+  - name: leftDuctRearOutlet
+    point_a: [-20, -18, 55]
+    point_b: [-26, -10, 10]
+    pitch: 0.4
+    seal_radius: 3.2
+    expect_connected: true
+    volume_min: 3474.3
+    volume_max: 5211.4
+    description: 'As leftDuctMid45; station: the round rear outlet of the fork at z=10 (section z=10, hole centre ~(-25.5, -9.5)). The flatter front outlet is under 6 mm tall and is closed by the seal, so it is pinned by the leftDuctAir probes instead.'
+  - name: rightDuctMid45
+    point_a: [20, -18, 55]
+    point_b: [22, -16, 45]
+    pitch: 0.4
+    seal_radius: 3.2
+    expect_connected: true
+    volume_min: 3440.4
+    volume_max: 5160.7
+    description: 'Mirror of leftDuctMid45.'
+  - name: rightDuctTrunk30
+    point_a: [20, -18, 55]
+    point_b: [24, -14, 30]
+    pitch: 0.4
+    seal_radius: 3.2
+    expect_connected: true
+    volume_min: 3440.4
+    volume_max: 5160.7
+    description: 'Mirror of leftDuctTrunk30.'
+  - name: rightDuctLower20
+    point_a: [20, -18, 55]
+    point_b: [27, -12, 20]
+    pitch: 0.4
+    seal_radius: 3.2
+    expect_connected: true
+    volume_min: 3440.4
+    volume_max: 5160.7
+    description: 'Mirror of leftDuctLower20.'
+  - name: rightDuctRearOutlet
+    point_a: [20, -18, 55]
+    point_b: [26, -10, 10]
+    pitch: 0.4
+    seal_radius: 3.2
+    expect_connected: true
+    volume_min: 3440.4
+    volume_max: 5160.7
+    description: 'Mirror of leftDuctRearOutlet.'
+  - name: leftRightDuctIsolation
+    point_a: [-22, -16, 45]
+    point_b: [22, -16, 45]
+    pitch: 0.4
+    seal_radius: 3.2
+    expect_connected: false
+    description: 'With the same caps and closing radius, both duct centres at z=45 must be interior air in different components; a common cavity or an outside detour must fail.'
+  thickness:
+  - name: minimumHousingWall
+    min: 0.75
+    stat: p05
+    samples: 12000
+    max_thickness: 8.0
+    description: 'sources/voron-duct-description.md: fifth percentile of inward ray-cast wall thickness >=0.75 mm.
+      Whole housing, with the same nominal 1 mm walls on both ducts. Rays longer than 8 mm cross an open interior
+      (cavity, duct, hotend pocket) rather than a wall and are dropped, so the statistic reads the walls.'
+  probes:
+  - name: leftDuctAir
+    state: void
+    points:
+    - - -20
+      - -18
+      - 55
+    - - -22
+      - -16
+      - 45
+    - - -24
+      - -14
+      - 30
+    - - -27
+      - -12
+      - 20
+    - - -22
+      - -8
+      - 7.5
+    - - -22
+      - -22
+      - 8
+    description: Measured safe interior centers at inlet, two middle stations, lower trunk, and both outlet branches.
+      Sources section-z55/z45/z30/z20 and section-x-22; contour reading uncertainty <=0.75 mm.
+  - name: rightDuctAir
+    state: void
+    points:
+    - - 20
+      - -18
+      - 55
+    - - 22
+      - -16
+      - 45
+    - - 24
+      - -14
+      - 30
+    - - 27
+      - -12
+      - 20
+    - - 22
+      - -8
+      - 7.5
+    - - 22
+      - -22
+      - 8
+    description: Mirrored core probes, checked against section-z55/z45/z30/z20 and section-x22. These are air; never
+      material/support ribs.
+  - name: fanHubSolid
+    state: solid
+    points:
+    - [0, -23, 41]
+    - [0, -23, 45]
+    - [0, -21, 43]
+    - [0, -25, 43]
+    - [4, -23, 43]
+    - [-4, -23, 43]
+    description: 'The central hub of the fan opening (feature cosmeticFanGrille): a solid boss about 16 mm wide (x -8..8) and
+      15 mm tall (z ~36..51) spanning the opening depth from the front face to the bore floor; these points sit at least
+      1.5 mm inside it. Required because sections z=45 and y=-20 are banded with it; the vanes joining it to the rim are
+      optional.'
+  - name: hotendFanFloorSolid
+    state: solid
+    points:
+    - [0, -17, 26]
+    - [0, -16, 28]
+    - [10, -18, 30]
+    - [-13.6, -18.8, 26.4]
+    - [13, -10, 28]
+    - [-13, -8, 32]
+    description: 'Solid body behind the fan bore floor (y = -19.2): the chin under the bore at x=0 (the section x=0 closed outline z 20..29.5 is material, sloping back from y~-22 at z=20 to y~-12 at z=28) and the shoulders beside the hotend pocket (|x| 10..14, z 24..34, y -27..-4). There is no sealed air chamber here; the only interior air near the fan is the bore itself (frontFanAir), the pocket (hotendPocketAir) and the ducts. Do not carve chambers, bays, slots or access slabs in this region; the closing-radius passages measure the ducts only.'
+  - name: hotendPocketAir
+    state: void
+    points:
+    - - 0
+      - -5
+      - 36
+    - - 0
+      - -5
+      - 20
+    - - 0
+      - -12
+      - 10
+    - - 0
+      - -20
+      - 10
+    description: Conservative cavity/access centers from y=-12/-20 and x=0 sections. The approximate 26 x 35 pocket
+      is not promoted to an unsupported rectangular keep-out.
+  - name: backAccessAir
+    state: void
+    points:
+    - - 0
+      - -5
+      - 36
+    - - 0
+      - -2
+      - 36
+    - - 0
+      - -0.5
+      - 36
+    - - 0
+      - 0.5
+      - 36
+    description: Sampled clear path through the open back at y=0; final point intentionally outside the envelope.
+      No cap may close the cavity back.
+  - name: nozzleAccessAir
+    state: void
+    points:
+    - - 0
+      - -10
+      - 12
+    - - 0
+      - -10
+      - 8
+    - - 0
+      - -10
+      - 4
+    - - 0
+      - -10
+      - 1
+    description: Sampled clear downward access through the open nozzle end; final point lies below the part.
+  - name: frontFanAir
+    state: void
+    points:
+    - - 12
+      - -27
+      - 45
+    - - 12
+      - -24
+      - 45
+    - - -12
+      - -27
+      - 42
+    - - -12
+      - -24
+      - 42
+    description: Points inside the round front aperture, away from the visible hub and four optional vane locations;
+      front.png and section-y-20.png.
+  - name: mainMaterialAnchor
+    state: solid
+    points:
+    - - 0
+      - -10
+      - 58.8
+    description: Roof bridge beneath cosmetic engraving, well away from the notch and vertical bores; x=0 section.
+  - name: screwBoreAir
+    state: void
+    points:
+    - - -6.963
+      - -3.939
+      - 56
+    - - 3.939
+      - -6.963
+      - 56
+    - - -6.963
+      - -3.939
+      - 59.4
+    - - 3.939
+      - -6.963
+      - 59.4
+    - - -28
+      - -2.3
+      - 19
+    - - -25
+      - -2.329
+      - 35
+    - - -12.7
+      - -3.2
+      - 55.424
+    - - 12.7
+      - -3.131
+      - 55.424
+    - - -16.25
+      - -3.75
+      - 19.301
+    - - 16.25
+      - -3.75
+      - 19.301
+    description: Ten stated full-360 bore segments from the cylindrical table, including the two stacked segments
+      at each top screw. The smallest radius is 1.35 mm, larger than axis/radius digital uncertainty.
+  - name: topInletAccessAir
+    state: void
+    points:
+    - - -15
+      - -19
+      - 60
+    - - -15
+      - -19
+      - 61
+    - - -15
+      - -19
+      - 62
+    - - 10
+      - -19
+      - 60
+    - - 10
+      - -19
+      - 61
+    - - 10
+      - -19
+      - 62
+    description: Visible mouth interiors from top.png and section-y-20.png, deliberately offset from the thin optional
+      inlet vane traces. Samples straddle z=61.5; the z=62 samples are outside-envelope access endpoints. The z=60
+      samples are the positive passage endpoints, 1 mm below the test plugs.
+  - name: lowerMountAccessAir
+    state: void
+    points:
+    - - -16.25
+      - -26
+      - 19.301
+    - - 16.25
+      - -26
+      - 19.301
+    - - -16.25
+      - -20
+      - 19.301
+    - - 16.25
+      - -20
+      - 19.301
+    - - -16.25
+      - -12
+      - 19.301
+    - - 16.25
+      - -12
+      - 19.301
+    description: Located void centers of the two front-visible lower screw access paths, corroborated by front.png
+      and sections y=-20 and y=-12. No additional bore diameter or chamfer depth is inferred for this continuation.
+  cylinder_counts:
+  - name: topPilotPair
+    diameter: 2.7
+    radius_tolerance: 0.15
+    kind: hole
+    direction:
+    - 0
+    - 0
+    - 1
+    region:
+    - - -9
+      - -9
+      - 54
+    - - 6
+      - -2
+      - 58
+    expected: 2
+    description: Stated full bores; axis-center region distinguishes similar diameters and coaxial steps. Repeated
+      partial shell fillets are enumerated individually, not treated as fasteners.
+  - name: topCounterborePair
+    diameter: 5
+    radius_tolerance: 0.15
+    kind: hole
+    direction:
+    - 0
+    - 0
+    - 1
+    region:
+    - - -9
+      - -9
+      - 57.5
+    - - 6
+      - -2
+      - 61.5
+    expected: 2
+    description: Stated full bores; axis-center region distinguishes similar diameters and coaxial steps. Repeated
+      partial shell fillets are enumerated individually, not treated as fasteners.
+  - name: lowerMountPair
+    diameter: 3.4
+    radius_tolerance: 0.15
+    kind: hole
+    direction:
+    - 0
+    - 1
+    - 0
+    region:
+    - - -18
+      - -8
+      - 18
+    - - 18
+      - 1
+      - 21
+    expected: 2
+    description: Stated full bores; axis-center region distinguishes similar diameters and coaxial steps. Repeated
+      partial shell fillets are enumerated individually, not treated as fasteners.
+  - name: upperMountPair
+    diameter: 4.6
+    radius_tolerance: 0.15
+    kind: hole
+    direction:
+    - 0
+    - 1
+    - 0
+    region:
+    - - -15
+      - -7
+      - 53
+    - - 15
+      - 1
+      - 57
+    expected: 2
+    description: Stated full bores; axis-center region distinguishes similar diameters and coaxial steps. Repeated
+      partial shell fillets are enumerated individually, not treated as fasteners.
+  - name: rearAuxPair
+    diameter: 4.7
+    radius_tolerance: 0.15
+    kind: hole
+    direction:
+    - 0
+    - 1
+    - 0
+    region:
+    - - -31
+      - -5
+      - 17
+    - - -22
+      - 1
+      - 37
+    expected: 2
+    description: Stated full bores; axis-center region distinguishes similar diameters and coaxial steps. Repeated
+      partial shell fillets are enumerated individually, not treated as fasteners.
+  gears: []
+  meshes: []
+  deviation: null
+  blockout:
+    volume_min: 109390.139
+    volume_max: 120904.891
+  export_volume_tolerance_rel: 0.002
+references:
+- path: sources/back.png
+  kind: image
+  role: authoritative
+  sha256: d9993a7951305125b17849520dc3e4c593395cd32e33913a96e816f8ad86d78b
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Orthographic mm-grid evidence for frame, silhouette, port locations and visible feature counts.
+- path: sources/bottom.png
+  kind: image
+  role: authoritative
+  sha256: 99a231fa19ee41312e13e5235b253b6171240a53631fbf94471c4e645c9f3465
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Orthographic mm-grid evidence for frame, silhouette, port locations and visible feature counts.
+- path: sources/dimension-sheet.md
+  kind: table
+  role: authoritative
+  sha256: 3d150ee78d7c71e164535fe895088ffa4d6d75114b58edd6328fff4c47c695bf
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Quoted dimension/axis/section tables. Provenance of quoted values is stated; no reference ingest files or
+    reference CAD were read.
+- path: sources/front.png
+  kind: image
+  role: authoritative
+  sha256: 545e3b87263e28c5d3ec34276955fb4796248332983d2cb49684c082202dbfb3
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Orthographic mm-grid evidence for frame, silhouette, port locations and visible feature counts.
+- path: sources/iso-below.png
+  kind: image
+  role: illustrative
+  sha256: 5414dfaf4b3c5fb32a2a42897ff413d0507e7cb5ee2320238c5b55c837b3bd92
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Overall spatial relationships and optional styling; do not take dimensions from isometric projected lengths.
+- path: sources/iso.png
+  kind: image
+  role: illustrative
+  sha256: a53d5ef420cd2e45ef1942b8cfd74e9eaeed82b33961f3292e4cd0e1f0478436
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Overall spatial relationships and optional styling; do not take dimensions from isometric projected lengths.
+- path: sources/iso2.png
+  kind: image
+  role: illustrative
+  sha256: cfb622b1cf2de0621babf230fe4f377a990ef9946d58e5d955b758c9f5ebf12e
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Overall spatial relationships and optional styling; do not take dimensions from isometric projected lengths.
+- path: sources/left.png
+  kind: image
+  role: authoritative
+  sha256: a83a406028cfd1bc310776c2f0dbc4673dbb2ba88ebff0e472b53ad421a0640d
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Orthographic mm-grid evidence for frame, silhouette, port locations and visible feature counts.
+- path: sources/render-notes.md
+  kind: text
+  role: authoritative
+  sha256: 8e01aeb577033da71d8a610d78928238f48355dce9e0971edbc621f990ca0b6b
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Orthographic frame, extents and supplied rendering metadata; reference triangle count is diagnostic.
+- path: sources/right.png
+  kind: image
+  role: authoritative
+  sha256: 1f14cfe9a9de8a8327a3bc12b991464d85c6adef10c453a56161a6b650cf8b8d
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Orthographic mm-grid evidence for frame, silhouette, port locations and visible feature counts.
+- path: sources/section-x-22.png
+  kind: drawing
+  role: authoritative
+  sha256: 906479b97107a387f93734009e482a1acc4d75a5cb6248f771ca3f3c21a88b61
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/section-x0.png
+  kind: drawing
+  role: authoritative
+  sha256: 30db4695d01c4e2003cbb782debc4a2b3d23ef76c3c16dd9e909edcc7d102059
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/section-x22.png
+  kind: drawing
+  role: authoritative
+  sha256: 79b4f1c7e3912577c067c94093f09d39c34c00614892ee0feeb0a53d7e7ae26c
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/section-y-12.png
+  kind: drawing
+  role: authoritative
+  sha256: 74706b6b2d6db03fda484965c3f4d48bb5b989228adb13b016f3c05e12c11b72
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/section-y-20.png
+  kind: drawing
+  role: authoritative
+  sha256: e781d9072805478672deecc52820cbd86e53bd009b9fbd069821bc956731ef7e
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/section-y-5.png
+  kind: drawing
+  role: authoritative
+  sha256: 7bea7ed7c698ff28593792036b35fbc018c616541aab1781bf97c073385a3869
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/section-z10.png
+  kind: drawing
+  role: authoritative
+  sha256: 8db2da999a0d047e26f34a264313a178cc6239c3dff22ee2cc55c055fa433c96
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/section-z20.png
+  kind: drawing
+  role: authoritative
+  sha256: 7b13af9a25b7bc409aaae9b72f126ee1fe5588f789c46445f3b6cdfdc88962c9
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/section-z30.png
+  kind: drawing
+  role: authoritative
+  sha256: 9553a783bcec14250054a90b8a863b43302fb9944fc146c2cbc73f185aabf918
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/section-z45.png
+  kind: drawing
+  role: authoritative
+  sha256: b72331aead4d9c114de497d1bd77f6ad435396d064b488b73603c04d3c7ca4c8
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/section-z55.png
+  kind: drawing
+  role: authoritative
+  sha256: 8176c82680b60fd3ad92c5b3478a21a6268b169ad22d2f45f0461cf20f413e6b
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Material outline and mm axes; compare label with dimension sheet. Conflicts and optional-region counts are
+    disclosed in the brief.
+- path: sources/top.png
+  kind: image
+  role: authoritative
+  sha256: c035e03a2df785aafcdb61474a38934d50799a6c09d2ce653e8936d1dadd20cc
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Orthographic mm-grid evidence for frame, silhouette, port locations and visible feature counts.
+- path: sources/voron-duct-description.md
+  kind: text
+  role: authoritative
+  sha256: 6393278735f162422209a12eb2ac58b40a8446fd7ebd46f9d419992a8b322623
+  units: mm
+  revision: Supplied reconstruction bundle; upstream commit/revision not stated; content pinned by sha256.
+  note: Functional routing, cavity, closed/separate ducts, thickness statistic, cosmetic priority and GPL-3.0 source
+    attribution.
+open_questions:
+- Q1. Which section source is correct at y=-5 (table 1726.99 mm2, 3 loops/6 holes; image 55.37 mm2, 5 regions) and
+  z=20 (table 765.96 mm2; image 618.29 mm2)? The draft uses table areas, a disclosed 25% z=20 band, and leaves exact
+  y=-5 loop/hole counts unpinned pending resolution.
+- Q2. Does mirrored ducts mean exact mirrored top mouths as well as the principal routes and forks? The description
+  suggests mirrored inlets, but top.png shows left x~-25..-10 and right x~5..18. The draft mirrors the core routes
+  and probe stations while recording the visible asymmetric mouth transitions.
+- Q3. What are the exact loft centerlines, section profiles, bend radii, fork-divider shape and port boundaries
+  between the supplied stations? Interpolate the shown routes with the stated nominal walls; do not invent unseen
+  hardware geometry.
+- Q4. What are acceptable sealed air-volume ranges for each duct, and do the six proposed drawing-based plug boxes
+  seal only the actual ports? No source gives per-duct volume limits; the passage checks report volume without a
+  numeric band, and plug behavior needs validation against the eventual model.
+- Q5. How should the approximate 26 x 35 mm hotend pocket at z~9..44 be reconciled with the larger fan transition
+  and z=54 rear roof? No hotend hardware envelope, exact cavity depth or fit clearance is supplied; no rectangular
+  hardware keep-out is assumed.
+- Q6. What are the angular trim limits of the 20 partial cylindrical patches, the screw entry/chamfer profiles,
+  and the lower mounting bores beyond the documented y=-7.5..0 segment? The axis/radius/length table is pinned,
+  but full bores or full pins must not replace partial surfaces.
+- Q7. Which material, density, printing process details, shrink allowance and fit tolerances are intended? Material
+  and density remain unknown; all tolerances here are digital reconstruction comparisons, not manufacturing qualification.
+- Q8. What upstream revision and cosmetic detail level should be retained? Source hashes pin this bundle, but no
+  upstream commit, font, engraving depth, grille thickness or complete optional facet radii are provided; exterior
+  mass properties remain diagnostic and hidden geometry is not scored.

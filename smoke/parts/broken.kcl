@@ -1,0 +1,8 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Negative test: `var` must take a literal guess, not an identifier (kcl-docs must-know 2).
+width = 10mm
+s = sketch(on = XY) {
+  c = circle(start = [var width, var 0mm], center = [var 0mm, var 0mm])
+}
+solid = extrude(region(segments = [s.c]), length = 5mm)

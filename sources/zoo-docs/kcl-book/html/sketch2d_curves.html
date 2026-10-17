@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Sketching curved lines - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/sketch2d_curves.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="sketching-curved-lines"><a class="header" href="#sketching-curved-lines">Sketching curved lines</a></h1>
+<p><strong>WARNING</strong>: This chapter covers the old syntax for our previous sketch library (that didn't support constraint solvers). If you're new to KCL, you should probably skip this chapter and read the new chapter on sketch blocks. If you've already got old KCL code that used the old syntax for sketching, don't worry, you can keep using the old syntax, and this chapter will explain it. But new users shouldn't worry about this, unless they're working with old code.</p>
+<ul>
+<li><a href="#pills">Pills</a></li>
+<li><a href="#spirals">Spirals</a></li>
+<li><a href="#circles">Circles</a></li>
+</ul>
+<p>In the previous chapter, we sketched a basic triangle. In this chapter, we'll look at some more interesting kinds of sketches you can do, using more interesting kinds of paths.</p>
+<h2 id="pills"><a class="header" href="#pills">Pills</a></h2>
+<p>Let's sketch a pill shape, like a rectangle but with rounded edges. We can use tangential arcs for this. The <a href="https://zoo.dev/docs/kcl-std/tangentialArc"><code>tangentialArc</code></a> function sketch a curved line -- specifically, an arc, or a subset of a circle -- starting from the previous line's end. It draws it at a smooth angle from the previous line, i.e. <em>tangent</em> to the previous line.</p>
+<pre><code class="language-kcl">height = 4
+width = 8
+startSketchOn(XZ)
+  |&gt; startProfile(at = [0, 0])
+  |&gt; xLine(length = width)
+  |&gt; tangentialArc(end = [0, height])
+  |&gt; xLine(length = -width)
+  |&gt; tangentialArc(endAbsolute = profileStart())
+</code></pre>
+<p>It should look like this:</p>
+<p><img src="images/static/pill_sketch.png" alt="A pill-shape made from xLines and tangentialArcs" /></p>
+<p>Let's analyze this! It looks very similar to the triangle we sketched previously, but we're using <code>tangentialArc</code>. You can see it takes a relative <code>end</code>, i.e. an X distance and Y distance to move from the current point. It draws a nice smooth arc there.</p>
+<p>We wrote this arc using <code>end</code>, i.e. an X and Y distance. But we could have defined this arc differently, using a <code>radius</code> and <code>angle</code> instead (or a <code>diameter</code> and <code>angle</code>). You can replace the <code>tangentialArc(end = [0, height])</code> with <code>tangentialArc(angle = 180, radius = height)</code> instead, and it should draw the same thing.</p>
+<pre><code class="language-kcl">height = 4
+width = 8
+startSketchOn(XZ)
+  |&gt; startProfile(at = [0, 0])
+  |&gt; xLine(length = width)
+  |&gt; tangentialArc(diameter = height, angle = 180deg)
+  |&gt; xLine(length = -width)
+  |&gt; tangentialArc(endAbsolute = profileStart())
+</code></pre>
+<p>Here, the angle <code>180deg</code> is measuring a counterclockwise angle. To make the arc go the other direction (clockwise), you'd use <code>-180deg</code>.</p>
+<p>The second <code>tangentialArc</code> call takes an absolute point. We tell it to draw an arc from the current point to the start of the profile. This should remind you of how straight lines can use either <code>end</code> (relative) or <code>endAbsolute</code>.</p>
+<h2 id="spirals"><a class="header" href="#spirals">Spirals</a></h2>
+<p>We can use tangential arcs to make a spiral too.</p>
+<pre><code class="language-kcl">height = 100
+startSketchOn(XZ)
+  |&gt; startProfile(at = [0, 0])
+  |&gt; tangentialArc(angle = 180, radius = height)
+  |&gt; tangentialArc(angle = 180, radius = height * 1.1)
+  |&gt; tangentialArc(angle = 180, radius = height * 1.2)
+  |&gt; tangentialArc(angle = 180, radius = height * 1.3)
+  |&gt; tangentialArc(angle = 180, radius = height * 1.4)
+  |&gt; tangentialArc(angle = 180, radius = height * 1.5)
+  |&gt; tangentialArc(angle = 180, radius = height * 1.6)
+  |&gt; tangentialArc(angle = 180, radius = height * 1.7)
+</code></pre>
+<p>It should look like this:</p>
+<p><img src="images/static/spiral.png" alt="A spiral made from many tangential arcs" /></p>
+<p>This works because each tangentialArc is drawing half a circle, away from the previous arc, and the circle is getting slightly larger each time. The <code>180</code> is a counterclockwise angle, so each time we draw a new arc, it bends around the circle counterclockwise.</p>
+<h2 id="circles"><a class="header" href="#circles">Circles</a></h2>
+<p>And lastly, let's look at the humble circle.</p>
+<pre><code class="language-kcl=basic_circle">startSketchOn(XZ)
+  |&gt; circle(center = [0, 0], radius = 10)
+</code></pre>
+<p><img src="images/dynamic/basic_circle.png" alt="2D fallback: A simple circle" title="2D fallback: A simple circle" /></p>
+<p>The <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-circle"><code>circle</code></a> call takes <code>center</code> and <code>radius</code> arguments. Note that <code>circle</code> closes itself without any need for a <code>close()</code> call. That's because a circle is inherently closed -- it always starts and ends its own profile.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="sketch2d.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="reduce_geometry.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="sketch2d.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="reduce_geometry.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

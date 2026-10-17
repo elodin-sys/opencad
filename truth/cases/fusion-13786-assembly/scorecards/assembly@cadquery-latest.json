@@ -1,0 +1,271 @@
+{
+  "case": "fusion-13786-assembly",
+  "scored_at": "2026-09-21T01:27:31Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "8a2fcca2-10f6-498d-bf1f-4cdfc4407ad3",
+    "exit_code": 0,
+    "seconds": 109,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-13786-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/cadquery/fusion-13786-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "CadQuery local export via assembly-check (1 ledger row); no hosted engine.",
+      "commands_list": [
+        "ruff format --check parts/cadquery/fusion-13786-assembly/main.py",
+        "ruff check parts/cadquery/fusion-13786-assembly/main.py",
+        ".venv/bin/python -m skillkat.truth assembly-check ... --entry parts/cadquery/fusion-13786-assembly/main.py --backend cadquery --ledger worker/001-assemble/engine-ledger.jsonl"
+      ],
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 4.94,
+      "visual_check": "Visual: pin seated in the plate +X edge bore (top-right of the plate), axes colinear in front and top (rod continues the plate mid-thickness), contact at the hole (gap 0); iso shows the pin head proud of the edge with the shaft through the bore; small cylindrical interpenetration at the fit (critic 9.75 mm\u00b3), bodies not moved off key points."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "8a2fcca2-10f6-498d-bf1f-4cdfc4407ad3",
+    "exit_code": 0,
+    "seconds": 109,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-13786-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/cadquery/fusion-13786-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "CadQuery local export via assembly-check (1 ledger row); no hosted engine.",
+      "commands_list": [
+        "ruff format --check parts/cadquery/fusion-13786-assembly/main.py",
+        "ruff check parts/cadquery/fusion-13786-assembly/main.py",
+        ".venv/bin/python -m skillkat.truth assembly-check ... --entry parts/cadquery/fusion-13786-assembly/main.py --backend cadquery --ledger worker/001-assemble/engine-ledger.jsonl"
+      ],
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 4.94,
+      "visual_check": "Visual: pin seated in the plate +X edge bore (top-right of the plate), axes colinear in front and top (rod continues the plate mid-thickness), contact at the hole (gap 0); iso shows the pin head proud of the edge with the shaft through the bore; small cylindrical interpenetration at the fit (critic 9.75 mm\u00b3), bodies not moved off key points."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "mode": "modelled",
+  "program_executes": true,
+  "solid_count": {
+    "measured": 2,
+    "expected": 2,
+    "ok": true
+  },
+  "export_agreement": {
+    "ok": true,
+    "bodies": {
+      "84608_204c01e6_0008_1": {
+        "ok": true,
+        "volume_expected": 25187.468083716412,
+        "volume_measured": 25187.468083716332,
+        "volume_rel": 3.1775934559996645e-15,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 0.011740625287281507,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 3.1505179659625587e-13
+      },
+      "84608_204c01e6_0008_2": {
+        "ok": true,
+        "volume_expected": 40.73343223293772,
+        "volume_measured": 40.73343223293552,
+        "volume_rel": 5.4075543358587525e-14,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 5.988914183673097e-07,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 7.084832987106081e-08
+      }
+    }
+  },
+  "export_integrity": {
+    "ok": true,
+    "valid": true,
+    "solids": 2,
+    "expected_solids": 2,
+    "watertight": true,
+    "deterministic": true
+  },
+  "hygiene": {
+    "ok": true,
+    "has_result": true,
+    "has_placements": true,
+    "cad_refs": [],
+    "truth_refs": [],
+    "files": [
+      "/Users/danieldriscoll/dual/skillkat/parts/cadquery/fusion-13786-assembly/main.py"
+    ]
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": true,
+  "offset_truth_mm": -4.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 4.714191174757185e-05,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": -4.0000000000000036,
+      "expected": -4.0000000000000036,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 0.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 9.74947468423765,
+      "truth_interference": 9.74947468423765,
+      "max": 10.74947468423765,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.0,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "84608_204c01e6_0008_1": {
+        "origin": [
+          -39.0,
+          -1.6208,
+          48.0496
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -39.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            -1.6208
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            48.0496
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "84608_204c01e6_0008_2": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-13786-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-13786-assembly/handoff/assembly.html",
+    "motion": "revolute",
+    "native_glb": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-13786-assembly/handoff/assembly-native.glb"
+  }
+}

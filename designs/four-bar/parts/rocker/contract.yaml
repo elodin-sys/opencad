@@ -1,0 +1,312 @@
+schema_version: 1
+name: four-bar-rocker
+intent: >-
+  Rocker link (O4 to B, 80 mm between hole centres) of the planar crank-rocker four-bar
+  linkage in sources/four-bar-spec.md (the only source, authoritative, text), drafted in its
+  own frame: a stadium plate 5 thick and 16 wide (tangent hull of two R8 circles centred on
+  O4 (0, 0) and B (80, 0), extruded z = 0..5, overall x -8..88) with two Ø6 through holes
+  along z at O4 and B. O4 is the ground pivot (joint pinO4); the bottom face around B seats
+  on the coupler's top face (joint pinB). One solid, no other features.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of the O4 hole (the rocker's first hole, the ground pivot) on the bottom face: x = y = z = 0"
+  axes:
+    x: "along the link centreline from O4 toward B; the B hole centre is at x = 80"
+    y: "across the 16 mm width; the link is mirror-symmetric about y = 0 (edges at y = -8 and y = 8)"
+    z: "up along both hole (pin) axes, from the bottom face z = 0 to the top face z = 5"
+  datums:
+    - name: A
+      description: "bottom face, z = 0 (seats on the coupler's top face around pin B)"
+    - name: B
+      description: "O4 hole axis: x = 0, y = 0, along z (ground pivot, joint pinO4)"
+    - name: C
+      description: "B hole axis: x = 80, y = 0, along z (coupler pin, joint pinB)"
+
+envelope:
+  min: [-8, -8, 0]
+  max: [88, 8, 5]
+  tolerance: 0.05
+
+parameters:
+  - name: linkLength
+    value: 80
+    unit: mm
+    provenance: stated
+    source: "four-bar-spec.md link table, 'Rocker | O4 to B: 80'; intent 'B at (80, 0, 0)'"
+    tolerance: 0.01
+    description: "distance between the O4 and B hole centres along x (B hole at x = linkLength)"
+  - name: endRadius
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "four-bar-spec.md, 'semicircular ends of radius 8 centred on its two holes'; intent 'two R8 circles'"
+    tolerance: 0.01
+    description: "radius of the two semicircular stadium ends, centred on the hole axes"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 1067.035
+        direction: increase
+        bbox_delta: [2, 2, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [5, 8, 11]
+      infeasible_deltas: [-6]
+  - name: linkWidth
+    value: 16
+    unit: mm
+    provenance: derived
+    formula: "2 * endRadius"
+    source: "four-bar-spec.md, '16 wide'; intent '16 wide (y -8..8)'; equals the tangent hull width"
+    tolerance: 0.01
+    description: "stadium width along y (y -8..8)"
+  - name: linkThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "four-bar-spec.md, 'stadium plate 5 thick'; intent 'bottom face z = 0, top face z = 5'"
+    tolerance: 0.01
+    description: "plate thickness along z"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 1424.513
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.02
+      sweep:
+        values: [3, 5, 8]
+      infeasible_deltas: [-5]
+  - name: holeDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "four-bar-spec.md link table, 'Ø6 holes'; intent 'two Ø6 through holes along z'"
+    tolerance: 0.01
+    description: "diameter of the two pin holes at O4 and B"
+
+features:
+  - id: stadium
+    kind: extrude
+    description: "stadium section, tangent hull of two endRadius circles centred on (0, 0) and (linkLength, 0), extruded z = 0..linkThickness; overall x -8..88, y -8..8"
+    parameters: [linkLength, endRadius, linkWidth, linkThickness]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[40, 0, 2.5], [40, 5.5, 2.5], [40, -5.5, 2.5]]
+      - method: section
+        section: web_x
+      - method: face
+        face: top
+      - method: face
+        face: bottom
+      - method: cylinder
+        cylinder: endO4
+      - method: cylinder
+        cylinder: endB
+      - method: dimension
+        dimension: lengthX
+      - method: dimension
+        dimension: widthY
+      - method: dimension
+        dimension: thicknessZ
+  - id: boreO4
+    kind: hole
+    description: "Ø6 through hole along z at O4 (0, 0), the ground pivot bore"
+    parameters: [holeDiameter]
+    verify:
+      - method: cylinder
+        cylinder: holeO4
+      - method: void
+        points: [[0, 0, 1.5], [0, 0, 3.5]]
+      - method: solid
+        points: [[-6, 0, 2.5], [0, 5.5, 2.5], [0, -5.5, 2.5]]
+      - method: section
+        section: mid_z
+      - method: section
+        section: off_axis_y
+  - id: boreB
+    kind: hole
+    description: "Ø6 through hole along z at B (linkLength, 0), the coupler pin bore"
+    parameters: [holeDiameter, linkLength]
+    verify:
+      - method: cylinder
+        cylinder: holeB
+      - method: void
+        points: [[80, 0, 1.5], [80, 0, 3.5]]
+      - method: solid
+        points: [[86, 0, 2.5], [80, 5.5, 2.5], [80, -5.5, 2.5]]
+      - method: section
+        section: mid_z
+      - method: section
+        section: off_axis_y
+
+interfaces:
+  - name: pinO4
+    description: "ground pivot O4: the Ø6 bore on the z axis at the origin, where joint pinO4 (revolute about +z) attaches the rocker at own-frame point [0, 0, 0]; the rocker's bottom face runs 10 above the ground's top face, so nothing seats on it here"
+    must_not_change: true
+    checks: [holeO4, bottom]
+  - name: pinB
+    description: "coupler pin B: the Ø6 bore at (80, 0) along z, where joint pinB (revolute about +z) attaches the rocker at own-frame point [80, 0, 0]; the bottom face z = 0 around it seats on the coupler's top face"
+    must_not_change: true
+    checks: [holeB, bottom]
+  - name: centreline
+    description: "link centreline plane y = 0 through both hole axes; the rocker is mirror-symmetric about it"
+    must_not_change: true
+    checks: [mirrorY]
+
+acceptance:
+  volume:
+    expected: 7122.566
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "linkThickness * (2 * endRadius * linkLength + pi * endRadius^2 - 2 * pi * (holeDiameter / 2)^2) = 5 * (1280 + 201.062 - 56.549) = 5 * 1424.513"
+  surface_area:
+    expected: 4088.849
+    tolerance_rel: 0.01
+    provenance: derived
+    note: "2 * 1424.513 (top + bottom) + 5 * (2 * 80 + 2 * pi * 8) (outer wall 1051.327) + 2 * pi * 6 * 5 (two bores 188.496)"
+  center_of_mass:
+    expected: [40, 0, 2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "the plate and both holes are symmetric about x = linkLength / 2 and y = 0; z at half thickness"
+  solid_count: 1
+  sections:
+    - id: mid_z
+      plane: z
+      at: 2.5
+      expect:
+        area: 1424.513
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 2
+      description: "mid-thickness section: stadium 1481.062 minus two Ø6 bores 2 * 28.274"
+    - id: off_axis_y
+      plane: y
+      at: 1
+      expect:
+        area: 422.804
+        area_tolerance_rel: 0.005
+        loops: 3
+        holes: 0
+      description: "section 1 mm off the centreline (clear of the bore axes and seams): both through bores split it into three islands; length (80 + 2 * sqrt(63)) - 4 * sqrt(8) = 84.561, times 5"
+    - id: web_x
+      plane: x
+      at: 40
+      expect:
+        area: 80
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "mid-length web section, 16 wide x 5 thick"
+  faces:
+    - name: top
+      plane: z
+      at: 5
+      normal: "+"
+      area: 1424.513
+      area_tolerance_rel: 0.005
+      center: [40, 0]
+      mode: one
+    - name: bottom
+      plane: z
+      at: 0
+      normal: "-"
+      center: [40, 0]
+      mode: one
+  cylinders:
+    - name: holeO4
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      description: "O4 ground pivot bore (joint pinO4); length left open so the thickness edit keeps this pinned check intact"
+    - name: holeB
+      point: [80, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      description: "B coupler pin bore (joint pinB); length left open so the thickness edit keeps this pinned check intact"
+    - name: endO4
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 8
+      length: 5
+      t_range: [0, 5]
+      description: "convex R8 semicircular end around O4 (x <= 0)"
+    - name: endB
+      point: [80, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 8
+      length: 5
+      t_range: [0, 5]
+      description: "convex R8 semicircular end around B (x >= 80)"
+  dimensions:
+    - name: lengthX
+      axis: x
+      expected: 96
+      tolerance: 0.05
+      description: "overall length x -8..88 = linkLength + 2 * endRadius"
+    - name: widthY
+      axis: y
+      expected: 16
+      tolerance: 0.05
+      description: "overall width y -8..8 = linkWidth"
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "plate thickness between the bottom and top faces"
+  solids:
+    - name: body
+      contains_point: [40, 0, 2.5]
+      description: "the single rocker solid"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[40, 0, 2.5], [-6, 0, 2.5], [86, 0, 2.5], [0, 5.5, 2.5], [80, -5.5, 2.5]]
+      description: "web centre, the wall beyond each bore, and the side walls beside the bores"
+    - name: inBores
+      state: void
+      points: [[0, 0, 1.5], [0, 0, 3.5], [80, 0, 1.5], [80, 0, 3.5]]
+      description: "on both bore axes near the bottom and the top, proving the bores run through"
+  cylinder_counts:
+    - name: pinBores
+      diameter: 6
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 2
+      description: "exactly the two Ø6 pin bores"
+  symmetry:
+    - name: mirrorY
+      plane: y
+      at: 0
+  blockout:
+    volume_min: 7050
+    volume_max: 7500
+
+references:
+  - path: sources/four-bar-spec.md
+    kind: text
+    role: authoritative
+    sha256: aececd85a2ba8a2e020775f05a44f1bd1c3a505c8c8c5ed634606d975490bf17
+    units: mm
+    revision: "none stated (file as supplied)"
+    note: "four-bar design specification: link table, layer stack, part frames, rest configuration and pins"
+
+open_questions:
+  - "Material, density and process are not stated in the spec; no mass claim is made (density left null)."
+  - "No fit or tolerance class is stated for the Ø6 pin holes; they are modelled at nominal 6.000 mm."
+  - "No edge breaks (chamfers, fillets) are stated for the plate or the hole edges; all edges are modelled sharp."
+  - "At O4 the rocker (assembly layer z 10..15) runs 10 mm above the ground's top face with no stated spacer, boss or pin length; the pin hardware is not part of this part."

@@ -1,0 +1,3738 @@
+schema_version: 1
+name: prusa-mini-extruder-front
+intent: 'Reconstruct the Original Prusa MINI extruder front housing (MINI-extruder-front) as editable, parameterized
+  KCL from the attached renders, section drawings and dimension sheet. Frame: x across the plate (-26.5 to 26.5),
+  y through the thickness with the back mating face at y = 0 and the front face at y = 14, z vertical from the
+  bottom face z = -30 to the top lug at z = 33.72. Assembly-governing geometry must be exact: the keyhole central
+  opening (Ø22.5 x 3 recess, Ø16 bore, Ø26 x 6 counterbore on the axis x = -2, z = 0; Ø12 x 3 recess, Ø16 bore
+  and Ø14 counterbore on x = -2, z = 16.4), every Ø3.4 through hole with its Ø6.5 / Ø3.5 counterbore or heat-set
+  trap, the Ø4 filament holes, the hotend clamp channel bores along z at x ~ 25.6, and the mating planes (y =
+  0, y = 14, z = -30, x = -26.5). Declare each hole as an acceptance cylinder and the mating planes as interfaces
+  with checks. The fan-duct lobe, top-lug fillet and embossed text are cosmetic (optional features). One solid;
+  export STEP and STL. The reference CAD is evaluator-only; the deliverable must be construction, never an import.'
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: 3D printing; material and print settings unspecified
+release_status: reconstruction
+frame:
+  origin: The point [0,0,0] is on the y=0 mating plane, halfway between the x envelope limits and 30 mm above
+    the z=-30 bottom plane. It lies in the central opening, not necessarily in material. The lower opening axis
+    meets y=0 at [-2,0,0].
+  axes:
+    x: Across the plate toward the half-clamp; left locating side x=-26.5, right envelope x=26.5. front.png plots
+      +x right; back.png plots -x right.
+    y: Through thickness from the back mating datum y=0 to front datum y=14. Screw and keyhole axes run parallel
+      to +y. Camera filenames do not rename these datums.
+    z: Upward from bottom z=-30 to highest lug/web z=33.72; main top ledge z=28.
+  datums:
+  - name: A
+    description: Back mating plane y=0, outward [0,-1,0].
+  - name: B
+    description: Front plane y=14, outward [0,1,0], 14 mm from A.
+  - name: C
+    description: Bottom plane z=-30, outward [0,0,-1].
+  - name: D
+    description: Left locating plane x=-26.5, outward [-1,0,0].
+envelope:
+  min: [-26.5, 0, -30]
+  max: [26.5, 14, 33.72]
+  tolerance: 0.03
+parameters:
+- name: plateWidth
+  value: 53
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Overall x span.
+  source: sources/prusa-extruder-front-description.md; '53 x 14 x 63.72 mm'
+- name: plateThickness
+  value: 14
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Nominal separation of y=0 and y=14; do not replace with bbox artifact 14.001.
+  source: sources/prusa-extruder-front-description.md; 'front face at y = 14'
+- name: bottomZ
+  value: -30
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Bottom datum.
+  source: sources/prusa-extruder-front-description.md; 'flat bottom face at z = -30'
+- name: lugMaxZ
+  value: 33.72
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Highest rear web/lug point; the Ø10 lug alone reaches z=33.
+  source: sources/prusa-extruder-front-description.md; 'z vertical (-30 .. +33.72)'
+- name: bodyTopZ
+  value: 28
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Main top ledge.
+  source: sources/dimension-sheet.md; planar +z faces at z=28
+- name: leftTopChamferZ
+  value: 24
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Upper left bevel starts here.
+  source: sources/dimension-sheet.md; inclined point [-26.5,0,24]
+- name: rightTopChamferX
+  value: 22.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Upper right bevel starts here.
+  source: sources/dimension-sheet.md; inclined point [22.5,0,28]
+- name: leftFootX
+  value: -21.95
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Lower left vertical foot.
+  source: sources/dimension-sheet.md; -x planar face at x=-21.95
+- name: leftShoulderZ
+  value: -21.925
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Lower left shallow bevel anchor.
+  source: sources/dimension-sheet.md; inclined point [-26.5,0,-21.925]
+- name: leftDiagonalAnchorX
+  value: -22.946
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Lower left diagonal plane anchor x.
+  source: sources/dimension-sheet.md; inclined point [-22.946,0,-23.45]
+- name: leftDiagonalAnchorZ
+  value: -23.45
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Lower left diagonal plane anchor z.
+  source: sources/dimension-sheet.md; inclined point [-22.946,0,-23.45]
+- name: rightBottomChamferZ
+  value: -22.75
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Lower right bevel anchor at x=26.5.
+  source: sources/dimension-sheet.md; inclined point [26.5,0,-22.75]
+- name: halfWidth
+  value: 26.5
+  unit: mm
+  provenance: derived
+  tolerance: 0.02
+  description: Overall half width.
+  formula: plateWidth / 2
+- name: overallHeight
+  value: 63.72
+  unit: mm
+  provenance: derived
+  tolerance: 0.02
+  description: Overall height.
+  formula: lugMaxZ - bottomZ
+- name: leftKneeX
+  value: -24.15
+  unit: mm
+  provenance: measured
+  tolerance: 0.2
+  description: Raster lower left bevel-junction x. Exact table planes take precedence over raster intersections.
+  source: sources/front.png; original pixel (337,1650); origin (954,1085), scale 25.53 px/mm
+- name: leftKneeZ
+  value: -22.13
+  unit: mm
+  provenance: measured
+  tolerance: 0.2
+  description: Raster lower left bevel-junction z. Exact table planes take precedence over raster intersections.
+  source: sources/front.png; original pixel (337,1650); origin (954,1085), scale 25.53 px/mm
+- name: leftFootTopZ
+  value: -24.55
+  unit: mm
+  provenance: measured
+  tolerance: 0.2
+  description: Raster top of the lower left vertical foot. Exact table planes take precedence over raster intersections.
+  source: sources/front.png; original pixel (393,1712); origin (954,1085), scale 25.53 px/mm
+- name: lugWebPeakX
+  value: 16.75
+  unit: mm
+  provenance: measured
+  tolerance: 0.25
+  description: Raster x of the highest web point. Exact table planes take precedence over raster intersections.
+  source: sources/front.png; original pixel u=1378..1382,v=224; origin (954,1085), scale 25.53 px/mm
+- name: keyUpperCounterboreDiameter
+  value: 26.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for keyUpperFrontCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 1, hole Ø26, axis point [-2.0, 0.0, 16.4], extent
+    [8.0, 14.0]
+- name: keyAxisX
+  value: -2.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for keyUpperFrontCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 1, hole Ø26, axis point [-2.0, 0.0, 16.4], extent
+    [8.0, 14.0]
+- name: keyUpperZ
+  value: 16.4
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for keyUpperFrontCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 1, hole Ø26, axis point [-2.0, 0.0, 16.4], extent
+    [8.0, 14.0]
+- name: keyMiddleEnd
+  value: 8.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for keyUpperFrontCounterbore, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 1, hole Ø26, axis point [-2.0, 0.0, 16.4], extent
+    [8.0, 14.0]
+- name: keyLowerRecessDiameter
+  value: 22.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for keyLowerBackRecess.
+  source: sources/dimension-sheet.md; Cylindrical features row 2, hole Ø22.5, axis point [-2.0, 0.0, 0.0], extent
+    [0.0, 3.0]
+- name: keyBackDepth
+  value: 3.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for keyLowerBackRecess, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 2, hole Ø22.5, axis point [-2.0, 0.0, 0.0], extent
+    [0.0, 3.0]
+- name: keyUpperBoreDiameter
+  value: 16.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for keyUpperMiddleBore.
+  source: sources/dimension-sheet.md; Cylindrical features row 3, hole Ø16, axis point [-2.0, 0.0, 16.4], extent
+    [3.0, 8.0]
+- name: keyLowerExitDiameter
+  value: 14.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for keyLowerFrontCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 4, hole Ø14, axis point [-2.0, 0.0, 0.0], extent
+    [10.361, 14.0]
+- name: keyLowerExitStart
+  value: 10.361
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for keyLowerFrontCounterbore, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 4, hole Ø14, axis point [-2.0, 0.0, 0.0], extent
+    [10.361, 14.0]
+- name: clampCornerOuterDiameter
+  value: 12.684
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for clampCornerOuterCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 5, hole Ø12.684, axis point [22.922, 7.0, -22.922],
+    extent [-3.975, -0.975]
+- name: clampCornerAxisX
+  value: 22.922
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for clampCornerOuterCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 5, hole Ø12.684, axis point [22.922, 7.0, -22.922],
+    extent [-3.975, -0.975]
+- name: clampCenterY
+  value: 7.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis y coordinate for clampCornerOuterCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 5, hole Ø12.684, axis point [22.922, 7.0, -22.922],
+    extent [-3.975, -0.975]
+- name: clampCornerAxisZ
+  value: -22.922
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for clampCornerOuterCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 5, hole Ø12.684, axis point [22.922, 7.0, -22.922],
+    extent [-3.975, -0.975]
+- name: clampCornerStart
+  value: -3.975
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for clampCornerOuterCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 5, hole Ø12.684, axis point [22.922, 7.0, -22.922],
+    extent [-3.975, -0.975]
+- name: clampCornerEnd
+  value: -0.975
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for clampCornerOuterCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 5, hole Ø12.684, axis point [22.922, 7.0, -22.922],
+    extent [-3.975, -0.975]
+- name: clampOuterDiameter
+  value: 12.63
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for clampAxialOuterCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 6, hole Ø12.63, axis point [25.618, 7.0, 0.0],
+    extent [-9.0, 24.0]
+- name: clampAxisX
+  value: 25.618
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for clampAxialOuterCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 6, hole Ø12.63, axis point [25.618, 7.0, 0.0],
+    extent [-9.0, 24.0]
+- name: clampStartZ
+  value: -9.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for clampAxialOuterCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 6, hole Ø12.63, axis point [25.618, 7.0, 0.0],
+    extent [-9.0, 24.0]
+- name: clampEndZ
+  value: 24.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for clampAxialOuterCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 6, hole Ø12.63, axis point [25.618, 7.0, 0.0],
+    extent [-9.0, 24.0]
+- name: keyUpperRecessDiameter
+  value: 12.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for keyUpperBackRecess.
+  source: sources/dimension-sheet.md; Cylindrical features row 7, hole Ø12, axis point [-2.0, 0.0, 16.4], extent
+    [0.0, 3.0]
+- name: clampReliefDiameter
+  value: 11.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for clampTiltOuterCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 8, hole Ø11.5, axis point [28.665, 7.0, -5.054],
+    extent [-26.345, -4.081]
+- name: clampTiltAxisX
+  value: 28.665
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for clampTiltOuterCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 8, hole Ø11.5, axis point [28.665, 7.0, -5.054],
+    extent [-26.345, -4.081]
+- name: clampTiltAxisZ
+  value: -5.054
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for clampTiltOuterCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 8, hole Ø11.5, axis point [28.665, 7.0, -5.054],
+    extent [-26.345, -4.081]
+- name: clampTiltDirX
+  value: 0.1736
+  unit: ''
+  provenance: stated
+  tolerance: 0.0002
+  description: Rounded axis-direction x component; normalize the vector before use.
+  source: sources/dimension-sheet.md; Cylindrical features row 8, hole Ø11.5, axis point [28.665, 7.0, -5.054],
+    extent [-26.345, -4.081]
+- name: clampTiltDirZ
+  value: 0.9848
+  unit: ''
+  provenance: stated
+  tolerance: 0.0002
+  description: Rounded axis-direction z component; normalize the vector before use.
+  source: sources/dimension-sheet.md; Cylindrical features row 8, hole Ø11.5, axis point [28.665, 7.0, -5.054],
+    extent [-26.345, -4.081]
+- name: clampTiltStart
+  value: -26.345
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for clampTiltOuterCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 8, hole Ø11.5, axis point [28.665, 7.0, -5.054],
+    extent [-26.345, -4.081]
+- name: clampTiltEnd
+  value: -4.081
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for clampTiltOuterCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 8, hole Ø11.5, axis point [28.665, 7.0, -5.054],
+    extent [-26.345, -4.081]
+- name: clampUpperReliefX
+  value: 28.75
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for clampUpperRelief.
+  source: sources/dimension-sheet.md; Cylindrical features row 9, hole Ø11.5, axis point [28.75, 7.0, 0.0], extent
+    [0.0, 27.506]
+- name: clampUpperReliefEnd
+  value: 27.506
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for clampUpperRelief, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 9, hole Ø11.5, axis point [28.75, 7.0, 0.0], extent
+    [0.0, 27.506]
+- name: clampOffsetDiameter
+  value: 9.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for clampNearOffsetCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 10, hole Ø9.5, axis point [25.171, 5.5, 0.0], extent
+    [-9.0, 24.0]
+- name: clampOffsetX
+  value: 25.171
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for clampNearOffsetCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 10, hole Ø9.5, axis point [25.171, 5.5, 0.0], extent
+    [-9.0, 24.0]
+- name: clampNearY
+  value: 5.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis y coordinate for clampNearOffsetCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 10, hole Ø9.5, axis point [25.171, 5.5, 0.0], extent
+    [-9.0, 24.0]
+- name: clampFarY
+  value: 8.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis y coordinate for clampFarOffsetCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 11, hole Ø9.5, axis point [25.171, 8.5, 0.0], extent
+    [-9.0, 24.0]
+- name: clampCornerOffsetDiameter
+  value: 8.787
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for clampCornerNearCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 12, hole Ø8.787, axis point [22.504, 5.143, -22.504],
+    extent [-3.975, -0.975]
+- name: clampCornerOffsetX
+  value: 22.504
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for clampCornerNearCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 12, hole Ø8.787, axis point [22.504, 5.143, -22.504],
+    extent [-3.975, -0.975]
+- name: clampCornerNearY
+  value: 5.143
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis y coordinate for clampCornerNearCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 12, hole Ø8.787, axis point [22.504, 5.143, -22.504],
+    extent [-3.975, -0.975]
+- name: clampCornerOffsetZ
+  value: -22.504
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for clampCornerNearCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 12, hole Ø8.787, axis point [22.504, 5.143, -22.504],
+    extent [-3.975, -0.975]
+- name: clampCornerFarY
+  value: 8.857
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis y coordinate for clampCornerFarCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 13, hole Ø8.787, axis point [22.504, 8.857, -22.504],
+    extent [-3.975, -0.975]
+- name: clampInnerDiameter
+  value: 8.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for clampTiltNearCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 14, hole Ø8, axis point [27.777, 5.5, -4.898],
+    extent [-19.018, -16.249]
+- name: clampTiltInnerX
+  value: 27.777
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for clampTiltNearCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 14, hole Ø8, axis point [27.777, 5.5, -4.898],
+    extent [-19.018, -16.249]
+- name: clampTiltInnerZ
+  value: -4.898
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for clampTiltNearCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 14, hole Ø8, axis point [27.777, 5.5, -4.898],
+    extent [-19.018, -16.249]
+- name: clampTiltNearStart
+  value: -19.018
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for clampTiltNearCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 14, hole Ø8, axis point [27.777, 5.5, -4.898],
+    extent [-19.018, -16.249]
+- name: clampTiltNearEnd
+  value: -16.249
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for clampTiltNearCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 14, hole Ø8, axis point [27.777, 5.5, -4.898],
+    extent [-19.018, -16.249]
+- name: clampTiltFarStart
+  value: -23.376
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for clampTiltFarCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 15, hole Ø8, axis point [27.777, 8.5, -4.898],
+    extent [-23.376, -4.407]
+- name: clampTiltFarEnd
+  value: -4.407
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for clampTiltFarCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 15, hole Ø8, axis point [27.777, 8.5, -4.898],
+    extent [-23.376, -4.407]
+- name: clampUpperInnerX
+  value: 27.849
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for clampUpperNearCut.
+  source: sources/dimension-sheet.md; Cylindrical features row 16, hole Ø8, axis point [27.849, 5.5, 0.0], extent
+    [0.0, 19.625]
+- name: clampUpperNearEnd
+  value: 19.625
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for clampUpperNearCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 16, hole Ø8, axis point [27.849, 5.5, 0.0], extent
+    [0.0, 19.625]
+- name: clampUpperFarEnd
+  value: 24.712
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for clampUpperFarCut, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 17, hole Ø8, axis point [27.849, 8.5, 0.0], extent
+    [0.0, 24.712]
+- name: counterboreDiameter
+  value: 6.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for leftPivotCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 18, hole Ø6.5, axis point [-23.92, 0.0, 0.0], extent
+    [8.5, 14.0]
+- name: leftPivotX
+  value: -23.92
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for leftPivotCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 18, hole Ø6.5, axis point [-23.92, 0.0, 0.0], extent
+    [8.5, 14.0]
+- name: pivotCounterboreStart
+  value: 8.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for leftPivotCounterbore, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 18, hole Ø6.5, axis point [-23.92, 0.0, 0.0], extent
+    [8.5, 14.0]
+- name: upperLeftScrewX
+  value: -18.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for upperLeftCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 19, hole Ø6.5, axis point [-18.5, 0.0, 22.0], extent
+    [0.0, 9.8]
+- name: upperLeftScrewZ
+  value: 22.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for upperLeftCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 19, hole Ø6.5, axis point [-18.5, 0.0, 22.0], extent
+    [0.0, 9.8]
+- name: longCounterboreEnd
+  value: 9.8
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for upperLeftCounterbore, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 19, hole Ø6.5, axis point [-18.5, 0.0, 22.0], extent
+    [0.0, 9.8]
+- name: lowerLeftScrewX
+  value: -17.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for lowerLeftCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 20, hole Ø6.5, axis point [-17.0, 0.0, -20.0],
+    extent [0.0, 9.8]
+- name: lowerLeftScrewZ
+  value: -20.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for lowerLeftCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 20, hole Ø6.5, axis point [-17.0, 0.0, -20.0],
+    extent [0.0, 9.8]
+- name: rightPivotX
+  value: 19.92
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for rightPivotCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 21, hole Ø6.5, axis point [19.92, 0.0, 0.0], extent
+    [8.5, 14.0]
+- name: upperRightScrewX
+  value: 20.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for upperRightCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 22, hole Ø6.5, axis point [20.0, 0.0, 17.0], extent
+    [0.0, 7.8]
+- name: upperRightScrewZ
+  value: 17.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for upperRightCounterbore.
+  source: sources/dimension-sheet.md; Cylindrical features row 22, hole Ø6.5, axis point [20.0, 0.0, 17.0], extent
+    [0.0, 7.8]
+- name: rightCounterboreEnd
+  value: 7.8
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for upperRightCounterbore, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 22, hole Ø6.5, axis point [20.0, 0.0, 17.0], extent
+    [0.0, 7.8]
+- name: sideScallopDiameter
+  value: 5.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for sideScallopBore.
+  source: sources/dimension-sheet.md; Cylindrical features row 23, hole Ø5.5, axis point [22.088, 0.0, -15.0],
+    extent [0.0, 4.649]
+- name: sideScallopX
+  value: 22.088
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for sideScallopBore.
+  source: sources/dimension-sheet.md; Cylindrical features row 23, hole Ø5.5, axis point [22.088, 0.0, -15.0],
+    extent [0.0, 4.649]
+- name: sideScallopZ
+  value: -15.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for sideScallopBore.
+  source: sources/dimension-sheet.md; Cylindrical features row 23, hole Ø5.5, axis point [22.088, 0.0, -15.0],
+    extent [0.0, 4.649]
+- name: sideScallopEnd
+  value: 4.649
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for sideScallopBore, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 23, hole Ø5.5, axis point [22.088, 0.0, -15.0],
+    extent [0.0, 4.649]
+- name: filamentDiameter
+  value: 4.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for filamentTransverseBore.
+  source: sources/dimension-sheet.md; Cylindrical features row 24, hole Ø4, axis point [14.708, 0.0, 30.0], extent
+    [0.0, 9.242]
+- name: filamentTransverseX
+  value: 14.708
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for filamentTransverseBore.
+  source: sources/dimension-sheet.md; Cylindrical features row 24, hole Ø4, axis point [14.708, 0.0, 30.0], extent
+    [0.0, 9.242]
+- name: filamentZ
+  value: 30.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for filamentTransverseBore.
+  source: sources/dimension-sheet.md; Cylindrical features row 24, hole Ø4, axis point [14.708, 0.0, 30.0], extent
+    [0.0, 9.242]
+- name: filamentTransverseEnd
+  value: 9.242
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for filamentTransverseBore, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 24, hole Ø4, axis point [14.708, 0.0, 30.0], extent
+    [0.0, 9.242]
+- name: filamentEntryAxisX
+  value: -1.248
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for filamentAngledBore.
+  source: sources/dimension-sheet.md; Cylindrical features row 25, hole Ø4, axis point [-1.248, 3.964, 30.0],
+    extent [20.136, 24.991]
+- name: filamentEntryAxisY
+  value: 3.964
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis y coordinate for filamentAngledBore.
+  source: sources/dimension-sheet.md; Cylindrical features row 25, hole Ø4, axis point [-1.248, 3.964, 30.0],
+    extent [20.136, 24.991]
+- name: filamentDirX
+  value: 0.9538
+  unit: ''
+  provenance: stated
+  tolerance: 0.0002
+  description: Rounded axis-direction x component; normalize the vector before use.
+  source: sources/dimension-sheet.md; Cylindrical features row 25, hole Ø4, axis point [-1.248, 3.964, 30.0],
+    extent [20.136, 24.991]
+- name: filamentDirY
+  value: 0.3003
+  unit: ''
+  provenance: stated
+  tolerance: 0.0002
+  description: Rounded axis-direction y component; normalize the vector before use.
+  source: sources/dimension-sheet.md; Cylindrical features row 25, hole Ø4, axis point [-1.248, 3.964, 30.0],
+    extent [20.136, 24.991]
+- name: filamentEntryStart
+  value: 20.136
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for filamentAngledBore, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 25, hole Ø4, axis point [-1.248, 3.964, 30.0],
+    extent [20.136, 24.991]
+- name: filamentEntryEnd
+  value: 24.991
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for filamentAngledBore, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 25, hole Ø4, axis point [-1.248, 3.964, 30.0],
+    extent [20.136, 24.991]
+- name: upperLeftPilotDiameter
+  value: 3.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for upperLeftPilot. Edit only the final y=10.1..14 cylinder; keep the preceding square
+    bridge fixed.
+  source: sources/dimension-sheet.md; Cylindrical features row 26, hole Ø3.5, axis point [-18.5, 0.0, 22.0], extent
+    [10.1, 14.0]
+  edit_test:
+    delta: 0.04
+    expect:
+      volume_delta: -0.8625556789696165
+      direction: decrease
+      tolerance_rel: 0.03
+      bbox_delta: [0, 0, 0]
+    sweep:
+      values: [3.48, 3.5, 3.52]
+    infeasible_deltas: [-4]
+- name: longPilotStart
+  value: 10.1
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for upperLeftPilot, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 26, hole Ø3.5, axis point [-18.5, 0.0, 22.0], extent
+    [10.1, 14.0]
+- name: lowerLeftPilotDiameter
+  value: 3.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for lowerLeftPilot. Edit only the final y=10.1..14 cylinder; keep the preceding square
+    bridge fixed.
+  source: sources/dimension-sheet.md; Cylindrical features row 27, hole Ø3.5, axis point [-17.0, 0.0, -20.0],
+    extent [10.1, 14.0]
+  edit_test:
+    delta: 0.04
+    expect:
+      volume_delta: -0.8625556789696165
+      direction: decrease
+      tolerance_rel: 0.03
+      bbox_delta: [0, 0, 0]
+    sweep:
+      values: [3.48, 3.5, 3.52]
+    infeasible_deltas: [-4]
+- name: screwDiameter
+  value: 3.4
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for leftPivotPilot.
+  source: sources/dimension-sheet.md; Cylindrical features row 28, hole Ø3.4, axis point [-23.92, 0.0, 0.0], extent
+    [0.0, 7.813]
+- name: pivotPilotEnd
+  value: 7.813
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed end extent for leftPivotPilot, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 28, hole Ø3.4, axis point [-23.92, 0.0, 0.0], extent
+    [0.0, 7.813]
+- name: leftNutX
+  value: -22.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for leftNutPilot.
+  source: sources/dimension-sheet.md; Cylindrical features row 29, hole Ø3.4, axis point [-22.0, 0.0, 15.0], extent
+    [4.6, 14.0]
+- name: leftNutZ
+  value: 15.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for leftNutPilot.
+  source: sources/dimension-sheet.md; Cylindrical features row 29, hole Ø3.4, axis point [-22.0, 0.0, 15.0], extent
+    [4.6, 14.0]
+- name: nutPilotStart
+  value: 4.6
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for leftNutPilot, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 29, hole Ø3.4, axis point [-22.0, 0.0, 15.0], extent
+    [4.6, 14.0]
+- name: lugNutX
+  value: 8.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for lugNutPilot.
+  source: sources/dimension-sheet.md; Cylindrical features row 30, hole Ø3.4, axis point [8.0, 0.0, 28.0], extent
+    [4.6, 14.0]
+- name: lugNutZ
+  value: 28.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for lugNutPilot.
+  source: sources/dimension-sheet.md; Cylindrical features row 30, hole Ø3.4, axis point [8.0, 0.0, 28.0], extent
+    [4.6, 14.0]
+- name: lowerNutX
+  value: 12.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis x coordinate for lowerNutPilot.
+  source: sources/dimension-sheet.md; Cylindrical features row 31, hole Ø3.4, axis point [12.0, 0.0, -17.0], extent
+    [4.6, 14.0]
+- name: lowerNutZ
+  value: -17.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Axis z coordinate for lowerNutPilot.
+  source: sources/dimension-sheet.md; Cylindrical features row 31, hole Ø3.4, axis point [12.0, 0.0, -17.0], extent
+    [4.6, 14.0]
+- name: rightPilotStart
+  value: 8.1
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for upperRightPilot, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 33, hole Ø3.4, axis point [20.0, 0.0, 17.0], extent
+    [8.1, 14.0]
+- name: upperLeftBossDiameter
+  value: 11.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for upperLeftBoss.
+  source: sources/dimension-sheet.md; Cylindrical features row 34, pin Ø11, axis point [-18.5, 0.0, 22.0], extent
+    [8.0, 14.0]
+- name: lugBossDiameter
+  value: 10.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for lugBoss.
+  source: sources/dimension-sheet.md; Cylindrical features row 35, pin Ø10, axis point [8.0, 0.0, 28.0], extent
+    [0.0, 14.0]
+- name: clampCornerLipDiameter
+  value: 9.184
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for clampCornerLip.
+  source: sources/dimension-sheet.md; Cylindrical features row 36, pin Ø9.184, axis point [22.922, 7.0, -22.922],
+    extent [-3.975, -0.975]
+- name: clampAxialLipDiameter
+  value: 9.13
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for clampAxialLip.
+  source: sources/dimension-sheet.md; Cylindrical features row 37, pin Ø9.13, axis point [25.618, 7.0, 0.0], extent
+    [-9.0, 24.0]
+- name: clampFarLipDiameter
+  value: 6.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for clampFarLip.
+  source: sources/dimension-sheet.md; Cylindrical features row 38, pin Ø6, axis point [25.171, 8.5, 0.0], extent
+    [-8.242, 24.0]
+- name: clampFarLipStart
+  value: -8.242
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Signed start extent for clampFarLip, from the stated axis point.
+  source: sources/dimension-sheet.md; Cylindrical features row 38, pin Ø6, axis point [25.171, 8.5, 0.0], extent
+    [-8.242, 24.0]
+- name: clampCornerOffsetLipDiameter
+  value: 5.287
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Diameter for clampCornerNearLip.
+  source: sources/dimension-sheet.md; Cylindrical features row 39, pin Ø5.287, axis point [22.504, 5.143, -22.504],
+    extent [-3.975, -0.975]
+- name: nutLeftFlatX
+  value: -24.8
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Left x flat of the trap centered at x=-22.
+  source: sources/dimension-sheet.md; +x face at x=-24.8
+- name: nutRightFlatX
+  value: -19.2
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Right x flat of the trap centered at x=-22.
+  source: sources/dimension-sheet.md; -x face at x=-19.2
+- name: nutFullDepth
+  value: 4
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: First support ledges stop the hex corner regions.
+  source: sources/dimension-sheet.md; six -y faces at y=4
+- name: nutRectEnd
+  value: 4.3
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Second support ledges end the rectangular bridge.
+  source: sources/dimension-sheet.md; six -y faces at y=4.3
+- name: longCounterboreFullDepth
+  value: 9.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Circular recess depth before support steps at the two left screws.
+  source: sources/dimension-sheet.md; four -y faces at y=9.5
+- name: rightCounterboreFullDepth
+  value: 7.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Circular recess depth before support steps at (20,17).
+  source: sources/dimension-sheet.md; two -y faces at y=7.5
+- name: nutAcrossFlats
+  value: 5.6
+  unit: mm
+  provenance: derived
+  tolerance: 0.03
+  description: Common width of the three point-up hex nut traps.
+  formula: nutRightFlatX - nutLeftFlatX
+- name: nutCornerRadius
+  value: 3.2331615074619044
+  unit: mm
+  provenance: derived
+  tolerance: 0.03
+  description: Hex circumradius.
+  formula: nutAcrossFlats / sqrt(3)
+- name: bridgeLayerHeight
+  value: 0.3
+  unit: mm
+  provenance: derived
+  tolerance: 0.03
+  description: Printable bridge increment; no equality lock between independent dimensions.
+  formula: nutRectEnd - nutFullDepth
+- name: lowerTransitionLength
+  value: 7.361
+  unit: mm
+  provenance: derived
+  tolerance: 0.03
+  description: Lower keyhole tapered length.
+  formula: keyLowerExitStart - keyBackDepth
+- name: longPilotLength
+  value: 3.9
+  unit: mm
+  provenance: derived
+  tolerance: 0.03
+  description: Straight pilot length used by the diameter edit tests.
+  formula: plateThickness - longPilotStart
+- name: pivotMouthDiameter
+  value: 3.9
+  unit: mm
+  provenance: measured
+  tolerance: 0.15
+  description: Raster diameter of the tapered pivot-pilot mouth at y=8.5.
+  source: sources/section-z0.png; v≈286, right pilot edges u≈1385 and1479; 24 px/mm
+features:
+- id: housingEnvelope
+  kind: extrude
+  description: One constructed plate, lower left foot, upper lug and rear web. The blockout and finished part
+    both reach the full envelope, including z=33.72.
+  parameters: [plateWidth, plateThickness, bottomZ, lugMaxZ, bodyTopZ, leftTopChamferZ, rightTopChamferX, leftFootX,
+    leftShoulderZ, leftDiagonalAnchorX, leftDiagonalAnchorZ, rightBottomChamferZ, halfWidth, overallHeight, leftKneeX,
+    leftKneeZ, leftFootTopZ, lugWebPeakX]
+  count: 1
+  verify:
+  - method: bbox
+  - method: solid
+    points:
+    - [-10, 7, -25]
+    - [-24, 6, -10]
+    - [8, 7, 31]
+    note: Core material, with millimetres of clearance from raster-inferred boundaries.
+  - method: dimension
+    dimension: overallWidth
+  - method: dimension
+    dimension: overallThickness
+  - method: dimension
+    dimension: overallHeight
+- id: keyUpperFrontCounterbore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 1; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [keyUpperCounterboreDiameter, keyAxisX, keyUpperZ, keyMiddleEnd, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: keyUpperFrontCounterbore
+- id: keyLowerBackRecess
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 2; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [keyLowerRecessDiameter, keyAxisX, keyBackDepth]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: keyLowerBackRecess
+- id: keyUpperMiddleBore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 3; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [keyUpperBoreDiameter, keyAxisX, keyUpperZ, keyBackDepth, keyMiddleEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: keyUpperMiddleBore
+- id: keyLowerFrontCounterbore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 4; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [keyLowerExitDiameter, keyAxisX, keyLowerExitStart, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: keyLowerFrontCounterbore
+- id: clampCornerOuterCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 5; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampCornerOuterDiameter, clampCornerAxisX, clampCenterY, clampCornerAxisZ, clampCornerStart, clampCornerEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampCornerOuterCut
+- id: clampAxialOuterCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 6; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampOuterDiameter, clampAxisX, clampCenterY, clampStartZ, clampEndZ]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampAxialOuterCut
+- id: keyUpperBackRecess
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 7; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [keyUpperRecessDiameter, keyAxisX, keyUpperZ, keyBackDepth]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: keyUpperBackRecess
+- id: clampTiltOuterCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 8; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampReliefDiameter, clampTiltAxisX, clampCenterY, clampTiltAxisZ, clampTiltDirX, clampTiltDirZ,
+    clampTiltStart, clampTiltEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampTiltOuterCut
+- id: clampUpperRelief
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 9; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampReliefDiameter, clampUpperReliefX, clampCenterY, clampUpperReliefEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampUpperRelief
+- id: clampNearOffsetCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 10; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampOffsetDiameter, clampOffsetX, clampNearY, clampStartZ, clampEndZ]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampNearOffsetCut
+- id: clampFarOffsetCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 11; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampOffsetDiameter, clampOffsetX, clampFarY, clampStartZ, clampEndZ]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampFarOffsetCut
+- id: clampCornerNearCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 12; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampCornerOffsetDiameter, clampCornerOffsetX, clampCornerNearY, clampCornerOffsetZ, clampCornerStart,
+    clampCornerEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampCornerNearCut
+- id: clampCornerFarCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 13; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampCornerOffsetDiameter, clampCornerOffsetX, clampCornerFarY, clampCornerOffsetZ, clampCornerStart,
+    clampCornerEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampCornerFarCut
+- id: clampTiltNearCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 14; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampInnerDiameter, clampTiltInnerX, clampNearY, clampTiltInnerZ, clampTiltDirX, clampTiltDirZ,
+    clampTiltNearStart, clampTiltNearEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampTiltNearCut
+- id: clampTiltFarCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 15; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampInnerDiameter, clampTiltInnerX, clampFarY, clampTiltInnerZ, clampTiltDirX, clampTiltDirZ,
+    clampTiltFarStart, clampTiltFarEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampTiltFarCut
+- id: clampUpperNearCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 16; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampInnerDiameter, clampUpperInnerX, clampNearY, clampUpperNearEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampUpperNearCut
+- id: clampUpperFarCut
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 17; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampInnerDiameter, clampUpperInnerX, clampFarY, clampUpperFarEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampUpperFarCut
+- id: leftPivotCounterbore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 18; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [counterboreDiameter, leftPivotX, pivotCounterboreStart, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: leftPivotCounterbore
+- id: upperLeftCounterbore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 19; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [counterboreDiameter, upperLeftScrewX, upperLeftScrewZ, longCounterboreEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: upperLeftCounterbore
+- id: lowerLeftCounterbore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 20; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [counterboreDiameter, lowerLeftScrewX, lowerLeftScrewZ, longCounterboreEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: lowerLeftCounterbore
+- id: rightPivotCounterbore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 21; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [counterboreDiameter, rightPivotX, pivotCounterboreStart, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: rightPivotCounterbore
+- id: upperRightCounterbore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 22; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [counterboreDiameter, upperRightScrewX, upperRightScrewZ, rightCounterboreEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: upperRightCounterbore
+- id: sideScallopBore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 23; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [sideScallopDiameter, sideScallopX, sideScallopZ, sideScallopEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: sideScallopBore
+- id: filamentTransverseBore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 24; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [filamentDiameter, filamentTransverseX, filamentZ, filamentTransverseEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: filamentTransverseBore
+- id: filamentAngledBore
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 25; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [filamentDiameter, filamentEntryAxisX, filamentEntryAxisY, filamentZ, filamentDirX, filamentDirY,
+    filamentEntryStart, filamentEntryEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: filamentAngledBore
+- id: upperLeftPilot
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 26; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [upperLeftPilotDiameter, upperLeftScrewX, upperLeftScrewZ, longPilotStart, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: upperLeftPilot
+- id: lowerLeftPilot
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 27; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [lowerLeftPilotDiameter, lowerLeftScrewX, lowerLeftScrewZ, longPilotStart, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: lowerLeftPilot
+- id: leftPivotPilot
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 28; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [screwDiameter, leftPivotX, pivotPilotEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: leftPivotPilot
+- id: leftNutPilot
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 29; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [screwDiameter, leftNutX, leftNutZ, nutPilotStart, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: leftNutPilot
+- id: lugNutPilot
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 30; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [screwDiameter, lugNutX, lugNutZ, nutPilotStart, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: lugNutPilot
+- id: lowerNutPilot
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 31; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [screwDiameter, lowerNutX, lowerNutZ, nutPilotStart, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: lowerNutPilot
+- id: rightPivotPilot
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 32; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [screwDiameter, rightPivotX, pivotPilotEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: rightPivotPilot
+- id: upperRightPilot
+  kind: hole
+  description: Stated in dimension-sheet.md cylindrical row 33; yes angular coverage. t_range is from this point
+    along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+    uninterrupted drilled hole.
+  parameters: [screwDiameter, upperRightScrewX, upperRightScrewZ, rightPilotStart, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: upperRightPilot
+- id: upperLeftBoss
+  kind: boss
+  description: Stated in dimension-sheet.md cylindrical row 34; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [upperLeftBossDiameter, upperLeftScrewX, upperLeftScrewZ, keyMiddleEnd, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: upperLeftBoss
+- id: lugBoss
+  kind: boss
+  description: Stated in dimension-sheet.md cylindrical row 35; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [lugBossDiameter, lugNutX, lugNutZ, plateThickness]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: lugBoss
+- id: clampCornerLip
+  kind: boss
+  description: Stated in dimension-sheet.md cylindrical row 36; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampCornerLipDiameter, clampCornerAxisX, clampCenterY, clampCornerAxisZ, clampCornerStart, clampCornerEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampCornerLip
+- id: clampAxialLip
+  kind: boss
+  description: Stated in dimension-sheet.md cylindrical row 37; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampAxialLipDiameter, clampAxisX, clampCenterY, clampStartZ, clampEndZ]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampAxialLip
+- id: clampFarLip
+  kind: boss
+  description: Stated in dimension-sheet.md cylindrical row 38; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampFarLipDiameter, clampOffsetX, clampFarY, clampFarLipStart, clampEndZ]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampFarLip
+- id: clampCornerNearLip
+  kind: boss
+  description: Stated in dimension-sheet.md cylindrical row 39; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampCornerOffsetLipDiameter, clampCornerOffsetX, clampCornerNearY, clampCornerOffsetZ, clampCornerStart,
+    clampCornerEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampCornerNearLip
+- id: clampCornerFarLip
+  kind: boss
+  description: Stated in dimension-sheet.md cylindrical row 40; partial angular coverage. t_range is from this
+    point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+    a full uninterrupted drilled hole.
+  parameters: [clampCornerOffsetLipDiameter, clampCornerOffsetX, clampCornerFarY, clampCornerOffsetZ, clampCornerStart,
+    clampCornerEnd]
+  count: 1
+  verify:
+  - method: cylinder
+    cylinder: clampCornerFarLip
+- id: keyholeTaperAndNeck
+  kind: loft
+  description: 'Provisional table-and-section interpretation: lower Ø22.5 at y=0..3 tapers to Ø14 at y=10.361;
+    Ø14 continues to y=14. Upper stack Ø12/Ø16/Ø26. Two inclined neck walls connect the openings. No separate
+    lower Ø16 cylindrical surface is supported by the table.'
+  parameters: [keyAxisX, keyUpperZ, keyLowerRecessDiameter, keyLowerExitDiameter, keyBackDepth, keyLowerExitStart,
+    lowerTransitionLength]
+  verify:
+  - method: plane
+    plane: keyNeckLeft
+  - method: plane
+    plane: keyNeckRight
+  - method: section
+    section: midPlate
+  - method: section
+    section: keyholeDepthSection
+  - method: section
+    section: pivotDepthSection
+  - method: section
+    section: upperBoreDepthSection
+  - method: void
+    points:
+    - [-2, 1.5, 0]
+    - [-2, 7, 0]
+    - [-2, 12, 0]
+    - [-2, 1.5, 16.4]
+    - [-2, 5.5, 16.4]
+    - [-2, 11, 16.4]
+    - [-2, 7, 8]
+    note: Both axes and the connecting neck; no probe close to an inferred wall.
+- id: fastenerBridgesAndNutTraps
+  kind: pocket
+  description: 'Three point-up hex traps at (-22,15),(8,28),(12,-17). Hex corner ledges y=4, rectangular support
+    end y=4.3, square support end/pilot start y=4.6. Left counterbores: support steps y=9.5/9.8/10.1. Upper-right:
+    y=7.5/7.8/8.1. Six Ø3.4 pilots and two Ø3.5 pilots. Retain printable bridges rather than substituting smooth
+    conical counterbores.'
+  parameters: [nutLeftFlatX, nutRightFlatX, nutAcrossFlats, nutCornerRadius, nutFullDepth, nutRectEnd, nutPilotStart,
+    bridgeLayerHeight, longCounterboreFullDepth, longCounterboreEnd, longPilotStart, longPilotLength, rightCounterboreFullDepth,
+    rightCounterboreEnd, rightPilotStart]
+  count: 3
+  verify:
+  - method: dimension
+    dimension: nutTrapWidth
+  - method: section
+    section: backPocketSection
+  - method: section
+    section: frontPocketSection
+  - method: section
+    section: leftScrewDepthSection
+  - method: section
+    section: lowerScrewClampSection
+  - method: void
+    points:
+    - [-22, 2, 15]
+    - [8, 2, 28]
+    - [12, 2, -17]
+    - [-18.5, 12, 22]
+    - [-17, 12, -20]
+    - [20, 11, 17]
+    note: Axes of nut cavities/pilots, at least 1.7 mm from nominal radial walls.
+- id: pivotTransitionsAndOpenSlot
+  kind: cut
+  description: Short tapered mouths y=7.813..8.5 join Ø3.4 pivot pilots to Ø6.5 counterbore shoulders. The left
+    counterbore is open to x=-26.5 through a z=±3.25 slot. Mouth Ø3.9 is raster measured, not an assumed standard
+    size.
+  parameters: [pivotPilotEnd, pivotCounterboreStart, pivotMouthDiameter, counterboreDiameter, screwDiameter, leftPivotX,
+    rightPivotX]
+  verify:
+  - method: face
+    face: leftPivotShoulder
+  - method: face
+    face: rightPivotShoulder
+  - method: face
+    face: leftPivotSlotBottom
+  - method: face
+    face: leftPivotSlotTop
+  - method: section
+    section: pivotDepthSection
+  - method: void
+    points:
+    - [-23.92, 4, 0]
+    - [19.92, 4, 0]
+    note: Pilot centers; no near-mouth probes imposed.
+- id: functionalPlanarFaces
+  kind: profile
+  description: All non-typographic functional rows from the supplied axis-aligned face table. Repeated faces have
+    individual centers. Only backDatum intentionally sums coplanar contact material.
+  parameters: [plateThickness, bodyTopZ, bottomZ, halfWidth, nutAcrossFlats]
+  verify:
+  - method: face
+    face: leftDatum
+  - method: face
+    face: leftNutFlatLeft
+  - method: face
+    face: leftNutBridgeLeft
+  - method: face
+    face: leftFootSide
+  - method: face
+    face: leftNutBridgeRight
+  - method: face
+    face: upperLeftBridgeLeft
+  - method: face
+    face: leftNutFlatRight
+  - method: face
+    face: lowerLeftBridgeLeft
+  - method: face
+    face: upperLeftBridgeRight
+  - method: face
+    face: lowerLeftBridgeRight
+  - method: face
+    face: lugNutFlatLeft
+  - method: face
+    face: lugNutBridgeLeft
+  - method: face
+    face: lowerNutFlatLeft
+  - method: face
+    face: lugNutBridgeRight
+  - method: face
+    face: lowerNutBridgeLeft
+  - method: face
+    face: lugNutFlatRight
+  - method: face
+    face: lowerNutBridgeRight
+  - method: face
+    face: lowerNutFlatRight
+  - method: face
+    face: upperRightBridgeLeft
+  - method: face
+    face: upperRightBridgeRight
+  - method: face
+    face: sideScallopEndFace
+  - method: face
+    face: clampLowerSideFace
+  - method: face
+    face: clampUpperSideFace
+  - method: face
+    face: rightSideFrontPanel
+  - method: face
+    face: rightSideBackPanel
+  - method: face
+    face: backDatum
+  - method: face
+    face: clampCornerBackLedge
+  - method: face
+    face: clampCornerPocketFloor
+  - method: face
+    face: clampUpperBackFloor
+  - method: face
+    face: clampLowerBackFloor
+  - method: face
+    face: keyUpperBackShoulder
+  - method: face
+    face: lowerNutTopLedge
+  - method: face
+    face: leftNutBottomLedge
+  - method: face
+    face: leftNutTopLedge
+  - method: face
+    face: lugNutTopLedge
+  - method: face
+    face: lowerNutBottomLedge
+  - method: face
+    face: lugNutBottomLedge
+  - method: face
+    face: lugNutLeftLedge
+  - method: face
+    face: leftNutLeftLedge
+  - method: face
+    face: lugNutRightLedge
+  - method: face
+    face: leftNutRightLedge
+  - method: face
+    face: lowerNutLeftLedge
+  - method: face
+    face: lowerNutRightLedge
+  - method: face
+    face: upperRightTopLedge
+  - method: face
+    face: upperRightBottomLedge
+  - method: face
+    face: upperRightLeftLedge
+  - method: face
+    face: upperRightRightLedge
+  - method: face
+    face: keyUpperFrontShoulder
+  - method: face
+    face: leftPivotShoulder
+  - method: face
+    face: rightPivotShoulder
+  - method: face
+    face: upperLeftTopLedge
+  - method: face
+    face: lowerLeftTopLedge
+  - method: face
+    face: lowerLeftBottomLedge
+  - method: face
+    face: upperLeftBottomLedge
+  - method: face
+    face: lowerLeftRightLedge
+  - method: face
+    face: upperLeftRightLedge
+  - method: face
+    face: upperLeftLeftLedge
+  - method: face
+    face: lowerLeftLeftLedge
+  - method: face
+    face: clampCornerFrontLedge
+  - method: face
+    face: clampCornerFrontFloor
+  - method: face
+    face: clampLowerFrontFloor
+  - method: face
+    face: clampUpperFrontFloor
+  - method: face
+    face: frontDatum
+  - method: face
+    face: bottomDatum
+  - method: face
+    face: lowerLeftBridgeBottom
+  - method: face
+    face: lowerNutBridgeBottom
+  - method: face
+    face: lowerLeftBridgeTop
+  - method: face
+    face: lowerNutBridgeTop
+  - method: face
+    face: clampLowerSlotBottom
+  - method: face
+    face: clampLowerSlotTop
+  - method: face
+    face: clampLowerBackStep
+  - method: face
+    face: leftPivotSlotBottom
+  - method: face
+    face: leftPivotSlotTop
+  - method: face
+    face: leftNutBridgeBottom
+  - method: face
+    face: upperRightBridgeBottom
+  - method: face
+    face: leftNutBridgeTop
+  - method: face
+    face: upperRightBridgeTop
+  - method: face
+    face: clampUpperBackStep
+  - method: face
+    face: upperLeftBridgeBottom
+  - method: face
+    face: clampUpperSlotBottom
+  - method: face
+    face: upperLeftBridgeTop
+  - method: face
+    face: upperLeftBossLedge
+  - method: face
+    face: clampUpperSlotTop
+  - method: face
+    face: clampUpperBackRim
+  - method: face
+    face: lugNutBridgeBottom
+  - method: face
+    face: topLeftLedge
+  - method: face
+    face: topRightLedge
+  - method: face
+    face: lugNutBridgeTop
+  - method: dimension
+    dimension: matingFaceSeparation
+  - method: dimension
+    dimension: leftFootOffset
+  - method: dimension
+    dimension: upperRecessDepth
+  - method: dimension
+    dimension: upperBoreLength
+  - method: dimension
+    dimension: upperCounterboreDepth
+  - method: dimension
+    dimension: pivotCounterboreDepth
+  - method: dimension
+    dimension: nutTrapWidth
+  - method: dimension
+    dimension: lowerClampSlotHeight
+  - method: dimension
+    dimension: upperClampSlotHeight
+- id: inclinedFunctionalWalls
+  kind: chamfer
+  description: Stated perimeter bevels, keyhole necks, hex flats and clamp slot planes; normalized document normals
+    determine their orientations.
+  parameters: [leftTopChamferZ, rightTopChamferX, leftShoulderZ, leftDiagonalAnchorX, leftDiagonalAnchorZ, rightBottomChamferZ,
+    nutAcrossFlats]
+  verify:
+  - method: plane
+    plane: leftLowerBevel
+  - method: plane
+    plane: leftUpperBevel
+  - method: plane
+    plane: rightUpperBevel
+  - method: plane
+    plane: clampTiltWall
+  - method: plane
+    plane: clampCornerUpperWall
+  - method: plane
+    plane: leftShallowBevel
+  - method: plane
+    plane: clampCornerLowerWall
+  - method: plane
+    plane: keyNeckLeft
+  - method: plane
+    plane: keyNeckRight
+  - method: plane
+    plane: upperLeftBossBevel
+  - method: plane
+    plane: rightLowerBevel
+  - method: plane
+    plane: lugHexUpperRight
+  - method: plane
+    plane: leftHexUpperLeft
+  - method: plane
+    plane: lugHexLowerLeft
+  - method: plane
+    plane: leftHexUpperRight
+  - method: plane
+    plane: lowerHexLowerLeft
+  - method: plane
+    plane: lugHexLowerRight
+  - method: plane
+    plane: lowerHexLowerRight
+  - method: plane
+    plane: lowerHexUpperRight
+  - method: plane
+    plane: leftHexLowerLeft
+  - method: plane
+    plane: leftHexLowerRight
+  - method: plane
+    plane: lugHexUpperLeft
+  - method: plane
+    plane: lowerHexUpperLeft
+  - method: plane
+    plane: clampCornerBackBevel
+  - method: plane
+    plane: clampCornerBottomWall
+- id: clampSlotsAndSteppedChannel
+  kind: channel
+  description: Partial axial, tilted and 45-degree cut surfaces and retaining lips on +x. Slots at z=-9..-6 and
+    z=21..24, plus the diagonal lower slot. A full tube cut would destroy the half-clamp.
+  parameters: [clampCornerOuterDiameter, clampCornerAxisX, clampCenterY, clampCornerAxisZ, clampCornerStart, clampCornerEnd,
+    clampOuterDiameter, clampAxisX, clampStartZ, clampEndZ, clampReliefDiameter, clampTiltAxisX, clampTiltAxisZ,
+    clampTiltDirX, clampTiltDirZ, clampTiltStart, clampTiltEnd, clampUpperReliefX, clampUpperReliefEnd, clampOffsetDiameter,
+    clampOffsetX, clampNearY, clampFarY, clampCornerOffsetDiameter, clampCornerOffsetX, clampCornerNearY, clampCornerOffsetZ,
+    clampCornerFarY, clampInnerDiameter, clampTiltInnerX, clampTiltInnerZ, clampTiltNearStart, clampTiltNearEnd,
+    clampTiltFarStart, clampTiltFarEnd, clampUpperInnerX, clampUpperNearEnd, clampUpperFarEnd, clampCornerLipDiameter,
+    clampAxialLipDiameter, clampFarLipDiameter, clampFarLipStart, clampCornerOffsetLipDiameter]
+  verify:
+  - method: section
+    section: midPlate
+  - method: section
+    section: lowerScrewClampSection
+  - method: section
+    section: upperBoreDepthSection
+  - method: dimension
+    dimension: lowerClampSlotHeight
+  - method: dimension
+    dimension: upperClampSlotHeight
+- id: sectionTopology
+  kind: other
+  description: Eight material sections check connectivity, holes, supports and channels; x=-18.5 loop-count conflict
+    remains Q3.
+  parameters: [plateThickness]
+  verify:
+  - method: section
+    section: midPlate
+  - method: section
+    section: backPocketSection
+  - method: section
+    section: frontPocketSection
+  - method: section
+    section: keyholeDepthSection
+  - method: section
+    section: leftScrewDepthSection
+  - method: section
+    section: pivotDepthSection
+  - method: section
+    section: upperBoreDepthSection
+  - method: section
+    section: lowerScrewClampSection
+  - method: count
+    section: midPlate
+    count: 1
+    note: Outer material loops only; its 11 holes are checked by SectionExpect.holes.
+- id: fanDuctBlend
+  kind: fillet
+  description: Optional organic fan-duct lobe and blends near +x,z≈-15. Named bores, lips and datums remain required;
+    no invented blend radius.
+  optional: true
+  parameters: []
+  verify:
+  - method: bbox
+    note: Checks shared-envelope retention only; not validation of the cosmetic outline, font or fillet radius.
+- id: topLugFillet
+  kind: fillet
+  description: Optional top-lug/web fillet. Retain Ø10 lug and the highest point z=33.72.
+  optional: true
+  parameters: [lugMaxZ, lugWebPeakX]
+  verify:
+  - method: bbox
+    note: Checks shared-envelope retention only; not validation of the cosmetic outline, font or fillet radius.
+- id: r1Marking
+  kind: other
+  description: Optional R1 marking on the y=0 side. Exact font and relief sign are unresolved; prose says embossed
+    while sections show recesses.
+  optional: true
+  parameters: []
+  verify:
+  - method: bbox
+    note: Checks shared-envelope retention only; not validation of the cosmetic outline, font or fillet radius.
+- id: directionArrow
+  kind: other
+  description: Optional arrow near x≈-17,z≈-26.65 on y=0. Exact outline and depth are not invented.
+  optional: true
+  parameters: []
+  verify:
+  - method: bbox
+    note: Checks shared-envelope retention only; not validation of the cosmetic outline, font or fillet radius.
+interfaces:
+- name: backMatingDatum
+  description: Datum A, y=0 outward -y; intentionally combined contact area across coplanar islands.
+  must_not_change: true
+  checks: [backDatum, matingFaceSeparation]
+- name: frontFaceDatum
+  description: Datum B, y=14 outward +y, irrespective of image filenames.
+  must_not_change: true
+  checks: [frontDatum, matingFaceSeparation]
+- name: bottomMountingDatum
+  description: Datum C, z=-30 outward -z.
+  must_not_change: true
+  checks: [bottomDatum, overallHeight]
+- name: leftLocatingDatum
+  description: Datum D, x=-26.5 outward -x.
+  must_not_change: true
+  checks: [leftDatum, overallWidth, leftFootOffset]
+- name: rightClampFaces
+  description: Separated +x contact patches and channel slots.
+  must_not_change: true
+  checks: [rightSideFrontPanel, rightSideBackPanel, clampLowerSideFace, clampUpperSideFace, sideScallopBore, lowerClampSlotHeight,
+    upperClampSlotHeight]
+- name: keyholeAssembly
+  description: Provisional detailed-table interpretation; preserve Q1.
+  must_not_change: true
+  checks: [keyUpperFrontCounterbore, keyLowerBackRecess, keyUpperMiddleBore, keyLowerFrontCounterbore, keyUpperBackRecess,
+    keyUpperBackShoulder, keyUpperFrontShoulder, keyNeckLeft, keyNeckRight, upperRecessDepth, upperBoreLength,
+    upperCounterboreDepth, midPlate]
+- name: fastenerPattern
+  description: Eight screw axes, five Ø6.5 counterbores, three hex traps and two surrounding bosses.
+  must_not_change: true
+  checks: [leftPivotCounterbore, upperLeftCounterbore, lowerLeftCounterbore, rightPivotCounterbore, upperRightCounterbore,
+    upperLeftPilot, lowerLeftPilot, leftPivotPilot, leftNutPilot, lugNutPilot, lowerNutPilot, rightPivotPilot,
+    upperRightPilot, upperLeftBoss, lugBoss, nutTrapWidth, pivotCounterboreDepth, leftScrewDepthSection]
+- name: filamentPath
+  description: Both Ø4 passages, including the angled entry.
+  must_not_change: true
+  checks: [filamentTransverseBore, filamentAngledBore]
+- name: hotendHalfClamp
+  description: All documented partial cuts and convex lips, including axial, tilted and 45-degree segments.
+  must_not_change: true
+  checks: [clampCornerOuterCut, clampAxialOuterCut, clampTiltOuterCut, clampUpperRelief, clampNearOffsetCut, clampFarOffsetCut,
+    clampCornerNearCut, clampCornerFarCut, clampTiltNearCut, clampTiltFarCut, clampUpperNearCut, clampUpperFarCut,
+    clampCornerLip, clampAxialLip, clampFarLip, clampCornerNearLip, clampCornerFarLip, clampTiltWall, clampCornerUpperWall,
+    clampCornerLowerWall, upperBoreDepthSection, lowerScrewClampSection]
+acceptance:
+  bbox_tolerance: 0.03
+  volume: null
+  surface_area: null
+  center_of_mass: null
+  solid_count: 1
+  sections:
+  - id: midPlate
+    plane: y
+    at: 7.0
+    expect:
+      area: 2186.59
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 11
+    description: 'Stated table section y = 7.0: solid area 2186.59 mm2, 1 outer loops, 11 holes.'
+  - id: backPocketSection
+    plane: y
+    at: 1.5
+    expect:
+      area: 2203.29
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 9
+    description: 'Stated table section y = 1.5: solid area 2203.29 mm2, 1 outer loops, 9 holes.'
+  - id: frontPocketSection
+    plane: y
+    at: 12.0
+    expect:
+      area: 2148.31
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 7
+    description: 'Stated table section y = 12.0: solid area 2148.31 mm2, 1 outer loops, 7 holes.'
+  - id: keyholeDepthSection
+    plane: x
+    at: 0.0
+    expect:
+      area: 333.46
+      area_tolerance_rel: 0.01
+      loops: 2
+      holes: 0
+    description: 'Stated table section x = 0.0: solid area 333.46 mm2, 2 outer loops, 0 holes.'
+  - id: leftScrewDepthSection
+    plane: x
+    at: -18.5
+    expect:
+      area: 662.84
+      area_tolerance_rel: 0.01
+      loops: 3
+      holes: 0
+    description: 'Stated table section x = -18.5: solid area 662.84 mm2, 3 outer loops, 0 holes. Mesh drawing
+      title instead says two regions; unresolved Q3, draft uses table topology.'
+  - id: pivotDepthSection
+    plane: z
+    at: 0.0
+    expect:
+      area: 336.53
+      area_tolerance_rel: 0.01
+      loops: 4
+      holes: 0
+    description: 'Stated table section z = 0.0: solid area 336.53 mm2, 4 outer loops, 0 holes.'
+  - id: upperBoreDepthSection
+    plane: z
+    at: 17.0
+    expect:
+      area: 355.45
+      area_tolerance_rel: 0.01
+      loops: 4
+      holes: 0
+    description: 'Stated table section z = 17.0: solid area 355.45 mm2, 4 outer loops, 0 holes.'
+  - id: lowerScrewClampSection
+    plane: z
+    at: -20.0
+    expect:
+      area: 584.6
+      area_tolerance_rel: 0.01
+      loops: 2
+      holes: 1
+    description: 'Stated table section z = -20.0: solid area 584.6 mm2, 2 outer loops, 1 holes.'
+  faces:
+  - name: leftDatum
+    plane: x
+    at: -26.5
+    normal: '-'
+    area: 607.2
+    area_tolerance_rel: 0.01
+    tolerance: 0.05
+    mode: sum
+  - name: leftNutFlatLeft
+    plane: x
+    at: -24.8
+    normal: +
+    area: 13.9
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: leftNutBridgeLeft
+    plane: x
+    at: -23.7
+    normal: +
+    area: 1.02
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: leftFootSide
+    plane: x
+    at: -21.95
+    normal: '-'
+    area: 76.48
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: leftNutBridgeRight
+    plane: x
+    at: -20.3
+    normal: '-'
+    area: 1.02
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: upperLeftBridgeLeft
+    plane: x
+    at: -20.25
+    normal: +
+    area: 1.05
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: leftNutFlatRight
+    plane: x
+    at: -19.2
+    normal: '-'
+    area: 13.9
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lowerLeftBridgeLeft
+    plane: x
+    at: -18.75
+    normal: +
+    area: 1.05
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: upperLeftBridgeRight
+    plane: x
+    at: -16.75
+    normal: '-'
+    area: 1.05
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lowerLeftBridgeRight
+    plane: x
+    at: -15.25
+    normal: '-'
+    area: 1.05
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lugNutFlatLeft
+    plane: x
+    at: 5.2
+    normal: +
+    area: 13.9
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lugNutBridgeLeft
+    plane: x
+    at: 6.3
+    normal: +
+    area: 1.02
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lowerNutFlatLeft
+    plane: x
+    at: 9.2
+    normal: +
+    area: 13.9
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lugNutBridgeRight
+    plane: x
+    at: 9.7
+    normal: '-'
+    area: 1.02
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lowerNutBridgeLeft
+    plane: x
+    at: 10.3
+    normal: +
+    area: 1.02
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lugNutFlatRight
+    plane: x
+    at: 10.8
+    normal: '-'
+    area: 13.9
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lowerNutBridgeRight
+    plane: x
+    at: 13.7
+    normal: '-'
+    area: 1.02
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lowerNutFlatRight
+    plane: x
+    at: 14.8
+    normal: '-'
+    area: 13.9
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: upperRightBridgeLeft
+    plane: x
+    at: 18.3
+    normal: +
+    area: 1.02
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: upperRightBridgeRight
+    plane: x
+    at: 21.7
+    normal: '-'
+    area: 1.02
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: sideScallopEndFace
+    plane: x
+    at: 23.14
+    normal: +
+    area: 7.41
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampLowerSideFace
+    plane: x
+    at: 24.0
+    normal: +
+    area: 12.89
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [1.11, -8.23]
+  - name: clampUpperSideFace
+    plane: x
+    at: 24.0
+    normal: +
+    area: 10.2
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [1.12, 22.5]
+  - name: rightSideFrontPanel
+    plane: x
+    at: 26.5
+    normal: +
+    area: 64.91
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [13.24, 2.77]
+  - name: rightSideBackPanel
+    plane: x
+    at: 26.5
+    normal: +
+    area: 41.94
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [0.86, 7.53]
+  - name: rightSideFacesTotal
+    plane: x
+    at: 26.5
+    normal: +
+    area: 106.85
+    area_tolerance_rel: 0.15
+    tolerance: 0.1
+    mode: sum
+  - name: backDatum
+    plane: y
+    at: 0
+    normal: '-'
+    area: 2166.04
+    area_tolerance_rel: 0.03
+    tolerance: 0.05
+    mode: sum
+  - name: clampCornerBackLedge
+    plane: y
+    at: 0.75
+    normal: +
+    area: 1.5
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampCornerPocketFloor
+    plane: y
+    at: 2.5
+    normal: '-'
+    area: 6.1
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampUpperBackFloor
+    plane: y
+    at: 2.731
+    normal: '-'
+    area: 5.16
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [24.45, 22.5]
+  - name: clampLowerBackFloor
+    plane: y
+    at: 2.731
+    normal: '-'
+    area: 1.76
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [24.24, -6.26]
+  - name: keyUpperBackShoulder
+    plane: y
+    at: 3.0
+    normal: +
+    area: 66.24
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lowerNutTopLedge
+    plane: y
+    at: 4.0
+    normal: '-'
+    area: 4.07
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [12, -14.79]
+  - name: leftNutBottomLedge
+    plane: y
+    at: 4.0
+    normal: '-'
+    area: 4.07
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-22, 12.79]
+  - name: leftNutTopLedge
+    plane: y
+    at: 4.0
+    normal: '-'
+    area: 4.07
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-22, 17.21]
+  - name: lugNutTopLedge
+    plane: y
+    at: 4.0
+    normal: '-'
+    area: 4.07
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [8, 30.21]
+  - name: lowerNutBottomLedge
+    plane: y
+    at: 4.0
+    normal: '-'
+    area: 4.07
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [12, -19.21]
+  - name: lugNutBottomLedge
+    plane: y
+    at: 4.0
+    normal: '-'
+    area: 4.07
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [8, 25.79]
+  - name: lugNutLeftLedge
+    plane: y
+    at: 4.3
+    normal: '-'
+    area: 3.73
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [5.75, 28]
+  - name: leftNutLeftLedge
+    plane: y
+    at: 4.3
+    normal: '-'
+    area: 3.73
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-24.25, 15]
+  - name: lugNutRightLedge
+    plane: y
+    at: 4.3
+    normal: '-'
+    area: 3.73
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [10.25, 28]
+  - name: leftNutRightLedge
+    plane: y
+    at: 4.3
+    normal: '-'
+    area: 3.73
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-19.75, 15]
+  - name: lowerNutLeftLedge
+    plane: y
+    at: 4.3
+    normal: '-'
+    area: 3.73
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [9.75, -17]
+  - name: lowerNutRightLedge
+    plane: y
+    at: 4.3
+    normal: '-'
+    area: 3.73
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [14.25, -17]
+  - name: upperRightTopLedge
+    plane: y
+    at: 7.5
+    normal: '-'
+    area: 6.07
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [20, 19.33]
+  - name: upperRightBottomLedge
+    plane: y
+    at: 7.5
+    normal: '-'
+    area: 6.07
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [20, 14.67]
+  - name: upperRightLeftLedge
+    plane: y
+    at: 7.8
+    normal: '-'
+    area: 4.74
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [17.6, 17]
+  - name: upperRightRightLedge
+    plane: y
+    at: 7.8
+    normal: '-'
+    area: 4.46
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [22.36, 17]
+  - name: keyUpperFrontShoulder
+    plane: y
+    at: 8.0
+    normal: +
+    area: 286.25
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: leftPivotShoulder
+    plane: y
+    at: 8.5
+    normal: +
+    area: 21.41
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-23.86, 0]
+  - name: rightPivotShoulder
+    plane: y
+    at: 8.5
+    normal: +
+    area: 21.24
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [19.92, 0]
+  - name: upperLeftTopLedge
+    plane: y
+    at: 9.5
+    normal: '-'
+    area: 5.79
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-18.5, 24.36]
+  - name: lowerLeftTopLedge
+    plane: y
+    at: 9.5
+    normal: '-'
+    area: 5.79
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-17, -17.64]
+  - name: lowerLeftBottomLedge
+    plane: y
+    at: 9.5
+    normal: '-'
+    area: 5.79
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-17, -22.36]
+  - name: upperLeftBottomLedge
+    plane: y
+    at: 9.5
+    normal: '-'
+    area: 5.79
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-18.5, 19.64]
+  - name: lowerLeftRightLedge
+    plane: y
+    at: 9.8
+    normal: '-'
+    area: 4.67
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-14.57, -20]
+  - name: upperLeftRightLedge
+    plane: y
+    at: 9.8
+    normal: '-'
+    area: 4.67
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-16.07, 22]
+  - name: upperLeftLeftLedge
+    plane: y
+    at: 9.8
+    normal: '-'
+    area: 4.67
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-20.93, 22]
+  - name: lowerLeftLeftLedge
+    plane: y
+    at: 9.8
+    normal: '-'
+    area: 4.67
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-19.43, -20]
+  - name: clampCornerFrontLedge
+    plane: y
+    at: 11.5
+    normal: +
+    area: 3.21
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampCornerFrontFloor
+    plane: y
+    at: 13.25
+    normal: '-'
+    area: 9.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [21.81, -25.31]
+  - name: clampLowerFrontFloor
+    plane: y
+    at: 13.25
+    normal: '-'
+    area: 3.99
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [25.84, -7.5]
+  - name: clampUpperFrontFloor
+    plane: y
+    at: 13.25
+    normal: '-'
+    area: 3.99
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [25.84, 22.5]
+  - name: frontDatum
+    plane: y
+    at: 14.0
+    normal: +
+    area: 2279.29
+    area_tolerance_rel: 0.03
+    tolerance: 0.05
+    mode: sum
+  - name: bottomDatum
+    plane: z
+    at: -30.0
+    normal: '-'
+    area: 573.52
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: sum
+  - name: lowerLeftBridgeBottom
+    plane: z
+    at: -21.75
+    normal: +
+    area: 2.69
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lowerNutBridgeBottom
+    plane: z
+    at: -18.7
+    normal: +
+    area: 2.61
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lowerLeftBridgeTop
+    plane: z
+    at: -18.25
+    normal: '-'
+    area: 2.69
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lowerNutBridgeTop
+    plane: z
+    at: -15.3
+    normal: '-'
+    area: 2.61
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampLowerSlotBottom
+    plane: z
+    at: -9.0
+    normal: +
+    area: 27.19
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampLowerSlotTop
+    plane: z
+    at: -6.0
+    normal: '-'
+    area: 27.69
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampLowerBackStep
+    plane: z
+    at: -4.625
+    normal: '-'
+    area: 5.69
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: leftPivotSlotBottom
+    plane: z
+    at: -3.25
+    normal: +
+    area: 14.19
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: leftPivotSlotTop
+    plane: z
+    at: 3.25
+    normal: '-'
+    area: 14.19
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: leftNutBridgeBottom
+    plane: z
+    at: 13.3
+    normal: +
+    area: 2.61
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: upperRightBridgeBottom
+    plane: z
+    at: 15.3
+    normal: +
+    area: 2.68
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: leftNutBridgeTop
+    plane: z
+    at: 16.7
+    normal: '-'
+    area: 2.61
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: upperRightBridgeTop
+    plane: z
+    at: 18.7
+    normal: '-'
+    area: 2.68
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampUpperBackStep
+    plane: z
+    at: 19.625
+    normal: +
+    area: 5.91
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: upperLeftBridgeBottom
+    plane: z
+    at: 20.25
+    normal: +
+    area: 2.69
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampUpperSlotBottom
+    plane: z
+    at: 21.0
+    normal: +
+    area: 27.99
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: upperLeftBridgeTop
+    plane: z
+    at: 23.75
+    normal: '-'
+    area: 2.69
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: upperLeftBossLedge
+    plane: z
+    at: 24.0
+    normal: +
+    area: 17.26
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampUpperSlotTop
+    plane: z
+    at: 24.0
+    normal: '-'
+    area: 27.99
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: clampUpperBackRim
+    plane: z
+    at: 25.375
+    normal: '-'
+    area: 3.05
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: lugNutBridgeBottom
+    plane: z
+    at: 26.3
+    normal: +
+    area: 2.61
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  - name: topLeftLedge
+    plane: z
+    at: 28.0
+    normal: +
+    area: 204.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [-9.75, 4]
+  - name: topRightLedge
+    plane: z
+    at: 28.0
+    normal: +
+    area: 79.87
+    area_tolerance_rel: 0.02
+    tolerance: 0.1
+    mode: one
+    center: [18.75, 5.15]
+  - name: lugNutBridgeTop
+    plane: z
+    at: 29.7
+    normal: '-'
+    area: 2.61
+    area_tolerance_rel: 0.02
+    tolerance: 0.05
+    mode: one
+  cylinders:
+  - name: keyUpperFrontCounterbore
+    point: [-2.0, 0.0, 16.4]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 26.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 6.0
+    length_tolerance: 0.05
+    t_range: [8.0, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 1; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: keyLowerBackRecess
+    point: [-2.0, 0.0, 0.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 22.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.0
+    length_tolerance: 0.05
+    t_range: [0.0, 3.0]
+    description: Stated in dimension-sheet.md cylindrical row 2; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: keyUpperMiddleBore
+    point: [-2.0, 0.0, 16.4]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 16.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 5.0
+    length_tolerance: 0.05
+    t_range: [3.0, 8.0]
+    description: Stated in dimension-sheet.md cylindrical row 3; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: keyLowerFrontCounterbore
+    point: [-2.0, 0.0, 0.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 14.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.639
+    length_tolerance: 0.05
+    t_range: [10.361, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 4; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampCornerOuterCut
+    point: [22.922, 7.0, -22.922]
+    direction: [0.7071, 0.0, 0.7071]
+    kind: hole
+    diameter: 12.684
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.0
+    length_tolerance: 0.05
+    t_range: [-3.975, -0.975]
+    description: Stated in dimension-sheet.md cylindrical row 5; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampAxialOuterCut
+    point: [25.618, 7.0, 0.0]
+    direction: [0.0, 0.0, 1.0]
+    kind: hole
+    diameter: 12.63
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 33.0
+    length_tolerance: 0.05
+    t_range: [-9.0, 24.0]
+    description: Stated in dimension-sheet.md cylindrical row 6; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: keyUpperBackRecess
+    point: [-2.0, 0.0, 16.4]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 12.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.0
+    length_tolerance: 0.05
+    t_range: [0.0, 3.0]
+    description: Stated in dimension-sheet.md cylindrical row 7; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampTiltOuterCut
+    point: [28.665, 7.0, -5.054]
+    direction: [0.1736, 0.0, 0.9848]
+    kind: hole
+    diameter: 11.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 22.264
+    length_tolerance: 0.05
+    t_range: [-26.345, -4.081]
+    description: Stated in dimension-sheet.md cylindrical row 8; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampUpperRelief
+    point: [28.75, 7.0, 0.0]
+    direction: [0.0, 0.0, 1.0]
+    kind: hole
+    diameter: 11.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 27.506
+    length_tolerance: 0.05
+    t_range: [0.0, 27.506]
+    description: Stated in dimension-sheet.md cylindrical row 9; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampNearOffsetCut
+    point: [25.171, 5.5, 0.0]
+    direction: [0.0, 0.0, 1.0]
+    kind: hole
+    diameter: 9.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 33.0
+    length_tolerance: 0.05
+    t_range: [-9.0, 24.0]
+    description: Stated in dimension-sheet.md cylindrical row 10; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampFarOffsetCut
+    point: [25.171, 8.5, 0.0]
+    direction: [0.0, 0.0, 1.0]
+    kind: hole
+    diameter: 9.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 33.0
+    length_tolerance: 0.05
+    t_range: [-9.0, 24.0]
+    description: Stated in dimension-sheet.md cylindrical row 11; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampCornerNearCut
+    point: [22.504, 5.143, -22.504]
+    direction: [0.7071, 0.0, 0.7071]
+    kind: hole
+    diameter: 8.787
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.0
+    length_tolerance: 0.05
+    t_range: [-3.975, -0.975]
+    description: Stated in dimension-sheet.md cylindrical row 12; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampCornerFarCut
+    point: [22.504, 8.857, -22.504]
+    direction: [0.7071, 0.0, 0.7071]
+    kind: hole
+    diameter: 8.787
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.0
+    length_tolerance: 0.05
+    t_range: [-3.975, -0.975]
+    description: Stated in dimension-sheet.md cylindrical row 13; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampTiltNearCut
+    point: [27.777, 5.5, -4.898]
+    direction: [0.1736, 0.0, 0.9848]
+    kind: hole
+    diameter: 8.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 2.768
+    length_tolerance: 0.05
+    t_range: [-19.018, -16.249]
+    description: Stated in dimension-sheet.md cylindrical row 14; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampTiltFarCut
+    point: [27.777, 8.5, -4.898]
+    direction: [0.1736, 0.0, 0.9848]
+    kind: hole
+    diameter: 8.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 18.97
+    length_tolerance: 0.05
+    t_range: [-23.376, -4.407]
+    description: Stated in dimension-sheet.md cylindrical row 15; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampUpperNearCut
+    point: [27.849, 5.5, 0.0]
+    direction: [0.0, 0.0, 1.0]
+    kind: hole
+    diameter: 8.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 19.625
+    length_tolerance: 0.05
+    t_range: [0.0, 19.625]
+    description: Stated in dimension-sheet.md cylindrical row 16; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampUpperFarCut
+    point: [27.849, 8.5, 0.0]
+    direction: [0.0, 0.0, 1.0]
+    kind: hole
+    diameter: 8.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 24.712
+    length_tolerance: 0.05
+    t_range: [0.0, 24.712]
+    description: Stated in dimension-sheet.md cylindrical row 17; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: leftPivotCounterbore
+    point: [-23.92, 0.0, 0.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 6.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 5.5
+    length_tolerance: 0.05
+    t_range: [8.5, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 18; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: upperLeftCounterbore
+    point: [-18.5, 0.0, 22.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 6.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 9.8
+    length_tolerance: 0.05
+    t_range: [0.0, 9.8]
+    description: Stated in dimension-sheet.md cylindrical row 19; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: lowerLeftCounterbore
+    point: [-17.0, 0.0, -20.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 6.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 9.8
+    length_tolerance: 0.05
+    t_range: [0.0, 9.8]
+    description: Stated in dimension-sheet.md cylindrical row 20; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: rightPivotCounterbore
+    point: [19.92, 0.0, 0.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 6.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 5.5
+    length_tolerance: 0.05
+    t_range: [8.5, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 21; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: upperRightCounterbore
+    point: [20.0, 0.0, 17.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 6.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 7.8
+    length_tolerance: 0.05
+    t_range: [0.0, 7.8]
+    description: Stated in dimension-sheet.md cylindrical row 22; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: sideScallopBore
+    point: [22.088, 0.0, -15.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 5.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 4.649
+    length_tolerance: 0.05
+    t_range: [0.0, 4.649]
+    description: Stated in dimension-sheet.md cylindrical row 23; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: filamentTransverseBore
+    point: [14.708, 0.0, 30.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 4.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 9.242
+    length_tolerance: 0.05
+    t_range: [0.0, 9.242]
+    description: Stated in dimension-sheet.md cylindrical row 24; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: filamentAngledBore
+    point: [-1.248, 3.964, 30.0]
+    direction: [0.9538, 0.3003, 0.0]
+    kind: hole
+    diameter: 4.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 4.854
+    length_tolerance: 0.05
+    t_range: [20.136, 24.991]
+    description: Stated in dimension-sheet.md cylindrical row 25; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: upperLeftPilot
+    point: [-18.5, 0.0, 22.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 3.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.9
+    length_tolerance: 0.05
+    t_range: [10.1, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 26; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: lowerLeftPilot
+    point: [-17.0, 0.0, -20.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 3.5
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.9
+    length_tolerance: 0.05
+    t_range: [10.1, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 27; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: leftPivotPilot
+    point: [-23.92, 0.0, 0.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 3.4
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 7.813
+    length_tolerance: 0.05
+    t_range: [0.0, 7.813]
+    description: Stated in dimension-sheet.md cylindrical row 28; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: leftNutPilot
+    point: [-22.0, 0.0, 15.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 3.4
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 9.4
+    length_tolerance: 0.05
+    t_range: [4.6, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 29; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: lugNutPilot
+    point: [8.0, 0.0, 28.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 3.4
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 9.4
+    length_tolerance: 0.05
+    t_range: [4.6, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 30; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: lowerNutPilot
+    point: [12.0, 0.0, -17.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 3.4
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 9.4
+    length_tolerance: 0.05
+    t_range: [4.6, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 31; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: rightPivotPilot
+    point: [19.92, 0.0, 0.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 3.4
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 7.813
+    length_tolerance: 0.05
+    t_range: [0.0, 7.813]
+    description: Stated in dimension-sheet.md cylindrical row 32; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: upperRightPilot
+    point: [20.0, 0.0, 17.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 3.4
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 5.9
+    length_tolerance: 0.05
+    t_range: [8.1, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 33; yes angular coverage. t_range is from this point
+      along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily a full
+      uninterrupted drilled hole.
+  - name: upperLeftBoss
+    point: [-18.5, 0.0, 22.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 11.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 6.0
+    length_tolerance: 0.05
+    t_range: [8.0, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 34; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: lugBoss
+    point: [8.0, 0.0, 28.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 10.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 14.0
+    length_tolerance: 0.05
+    t_range: [0.0, 14.0]
+    description: Stated in dimension-sheet.md cylindrical row 35; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampCornerLip
+    point: [22.922, 7.0, -22.922]
+    direction: [0.7071, 0.0, 0.7071]
+    kind: pin
+    diameter: 9.184
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.0
+    length_tolerance: 0.05
+    t_range: [-3.975, -0.975]
+    description: Stated in dimension-sheet.md cylindrical row 36; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampAxialLip
+    point: [25.618, 7.0, 0.0]
+    direction: [0.0, 0.0, 1.0]
+    kind: pin
+    diameter: 9.13
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 33.0
+    length_tolerance: 0.05
+    t_range: [-9.0, 24.0]
+    description: Stated in dimension-sheet.md cylindrical row 37; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampFarLip
+    point: [25.171, 8.5, 0.0]
+    direction: [0.0, 0.0, 1.0]
+    kind: pin
+    diameter: 6.0
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 32.242
+    length_tolerance: 0.05
+    t_range: [-8.242, 24.0]
+    description: Stated in dimension-sheet.md cylindrical row 38; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampCornerNearLip
+    point: [22.504, 5.143, -22.504]
+    direction: [0.7071, 0.0, 0.7071]
+    kind: pin
+    diameter: 5.287
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.0
+    length_tolerance: 0.05
+    t_range: [-3.975, -0.975]
+    description: Stated in dimension-sheet.md cylindrical row 39; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  - name: clampCornerFarLip
+    point: [22.504, 8.857, -22.504]
+    direction: [0.7071, 0.0, 0.7071]
+    kind: pin
+    diameter: 5.287
+    radius_tolerance: 0.025
+    axis_tolerance: 0.03
+    length: 3.0
+    length_tolerance: 0.05
+    t_range: [-3.975, -0.975]
+    description: Stated in dimension-sheet.md cylindrical row 40; partial angular coverage. t_range is from this
+      point along the normalized direction. Length is the remaining cylindrical surface extent, not necessarily
+      a full uninterrupted drilled hole.
+  planes:
+  - name: leftLowerBevel
+    point: [-22.946, 0.0, -23.45]
+    normal: [-0.7373, 0.0, -0.6756]
+    area: 45.71
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row1, stated point[-22.946, 0.0, -23.45], outward normal[-0.7373,
+      0.0, -0.6756], area45.71.
+  - name: leftUpperBevel
+    point: [-26.5, 0.0, 24.0]
+    normal: [-0.7071, 0.0, 0.7071]
+    area: 45.25
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row2, stated point[-26.5, 0.0, 24.0], outward normal[-0.7071,
+      0.0, 0.7071], area45.25.
+  - name: rightUpperBevel
+    point: [22.5, 0.0, 28.0]
+    normal: [0.7071, 0.0, 0.7071]
+    area: 44.94
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row3, stated point[22.5, 0.0, 28.0], outward normal[0.7071,
+      0.0, 0.7071], area44.94.
+  - name: clampTiltWall
+    point: [25.721, 12.259, -8.679]
+    normal: [0.3368, -0.9397, -0.0594]
+    area: 35.38
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row4, stated point[25.721, 12.259, -8.679], outward normal[0.3368,
+      -0.9397, -0.0594], area35.38.
+  - name: clampCornerUpperWall
+    point: [17.704, 7.0, -23.326]
+    normal: [0.7071, -0.0, 0.7071]
+    area: 33.85
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row5, stated point[17.704, 7.0, -23.326], outward normal[0.7071,
+      -0.0, 0.7071], area33.85.
+  - name: leftShallowBevel
+    point: [-26.5, 0.0, -21.925]
+    normal: [-0.0872, -0.0, -0.9962]
+    area: 32.94
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row6, stated point[-26.5, 0.0, -21.925], outward normal[-0.0872,
+      -0.0, -0.9962], area32.94.
+  - name: clampCornerLowerWall
+    point: [19.825, 7.0, -21.205]
+    normal: [-0.7071, 0.0, -0.7071]
+    area: 31.99
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row7, stated point[19.825, 7.0, -21.205], outward normal[-0.7071,
+      0.0, -0.7071], area31.99.
+  - name: keyNeckLeft
+    point: [-8.566, 0.0, 5.18]
+    normal: [0.9659, -0.0, -0.2588]
+    area: 21.24
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row8, stated point[-8.566, 0.0, 5.18], outward normal[0.9659,
+      -0.0, -0.2588], area21.24.
+  - name: keyNeckRight
+    point: [2.594, 0.0, 12.54]
+    normal: [-0.9659, -0.0, -0.2588]
+    area: 21.24
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row9, stated point[2.594, 0.0, 12.54], outward normal[-0.9659,
+      -0.0, -0.2588], area21.24.
+  - name: upperLeftBossBevel
+    point: [-16.5, 14.0, 28.0]
+    normal: [0.766, -0.0, 0.6428]
+    area: 21.12
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row10, stated point[-16.5, 14.0, 28.0], outward normal[0.766,
+      -0.0, 0.6428], area21.12.
+  - name: rightLowerBevel
+    point: [26.5, 0.0, -22.75]
+    normal: [0.7071, 0.0, -0.7071]
+    area: 23.31
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row11, stated point[26.5, 0.0, -22.75], outward normal[0.7071,
+      0.0, -0.7071], area16.06. Add coplanar row25 area7.25; the plane inspector sums both faces.
+  - name: lugHexUpperRight
+    point: [8.0, 0.0, 31.233]
+    normal: [-0.5, -0.0, -0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row12, stated point[8.0, 0.0, 31.233], outward normal[-0.5,
+      -0.0, -0.866], area12.98.
+  - name: leftHexUpperLeft
+    point: [-24.8, 0.0, 16.617]
+    normal: [0.5, -0.0, -0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row13, stated point[-24.8, 0.0, 16.617], outward normal[0.5,
+      -0.0, -0.866], area12.98.
+  - name: lugHexLowerLeft
+    point: [8.0, 0.0, 24.767]
+    normal: [0.5, -0.0, 0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row14, stated point[8.0, 0.0, 24.767], outward normal[0.5,
+      -0.0, 0.866], area12.98.
+  - name: leftHexUpperRight
+    point: [-22.0, 0.0, 18.233]
+    normal: [-0.5, -0.0, -0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row15, stated point[-22.0, 0.0, 18.233], outward normal[-0.5,
+      -0.0, -0.866], area12.98.
+  - name: lowerHexLowerLeft
+    point: [12.0, 0.0, -20.233]
+    normal: [0.5, -0.0, 0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row16, stated point[12.0, 0.0, -20.233], outward normal[0.5,
+      -0.0, 0.866], area12.98.
+  - name: lugHexLowerRight
+    point: [10.8, 0.0, 26.383]
+    normal: [-0.5, -0.0, 0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row17, stated point[10.8, 0.0, 26.383], outward normal[-0.5,
+      -0.0, 0.866], area12.98.
+  - name: lowerHexLowerRight
+    point: [14.8, 0.0, -18.617]
+    normal: [-0.5, -0.0, 0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row18, stated point[14.8, 0.0, -18.617], outward normal[-0.5,
+      -0.0, 0.866], area12.98.
+  - name: lowerHexUpperRight
+    point: [12.0, 0.0, -13.767]
+    normal: [-0.5, -0.0, -0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row19, stated point[12.0, 0.0, -13.767], outward normal[-0.5,
+      -0.0, -0.866], area12.98.
+  - name: leftHexLowerLeft
+    point: [-22.0, 0.0, 11.767]
+    normal: [0.5, -0.0, 0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row20, stated point[-22.0, 0.0, 11.767], outward normal[0.5,
+      -0.0, 0.866], area12.98.
+  - name: leftHexLowerRight
+    point: [-19.2, 0.0, 13.383]
+    normal: [-0.5, -0.0, 0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row21, stated point[-19.2, 0.0, 13.383], outward normal[-0.5,
+      -0.0, 0.866], area12.98.
+  - name: lugHexUpperLeft
+    point: [5.2, 0.0, 29.617]
+    normal: [0.5, -0.0, -0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row22, stated point[5.2, 0.0, 29.617], outward normal[0.5,
+      -0.0, -0.866], area12.98.
+  - name: lowerHexUpperLeft
+    point: [9.2, 0.0, -15.383]
+    normal: [0.5, -0.0, -0.866]
+    area: 12.98
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row23, stated point[9.2, 0.0, -15.383], outward normal[0.5,
+      -0.0, -0.866], area12.98.
+  - name: clampCornerBackBevel
+    point: [21.107, -2.5, -24.608]
+    normal: [0.7071, 0.0, -0.7071]
+    area: 8.42
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row24, stated point[21.107, -2.5, -24.608], outward normal[0.7071,
+      0.0, -0.7071], area8.42.
+  - name: clampCornerBottomWall
+    point: [20.842, -0.0, -28.408]
+    normal: [0.7071, -0.0, 0.7071]
+    area: 6.25
+    area_tolerance_rel: 0.03
+    tolerance: 0.04
+    angle_tolerance_deg: 0.2
+    description: sources/dimension-sheet.md; inclined row26, stated point[20.842, -0.0, -28.408], outward normal[0.7071,
+      -0.0, 0.7071], area6.25.
+  dimensions:
+  - name: overallWidth
+    axis: x
+    expected: 53
+    tolerance: 0.03
+    description: plateWidth; source envelope.
+  - name: overallThickness
+    axis: y
+    expected: 14
+    tolerance: 0.03
+    description: Nominal y span; table14.001 differs by only.001.
+  - name: overallHeight
+    axis: z
+    expected: 63.72
+    tolerance: 0.03
+    description: lugMaxZ - bottomZ.
+  - name: matingFaceSeparation
+    axis: y
+    expected: 14
+    tolerance: 0.03
+    description: 14 - 0.
+    between: [backDatum, frontDatum]
+  - name: leftFootOffset
+    axis: x
+    expected: 4.55
+    tolerance: 0.04
+    description: leftFootX + halfWidth = -21.95 +26.5.
+    between: [leftDatum, leftFootSide]
+  - name: upperRecessDepth
+    axis: y
+    expected: 3
+    tolerance: 0.04
+    description: keyBackDepth.
+    between: [backDatum, keyUpperBackShoulder]
+  - name: upperBoreLength
+    axis: y
+    expected: 5
+    tolerance: 0.04
+    description: keyMiddleEnd - keyBackDepth =8-3.
+    between: [keyUpperBackShoulder, keyUpperFrontShoulder]
+  - name: upperCounterboreDepth
+    axis: y
+    expected: 6
+    tolerance: 0.04
+    description: plateThickness - keyMiddleEnd =14-8.
+    between: [keyUpperFrontShoulder, frontDatum]
+  - name: pivotCounterboreDepth
+    axis: y
+    expected: 5.5
+    tolerance: 0.04
+    description: plateThickness - pivotCounterboreStart =14-8.5.
+    between: [rightPivotShoulder, frontDatum]
+  - name: nutTrapWidth
+    axis: x
+    expected: 5.6
+    tolerance: 0.04
+    description: nutAcrossFlats = -19.2 -(-24.8).
+    between: [leftNutFlatLeft, leftNutFlatRight]
+  - name: lowerClampSlotHeight
+    axis: z
+    expected: 3
+    tolerance: 0.04
+    description: Table face levels -6 -(-9).
+    between: [clampLowerSlotBottom, clampLowerSlotTop]
+  - name: upperClampSlotHeight
+    axis: z
+    expected: 3
+    tolerance: 0.04
+    description: Table face levels24-21.
+    between: [clampUpperSlotBottom, clampUpperSlotTop]
+  deviation: null
+  blockout:
+    volume_min: 42000
+    volume_max: 47500
+  export_volume_tolerance_rel: 0.002
+references:
+- path: sources/back.png
+  kind: drawing
+  role: authoritative
+  sha256: 0082b3fc7dba786305b2403e8d454471030bf13072317f94c55cd314add6fc85
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Plots -x horizontally; shows the y=14 counterbore side.
+- path: sources/bottom.png
+  kind: drawing
+  role: authoritative
+  sha256: ffcb4f042cf21f1af12962ce8e25164d444a06b3949523f7b80853c5112764d8
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+- path: sources/dimension-sheet.md
+  kind: table
+  role: authoritative
+  sha256: 8114a967a9bfa8f1b8cb70e979bda39f2e6a02b28eee8c3c2a906a5389d6e93c
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Detailed coordinates, surfaces and sections; numbers are stated document values, not agent reference-ingest
+    measurements.
+- path: sources/front.png
+  kind: drawing
+  role: authoritative
+  sha256: 5eb8d869e83a8b6fda807d1a89c6a2340416e9fcc6ba7e9156e5ad9090891415
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Plots +x horizontally; shows the y=0 pocket and marking side.
+- path: sources/iso-below.png
+  kind: image
+  role: illustrative
+  sha256: a88b88b12b762c2f233eb945e824d56e66618b4595732be098034a98fea0f4e7
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Spatial interpretation only; no metric measurements from isometric projection.
+- path: sources/iso.png
+  kind: image
+  role: illustrative
+  sha256: b020791e7cac6906a7849143eacd5a451367a29067b7005ef9ba6031fb40490b
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Spatial interpretation only; no metric measurements from isometric projection.
+- path: sources/iso2.png
+  kind: image
+  role: illustrative
+  sha256: 71fc8bd6986eeaaaa6ca80f0bc33b3263ab695c169a03c11adc27834e2366dfe
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Spatial interpretation only; no metric measurements from isometric projection.
+- path: sources/left.png
+  kind: drawing
+  role: authoritative
+  sha256: 0e619ab6438f959e407e5c85024d515dcf7893d28a4f4442300eaaf2ec8ec392
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+- path: sources/prusa-extruder-front-description.md
+  kind: text
+  role: authoritative
+  sha256: 68bb9d8de0d472b48ee4d006368d8317942fb1662c46fa57ca40444a3270e3fc
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Functional scope and frame; conflicting keyhole axis assignments retained as Q1.
+- path: sources/render-notes.md
+  kind: text
+  role: authoritative
+  sha256: d55bcc4dd15907bcbd350f4f13f8203ae1108e811702c8146c8dc571529e1728
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm-grid convention, mesh-render metadata and envelope.
+- path: sources/right.png
+  kind: drawing
+  role: authoritative
+  sha256: 058b38e8a33e018052f9ecce5dad1dc4ac49d7f09475300dd7760bb47516e15c
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+- path: sources/section-x-18.5.png
+  kind: drawing
+  role: authoritative
+  sha256: 631dc2ecc85bb8d7ecf1ae2592d716be3f79226a496944f9649ad8422b637881
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Table/drawing topology conflict Q3.
+- path: sources/section-x0.png
+  kind: drawing
+  role: authoritative
+  sha256: 5948745dc3a39d6be9f315b77bff89c305a1ed817e0db31efa3a9b66e811dba8
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+- path: sources/section-y1.5.png
+  kind: drawing
+  role: authoritative
+  sha256: 35f64ab977673fb8c50df3c20af3c5bff32470d319d67c36e77518ef06675a51
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+- path: sources/section-y12.png
+  kind: drawing
+  role: authoritative
+  sha256: 2adcdb2843aec7741582b66c0e07c3a6a955b5ea989eb2a9ec0a9c94e3004a83
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+- path: sources/section-y7.png
+  kind: drawing
+  role: authoritative
+  sha256: 010bf57ad6582553c9cf903435bc324dd6629f191dd1ab16d90c258a4cca497d
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+- path: sources/section-z-20.png
+  kind: drawing
+  role: authoritative
+  sha256: 4525f85f7d8aad2c964b1d88a2abe5ed4e5086bdff8103449b6e88ac4c28ab8b
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+- path: sources/section-z0.png
+  kind: drawing
+  role: authoritative
+  sha256: 21d566609ed38ef40a873d62e8b99c37fb9ab24a897ebb55fc724db4aef8094a
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+- path: sources/section-z17.png
+  kind: drawing
+  role: authoritative
+  sha256: 09015d9730b123e12ab2950371d63cd2cdcf87d9b8ff6fb5ea037df1333d5016
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+- path: sources/top.png
+  kind: drawing
+  role: authoritative
+  sha256: 723eafa804a379697e33524c77c45951f601d3515f889ef73cd459437721c335
+  units: mm
+  revision: Undated supplied bundle; upstream CAD revision unspecified
+  note: Orthographic mm grid/material outline; pixel readings carry wider tolerance than tabulated coordinates.
+open_questions: ['Q1 — Keyhole conflict: prose places Ø26 at z=0 and Ø14 at z=16.4 and implies a lower Ø16 cylinder;
+    the dimension table and sections reverse those counterbores and show a lower taper. Which is intended? Draft
+    checks provisionally follow the table and sections; intent is preserved verbatim.', 'Q2 — View naming: front.png
+    shows the y=0 hex-pocket/marking side, although the frame calls y=14 the front. Are these camera labels only?
+    This draft uses numerical coordinates and the requested datum definitions.', 'Q3 — Topology: the table gives
+    three outer loops at x=-18.5, while the section drawing says two regions. Which is authoritative? Draft acceptance
+    uses the table''s 662.84 mm2 and three loops; the drawing says 662.94 mm2 and two regions.', 'Q4 — Construction:
+    exact angular trims and connecting blends of the partial clamp surfaces are not tabulated. Can further drawings
+    resolve them? All 40 cylinders and functional planes are specified; surrounding blends remain underdetermined,
+    and the pivot-mouth Ø3.9 is only raster measured.', 'Q5 — Diagnostics: quoted volume 29833.56 mm3, area 11557.87
+    mm2 and centroid [-0.703,6.989,-2.703] mm lack a complete analytic exterior. Should they ever become mandatory
+    gates? They remain nonbinding; schema 1 cannot label these acceptance quantities diagnostic-only, so their
+    fields are null.', 'Q6 — Cosmetics: exact fan-lobe outline, lug fillet radius and R1/arrow outlines are unspecified;
+    embossed versus recessed is also unclear. May they remain omitted or approximate? Shared envelope and functional
+    checks still apply.', 'Q7 — Manufacturing: material, density, print settings and physical fit tolerances are
+    unspecified; trap hardware is called both nut and heat-set hardware. Which material and fasteners/inserts
+    are intended? Only documented geometry and digital tolerances are specified.', 'Q8 — Thickness: the table
+    bbox reaches y=14.001 but the face and renders give 14.000. Is the extra 0.001 intentional? This draft retains
+    the requested y=14 datum with a 0.03 mm envelope tolerance.']

@@ -1,0 +1,19 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/vertical
+Title: Vertical
+
+# Vertical
+
+Constrain sketch segments or point pairs to a vertical relationship in Zoo Design Studio.
+
+The Vertical constraint keeps selected geometry aligned to the sketch's vertical direction. Use it to
+lock profile edges or reference points to a vertical orientation as other dimensions change.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/vertical/vertical.gif"
+  alt="Applying a vertical constraint to sketch geometry"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Vertical keeps selected geometry aligned to the sketch's vertical direction
+</div>

@@ -1,0 +1,1621 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/sprite-aleph-v2/parts/main-shell/contract.yaml: 102 parameters {'stated': 99, 'inferred': 1, 'derived': 2}; sources unresolved {}; unanchored 4",
+        "open questions: 12 (blocking []); interfaces 8, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 99,
+          "inferred": 1,
+          "derived": 2
+        },
+        "soft_values": 1,
+        "open_questions": [
+          "Changed (revision 1, reviewer notes): Corrected skirtBandClear outer bound from29.3 to29.2 and specified the lips-only exception to resolve the groove back-wall conflict; reviewer notes supersede proposal section8.4. Mandatory skirtBandClear: both mirrored bands abs(x)26.4..29.2,y14.8..22.2,z22..202 contain no shell or sled material except the two shell groove lips at abs(x)28..29.2,y14.8..16 and20..22.2. The outer bound is the groove back face at abs(x)29.2; tongue outer face29.1 retains0.1 clearance. No shell material above y15 past z202.",
+          "Changed (revision 1, reviewer notes): Replaced the unspecified shell screw head diameter/depth with the selected hardware and countersink dimensions to resolve the flank-fastener drafting question. ISO 10642 M3 x 8, head D6.0 nominal, D6.72 max,90deg. Each flank hole has a90deg countersink D6.4 at the outer skin surface, depth1.5 to the D3.4 clearance bore through the3.6 skin and pad; heads sit flush to0.1 below the surface.",
+          "Inherited grille centres start6.5 after the aperture edge at pitch6,ten seed centres. Shortening61 to60 puts the last centre at93.5 outside the window33..93,leaving nine complete bars plus a 0.1 mm terminal stub at z92.9..93 when clipped. Confirm the intended endpoint treatment; do not quietly change pitch,bar count or gross83% to net free area.",
+          "Nominal new wall2 and ceiling35.5 coincide outside the inherited pocket,while the seed shoulder underside34.5 adds local stock to make a1mm recessed pocket. Confirm this inherited local roof thickening and round-end outline with the retained tab; do not flatten away the pocket.",
+          "Inherited source briefs mention D2.0/D1.4 nacelle tip holes at own z33.75..35.75 (assembly43.75..45.75),but the passing v1 seed omits them. Resolve exact radii/axial extents against local source interfaces before adding individual cylinder checks; do not invent or silently delete motor features.",
+          "R7 is a provisional seed choice within required R6..R8. Exact tangent blends,normal2 nose offset,skin-only x symmetry and nested sections need CAD verification. The port grille prevents valid whole-part mirror symmetry acceptance.",
+          "PartContract cannot directly score analytic station outlines,regional symmetry,tessellated dihedral,forbidden-band exceptions or translated assembly sweeps. Named section obligations are mandatory independent OpenCascade/assembly gates,not certified by a section snapshot or check-bundle. Brow256.7 belongs to cover and must not extend shell249.3.",
+          "Assembled shellSlide,coverSlide,camSweep,propTipToBody>=11,Aleph-to-skin>=3,screw coaxiality<=0.1,battery/regulator clearance and four flow/wire passages remain unverified. STEP hardware cannot encode Aleph rotation here; use stated assembly transform and real bodies. Wire/harness diameters and bend radii are unspecified.",
+          "Final PETG versus ASA,density and print settings remain unspecified; no mass,whole-part volume,CoM or global mesh-fidelity target is asserted. Blockout volume band is a deliberately broad envelope-solid estimate,not finished-shell acceptance.",
+          "No protocol output paths were supplied and only contract.yaml/brief.md may be created here. Protocol result,verification and unresolved items are returned in the final message; no result.md,metrics.json or done file is created.",
+          "ECR slide-clearance: the outline-following rib ring blocked shellSlide on the shoulders (it sat 1.5 inboard of the skin where the sled is held 0.4 off it), and the upper fairing roots sat inside the cover past z22. The ring now covers the straight sides and keel flat only; the fairing roots are trimmed to the grown outer outline past z22. shellSlide and coverSlide are re-verified at assembly level.",
+          "Changed (revision 1, reviewer notes): Adopted ECR cam-ear-clearance camEarRelief (radius 6.3 mm about the x-axis at y=-2.28, z=244, for |x| <= 12.4 mm), its parameters, camEarClear/camEarWallKept probes and acceptance records to clear the unchanged camera plate ears after camSweep failed at all 11 poses; outer nose and retained interfaces stay unchanged."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [
+          "ribSideHalfY",
+          "ribKeelHalfX",
+          "camEarClearRadius",
+          "camEarClearHalfX"
+        ],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "ribSeat",
+          "ribTop",
+          "shellScrewsCoaxial",
+          "boreStarboardLow",
+          "boreStarboardHigh",
+          "borePortLow",
+          "borePortHigh",
+          "ribBearing",
+          "pocketCeiling",
+          "grooveFloorStarboard",
+          "grooveCeilingStarboard",
+          "grooveBackStarboard",
+          "grooveFloorPort",
+          "grooveCeilingPort",
+          "grooveBackPort",
+          "skirtBandClear",
+          "coverSlide",
+          "cameraRib",
+          "apertureUnchanged",
+          "camSweep",
+          "hingeNotchRear",
+          "hingeNotchFront",
+          "servoLedge",
+          "servoSupport",
+          "vtxSupport",
+          "pocketSideStarboard",
+          "pocketSidePort",
+          "fairings",
+          "nacelles",
+          "spanX",
+          "spanY",
+          "shellSlide",
+          "alephToSkin",
+          "passages"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json bbox.max_error = 0.0 (tol 0.1)",
+        "results/build123d/sprite-aleph-v2/parts/main-shell/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -94.0,
+            -94.0,
+            0.0
+          ],
+          "expected_max": [
+            94.0,
+            94.0,
+            249.3
+          ],
+          "measured_min": [
+            -94.0,
+            -94.0,
+            -0.0
+          ],
+          "measured_max": [
+            94.0,
+            94.0,
+            249.3
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.1,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -94.0,
+            -94.0,
+            0.0
+          ],
+          "expected_max": [
+            94.0,
+            94.0,
+            249.3
+          ],
+          "measured_min": [
+            -94.0,
+            -94.0,
+            -0.0
+          ],
+          "measured_max": [
+            94.0,
+            94.0,
+            249.3
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.1,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json volume = None vs None",
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json surface_area = None vs None",
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json center_of_mass = None vs None"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": false,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": false,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": false,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json features: 11/11 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "boreStarboardLow": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.1,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "boreStarboardHigh": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.1,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "borePortLow": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.1,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "borePortHigh": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.1,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "ribSeat": {
+            "ok": true,
+            "kind": "section"
+          },
+          "ribTop": {
+            "ok": true,
+            "kind": "section"
+          },
+          "shellScrewsCoaxial": {
+            "ok": true,
+            "kind": "section"
+          },
+          "boreStarboardLow": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "boreStarboardHigh": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "borePortLow": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "borePortHigh": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "ribBearing": {
+            "ok": true,
+            "kind": "face"
+          },
+          "pocketCeiling": {
+            "ok": true,
+            "kind": "face"
+          },
+          "grooveFloorStarboard": {
+            "ok": true,
+            "kind": "face"
+          },
+          "grooveCeilingStarboard": {
+            "ok": true,
+            "kind": "face"
+          },
+          "grooveBackStarboard": {
+            "ok": true,
+            "kind": "face"
+          },
+          "grooveFloorPort": {
+            "ok": true,
+            "kind": "face"
+          },
+          "grooveCeilingPort": {
+            "ok": true,
+            "kind": "face"
+          },
+          "grooveBackPort": {
+            "ok": true,
+            "kind": "face"
+          },
+          "skirtBandClear": {
+            "ok": true,
+            "kind": "section"
+          },
+          "coverSlide": {
+            "ok": true,
+            "kind": "section"
+          },
+          "cameraRib": {
+            "ok": true,
+            "kind": "section"
+          },
+          "apertureUnchanged": {
+            "ok": true,
+            "kind": "section"
+          },
+          "camSweep": {
+            "ok": true,
+            "kind": "section"
+          },
+          "hingeNotchRear": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hingeNotchFront": {
+            "ok": true,
+            "kind": "face"
+          },
+          "servoLedge": {
+            "ok": true,
+            "kind": "face"
+          },
+          "servoSupport": {
+            "ok": true,
+            "kind": "section"
+          },
+          "vtxSupport": {
+            "ok": true,
+            "kind": "section"
+          },
+          "pocketSideStarboard": {
+            "ok": true,
+            "kind": "face"
+          },
+          "pocketSidePort": {
+            "ok": true,
+            "kind": "face"
+          },
+          "fairings": {
+            "ok": true,
+            "kind": "section"
+          },
+          "nacelles": {
+            "ok": true,
+            "kind": "section"
+          },
+          "spanX": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "spanY": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "shellSlide": {
+            "ok": true,
+            "kind": "section"
+          },
+          "alephToSkin": {
+            "ok": true,
+            "kind": "section"
+          },
+          "passages": {
+            "ok": true,
+            "kind": "section"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json agreement engine=93950.88562447844 step=93950.8849076229 stl=93944.02170843892 (rel tol 0.01; independent=False)",
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json agreement.manifold = 93944.01937103784 (Manifold kernel witness, rel vs STEP 7.307580542543907e-05; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 93950.88562447844,
+        "kcl": 93950.88562447844,
+        "step": 93950.8849076229,
+        "stl": 93944.02170843892,
+        "tolerance_rel": 0.01,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "manifold": 93944.01937103784,
+        "manifold_vs_step_rel": 7.307580542543907e-05,
+        "engine_vs_step_rel": 7.630109566992489e-09,
+        "kcl_vs_step_rel": 7.630109566992489e-09,
+        "stl_vs_step_rel": 7.30509264572392e-05,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/main-shell/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 0/0 values; infeasible refused 2/2; interfaces pinned 34"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "grilleBarWidth",
+            "delta": 0.1,
+            "ok": true,
+            "checks": {
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 33,
+                "driven": [
+                  "fanPlenum",
+                  "grilleTop",
+                  "passages",
+                  "ventilation"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -1.2,
+                  "value": 0.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: grille bars close openings\", \"class\": \"program\", \"timings\": {\"failed_s\": 2.359, \"main_s\": 2.359}}"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "louverBarWidth",
+            "delta": 0.1,
+            "ok": true,
+            "checks": {
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 33,
+                "driven": [
+                  "passages",
+                  "ventilation"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -1.2,
+                  "value": 0.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: louver bars close openings\", \"class\": \"program\", \"timings\": {\"failed_s\": 9.173, \"main_s\": 9.173}}"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "56f35415739b1d51b6973745f711014f75c9d7ca92012096fde7b97a30332af6",
+          "re_export_sha256": "56f35415739b1d51b6973745f711014f75c9d7ca92012096fde7b97a30332af6",
+          "ok": true
+        },
+        "sweep": {
+          "values": 0,
+          "passed": 0
+        },
+        "infeasible": {
+          "declared": 2,
+          "refused": 2
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/main-shell/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=31 unused={'innerWidth': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'innerHeight': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'rearTabEndZ': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'rearScrewZ': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'sledPadX': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'screwLength': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'screwTipX': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'insertEngagement': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'hingeFloorY': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'fanDiameter': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'fanCenterY': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'fanCenterZ': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'fanPlenumMin': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'alephToSkinMin': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'shellSlideTravel': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'coverSlideTravel': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'padTotalThickness': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}, 'slidePadGap': {'defined_in': 'main.py', 'edit_test': False, 'ok': True}}",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "build123d",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "math",
+            "build123d"
+          ],
+          "forbidden_imports": [],
+          "asserts": 31,
+          "sketch_blocks": 85,
+          "feature_ops": 85,
+          "construction_ops": {
+            "calls": 85,
+            "has_result": true
+          },
+          "parameters": {
+            "shellHeight": {
+              "found": true,
+              "value": 249.3,
+              "expected": 249.3,
+              "file": "main.py",
+              "ok": true
+            },
+            "footprint": {
+              "found": true,
+              "value": 188.0,
+              "expected": 188.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "bodyHalfWidth": {
+              "found": true,
+              "value": 30.0,
+              "expected": 30.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "bodyHalfHeight": {
+              "found": true,
+              "value": 37.5,
+              "expected": 37.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "facetShoulderY": {
+              "found": true,
+              "value": 23.4,
+              "expected": 23.4,
+              "file": "main.py",
+              "ok": true
+            },
+            "facetCrownHalfWidth": {
+              "found": true,
+              "value": 17.6,
+              "expected": 17.6,
+              "file": "main.py",
+              "ok": true
+            },
+            "wallThickness": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "innerWidth": {
+              "found": true,
+              "value": 56.0,
+              "expected": 56.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "innerHeight": {
+              "found": true,
+              "value": 71.0,
+              "expected": 71.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "prismaticEndZ": {
+              "found": true,
+              "value": 125.0,
+              "expected": 125.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "roofEndZ": {
+              "found": true,
+              "value": 22.0,
+              "expected": 22.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "pocketCeilingY": {
+              "found": true,
+              "value": 35.5,
+              "expected": 35.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "pocketHalfWidth": {
+              "found": true,
+              "value": 3.55,
+              "expected": 3.55,
+              "file": "main.py",
+              "ok": true
+            },
+            "pocketStartZ": {
+              "found": true,
+              "value": 9.45,
+              "expected": 9.45,
+              "file": "main.py",
+              "ok": true
+            },
+            "rearTabEndZ": {
+              "found": true,
+              "value": 28.95,
+              "expected": 28.95,
+              "file": "main.py",
+              "ok": true
+            },
+            "rearScrewZ": {
+              "found": true,
+              "value": 25.5,
+              "expected": 25.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "ribStartZ": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "ribEndZ": {
+              "found": true,
+              "value": 10.0,
+              "expected": 10.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "ribThickness": {
+              "found": true,
+              "value": 1.5,
+              "expected": 1.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "ribInnerX": {
+              "found": true,
+              "value": 26.5,
+              "expected": 26.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "grooveInnerX": {
+              "found": true,
+              "value": 28.0,
+              "expected": 28.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "grooveOuterX": {
+              "found": true,
+              "value": 29.2,
+              "expected": 29.2,
+              "file": "main.py",
+              "ok": true
+            },
+            "grooveBottomY": {
+              "found": true,
+              "value": 16.0,
+              "expected": 16.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "grooveTopY": {
+              "found": true,
+              "value": 20.0,
+              "expected": 20.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "wallEndZ": {
+              "found": true,
+              "value": 202.0,
+              "expected": 202.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "bodySplitY": {
+              "found": true,
+              "value": 22.0,
+              "expected": 22.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "grilleStartZ": {
+              "found": true,
+              "value": 33.0,
+              "expected": 33.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "grilleEndZ": {
+              "found": true,
+              "value": 93.0,
+              "expected": 93.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "grilleBottomY": {
+              "found": true,
+              "value": -16.0,
+              "expected": -16.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "grilleTopY": {
+              "found": true,
+              "value": 14.0,
+              "expected": 14.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "louverRearStartZ": {
+              "found": true,
+              "value": 21.0,
+              "expected": 21.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "louverRearEndZ": {
+              "found": true,
+              "value": 32.0,
+              "expected": 32.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "louverFrontStartZ": {
+              "found": true,
+              "value": 94.0,
+              "expected": 94.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "louverFrontEndZ": {
+              "found": true,
+              "value": 105.0,
+              "expected": 105.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "louverBottomY": {
+              "found": true,
+              "value": -14.0,
+              "expected": -14.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "louverTopY": {
+              "found": true,
+              "value": 14.0,
+              "expected": 14.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "screwBoreDiameter": {
+              "found": true,
+              "value": 3.4,
+              "expected": 3.4,
+              "file": "main.py",
+              "ok": true
+            },
+            "padDiameter": {
+              "found": true,
+              "value": 9.0,
+              "expected": 9.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "padInnerX": {
+              "found": true,
+              "value": 26.4,
+              "expected": 26.4,
+              "file": "main.py",
+              "ok": true
+            },
+            "lowScrewY": {
+              "found": true,
+              "value": 0.0,
+              "expected": 0.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "lowScrewZ": {
+              "found": true,
+              "value": 14.0,
+              "expected": 14.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "highScrewY": {
+              "found": true,
+              "value": -18.0,
+              "expected": -18.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "highScrewZ": {
+              "found": true,
+              "value": 112.0,
+              "expected": 112.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "countersinkAngle": {
+              "found": true,
+              "value": 90.0,
+              "expected": 90.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "sledPadX": {
+              "found": true,
+              "value": 26.0,
+              "expected": 26.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "screwLength": {
+              "found": true,
+              "value": 8.0,
+              "expected": 8.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "screwTipX": {
+              "found": true,
+              "value": 22.0,
+              "expected": 22.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "insertEngagement": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "armFairingWall": {
+              "found": true,
+              "value": 0.82,
+              "expected": 0.82,
+              "file": "main.py",
+              "ok": true
+            },
+            "armFairingHalfWidth": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "armFairingRidgeZ": {
+              "found": true,
+              "value": 25.0,
+              "expected": 25.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "nacelleOffset": {
+              "found": true,
+              "value": 80.0,
+              "expected": 80.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "nacelleOuterDiameter": {
+              "found": true,
+              "value": 17.09,
+              "expected": 17.09,
+              "file": "main.py",
+              "ok": true
+            },
+            "nacelleRingZ": {
+              "found": true,
+              "value": 30.0,
+              "expected": 30.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "hingeRibStartZ": {
+              "found": true,
+              "value": 242.0,
+              "expected": 242.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "hingeRibEndZ": {
+              "found": true,
+              "value": 246.0,
+              "expected": 246.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "hingeInnerX": {
+              "found": true,
+              "value": 12.6,
+              "expected": 12.6,
+              "file": "main.py",
+              "ok": true
+            },
+            "hingeOuterX": {
+              "found": true,
+              "value": 16.2,
+              "expected": 16.2,
+              "file": "main.py",
+              "ok": true
+            },
+            "hingeNotchWidth": {
+              "found": true,
+              "value": 4.1,
+              "expected": 4.1,
+              "file": "main.py",
+              "ok": true
+            },
+            "hingeRadius": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "hingeSeatY": {
+              "found": true,
+              "value": -2.28,
+              "expected": -2.28,
+              "file": "main.py",
+              "ok": true
+            },
+            "hingeSeatZ": {
+              "found": true,
+              "value": 244.0,
+              "expected": 244.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "hingeFloorY": {
+              "found": true,
+              "value": -4.29,
+              "expected": -4.29,
+              "file": "main.py",
+              "ok": true
+            },
+            "servoLedgeZ": {
+              "found": true,
+              "value": 214.85,
+              "expected": 214.85,
+              "file": "main.py",
+              "ok": true
+            },
+            "widthStartZ": {
+              "found": true,
+              "value": 202.0,
+              "expected": 202.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "widthEndZ": {
+              "found": true,
+              "value": 249.3,
+              "expected": 249.3,
+              "file": "main.py",
+              "ok": true
+            },
+            "tipHalfWidth": {
+              "found": true,
+              "value": 13.1,
+              "expected": 13.1,
+              "file": "main.py",
+              "ok": true
+            },
+            "widthEndSlope": {
+              "found": true,
+              "value": -0.4,
+              "expected": -0.4,
+              "file": "main.py",
+              "ok": true
+            },
+            "crownStartZ": {
+              "found": true,
+              "value": 185.0,
+              "expected": 185.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "crownEndZ": {
+              "found": true,
+              "value": 256.7,
+              "expected": 256.7,
+              "file": "main.py",
+              "ok": true
+            },
+            "browY": {
+              "found": true,
+              "value": 7.8,
+              "expected": 7.8,
+              "file": "main.py",
+              "ok": true
+            },
+            "crownEndSlope": {
+              "found": true,
+              "value": -0.72,
+              "expected": -0.72,
+              "file": "main.py",
+              "ok": true
+            },
+            "keelStartZ": {
+              "found": true,
+              "value": 125.0,
+              "expected": 125.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "keelEndZ": {
+              "found": true,
+              "value": 249.3,
+              "expected": 249.3,
+              "file": "main.py",
+              "ok": true
+            },
+            "tipKeelY": {
+              "found": true,
+              "value": -22.9,
+              "expected": -22.9,
+              "file": "main.py",
+              "ok": true
+            },
+            "keelEndSlope": {
+              "found": true,
+              "value": 0.35,
+              "expected": 0.35,
+              "file": "main.py",
+              "ok": true
+            },
+            "morphLength": {
+              "found": true,
+              "value": 23.0,
+              "expected": 23.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "splitStartY": {
+              "found": true,
+              "value": 15.0,
+              "expected": 15.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "splitLength": {
+              "found": true,
+              "value": 14.0,
+              "expected": 14.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "fanDiameter": {
+              "found": true,
+              "value": 38.0,
+              "expected": 38.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "fanCenterY": {
+              "found": true,
+              "value": 3.6,
+              "expected": 3.6,
+              "file": "main.py",
+              "ok": true
+            },
+            "fanCenterZ": {
+              "found": true,
+              "value": 63.0,
+              "expected": 63.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "fanPlenumMin": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "alephToSkinMin": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "shellSlideTravel": {
+              "found": true,
+              "value": 250.0,
+              "expected": 250.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "coverSlideTravel": {
+              "found": true,
+              "value": 180.0,
+              "expected": 180.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "skirtBandInnerX": {
+              "found": true,
+              "value": 26.4,
+              "expected": 26.4,
+              "file": "main.py",
+              "ok": true
+            },
+            "skirtBandOuterX": {
+              "found": true,
+              "value": 29.2,
+              "expected": 29.2,
+              "file": "main.py",
+              "ok": true
+            },
+            "skirtBandBottomY": {
+              "found": true,
+              "value": 14.8,
+              "expected": 14.8,
+              "file": "main.py",
+              "ok": true
+            },
+            "skirtBandTopY": {
+              "found": true,
+              "value": 22.2,
+              "expected": 22.2,
+              "file": "main.py",
+              "ok": true
+            },
+            "cornerRadius": {
+              "found": true,
+              "value": 7.0,
+              "expected": 7.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "grilleBarWidth": {
+              "found": true,
+              "value": 1.2,
+              "expected": 1.2,
+              "file": "main.py",
+              "ok": true
+            },
+            "grillePitch": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "grilleBarOffset": {
+              "found": true,
+              "value": 6.5,
+              "expected": 6.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "louverBarWidth": {
+              "found": true,
+              "value": 1.2,
+              "expected": 1.2,
+              "file": "main.py",
+              "ok": true
+            },
+            "roofUndersideY": {
+              "found": true,
+              "value": 34.5,
+              "expected": 34.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "padTotalThickness": {
+              "found": true,
+              "value": 3.6,
+              "expected": 3.6,
+              "file": "main.py",
+              "ok": true
+            },
+            "slidePadGap": {
+              "found": true,
+              "value": 0.4,
+              "expected": 0.4,
+              "file": "main.py",
+              "ok": true
+            },
+            "ribSideHalfY": {
+              "found": true,
+              "value": 20.5,
+              "expected": 20.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "ribKeelHalfX": {
+              "found": true,
+              "value": 14.0,
+              "expected": 14.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "camEarClearRadius": {
+              "found": true,
+              "value": 6.3,
+              "expected": 6.3,
+              "file": "main.py",
+              "ok": true
+            },
+            "camEarClearHalfX": {
+              "found": true,
+              "value": 12.4,
+              "expected": 12.4,
+              "file": "main.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {
+            "innerWidth": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "innerHeight": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "rearTabEndZ": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "rearScrewZ": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "sledPadX": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "screwLength": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "screwTipX": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "insertEngagement": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "hingeFloorY": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "fanDiameter": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "fanCenterY": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "fanCenterZ": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "fanPlenumMin": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "alephToSkinMin": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "shellSlideTravel": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "coverSlideTravel": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "padTotalThickness": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "slidePadGap": {
+              "defined_in": "main.py",
+              "edit_test": false,
+              "ok": true
+            }
+          },
+          "lines": 706,
+          "numeric_literals": 714,
+          "source_size": {
+            "lines": 706,
+            "numeric_literals": 714,
+            "max_lines": 4000,
+            "max_literals": 6000,
+            "ok": true
+          },
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/main-shell/export.json step.deterministic = True sha256 56f35415739b; stl=present; glb=present",
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json valid = True solids = 1 (expected 1)",
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = False; manifold witness = 93944.01937103784"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/sprite-aleph-v2/parts/main-shell/export/sprite-aleph-v2-main-shell.step",
+            "sha256": "56f35415739b1d51b6973745f711014f75c9d7ca92012096fde7b97a30332af6",
+            "bytes": 10495684,
+            "deterministic": true,
+            "second_sha256": "56f35415739b1d51b6973745f711014f75c9d7ca92012096fde7b97a30332af6"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/sprite-aleph-v2/parts/main-shell/export/sprite-aleph-v2-main-shell.stl",
+            "sha256": "bc5cf1a3186417398bdd62911b90293962ef167801df36051141461082238668",
+            "bytes": 5685584
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/sprite-aleph-v2/parts/main-shell/export/sprite-aleph-v2-main-shell.glb",
+            "sha256": "1992af05202da67af5b1648bd7e84eb95a73bcbffe77a4526774a26305815c55",
+            "bytes": 2047056
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 93944.01937103784,
+          "faces": 113710,
+          "vertices": 56811,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 93944.02170843892,
+          "surface_area": 128823.2581034868,
+          "bbox_min": [
+            -93.99237823486328,
+            -93.99529266357422,
+            0.0
+          ],
+          "bbox_max": [
+            93.99237823486328,
+            93.99529266357422,
+            249.3000030517578
+          ],
+          "center_of_mass": [
+            1.2071246773302233,
+            -10.789749668600209,
+            89.84387487092894
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0f4a6-ca75-7f70-9495-14a1dd7bac5f; engine versions ['0.12.0']; engine calls 7; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 7,
+        "allow_errors": false,
+        "engine_versions": [
+          "0.12.0"
+        ],
+        "zoo_versions": [
+          "0.12.0"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/main-shell/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = prototype; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "prototype",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present, no traced geometry",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/main-shell/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 85, 'has_result': True} lines = 706"
+      ],
+      "failure_means": "the deliverable is a re-export or a trace of the reference, not a design",
+      "knob": "rebuild from construction with dimensions as parameters; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "math",
+          "build123d"
+        ],
+        "construction_ops": {
+          "calls": 85,
+          "has_result": true
+        },
+        "sketch_blocks": 85,
+        "feature_ops": 85,
+        "source_size": {
+          "lines": 706,
+          "numeric_literals": 714,
+          "max_lines": 4000,
+          "max_literals": 6000,
+          "ok": true
+        }
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

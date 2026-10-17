@@ -1,0 +1,1247 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/aleph-stack/parts/module/contract.yaml: 29 parameters {'stated': 28, 'derived': 1}; sources unresolved {}; unanchored 27",
+        "open questions: 6 (blocking []); interfaces 3, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 28,
+          "derived": 1
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "SoC lid: the STEP gives x 23.67..45.93, y 14.73..34.89, top z = 3.826; the contract keeps the intent's rounded 23.7/45.9/14.7/34.9/3.83 (tolerances 0.05/0.01), so the lid is 0.06 narrower in x, 0.04 deeper in y and 0.004 taller than the file.",
+          "Key notch depth: the intent's 'from y = 0 to 3.5 with an R0.5 end' is read as the STEP shows it: straight walls to y = 3.5, end arc centred at y = 3.5, deepest point y = 4.0.",
+          "Keep-out shells (top-side components to z = 6.28 under the heatsink, bottom-side to z = -1.4) are not modelled; enclosure clearance checks must add them from the STEP.",
+          "Gold fingers, components, DRAM and the SoC die are not modelled; the lid block stands in for the SoC package.",
+          "Function of the two D1.8 holes (one is the STEP origin) is not stated in the sources.",
+          "Material and density are unknown (mixed FR-4 and SoC); no mass claim is made."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [
+          "pcbWidth",
+          "pcbThickness",
+          "cornerRadius",
+          "keyNotchX",
+          "keyNotchWidth",
+          "keyNotchDepth",
+          "keyNotchEntryRadius",
+          "sideNotchDepth",
+          "sideNotchYMin",
+          "sideNotchYMax",
+          "sideNotchCornerRadius",
+          "heatsinkHoleDiameter",
+          "heatsinkPatternX",
+          "heatsinkPatternY",
+          "heatsinkPatternCx",
+          "heatsinkPatternCy",
+          "mountHoleDiameter",
+          "mountHoleX",
+          "mountHoleY",
+          "smallHoleDiameter",
+          "smallHoleX",
+          "smallHoleY",
+          "socXMin",
+          "socXMax",
+          "socYMin",
+          "socYMax",
+          "socTop"
+        ],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "bottom",
+          "mountHoleLeft",
+          "mountHoleRight",
+          "fingerEdge",
+          "keyNotchEnd",
+          "socTop",
+          "heatsinkHoleA",
+          "heatsinkHoleB",
+          "heatsinkHoleC",
+          "heatsinkHoleD"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/module/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/build123d/aleph-stack/parts/module/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            69.6,
+            45.0,
+            3.83
+          ],
+          "measured_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            69.6,
+            45.0,
+            3.83
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            69.6,
+            45.0,
+            3.83
+          ],
+          "measured_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            69.6,
+            45.0,
+            3.83
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/module/inspect.json volume = 4857.392 vs 4857.39",
+        "results/build123d/aleph-stack/parts/module/inspect.json surface_area = 6725.2686 vs 6725.27",
+        "results/build123d/aleph-stack/parts/module/inspect.json center_of_mass = [34.7966, 23.0319, 1.065] vs [34.797, 23.032, 1.065]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 4857.39,
+          "measured": 4857.392,
+          "error": 0.002,
+          "band": 2.0,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 6725.27,
+          "measured": 6725.2686,
+          "error": 0.0014,
+          "band": 3.0,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            34.797,
+            23.032,
+            1.065
+          ],
+          "measured": [
+            34.7966,
+            23.0319,
+            1.065
+          ],
+          "errors": [
+            0.0004,
+            0.0001,
+            0.0
+          ],
+          "tolerance": 0.02,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/module/inspect.json features: 7/7 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "heatsinkHoleA": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "heatsinkHoleB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "heatsinkHoleC": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "heatsinkHoleD": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "mountHoleLeft": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "mountHoleRight": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "smallHoleLeft": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "smallHoleRight": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "keyNotchEnd": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "keyNotchEntryLeft": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "keyNotchEntryRight": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "sideNotchCornerLL": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "sideNotchCornerLU": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "sideNotchCornerRL": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "sideNotchCornerRU": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "cornerA": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "cornerB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "cornerC": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "cornerD": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "bottom": {
+            "ok": true,
+            "kind": "face"
+          },
+          "mountHoleLeft": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "mountHoleRight": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "fingerEdge": {
+            "ok": true,
+            "kind": "face"
+          },
+          "keyNotchEnd": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "socTop": {
+            "ok": true,
+            "kind": "face"
+          },
+          "heatsinkHoleA": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "heatsinkHoleB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "heatsinkHoleC": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "heatsinkHoleD": {
+            "ok": true,
+            "kind": "cylinder"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/module/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/module/inspect.json agreement engine=4857.392028070939 step=4857.392028070944 stl=4857.886648514036 (rel tol 0.002; independent=False)",
+        "results/build123d/aleph-stack/parts/module/inspect.json agreement.manifold = 4857.886648514036 (Manifold kernel witness, rel vs STEP 0.00010182839685025278; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 4857.392028070939,
+        "kcl": 4857.392028070939,
+        "step": 4857.392028070944,
+        "stl": 4857.886648514036,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "manifold": 4857.886648514036,
+        "manifold_vs_step_rel": 0.00010182839685025278,
+        "engine_vs_step_rel": 1.1234358229893047e-15,
+        "kcl_vs_step_rel": 1.1234358229893047e-15,
+        "stl_vs_step_rel": 0.00010182839685025278,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/module/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 6/6 values; infeasible refused 3/3; interfaces pinned 10"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "pcbThickness",
+            "delta": 0.2,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 523.31,
+                "measured": 523.3111380118244,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 8,
+                "driven": [
+                  "bottom",
+                  "cornerA",
+                  "cornerB",
+                  "cornerC",
+                  "cornerD",
+                  "lengthX",
+                  "pcbMid",
+                  "pcbThick",
+                  "pcbTop",
+                  "seatHeight",
+                  "socMid",
+                  "socTop",
+                  "widthY"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 1.0,
+                  "volume": 4334.080890059121,
+                  "bbox_size": [
+                    69.6,
+                    45.0,
+                    3.83
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -523.3111380118235,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 1.2,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 1.6,
+                  "volume": 5904.01430409459,
+                  "bbox_size": [
+                    69.6,
+                    45.0,
+                    3.83
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 1046.622276023646,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -1.2,
+                  "value": 0.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: pcbThickness must be positive\", \"class\": \"program\", \"timings\": {\"failed_s\": 2.884, \"main_s\": 2.884}}"
+                },
+                {
+                  "delta": 3.0,
+                  "value": 4.2,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: socTop must exceed pcbThickness\", \"class\": \"program\", \"timings\": {\"failed_s\": 2.954, \"main_s\": 2.954}}"
+                }
+              ],
+              "declared": 2,
+              "refused": 2,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "sideNotchDepth",
+            "delta": 0.25,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -2.4,
+                "measured": -2.4000000000060027,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 10,
+                "driven": [
+                  "leftNotchFloor",
+                  "notchSpan",
+                  "rightNotchFloor",
+                  "sideNotchCornerLL",
+                  "sideNotchCornerLU",
+                  "sideNotchCornerRL",
+                  "sideNotchCornerRU",
+                  "sideNotches"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 1.25,
+                  "volume": 4862.192028070955,
+                  "bbox_size": [
+                    69.6,
+                    45.0,
+                    3.83
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 4.800000000010186,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 1.75,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 2.25,
+                  "volume": 4852.592028070933,
+                  "bbox_size": [
+                    69.6,
+                    45.0,
+                    3.83
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -4.800000000011096,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -1.75,
+                  "value": 0.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: sideNotchDepth must exceed sideNotchCornerRadius and be at most 10\", \"class\": \"program\", \"timings\": {\"failed_s\": 2.947, \"main_s\": 2.947}}"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "bfe22499fdd348910ceb904fe3cb5fff49b0d3156bf157f3f94b06c14a9436ce",
+          "re_export_sha256": "bfe22499fdd348910ceb904fe3cb5fff49b0d3156bf157f3f94b06c14a9436ce",
+          "ok": true
+        },
+        "sweep": {
+          "values": 6,
+          "passed": 6
+        },
+        "infeasible": {
+          "declared": 3,
+          "refused": 3
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/module/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=13",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "build123d",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "build123d"
+          ],
+          "forbidden_imports": [],
+          "asserts": 13,
+          "sketch_blocks": 7,
+          "feature_ops": 7,
+          "construction_ops": {
+            "calls": 7,
+            "has_result": true
+          },
+          "parameters": {
+            "pcbLength": {
+              "found": true,
+              "value": 69.6,
+              "expected": 69.6,
+              "file": "main.py",
+              "ok": true
+            },
+            "pcbWidth": {
+              "found": true,
+              "value": 45.0,
+              "expected": 45.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "pcbThickness": {
+              "found": true,
+              "value": 1.2,
+              "expected": 1.2,
+              "file": "main.py",
+              "ok": true
+            },
+            "cornerRadius": {
+              "found": true,
+              "value": 0.6,
+              "expected": 0.6,
+              "file": "main.py",
+              "ok": true
+            },
+            "keyNotchX": {
+              "found": true,
+              "value": 38.3,
+              "expected": 38.3,
+              "file": "main.py",
+              "ok": true
+            },
+            "keyNotchWidth": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "keyNotchDepth": {
+              "found": true,
+              "value": 3.5,
+              "expected": 3.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "keyNotchEndRadius": {
+              "found": true,
+              "value": 0.5,
+              "expected": 0.5,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            },
+            "keyNotchEntryRadius": {
+              "found": true,
+              "value": 0.25,
+              "expected": 0.25,
+              "file": "main.py",
+              "ok": true
+            },
+            "sideNotchDepth": {
+              "found": true,
+              "value": 1.75,
+              "expected": 1.75,
+              "file": "main.py",
+              "ok": true
+            },
+            "sideNotchYMin": {
+              "found": true,
+              "value": 18.0,
+              "expected": 18.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "sideNotchYMax": {
+              "found": true,
+              "value": 22.0,
+              "expected": 22.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "sideNotchCornerRadius": {
+              "found": true,
+              "value": 0.65,
+              "expected": 0.65,
+              "file": "main.py",
+              "ok": true
+            },
+            "heatsinkHoleDiameter": {
+              "found": true,
+              "value": 3.2,
+              "expected": 3.2,
+              "file": "main.py",
+              "ok": true
+            },
+            "heatsinkPatternX": {
+              "found": true,
+              "value": 43.2,
+              "expected": 43.2,
+              "file": "main.py",
+              "ok": true
+            },
+            "heatsinkPatternY": {
+              "found": true,
+              "value": 28.8,
+              "expected": 28.8,
+              "file": "main.py",
+              "ok": true
+            },
+            "heatsinkPatternCx": {
+              "found": true,
+              "value": 34.8,
+              "expected": 34.8,
+              "file": "main.py",
+              "ok": true
+            },
+            "heatsinkPatternCy": {
+              "found": true,
+              "value": 24.81,
+              "expected": 24.81,
+              "file": "main.py",
+              "ok": true
+            },
+            "mountHoleDiameter": {
+              "found": true,
+              "value": 2.75,
+              "expected": 2.75,
+              "file": "main.py",
+              "ok": true
+            },
+            "mountHoleX": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "mountHoleY": {
+              "found": true,
+              "value": 42.0,
+              "expected": 42.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "smallHoleDiameter": {
+              "found": true,
+              "value": 1.8,
+              "expected": 1.8,
+              "file": "main.py",
+              "ok": true
+            },
+            "smallHoleX": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "smallHoleY": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "socXMin": {
+              "found": true,
+              "value": 23.7,
+              "expected": 23.7,
+              "file": "main.py",
+              "ok": true
+            },
+            "socXMax": {
+              "found": true,
+              "value": 45.9,
+              "expected": 45.9,
+              "file": "main.py",
+              "ok": true
+            },
+            "socYMin": {
+              "found": true,
+              "value": 14.7,
+              "expected": 14.7,
+              "file": "main.py",
+              "ok": true
+            },
+            "socYMax": {
+              "found": true,
+              "value": 34.9,
+              "expected": 34.9,
+              "file": "main.py",
+              "ok": true
+            },
+            "socTop": {
+              "found": true,
+              "value": 3.83,
+              "expected": 3.83,
+              "file": "main.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 151,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/module/export.json step.deterministic = True sha256 bfe22499fdd3; stl=present; glb=present",
+        "results/build123d/aleph-stack/parts/module/inspect.json valid = True solids = 1 (expected 1)",
+        "results/build123d/aleph-stack/parts/module/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = False; manifold witness = 4857.886648514036"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/aleph-stack/parts/module/export/aleph-stack-module.step",
+            "sha256": "bfe22499fdd348910ceb904fe3cb5fff49b0d3156bf157f3f94b06c14a9436ce",
+            "bytes": 146216,
+            "deterministic": true,
+            "second_sha256": "bfe22499fdd348910ceb904fe3cb5fff49b0d3156bf157f3f94b06c14a9436ce",
+            "determinism_source": "edit restore re-export"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/aleph-stack/parts/module/export/aleph-stack-module.stl",
+            "sha256": "022d4cd45042c5ab29e043b96184ff625434af0636ca2aad2bae73c3f95dc3cc",
+            "bytes": 66284
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/aleph-stack/parts/module/export/aleph-stack-module.glb",
+            "sha256": "881af883272ac2dc04be76fc3f7dad79e767bd7754401b4688504bcf80eb9faa",
+            "bytes": 24408
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 4857.886648514036,
+          "faces": 1324,
+          "vertices": 648,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 4857.886648514036,
+          "surface_area": 6725.892235674713,
+          "bbox_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bbox_max": [
+            69.5999984741211,
+            45.0,
+            3.8299999237060547
+          ],
+          "center_of_mass": [
+            34.79661359389241,
+            23.03233000713142,
+            1.0649235429579047
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 136a0eca-937c-4240-9bf1-07e4c316de78; engine versions ['0.12.0']; engine calls 11; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 11,
+        "allow_errors": false,
+        "engine_versions": [
+          "0.12.0"
+        ],
+        "zoo_versions": [
+          "0.12.0"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/module/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/aleph-stack/parts/module/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 7, 'has_result': True} lines = 151"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "build123d"
+        ],
+        "construction_ops": {
+          "calls": 7,
+          "has_result": true
+        },
+        "sketch_blocks": 7,
+        "feature_ops": 7
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

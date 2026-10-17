@@ -1,0 +1,112 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import plateThickness, lugMaxZ, bodyTopZ, lugWebPeakX, filamentDiameter, filamentTransverseX, filamentZ, filamentTransverseEnd, filamentEntryAxisX, filamentEntryAxisY, filamentDirX, filamentDirY, filamentEntryStart, filamentEntryEnd, lugNutX, lugNutZ, lugBossDiameter from "params.kcl"
+
+// Contract literals and their individual bounds are in the shared params.kcl.
+// This module owns only the two finite cylinder segments, not their connection.
+filamentRadius = filamentDiameter / 2
+directionLength = sqrt(filamentDirX ^ 2 + filamentDirY ^ 2)
+entryDx = filamentDirX / directionLength
+entryDy = filamentDirY / directionLength
+entryAngle = atan2(y = filamentDirY: mm, x = filamentDirX: mm)
+entryStartX = filamentEntryAxisX + entryDx * filamentEntryStart
+entryStartY = filamentEntryAxisY + entryDy * filamentEntryStart
+entryEndX = filamentEntryAxisX + entryDx * filamentEntryEnd
+entryEndY = filamentEntryAxisY + entryDy * filamentEntryEnd
+mouthOverrun = 0.02mm
+booleanTolerance = 0.001mm
+
+// Fixed partition boundaries: edits may not borrow a neighbour's material.
+ownedMinX = 12.6mm
+ownedMaxX = 23.3mm
+ownedMinZ = 28mm
+ownedMaxZ = 32.1mm
+assert(
+  filamentDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = lugBossDiameter,
+  error = "Filament diameter must fit the upper web",
+)
+assert(directionLength, isGreaterThan = 0_, error = "Angled filament axis must have a nonzero direction")
+assert(
+  filamentDirX,
+  isGreaterThan = 0_,
+  isLessThan = 1_,
+  error = "Angled filament axis must point toward positive x",
+)
+assert(
+  filamentDirY,
+  isGreaterThan = 0_,
+  isLessThan = 1_,
+  error = "Angled filament axis must point toward positive y",
+)
+assert(filamentZ - filamentRadius, isGreaterThanOrEqual = ownedMinZ, error = "Filament passages must not cut below their partition")
+assert(filamentZ - filamentRadius, isGreaterThanOrEqual = bodyTopZ, error = "Filament passages must preserve the lower top ledges")
+assert(filamentZ + filamentRadius, isLessThan = ownedMaxZ, error = "Filament passages must remain inside their upper partition")
+assert(filamentZ + filamentRadius, isLessThan = lugMaxZ, error = "The web peak must remain above the passages")
+assert(filamentTransverseX - filamentRadius, isGreaterThan = ownedMinX, error = "Transverse bore must preserve its left neighbour")
+assert(filamentTransverseX + filamentRadius, isLessThan = ownedMaxX, error = "Transverse bore must remain inside its right partition")
+assert(filamentTransverseX, isLessThan = lugWebPeakX, error = "Transverse axis must remain on the lug side of the web peak")
+assert(
+  filamentTransverseEnd,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness - 0.1mm,
+  error = "Transverse bore must stop before the front face",
+)
+assert(
+  filamentEntryStart,
+  isGreaterThan = 0mm,
+  isLessThan = filamentEntryEnd,
+  error = "Angled bore must use its finite positive t range",
+)
+assert(entryStartX - (filamentRadius * entryDy), isGreaterThan = ownedMinX, error = "Angled bore must preserve its left neighbour")
+assert(entryEndX + filamentRadius * entryDy, isLessThan = ownedMaxX, error = "Angled bore must remain inside its right partition")
+assert(entryStartY - (filamentRadius * entryDx), isGreaterThan = 0.1mm, error = "Angled bore must stop short of the back face")
+assert(entryEndY + filamentRadius * entryDx, isLessThan = plateThickness - 0.1mm, error = "Angled bore must stop short of the front face")
+assert(sqrt((filamentTransverseX - lugNutX): mm ^ 2 + (filamentZ - lugNutZ): mm ^ 2): mm, isGreaterThan = lugBossDiameter / 2, error = "Filament axis must remain outside the lug boss and its fastener stack")
+
+export fn filament(@body) {
+  // Temporary XY cylinders avoid face-local frames. Only the transverse
+  // mouth overruns into air at the shared y=0 datum; internal ends stay exact.
+  transverseSketch = sketch(on = XY) {
+    c = circle(center = [0mm, 0mm], start = [filamentRadius, 0mm])
+  }
+  transverseRegion = region(segments = [transverseSketch.c])
+  transverseRaw = extrude(transverseRegion, length = filamentTransverseEnd + mouthOverrun, method = NEW)
+  transverse = rotate(transverseRaw, roll = -90deg, global = true)
+    |> translate(
+         x = filamentTransverseX,
+         y = -mouthOverrun,
+         z = filamentZ,
+         global = true,
+       )
+
+  angledSketch = sketch(on = XY) {
+    c = circle(center = [0mm, 0mm], start = [filamentRadius, 0mm])
+  }
+  angledRegion = region(segments = [angledSketch.c])
+  angledRaw = extrude(angledRegion, length = filamentEntryEnd - filamentEntryStart, method = NEW)
+  angled = rotate(angledRaw, pitch = 90deg, global = true)
+    |> rotate(yaw = entryAngle, global = true)
+    |> translate(
+         x = entryStartX,
+         y = entryStartY,
+         z = filamentZ,
+         global = true,
+       )
+
+  passageTools = union([transverse, angled], tolerance = booleanTolerance)
+  cutBody = subtract(body, tools = passageTools, tolerance = booleanTolerance)
+  finished = clone(cutBody)
+  hide([transverseRegion, angledRegion])
+  hide([
+    body,
+    transverseRaw,
+    transverse,
+    angledRaw,
+    angled,
+    passageTools,
+    cutBody
+  ])
+  return finished
+}

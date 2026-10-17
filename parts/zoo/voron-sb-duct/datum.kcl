@@ -1,0 +1,359 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Envelope body of voron-sb-duct: the full bounding prism of the passed blockout
+// (x -halfWidth..+halfWidth, y frontY..backY, z nozzleEndZ..topZ) before every functional cut.
+// Native datums: centre plane x = 0, back mating plane y = 0, nozzle end z = 2.367.
+// The feature modules (hotendCavity, leftDuct, rightDuct, topFasteners, rearInterface) cut or add
+// everything else. All contract parameters are imported so every edit fails loudly here if infeasible.
+import overallWidth, overallDepth, nozzleEndZ, topZ, backY, overallHeight, halfWidth, frontY, ductCount, outletsPerDuct, ductWidth, ductDepth, ductWall, wallMinimum, hotendCavityWidth, hotendCavityHeight, hotendCavityBottomZ, hotendCavityTopZ, fanOpeningDiameter, fanCenterZ, ductMidCenterX, ductMidCenterY, leftInletCenterX, rightInletCenterX, leftInletWidth, rightInletWidth, inletDepth, inletCenterY, topHoleAx, topHoleAy, topHoleBx, topHoleBy, topPilotDiameter, topCounterboreDiameter, topPilotStartZ, topBoreCylinderEndZ, topCounterboreDepth, upperMountHalfSpacing, upperMountZ, upperMountDiameter, upperMountLeftStartY, upperMountRightStartY, rearBoreEndY, auxLowerX, auxLowerZ, auxUpperX, auxUpperZ, auxBoreDiameter, auxLowerStartY, auxUpperStartY, lowerMountHalfSpacing, lowerMountZ, lowerMountDiameter, lowerMountBoreLength, rearCableNotchDiameter, topCounterboreFloorZ, topPilotLength from "params.kcl"
+
+// Feasibility inequalities only, never locks between parameters (contract formulas:
+// overallHeight = topZ - nozzleEndZ, halfWidth = overallWidth / 2, frontY = backY - overallDepth,
+// hotendCavityTopZ = hotendCavityBottomZ + hotendCavityHeight,
+// topCounterboreFloorZ = topBoreCylinderEndZ - topCounterboreDepth,
+// topPilotLength = topCounterboreFloorZ - topPilotStartZ).
+assert(overallWidth, isGreaterThan = 0mm, error = "Envelope width must be positive.")
+assert(overallDepth, isGreaterThan = 0mm, error = "Envelope depth must be positive.")
+assert(
+  nozzleEndZ,
+  isGreaterThan = 0mm,
+  isLessThan = topZ,
+  error = "Nozzle end must remain above the native origin and below the top.",
+)
+assert(topZ, isGreaterThan = nozzleEndZ, error = "Top must be above the nozzle end.")
+assert(backY, isGreaterThan = frontY, error = "Back datum must be behind the front face.")
+assert(overallHeight, isGreaterThan = 0mm, error = "Declared envelope height must be positive.")
+assert(
+  halfWidth,
+  isGreaterThan = 0mm,
+  isLessThan = overallWidth,
+  error = "Declared half width must fit within the full width.",
+)
+assert(frontY, isLessThan = backY, error = "Declared front face must be forward of the back datum.")
+assert(
+  ductCount,
+  isGreaterThanOrEqual = 1,
+  isLessThan = overallWidth / (ductWidth + 2 * ductWall),
+  error = "Duct count must be positive and leave room for walls.",
+)
+assert(
+  outletsPerDuct,
+  isGreaterThanOrEqual = 1,
+  isLessThan = ductDepth / ductWall,
+  error = "Outlet count must be positive and leave room for dividers.",
+)
+assert(
+  ductWidth,
+  isGreaterThan = 0mm,
+  isLessThan = overallWidth / ductCount - (2 * ductWall),
+  error = "Duct width must be positive and fit its side of the envelope.",
+)
+assert(
+  ductDepth,
+  isGreaterThan = 0mm,
+  isLessThan = overallDepth - (2 * ductWall),
+  error = "Duct depth must leave front and rear walls.",
+)
+assert(
+  ductWall,
+  isGreaterThan = 0mm,
+  isLessThan = ductWidth / 2,
+  error = "Duct wall must be positive and smaller than half the channel width.",
+)
+assert(
+  wallMinimum,
+  isGreaterThan = 0mm,
+  isLessThanOrEqual = ductWall,
+  error = "Minimum wall must be positive and no greater than nominal wall.",
+)
+assert(
+  hotendCavityWidth,
+  isGreaterThan = 0mm,
+  isLessThan = overallWidth - (ductCount * (ductWidth + 2 * ductWall)),
+  error = "Hotend cavity width must leave space for both duct bodies.",
+)
+assert(
+  hotendCavityHeight,
+  isGreaterThan = 0mm,
+  isLessThan = topZ - nozzleEndZ,
+  error = "Hotend cavity height must fit within the envelope.",
+)
+assert(
+  hotendCavityBottomZ,
+  isGreaterThan = nozzleEndZ,
+  isLessThan = topZ - hotendCavityHeight,
+  error = "Hotend cavity bottom and height must fit between nozzle end and roof.",
+)
+assert(
+  hotendCavityTopZ,
+  isGreaterThan = hotendCavityBottomZ,
+  isLessThan = topZ,
+  error = "Declared cavity top must be above its bottom and below the roof.",
+)
+assert(
+  fanOpeningDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = overallWidth - (2 * ductWall),
+  error = "Fan opening diameter must be positive and fit the housing width.",
+)
+assert(
+  fanCenterZ,
+  isGreaterThan = nozzleEndZ,
+  isLessThan = topZ,
+  error = "Fan center must lie within the housing height.",
+)
+assert(
+  ductMidCenterX,
+  isGreaterThan = ductWidth / 2 + ductWall,
+  isLessThan = overallWidth / 2 - (ductWidth / 2) - ductWall,
+  error = "Mirrored duct centers must leave separate channels and outer walls.",
+)
+assert(
+  ductMidCenterY,
+  isGreaterThan = backY - overallDepth + ductDepth / 2 + ductWall,
+  isLessThan = backY - (ductDepth / 2) - ductWall,
+  error = "Middle duct station must leave front and rear walls.",
+)
+assert(
+  leftInletCenterX,
+  isGreaterThan = -overallWidth / 2 + leftInletWidth / 2 + ductWall,
+  isLessThan = -leftInletWidth / 2 - ductWall,
+  error = "Left inlet must fit inside the negative-x side.",
+)
+assert(
+  rightInletCenterX,
+  isGreaterThan = rightInletWidth / 2 + ductWall,
+  isLessThan = overallWidth / 2 - (rightInletWidth / 2) - ductWall,
+  error = "Right inlet must fit inside the positive-x side.",
+)
+assert(
+  leftInletWidth,
+  isGreaterThan = 0mm,
+  isLessThan = overallWidth / 2 - (2 * ductWall),
+  error = "Left inlet width must be positive and leave rim material.",
+)
+assert(
+  rightInletWidth,
+  isGreaterThan = 0mm,
+  isLessThan = overallWidth / 2 - (2 * ductWall),
+  error = "Right inlet width must be positive and leave rim material.",
+)
+assert(
+  inletDepth,
+  isGreaterThan = 0mm,
+  isLessThan = overallDepth - (2 * ductWall),
+  error = "Inlet depth must be positive and leave rim material.",
+)
+assert(
+  inletCenterY,
+  isGreaterThan = backY - overallDepth + inletDepth / 2 + ductWall,
+  isLessThan = backY - (inletDepth / 2) - ductWall,
+  error = "Inlet depth and position must fit inside the envelope.",
+)
+assert(
+  topHoleAx,
+  isGreaterThan = -overallWidth / 2 + topCounterboreDiameter / 2 + ductWall,
+  isLessThan = overallWidth / 2 - (topCounterboreDiameter / 2) - ductWall,
+  error = "Top fastener A must leave material at both x boundaries.",
+)
+assert(
+  topHoleAy,
+  isGreaterThan = backY - overallDepth + topCounterboreDiameter / 2 + ductWall,
+  isLessThan = backY - (topCounterboreDiameter / 2) - ductWall,
+  error = "Top fastener A must leave material at front and back.",
+)
+assert(
+  topHoleBx,
+  isGreaterThan = -overallWidth / 2 + topCounterboreDiameter / 2 + ductWall,
+  isLessThan = overallWidth / 2 - (topCounterboreDiameter / 2) - ductWall,
+  error = "Top fastener B must leave material at both x boundaries.",
+)
+assert(
+  topHoleBy,
+  isGreaterThan = backY - overallDepth + topCounterboreDiameter / 2 + ductWall,
+  isLessThan = backY - (topCounterboreDiameter / 2) - ductWall,
+  error = "Top fastener B must leave material at front and back.",
+)
+assert(
+  topPilotDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = topCounterboreDiameter,
+  error = "Top pilot diameter must be positive and smaller than the counterbore.",
+)
+assert(
+  topCounterboreDiameter,
+  isGreaterThan = topPilotDiameter,
+  isLessThan = overallDepth - (2 * ductWall),
+  error = "Top counterbore must exceed its pilot diameter and fit the roof.",
+)
+assert(
+  topPilotStartZ,
+  isGreaterThan = nozzleEndZ,
+  isLessThan = topBoreCylinderEndZ - topCounterboreDepth,
+  error = "Top pilot must start below the driven counterbore floor and above the nozzle end.",
+)
+assert(
+  topBoreCylinderEndZ,
+  isGreaterThan = topPilotStartZ + topCounterboreDepth,
+  isLessThan = topZ,
+  error = "Top cylindrical bore must leave a positive pilot length and a top entry.",
+)
+assert(
+  topCounterboreDepth,
+  isGreaterThan = 0mm,
+  isLessThan = topBoreCylinderEndZ - topPilotStartZ,
+  error = "Counterbore depth must be positive and leave pilot material below its floor.",
+)
+assert(
+  upperMountHalfSpacing,
+  isGreaterThan = upperMountDiameter / 2 + ductWall,
+  isLessThan = overallWidth / 2 - (upperMountDiameter / 2) - ductWall,
+  error = "Upper screw pair must remain separated and within the side boundaries.",
+)
+assert(
+  upperMountZ,
+  isGreaterThan = nozzleEndZ + upperMountDiameter / 2 + ductWall,
+  isLessThan = topZ - (upperMountDiameter / 2) - ductWall,
+  error = "Upper screws must leave material above and below.",
+)
+assert(
+  upperMountDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = 2 * upperMountHalfSpacing - (2 * ductWall),
+  error = "Upper screw diameter must be positive and preserve separate bores.",
+)
+assert(
+  upperMountLeftStartY,
+  isGreaterThan = backY - overallDepth,
+  isLessThan = rearBoreEndY,
+  error = "Left upper bore must begin inside the envelope before its rear end.",
+)
+assert(
+  upperMountRightStartY,
+  isGreaterThan = backY - overallDepth,
+  isLessThan = rearBoreEndY,
+  error = "Right upper bore must begin inside the envelope before its rear end.",
+)
+assert(
+  rearBoreEndY,
+  isGreaterThan = backY - overallDepth,
+  isLessThan = backY,
+  error = "Rear straight bores must end inside the envelope before the entry treatment.",
+)
+assert(
+  auxLowerX,
+  isGreaterThan = -overallWidth / 2 + auxBoreDiameter / 2 + ductWall,
+  isLessThan = -auxBoreDiameter / 2 - ductWall,
+  error = "Lower auxiliary screw must fit on the negative-x side.",
+)
+assert(
+  auxLowerZ,
+  isGreaterThan = nozzleEndZ + auxBoreDiameter / 2 + ductWall,
+  isLessThan = topZ - (auxBoreDiameter / 2) - ductWall,
+  error = "Lower auxiliary screw must fit within the housing height.",
+)
+assert(
+  auxUpperX,
+  isGreaterThan = -overallWidth / 2 + auxBoreDiameter / 2 + ductWall,
+  isLessThan = -auxBoreDiameter / 2 - ductWall,
+  error = "Upper auxiliary screw must fit on the negative-x side.",
+)
+assert(
+  auxUpperZ,
+  isGreaterThan = nozzleEndZ + auxBoreDiameter / 2 + ductWall,
+  isLessThan = topZ - (auxBoreDiameter / 2) - ductWall,
+  error = "Upper auxiliary screw must fit within the housing height.",
+)
+assert(
+  auxBoreDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = overallWidth / 2 - (2 * ductWall),
+  error = "Auxiliary bore diameter must be positive and fit the left side.",
+)
+assert(
+  auxLowerStartY,
+  isGreaterThan = backY - overallDepth,
+  isLessThan = rearBoreEndY,
+  error = "Lower auxiliary bore must have a positive length inside the envelope.",
+)
+assert(
+  auxUpperStartY,
+  isGreaterThan = backY - overallDepth,
+  isLessThan = rearBoreEndY,
+  error = "Upper auxiliary bore must have a positive length inside the envelope.",
+)
+assert(
+  lowerMountHalfSpacing,
+  isGreaterThan = lowerMountDiameter / 2 + ductWall,
+  isLessThan = overallWidth / 2 - (lowerMountDiameter / 2) - ductWall,
+  error = "Lower mounting pair must remain separated and inside the side boundaries.",
+)
+assert(
+  lowerMountZ,
+  isGreaterThan = nozzleEndZ + lowerMountDiameter / 2 + ductWall,
+  isLessThan = topZ - (lowerMountDiameter / 2) - ductWall,
+  error = "Lower mounting axes must leave material above and below.",
+)
+assert(
+  lowerMountDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = 2 * lowerMountHalfSpacing - (2 * ductWall),
+  error = "Lower mount diameter must be positive and preserve separate bores.",
+)
+assert(
+  lowerMountBoreLength,
+  isGreaterThan = 0mm,
+  isLessThan = overallDepth,
+  error = "Documented lower bore length must be positive and within the housing depth.",
+)
+assert(
+  rearCableNotchDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = 2 * (overallDepth - ductWall),
+  error = "Partial rear cable notch must have positive radius and leave front material.",
+)
+assert(
+  topCounterboreFloorZ,
+  isGreaterThan = topPilotStartZ,
+  isLessThan = topBoreCylinderEndZ,
+  error = "Declared counterbore shoulder must lie between pilot start and bore end.",
+)
+assert(
+  topPilotLength,
+  isGreaterThan = 0mm,
+  isLessThan = topBoreCylinderEndZ - topPilotStartZ,
+  error = "Declared pilot length must be positive and shorter than the total straight bore.",
+)
+
+// Full bounding prism at z = nozzleEndZ, driven by the primary dimensions so edits propagate.
+envelopeProfile = sketch(on = offsetPlane(XY, offset = nozzleEndZ)) {
+  frontEdge = line(start = [var -35.534mm, var -27.4mm], end = [var 35.534mm, var -27.4mm])
+  rightEdge = line(start = [var 35.534mm, var -27.4mm], end = [var 35.534mm, var 0mm])
+  backEdge = line(start = [var 35.534mm, var 0mm], end = [var -35.534mm, var 0mm])
+  leftEdge = line(start = [var -35.534mm, var 0mm], end = [var -35.534mm, var -27.4mm])
+  coincident([frontEdge.end, rightEdge.start])
+  coincident([rightEdge.end, backEdge.start])
+  coincident([backEdge.end, leftEdge.start])
+  coincident([leftEdge.end, frontEdge.start])
+  horizontal(frontEdge)
+  horizontal(backEdge)
+  vertical(leftEdge)
+  vertical(rightEdge)
+  coincident([
+    frontEdge.start,
+    [
+      -overallWidth / 2,
+      backY - overallDepth
+    ]
+  ])
+  horizontalDistance([frontEdge.start, frontEdge.end]) == overallWidth
+  verticalDistance([rightEdge.start, rightEdge.end]) == overallDepth
+}
+envelopeRegion = region(segments = [
+  envelopeProfile.frontEdge,
+  envelopeProfile.rightEdge
+])
+export datum = extrude(envelopeRegion, length = topZ - nozzleEndZ)
+// Hide the solved sketch through its Sketch handle; the consumed region identifies the solid.
+hide(envelopeProfile.meta.sketch)
+datum

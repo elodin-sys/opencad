@@ -1,0 +1,73 @@
+{
+  "named_faces": {
+    "floor": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 1744.5127679254701,
+      "ok": true,
+      "position": 0.0,
+      "center_expected": [
+        50.0,
+        0.0
+      ],
+      "center_error": 4.319524458806255e-09,
+      "centroid_uv": [
+        49.999999995680476,
+        1.1939221312984305e-12
+      ]
+    },
+    "deck": {
+      "plane": "z",
+      "at": 5.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1744.5127679254701,
+      "ok": true,
+      "position": 4.999999999999999,
+      "area_expected": 1744.513,
+      "area_ok": true,
+      "center_expected": [
+        50.0,
+        0.0
+      ],
+      "center_error": 4.319524458806255e-09,
+      "centroid_uv": [
+        49.999999995680476,
+        1.1939221312984305e-12
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "floor",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        50.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "deck",
+      "plane": "z",
+      "at": 5.0,
+      "normal": "+",
+      "area": 1744.513,
+      "area_tolerance_rel": 0.002,
+      "tolerance": null,
+      "center": [
+        50.0,
+        0.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 5
+}

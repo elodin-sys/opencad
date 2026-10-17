@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Checking your work - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/checking.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<ul>
+<li><a href="#checking-your-work">Checking your work</a>
+<ul>
+<li><a href="#querying-calculations">Querying calculations</a></li>
+<li><a href="#querying-geometry">Querying geometry</a></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#asserts">Asserts</a></li>
+<li><a href="#asserts-and-parametric-design">Asserts and parametric design</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="checking-your-work"><a class="header" href="#checking-your-work">Checking your work</a></h1>
+<p>Correctness matters a lot in engineering. KCL tries to give you the tools you need to check your own work, and make sure your designs do exactly what you expect. In this chapter we'll explore ways to verify your KCL code does what you intended it to do.</p>
+<h2 id="querying-calculations"><a class="header" href="#querying-calculations">Querying calculations</a></h2>
+<p>We've already covered this one, so I'll keep this brief. If you want to double-check your calculations, you can always assign some intermediate value to a variable, then view its value in the Variables panel in Zoo Design Studio. We saw an example of this earlier, where we broke up the quadratic equation <a href="calling_functions.html#combining-functions">into parts and inspected them</a>. You can break complicated calculations into smaller parts, storing them in variables so they can be inspected individually.</p>
+<h2 id="querying-geometry"><a class="header" href="#querying-geometry">Querying geometry</a></h2>
+<p>You can also query distances and angles, by <a href="fillets.html#measuring-geometry">measuring them with tags</a>. Then you can assign those values to variables and read them off the Variables panel. We covered this previously, so refer back to that link for more detail.</p>
+<h2 id="comments"><a class="header" href="#comments">Comments</a></h2>
+<p>Putting a comment in your code helps explain <em>why</em> you're doing something. Why was this edge double the size of the previous edge? Why was this particular curvature or angle chosen? Leaving comments in your code, like <code>// Edge must be 1cm longer than front edge to accommodate button</code>, helps explain to your colleagues why a certain decision was made. That way, when someone revisits the design in the future, they know if your original assumptions still hold, or if they can be changed.</p>
+<h2 id="asserts"><a class="header" href="#asserts">Asserts</a></h2>
+<p>KCL's <a href="https://zoo.dev/docs/kcl-std/functions/std-assert"><code>assert</code></a> function lets you check that a certain variable has the expected value. In other words, you're asserting that the variable actually has the value you expect. If this assertion is wrong, KCL will stop executing and explain why. For example, let's add asserts to our quadratic equation calculations. We can calculate that the quadratic 2x^2 + 3x + 1 should have roots -0.5 and -1. Let's calculate it, and asserts to make sure we got the calculations correct.</p>
+<pre><code class="language-kcl">// Coefficients that define the quadratic
+a = 2
+b = 3
+c = 1
+
+delta = pow(b, exp = 2) - (4 * a * c)
+x0 = ((-b) + sqrt(delta)) / (2 * a)
+x1 = ((-b) - sqrt(delta)) / (2 * a)
+
+// Assert the two roots are what we expect.
+assert(x0, isEqualTo = -0.5)
+assert(x1, isEqualTo = -1)
+</code></pre>
+<p>This program was written correctly, so the KCL program runs just fine. But let's pretend we made a typo. We'll change <code>c = 1</code> to <code>c = 0</code>, and rerun the program. You'll see the <code>assert</code> has an error now: "assert failed: Expected 0 to be equal to -0.5 but it wasn't".</p>
+<p>Asserts work pretty similarly to looking up a variable in the Variables panel. Both let you check a value is what you expect. But asserts have two big advantages over checking the Variables panel.</p>
+<p>Firstly, asserts are automatic. You can add asserts to your KCL code, and then every time the program runs, the asserts will get checked. You don't have to remember which values need checking. If you send your KCL file to a coworker, you don't have to explain "Hey, make sure to check that <code>maximumStress</code> is 1.25". You can just add the <code>assert</code> to your code, and all your coworkers will benefit from having the assertion checked. This is especially helpful for iterating on your design. You can start your design work by adding some asserts to check key requirements, and then as you keep tweaking and improving your design, KCL will automatically run all the asserts, and make sure the same properties are always checked.</p>
+<p>Secondly, asserts are more flexible. You can check many different properties besides just checking two numbers are equal. For example, you can compare them and check if one number is greater or less than your variable:</p>
+<pre><code class="language-kcl">wallMountingHoleDiameter = .625
+wallMountLength = 2.25
+assert(wallMountLength, isGreaterThanOrEqual = wallMountingHoleDiameter * 3)
+</code></pre>
+<p>You can add custom error messages to explain <em>why</em> this assertion is important:</p>
+<pre><code class="language-kcl">wallMountingHoleDiameter = .625
+wallMountLength = 2.25
+assert(wallMountLength, isGreaterThanOrEqual = wallMountingHoleDiameter * 3, error = "This doesn't leave enough room for a hole. Either decrease hole diameter or increase wallMountLength")
+</code></pre>
+<p>You can also add a tolerance to your equality checks, to ensure that tiny little differences caused by floating-point math or approximation calculations don't trigger the error.</p>
+<pre><code class="language-kcl">assert(1.0000001214, isEqualTo = 1.0, tolerance = 0.001)
+</code></pre>
+<h2 id="asserts-and-parametric-design"><a class="header" href="#asserts-and-parametric-design">Asserts and parametric design</a></h2>
+<p>For a realistic example of asserts, see this <a href="https://zoo.dev/aquarium/bracket">bracket</a> we modelled in KCL. You can see the mechanical engineer designed this parametrically. They designed the bracket in terms of parameters like <code>width</code>, <code>p</code> (the force on the shelf), <code>shelfMountLength</code> etc. From these initial parameters, they calculate other quantities, like the <code>moment</code> or the <code>thickness</code>. Then they use <code>asserts</code> to make sure that when the parameters are changed, the results are still sensible. For example, they check that the parameters leave enough of a gap between the holes and the bracket's edge. They're also checking that the bracket is strong enough, by checking the actual stress on the model for these parameters (<code>actualSigma</code>) is below the maximum allowed stress, via <code>assert(actualSigma, isLessThanOrEqual = sigmaAllow)</code>.</p>
+<p>We could add more detailed checks by asserting that the parameters meet basic logical requirements -- for example, the <code>width</code> must be greater than zero to be meaningful. So you could add <code>assert(width, isGreaterThan = 0)</code>.</p>
+<p>By adding these asserts and comments, your CAD files become self-documenting. You don't need to email a PDF to your colleagues explaining why you chose the parameters you chose, or why certain lengths are they way they are. Your assertions both indicate what measurements or properties are important, <em>and</em> prove that your design has those important properties.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>KCL helps you automatically check your work. You should be able to analyze your engineering designs as early as possible in the design process -- ideally, within Zoo Design Studio, long before you send the part away for manufacturing or analysis. You can check your work in the Variables panel, but we recommend adding <a href="https://zoo.dev/docs/kcl-std/functions/std-assert"><code>assert</code></a> statements to your KCL. You can use asserts to:</p>
+<ul>
+<li>Double-check your calculations, especially when transcribing engineering calculations into KCL</li>
+<li>Validate parameters in parametric design, like ensuring a radius or length is positive</li>
+<li>Check that your part fulfills its requirements, for example by calculating the maximum force it can tolerate, and asserting that maximum force is above your required minimum</li>
+<li>Query geometry like the angle between two lines with <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-segAng"><code>segAng</code></a> and ensure it's what you expect</li>
+<li>Clearly explain what important requirements your design has, and how to correct mistakes if the assertion fails.</li>
+</ul>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="map_reduce.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="units_of_measurement.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="map_reduce.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="units_of_measurement.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

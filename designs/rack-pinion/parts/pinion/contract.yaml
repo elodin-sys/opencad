@@ -1,0 +1,344 @@
+schema_version: 1
+name: rack-pinion-pinion
+intent: >-
+  Spur pinion of the rack-pinion machine, drafted in its own frame: axis +z through the origin, bottom face
+  z = 0, face width 8 (z 0..8), a tooth centred on +x. 20 teeth, module 2, pressure angle 20 deg, pitch radius 20,
+  tip radius 22, root radius 17.5, base circle 20 cos 20 deg = 18.794; involute flanks (12-16 points per flank from
+  the base circle to the tip), every tooth thinned by 0.05 mm at the pitch circle (circular tooth thickness
+  p/2 - 0.05 = 3.091593, p = 2 pi); a D6 through bore on the axis. It stands on the base plate, turns on the revolute
+  joint pinionSpin about +z at its own origin and drives the rack (the tooth at -90 deg points into the rack's tooth
+  space at x = 0 at rest). Authoritative source: sources/rack-pinion-spec.md.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "on the pinion axis in the bottom face (z = 0); the bore axis and the revolute joint pinionSpin pass through it"
+  axes:
+    x: "radial, along the centre line of the phase-reference tooth (a tooth centred on +x); y = 0 is that tooth's mirror plane"
+    y: "radial, 90 deg from +x (right-handed); with 20 teeth (18 deg pitch) teeth are also centred on +y, -x and -y (-90 deg, the tooth that points into the rack space at rest)"
+    z: "along the pinion axis, up from the bottom face (z = 0) to the top face (z = 8); pinionSpin turns about +z"
+  datums:
+    - name: A
+      description: "bottom face, z = 0, stands on the base plate top"
+    - name: B
+      description: "bore axis = z axis through the origin (D6 bore, coaxial with the plate's D6 hole)"
+    - name: C
+      description: "phase plane y = 0 through the centre line of the tooth on +x (the joint's phase reference)"
+
+envelope:
+  min: [-22, -22, 0]
+  max: [22, 22, 8]
+  tolerance: 0.05
+
+parameters:
+  - name: gearModule
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, parameter table: Module 2 mm"
+    tolerance: 0.001
+    description: "gear module m"
+  - name: toothCount
+    value: 20
+    unit: ""
+    provenance: stated
+    source: "rack-pinion-spec.md, parameter table: Pinion 20 teeth"
+    tolerance: 0.01
+    description: "number of teeth z"
+  - name: pressureAngle
+    value: 20
+    unit: deg
+    provenance: stated
+    source: "rack-pinion-spec.md, parameter table: Pressure angle 20 deg"
+    tolerance: 0.01
+    description: "pressure angle at the pitch circle"
+  - name: pitchRadius
+    value: 20
+    unit: mm
+    provenance: derived
+    formula: "gearModule * toothCount / 2"
+    source: "rack-pinion-spec.md, parameter table: pitch radius 20"
+    tolerance: 0.001
+    description: "pitch circle radius (tangent to the rack pitch line in the assembly)"
+  - name: tipRadius
+    value: 22
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius + gearModule"
+    source: "rack-pinion-spec.md, parameter table: tip 22"
+    tolerance: 0.01
+    description: "addendum (tip) circle radius"
+  - name: rootRadius
+    value: 17.5
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius - 1.25 * gearModule"
+    source: "rack-pinion-spec.md, parameter table: root 17.5"
+    tolerance: 0.01
+    description: "dedendum (root) circle radius"
+  - name: baseRadius
+    value: 18.793852
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius * cos(radians(pressureAngle))"
+    source: "intent: base circle 20 cos 20 deg = 18.794"
+    tolerance: 0.001
+    description: "base circle radius; the involutes start here"
+  - name: circularPitch
+    value: 6.283185
+    unit: mm
+    provenance: derived
+    formula: "pi * gearModule"
+    source: "rack-pinion-spec.md: pitch p = 2 pi = 6.283185 mm"
+    tolerance: 0.0001
+    description: "circular pitch p at the pitch circle"
+  - name: toothThinning
+    value: 0.05
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, parameter table: Backlash, thin every pinion tooth by 0.05 mm at its pitch circle"
+    tolerance: 0.001
+    description: "circular tooth-thickness reduction at the pitch circle (backlash share of the pinion)"
+    edit_test:
+      delta: 0.05
+      expect:
+        volume_delta: -35.55
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.1
+  - name: toothThickness
+    value: 3.091593
+    unit: mm
+    provenance: derived
+    formula: "circularPitch / 2 - toothThinning"
+    source: "intent: circular tooth thickness p/2 - 0.05 = 3.091593 mm"
+    tolerance: 0.0005
+    description: "circular tooth thickness on the pitch circle"
+  - name: faceWidth
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, parameter table: face width 8 (z 0..8)"
+    tolerance: 0.01
+    description: "extrusion length along +z from the bottom face"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 2386.78
+        direction: increase
+        bbox_delta: [0, 0, 2]
+        tolerance_rel: 0.02
+      sweep:
+        values: [6, 8, 10]
+      infeasible_deltas: [-8]
+  - name: boreDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "rack-pinion-spec.md, parameter table: bore D6"
+    tolerance: 0.01
+    description: "through-bore diameter on the axis"
+  - name: flankPoints
+    value: 14
+    unit: ""
+    provenance: inferred
+    rationale: "the sources allow 12-16 points per involute flank from the base circle to the tip; 14 is the middle of that range"
+    tolerance: 2
+    description: "points per involute flank (base circle to tip)"
+
+features:
+  - id: toothProfile
+    kind: profile
+    description: >-
+      one tooth outline centred on +x and mirror-symmetric about y = 0: two involutes of the base circle (flankPoints
+      points each, from baseRadius to tipRadius), placed so the half-angle at the pitch circle is
+      toothThickness / (2 pitchRadius) (half-angle at the base circle 0.092194 rad); each flank continues radially from
+      the base circle down to the root circle (rootRadius, no fillet); a tip arc of radius tipRadius joins the flanks
+      (tip land 1.335)
+    parameters: [gearModule, pressureAngle, pitchRadius, baseRadius, tipRadius, rootRadius, circularPitch, toothThinning, toothThickness, flankPoints]
+    verify:
+      - method: solid
+        points: [[20, 0, 4], [21, 0, 4]]
+      - method: dimension
+        dimension: tipSpanX
+  - id: teethPattern
+    kind: pattern
+    count: 20
+    description: "the tooth repeated every 360 / toothCount = 18 deg about +z (teeth centred on 0, 90, 180 and -90 deg), neighbouring teeth joined by root arcs of radius rootRadius"
+    parameters: [toothCount, rootRadius]
+    verify:
+      - method: solid
+        points: [[0, 20, 4], [-20, 0, 4], [0, -20, 4]]
+      - method: void
+        points: [[19.7538, 3.1287, 4], [19.7538, -3.1287, 4], [3.1287, -19.7538, 4], [-3.1287, -19.7538, 4]]
+      - method: dimension
+        dimension: tipSpanY
+  - id: gearBody
+    kind: extrude
+    description: "the closed 20-tooth outline extruded faceWidth along +z from z = 0"
+    parameters: [faceWidth]
+    verify:
+      - method: bbox
+      - method: face
+        face: bottom
+      - method: face
+        face: top
+      - method: dimension
+        dimension: faceSpan
+      - method: section
+        section: mid
+  - id: bore
+    kind: hole
+    description: "D6 through bore on the z axis, z = 0 to faceWidth"
+    parameters: [boreDiameter]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: void
+        points: [[0, 0, 4]]
+
+interfaces:
+  - name: seat
+    description: "the bottom face (z = 0) stands on the base plate top; no edit test moves it"
+    must_not_change: true
+    checks: [bottom]
+  - name: boreAxis
+    description: "the D6 bore is coaxial with the plate's D6 hole and carries the revolute joint pinionSpin (own-frame point [0, 0, 0], axis +z)"
+    must_not_change: true
+    checks: [bore]
+  - name: phaseAndMesh
+    description: "the tooth centred on +x is the joint's phase reference (at rest the tooth at -90 deg points into the rack's tooth space at x = 0); the flanks and the 44 mm tip diameter mesh with the rack"
+    must_not_change: true
+    checks: [phaseY, tipSpanX, tipSpanY]
+
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 9547.1
+    tolerance_rel: 0.01
+    provenance: derived
+    note: >-
+      faceWidth * A, A = pi rootRadius^2 + toothCount * Atooth - pi (boreDiameter / 2)^2 = 1193.388 mm2;
+      Atooth = psiB (baseRadius^2 - rootRadius^2) + integral(baseRadius..tipRadius) 2 psi(r) r dr = 12.9775 mm2,
+      psi(r) = psiB - inv(acos(baseRadius / r)), psiB = toothThickness / (2 pitchRadius) + inv(pressureAngle)
+      = 0.092194 rad; radial flanks below the base circle, no root fillet (a 0.76 mm root fillet adds about 0.4 %)
+  surface_area:
+    expected: 4642.0
+    tolerance_rel: 0.05
+    provenance: derived
+    note: >-
+      2 A + faceWidth * (outer perimeter 263.05 + bore circumference 18.85); per tooth 2 (radial 1.294 +
+      involute baseRadius t^2 / 2 = 3.479, t^2 = (tipRadius / baseRadius)^2 - 1) + tip arc 1.335 + root arc 2.271
+  center_of_mass:
+    expected: [0, 0, 4]
+    tolerance: 0.05
+    provenance: derived
+    note: "20-fold symmetry about the z axis puts the centroid on the axis; the prismatic extrusion puts it at faceWidth / 2"
+  solid_count: 1
+  sections:
+    - id: mid
+      plane: z
+      at: 4
+      expect:
+        area: 1193.39
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "mid-face section: one 20-tooth outer loop and one hole (the D6 bore)"
+  faces:
+    - name: bottom
+      plane: z
+      at: 0
+      normal: "-"
+      center: [0, 0]
+      mode: one
+    - name: top
+      plane: z
+      at: 8
+      normal: "+"
+      area: 1193.39
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      description: "D6 through bore on the pinion axis; length follows faceWidth, so it is not pinned here"
+  dimensions:
+    - name: faceSpan
+      axis: z
+      expected: 8
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "face width between the bottom and top faces"
+    - name: tipSpanX
+      axis: x
+      expected: 44
+      tolerance: 0.05
+      description: "bbox extent along x: tips of the teeth centred on +x and -x (2 tipRadius)"
+    - name: tipSpanY
+      axis: y
+      expected: 44
+      tolerance: 0.05
+      description: "bbox extent along y: tips of the teeth centred on +y and -y (2 tipRadius)"
+  probes:
+    - name: inTeeth
+      state: solid
+      points: [[20, 0, 4], [21, 0, 4], [0, 20, 4], [-20, 0, 4], [0, -20, 4]]
+      description: "pitch-circle points on the teeth centred on +x, +y, -x and -y (phase), and 1 mm below the +x tip"
+    - name: inHub
+      state: solid
+      points: [[10, 0, 4], [16.2969, 2.5812, 4]]
+      description: "hub between bore and root; 1 mm inside the root circle under the space at 9 deg"
+    - name: inSpaces
+      state: void
+      points: [[19.7538, 3.1287, 4], [19.7538, -3.1287, 4], [3.1287, -19.7538, 4], [-3.1287, -19.7538, 4], [18.371, 2.9097, 4]]
+      description: "tooth spaces centred at 9, -9, -81 and -99 deg on the pitch circle (1.50 mm from both flanks), and r = 18.6 at 9 deg (1.1 mm above the root, 1.21 mm from the flanks)"
+    - name: inBore
+      state: void
+      points: [[0, 0, 4]]
+      description: "bore centre, 3 mm from the bore wall and 4 mm from both faces"
+  cylinder_counts:
+    - name: bores
+      diameter: 6
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+      description: "exactly one D6 bore"
+  gears:
+    - name: pinionTeeth
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      at: 4
+      module: 2
+      teeth: 20
+      description: "20 teeth of module 2 in the mid-face section"
+  symmetry:
+    - name: phaseY
+      plane: y
+      at: 0
+  blockout:
+    volume_min: 11700
+    volume_max: 12300
+
+references:
+  - path: sources/rack-pinion-spec.md
+    kind: text
+    role: authoritative
+    sha256: 87f6a8bbc15c559e23899017105cd36ee8b503a6238b00213d3b99103d903561
+    units: mm
+    revision: "as supplied with the rack-pinion machine case"
+    note: "parameter table (module, pressure angle, pinion teeth, radii, face, bore, backlash), part frames and rest configuration"
+
+open_questions:
+  - "The root shape between the root circle (17.5) and the base circle (18.794) is not stated; the contract assumes each flank continues radially to the root circle with no fillet (volume and area computed that way; a small root fillet stays inside the tolerances). With the rack's addendum 2 the lowest involute contact is at r = 18.82, and the rack tip corner clears the radial segment below the base circle (it grazes the flank only at the base circle), but zero interference over the revolution is checked at assembly level only."
+  - "Material, density and process are not stated; no mass claim is made."
+  - "The number of points per involute flank is a free choice inside the stated 12-16; 14 is assumed (tolerance 2)."

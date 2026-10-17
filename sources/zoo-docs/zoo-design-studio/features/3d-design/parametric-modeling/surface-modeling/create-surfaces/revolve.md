@@ -1,0 +1,79 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/revolve
+Title: Revolve Surface
+
+# Revolve Surface
+
+Revolve profiles into surface geometry with the Revolve Surface tool in Zoo Design Studio.
+
+Use the same Revolve tool used in
+[Revolve Solid](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve),
+then set `bodyType` to `surface` to spin a profile into an open surface instead of a closed solid.
+This is useful for rotational forms, reference surfaces, and thin swept geometry that should not
+become a closed solid body.
+
+## Body Type
+
+The `bodyType` parameter controls whether Revolve creates a solid body or a surface body. Set
+`bodyType` to `surface` when you want a thin shell with no thickness instead of a watertight 3D
+body. This works the same way as the Body Type option in the solid Revolve workflow, you are just
+using it here to keep the result as surface geometry.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/revolve/revolve.webp"
+  alt="Revolve tool with bodyType set to surface in Zoo Design Studio"
+  aspect="2366 / 2018"
+  maxHeightPx={800}
+/>
+
+## Selection
+
+Choose a sketch segment when the surface should use a single edge as its profile. If the sketch
+forms a closed region, choose the region to use the full enclosed profile instead.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/revolve/select-segment.webp"
+  alt="Revolve surface with a selected segment"
+  aspect="2366 / 2018"
+  maxHeightPx={400}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Selected sketch segment
+</div>
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/revolve/select-region.webp"
+  alt="Revolve surface with a selected region"
+  aspect="2366 / 2018"
+  maxHeightPx={400}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Selected sketch region
+</div>
+
+## Other Parameters
+
+All other Revolve parameters, such as `Axis Type`, `Sketch Axis`, `Edge`, `Angle`, `Symmetric`,
+`Bidirectional Angle`, and `Start Tag / End Tag`, work the same way as they do in
+[Revolve Solid](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve).
+For the full parameter reference, visit the solid modeling section.
+
+## Are you interested in code?
+
+Zoo Design Studio writes KCL behind the scenes. A surface revolve is just a `revolve` call with `bodyType = SURFACE`, applied to a sketch segment or profile.
+
+```kcl
+mySketch = sketch(on = XZ) {
+  arc(
+    start = [var -8mm, var 6mm],
+    end = [var -8mm, var -6mm],
+    center = [var -8mm, var 0mm]
+  )
+}
+revolveSurface = revolve(
+  mySketch,
+  angle = -180deg,
+  axis = Y,
+  bodyType = SURFACE,
+)
+```
+
+Want to find out more about the `revolve` function? [Check it out](/docs/kcl-std/functions/std-sketch-revolve) in our KCL docs.

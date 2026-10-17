@@ -1,0 +1,271 @@
+{
+  "case": "fusion-16418-assembly",
+  "scored_at": "2026-09-21T01:40:44Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "9d91894a-b317-4559-b479-802a175039ec",
+    "exit_code": 0,
+    "seconds": 136,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/freecad/fusion-16418-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "",
+      "commands_list": [
+        "ruff format --check parts/freecad/fusion-16418-assembly/main.py",
+        "ruff check parts/freecad/fusion-16418-assembly/main.py",
+        ".venv/bin/python -m skillkat.truth assembly-check /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/work --entry /Users/danieldriscoll/dual/skillkat/parts/freecad/fusion-16418-assembly/main.py --backend freecad --ledger /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/worker/001-assemble/engine-ledger.jsonl"
+      ],
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 0.96,
+      "visual_check": "Visual: iso and front show the gear seated in the housing cavity on the lower joint hole, hex bore coaxial with the housing cylinder (axes aligned); top shows the gear spanning the cavity toward the open face; bodies contact (gap 0) with a small ~0.53 mm\u00b3 interpenetration at the teeth/walls, left on the key-point pose."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "9d91894a-b317-4559-b479-802a175039ec",
+    "exit_code": 0,
+    "seconds": 136,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/freecad/fusion-16418-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "",
+      "commands_list": [
+        "ruff format --check parts/freecad/fusion-16418-assembly/main.py",
+        "ruff check parts/freecad/fusion-16418-assembly/main.py",
+        ".venv/bin/python -m skillkat.truth assembly-check /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/work --entry /Users/danieldriscoll/dual/skillkat/parts/freecad/fusion-16418-assembly/main.py --backend freecad --ledger /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/worker/001-assemble/engine-ledger.jsonl"
+      ],
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 0.96,
+      "visual_check": "Visual: iso and front show the gear seated in the housing cavity on the lower joint hole, hex bore coaxial with the housing cylinder (axes aligned); top shows the gear spanning the cavity toward the open face; bodies contact (gap 0) with a small ~0.53 mm\u00b3 interpenetration at the teeth/walls, left on the key-point pose."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "mode": "modelled",
+  "program_executes": true,
+  "solid_count": {
+    "measured": 2,
+    "expected": 2,
+    "ok": true
+  },
+  "export_agreement": {
+    "ok": true,
+    "bodies": {
+      "23309_76dcf100_0002_1": {
+        "ok": true,
+        "volume_expected": 827.6532984081307,
+        "volume_measured": 827.6532984072184,
+        "volume_rel": 1.1023176908383188e-12,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 1.862291490284534e-12,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 2.5058206575999726e-12
+      },
+      "23309_76dcf100_0003_2": {
+        "ok": true,
+        "volume_expected": 4864.078032735531,
+        "volume_measured": 4864.07636437037,
+        "volume_rel": 3.429972031424049e-07,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 8.32799684359531e-11,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 3.4843735364929547e-06
+      }
+    }
+  },
+  "export_integrity": {
+    "ok": true,
+    "valid": true,
+    "solids": 2,
+    "expected_solids": 2,
+    "watertight": true,
+    "deterministic": true
+  },
+  "hygiene": {
+    "ok": true,
+    "has_result": true,
+    "has_placements": true,
+    "cad_refs": [],
+    "truth_refs": [],
+    "files": [
+      "/Users/danieldriscoll/dual/skillkat/parts/freecad/fusion-16418-assembly/main.py"
+    ]
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": true,
+  "offset_truth_mm": -5.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 1.7763568394002505e-15,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": -5.0,
+      "expected": -5.0,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 0.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 0.5293460947886042,
+      "truth_interference": 0.5293460947887276,
+      "max": 1.5293460947887276,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.0,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "23309_76dcf100_0002_1": {
+        "origin": [
+          11.5,
+          3.5,
+          -38.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            11.5
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            3.5
+          ],
+          [
+            0.0,
+            0.0,
+            -1.0,
+            -38.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "23309_76dcf100_0003_2": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/handoff/assembly.html",
+    "motion": "revolute",
+    "native_glb": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/handoff/assembly-native.glb"
+  }
+}

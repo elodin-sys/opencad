@@ -1,0 +1,158 @@
+id: crank-slider
+title: 'Offset crank-slider as an assembly: ground, crank, connecting rod and slider closed into one loop'
+kind: machine
+truth_class: C
+role: validation
+source:
+  citation: Analytic mechanism reference (scripts/derive_mechanism_truth.py); x = r cos t + sqrt(l^2 -
+    (e - r sin t)^2)
+  urls: []
+  accessed: '2026-09-25'
+  revision: spec v1
+  license: this repository
+intent: 'Build the offset crank-slider of the attached specification as a machine of four separately designed
+  parts: a ground plate, a crank (30 between holes), a connecting rod (100) and a slider block, each drafted
+  and modelled in its own frame as the specification states, in the stated layers. Connect them with three
+  revolute pins and a prismatic guide along +x into one closed loop: three joints form the joint tree
+  from the ground and the fourth is the loop''s closing joint; place the parts in the specified rest configuration
+  so the loop closes. The crank is the motor-driven joint. Declare a motion sweep of one full crank revolution.
+  Predict the slider travel and the stroke from the geometry.'
+inputs:
+- path: inputs/crank-slider-spec.md
+  kind: text
+  sha256: cd01ebc4dc4d7289a786bef3bca834eb565dd9f6109941bbcc2ec04b879c0d1c
+  note: the complete design specification
+truth:
+- path: truth/crank-slider-truth.yaml
+  kind: yaml
+  sha256: ffd908b15809c83eaaa822f6a82a06df2c8441932c7f2fb869bc696ef591f07d
+  note: rest pin position, stroke and part volumes (scripts/derive_mechanism_truth.py)
+- path: truth/slider-travel.csv
+  kind: table
+  sha256: 5cfd13b57a17ca65f5b69190e83605072ff940177aa01d56f20f9b3b850e0bc7
+  note: slider travel from rest vs crank angle, 0..360 deg by 10
+arms:
+- id: spec-only
+  design: crank-slider
+  inputs:
+  - inputs/crank-slider-spec.md
+  images: []
+  notes: Text specification only.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 200.0
+  - 70.0
+  - 15.0
+  tolerance: 0.15
+  note: the ground plate (-40..160, -30..40) bounds every part at rest; layers z -5..10
+- id: solid_count
+  kind: solid_count
+  expected: 4
+- id: ground
+  kind: solid
+  point:
+  - -20.0
+  - 0.0
+  - -2.5
+  expected: 69858.63
+  tolerance_rel: 0.005
+- id: crank
+  kind: solid
+  point:
+  - 15.0
+  - 0.0
+  - 2.5
+  expected: 3122.57
+  tolerance_rel: 0.005
+- id: rod
+  kind: solid
+  point:
+  - 79.749372
+  - 5.0
+  - 7.5
+  expected: 8722.57
+  tolerance_rel: 0.005
+- id: slider
+  kind: solid
+  point:
+  - 139.498744
+  - 10.0
+  - 2.5
+  expected: 2258.63
+  tolerance_rel: 0.005
+- id: crank_pin_hole
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 30.0
+  - 0
+  - 2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 3.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 5.0
+  length_tolerance: 0.1
+- id: rod_wrist_hole
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 129.498744
+  - 10.0
+  - 7.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 3.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 5.0
+  length_tolerance: 0.1
+- id: slider_hole
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 129.498744
+  - 10.0
+  - 2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 3.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 5.0
+  length_tolerance: 0.1
+performance:
+- id: sliderTravel
+  quantity: joint_value
+  unit: mm
+  evidence: C
+  series: truth/slider-travel.csv
+  x_column: 0
+  y_column: 1
+  skip: 1
+  tolerance: 0.05
+  source: x(t) - x(0) with r 30, l 100, e 10
+  where: the guide joint between ground and slider (`joint`), as a series over the one-revolution crank
+    motion (`motion`, range 0 to 360 deg, no `at`)
+- id: stroke
+  quantity: joint_range
+  unit: mm
+  evidence: C
+  value: 60.332781665402095
+  tolerance: 0.05
+  source: sqrt((l + r)^2 - e^2) - sqrt((l - r)^2 - e^2)
+  where: the guide joint (`joint`) over the one-revolution crank motion (`motion`)
+notes:
+- Link volumes are 5 (L 16 + pi 8^2 - 2 pi 3^2); the slider 30 x 16 x 5 - pi 3^2 5; the ground 200 x 70
+  x 5 - pi 3^2 5.
+- Series references are scored by the largest absolute error at their points (the prediction interpolated
+  onto them).

@@ -1,0 +1,120 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+plateWidth = 80mm
+plateHeight = 50mm
+plateThickness = 6mm
+holeDiameter = 4.5mm
+holeInset = 10mm
+cornerRadius = 5mm
+
+// Geometric bounds preserve four separate holes inside the rounded outline.
+assert(plateWidth, isGreaterThan = 2 * holeInset + holeDiameter, error = "plateWidth must leave separate hole columns")
+assert(plateHeight, isGreaterThan = 2 * holeInset + holeDiameter, error = "plateHeight must leave separate hole rows")
+assert(plateThickness, isGreaterThan = 0mm, error = "plateThickness must be positive")
+assert(holeDiameter, isGreaterThan = 0mm, error = "holeDiameter must be positive")
+assert(holeInset, isGreaterThan = holeDiameter / 2, error = "holeInset must leave material between each hole and the plate edge")
+assert(cornerRadius, isGreaterThan = 0mm, error = "cornerRadius must be positive")
+assert(cornerRadius, isLessThan = holeInset, error = "cornerRadius must stay inside the hole centre inset")
+
+// Datum A is XY; B and C retain the minimum corner of the unfilleted blank.
+plateSketch = sketch(on = XY) {
+  front = line(start = [var 0mm, var 0mm], end = [var 80mm, var 0mm])
+  right = line(start = [var 80mm, var 0mm], end = [var 80mm, var 50mm])
+  back = line(start = [var 80mm, var 50mm], end = [var 0mm, var 50mm])
+  left = line(start = [var 0mm, var 50mm], end = [var 0mm, var 0mm])
+  coincident([front.start, ORIGIN])
+  coincident([front.end, right.start])
+  coincident([right.end, back.start])
+  coincident([back.end, left.start])
+  coincident([left.end, front.start])
+  horizontal(front)
+  horizontal(back)
+  vertical(right)
+  vertical(left)
+  horizontalDistance([front.start, front.end]) == plateWidth
+  verticalDistance([front.start, left.start]) == plateHeight
+}
+plateRegion = region(segments = [plateSketch.front, plateSketch.right])
+// The consumed stock region becomes the plate; hiding it would hide the solid.
+plate = extrude(
+  plateRegion,
+  length = plateThickness,
+  tagStart = $bottom,
+  tagEnd = $top,
+)
+
+// Adjacent wall faces intersect on the four vertical edges, leaving flat caps.
+roundedPlate = fillet(
+  plate,
+  radius = cornerRadius,
+  edges = [
+    {
+      sideFaces = [
+        plateRegion.tags.front,
+        plateRegion.tags.right
+      ]
+    },
+    {
+      sideFaces = [
+        plateRegion.tags.right,
+        plateRegion.tags.back
+      ]
+    },
+    {
+      sideFaces = [
+        plateRegion.tags.back,
+        plateRegion.tags.left
+      ]
+    },
+    {
+      sideFaces = [
+        plateRegion.tags.left,
+        plateRegion.tags.front
+      ]
+    }
+  ],
+)
+
+// The tagged top cap inherits the blank XY frame, with its origin at z=plateThickness.
+holeSketch = sketch(on = faceOf(roundedPlate, face = plate.faces.top)) {
+  frontLeft = circle(start = [var 12.25mm, var 10mm], center = [var 10mm, var 10mm])
+  frontRight = circle(start = [var 72.25mm, var 10mm], center = [var 70mm, var 10mm])
+  backRight = circle(start = [var 72.25mm, var 40mm], center = [var 70mm, var 40mm])
+  backLeft = circle(start = [var 12.25mm, var 40mm], center = [var 10mm, var 40mm])
+  horizontal([frontLeft.center, frontLeft.start])
+  horizontal([frontRight.center, frontRight.start])
+  horizontal([backRight.center, backRight.start])
+  horizontal([backLeft.center, backLeft.start])
+  horizontalDistance([ORIGIN, frontLeft.center]) == holeInset
+  verticalDistance([ORIGIN, frontLeft.center]) == holeInset
+  horizontalDistance([ORIGIN, frontRight.center]) == plateWidth - holeInset
+  verticalDistance([ORIGIN, frontRight.center]) == holeInset
+  horizontalDistance([ORIGIN, backRight.center]) == plateWidth - holeInset
+  verticalDistance([ORIGIN, backRight.center]) == plateHeight - holeInset
+  horizontalDistance([ORIGIN, backLeft.center]) == holeInset
+  verticalDistance([ORIGIN, backLeft.center]) == plateHeight - holeInset
+  diameter(frontLeft) == holeDiameter
+  equalRadius([
+    frontLeft,
+    frontRight,
+    backRight,
+    backLeft
+  ])
+}
+frontLeftRegion = region(segments = [holeSketch.frontLeft])
+frontRightRegion = region(segments = [holeSketch.frontRight])
+backRightRegion = region(segments = [holeSketch.backRight])
+backLeftRegion = region(segments = [holeSketch.backLeft])
+// Face extrusion consumes these regions directly into the existing body.
+bracket = extrude(
+  [
+    frontLeftRegion,
+    frontRightRegion,
+    backRightRegion,
+    backLeftRegion
+  ],
+  length = -plateThickness,
+  method = MERGE,
+)
+
+bracket

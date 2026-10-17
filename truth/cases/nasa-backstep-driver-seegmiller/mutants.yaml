@@ -1,0 +1,25 @@
+# Deliberately wrong parts the scorer must reject. Class C case with arithmetic truth: mutants operate on the passing candidate STEP.
+# Frame: x in [-1333.5, 635], y in [0, 152.4], z in [0, 114.3]; step at x = 0 (upstream floor z = 12.7).
+mutants:
+  - id: scaled_0p1pct
+    op: scale
+    factor: 1.001
+    note: 0.1 % scale error is 2 mm over the length; must fail bbox at +-0.05.
+    expect_caught_by: [bbox_size]
+  - id: raised_1mm
+    op: translate
+    offset: [0, 0, 1]
+    note: identical size and volume; every named plane is 1 mm off.
+  # The solid is the fluid domain: removing fluid is a cut, adding a wall bump is also a cut.
+  - id: recirculation_partly_filled
+    op: cut_box
+    min: [0, -1, -1]
+    max: [100, 153.4, 12.7]
+    note: the first 100 mm of fluid below the step removed (step effectively moved to x = 100).
+    expect_caught_by: [volume, below_step_top_section]
+  - id: roof_bump
+    op: cut_box
+    min: [-100, -1, 100]
+    max: [-50, 153.4, 130]
+    note: fluid removed under the roof between x = -100 and -50 (a bump intruding into the duct).
+    expect_caught_by: [volume]

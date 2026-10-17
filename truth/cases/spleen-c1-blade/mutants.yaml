@@ -1,0 +1,19 @@
+# Deliberately wrong parts the scorer must reject. Frame: blade span along z in [0, 165]; profile in x,y.
+mutants:
+  - id: scaled_0p5pct
+    op: scale
+    factor: 1.005
+    expect_caught_by: [bbox_size]
+  - id: shifted_0p2mm
+    op: translate
+    offset: [0.2, 0, 0]
+    note: profile displaced; p95 to the table exceeds 0.05 mm.
+  - id: mirrored_camber
+    op: mirror
+    axis: y
+    note: mirrored about the bbox centre plane y = const; stagger sign flips (the v1 failure class).
+  - id: rotated_half_deg
+    op: rotate
+    axis: z
+    angle_deg: 0.5
+    note: stagger off by 0.5 deg about the blade centre.

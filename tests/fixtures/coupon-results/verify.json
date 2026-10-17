@@ -1,0 +1,193 @@
+{
+  "kcl": "/Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl",
+  "format": {
+    "ok": true,
+    "findings": []
+  },
+  "lint": {
+    "ok": true,
+    "code": 0,
+    "output": ""
+  },
+  "hygiene": {
+    "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+    "kcl_version_2": true,
+    "default_unit_mm": true,
+    "legacy_v1": [],
+    "imports": [],
+    "forbidden_imports": [],
+    "asserts": 3,
+    "sketch_blocks": 1,
+    "feature_ops": 1,
+    "parameters": {
+      "width": {
+        "found": true,
+        "value": 60.0,
+        "unit": "mm",
+        "expected": 60.0,
+        "expected_unit": "mm",
+        "ok": true
+      },
+      "height": {
+        "found": true,
+        "value": 40.0,
+        "unit": "mm",
+        "expected": 40.0,
+        "expected_unit": "mm",
+        "ok": true
+      },
+      "thickness": {
+        "found": true,
+        "value": 4.0,
+        "unit": "mm",
+        "expected": 4.0,
+        "expected_unit": "mm",
+        "ok": true
+      }
+    },
+    "parameters_ok": true,
+    "lines": 42,
+    "ok": true
+  },
+  "analyze": {
+    "bbox_min": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bbox_max": [
+      60.0,
+      40.0,
+      4.0
+    ],
+    "bbox_size": [
+      60.0,
+      40.0,
+      4.0
+    ],
+    "com": [
+      30.0,
+      20.0,
+      2.0
+    ],
+    "volume_mm3": 9600.00033956021,
+    "surface_area_mm2": 5599.99980032444,
+    "mass_g": 25.92000091681257,
+    "density_kg_m3": 2700.0,
+    "seconds": 2.72
+  },
+  "bbox": {
+    "expected_min": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "expected_max": [
+      60.0,
+      40.0,
+      4.0
+    ],
+    "measured_min": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "measured_max": [
+      60.0,
+      40.0,
+      4.0
+    ],
+    "max_error": 0.0,
+    "tolerance": 0.02,
+    "ok": true
+  },
+  "volume": {
+    "declared": true,
+    "expected": 9600.0,
+    "measured": 9600.0003,
+    "error": 0.0003,
+    "band": 9.6,
+    "ok": true
+  },
+  "surface_area": {
+    "declared": true,
+    "expected": 5600.0,
+    "measured": 5599.9998,
+    "error": 0.0002,
+    "band": 5.6,
+    "ok": true
+  },
+  "center_of_mass": {
+    "declared": true,
+    "expected": [
+      30.0,
+      20.0,
+      2.0
+    ],
+    "measured": [
+      30.0,
+      20.0,
+      2.0
+    ],
+    "errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "tolerance": 0.02,
+    "ok": true
+  },
+  "analyze_ok": true,
+  "snapshots": {
+    "front": "/Users/danieldriscoll/dual/opencad/results/coupon/snapshots/view-front.png",
+    "top": "/Users/danieldriscoll/dual/opencad/results/coupon/snapshots/view-top.png",
+    "right-side": "/Users/danieldriscoll/dual/opencad/results/coupon/snapshots/view-right-side.png",
+    "iso": "/Users/danieldriscoll/dual/opencad/results/coupon/snapshots/view-iso.png",
+    "four-ways": "/Users/danieldriscoll/dual/opencad/results/coupon/snapshots/view-four-ways.png"
+  },
+  "ok": true,
+  "engine_calls": [
+    {
+      "cmd": "zoo kcl analyze --format json --volume-output-unit mm3 --center-of-mass-output-unit mm --surface-area-output-unit mm2 --mass-output-unit g --material-density 2700.0 --material-density-unit kg:m3 /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl",
+      "ok": true,
+      "seconds": 2.72
+    },
+    {
+      "cmd": "zoo kcl snapshot --angle front /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl /Users/danieldriscoll/dual/opencad/results/coupon/snapshots/view-front.png",
+      "ok": true,
+      "seconds": 1.75
+    },
+    {
+      "cmd": "zoo kcl snapshot --angle top /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl /Users/danieldriscoll/dual/opencad/results/coupon/snapshots/view-top.png",
+      "ok": true,
+      "seconds": 1.96
+    },
+    {
+      "cmd": "zoo kcl snapshot --angle right-side /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl /Users/danieldriscoll/dual/opencad/results/coupon/snapshots/view-right-side.png",
+      "ok": true,
+      "seconds": 1.72
+    },
+    {
+      "cmd": "zoo kcl snapshot --angle iso /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl /Users/danieldriscoll/dual/opencad/results/coupon/snapshots/view-iso.png",
+      "ok": true,
+      "seconds": 1.91
+    },
+    {
+      "cmd": "zoo kcl snapshot --angle four-ways /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl /Users/danieldriscoll/dual/opencad/results/coupon/snapshots/view-four-ways.png",
+      "ok": true,
+      "seconds": 2.27
+    }
+  ],
+  "stage": "verify",
+  "provenance": {
+    "generated_at": "2026-09-15T06:53:57Z",
+    "opencad_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "10eb5fc1e12ffec35713a7a7113183467bd4b676",
+      "dirty": true
+    },
+    "contract": "/Users/danieldriscoll/dual/opencad/designs/coupon/contract.yaml"
+  }
+}

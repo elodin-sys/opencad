@@ -1,0 +1,44 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/modify-solids/fillet
+Title: Fillet
+
+# Fillet
+
+Round solid edges with fillets in Zoo Design Studio.
+
+Use Fillet to create rounded transitions on edges or at face intersections. Fillets reduce stress concentrations, eliminate sharp edges, improve manufacturability, and communicate finished edge intent directly in the solid model.
+
+## Options
+
+### Selection
+Select the edge or edges you want to round. You can pick multiple edges at once to apply the same radius to all of them.
+
+### Radius
+The size of the round, specified in your current units. Larger radii create gentler curves; smaller radii make tighter rounds. Make sure the radius isn't bigger than the space available (like trying to put a 10mm radius on a 5mm thick wall).
+
+Common radius values by application:
+- **0.5-2mm** - Standard edge breaks for sheet metal and machined parts
+- **2-5mm** - Moderate fillets for comfortable hand-grip edges  
+- **5mm+** - Large blends for high-stress areas or smooth aesthetic transitions
+
+### Tag
+Tag the new fillet surface if you need to reference it in later operations.
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/EIozddgj--w"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>

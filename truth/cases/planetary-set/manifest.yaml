@@ -1,0 +1,229 @@
+id: planetary-set
+title: 'Planetary gear set as an assembly: fixed internal ring, sun, carrier and three planets, carrier
+  ratio 1/3'
+kind: machine
+truth_class: C
+role: validation
+source:
+  citation: Analytic mechanism reference (scripts/derive_mechanism_truth.py); tooth counts, module and
+    phases from the specification
+  urls: []
+  accessed: '2026-09-25'
+  revision: spec v1
+  license: this repository
+intent: 'Build the planetary gear set of the attached specification as a machine of separately designed
+  parts: a base plate, an internal 48-tooth ring rigidly fixed to it, a 24-tooth sun and a carrier turning
+  about the common axis, and one 12-tooth planet design used for three planets turning on the carrier,
+  each drafted and modelled in its own frame as the specification states. Phase every gear exactly as
+  specified so all six meshes engage. The sun is the motor-driven joint; each planet follows through two
+  epicyclic gear transmissions relative to the carrier (sun to planet, and the fixed ring to planet),
+  and the carrier is free, so the loops through the planets set its motion. Declare a motion sweep of
+  the sun. Predict the carrier ratio and the carrier angle from the geometry.'
+inputs:
+- path: inputs/planetary-set-spec.md
+  kind: text
+  sha256: 2a8bca0f4ffa01692bc1a5879aeb8b02a1d728b2cbe39448f181197d86ca14ca
+  note: the complete design specification
+truth:
+- path: truth/planetary-set-truth.yaml
+  kind: yaml
+  sha256: 3245eebdc027c1fa4cd4dd762bf624595b07c1d341253428ee9ffe28b97884e6
+  note: analytic carrier ratio, rest phases and planet axes (scripts/derive_mechanism_truth.py)
+arms:
+- id: spec-only
+  design: planetary-set
+  inputs:
+  - inputs/planetary-set-spec.md
+  images: []
+  notes: Text specification only.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 150.0
+  - 150.0
+  - 20.0
+  tolerance: 0.15
+  note: the plate bounds the set in x and y; plate z -5..0, carrier top at z 15
+- id: solid_count
+  kind: solid_count
+  expected: 7
+- id: plate
+  kind: solid
+  point:
+  - 60.0
+  - 60.0
+  - -2.5
+  expected: 112107.3
+  tolerance_rel: 0.005
+- id: ring
+  kind: solid
+  point:
+  - 54.0
+  - 0.0
+  - 5.0
+- id: sun
+  kind: solid
+  point:
+  - 15.0
+  - 0.0
+  - 5.0
+- id: carrier
+  kind: solid
+  point:
+  - 0.0
+  - 20.0
+  - 12.5
+  expected: 29263.94
+  tolerance_rel: 0.005
+  note: disc r 44 x 5 minus the Ø10 centre hole and three Ø8 planet holes
+- id: planet0
+  kind: solid
+  point:
+  - 43.0
+  - 0.0
+  - 5.0
+- id: planet1
+  kind: solid
+  point:
+  - -11.0
+  - 31.176915
+  - 5.0
+- id: planet2
+  kind: solid
+  point:
+  - -11.0
+  - -31.176915
+  - 5.0
+- id: sun_teeth
+  kind: teeth
+  solid: sun
+  point:
+  - 0
+  - 0
+  - 0
+  direction:
+  - 0
+  - 0
+  - 1
+  at: 5.0
+  module: 2.0
+  expected: 24
+- id: planet0_teeth
+  kind: teeth
+  solid: planet0
+  point:
+  - 36.0
+  - 0
+  - 0
+  direction:
+  - 0
+  - 0
+  - 1
+  at: 5.0
+  module: 2.0
+  expected: 12
+- id: planet1_teeth
+  kind: teeth
+  solid: planet1
+  point:
+  - -18.0
+  - 31.176915
+  - 0
+  direction:
+  - 0
+  - 0
+  - 1
+  at: 5.0
+  module: 2.0
+  expected: 12
+- id: planet2_teeth
+  kind: teeth
+  solid: planet2
+  point:
+  - -18.0
+  - -31.176915
+  - 0
+  direction:
+  - 0
+  - 0
+  - 1
+  at: 5.0
+  module: 2.0
+  expected: 12
+- id: ring_outside
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 0
+  - 0
+  - 5.0
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 58.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 10.0
+  length_tolerance: 0.1
+- id: carrier_hole_0
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 36.0
+  - 0
+  - 12.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 4.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 5.0
+  length_tolerance: 0.1
+- id: sun_mesh
+  kind: gear_mesh
+  a: sun
+  b: planet0
+  axis_a:
+  - - 0
+    - 0
+    - 0
+  - - 0
+    - 0
+    - 1
+  axis_b:
+  - - 36.0
+    - 0
+    - 0
+  - - 0
+    - 0
+    - 1
+  ratio: 2.0
+  pitch_deg: 15.0
+  steps: 6
+  backlash_max: 0.2
+  note: the sun and one planet about their own axes with the carrier held
+performance:
+- id: carrierRatio
+  quantity: transmission_ratio
+  unit: ''
+  evidence: C
+  value: 0.3333333333333333
+  tolerance: 1.0e-09
+  source: 24 / (24 + 48) with the ring fixed
+  where: the carrier (`body` the carrier), carrier angle over sun angle
+  note: exact analytic ratio; the prediction uses the tooth counts measured on the placed gears (the ring
+    read internally)
+- id: carrierAt360
+  quantity: joint_value
+  unit: deg
+  evidence: C
+  value: 120.0
+  tolerance: 1.0e-06
+  source: 360 deg x 1/3
+  where: 'the carrier''s joint (`joint`), with the sun turned one revolution (`at: 360`)'
+notes:
+- The plate volume is 150 x 150 x 5 - pi 5^2 5; the carrier pi 5 (44^2 - 5^2 - 3 x 4^2).

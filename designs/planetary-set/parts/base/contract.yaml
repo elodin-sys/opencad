@@ -1,0 +1,290 @@
+schema_version: 1
+name: planetary-set-base
+intent: >-
+  Base plate of the planetary gear set with a fixed ring, drafted in its own frame, which is the
+  assembly frame: a 150 x 150 x 5 mm plate from corner (-75, -75, -5) to (75, 75, 0), edges along
+  x and y, with a D10 through hole on the z axis (x = y = 0). Its top face z = 0 is the seat the
+  ring, the sun and the three planets stand on; the ring is fixed rigidly on it, concentric with
+  the hole. No other features. Authoritative source: sources/planetary-set-spec.md (text only).
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of the plate's top face (the seat) on the hole axis: x = y = 0 at the D10 hole centre, z = 0 at the top face; this is the assembly origin (sun, ring and carrier axis)"
+  axes:
+    x: "along one pair of plate edges; the plate spans x = -75..75, mirror plane at x = 0; the rest-position direction on which the sun, planets and ring each centre a tooth"
+    y: "along the other pair of plate edges; the plate spans y = -75..75, mirror plane at y = 0; completes a right-handed frame"
+    z: "up along the hole axis (the common sun, ring and carrier axis); the plate occupies z = -5..0 and the gears stand above z = 0"
+  datums:
+    - name: A
+      description: "top face z = 0, normal +z: the seat the ring, the sun and the three planets stand on"
+    - name: B
+      description: "hole axis x = y = 0 along +z: the axis the ring is fixed concentric with and the sun and carrier turn about"
+    - name: C
+      description: "mid planes x = 0 and y = 0: the plate and its hole are mirror-symmetric about both"
+
+envelope:
+  min: [-75, -75, -5]
+  max: [75, 75, 0]
+  tolerance: 0.05
+
+parameters:
+  - name: plateSizeX
+    value: 150
+    unit: mm
+    provenance: stated
+    source: "intent ('150 x 150 x 5 mm plate from corner (-75, -75, -5) to (75, 75, 0)'); planetary-set-spec.md parameter table, Base plate row"
+    tolerance: 0.01
+    description: "plate extent along x, centred on x = 0 (x = -plateSizeX/2 .. plateSizeX/2)"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 7500
+        direction: increase
+        bbox_delta: [10, 0, 0]
+        tolerance_rel: 0.02
+      infeasible_deltas: [-145]
+  - name: plateSizeY
+    value: 150
+    unit: mm
+    provenance: stated
+    source: "intent ('150 x 150 x 5 mm plate from corner (-75, -75, -5) to (75, 75, 0)'); planetary-set-spec.md parameter table, Base plate row"
+    tolerance: 0.01
+    description: "plate extent along y, centred on y = 0 (y = -plateSizeY/2 .. plateSizeY/2)"
+  - name: plateThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "intent ('150 x 150 x 5 mm plate', corner z = -5 to top z = 0); planetary-set-spec.md parameter table, Base plate row"
+    tolerance: 0.01
+    description: "plate thickness along z; the plate hangs below the seat, z = -plateThickness .. 0, so a thickness edit moves only the bottom face"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 22421.46
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.02
+      sweep:
+        values: [3, 5, 8]
+      infeasible_deltas: [-5]
+  - name: holeDiameter
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "intent ('a D10 through hole on the z axis (x = y = 0)'); planetary-set-spec.md parameter table, Base plate row ('centre hole Ø10')"
+    tolerance: 0.01
+    description: "diameter of the through hole on the z axis, z = -plateThickness .. 0"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: -172.79
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [8, 10, 12]
+      infeasible_deltas: [-10, 150]
+
+features:
+  - id: plate
+    kind: extrude
+    description: "plateSizeX x plateSizeY rectangle centred on the z axis, edges along x and y, extruded plateThickness downward from the seat z = 0 to z = -plateThickness"
+    parameters: [plateSizeX, plateSizeY, plateThickness]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[50, 50, -2.5], [-50, -50, -2.5]]
+      - method: face
+        face: top
+      - method: face
+        face: bottom
+      - method: dimension
+        dimension: thicknessZ
+      - method: dimension
+        dimension: spanX
+      - method: dimension
+        dimension: spanY
+      - method: section
+        section: midZ
+  - id: centreHole
+    kind: hole
+    description: "D10 through hole on the z axis (x = y = 0) from the bottom face z = -5 to the seat z = 0; the ring is fixed concentric with it"
+    parameters: [holeDiameter, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: centreHole
+      - method: void
+        points: [[0, 0, -2.5]]
+      - method: section
+        section: midX
+
+interfaces:
+  - name: seat
+    description: "top face z = 0 (datum A): the ring (rigid joint ringFixed at own-frame point [0, 0, 0], axis +z), the sun (revolute sunSpin at [0, 0, 0], axis +z) and the three planets stand on it; the carrier joint carrierSpin sits at [0, 0, 10], axis +z, in this frame. The thickness edit grows the plate downward and the size and hole edits keep it flat, so no edit moves this plane"
+    must_not_change: true
+    checks: [top]
+  - name: axis
+    description: "hole axis x = y = 0 along +z (datum B), the common axis of the ring (fixed concentric with the hole), the sun and the carrier; the plate and the hole stay centred on it under every edit, so both mirror planes survive"
+    must_not_change: true
+    checks: [mirrorX, mirrorY]
+
+acceptance:
+  volume:
+    expected: 112107.30
+    tolerance: 50
+    provenance: derived
+    note: "plateSizeX * plateSizeY * plateThickness - pi/4 * holeDiameter^2 * plateThickness = 112500 - 125 pi = 112107.30"
+  surface_area:
+    expected: 48000
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "2 * (150*150 - pi*5^2) + 4 * 150*5 + 2*pi*5*5 = 44842.92 + 3000 + 157.08 = 48000.00 (the hole wall exactly replaces the two removed discs because r = h = 5)"
+  center_of_mass:
+    expected: [0, 0, -2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "plate and hole both symmetric about x = 0 and y = 0; uniform slab z = -5..0 has its centroid at z = -plateThickness/2"
+  solid_count: 1
+  solids:
+    - name: plate
+      contains_point: [50, 50, -2.5]
+      description: "the single plate solid"
+  sections:
+    - id: midZ
+      plane: z
+      at: -2.5
+      expect:
+        area: 22421.46
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 1
+      description: "mid-thickness section: the 150 x 150 square with the D10 hole, 22500 - 25 pi"
+    - id: midX
+      plane: x
+      at: 0
+      expect:
+        area: 700
+        area_tolerance_rel: 0.002
+        loops: 2
+        holes: 0
+      description: "section through the hole axis: two 70 x 5 rectangles (y = -75..-5 and 5..75) either side of the through hole"
+  faces:
+    - name: top
+      plane: z
+      at: 0
+      normal: "+"
+      center: [0, 0]
+      mode: one
+    - name: bottom
+      plane: z
+      at: -5
+      normal: "-"
+      area: 22421.46
+      area_tolerance_rel: 0.002
+      center: [0, 0]
+      mode: one
+    - name: sideXPlus
+      plane: x
+      at: 75
+      normal: "+"
+      area: 750
+      area_tolerance_rel: 0.002
+      mode: one
+    - name: sideXMinus
+      plane: x
+      at: -75
+      normal: "-"
+      area: 750
+      area_tolerance_rel: 0.002
+      mode: one
+    - name: sideYPlus
+      plane: y
+      at: 75
+      normal: "+"
+      area: 750
+      area_tolerance_rel: 0.002
+      mode: one
+    - name: sideYMinus
+      plane: y
+      at: -75
+      normal: "-"
+      area: 750
+      area_tolerance_rel: 0.002
+      mode: one
+  cylinders:
+    - name: centreHole
+      point: [0, 0, -5]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 10
+      length: 5
+      t_range: [0, 5]
+      description: "D10 through hole on the z axis, z = -5..0"
+  dimensions:
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "plate thickness between the bottom face and the seat"
+    - name: spanX
+      axis: x
+      expected: 150
+      tolerance: 0.05
+      description: "plate bbox extent along x"
+    - name: spanY
+      axis: y
+      expected: 150
+      tolerance: 0.05
+      description: "plate bbox extent along y"
+  probes:
+    - name: plateMaterial
+      state: solid
+      points: [[50, 50, -2.5], [-50, 50, -2.5], [-50, -50, -2.5], [50, -50, -2.5], [15, 0, -2.5]]
+      description: "mid-thickness points in each quadrant and beside the hole"
+    - name: holeVoid
+      state: void
+      points: [[0, 0, -2.5], [0, 2.5, -2.5]]
+      description: "points inside the D10 hole, at least 2.5 mm from its wall and from both plate faces"
+  cylinder_counts:
+    - name: d10Holes
+      diameter: 10
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+      description: "exactly one D10 hole (no other features)"
+  symmetry:
+    - name: mirrorX
+      plane: x
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+    - name: mirrorY
+      plane: y
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 108000
+    volume_max: 113000
+
+references:
+  - path: sources/planetary-set-spec.md
+    kind: text
+    role: authoritative
+    sha256: 2a8bca0f4ffa01692bc1a5879aeb8b02a1d728b2cbe39448f181197d86ca14ca
+    units: mm
+    revision: "unversioned"
+    note: "planetary set design specification; Base plate row of the parameter table and the Frame paragraph"
+
+open_questions:
+  - "Material, density and process are not stated; mass properties are left at the analyzer's default density and no mass claim is made."
+  - "No edge breaks, corner radii or fastener holes are specified ('No other features'); the plate edges and hole edges are left sharp."
+  - "How the ring is fixed to the plate is not specified beyond a rigid joint; no bolt or dowel holes are modelled."
+  - "The fit of the D10 hole (clearance for a shaft through the plate, if any) is not stated; the nominal diameter is used."

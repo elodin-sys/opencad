@@ -1,0 +1,340 @@
+Source URL: https://zoo.dev/docs/kcl-book/fillets.html
+Title: Fillets, Chamfers and Edges
+
+# Fillets, Chamfers and Edges
+- [Motivation: Applying a fillet](#motivation-applying-a-fillet)
+- [Relationships between edges](#relationships-between-edges)
+- [Edges between faces](#edges-between-faces)
+- [Chamfers](#chamfers)
+  - [Advanced chamfers](#advanced-chamfers)
+- [Measuring geometry](#measuring-geometry)
+
+## Motivation: Applying a fillet
+When you manufacture a part, you often want to smooth off its sharp edges, so they're rounded and won't accidentally cut someone who holds it. Let's say we're modeling a cube, like this:
+
+```kcl=cube_no_fillets
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+
+// Extrude a cube.
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+```
+
+It produces a cube like this:
+
+What if we want to fillet one of its sides? Let's start simple and refer to one of the four bottom edges. Those edges were made by the four [`line`](https://zoo.dev/docs/kcl-std/functions/std-solver-line) function calls, which were all assigned to variables (`line1`, `line2`, etc). The region preserves those variables under `.tags`, so we can reference the edge created from `line1` via `regionCube.tags.line1` and apply a fillet to it.
+
+```kcl=cube_one_fillet
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+
+// Extrude a cube.
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Fillet one edge
+filletCube = fillet(extrudeCube, tags = regionCube.tags.line1, radius = 0.2)
+```
+
+The [`fillet`](https://zoo.dev/docs/kcl-std/functions/std-solid-fillet) function accepts an argument `tags`, which expects edges to fillet. You can pass in a single edge, like we did, or an array of edges like `[regionCube.tags.line1, regionCube.tags.line2]`.
+
+That program should produce a cube with one filleted edge, like this:
+
+Nice! We could fillet all four bottom sides if we wanted to:
+
+```kcl=cube_four_fillets
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+
+// Extrude a cube.
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Fillet all bottom edges
+filletCube = fillet(
+  extrudeCube,
+  tags = [
+    regionCube.tags.line1,
+    regionCube.tags.line2,
+    regionCube.tags.line3,
+    regionCube.tags.line4,
+  ],
+  radius = 0.2,
+)
+```
+
+## Relationships between edges
+So far, we've assigned geometry (like a line) to a variable when we create it, and then use that variable to refer to it later (e.g. for fillets). What about edges we don't create directly, and therefore can't assign to a variable? For example, we've already filleted the four bottom edges, but how do we fillet the top four edges? We aren't creating them via [`line`](https://zoo.dev/docs/kcl-std/functions/std-solver-line) calls. They're created by the CAD engine in the [`extrude`](https://zoo.dev/docs/kcl-std/functions/std-sketch-extrude) call. If we didn't explicitly create them with a sketch function, how do we store them in a variable? Here's the secret --- you don't. KCL has a few helpful functions to access edges that you didn't create directly. Because we can refer to the bottom edges, we can use helper functions like [`getOppositeEdge`](https://zoo.dev/docs/kcl-std/functions/std-sketch-getOppositeEdge) to reference the top edges, like this:
+
+```kcl=cube_two_opposite_fillets
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// This is all the same as previous examples.
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Note that here we're using `getOppositeEdge`.
+filletCube = fillet(
+  extrudeCube,
+  tags = [
+    // Fillet the bottom edge
+    regionCube.tags.line1,
+    // Fillet the top edge
+    getOppositeEdge(regionCube.tags.line1)
+  ],
+  radius = 0.2,
+)
+```
+
+We can fillet all four bottom edges *and* all four top edges by using [`getOppositeEdge`](https://zoo.dev/docs/kcl-std/functions/std-sketch-getOppositeEdge) on each:
+
+```kcl=cube_eight_fillets
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Same as previous examples:
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Fillet edges
+filletCube = fillet(
+  extrudeCube,
+  tags = [
+    // Fillet the bottom four edges
+    regionCube.tags.line1,
+    regionCube.tags.line2,
+    regionCube.tags.line3,
+    regionCube.tags.line4,
+    // Fillet the top four edges
+    getOppositeEdge(regionCube.tags.line1),
+    getOppositeEdge(regionCube.tags.line2),
+    getOppositeEdge(regionCube.tags.line3),
+    getOppositeEdge(regionCube.tags.line4)
+  ],
+  radius = 0.2,
+)
+```
+
+So, we've filleted the bottom horizontal edges, and the top horizontal edges. What about the side (vertical) edges, which connect the top and bottom face? We can use [`getNextAdjacentEdge`](https://zoo.dev/docs/kcl-std/functions/std-sketch-getNextAdjacentEdge) and [`getPreviousAdjacentEdge`](https://zoo.dev/docs/kcl-std/functions/std-sketch-getPreviousAdjacentEdge) to reference them:
+
+```kcl=cube_next_prev_fillets
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+
+// Extrude a cube
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Fillet edges
+filletCube = fillet(
+  extrudeCube,
+  tags = [
+    // Bottom edge
+    regionCube.tags.line1,
+    // One side edge
+    getNextAdjacentEdge(regionCube.tags.line1),
+    // The other side edge
+    getPreviousAdjacentEdge(regionCube.tags.line1),
+  ],
+  radius = 0.2,
+)
+```
+
+Here, we filleted the bottom side, `line1` just like we did before. But we've also filleted the sides adjacent to it. One side is "before" line1, one side is "after" line1, in Zoo's internal tracking of edges. We can use a similar trick to fillet all four vertical side edges:
+
+```kcl=cube_next_prev_fillets_all_sides
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+
+// Extrude a cube
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Fillet edges
+filletCube = fillet(
+  extrudeCube,
+  tags = [
+    getNextAdjacentEdge(regionCube.tags.line1),
+    getPreviousAdjacentEdge(regionCube.tags.line1),
+    getNextAdjacentEdge(regionCube.tags.line3),
+    getPreviousAdjacentEdge(regionCube.tags.line3),
+  ],
+  radius = 0.2,
+)
+```
+
+## Edges between faces
+Sometimes `getNextAdjacentEdge` and similar functions are a bit tricky to use. It can be hard to look at a model and figure out which is the next, or previous, or opposite, edge. There's another way to refer to edges: which faces does this edge touch? For this we use the [`getCommonEdge`](https://zoo.dev/docs/kcl-std/functions/std-sketch-getCommonEdge) function.
+
+```kcl=cube_common_edge
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// This is the same as previous examples
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Find the edge that borders the face from line4 and the face from line1.
+edge = getCommonEdge(faces = [
+  regionCube.tags.line4,
+  regionCube.tags.line1
+])
+
+// Then fillet it.
+fillet(extrudeCube, tags = edge, radius = 0.2)
+```
+
+[`getCommonEdge`](https://zoo.dev/docs/kcl-std/functions/std-sketch-getCommonEdge) takes a list of faces, and returns the edge that is shared between them -- their *common* edge. This is a pretty useful function, because usually it's easier to reference and name faces rather than edges.
+
+Notice in this example that the list of `faces` looks like a list of edges. We're passing in `line4` and `line1`, which we used to reference edges in the above examples. That's because KCL recognizes that `extrude` creates a face out of each edge (imagine each edge being dragged upwards, to create a face).
+
+There are other ways to refer to faces, but we'll see them later in this book.
+
+## Chamfers
+A [`chamfer`](https://zoo.dev/docs/kcl-std/functions/std-solid-chamfer) is just like a fillet, except that fillets smooth away an edge to make it round, but chamfers just make a single cut across an edge. Here's an example of the difference. Compare this chamfered cube with the filleted cubes above:
+
+```kcl=chamfered_cube
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Same as previous examples
+width = 1
+square = sketch(on = XY) {
+  line1 = line(start = [width / 2, -width / 2], end = [width / 2, width / 2])
+  line2 = line(start = [width / 2, width / 2], end = [-width / 2, width / 2])
+  line3 = line(start = [-width / 2, width / 2], end = [-width / 2, -width / 2])
+  line4 = line(start = [-width / 2, -width / 2], end = [width / 2, -width / 2])
+}
+regionCube = region(segments = [square.line1, square.line2])
+extrudeCube = extrude(regionCube, length = width)
+
+// Apply a chamfer
+chamferedCube = chamfer(extrudeCube, tags = [getOppositeEdge(regionCube.tags.line1)], length = 0.2)
+```
+
+### Advanced chamfers
+To define the chamfer, you only need to provide its `length`. But if you want more control of the chamfer angle, you can set the optional `secondLength` or `angle` parameters. Let's see how they work.
+
+Chamfering cuts away at two faces, creating a third face in between them. By default, the chamfer cuts away an even amount from both sides, creating a chamfered face at a 45 degree angle. The amount cut away from each face is the `length` parameter. But you can make a chamfer that cuts different amounts from each face, using the `secondLength` or `angle` parameters. This diagram shows the cross-section of a cube being chamfered:
+
+![How chamfer lengths really work](images/static/advanced_chamfers.png)
+
+Setting a second length which is much bigger or smaller than the first length means the chamfer will be "steep" -- the new face will be at a very sharp (or very obtuse) angle between the existing two faces. You can also set this angle explicitly, via the `angle` parameter. You can't use both `angle` and `secondLength` because they're essentially two different ways of setting the same property.
+
+## Measuring geometry
+So we've learned to use variables from sketch blocks to reference the lines we create, then use helper functions like [`getOppositeEdge`](https://zoo.dev/docs/kcl-std/functions/std-sketch-getOppositeEdge) to reference other geometry elsewhere in the model. But these variables aren't just used for altering edges. They provide a valuable way to query and measure your models. Let's see how.
+
+Let's say you've got a solid triangle, like this:
+
+```kcl
+// Make a triangle
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+sketch001 = sketch(on = YZ) {
+  line1 = line(start = [var 5.29mm, var -4.11mm], end = [var -4.31mm, var -4.11mm])
+  line2 = line(start = [var -4.31mm, var -4.11mm], end = [var 0.49mm, var 5.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.49mm, var 5.14mm], end = [var 5.29mm, var -4.11mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+  equalLength([line2, line3])
+  horizontal(line1)
+}
+
+// Extrude it
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 1)
+```
+
+Let's ask a simple question. How long is each side of the triangle?
+
+It sounds simple, but to actually calculate it, you'd have to break out a pencil and paper, then do some trigonometry. The problem is, the length doesn't appear anywhere in the `line` function call. The lines are defined by their start and end points, and the length is an implicit property of those. Defining lines as a start and end is helpful, but it means important properties, like length, can't be read from our source code.
+
+However, tags give us a simple way to refer to each line, and then query them for properties like length with the [`segLen`](https://zoo.dev/docs/kcl-std/functions/std-sketch-segLen) function. Let's update our program:
+
+```kcl
+// Make a triangle
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+sketch001 = sketch(on = YZ) {
+  line1 = line(start = [var 5.29mm, var -4.11mm], end = [var -4.31mm, var -4.11mm])
+  line2 = line(start = [var -4.31mm, var -4.11mm], end = [var 0.49mm, var 5.14mm])
+  coincident([line1.end, line2.start])
+  line3 = line(start = [var 0.49mm, var 5.14mm], end = [var 5.29mm, var -4.11mm])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line1.start])
+  equalLength([line2, line3])
+  horizontal(line1)
+}
+// Extrude it
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 1)
+
+// Measure its side lengths
+side1Len = segLen(extrude001.sketch.tags.line1)
+side2Len = segLen(extrude001.sketch.tags.line2)
+side3Len = segLen(extrude001.sketch.tags.line3)
+```
+
+Now you can open up the Variables pane and look at the `side1Len`, `side2Len` and `side3Len` variables to find each side's length. That's pretty useful! And if you want to use those lengths elsewhere in your code, you can! You could start drawing lines where the end is `[side1Len, 0]` for example, or plug those lengths into other calculations.
+
+There are other helpers too, like [`segStart`](https://zoo.dev/docs/kcl-std/functions/std-sketch-segStart) and [`segEnd`](https://zoo.dev/docs/kcl-std/functions/std-sketch-segEnd) to find a line's start and end, respectively. Take a look at the KCL [standard library docs](https://zoo.dev/docs/kcl-std) to find them all.

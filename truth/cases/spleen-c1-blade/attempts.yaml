@@ -1,0 +1,312 @@
+attempts:
+- started: '2026-09-15T17:56:11Z'
+  arm: table-and-notes
+  backend: zoo
+  design: spleen-c1-blade
+  stage_reached: draft-failed
+  force: false
+  resume_from: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/spleen-c1-blade-1789494972
+  draft:
+    ok: false
+    rounds: 3
+    thread_id: 01a0a636-553c-7a83-85ea-52858a6d25e7
+    problems:
+    - unexpected reference entry 'profile.png'
+  seconds: 1133
+  finished: '2026-09-15T18:15:05Z'
+- started: '2026-09-15T18:15:23Z'
+  arm: table-and-notes
+  backend: zoo
+  design: spleen-c1-blade
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/spleen-c1-blade-1789496126
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0a647-efef-7ee2-afdb-8922dfc811fe
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 9
+      required_total: 10
+      optional_pass: 0
+      optional_total: 0
+    failed:
+    - deviation_vs_v2_blade
+  seconds: 5244
+  finished: '2026-09-15T19:42:49Z'
+- started: '2026-09-15T19:43:30Z'
+  arm: table-and-notes
+  backend: zoo
+  design: spleen-c1-blade
+  stage_reached: scored
+  resume_from: score
+  note: Same handoff as the previous attempt. Rescored after silhouette IoU raster
+    resolution increased from 600 to 2400 px (top-view IoU 0.981 -> 0.994).
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 10
+      required_total: 10
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 70
+  finished: '2026-09-15T19:44:39Z'
+- started: '2026-09-16T07:50:28Z'
+  finished: '2026-09-16T07:50:29Z'
+  arm: table-and-notes
+  backend: zoo
+  design: spleen-c1-blade
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 11
+      required_total: 11
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532
+  seconds: 81
+- started: '2026-09-16T08:36:41Z'
+  finished: '2026-09-16T08:36:41Z'
+  arm: table-and-notes
+  backend: zoo
+  design: spleen-c1-blade
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 11
+      required_total: 11
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532
+  seconds: 77
+- started: '2026-09-16T08:42:32Z'
+  finished: '2026-09-16T08:42:32Z'
+  arm: table-and-notes
+  backend: zoo
+  design: spleen-c1-blade
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 12
+      required_total: 12
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532
+  seconds: 127
+- started: '2026-09-16T09:31:27Z'
+  finished: '2026-09-16T09:31:27Z'
+  arm: table-and-notes
+  backend: zoo
+  design: spleen-c1-blade
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 12
+      required_total: 12
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532
+  seconds: 125
+- started: '2026-09-16T09:39:08Z'
+  finished: '2026-09-16T09:39:08Z'
+  arm: table-and-notes
+  backend: zoo
+  design: spleen-c1-blade
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 12
+      required_total: 12
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532
+  seconds: 128
+- started: '2026-09-16T09:48:01Z'
+  finished: '2026-09-16T09:48:01Z'
+  arm: table-and-notes
+  backend: zoo
+  design: spleen-c1-blade
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 12
+      required_total: 12
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532
+  seconds: 119
+- started: '2026-09-16T10:32:19Z'
+  finished: '2026-09-16T10:32:20Z'
+  arm: table-and-notes
+  backend: zoo
+  design: spleen-c1-blade
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 12
+      required_total: 12
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532
+  seconds: 122
+- started: '2026-09-20T06:07:43Z'
+  arm: table-and-notes
+  backend: cadquery
+  design: spleen-c1-blade
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/spleen-c1-blade
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 4056239a-6817-444e-aef9-137a0b157647
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/spleen-c1-blade/manifest.yaml'''
+  seconds: 625
+  finished: '2026-09-20T06:18:11Z'
+- started: '2026-09-20T06:07:44Z'
+  arm: table-and-notes
+  backend: freecad
+  design: spleen-c1-blade
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/spleen-c1-blade
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: e0e071bf-ddf7-4296-b2d7-706c00241184
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/spleen-c1-blade/manifest.yaml'''
+  seconds: 768
+  finished: '2026-09-20T06:20:33Z'
+- started: '2026-09-20T06:07:44Z'
+  arm: table-and-notes
+  backend: build123d
+  design: spleen-c1-blade
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/spleen-c1-blade
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 0df891c0-d88c-41a7-9351-572edac84b4a
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 12
+      required_total: 12
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 934
+  finished: '2026-09-20T06:23:20Z'
+- started: '2026-09-20T06:25:38Z'
+  finished: '2026-09-20T06:25:40Z'
+  arm: table-and-notes
+  design: spleen-c1-blade
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 12
+      required_total: 12
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 26c1b3a9520510eae47deeef5fd86fefc23507bd502e92d45158f356a4527c1b
+  seconds: 129
+  backend: cadquery
+- started: '2026-09-20T06:27:44Z'
+  finished: '2026-09-20T06:27:44Z'
+  arm: table-and-notes
+  design: spleen-c1-blade
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 12
+      required_total: 12
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: f7bf485d5647d49fa0c9aed267f9196071e5786ffa3458807d7e0be565e759fa
+  seconds: 122
+  backend: freecad

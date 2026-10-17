@@ -1,0 +1,282 @@
+schema_version: 1
+name: four-bar-ground
+intent: >-
+  Ground plate (link 1) of the planar crank-rocker four-bar linkage `four-bar`, modelled in its own frame, which is the
+  assembly frame: origin at pivot O2 on the top face, +x toward O4, +z up along the pin axes. One rectangular plate
+  160 (x) x 60 (y) x 5 (z) from corner (-30, -30, -5) to (130, 30, 0), top face z = 0, bottom face z = -5, with two
+  Ø6 through holes along z centred at O2 (0, 0) and O4 (100, 0) (ground length 100). The O2 hole axis is the crank's
+  pivot (joint pinO2, the motor) and the top face around it is the crank's seat (the crank lies on z = 0..5); the O4
+  hole axis is the rocker's pivot (joint pinO4; the rocker runs at z = 10..15, so nothing seats there). No other
+  features; one solid. Authoritative source: sources/four-bar-spec.md (text).
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "pivot O2: the O2 hole axis where it meets the plate's top face (x = y = z = 0); this is the assembly frame of four-bar"
+  axes:
+    x: "along the ground line from O2 toward O4 (O4 at x = 100); the plate spans x = -30..130"
+    y: "across the 60 mm plate width, right-handed with x and z; the plate spans y = -30..30 and both hole axes lie on y = 0"
+    z: "up along the pin axes, normal to the plate; top face z = 0, bottom face z = -5; the links stack above it (crank 0..5, coupler 5..10, rocker 10..15)"
+  datums:
+    - name: A
+      description: "top face, z = 0: the crank's seat and the primary datum"
+    - name: B
+      description: "O2 hole axis, x = 0, y = 0, parallel to z: the crank pivot (joint pinO2)"
+    - name: C
+      description: "O4 hole axis, x = 100, y = 0, parallel to z: the rocker pivot (joint pinO4); the line B to C is +x"
+
+envelope:
+  min: [-30, -30, -5]
+  max: [130, 30, 0]
+  tolerance: 0.05
+
+parameters:
+  - name: plateLength
+    value: 160
+    unit: mm
+    provenance: stated
+    source: "sources/four-bar-spec.md, link table, Ground row: plate 160 x 60 x 5, corner (-30, -30, -5) to (130, 30, 0)"
+    tolerance: 0.01
+    description: "plate extent along x, from plateXMin to plateXMin + plateLength (= 130)"
+  - name: plateWidth
+    value: 60
+    unit: mm
+    provenance: stated
+    source: "sources/four-bar-spec.md, link table, Ground row: plate 160 x 60 x 5, y from -30 to 30"
+    tolerance: 0.01
+    description: "plate extent along y, centred on the ground line y = 0 (y = -plateWidth/2 .. +plateWidth/2)"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 8000
+        direction: increase
+        bbox_delta: [0, 10, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [40, 60, 80]
+      infeasible_deltas: [-56]
+  - name: plateThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "sources/four-bar-spec.md, link table, Ground row: plate 160 x 60 x 5 from z = -5 to 0; layers: ground z -5..0"
+    tolerance: 0.01
+    description: "plate thickness along z, hanging below the top face z = 0 (bottom face at z = -plateThickness)"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 9543.451
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.02
+      sweep:
+        values: [3, 5, 8]
+      infeasible_deltas: [-5]
+  - name: plateXMin
+    value: -30
+    unit: mm
+    provenance: stated
+    source: "sources/four-bar-spec.md, link table, Ground row: corner (-30, -30, -5)"
+    tolerance: 0.01
+    description: "x of the plate's -x end face, 30 behind O2"
+  - name: groundLength
+    value: 100
+    unit: mm
+    provenance: stated
+    source: "sources/four-bar-spec.md, link table, Ground row: O2 (0, 0) and O4 (100, 0): ground length 100"
+    tolerance: 0.01
+    description: "O2 to O4 along +x: the x of the O4 hole axis"
+  - name: holeDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "sources/four-bar-spec.md, link table, Ground row: Ø6 holes at O2 and O4"
+    tolerance: 0.01
+    description: "diameter of both through pivot holes"
+
+features:
+  - id: plate
+    kind: extrude
+    description: "rectangle plateLength x plateWidth (x from plateXMin, centred on y = 0) extruded from the top face z = 0 down by plateThickness"
+    parameters: [plateLength, plateWidth, plateThickness, plateXMin]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[50, 0, -2.5], [-20, -20, -2.5], [120, 20, -2.5]]
+      - method: face
+        face: top
+      - method: face
+        face: bottom
+      - method: dimension
+        dimension: thicknessZ
+      - method: section
+        section: midZ
+  - id: holeO2
+    kind: hole
+    description: "Ø holeDiameter through hole along z at O2 (0, 0): the crank's pivot bore"
+    parameters: [holeDiameter]
+    verify:
+      - method: cylinder
+        cylinder: holeO2
+      - method: void
+        points: [[0, 0, -2.5]]
+      - method: section
+        section: throughO2
+  - id: holeO4
+    kind: hole
+    description: "Ø holeDiameter through hole along z at O4 (groundLength, 0): the rocker's pivot bore"
+    parameters: [holeDiameter, groundLength]
+    verify:
+      - method: cylinder
+        cylinder: holeO4
+      - method: void
+        points: [[100, 0, -2.5]]
+      - method: section
+        section: throughO4
+
+interfaces:
+  - name: pivotO2
+    description: "joint pinO2 (revolute about +z, the motor): the O2 hole axis x = y = 0 is the crank's pivot and the top face z = 0 around it is the crank's seat (crank on z = 0..5); the plateThickness and plateWidth edits move neither"
+    must_not_change: true
+    checks: [holeO2, top]
+  - name: pivotO4
+    description: "joint pinO4 (revolute about +z): the O4 hole axis x = 100, y = 0 is the rocker's pivot; the joint origin (100, 0, 0) lies on the top face plane and the rocker runs at z = 10..15, so nothing seats on the plate there; the edits move neither"
+    must_not_change: true
+    checks: [holeO4, top]
+
+acceptance:
+  volume:
+    expected: 47717.257
+    tolerance: 10
+    provenance: derived
+    note: "plateLength * plateWidth * plateThickness - 2 * pi * (holeDiameter/2)^2 * plateThickness = 48000 - 90 pi"
+  surface_area:
+    expected: 21475.398
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "top + bottom 2 * (160*60 - 2 pi 3^2) = 19086.903; four sides 2 * (160 + 60) * 5 = 2200; two bores 2 * pi * 6 * 5 = 188.496"
+  center_of_mass:
+    expected: [50, 0, -2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "plate centroid (plateXMin + plateLength/2, 0, -plateThickness/2); the holes at x = 0 and 100 are symmetric about x = 50 and y = 0, so removing them does not shift it"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: -2.5
+      expect:
+        area: 9543.451
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 2
+      description: "mid-thickness section: the 160 x 60 outline with both Ø6 pivot holes (9600 - 18 pi)"
+    - id: throughO2
+      plane: x
+      at: 1
+      expect:
+        area: 271.716
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 0
+      description: "1 mm off the O2 axis (clear of any cylinder seam): the hole chord 2 sqrt(8) splits the 60 x 5 strip into two islands, so the hole runs through the full thickness (300 - 10 sqrt(8))"
+    - id: throughO4
+      plane: x
+      at: 101
+      expect:
+        area: 271.716
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 0
+      description: "as throughO2, 1 mm off the O4 axis"
+  faces:
+    - name: top
+      plane: z
+      at: 0
+      normal: "+"
+      mode: one
+    - name: bottom
+      plane: z
+      at: -5
+      normal: "-"
+      area: 9543.451
+      area_tolerance_rel: 0.002
+      center: [50, 0]
+      mode: one
+  cylinders:
+    - name: holeO2
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      radius_tolerance: 0.02
+      axis_tolerance: 0.02
+      description: "O2 pivot bore (crank, joint pinO2); no length because the plateThickness edit changes it"
+    - name: holeO4
+      point: [100, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      radius_tolerance: 0.02
+      axis_tolerance: 0.02
+      description: "O4 pivot bore (rocker, joint pinO4); no length because the plateThickness edit changes it"
+  dimensions:
+    - name: lengthX
+      axis: x
+      expected: 160
+      tolerance: 0.05
+      description: "bbox extent along x"
+    - name: widthY
+      axis: y
+      expected: 60
+      tolerance: 0.05
+      description: "bbox extent along y"
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.02
+      between: [bottom, top]
+      description: "plate thickness between the bottom and top faces"
+  solids:
+    - name: ground
+      contains_point: [50, 10, -2.5]
+      description: "the single ground plate solid"
+  probes:
+    - name: inPlate
+      state: solid
+      points: [[50, 0, -2.5], [-20, -20, -2.5], [120, 20, -2.5], [-20, 20, -2.5], [120, -20, -2.5], [0, 10, -2.5], [100, -10, -2.5]]
+    - name: inHoles
+      state: void
+      points: [[0, 0, -2.5], [100, 0, -2.5]]
+  cylinder_counts:
+    - name: pivotHoles
+      diameter: 6
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 2
+  deviation: null
+  blockout:
+    volume_min: 46500
+    volume_max: 48500
+
+references:
+  - path: sources/four-bar-spec.md
+    kind: text
+    role: authoritative
+    sha256: aececd85a2ba8a2e020775f05a44f1bd1c3a505c8c8c5ed634606d975490bf17
+    units: mm
+    revision: "as supplied (unversioned)"
+    note: "four-bar design specification: link table (Ground row), frame, layers and pins"
+
+open_questions:
+  - "Material, density and process are not stated; no mass claim is made (analyze defaults to 1 kg/m3)."
+  - "The fit of the Ø6 pivot holes to their pins is not stated; the holes are nominal Ø6 with no clearance allowance, and the pins are not part of this body."
+  - "Edge breaks (chamfers or fillets on the plate edges and hole mouths) are not stated; none are modelled."
+  - "How the O4 pin bridges the 10 mm between the top face and the rocker layer (z = 0..10) is an assembly question; the ground only provides the through hole."
+  - "Which end grows under a plateLength change is not stated; the contract keeps plateXMin = -30 fixed so only the +x end moves (plateLength is not edit-tested)."

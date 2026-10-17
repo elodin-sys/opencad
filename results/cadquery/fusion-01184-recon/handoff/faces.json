@@ -1,0 +1,279 @@
+{
+  "named_faces": {
+    "faceXMin": {
+      "plane": "x",
+      "at": 100.0,
+      "normal": "-",
+      "found": 1,
+      "area": 100.0,
+      "ok": true,
+      "position": 100.0,
+      "area_expected": 100.0,
+      "area_ok": true,
+      "center_expected": [
+        5.0,
+        95.0
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        5.0,
+        95.0
+      ]
+    },
+    "faceXMax": {
+      "plane": "x",
+      "at": 110.0,
+      "normal": "+",
+      "found": 1,
+      "area": 100.0,
+      "ok": true,
+      "position": 110.0,
+      "area_expected": 100.0,
+      "area_ok": true,
+      "center_expected": [
+        5.0,
+        95.0
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        5.0,
+        95.0
+      ]
+    },
+    "faceYMin": {
+      "plane": "y",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 100.0,
+      "ok": true,
+      "position": 0.0,
+      "area_expected": 100.0,
+      "area_ok": true,
+      "center_expected": [
+        105.0,
+        95.0
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        105.0,
+        95.0
+      ]
+    },
+    "faceYHeadLow": {
+      "plane": "y",
+      "at": 10.0,
+      "normal": "+",
+      "found": 1,
+      "area": 45.13673186459887,
+      "ok": true,
+      "position": 10.0,
+      "area_expected": 45.14,
+      "area_ok": true,
+      "center_expected": [
+        105.0,
+        81.28
+      ],
+      "center_error": 0.004267651666950201,
+      "centroid_uv": [
+        105.0,
+        81.28426765166695
+      ]
+    },
+    "faceYHeadHigh": {
+      "plane": "y",
+      "at": 10.0,
+      "normal": "+",
+      "found": 1,
+      "area": 45.13673186460028,
+      "ok": true,
+      "position": 10.0,
+      "area_expected": 45.14,
+      "area_ok": true,
+      "center_expected": [
+        105.0,
+        108.72
+      ],
+      "center_error": 0.00426765166693599,
+      "centroid_uv": [
+        105.00000000000001,
+        108.71573234833306
+      ]
+    },
+    "faceYShaftEnd": {
+      "plane": "y",
+      "at": 88.0,
+      "normal": "+",
+      "found": 1,
+      "area": 19.634954084936208,
+      "ok": true,
+      "position": 88.0,
+      "area_expected": 19.63,
+      "area_ok": true,
+      "center_expected": [
+        105.0,
+        95.0
+      ],
+      "center_error": 1.4210854715202004e-14,
+      "centroid_uv": [
+        104.99999999999999,
+        95.0
+      ]
+    },
+    "faceZMin": {
+      "plane": "z",
+      "at": 70.0,
+      "normal": "-",
+      "found": 1,
+      "area": 66.6305283725005,
+      "ok": true,
+      "position": 70.0,
+      "area_expected": 66.63,
+      "area_ok": true,
+      "center_expected": [
+        105.0,
+        5.0
+      ],
+      "center_error": 8.881784197001252e-16,
+      "centroid_uv": [
+        105.0,
+        5.000000000000001
+      ]
+    },
+    "faceZMax": {
+      "plane": "z",
+      "at": 120.0,
+      "normal": "+",
+      "found": 1,
+      "area": 66.6305283725005,
+      "ok": true,
+      "position": 120.0,
+      "area_expected": 66.63,
+      "area_ok": true,
+      "center_expected": [
+        105.0,
+        5.0
+      ],
+      "center_error": 8.881784197001252e-16,
+      "centroid_uv": [
+        105.0,
+        5.000000000000001
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "faceXMin",
+      "plane": "x",
+      "at": 100.0,
+      "normal": "-",
+      "area": 100.0,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        5.0,
+        95.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceXMax",
+      "plane": "x",
+      "at": 110.0,
+      "normal": "+",
+      "area": 100.0,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        5.0,
+        95.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceYMin",
+      "plane": "y",
+      "at": 0.0,
+      "normal": "-",
+      "area": 100.0,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        105.0,
+        95.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceYHeadLow",
+      "plane": "y",
+      "at": 10.0,
+      "normal": "+",
+      "area": 45.14,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        105.0,
+        81.28
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceYHeadHigh",
+      "plane": "y",
+      "at": 10.0,
+      "normal": "+",
+      "area": 45.14,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        105.0,
+        108.72
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceYShaftEnd",
+      "plane": "y",
+      "at": 88.0,
+      "normal": "+",
+      "area": 19.63,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        105.0,
+        95.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceZMin",
+      "plane": "z",
+      "at": 70.0,
+      "normal": "-",
+      "area": 66.63,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        105.0,
+        5.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceZMax",
+      "plane": "z",
+      "at": 120.0,
+      "normal": "+",
+      "area": 66.63,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        105.0,
+        5.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 8
+}

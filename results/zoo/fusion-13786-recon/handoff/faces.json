@@ -1,0 +1,255 @@
+{
+  "named_faces": {
+    "faceXMin": {
+      "plane": "x",
+      "at": -50.0,
+      "normal": "-",
+      "found": 1,
+      "area": 272.85840732141014,
+      "ok": true,
+      "position": -50.0,
+      "area_expected": 272.86,
+      "area_ok": true,
+      "center_expected": [
+        0.53,
+        1.5
+      ],
+      "center_error": 0.002059120650286017,
+      "centroid_uv": [
+        0.527940879349714,
+        1.4999999999770943
+      ]
+    },
+    "faceXMax": {
+      "plane": "x",
+      "at": 50.0,
+      "normal": "+",
+      "found": 1,
+      "area": 272.85840732141014,
+      "ok": true,
+      "position": 50.0,
+      "area_expected": 272.86,
+      "area_ok": true,
+      "center_expected": [
+        0.53,
+        1.5
+      ],
+      "center_error": 0.0020591206502824644,
+      "centroid_uv": [
+        0.5279408793497176,
+        1.5000000000229057
+      ]
+    },
+    "faceXNegInner": {
+      "plane": "x",
+      "at": -45.0,
+      "normal": "+",
+      "found": 0,
+      "area": 0.0,
+      "ok": false
+    },
+    "faceXPosInner": {
+      "plane": "x",
+      "at": 45.0,
+      "normal": "-",
+      "found": 0,
+      "area": 0.0,
+      "ok": false
+    },
+    "faceYMin": {
+      "plane": "y",
+      "at": -50.0,
+      "normal": "-",
+      "found": 1,
+      "area": 270.0,
+      "ok": true,
+      "position": -50.0,
+      "area_expected": 270.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        1.5
+      ],
+      "center_error": 1.4802973661668755e-15,
+      "centroid_uv": [
+        1.4802973661668755e-15,
+        1.5
+      ]
+    },
+    "faceYMax": {
+      "plane": "y",
+      "at": 50.0,
+      "normal": "+",
+      "found": 1,
+      "area": 282.0,
+      "ok": true,
+      "position": 50.0,
+      "area_expected": 282.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        1.5
+      ],
+      "center_error": 8.881784197001252e-16,
+      "centroid_uv": [
+        -8.881784197001252e-16,
+        1.5
+      ]
+    },
+    "faceZMin": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 8412.130247912355,
+      "ok": false,
+      "position": 0.0,
+      "area_expected": 8331.1,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        -4.93
+      ],
+      "center_error": 0.293153511896264,
+      "centroid_uv": [
+        -2.2976373990472094e-06,
+        -4.63684648811274
+      ]
+    },
+    "faceZMax": {
+      "plane": "z",
+      "at": 3.0,
+      "normal": "+",
+      "found": 1,
+      "area": 8412.10370602256,
+      "ok": false,
+      "position": 3.0,
+      "area_expected": 8331.1,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        -4.94
+      ],
+      "center_error": 0.30303307750756897,
+      "centroid_uv": [
+        2.8432711420420033e-05,
+        -4.636966923826311
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "faceXMin",
+      "plane": "x",
+      "at": -50.0,
+      "normal": "-",
+      "area": 272.86,
+      "area_tolerance_rel": 0.02,
+      "tolerance": 0.05,
+      "center": [
+        0.53,
+        1.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceXMax",
+      "plane": "x",
+      "at": 50.0,
+      "normal": "+",
+      "area": 272.86,
+      "area_tolerance_rel": 0.02,
+      "tolerance": 0.05,
+      "center": [
+        0.53,
+        1.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceXNegInner",
+      "plane": "x",
+      "at": -45.0,
+      "normal": "+",
+      "area": 3.14,
+      "area_tolerance_rel": 0.05,
+      "tolerance": 0.15,
+      "center": [
+        42.0,
+        1.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceXPosInner",
+      "plane": "x",
+      "at": 45.0,
+      "normal": "-",
+      "area": 3.14,
+      "area_tolerance_rel": 0.05,
+      "tolerance": 0.15,
+      "center": [
+        42.0,
+        1.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceYMin",
+      "plane": "y",
+      "at": -50.0,
+      "normal": "-",
+      "area": 270.0,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": [
+        0.0,
+        1.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceYMax",
+      "plane": "y",
+      "at": 50.0,
+      "normal": "+",
+      "area": 282.0,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": [
+        0.0,
+        1.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceZMin",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": 8331.1,
+      "area_tolerance_rel": 0.02,
+      "tolerance": 0.05,
+      "center": [
+        0.0,
+        -4.93
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "faceZMax",
+      "plane": "z",
+      "at": 3.0,
+      "normal": "+",
+      "area": 8331.1,
+      "area_tolerance_rel": 0.02,
+      "tolerance": 0.05,
+      "center": [
+        0.0,
+        -4.94
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 10
+}

@@ -1,0 +1,600 @@
+{
+  "kcl": "/Users/danieldriscoll/dual/opencad/parts/benchy/main.kcl",
+  "format": {
+    "ok": true,
+    "findings": []
+  },
+  "lint": {
+    "ok": true,
+    "code": 0,
+    "output": ""
+  },
+  "hygiene": {
+    "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+    "kcl_version_2": true,
+    "default_unit_mm": true,
+    "legacy_v1": [],
+    "imports": [],
+    "forbidden_imports": [],
+    "asserts": 36,
+    "sketch_blocks": 11,
+    "feature_ops": 32,
+    "parameters": {
+      "overallLength": {
+        "found": true,
+        "value": 60.0,
+        "unit": "mm",
+        "expected": 60.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "overallWidth": {
+        "found": true,
+        "value": 31.0,
+        "unit": "mm",
+        "expected": 31.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "overallHeight": {
+        "found": true,
+        "value": 48.0,
+        "unit": "mm",
+        "expected": 48.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "bridgeRoofLength": {
+        "found": true,
+        "value": 23.0,
+        "unit": "mm",
+        "expected": 23.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "chimneyInnerDiameter": {
+        "found": true,
+        "value": 3.0,
+        "unit": "mm",
+        "expected": 3.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "chimneyOuterDiameter": {
+        "found": true,
+        "value": 7.0,
+        "unit": "mm",
+        "expected": 7.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "chimneyHoleDepth": {
+        "found": true,
+        "value": 11.0,
+        "unit": "mm",
+        "expected": 11.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cargoBoxTopHeight": {
+        "found": true,
+        "value": 15.5,
+        "unit": "mm",
+        "expected": 15.5,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cargoBoxOuterA": {
+        "found": true,
+        "value": 12.0,
+        "unit": "mm",
+        "expected": 12.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cargoBoxOuterB": {
+        "found": true,
+        "value": 10.81,
+        "unit": "mm",
+        "expected": 10.81,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cargoBoxInnerA": {
+        "found": true,
+        "value": 8.0,
+        "unit": "mm",
+        "expected": 8.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cargoBoxInnerB": {
+        "found": true,
+        "value": 7.0,
+        "unit": "mm",
+        "expected": 7.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cargoBoxDepth": {
+        "found": true,
+        "value": 9.0,
+        "unit": "mm",
+        "expected": 9.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "hawsepipeInnerDiameter": {
+        "found": true,
+        "value": 4.0,
+        "unit": "mm",
+        "expected": 4.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "hawsepipeFlangeDepth": {
+        "found": true,
+        "value": 0.3,
+        "unit": "mm",
+        "expected": 0.3,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "frontWindowWidth": {
+        "found": true,
+        "value": 10.5,
+        "unit": "mm",
+        "expected": 10.5,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "frontWindowHeight": {
+        "found": true,
+        "value": 9.5,
+        "unit": "mm",
+        "expected": 9.5,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "rearWindowInnerDiameter": {
+        "found": true,
+        "value": 9.0,
+        "unit": "mm",
+        "expected": 9.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "rearWindowOuterDiameter": {
+        "found": true,
+        "value": 12.0,
+        "unit": "mm",
+        "expected": 12.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "rearWindowFlangeDepth": {
+        "found": true,
+        "value": 0.3,
+        "unit": "mm",
+        "expected": 0.3,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "bowOverhangAngle": {
+        "found": true,
+        "value": 40.0,
+        "unit": "deg",
+        "expected": 40.0,
+        "expected_unit": "deg",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "bridgeRoofAngle": {
+        "found": true,
+        "value": 5.5,
+        "unit": "deg",
+        "expected": 5.5,
+        "expected_unit": "deg",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "nameplateThickness": {
+        "found": true,
+        "value": 0.1,
+        "unit": "mm",
+        "expected": 0.1,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "hullKeelLength": {
+        "found": true,
+        "value": 40.0,
+        "unit": "mm",
+        "expected": 40.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "hullKeelWidth": {
+        "found": true,
+        "value": 20.0,
+        "unit": "mm",
+        "expected": 20.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "hullKeelCenterX": {
+        "found": true,
+        "value": 25.0,
+        "unit": "mm",
+        "expected": 25.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "hullSternWidth": {
+        "found": true,
+        "value": 22.0,
+        "unit": "mm",
+        "expected": 22.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "deckHeight": {
+        "found": true,
+        "value": 10.0,
+        "unit": "mm",
+        "expected": 10.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "sternGunwaleHeight": {
+        "found": true,
+        "value": 11.5,
+        "unit": "mm",
+        "expected": 11.5,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "bowGunwaleHeight": {
+        "found": true,
+        "value": 24.0,
+        "unit": "mm",
+        "expected": 24.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "hullWallThickness": {
+        "found": true,
+        "value": 1.6,
+        "unit": "mm",
+        "expected": 1.6,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cabinCenterX": {
+        "found": true,
+        "value": 31.0,
+        "unit": "mm",
+        "expected": 31.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cabinLength": {
+        "found": true,
+        "value": 20.0,
+        "unit": "mm",
+        "expected": 20.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cabinWidth": {
+        "found": true,
+        "value": 18.0,
+        "unit": "mm",
+        "expected": 18.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cabinWallThickness": {
+        "found": true,
+        "value": 2.0,
+        "unit": "mm",
+        "expected": 2.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "bridgeRoofWidth": {
+        "found": true,
+        "value": 20.0,
+        "unit": "mm",
+        "expected": 20.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "bridgeRoofThickness": {
+        "found": true,
+        "value": 2.5,
+        "unit": "mm",
+        "expected": 2.5,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "chimneyCenterX": {
+        "found": true,
+        "value": 25.0,
+        "unit": "mm",
+        "expected": 25.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "chimneyHeightAboveRoof": {
+        "found": true,
+        "value": 10.0,
+        "unit": "mm",
+        "expected": 10.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "chimneyStemDiameter": {
+        "found": true,
+        "value": 5.5,
+        "unit": "mm",
+        "expected": 5.5,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "chimneyCollarHeight": {
+        "found": true,
+        "value": 2.0,
+        "unit": "mm",
+        "expected": 2.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "cargoBoxCenterX": {
+        "found": true,
+        "value": 15.0,
+        "unit": "mm",
+        "expected": 15.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "hawsepipeCenterX": {
+        "found": true,
+        "value": 52.0,
+        "unit": "mm",
+        "expected": 52.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "hawsepipeCenterZ": {
+        "found": true,
+        "value": 18.0,
+        "unit": "mm",
+        "expected": 18.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "hawsepipeOuterDiameter": {
+        "found": true,
+        "value": 6.0,
+        "unit": "mm",
+        "expected": 6.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "windowCenterHeight": {
+        "found": true,
+        "value": 27.0,
+        "unit": "mm",
+        "expected": 27.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "sideOpeningWidth": {
+        "found": true,
+        "value": 9.0,
+        "unit": "mm",
+        "expected": 9.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      },
+      "sideOpeningHeight": {
+        "found": true,
+        "value": 22.0,
+        "unit": "mm",
+        "expected": 22.0,
+        "expected_unit": "mm",
+        "ok": true,
+        "file": "main.kcl"
+      }
+    },
+    "parameters_ok": true,
+    "unused_parameters": {},
+    "lines": 608,
+    "ok": true
+  },
+  "engine_note": "zoo kcl analyze: tessellated volume/area; bounding box may include internal cut-tool extents; authoritative values come from inspect.json (STEP)",
+  "engine": {
+    "status": "ok",
+    "class": "ok"
+  },
+  "analyze": {
+    "bbox_min": [
+      -6.0,
+      -18.587033767420927,
+      0.0
+    ],
+    "bbox_max": [
+      60.099999999999994,
+      48.00000000000001,
+      48.00000000000001
+    ],
+    "bbox_size": [
+      66.1,
+      66.58703376742093,
+      48.00000000000001
+    ],
+    "com": [
+      27.086217880249023,
+      0.0001502106606494635,
+      11.94732666015625
+    ],
+    "volume_mm3": 16941.149845504126,
+    "surface_area_mm2": 10165.357090730964,
+    "mass_g": null,
+    "density_kg_m3": null,
+    "seconds": 7.46
+  },
+  "bbox": {
+    "expected_min": [
+      0.0,
+      -15.5,
+      0.0
+    ],
+    "expected_max": [
+      60.0,
+      15.5,
+      48.0
+    ],
+    "measured_min": [
+      -6.0,
+      -18.587,
+      0.0
+    ],
+    "measured_max": [
+      60.1,
+      48.0,
+      48.0
+    ],
+    "max_error": 32.5,
+    "tolerance": 0.05,
+    "ok": false
+  },
+  "volume": {
+    "declared": true,
+    "expected": 15550.0,
+    "measured": 16941.1498,
+    "error": 1391.1498,
+    "band": 1555.0,
+    "ok": true
+  },
+  "surface_area": {
+    "declared": false,
+    "ok": true
+  },
+  "center_of_mass": {
+    "declared": false,
+    "ok": true
+  },
+  "analyze_ok": true,
+  "snapshots": {
+    "front": "/Users/danieldriscoll/dual/opencad/results/benchy/snapshots/view-front.png",
+    "top": "/Users/danieldriscoll/dual/opencad/results/benchy/snapshots/view-top.png",
+    "right-side": "/Users/danieldriscoll/dual/opencad/results/benchy/snapshots/view-right-side.png",
+    "iso": "/Users/danieldriscoll/dual/opencad/results/benchy/snapshots/view-iso.png",
+    "four-ways": "/Users/danieldriscoll/dual/opencad/results/benchy/snapshots/view-four-ways.png"
+  },
+  "engine_checks_ok": false,
+  "ok": true,
+  "engine_calls": [
+    {
+      "cmd": "zoo kcl analyze --format json --volume-output-unit mm3 --center-of-mass-output-unit mm --surface-area-output-unit mm2 --mass-output-unit g /Users/danieldriscoll/dual/opencad/parts/benchy/main.kcl",
+      "attempt": 1,
+      "class": "ok",
+      "ok": true,
+      "seconds": 7.46
+    },
+    {
+      "cmd": "zoo kcl snapshot --angle front /Users/danieldriscoll/dual/opencad/parts/benchy/main.kcl /Users/danieldriscoll/dual/opencad/results/benchy/snapshots/view-front.png",
+      "attempt": 1,
+      "class": "ok",
+      "ok": true,
+      "seconds": 5.43
+    },
+    {
+      "cmd": "zoo kcl snapshot --angle top /Users/danieldriscoll/dual/opencad/parts/benchy/main.kcl /Users/danieldriscoll/dual/opencad/results/benchy/snapshots/view-top.png",
+      "attempt": 1,
+      "class": "ok",
+      "ok": true,
+      "seconds": 5.33
+    },
+    {
+      "cmd": "zoo kcl snapshot --angle right-side /Users/danieldriscoll/dual/opencad/parts/benchy/main.kcl /Users/danieldriscoll/dual/opencad/results/benchy/snapshots/view-right-side.png",
+      "attempt": 1,
+      "class": "ok",
+      "ok": true,
+      "seconds": 5.32
+    },
+    {
+      "cmd": "zoo kcl snapshot --angle iso /Users/danieldriscoll/dual/opencad/parts/benchy/main.kcl /Users/danieldriscoll/dual/opencad/results/benchy/snapshots/view-iso.png",
+      "attempt": 1,
+      "class": "ok",
+      "ok": true,
+      "seconds": 5.32
+    },
+    {
+      "cmd": "zoo kcl snapshot --angle four-ways /Users/danieldriscoll/dual/opencad/parts/benchy/main.kcl /Users/danieldriscoll/dual/opencad/results/benchy/snapshots/view-four-ways.png",
+      "attempt": 1,
+      "class": "ok",
+      "ok": true,
+      "seconds": 5.96
+    }
+  ],
+  "stage": "verify",
+  "provenance": {
+    "generated_at": "2026-09-17T04:15:05Z",
+    "opencad_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "6cf6ead495d8b52a3ed042f76be0c051dabb301b",
+      "dirty": true
+    },
+    "contract": "/Users/danieldriscoll/dual/opencad/designs/benchy/contract.yaml"
+  }
+}

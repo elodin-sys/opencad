@@ -1,0 +1,415 @@
+schema_version: 1
+name: nasa-backstep-driver-seegmiller
+intent: >-
+  Model the air volume (flow passage) of the Driver-Seegmiller backward-facing-step
+  channel for the parallel-roof (0 degree divergence) case described in the attached
+  NASA validation page, as ONE solid suitable for CFD meshing. Use the documented
+  ratios and the step height H = 0.5 in = 12.7 mm: step height to tunnel exit
+  (downstream) height 1:9, step height to tunnel width 1:12, so the upstream channel
+  height is the downstream height minus H. Cover exactly the documented computational
+  domain x/H = -105 to +50. Frame: +x streamwise with x = 0 at the step face
+  (upstream is negative x), +y spanwise across the tunnel width with y = 0 at one
+  side wall, +z vertical with z = 0 at the downstream floor (the upstream floor
+  therefore sits at z = H). Expose H, the width, the two channel heights, the roof
+  angle, and the upstream/downstream domain lengths as named parameters, and name
+  the flow-boundary faces (inlet, outlet, roof, upstream floor, step face, downstream
+  floor, side walls) in the contract so the mesher can find them. The measured
+  reattachment location is a downstream validation target, not a geometry input;
+  do not tune anything to it.
+units:
+  length: mm
+  angle: deg
+material: air
+density_kg_m3: null
+process: CFD flow domain (no manufacturing)
+release_status: reconstruction
+
+frame:
+  origin: >-
+    [0, 0, 0] is the lower corner of the step face where the downstream floor,
+    the step plane, and the y = 0 side wall meet. The step plane is x = 0.
+  axes:
+    x: +x follows the flow downstream; upstream is negative x and the step is at x = 0.
+    y: +y spans the full tunnel width from the side wall at y = 0 to y = channelWidth.
+    z: +z is vertically upward from the downstream floor at z = 0 toward the roof.
+  datums:
+    - name: downstreamFloorDatum
+      description: z = 0 is the downstream floor, from x = 0 to downstreamLength.
+    - name: stepDatum
+      description: x = 0 is the vertical step face, from z = 0 to stepHeight, across the full width.
+    - name: spanDatum
+      description: y = 0 is one side wall; the other is at y = channelWidth. Do not center the span on y = 0.
+    - name: upstreamFloorDatum
+      description: z = stepHeight is the upstream floor, from x = -upstreamLength to 0.
+    - name: roofDatum
+      description: The parallel roof is the single plane z = downstreamHeight = stepHeight + upstreamHeight at the nominal configuration.
+    - name: domainEndDatums
+      description: Inlet x = -upstreamLength = -105*stepHeight; outlet x = downstreamLength = 50*stepHeight at the nominal configuration.
+
+envelope:
+  min: [-1333.5, 0, 0]
+  max: [635, 152.4, 114.3]
+  tolerance: 0.05
+
+parameters:
+  - name: stepHeight
+    value: 12.7
+    unit: mm
+    provenance: stated
+    source: 'sources/nasa-backstep-study01.md, Grid: "H is 0.5 inches." User also states H = 12.7 mm; exact conversion is 25.4 mm/in.'
+    tolerance: 0.01
+    description: H, the vertical floor drop at x = 0; upstream floor elevation above the downstream floor.
+  - name: channelWidth
+    value: 152.4
+    unit: mm
+    provenance: derived
+    source: 'sources/nasa-backstep-study01.md, Introduction: "step height to tunnel width ratio of 1:12".'
+    formula: 12 * stepHeight
+    tolerance: 0.01
+    description: Full span from y = 0 to the second side wall; no symmetry reduction. The edit test overrides this nominal formula alone.
+    edit_test:
+      delta: 12.7
+      expect:
+        volume_delta: 2642414.07
+        direction: increase
+        tolerance_rel: 0.002
+        bbox_delta: [0, 12.7, 0]
+  - name: downstreamHeight
+    value: 114.3
+    unit: mm
+    provenance: derived
+    source: 'sources/nasa-backstep-study01.md, Introduction: "step height to tunnel exit height ratio of 1:9".'
+    formula: 9 * stepHeight
+    tolerance: 0.01
+    description: Downstream passage height from z = 0 to the parallel roof; also the nominal roof elevation.
+  - name: upstreamHeight
+    value: 101.6
+    unit: mm
+    provenance: derived
+    source: User intent and sources/nasa-backstep-study01.md, Introduction, zero-divergence backward-facing-step configuration.
+    formula: downstreamHeight - stepHeight
+    tolerance: 0.01
+    description: Upstream passage height measured upward from the floor at z = stepHeight to the common roof.
+  - name: roofAngle
+    value: 0
+    unit: deg
+    provenance: stated
+    source: 'sources/nasa-backstep-study01.md, Introduction: "zero degree divergence of the top wall"; user selects the parallel-roof case.'
+    tolerance: 0.001
+    description: Roof divergence angle in the streamwise vertical plane. This contract prescribes the horizontal 0 degree configuration only.
+  - name: upstreamLength
+    value: 1333.5
+    unit: mm
+    provenance: derived
+    source: 'sources/nasa-backstep-study01.md, Grid: "the region from x/H = -105 to +50".'
+    formula: 105 * stepHeight
+    tolerance: 0.01
+    description: Positive distance from the inlet to the step; inlet coordinate is -upstreamLength. The edit test overrides this nominal formula alone.
+    edit_test:
+      delta: 12.7
+      expect:
+        volume_delta: 196644.768
+        direction: increase
+        tolerance_rel: 0.002
+        bbox_delta: [12.7, 0, 0]
+  - name: downstreamLength
+    value: 635
+    unit: mm
+    provenance: derived
+    source: 'sources/nasa-backstep-study01.md, Grid: "the region from x/H = -105 to +50".'
+    formula: 50 * stepHeight
+    tolerance: 0.01
+    description: Positive distance from the step to the outlet. The edit test overrides this nominal formula alone; reattachment does not set this length.
+    edit_test:
+      delta: 12.7
+      expect:
+        volume_delta: 221225.364
+        direction: increase
+        tolerance_rel: 0.002
+        bbox_delta: [12.7, 0, 0]
+
+features:
+  - id: flowDomain
+    kind: extrude
+    count: 1
+    description: >-
+      One connected, watertight air solid: the six-edge stepped x-z outline
+      extruded across channelWidth. The nominal outline is (-upstreamLength,
+      stepHeight), (0, stepHeight), (0, 0), (downstreamLength, 0),
+      (downstreamLength, downstreamHeight), (-upstreamLength, downstreamHeight).
+      The opening at x = 0 above stepHeight is interior air, with no partition face.
+    parameters: [stepHeight, channelWidth, downstreamHeight, upstreamHeight, roofAngle, upstreamLength, downstreamLength]
+    verify:
+      - method: bbox
+        note: Finished solid bounds must match the contract envelope in the specified frame.
+      - method: section
+        section: spanMid
+      - method: count
+        section: spanMid
+        count: 1
+        note: One outer loop in the stepped longitudinal section; acceptance.solid_count independently requires one 3D body.
+      - method: solid
+        points: [[-12.7, 76.2, 63.5], [12.7, 76.2, 63.5]]
+        note: Fluid exists on both sides of x = 0 above the upstream floor. Solid means air-domain interior here.
+  - id: upstreamPassage
+    kind: channel
+    count: 1
+    description: Rectangular upstream air passage from x = -upstreamLength to 0, z = stepHeight to the roof, across the full width.
+    parameters: [upstreamLength, channelWidth, upstreamHeight, stepHeight, downstreamHeight]
+    verify:
+      - method: section
+        section: upstreamMid
+      - method: solid
+        points: [[-666.75, 76.2, 63.5]]
+      - method: void
+        points: [[-666.75, 76.2, 6.35]]
+        note: The region below the upstream floor is outside the air solid, even though it lies inside the overall bounding box.
+      - method: face
+        face: inlet
+      - method: face
+        face: upstreamFloor
+  - id: backwardStep
+    kind: profile
+    count: 1
+    description: One sharp vertical floor drop at x = 0 with height stepHeight and width channelWidth; the step-face outward normal from the air is -x.
+    parameters: [stepHeight, channelWidth]
+    verify:
+      - method: face
+        face: stepFace
+      - method: void
+        points: [[-6.35, 76.2, 6.35]]
+      - method: solid
+        points: [[6.35, 76.2, 6.35]]
+      - method: section
+        section: belowStep
+      - method: count
+        section: belowStep
+        count: 1
+        note: A horizontal section below stepHeight contains only the downstream rectangle, with one outer loop and no hole.
+  - id: downstreamPassage
+    kind: channel
+    count: 1
+    description: Rectangular downstream air passage from x = 0 to downstreamLength, z = 0 to downstreamHeight, across the full width.
+    parameters: [downstreamLength, channelWidth, downstreamHeight]
+    verify:
+      - method: section
+        section: downstreamMid
+      - method: solid
+        points: [[317.5, 76.2, 57.15]]
+      - method: face
+        face: outlet
+      - method: face
+        face: downstreamFloor
+  - id: parallelRoof
+    kind: wall
+    count: 1
+    description: One continuous planar fluid boundary at z = downstreamHeight across both reaches, with zero streamwise divergence and outward normal +z.
+    parameters: [roofAngle, downstreamHeight, upstreamHeight, stepHeight, channelWidth, upstreamLength, downstreamLength]
+    verify:
+      - method: face
+        face: roof
+      - method: section
+        section: aboveStep
+  - id: sideWalls
+    kind: wall
+    count: 2
+    description: Two full stepped-profile fluid boundaries at y = 0 and y = channelWidth; wall material and wall thickness are outside the modeled air volume.
+    parameters: [channelWidth, upstreamLength, downstreamLength, stepHeight, upstreamHeight, downstreamHeight]
+    verify:
+      - method: face
+        face: sideWallY0
+      - method: face
+        face: sideWallYMax
+      - method: void
+        points: [[-666.75, -12.7, 63.5], [317.5, 165.1, 57.15]]
+        note: Both probes are outside the full-width flow passage.
+
+interfaces:
+  - name: flowBoundaryNames
+    description: Preserve the eight meshing face names inlet, outlet, roof, upstreamFloor, stepFace, downstreamFloor, sideWallY0, and sideWallYMax, with outward normals from the air solid.
+    must_not_change: true
+  - name: meshableFluidRegion
+    description: Preserve one watertight fluid solid with no internal partitions, internal holes, solid tunnel-wall bodies, fillets, or artificial reattachment features.
+    must_not_change: true
+  - name: fixedStepFrame
+    description: Preserve the step at x = 0, downstream floor at z = 0, and span datum at y = 0 during the declared width and length edits.
+    must_not_change: true
+
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 31708968.84
+    tolerance_rel: 0.002
+    provenance: derived
+    note: >-
+      At roofAngle = 0, V = channelWidth * (upstreamLength * upstreamHeight +
+      downstreamLength * downstreamHeight). Equivalently, V = channelWidth *
+      ((upstreamLength + downstreamLength) * downstreamHeight - upstreamLength *
+      stepHeight), using the nominal height relationship. Units mm3.
+  surface_area:
+    expected: 1050965.64
+    tolerance_rel: 0.002
+    provenance: derived
+    note: >-
+      Let A = upstreamLength * upstreamHeight + downstreamLength * downstreamHeight.
+      At roofAngle = 0, S = 2*A + channelWidth * (2*(upstreamLength +
+      downstreamLength) + upstreamHeight + downstreamHeight + stepHeight).
+      This is the sum of all eight external boundary-face areas, including inlet
+      and outlet caps; the shared opening at x = 0 is not a boundary. Units mm2.
+  center_of_mass:
+    expected: [-323.406976744186, 76.2, 61.2848837209302]
+    tolerance: 0.05
+    provenance: derived
+    note: >-
+      Uniform-volume centroid, independent of air density. Let Au = upstreamLength *
+      upstreamHeight, Ad = downstreamLength * downstreamHeight, A = Au + Ad.
+      Cx = (Au*(-upstreamLength/2) + Ad*(downstreamLength/2))/A;
+      Cy = channelWidth/2;
+      Cz = (Au*(stepHeight + upstreamHeight/2) + Ad*(downstreamHeight/2))/A.
+      Formulas assume the specified zero-divergence nominal geometry. Units mm.
+  solid_count: 1
+  sections:
+    - id: upstreamMid
+      plane: x
+      at: -666.75
+      expect:
+        area: 15483.84
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+        islands_min: 1
+      description: x = -upstreamLength/2; area = channelWidth*upstreamHeight, spanning z = stepHeight to downstreamHeight and y = 0 to channelWidth.
+    - id: downstreamMid
+      plane: x
+      at: 317.5
+      expect:
+        area: 17419.32
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+        islands_min: 1
+      description: x = downstreamLength/2; area = channelWidth*downstreamHeight, spanning z = 0 to downstreamHeight and the full width.
+    - id: spanMid
+      plane: y
+      at: 76.2
+      expect:
+        area: 208064.1
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+        islands_min: 1
+      description: y = channelWidth/2; area = upstreamLength*upstreamHeight + downstreamLength*downstreamHeight. One six-edge stepped outline, with no internal boundary at x = 0 above the step.
+    - id: belowStep
+      plane: z
+      at: 6.35
+      expect:
+        area: 96774
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+        islands_min: 1
+      description: z = stepHeight/2; area = downstreamLength*channelWidth. Only x = 0 to downstreamLength contains air at this elevation.
+    - id: aboveStep
+      plane: z
+      at: 63.5
+      expect:
+        area: 299999.4
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+        islands_min: 1
+      description: z = stepHeight + upstreamHeight/2; area = (upstreamLength + downstreamLength)*channelWidth. Both reaches form one uninterrupted rectangle.
+  faces:
+    - name: inlet
+      plane: x
+      at: -1333.5
+      normal: "-"
+      area: 15483.84
+      area_tolerance_rel: 0.002
+      tolerance: 0.05
+      center: [76.2, 63.5]
+      mode: one
+    - name: outlet
+      plane: x
+      at: 635
+      normal: "+"
+      area: 17419.32
+      area_tolerance_rel: 0.002
+      tolerance: 0.05
+      center: [76.2, 57.15]
+      mode: one
+    - name: roof
+      plane: z
+      at: 114.3
+      normal: "+"
+      area: 299999.4
+      area_tolerance_rel: 0.002
+      tolerance: 0.05
+      center: [-349.25, 76.2]
+      mode: one
+    - name: upstreamFloor
+      plane: z
+      at: 12.7
+      normal: "-"
+      area: 203225.4
+      area_tolerance_rel: 0.002
+      tolerance: 0.05
+      center: [-666.75, 76.2]
+      mode: one
+    - name: stepFace
+      plane: x
+      at: 0
+      normal: "-"
+      area: 1935.48
+      area_tolerance_rel: 0.002
+      tolerance: 0.05
+      center: [76.2, 6.35]
+      mode: one
+    - name: downstreamFloor
+      plane: z
+      at: 0
+      normal: "-"
+      area: 96774
+      area_tolerance_rel: 0.002
+      tolerance: 0.05
+      center: [317.5, 76.2]
+      mode: one
+    - name: sideWallY0
+      plane: y
+      at: 0
+      normal: "-"
+      area: 208064.1
+      area_tolerance_rel: 0.002
+      tolerance: 0.05
+      center: [-323.406976744186, 61.2848837209302]
+      mode: one
+    - name: sideWallYMax
+      plane: y
+      at: 152.4
+      normal: "+"
+      area: 208064.1
+      area_tolerance_rel: 0.002
+      tolerance: 0.05
+      center: [-323.406976744186, 61.2848837209302]
+      mode: one
+  blockout:
+    volume_min: 31645550.90232
+    volume_max: 31772386.77768
+  export_volume_tolerance_rel: 0.002
+
+references:
+  - path: sources/nasa-backstep-study01.md
+    kind: text
+    role: authoritative
+    sha256: 2aca80462b8cd0fd2554c59a156e6a1149921d26b51fbe763e393f3a065e05b2
+    units: in (step height); dimensionless (ratios and x/H); deg (roof); ft (described grid coordinates); m/s (validation velocity)
+    revision: NASA page created 1998-12-11, last updated 2021-02-10; supplied offline text reproduction with figures omitted.
+    note: >-
+      NASA Glenn WIND Backstep Study #1,
+      https://www.grc.nasa.gov/WWW/wind/valid/backstep/backstep01/backstep01.html.
+      Geometry evidence comes from Introduction and Grid. Boundary Conditions
+      describe numerical treatment, not additional physical holes or wall thickness.
+      Comparisons of the Results supplies validation data only; no reattachment
+      quantity is a geometry parameter. No images, grid coordinate files, CAD,
+      or mesh references were supplied.
+open_questions: []

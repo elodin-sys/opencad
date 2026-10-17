@@ -1,0 +1,32 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/transforms/patterns
+Title: Patterns
+
+# Patterns
+
+Repeat geometry with pattern tools in Zoo Design Studio.
+
+Pattern tools replicate geometry in regular arrangements so repeated features stay quick to create
+and easy to edit.
+
+## Video Walkthrough
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/uBv-eIeZI2A"
+            title="Linear and Circular Patterns in Zoo Design Studio"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>

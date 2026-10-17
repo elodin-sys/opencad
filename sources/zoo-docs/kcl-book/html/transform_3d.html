@@ -1,0 +1,516 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Transforming 3D solids - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/transform_3d.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="transforming-3d-solids"><a class="header" href="#transforming-3d-solids">Transforming 3D solids</a></h1>
+<ul>
+<li><a href="#colour">Colour</a></li>
+<li><a href="#clone-and-translate">Clone and translate</a></li>
+<li><a href="#scale">Scale</a></li>
+<li><a href="#rotation">Rotation</a></li>
+<li><a href="#using-transformations">Using transformations</a></li>
+</ul>
+<p>We've covered many different ways to create 3D solids from 2D sketches, but what can we do with our solids afterwards? In this chapter we'll cover how to combine them via union, intersection and subtraction. This is sometimes called <em>constructive solid geometry</em>. We'll also look at how to scale, rotate or translate them. But before we get to that, let's start with something a little fun:</p>
+<h2 id="colour"><a class="header" href="#colour">Colour</a></h2>
+<p>So far, all our models have used the standard shiny grey metal appearance. But you can customize this! Let's change the texture. We'll make two cubes: one cyan, one shiny metallic green.</p>
+<pre><code class="language-kcl=cube_textures">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch 2 squares.
+sketch001 = sketch(on = XY) {
+  // Rectangle 1
+  line1 = line(start = [var -2.21mm, var -5.39mm], end = [var 2.8mm, var -5.39mm])
+  line2 = line(start = [var 2.8mm, var -5.39mm], end = [var 2.8mm, var -0.39mm])
+  line3 = line(start = [var 2.8mm, var -0.39mm], end = [var -2.21mm, var -0.39mm])
+  line4 = line(start = [var -2.21mm, var -0.39mm], end = [var -2.21mm, var -5.39mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+
+  // Rectangle 2
+  line5 = line(start = [var -10.25mm, var 2.72mm], end = [var -4.81mm, var 2.72mm])
+  line6 = line(start = [var -4.81mm, var 2.72mm], end = [var -4.81mm, var 8.16mm])
+  line7 = line(start = [var -4.81mm, var 8.16mm], end = [var -10.25mm, var 8.16mm])
+  line8 = line(start = [var -10.25mm, var 8.16mm], end = [var -10.25mm, var 2.72mm])
+  coincident([line5.end, line6.start])
+  coincident([line6.end, line7.start])
+  coincident([line7.end, line8.start])
+  coincident([line8.end, line5.start])
+  parallel([line6, line8])
+  parallel([line7, line5])
+  perpendicular([line5, line6])
+  horizontal(line7)
+
+  // Make all sides the same length (i.e. make the rectangles square).
+  distance([line1.start, line1.end]) == 5
+  equalLength([
+    line1,
+    line2,
+    line3,
+    line4,
+    line5,
+    line6,
+    line7
+  ])
+}
+
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+cube1 = extrude(region001, length = 5)
+  |&gt; appearance(color = "#00ffbf")
+
+region002 = region(segments = [sketch001.line5, sketch001.line6])
+cube2 = extrude(region002, length = 5)
+  |&gt; appearance(color = "#147807", metalness = 90, roughness = 60)
+</code></pre>
+<p><model-viewer
+            alt="Two cubes with different textures"
+            src="gltf/cube_textures/output.gltf"
+            poster="images/dynamic/cube_textures.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+The <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-appearance"><code>appearance</code></a> call takes in three arguments, each of which is optional. You can provide:</p>
+<ul>
+<li>A <code>color</code> as a hexadecimal number like <code>#0044ff</code>. The first two digits represent red, the next two green, and the last two blue. You can use an <a href="https://g.co/kgs/wVN95r4">online color picker</a> to play with the format. If you open your KCL in Zoo Design Studio, you can use an interactive color picker right there in the code editor.</li>
+<li>A <code>metalness</code> percentage, which is a number between 0 and 100.</li>
+<li>A <code>roughness</code> percentage, which is a number between 0 and 100.</li>
+</ul>
+<p>This is helpful for making your different solids stand out from each other. We'll be using the <code>appearance</code> call in our examples to help make it clear which KCL snippets correspond to which objects in the rendered images.</p>
+<h2 id="clone-and-translate"><a class="header" href="#clone-and-translate">Clone and translate</a></h2>
+<p>We can transform solids, keeping them <em>basically</em> the same -- the same number of sides, edges, and faces -- but changing some of their other properties.</p>
+<p>Firstly, we can <a href="https://zoo.dev/docs/kcl-std/functions/std-transform-translate"><code>translate</code></a> them (shifting them around in their coordinate system). To demonstrate this, we'll use the <a href="https://zoo.dev/docs/kcl-std/functions/std-clone"><code>clone</code></a> function to create a second copy of a cube, then use <a href="https://zoo.dev/docs/kcl-std/functions/std-transform-translate"><code>translate</code></a> to move it left, then <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-appearance"><code>appearance</code></a> to give it a different color:</p>
+<pre><code class="language-kcl=translate_cubes">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+sketch001 = sketch(on = XY) {
+  // Sketch a rectangle first.
+  line1 = line(start = [var -2.21mm, var -5.39mm], end = [var 2.8mm, var -5.39mm])
+  line2 = line(start = [var 2.8mm, var -5.39mm], end = [var 2.8mm, var -0.39mm])
+  line3 = line(start = [var 2.8mm, var -0.39mm], end = [var -2.21mm, var -0.39mm])
+  line4 = line(start = [var -2.21mm, var -0.39mm], end = [var -2.21mm, var -5.39mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+
+  // Make all sides the same length (i.e. make the rectangles square).
+  distance([line1.start, line1.end]) == 5
+  equalLength([line1, line2, line3, line4])
+}
+
+// This cube has the default silvery appearance.
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+silverCube = extrude(region001, length = 5)
+
+// Clone it, move it left, then make it green.
+greenCube = clone(silverCube)
+  |&gt; translate(x = -10)
+  |&gt; appearance(color = "#00ff00", metalness = 80, roughness = 30)
+</code></pre>
+<p><model-viewer
+            alt="Two translated cubes"
+            src="gltf/translate_cubes/output.gltf"
+            poster="images/dynamic/translate_cubes.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+The <a href="https://zoo.dev/docs/kcl-std/functions/std-transform-translate"><code>translate</code></a> call takes three arguments, <code>x</code>, <code>y</code> and <code>z</code>. Each of them is optional. If you provide one, it'll shift the solid along that axis. If you don't provide an axis, it'll remain unchanged.</p>
+<h2 id="scale"><a class="header" href="#scale">Scale</a></h2>
+<p>Next, we can <a href="https://zoo.dev/docs/kcl-std/functions/std-transform-scale"><code>scale</code></a> them, making them bigger or smaller.</p>
+<pre><code class="language-kcl=scaled_cubes">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+sketch001 = sketch(on = XY) {
+  // Sketch a rectangle first.
+  line1 = line(start = [var -2.21mm, var -5.39mm], end = [var 2.8mm, var -5.39mm])
+  line2 = line(start = [var 2.8mm, var -5.39mm], end = [var 2.8mm, var -0.39mm])
+  line3 = line(start = [var 2.8mm, var -0.39mm], end = [var -2.21mm, var -0.39mm])
+  line4 = line(start = [var -2.21mm, var -0.39mm], end = [var -2.21mm, var -5.39mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+
+  // Make all sides the same length (i.e. make the rectangles square).
+  distance([line1.start, line1.end]) == 5
+  equalLength([line1, line2, line3, line4])
+}
+
+// This cube has the default silvery appearance.
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+silverCube = extrude(region001, length = 5)
+
+// Clone it, move it up, make it 4x longer, and green.
+greenCube = clone(silverCube)
+  |&gt; translate(z = 10)
+  |&gt; scale(y = 4)
+  |&gt; appearance(color = "#00ff00", metalness = 80, roughness = 30)
+</code></pre>
+<p><model-viewer
+            alt="Three scaled cubes"
+            src="gltf/scaled_cubes/output.gltf"
+            poster="images/dynamic/scaled_cubes.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+The <a href="https://zoo.dev/docs/kcl-std/functions/std-transform-scale"><code>scale</code></a> call works similarly. You provide one or more axes -- if you don't provide an axis, it's left unchanged. Numbers less than 1 will shrink the solid (e.g. 0.25 means 1/4th its original size). Numbers larger than 1 will expand the solid (e.g. 4 means 4x its original size).</p>
+<h2 id="rotation"><a class="header" href="#rotation">Rotation</a></h2>
+<p>Lastly, we can rotate them. The <a href="https://zoo.dev/docs/kcl-std/functions/std-transform-rotate"><code>rotate</code></a> call is similar to translate and rotate: it takes a number of properties -- different ways to rotate -- all of which are optional, and if you don't provide one, it stays unchanged. These properties are roll, pitch and yaw.</p>
+<p><strong>Roll</strong>: Imagine spinning a pencil on its tip - that's a roll movement.
+<strong>Pitch</strong>: Think of a seesaw motion, where the object tilts up or down along its side axis.
+<strong>Yaw</strong>: Like turning your head left or right, this is a rotation around the vertical axis</p>
+<p>Let's see an example:</p>
+<pre><code class="language-kcl=rotated_cubes">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+sketch001 = sketch(on = XY) {
+  // Sketch a rectangle first.
+  line1 = line(start = [var -2.21mm, var -5.39mm], end = [var 2.8mm, var -5.39mm])
+  line2 = line(start = [var 2.8mm, var -5.39mm], end = [var 2.8mm, var -0.39mm])
+  line3 = line(start = [var 2.8mm, var -0.39mm], end = [var -2.21mm, var -0.39mm])
+  line4 = line(start = [var -2.21mm, var -0.39mm], end = [var -2.21mm, var -5.39mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+
+  // Make all sides the same length (i.e. make the rectangles square).
+  distance([line1.start, line1.end]) == 5
+  equalLength([line1, line2, line3, line4])
+}
+
+// This cube has the default silvery appearance.
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+silverCube = extrude(region001, length = 5)
+
+extrude002 = clone(silverCube)
+  |&gt; translate(z = 10)
+  |&gt; rotate(roll = 45deg)
+  |&gt; appearance(color = "#00ff00", metalness = 80, roughness = 30)
+
+extrude003 = clone(silverCube)
+  |&gt; translate(z = 20)
+  |&gt; rotate(pitch = 45deg)
+  |&gt; appearance(color = "#00ffe1", metalness = 80, roughness = 30)
+
+extrude004 = clone(silverCube)
+  |&gt; translate(z = 30)
+  |&gt; rotate(yaw = 45deg)
+  |&gt; appearance(color = "#5900ff", metalness = 80, roughness = 30)
+</code></pre>
+<p><model-viewer
+            alt="Four rotated cubes"
+            src="gltf/rotated_cubes/output.gltf"
+            poster="images/dynamic/rotated_cubes.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Note that these rotations are all around their own center (not the center of the plane).</p>
+<p>Roll, pitch and yaw are one valid way to represent a rotation, but there are other ways too. You could also choose an axis, and rotate around that axis. For example, let's put 4 cubes at the same point, and then rotate them each a little bit around the axis.</p>
+<pre><code class="language-kcl=rotated_cubes_axis">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square
+sketch001 = sketch(on = XY) {
+  // Sketch a rectangle first.
+  line1 = line(start = [var -2.21mm, var -5.39mm], end = [var 2.8mm, var -5.39mm])
+  line2 = line(start = [var 2.8mm, var -5.39mm], end = [var 2.8mm, var -0.39mm])
+  line3 = line(start = [var 2.8mm, var -0.39mm], end = [var -2.21mm, var -0.39mm])
+  line4 = line(start = [var -2.21mm, var -0.39mm], end = [var -2.21mm, var -5.39mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+
+  // Make all sides the same length (i.e. make the rectangles square).
+  distance([line1.start, line1.end]) == 5
+  equalLength([line1, line2, line3, line4])
+}
+
+angle = 15deg
+
+// This cube has the default silvery appearance.
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+silverCube = extrude(region001, length = 1)
+
+extrude002 = clone(silverCube)
+  |&gt; appearance(color = "#00ff00", metalness = 80, roughness = 30)
+  |&gt; rotate(axis = X, angle = angle)
+
+extrude003 = clone(silverCube)
+  |&gt; appearance(color = "#00ffe1", metalness = 80, roughness = 30)
+  |&gt; rotate(axis = X, angle = angle * 2)
+
+extrude004 = clone(silverCube)
+  |&gt; appearance(color = "#ffea00", metalness = 80, roughness = 60)
+  |&gt; rotate(axis = X, angle = angle * 3)
+</code></pre>
+<p><model-viewer
+            alt="Four cubes rotated around the same axis"
+            src="gltf/rotated_cubes_axis/output.gltf"
+            poster="images/dynamic/rotated_cubes_axis.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer></p>
+<h2 id="using-transformations"><a class="header" href="#using-transformations">Using transformations</a></h2>
+<p>You can combine multiple transformations, for example a translate and scale: <code>|&gt; translate(x = 10) |&gt; scale (y = 20)</code>. This can really simplify your mechanical engineering. For example, if you need to produce two cubes, rotated at different angles, which of these approaches sounds easier?</p>
+<ol>
+<li>Make one cube with 4 sides, and then design the other cube from scratch using <code>line</code> calls that join the 4 rotated points</li>
+<li>Make one cube, and then make a second cube by copying the first cube and adding a <code>rotation</code> call</li>
+</ol>
+<p>These transformations make your job easier by letting you reuse work from previous designs. Once you know how to sketch a cube, you don't need to recalculate your cube every time it needs to grow, rotate or get moved over. You can just use our simple transformation functions. Recalculating a cube each time is annoying, but possible. For more complicated geometry, with weird curves and many edges, redoing all your calculations to handle different scales and rotations can be <em>very</em> difficult and waste a lot of time! So don't recalculate them. Just reuse your work and transform it.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="planes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="csg.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="planes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="csg.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

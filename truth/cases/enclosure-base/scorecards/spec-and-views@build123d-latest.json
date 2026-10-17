@@ -1,0 +1,864 @@
+{
+  "case": "enclosure-base",
+  "arm": "spec-and-views",
+  "design": "enclosure-base",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/build123d/enclosure-base",
+  "truth_class": "B",
+  "role": "validation",
+  "scored_at": "2026-09-29T22:37:32Z",
+  "verdict": "PASS",
+  "accuracy_score": 99.98,
+  "summary": {
+    "required_pass": 24,
+    "required_total": 24,
+    "optional_pass": 1,
+    "optional_total": 1
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "47 tall after the lid split, not the 50 mm p_outerHeight",
+      "expected": [
+        100.0,
+        150.0,
+        47.0
+      ],
+      "measured": [
+        100.0,
+        150.0,
+        47.0
+      ],
+      "error": 0.0,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "",
+      "expected": 118431.4812348242,
+      "measured": 118431.48123442396,
+      "error": 4.002358764410019e-07,
+      "band": 1184.314812348242,
+      "ok": true
+    },
+    {
+      "id": "section_mid_z25",
+      "kind": "section",
+      "required": true,
+      "note": "the wall ring with the cavity, and four posts with their bores",
+      "plane": "z",
+      "at": 25.0,
+      "measured": {
+        "area": 1684.1150082347629,
+        "loops": 5,
+        "holes": 5
+      },
+      "checks": {
+        "area": {
+          "expected": 1684.115,
+          "measured": 1684.1150082347629,
+          "ok": true
+        },
+        "loops": {
+          "expected": 5,
+          "measured": 5,
+          "ok": true
+        },
+        "holes": {
+          "expected": 5,
+          "measured": 5,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_floor_z1p5",
+      "kind": "section",
+      "required": true,
+      "note": "the floor is solid under the bores (they are blind)",
+      "plane": "z",
+      "at": 1.5,
+      "measured": {
+        "area": 14883.508093207733,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 14883.508,
+          "measured": 14883.508093207733,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_posts_x38",
+      "kind": "section",
+      "required": true,
+      "note": "floor, end walls and two posts in one loop; the bores are open-topped notches",
+      "plane": "x",
+      "at": 38.0,
+      "measured": {
+        "area": 1240.2831853071796,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 1240.283,
+          "measured": 1240.2831853071796,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "bottom_face",
+      "kind": "face",
+      "required": true,
+      "note": "96 x 146 with r = 8 corners (the r = 2 bottom round takes 2 mm off every side)",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 13961.061929829746,
+      "expected_area": 13961.062,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        -6.514509471730561e-17,
+        4.771878188042636e-15
+      ],
+      "ok": true
+    },
+    {
+      "id": "cavity_floor",
+      "kind": "face",
+      "required": true,
+      "note": "94 x 144 with r = 7 corners, less the four post footprints",
+      "plane": "z",
+      "at": 3.0,
+      "normal": "+",
+      "found": 1,
+      "area": 13179.778774666922,
+      "expected_area": 13179.779,
+      "mode": "one",
+      "center": [
+        0.0,
+        0.0
+      ],
+      "centroid_uv": [
+        1.1102230246251565e-15,
+        1.380136521746607e-16
+      ],
+      "ok": true
+    },
+    {
+      "id": "bore_floor_pp",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 3.0,
+      "normal": "+",
+      "found": 1,
+      "area": 12.566370614359169,
+      "expected_area": 12.566,
+      "mode": "one",
+      "center": [
+        38.0,
+        63.0
+      ],
+      "centroid_uv": [
+        38.0,
+        63.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "bore_floor_mp",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 3.0,
+      "normal": "+",
+      "found": 1,
+      "area": 12.566370614359169,
+      "expected_area": 12.566,
+      "mode": "one",
+      "center": [
+        -38.0,
+        63.0
+      ],
+      "centroid_uv": [
+        -38.0,
+        63.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "bore_floor_mm",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 3.0,
+      "normal": "+",
+      "found": 1,
+      "area": 12.566370614359169,
+      "expected_area": 12.566,
+      "mode": "one",
+      "center": [
+        -38.0,
+        -63.0
+      ],
+      "centroid_uv": [
+        -38.0,
+        -63.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "bore_floor_pm",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 3.0,
+      "normal": "+",
+      "found": 1,
+      "area": 12.566370614359169,
+      "expected_area": 12.566,
+      "mode": "one",
+      "center": [
+        38.0,
+        -63.0
+      ],
+      "centroid_uv": [
+        38.0,
+        -63.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "rim",
+      "kind": "face",
+      "required": true,
+      "note": "the wall ring; the post tops are separate faces",
+      "plane": "z",
+      "at": 47.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1420.221225333078,
+      "expected_area": 1420.221,
+      "mode": "one",
+      "center": [
+        0.0,
+        0.0
+      ],
+      "centroid_uv": [
+        -2.5615578349341413e-15,
+        8.965452422269495e-15
+      ],
+      "ok": true
+    },
+    {
+      "id": "bore_pp",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          38.0,
+          63.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          38.0,
+          63.0,
+          25.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 44.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 44.0,
+          "measured": 44.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "bore_mp",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          -38.0,
+          63.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -38.0,
+          63.0,
+          25.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 44.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 44.0,
+          "measured": 44.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "bore_mm",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          -38.0,
+          -63.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -38.0,
+          -63.0,
+          25.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 44.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 44.0,
+          "measured": 44.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "bore_pm",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          38.0,
+          -63.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          38.0,
+          -63.0,
+          25.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.0,
+        "length": 44.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 44.0,
+          "measured": 44.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "post_pp",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          38.0,
+          63.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          38.0,
+          63.0,
+          25.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "length": 44.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 44.0,
+          "measured": 44.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "post_mp",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          -38.0,
+          63.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          -38.0,
+          63.0,
+          25.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "length": 44.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 44.0,
+          "measured": 44.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "post_mm",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          -38.0,
+          -63.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          -38.0,
+          -63.0,
+          25.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "length": 44.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 44.0,
+          "measured": 44.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "post_pm",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          38.0,
+          -63.0,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          38.0,
+          -63.0,
+          25.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.0,
+        "length": 44.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 44.0,
+          "measured": 44.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "material_solid",
+      "kind": "probe",
+      "required": true,
+      "note": "floor (including under two bores), side and end walls, two post walls; every point 1.5 mm from a surface",
+      "measured": [
+        "in",
+        "in",
+        "in",
+        "in",
+        "in",
+        "in",
+        "in"
+      ],
+      "expected": "solid",
+      "ok": true
+    },
+    {
+      "id": "openings_void",
+      "kind": "probe",
+      "required": true,
+      "note": "cavity and three post bores (one 1.5 mm above its floor)",
+      "measured": [
+        "out",
+        "out",
+        "out",
+        "out",
+        "out",
+        "out",
+        "out"
+      ],
+      "expected": "void",
+      "ok": true
+    },
+    {
+      "id": "min_wall",
+      "kind": "thickness",
+      "required": true,
+      "note": "walls, floor and post walls are 3 thick; rays longer than 6 run along a wall's height and are ignored",
+      "measured": {
+        "min": 2.9903187988371607,
+        "p01": 2.994513517496119,
+        "p05": 2.9994458084863065,
+        "p50": 3.0000000000000004
+      },
+      "stat": "p05",
+      "expected": {
+        "min": 2.9
+      },
+      "thinnest_points": [
+        [
+          -33.101,
+          63.952,
+          17.27
+        ],
+        [
+          -42.898,
+          62.047,
+          23.397
+        ],
+        [
+          36.139,
+          -58.37,
+          34.296
+        ],
+        [
+          -42.19,
+          -60.289,
+          26.603
+        ],
+        [
+          42.19,
+          65.71,
+          12.965
+        ]
+      ],
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "deviation",
+      "kind": "deviation",
+      "required": false,
+      "note": "diagnostic whole-part agreement; small features are scored individually above",
+      "measured": {
+        "p95": 0.004695427616466572,
+        "hausdorff_estimate": 0.02036252442888369,
+        "silhouette_iou_min": 0.9999744810863214,
+        "volume_ratio": 0.999926901718291
+      },
+      "checks": {
+        "p95": {
+          "max": 0.3,
+          "measured": 0.004695427616466572,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 1.5,
+          "measured": 0.02036252442888369,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "9504b81de4992440300914a49f90cda04586147c3d2f088a43ffbb6479e39237",
+    "truth_files": {
+      "truth/base.step": "5c24c0f65dc7a16abae19e2cb67e84ce0ae97336760e05f47dc4c4373c495257",
+      "truth/base.stl": "c3104ddd00468f1c9a69d0d761df9a5033d0f5084773eddfa8048c1f3ef3f63f",
+      "truth/parametric-enclosure.rst": "36fb5b35f31361ef45ccd8691711cd8ee3cea80fb381a813e86397a6972a433d",
+      "truth/base-50-tall.step": "029f5b65dd3e1d1088a291368196e452dba0c67c2e1a0e0588654917ba497952"
+    },
+    "input_files": {
+      "inputs/enclosure-base-spec.md": "5fea818692cbc29954c48cebb5413d22ad2b7f42ae80416c72d6d387ef1b2002",
+      "inputs/enclosure-base-iso.png": "2a8fd145c1e633fdafe492ced42153af2857af9dcff05c33c6323383ed0f1382",
+      "inputs/enclosure-base-top.png": "d2082d6515363d4843797322498e9f62ae0f9a60f9b725bbc8b916171e7deb7b",
+      "inputs/enclosure-base-section.png": "d15e879f8de5dee0e38f58a63a70206e7099478c43379d0b2ed5f1ba6728a3d8"
+    },
+    "source": {
+      "main.py": "fb81d0f39f9beb085de9dec607bfd0cde842feb26061d3f5db9b7322386fbc00"
+    },
+    "kcl": {},
+    "step_sha256": "904a0a9ac72079595fa6fd70b4b38240065387fd2460a527644b73c37cfb1bc7",
+    "design_bundle": {
+      "brief.md": "5074cf766f67279baaf2a77f399664f5f18af9f673f8a0ce8b409b1109dc7fd0",
+      "contract.yaml": "b41892a51560814c382988fa54906ebb94e00bf8475111dc4135ca1e1f86cded",
+      "sources/enclosure-base-iso.png": "2a8fd145c1e633fdafe492ced42153af2857af9dcff05c33c6323383ed0f1382",
+      "sources/enclosure-base-section.png": "d15e879f8de5dee0e38f58a63a70206e7099478c43379d0b2ed5f1ba6728a3d8",
+      "sources/enclosure-base-spec.md": "5fea818692cbc29954c48cebb5413d22ad2b7f42ae80416c72d6d387ef1b2002",
+      "sources/enclosure-base-top.png": "d2082d6515363d4843797322498e9f62ae0f9a60f9b725bbc8b916171e7deb7b"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-29T22:37:32Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "41c7fa1a7033d16c2e176e809abfa9ece7a2924d",
+      "dirty": true
+    }
+  },
+  "backend": "build123d"
+}

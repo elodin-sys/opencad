@@ -1,0 +1,697 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Patterns - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/patterns.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="patterns"><a class="header" href="#patterns">Patterns</a></h1>
+<ul>
+<li><a href="#basic-patterns">Basic patterns</a></li>
+<li><a href="#circular-patterns">Circular patterns</a></li>
+<li><a href="#transform-patterns">Transform patterns</a></li>
+<li><a href="#2d-patterns-and-holes">2D patterns and holes</a></li>
+</ul>
+<p>Real-world objects often have repeated parts. Consider a LEGO brick, which has a lot of repeated bumps on its top face. Or a table, with four repeated legs. KCL would be a very tedious language if we made you define each leg, or each LEGO bump, over and over again every time your model needed one. Luckily, there's a simple way to repeat geometry in your model. It's called a <em>pattern</em>. There are several ways to use patterns. Let's learn how they work!</p>
+<h2 id="basic-patterns"><a class="header" href="#basic-patterns">Basic patterns</a></h2>
+<p>Let's start simple. We can use patterns to replicate our geometry, copying it into our scene several times. Let's take this simple cylinder, and copy it 4 times.</p>
+<pre><code class="language-kcl=linear_pattern">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a circle
+circleSketch = sketch(on = XY) {
+  circle1 = circle(start = [var -1mm, var 1mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  distance([circle1.start, circle1.center]) == 2mm
+}
+
+// Extrude it into a cylinder, then pattern it.
+cylinders = extrude(region(segments = [circleSketch.circle1]), length = 4)
+  |&gt; patternLinear3d(instances = 4, distance = 10, axis = X)
+</code></pre>
+<p><model-viewer
+            alt="Using linear patterns to replicate a cylinder"
+            src="gltf/linear_pattern/output.gltf"
+            poster="images/dynamic/linear_pattern.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+The <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-patternLinear3d"><code>patternLinear3d</code></a> function takes 4 args:</p>
+<ul>
+<li>A solid to pattern (the unlabeled first arg, which is implicitly set to % and therefore gets the result of the <code>extrude()</code> call, i.e. the cylinder, piped in)</li>
+<li>The total number of instances you want (i.e. how many total copies of the solid there should be)</li>
+<li>How far apart each instance of the pattern should be</li>
+<li>The axis along which to place the copies.</li>
+</ul>
+<p>In our above example, it places 3 extra instances (for a total of 4) along the X axis, each 10 units apart.</p>
+<p><strong>Note</strong>: You can choose a standard axis like <code>X</code>, <code>Y</code> or <code>Z</code>, but you can also use any vector as an axis, like <code>[1, 1, 0.5]</code>.</p>
+<h2 id="circular-patterns"><a class="header" href="#circular-patterns">Circular patterns</a></h2>
+<p>You can also use patterns to replicate something and lay them out in an arc around a point. We'll use the <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-patternCircular3d"><code>patternCircular3d</code></a> function. Here's an example where we put 12 cubes in a circle:</p>
+<pre><code class="language-kcl=circular_cubes_false">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square, just like normal.
+sketch001 = sketch(on = XZ) {
+  line1 = line(start = [var 2.66mm, var -2.08mm], end = [var -2.31mm, var -2.08mm])
+  line2 = line(start = [var -2.31mm, var -2.08mm], end = [var -2.31mm, var 2.48mm])
+  line3 = line(start = [var -2.31mm, var 2.48mm], end = [var 2.66mm, var 2.48mm])
+  line4 = line(start = [var 2.66mm, var 2.48mm], end = [var 2.66mm, var -2.08mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  distance([line2.start, line2.end]) == 5mm
+  coincident([line3.start, ORIGIN])
+}
+
+// Extrude square into a cube.
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+cube = extrude(region001, length = 5)
+
+// First, move the square to the northernmost position (like 12 o'clock)
+translate(cube, z = 30)
+
+// Then pattern the cube 12 times, around the origin.
+  |&gt; patternCircular3d(
+       instances = 12,
+       axis = Y,
+       center = [0, 0, 0],
+       arcDegrees = 360deg,
+       rotateDuplicates = false,
+     )
+</code></pre>
+<p><model-viewer
+            alt="Using circular patterns to replicate a cube"
+            src="gltf/circular_cubes_false/output.gltf"
+            poster="images/dynamic/circular_cubes_false.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Here, the center of the pattern is <code>[0, 0, 0]</code>. We drew the first cube at the northernmost position (12 o'clock) and all the other instances were patterned around that center. Nice!</p>
+<p><strong>Note</strong>: The <code>center</code> argument is optional, and defaults to <code>[0, 0, 0]</code>.</p>
+<p>Notice that we used <code>rotateDuplicates = false</code>. If we set it to <code>true</code>, each duplicate object is also rotated as it is copied around the circle, so that they're all facing the center. Like this:</p>
+<pre><code class="language-kcl=circular_cubes_true">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square.
+sketch001 = sketch(on = XZ) {
+  line1 = line(start = [var 2.66mm, var -2.08mm], end = [var -2.31mm, var -2.08mm])
+  line2 = line(start = [var -2.31mm, var -2.08mm], end = [var -2.31mm, var 2.48mm])
+  line3 = line(start = [var -2.31mm, var 2.48mm], end = [var 2.66mm, var 2.48mm])
+  line4 = line(start = [var 2.66mm, var 2.48mm], end = [var 2.66mm, var -2.08mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  distance([line2.start, line2.end]) == 5mm
+  coincident([line3.start, ORIGIN])
+}
+
+// Extrude square into a cube.
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+cube = extrude(region001, length = 5)
+
+// First, move the square to the northernmost position (like 12 o'clock)
+translate(cube, z = 30)
+  // Then pattern the cube 12 times, around the origin.
+  |&gt; patternCircular3d(
+       instances = 12,
+       axis = Y,
+       center = [0, 0, 0],
+       arcDegrees = 360deg,
+       rotateDuplicates = true,
+     )
+</code></pre>
+<p><model-viewer
+            alt="Using circular patterns to replicate a cube"
+            src="gltf/circular_cubes_true/output.gltf"
+            poster="images/dynamic/circular_cubes_true.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+The <code>arcDegrees</code> argument is optional, and defaults to 360 degrees. We can set it to <code>240deg</code> to only pattern around two thirds of the circle instead:</p>
+<pre><code class="language-kcl=circular_cubes_partway">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a square.
+sketch001 = sketch(on = XZ) {
+  line1 = line(start = [var 2.66mm, var -2.08mm], end = [var -2.31mm, var -2.08mm])
+  line2 = line(start = [var -2.31mm, var -2.08mm], end = [var -2.31mm, var 2.48mm])
+  line3 = line(start = [var -2.31mm, var 2.48mm], end = [var 2.66mm, var 2.48mm])
+  line4 = line(start = [var 2.66mm, var 2.48mm], end = [var 2.66mm, var -2.08mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  distance([line2.start, line2.end]) == 5mm
+  coincident([line3.start, ORIGIN])
+}
+
+// Extrude square into a cube.
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+cube = extrude(region001, length = 5)
+
+// First, move the square to the northernmost position (like 12 o'clock)
+translate(cube, z = 30)
+  // Then pattern the cube 12 times, around the origin.
+  |&gt; patternCircular3d(
+       instances = 12,
+       axis = Y,
+       center = [0, 0, 0],
+       arcDegrees = 240deg,
+       rotateDuplicates = true,
+     )
+</code></pre>
+<p><model-viewer
+            alt="Using semi-circular patterns to replicate a cube"
+            src="gltf/circular_cubes_partway/output.gltf"
+            poster="images/dynamic/circular_cubes_partway.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+You can use patterns and sketch on face together, patterning an extrusion upon some base.</p>
+<pre><code class="language-kcl=pattern_sof">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a big circle.
+bigCircleSketch = sketch(on = XZ) {
+  circle1 = circle(start = [var 0mm, var 10mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  vertical([circle1.center, circle1.start])
+  distance([circle1.start, circle1.center]) == 10
+}
+
+// Extrude it into a "base".
+bigCircle = region(segments = [bigCircleSketch.circle1])
+base = extrude(bigCircle, length = 2)
+
+// Start sketching a smaller circle on that base.
+face001 = faceOf(base, face = END)
+smallCircleSketch = sketch(on = face001) {
+  circle1 = circle(start = [var -0.83mm, var 8.27mm], center = [var 0mm, var 7.79mm])
+  vertical([circle1.center, ORIGIN])
+  vertical([circle1.center, circle1.start])
+}
+
+// Extrude that circle into a small cylinder,
+// then pattern it around.
+region(segments = [smallCircleSketch.circle1])
+  |&gt; extrude(length = 2)
+  |&gt; patternCircular3d(
+       instances = 6,
+       axis = Y,
+       useOriginal = true,
+     )
+</code></pre>
+<p><model-viewer
+            alt="Using a pattern to repeatedly sketch on face"
+            src="gltf/pattern_sof/output.gltf"
+            poster="images/dynamic/pattern_sof.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+<strong>Note</strong>: When patterning an extrusion which was originally sketched on a face, KCL doesn't know whether you want to pattern the entire modified solid (e.g. both the base solid and the volume added by sketch-on-face-then-extrude), or just the extrusion. By default, <code>useOriginal = false</code>, so the entire solid (original and new volume added via sketch-on-face-then-extrude) will be patterned. You can set <code>useOriginal = true</code> to only pattern the part added via sketch-on-face-then-extrude.</p>
+<p>In other words, when <code>useOriginal = false</code> (the default), the total modified solid (made from a parent solid, and the modification) will be patterned around the global scene. When <code>useOriginal = true</code>, the modification will be patterned around the parent solid.</p>
+<h2 id="transform-patterns"><a class="header" href="#transform-patterns">Transform patterns</a></h2>
+<p>Circular and linear patterns cover a lot of really common use-cases for mechanical engineers. But sometimes you want to do more complicated patterns, in more complicated shapes. We can't add a dedicated pattern function for every single shape our users can think of -- that would be almost unmaintainable (there are infinite possible shapes, after all). Instead, KCL has a powerful, flexible interface for patterning solids in any arrangement you can think of. It's called a <em>transform</em> pattern. They're created with the <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-patternTransform"><code>patternTransform</code></a> function. It takes a familiar <code>instances</code> argument, which controls how many total copies of the shape you want. But it takes a new argument, called <code>transform</code>. This is a <em>custom function</em>. We'll dive deeper into those in the following chapters, but for now, they're basically just a way to calculate how to transform each replica in the pattern.</p>
+<p>When might you need a pattern transform? Here's one use: to do a 2D pattern, like tiling a grid. Let's use a pattern transform to make a 5 by 5 grid.</p>
+<pre><code class="language-kcl=xform_grid">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+numColumns = 5    // how many columns in our grid
+width = 10        // side length of each square
+gap = 1.5 * width // gap between each square
+
+// Sketch a square
+squareSketch = sketch(on = XY) {
+  line1 = line(start = [var -1.35mm, var 1.51mm], end = [var 1.44mm, var 1.51mm])
+  line2 = line(start = [var 1.44mm, var 1.51mm], end = [var 1.44mm, var -1.25mm])
+  line3 = line(start = [var 1.44mm, var -1.25mm], end = [var -1.35mm, var -1.25mm])
+  line4 = line(start = [var -1.35mm, var -1.25mm], end = [var -1.35mm, var 1.51mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  distance([line4.start, line4.end]) == width
+}
+
+// Transform function.
+// This takes in the instance number (called `i`), and returns a transform
+// object that tells KCL how to transform that instance.
+fn grid(@i) {
+  column = rem(i, divisor = numColumns)
+  row = floor(i / numColumns)
+  // Return a KCL object, with one property, `translate`.
+  // The `translate` property tells KCL how to translate each duplicated solid.
+  return {
+    translate = [column * gap, row * gap, 0]
+  }
+}
+
+// Extrude square, then pattern it using the transform function.
+region(segments = [squareSketch.line1, squareSketch.line2])
+  |&gt; extrude(length = 2)
+  |&gt; patternTransform(instances = numColumns * numColumns, transform = grid)
+</code></pre>
+<p>We've defined a <em>custom function</em> called <code>grid</code>. This function will get called once for every replica in the pattern, and it tells KCL how each replica should be transformed. Specifically it:</p>
+<ul>
+<li>Takes a single argument called <code>i</code>. It's used to indicate which number replica is currently being processed. The first copy made will set <code>i</code> to 1, the second copy will set <code>i</code> to 2, etc. The argument <code>i</code> is prefixed with <code>@</code> to indicate it's this function's special first unlabeled argument, so if you call it, you'd call it like <code>grid(1)</code> or <code>grid(2)</code>, not <code>grid(i = 1)</code>.</li>
+<li>Returns a list of different properties to transform in each replica.</li>
+</ul>
+<p>In this example, we define a function <code>grid</code> which tells <code>patternTransform</code> to translate each replica by a certain amount <code>column * gap</code> along the X axis, <code>row * gap</code> along the Y axis, and to stay on the same location on the Z axis (i.e. move exactly 0 along that axis).</p>
+<p>The <code>grid</code> function is called by <code>patternTransform</code> as many times as <code>patternTransform</code>'s first argument, <code>instances</code>. On each call to <code>grid</code> the current instance number is passed and bound to <code>i</code>. In this example, because <code>numColumns</code> is <code>5</code> and the code uses <code>instances = numColumns * numColumns</code>, there will be <code>5 * 5 = 25</code> instances. So the pattern transform will call <code>grid(0)</code>, <code>grid(1)</code> ... <code>grid(24)</code>.</p>
+<p>The specific value of <code>row</code> and <code>column</code> changes every time the <code>grid</code> function is called, because these variables are calculated from the input argument <code>i</code>. Remember, <code>i</code> represents which number replication we're transforming. To calculate <code>column</code> and <code>row</code> we're going to use a few new KCL functions we haven't seen before.</p>
+<p>Firstly, <a href="https://zoo.dev/docs/kcl-std/functions/std-math-rem"><code>rem</code></a>. The value <code>rem(i, divisor = n)</code> will divide i by n and return the remainder. This means that for i = 0, 1, 2, 3, 4, x will equal 0, 1, 2, 3 and 4. But when i = 5 (i.e. the fifth copy is being calculated), x will be 0. We're calling this function 25 times, and over those calls, x will step from 0 to 4, jump back down to 0, and begin stepping up again. This means x is a good way to calculate the columns, which range from column 0 to column 4 (a total of 5 columns).</p>
+<p>The <a href="https://zoo.dev/docs/kcl-std/functions/std-math-floor"><code>floor</code></a> function takes a fractional number, and rounds it down to the nearest integer. For example, <code>floor(3.6)</code> is <code>3</code>. This means it's a good way to calculate the row, because the first five times it's called, <code>row</code> will always equal <code>0</code>. It'll round down <code>(i / n)</code> from <code>0/5</code>, <code>1/5</code>, <code>2/5</code>, <code>3/5</code>, <code>4/5</code> all down to <code>0</code>. Then the sixth time it's called, it will receive <code>5/5</code>, which is 1, and round it down to <code>1</code>. These neat little mathematical tricks mean we can calculate the row and column from the repetition number <code>i</code>.</p>
+<p>The final result speaks for itself:</p>
+<p><model-viewer
+            alt="Grid of tiles using a pattern transform"
+            src="gltf/xform_grid/output.gltf"
+            poster="images/dynamic/xform_grid.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+We can transform each replica in other ways, too. For example, we can skip a replica altogether! Let's make a chessboard pattern, where we skip every second tile.</p>
+<pre><code class="language-kcl=xform_chessboard">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+numColumns = 5    // how many columns in our grid
+width = 10        // side length of each square
+gap = 1.05 * width // gap between each square
+
+// Sketch a square
+squareSketch = sketch(on = XY) {
+  line1 = line(start = [var -1.35mm, var 1.51mm], end = [var 1.44mm, var 1.51mm])
+  line2 = line(start = [var 1.44mm, var 1.51mm], end = [var 1.44mm, var -1.25mm])
+  line3 = line(start = [var 1.44mm, var -1.25mm], end = [var -1.35mm, var -1.25mm])
+  line4 = line(start = [var -1.35mm, var -1.25mm], end = [var -1.35mm, var 1.51mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  distance([line4.start, line4.end]) == width
+}
+
+// Transform function
+fn grid(@i) {
+  column = rem(i, divisor = numColumns)
+  row = floor(i / numColumns)
+  // Is `i` an even, or odd, number?
+  isEven = rem(i, divisor = 2) == 0
+
+  return {
+    translate = [column * gap, row * gap, 0],
+    // Only create a replica if `isEven` is true.
+    replicate = isEven,
+  }
+}
+
+// Extrude square, then pattern it using the transform function.
+region(segments = [squareSketch.line1, squareSketch.line2])
+  |&gt; extrude(length = 2)
+  |&gt; patternTransform(instances = numColumns * numColumns, transform = grid)
+</code></pre>
+<p>In this example, we use a very similar transform function. The only difference is, we're setting the <code>replicate</code> property on the final transform too. And we're setting it to the variable <code>isEven</code>. This variable is a boolean value -- it's true if <code>i</code> divided by 2 has a remainder of 0, which is the definition of an even number (it's divisible by 2). This should skip every second replication. Let's try it out!</p>
+<p><model-viewer
+            alt="chessboard of tiles using a pattern transform"
+            src="gltf/xform_chessboard/output.gltf"
+            poster="images/dynamic/xform_chessboard.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Here's another example, with some different transform properties being set.</p>
+<pre><code class="language-kcl=cube_spiral">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+width = 10        // side length of each square
+
+// Sketch a square
+squareSketch = sketch(on = XY) {
+  line1 = line(start = [var -1.35mm, var 1.51mm], end = [var 1.44mm, var 1.51mm])
+  line2 = line(start = [var 1.44mm, var 1.51mm], end = [var 1.44mm, var -1.25mm])
+  line3 = line(start = [var 1.44mm, var -1.25mm], end = [var -1.35mm, var -1.25mm])
+  line4 = line(start = [var -1.35mm, var -1.25mm], end = [var -1.35mm, var 1.51mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  distance([line4.start, line4.end]) == width
+}
+
+fn transform(@i) {
+  return {
+    // Move down each time.
+    translate = [0, 0, -i * width],
+    // Make the cube longer, wider and flatter each time.
+    scale = [
+      pow(1.1, exp = i),
+      pow(1.1, exp = i),
+      pow(0.9, exp = i)
+    ],
+    // Turn by 15 degrees each time.
+    rotation = { angle = 15 * i, origin = "local" }
+  }
+}
+
+
+// Extrude square, then pattern it using the transform function.
+region(segments = [squareSketch.line1, squareSketch.line2])
+  |&gt; extrude(length = 2)
+  |&gt; patternTransform(instances = 25, transform)
+</code></pre>
+<p>In this example, we make 25 cubes, slightly transforming each one. Each cube gets <strong>translated</strong> (moving down along the Z axis), and <strong>scaled</strong> (becoming longer, wider and flatter), as well as <strong>rotating</strong> 15 degrees around its own center (i.e. its <strong>local</strong> origin). We could rotate them around the scene's center by using <code>origin = "global"</code>. Here's the result.</p>
+<p><model-viewer
+            alt="many cubes in a spiral which gradually flattens each cube"
+            src="gltf/cube_spiral/output.gltf"
+            poster="images/dynamic/cube_spiral.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+The transform functions we've used so far each return a single transform. But if you'd like, they can return an array of transforms. Each transform in the array will get executed in order. This is helpful for simplifying some of your math calculations. Sometimes it's easier to formulate a transformation as a rotate, then a translate, then rotating back, rather than trying to calculate the perfect translation all at once.</p>
+<p>Pattern transforms are a very powerful tool. They're definitely one of the most complex function in KCL, but that complexity gives you a lot of flexibility. Any mathematical curve you can formulate can be used to pattern your instances, by just calculating it in a transform function. The same goes for tiling or grid arrangements. For more examples, you can read the full <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-patternTransform"><code>patternTransform</code></a> docs.</p>
+<h2 id="2d-patterns-and-holes"><a class="header" href="#2d-patterns-and-holes">2D patterns and holes</a></h2>
+<blockquote>
+<p><strong>WARNING</strong>: This section is a KCL 1 maintenance reference. 2D patterns are
+currently supported only by the old sketch syntax, and <code>subtract2d</code> is
+deprecated as of KCL 2. New KCL 2 models should pattern solid cutters and use
+3D <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-subtract"><code>subtract</code></a> instead.</p>
+</blockquote>
+<p>So far all of the patterns we've used have replicated 3D solids. But you can use patterns to replicate 2D sketches too. The <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-patternLinear2d"><code>patternLinear2d</code></a>, <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-patternCircular2d"><code>patternCircular2d</code></a> and <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-patternTransform2d"><code>patternTransform2d</code></a> functions work like their 3D variants, except they take 2D axes and 2D points. Here's a simple example:</p>
+<pre><code class="language-kcl=pattern2d">@settings(defaultLengthUnit = mm, kclVersion = 1.0)
+
+manyCircles = startSketchOn(XZ)
+  |&gt; circle(radius = 4, center = [50, 0])
+  |&gt; patternCircular2d(
+       center = [0, 0],
+       instances = 12,
+       arcDegrees = 360deg,
+       rotateDuplicates = true,
+     )
+</code></pre>
+<p><model-viewer
+            alt="Patterning 2D sketches of circles"
+            src="gltf/pattern2d/output.gltf"
+            poster="images/dynamic/pattern2d.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Now, you could use these 2D patterns as the basis for 3D solids, by extruding or revolving them. You can see this by adding the line <code>extrude(manyCircles, length = 10)</code> to the end of the above KCL program. But it's not a good idea, because it produces the exact same model as you would have gotten from making a single 3D solid, then using 3D patterns on that. The only difference is, extruding a 2D pattern is much slower than patterning a 3D solid. So, can we do anything <em>useful</em> with 2D patterns?</p>
+<p>In existing KCL 1 models, the deprecated <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-subtract2d"><code>subtract2d</code></a> function can put these
+holes into a 2D sketch. The following example is retained for maintaining those
+models, not as guidance for new KCL 2 code.</p>
+<pre><code class="language-kcl=subtract2d_patterns">@settings(defaultLengthUnit = mm, kclVersion = 1.0)
+
+manyCircles = startSketchOn(XZ)
+  |&gt; circle(radius = 4, center = [50, 0])
+  |&gt; patternCircular2d(
+       center = [0, 0],
+       instances = 12,
+       arcDegrees = 360deg,
+       rotateDuplicates = true,
+     )
+
+base = startSketchOn(XZ)
+  |&gt; circle(radius = 60, center = [0, 0])
+  |&gt; subtract2d(tool = manyCircles)
+  |&gt; extrude(length = 10)
+</code></pre>
+<p><model-viewer
+            alt="Subtracting a pattern of circles then extruding"
+            src="gltf/subtract2d_patterns/output.gltf"
+            poster="images/dynamic/subtract2d_patterns.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+For new KCL 2 models, create one solid cutter, pattern that solid, and pass the
+result to 3D <a href="https://zoo.dev/docs/kcl-std/functions/std-solid-subtract"><code>subtract</code></a>. Continue using <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-subtract2d"><code>subtract2d</code></a> only when maintaining a
+KCL 1 model that has not yet been migrated.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="csg.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="declaring_functions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="csg.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="declaring_functions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

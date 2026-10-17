@@ -1,0 +1,28 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces
+Title: Create Surfaces
+
+# Create Surfaces
+
+Create open and face-based surface geometry in Zoo Design Studio.
+
+Create Surfaces covers features that generate surface bodies directly from sketches and section
+profiles. These tools are useful when the design intent depends on open geometry, face continuity,
+or later surfacing operations.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/create-surfaces.webp"
+  alt="Open surface bodies created with surface modeling tools in Zoo Design Studio"
+  aspect="1382 / 2050"
+  maxHeightPx={640}
+/>
+
+This section includes
+[Extrude](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude),
+[Revolve](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/revolve),
+[Loft](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/loft),
+[Sweep](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/sweep),
+and [Blend](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/blend).
+
+Extrude, Revolve, Loft, and Sweep use familiar solid-modeling workflows, but can be configured to
+create open surface geometry instead of closed solid bodies. Blend is specific to surface modeling:
+it creates a transition surface between two selected open boundary edges.

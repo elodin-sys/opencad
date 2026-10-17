@@ -1,0 +1,37 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/workspace/settings/user-settings/app
+Title: App
+
+# App
+
+Configure global app behavior and appearance in Zoo Design Studio.
+
+The `App` section contains the main user-level app preferences shown in the settings UI.
+
+## Included Settings
+
+### Theme
+
+The overall appearance of the app.
+
+### Show Debug Panel
+
+Whether to show the debug panel, a development tool.
+
+### Libraries
+
+Project libraries control which project sources appear on Home.
+
+On desktop, you can add, rename, reorder, and remove Directory libraries. A Directory library points
+to a folder on your computer. Removing the library from settings does not delete the projects in that
+folder.
+
+With Cloud Sync, the `Personal Cloud` library appears as a Cloud library. Its settings
+row shows the resolved local storage path for the cloud working copy.
+
+In the browser, projects use Personal Cloud. Browser storage is not a
+normal local folder, so Zoo Design Studio treats all projects as cloud-backed projects rather than
+showing local-only browser libraries, which would not follow the user's account.
+
+For the full storage model, see
+[Project Libraries](/docs/zoo-design-studio/features/data-management/project-libraries) and
+[Cloud Sync](/docs/zoo-design-studio/features/data-management/cloud-sync).

@@ -1,0 +1,20 @@
+# Deliberately wrong parts the scorer must reject. Frame: revolve about x; x in [-650, 900], radius up to 95.25 (crest at x = 101.6).
+mutants:
+  - id: scaled_1pct
+    op: scale
+    factor: 1.01
+    expect_caught_by: [bbox_size]
+  - id: shifted_2mm_axial
+    op: translate
+    offset: [2, 0, 0]
+    note: bump station moved; bbox size unchanged.
+  - id: crest_clipped
+    op: cut_box
+    min: [90, -200, 60]
+    max: [112, 200, 200]
+    note: crest flattened above z = 60; section at the crest station and volume must move.
+  - id: rotated_1deg
+    op: rotate
+    axis: z
+    angle_deg: 1.0
+    note: axis misaligned.

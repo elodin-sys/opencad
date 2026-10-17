@@ -1,0 +1,268 @@
+id: disc-brake
+title: 'COMSOL 6.3 heat generation in a disc brake: disc and pad as an assembly, transient braking heat'
+kind: machine
+truth_class: B
+role: validation
+source:
+  citation: 'COMSOL Multiphysics 6.3 Application Library, Heat Transfer Module: Heat Generation in a Disc
+    Brake (brake_disc)'
+  urls:
+  - https://doc.comsol.com/6.3/doc/com.comsol.help.models.heat.brake_disc/brake_disc.html
+  - https://www.comsol.com/model/heat-generation-in-a-disc-brake-102
+  accessed: '2026-09-25'
+  revision: '6.3'
+  license: COMSOL documentation (c) COMSOL AB; evaluator copy only; the packet is a transcription
+intent: 'Rebuild the COMSOL 6.3 disc-brake heat-generation model of the attached reference packet as a
+  machine of two separately designed parts, in COMSOL''s coordinates converted to millimetres: the half-thickness
+  disc with its hub, rotating about the z axis on a revolute joint driven by the car''s braking history
+  (speed converted through the wheel radius), and one pad, the fixed datum, resting on the disc face z
+  = 13 mm. Declare the named boundaries the thermal analysis needs (the disc and pad contact faces, the
+  disc symmetry plane z = 0, every other face free), the panic-braking operating case, a transient CalculiX
+  thermal analysis with the friction_brake source and the reduced brake_energy budget, with every material
+  property and condition taken from the packet; values the packet does not give are inferred with a rationale
+  and an open question.'
+inputs:
+- path: inputs/comsol-brake-disc-packet.md
+  kind: text
+  sha256: 85535fc3210d6d0174945725ecf1a1f29351991bc272ba55fc138b0ad254638d
+  note: model definition, construction steps and physics settings; no results
+- path: inputs/figure-1-geometry.png
+  kind: image
+  sha256: 8c7faad09a9d6663c0a39fe6e18e5e721807c6750bf3b40b7ab67f95a36f5c54
+  note: 'COMSOL Figure 1: disc and pad geometry'
+- path: inputs/figure-2-velocity.png
+  kind: image
+  sha256: 05a0b5ceb2f81378a47ef8ac2b41edbf948dfe3c0c3392cb62b1c0ef8c56ccc1
+  note: 'COMSOL Figure 2: velocity profile'
+- path: inputs/figure-3-acceleration.png
+  kind: image
+  sha256: bb3f0ef43eaca917061fb013edd68fece3342aebec4ef0244089d6216d71c2dd
+  note: 'COMSOL Figure 3: acceleration profile'
+- path: inputs/figure-5-probe-line.png
+  kind: image
+  sha256: f3ffe42b7cc21121f49b80d52056b377c9aa4b90aec2d13ac0fbac1ecba5d0d5
+  note: 'COMSOL Figure 5: the radial probe line'
+truth:
+- path: truth/disc.step
+  kind: cad
+  sha256: 3f17a33fe4077cb3619496d145f8b881281684e49596542796090b090dbd47fc
+  units: mm
+- path: truth/pad.step
+  kind: cad
+  sha256: 95c263418ce0650b781ecb4996f036e4e47593ae7424f49687774dfeb599c766
+  units: mm
+- path: truth/brake.step
+  kind: cad
+  sha256: 9d839f4c41d1c7cb9065104f95d5da36f3748b7fc6a79a3112195e9592c8557f
+  units: mm
+- path: truth/brake-spec.yaml
+  kind: yaml
+  sha256: 0cafabd13bc7da497bbda05b9f3d602e6cc34ae6402fbc72b9953d060d72745a
+- path: truth/raw/brake_disc.html
+  kind: text
+  sha256: c2c4eab133574313eef90af6d6476eee173901c14efbd31d5deda873a79037d3
+- path: truth/raw/figures/brake_disc.1.1.09.png
+  kind: image
+  sha256: c37f82b545dccc0278ae10cdc67faf27c1841c57f60b558e4da573642c5cfb94
+- path: truth/raw/figures/brake_disc.1.1.11.png
+  kind: image
+  sha256: eb146d02347d009a3e902eead4c25719d0e52e9185eef6e27d67449018f2a8d6
+- path: truth/raw/figures/brake_disc.1.1.12.png
+  kind: image
+  sha256: 6a765919f5fc3aca8616f4244dddee6dd862a7540ba25d4e4c765c928f14f139
+arms:
+- id: construction-steps
+  design: disc-brake
+  inputs:
+  - inputs/comsol-brake-disc-packet.md
+  - inputs/figure-1-geometry.png
+  - inputs/figure-2-velocity.png
+  - inputs/figure-3-acceleration.png
+  - inputs/figure-5-probe-line.png
+  images:
+  - inputs/figure-1-geometry.png
+  - inputs/figure-2-velocity.png
+  - inputs/figure-3-acceleration.png
+  - inputs/figure-5-probe-line.png
+  notes: Reconstruction from the published construction steps; the documentation's results are evaluator-only.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  from:
+    file: truth/brake.step
+    measure: bbox_size
+  tolerance: 0.1
+- id: solid_count
+  kind: solid_count
+  expected: 2
+- id: disc
+  kind: solid
+  point:
+  - 0.0
+  - -100.0
+  - 6.5
+  from:
+    file: truth/disc.step
+    measure: volume
+  tolerance_rel: 0.002
+- id: pad
+  kind: solid
+  point:
+  - 0.0
+  - 111.91
+  - 16.0
+  from:
+    file: truth/pad.step
+    measure: volume
+  tolerance_rel: 0.01
+  note: 'rational Bezier outline: a weight read differently changes the pad area by a few percent'
+- id: disc_rim
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 0.0
+  - 0.0
+  - 6.5
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 140.0
+  radius_tolerance: 0.05
+  tolerance: 0.05
+  length: 13.0
+  length_tolerance: 0.05
+- id: hub
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 0.0
+  - 0.0
+  - 18.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 80.0
+  radius_tolerance: 0.05
+  tolerance: 0.05
+  length: 10.0
+  length_tolerance: 0.05
+- id: pad_contact
+  kind: face
+  plane: z
+  at: 13.0
+  normal: '-'
+  expected: 3544.37
+  area_tolerance_rel: 0.01
+  center:
+  - 0.0
+  - 111.91
+  tolerance: 0.05
+- id: pad_top
+  kind: face
+  plane: z
+  at: 19.5
+  normal: +
+  expected: 3544.37
+  area_tolerance_rel: 0.01
+  tolerance: 0.05
+- id: hub_top
+  kind: face
+  plane: z
+  at: 23.0
+  normal: +
+  expected: 20106.19
+  area_tolerance_rel: 0.001
+  tolerance: 0.05
+- id: section_z16
+  kind: section
+  plane: z
+  at: 16.0
+  from:
+    file: truth/brake.step
+    measure: section
+  area_tolerance_rel: 0.01
+- id: pad_on_disc
+  kind: clearance
+  a: pad
+  b: disc
+  min_gap: 0.0
+  max_gap: 0.05
+  note: the pad rests on the disc face, separate solids
+performance:
+- id: peakDiscTemperature
+  quantity: max_temperature
+  unit: K
+  case: panicBrake
+  evidence: N
+  value: 430.0
+  uncertainty: 5.0
+  u_input: 4.0
+  z_max: 2.0
+  digitized: true
+  source: text 'maximum temperature is approximately 430 K'; Figure 4 colour bar at t = 3.8 s tops near
+    430 K
+  note: 'u_input: T_air is not stated (293-300 K plausible)'
+- id: lineMaxTemperature
+  quantity: line_max_temperature
+  unit: K
+  case: panicBrake
+  evidence: N
+  value: 405.0
+  uncertainty: 5.0
+  u_input: 4.0
+  z_max: 2.0
+  digitized: true
+  source: Figure 6 (temperature vs time along the probe line) colour bar maximum
+- id: timeOfPeak
+  quantity: time_of_max_temperature
+  unit: s
+  case: panicBrake
+  evidence: N
+  value: 3.0
+  uncertainty: 0.25
+  z_max: 2.0
+  source: 'text: the highest temperature occurs approximately 1 s after engaging the brake (t = 2 s)'
+- id: producedHeat
+  quantity: produced_heat
+  unit: J
+  case: panicBrake
+  evidence: C
+  value: 67500.0
+  tolerance: 675.0
+  source: m (v0^2 - v1^2) / 2 / 8 with the stated 1800 kg, 25 -> 5 m/s, eight brakes; Figure 7 log10(W_prod
+    + 1) = 4.83 agrees
+- id: dissipatedHeat
+  quantity: dissipated_heat
+  unit: J
+  case: panicBrake
+  evidence: N
+  value: 590.0
+  uncertainty: 90.0
+  z_max: 2.0
+  digitized: true
+  source: 'Figure 7: log10(W_diss + 1) = 2.77 at t = 12 s, read from a log axis'
+- id: hotspotRadius
+  quantity: hotspot_radius
+  unit: mm
+  case: panicBrake
+  evidence: N
+  value: 132.0
+  uncertainty: 4.0
+  z_max: 2.0
+  digitized: true
+  required: false
+  source: 'text: the hotspot is positioned close to the radially outer edge of the pad (r about 0.135
+    m)'
+downstream_targets:
+- name: fade_margin_K
+  value: 600.0
+  units: K
+  note: braking power starts to fade above 600 K (text)
+notes:
+- The published model resolves the rotation with a translational-motion (Eulerian) term; a ring-averaged
+  or lumped model is a declared model-form difference.
+- The documentation's parameter file (r_wheel, T_air) is not public; both enter as inferred inputs.
+- Run A (reference geometry, this pipeline's analysis) is recorded in the calibration log before thresholds
+  are revisited.

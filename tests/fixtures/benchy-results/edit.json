@@ -1,0 +1,185 @@
+{
+  "ok": true,
+  "tests": [
+    {
+      "parameter": "overallLength",
+      "delta": 3.0,
+      "new_value": 63.0,
+      "volume": 17613.86042600659,
+      "solids": 1,
+      "volume_delta": 575.845264289128,
+      "bbox_size_delta": [
+        3.000358922593094,
+        -0.00015142076283325423,
+        0.0
+      ],
+      "checks": {
+        "volume_delta": {
+          "expected": 550.0,
+          "measured": 575.845264289128,
+          "ok": true
+        },
+        "direction": {
+          "expected": "increase",
+          "measured": "increase",
+          "ok": true
+        },
+        "bbox_delta": {
+          "expected": [
+            3.0,
+            0.0,
+            0.0
+          ],
+          "measured": [
+            3.000358922593094,
+            -0.00015142076283325423,
+            0.0
+          ],
+          "ok": true
+        },
+        "still_one_body": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "parameter": "overallHeight",
+      "delta": 2.0,
+      "new_value": 50.0,
+      "volume": 17310.015194774798,
+      "solids": 1,
+      "volume_delta": 272.0000330573348,
+      "bbox_size_delta": [
+        0.0,
+        0.0,
+        2.0
+      ],
+      "checks": {
+        "volume_delta": {
+          "expected": 270.0,
+          "measured": 272.0000330573348,
+          "ok": true
+        },
+        "direction": {
+          "expected": "increase",
+          "measured": "increase",
+          "ok": true
+        },
+        "bbox_delta": {
+          "expected": [
+            0.0,
+            0.0,
+            2.0
+          ],
+          "measured": [
+            0.0,
+            0.0,
+            2.0
+          ],
+          "ok": true
+        },
+        "still_one_body": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "parameter": "cargoBoxDepth",
+      "delta": 1.0,
+      "new_value": 10.0,
+      "volume": 16982.0151589545,
+      "solids": 1,
+      "volume_delta": -56.00000276296487,
+      "bbox_size_delta": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "checks": {
+        "volume_delta": {
+          "expected": -56.0,
+          "measured": -56.00000276296487,
+          "ok": true
+        },
+        "direction": {
+          "expected": "decrease",
+          "measured": "decrease",
+          "ok": true
+        },
+        "bbox_delta": {
+          "expected": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "measured": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ok": true
+        },
+        "still_one_body": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "restore": {
+    "baseline_sha256": "ce87ef6ceb6d81bafecb1f593924a6dab34cb4e7fd011c8d51bca3e61c9ff6d1",
+    "re_export_sha256": "ce87ef6ceb6d81bafecb1f593924a6dab34cb4e7fd011c8d51bca3e61c9ff6d1",
+    "ok": true
+  },
+  "declared": 3,
+  "engine_calls": [
+    {
+      "cmd": "zoo kcl export --output-format step --deterministic /var/folders/3b/t6tqt_q10xs05v1jkpnkztxm0000gn/T/opencad-edit-overallLength-l5lf5xa8/part/main.kcl /var/folders/3b/t6tqt_q10xs05v1jkpnkztxm0000gn/T/opencad-edit-overallLength-l5lf5xa8/step",
+      "attempt": 1,
+      "class": "ok",
+      "ok": true,
+      "seconds": 5.83
+    },
+    {
+      "cmd": "zoo kcl export --output-format step --deterministic /var/folders/3b/t6tqt_q10xs05v1jkpnkztxm0000gn/T/opencad-edit-overallHeight-fvsugsb5/part/main.kcl /var/folders/3b/t6tqt_q10xs05v1jkpnkztxm0000gn/T/opencad-edit-overallHeight-fvsugsb5/step",
+      "attempt": 1,
+      "class": "ok",
+      "ok": true,
+      "seconds": 6.27
+    },
+    {
+      "cmd": "zoo kcl export --output-format step --deterministic /var/folders/3b/t6tqt_q10xs05v1jkpnkztxm0000gn/T/opencad-edit-cargoBoxDepth-j9bel50c/part/main.kcl /var/folders/3b/t6tqt_q10xs05v1jkpnkztxm0000gn/T/opencad-edit-cargoBoxDepth-j9bel50c/step",
+      "attempt": 1,
+      "class": "ok",
+      "ok": true,
+      "seconds": 6.46
+    },
+    {
+      "cmd": "zoo kcl export --output-format step --deterministic /Users/danieldriscoll/dual/opencad/parts/benchy/main.kcl /var/folders/3b/t6tqt_q10xs05v1jkpnkztxm0000gn/T/opencad-restore-su39mnul",
+      "attempt": 1,
+      "class": "ok",
+      "ok": true,
+      "seconds": 5.9
+    }
+  ],
+  "stage": "edit",
+  "provenance": {
+    "generated_at": "2026-09-17T04:16:09Z",
+    "opencad_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "6cf6ead495d8b52a3ed042f76be0c051dabb301b",
+      "dirty": true
+    },
+    "contract": "/Users/danieldriscoll/dual/opencad/designs/benchy/contract.yaml"
+  }
+}

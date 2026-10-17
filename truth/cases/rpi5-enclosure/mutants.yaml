@@ -1,0 +1,54 @@
+# Deliberately wrong enclosures the scorer must reject (run after a passing design exists).
+mutants:
+- id: lid_fused_to_base
+  op: fill_box
+  min:
+  - -8.5
+  - -8.5
+  - 21.4
+  max:
+  - 93.5
+  - -0.5
+  - 21.8
+  expect_caught_by:
+  - two_solids
+  note: 'a bridge of material across the rim gap along the front wall: one printed blob, the lid cannot come off
+    (a plain fuse of two non-touching solids changes nothing)'
+- id: usb_c_blocked
+  op: fill_box
+  min:
+  - 4.0
+  - -3.0
+  - 1.6
+  max:
+  - 18.5
+  - 0.5
+  - 9.0
+  expect_caught_by:
+  - clear_usb_c_plug
+  note: the USB-C opening walled over
+- id: standoff_shifted
+  op: shift_hole
+  near:
+  - 3.5
+  - 3.5
+  - -2.5
+  radius: 1.25
+  offset:
+  - 0.6
+  - 0
+  - 0
+  expect_caught_by:
+  - standoff_1_pilot
+  note: one pilot 0.6 mm off its datum
+- id: floor_thinned
+  op: cut_box
+  min:
+  - 30
+  - 20
+  - -6.5
+  max:
+  - 55
+  - 36
+  - -4.2
+  note: floor cut to below the wall minimum from below (depends on the floor level of the design)

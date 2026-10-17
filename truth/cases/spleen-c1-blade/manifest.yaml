@@ -1,0 +1,219 @@
+id: spleen-c1-blade
+title: 'SPLEEN C1 high-speed low-pressure turbine cascade blade: published airfoil coordinates extruded
+  over the 165 mm cascade span'
+truth_class: B
+role: validation
+source:
+  citation: Lavagnoli, Lopes, Simonassi, Torre (VKI), SPLEEN - High Speed Turbine Cascade - Test Case
+    Database v5, Zenodo 13712768, doi:10.5281/zenodo.13712768 (CC-BY-4.0); Test_Case_Setup/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx,
+    SPLEENC1_Geometry_Airfoil_2D_CAD_v2.stp, SPLEEN-HSTC-DB-Geometry_TestSection_Info_v2.pdf
+  urls:
+  - https://zenodo.org/records/13712768
+  - https://doi.org/10.5281/zenodo.13712768
+  - https://zenodo.org/records/7264762
+  accessed: '2026-09-15'
+  revision: database v5 (2024-09-09); archive md5 e85ff6468e90477d2895817e349d30fc; v1 CAD with the wrong
+    stagger is Zenodo 7264762 (2022-10-30, zip md5 73af4bf92c5ac51d86e4e06ed6dbdef4) and is no longer
+    shipped; the coordinate table is the authoritative geometry per the v2 update note
+  license: CC-BY-4.0
+intent: 'Reconstruct one SPLEEN C1 turbine cascade blade as editable KCL. Build the closed airfoil profile
+  from the attached coordinate table (sheet SPLEENC1_Coord: pressure side x,y in columns A-B and suction
+  side x,y in columns C-D, both in metres, both running from the leading edge at the origin to the shared
+  trailing-edge point), keeping the table''s axes, origin, scale and orientation exactly: x axial, y pitchwise,
+  leading edge at (0, 0), trailing edge at (47.614, -21.600) mm, so the chord sits at the documented 24.4
+  degree stagger. Extrude the profile straight along +z from z = 0 over the documented cascade span (165.0
+  mm, Table 2.1). Preserve the leading edge, the suction-side curvature and the trailing-edge closure
+  as given; do not substitute a generic airfoil, do not smooth or re-fit the shape beyond what a faithful
+  curve through the published points requires, and do not add a root, platform, fillets or a display stand.
+  The coordinate table is authoritative over any CAD file (the database''s v1 CAD had a wrong stagger
+  angle). One solid; export STEP and STL.'
+inputs:
+- path: inputs/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx
+  kind: table
+  sha256: eb02e45c1ff8b6f94fcb7a91209f5b0113c96b1ffa27f9cbaff18133cb37a4f2
+  units: m
+  note: 1001 points per side in metres; sheet Features lists chord, pitch, stagger, TE radius
+- path: inputs/spleen-c1-geometry-excerpt.md
+  kind: text
+  sha256: f3e30892ac891e29e7b6483e6456b6d7e2364fdf719a08a28e0f13ada6fc18e8
+  note: Table 2.1 (span 165 mm etc.) and the v2 update note about the v1 CAD stagger error
+truth:
+- path: truth/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx
+  kind: table
+  sha256: eb02e45c1ff8b6f94fcb7a91209f5b0113c96b1ffa27f9cbaff18133cb37a4f2
+  units: m
+  note: 'the published coordinates (also an input): profile-deviation truth'
+- path: truth/spleen-c1-blade3-from-v2.step
+  kind: cad
+  sha256: 9d20056c7dee245e991584d5fca0d2031e39d84071327e8fc179e7f12b1abbf5
+  units: mm
+  note: central blade cut from SPLEENC1_Geometry_Airfoil_2D_CAD_v2.stp with scripts/derive_spleen_truth.py
+    and mapped into the coordinate-table frame (x axial, y pitchwise, z span 0..165)
+- path: truth/spleen-c1-blade3-from-v2.stl
+  kind: mesh
+  sha256: 55c8bd35f69ca52972cfe883a56991039fac1c6ad6a3ab7dc5f500c0d6891f28
+  units: mm
+  note: OpenCascade tessellation (0.01 mm deflection) of the derived blade STEP, for deviation metrics
+- path: truth/spleen-c1-blade3-from-v1.step
+  kind: cad
+  sha256: 8c8c4401d63167c437193a314b7da9728b3e2483d254994cffda26a8149533bd
+  units: mm
+  note: central blade cut from SPLEENC1_Geometry_Airfoil_2D_CAD_v1.stp (Zenodo 7264762) with scripts/derive_spleen_truth.py
+    --source v1; documented wrong stagger
+- path: truth/spleen-c1-blade3-from-v1.stl
+  kind: mesh
+  sha256: c5d51731904b066f9cce72008c2589fe9bbcf1dee06c3ff7f42f5c9f8eaa2e0c
+  units: mm
+  note: OpenCascade tessellation of the v1 blade, used as the not_matching reference
+arms:
+- id: table-and-notes
+  design: spleen-c1-blade
+  inputs:
+  - inputs/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx
+  - inputs/spleen-c1-geometry-excerpt.md
+  profile:
+    table: inputs/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx
+    units: m
+    sheet: SPLEENC1_Coord
+    sides:
+    - - 0
+      - 1
+    - - 2
+      - 3
+    skip: 2
+  notes: The deterministic profile ingest supplies area, chord, stagger and bbox of the closed loop as
+    measured (reference model) values.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 47.9727
+  - 31.2123
+  - 165.0
+  tolerance: 0.05
+- id: volume
+  kind: volume
+  from:
+    file: truth/spleen-c1-blade3-from-v2.step
+    measure: volume
+  tolerance_rel: 0.004
+  note: 38055.5 mm3 = 230.64 mm2 x 165 mm; 0.4 % allows for curve fitting through the published points
+    and the 0.435 mm TE radius
+- id: solid_count
+  kind: solid_count
+  expected: 1
+- id: center_of_mass
+  kind: center_of_mass
+  from:
+    file: truth/spleen-c1-blade3-from-v2.step
+    measure: center_of_mass
+  tolerance: 0.1
+- id: midspan_profile
+  kind: profile2d
+  plane: z
+  at: 82.5
+  reference: truth/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx
+  reference_units: m
+  reference_sheet: SPLEENC1_Coord
+  reference_sides:
+  - - 0
+    - 1
+  - - 2
+    - 3
+  reference_skip: 2
+  p95_max: 0.05
+  tolerance_rel: 0.005
+  chord_tolerance: 0.1
+  stagger_tolerance_deg: 0.2
+  note: 'section of the blade at mid-span against the published closed profile: p95 distance, area, farthest-pair
+    chord and its angle'
+- id: midspan_landmarks
+  kind: profile2d
+  plane: z
+  at: 82.5
+  reference: truth/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx
+  reference_units: m
+  reference_sheet: SPLEENC1_Coord
+  reference_sides:
+  - - 0
+    - 1
+  - - 2
+    - 3
+  reference_skip: 2
+  p95_max: 0.05
+  tolerance_rel: 0.005
+  chord_definition: landmarks
+  chord_tolerance: 0.05
+  stagger_tolerance_deg: 0.05
+  note: 'LE-to-TE of side 1: documented chord 52.2846 mm at -24.4009 deg. Farthest-pair is not the documented
+    stagger.'
+- id: root_profile
+  kind: profile2d
+  plane: z
+  at: 5.0
+  reference: truth/SPLEENC1_Geometry_Airfoil_2D_v1.xlsx
+  reference_units: m
+  reference_sheet: SPLEENC1_Coord
+  reference_sides:
+  - - 0
+    - 1
+  - - 2
+    - 3
+  reference_skip: 2
+  p95_max: 0.05
+  tolerance_rel: 0.005
+  note: a straight extrusion has the same profile at every station
+- id: midspan_section
+  kind: section
+  plane: z
+  at: 82.5
+  expected:
+    area: 230.64
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.005
+  note: OpenCascade planar sections of B-spline solids carry about 0.2 % area bias; tolerance widened
+    accordingly
+- id: root_face
+  kind: face
+  plane: z
+  at: 0.0
+  normal: '-'
+  expected: 230.64
+  tolerance: 0.02
+  area_tolerance_rel: 0.004
+- id: tip_face
+  kind: face
+  plane: z
+  at: 165.0
+  normal: +
+  expected: 230.64
+  tolerance: 0.02
+  area_tolerance_rel: 0.004
+- id: deviation_vs_v2_blade
+  kind: deviation
+  reference: truth/spleen-c1-blade3-from-v2.stl
+  p95_max: 0.05
+  hausdorff_max: 0.5
+  silhouette_iou_min: 0.99
+  note: the v2 CAD blade differs from the point table only by its curve fit and rounded trailing edge
+- id: not_matching_v1_wrong_stagger
+  kind: not_matching
+  reference: truth/spleen-c1-blade3-from-v1.stl
+  min_distance: 0.28
+  note: v1 CAD (Zenodo 7264762, 2022-10-30) has the documented wrong stagger; measured p95 between the
+    derived v1 and v2 blades is 0.568 mm, so min_distance is half of that. A reconstruction of the table/v2
+    geometry must sit farther than this from the v1 blade.
+downstream_targets:
+- name: blade_pressure_distribution_steady_inlet
+  value: 0
+  units: Mach / Cp along the blade at midspan
+  note: measured in the cascade (periodic passage, documented inlet conditions); a later CFD comparison,
+    never a CAD input
+notes:
+- The published v2 CAD is a five-blade cascade (pitch 32.95 mm along its z axis, blades extruded 165 mm
+  along y, with a 0.1 mm end plate). The single-blade truth was cut from it and rotated into the coordinate-table
+  frame; the coordinate bbox (47.973 x 31.212) matches the cut blade to 1e-3 mm.
+- 'Regression trap preserved from the source history: the v1 CAD had a wrong stagger; any reconstruction
+  whose chord angle departs from the table''s -24.40 deg fails midspan_landmarks.stagger_deg, and a reconstruction
+  that follows the v1 CAD fails not_matching_v1_wrong_stagger (p95 vs v1 must exceed 0.28 mm).'

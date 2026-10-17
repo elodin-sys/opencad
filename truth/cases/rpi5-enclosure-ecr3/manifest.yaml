@@ -1,0 +1,559 @@
+id: rpi5-enclosure-ecr3
+title: 'Raspberry Pi 5 enclosure after ECR3: lid screws moved to the long sides at x = (50.0, 75.0)'
+truth_class: C
+role: validation
+source:
+  citation: Raspberry Pi Ltd, Raspberry Pi 5 mechanical drawing RP-008347-DS-1 (pip.raspberrypi.com);
+    requirements authored for this benchmark
+  urls:
+  - https://pip-assets.raspberrypi.com/categories/892-raspberry-pi-5/documents/RP-008347-DS-1-raspberry-pi-5-mechanical-drawing.pdf
+  - https://pip.raspberrypi.com/categories/892-raspberry-pi-5
+  accessed: '2026-09-17'
+  revision: drawing updated 6 Oct 2025 per the product information portal
+  license: 'Raspberry Pi drawing: reference use; requirements: this repository'
+intent: 'Score the enclosure after change request ECR3 (lid screws moved to the long sides at x = (50.0,
+  75.0)): the revised requirement values apply and every other requirement is unchanged.'
+inputs:
+- path: inputs/ecr-3-fasteners.md
+  kind: text
+  sha256: 0600cb822db7621da8223d62f1612bf639b4ff227e895e09db8c685ad3668e4a
+  note: the change request
+truth:
+- path: truth/requirements.yaml
+  kind: yaml
+  sha256: dfc87b35070aab62d2b0dcf1daec3534572ca67282036c585a4ac36e70fb94cc
+  note: revised requirement values (evaluator-side)
+hardware:
+- name: pcb_slab
+  kind: box
+  min:
+  - 0
+  - 0
+  - 0
+  max:
+  - 85.0
+  - 56.0
+  - 1.6
+- name: pcb_edge_band
+  kind: box
+  min:
+  - -0.5
+  - -0.5
+  - 0.2
+  max:
+  - 85.5
+  - 56.5
+  - 1.6
+  description: 0.5 mm clearance band around the board edges at board height (standoffs touch the board
+    bottom below z = 0.2, which this band excludes)
+- name: top_envelope
+  kind: box
+  min:
+  - 0
+  - 0
+  - 1.6
+  max:
+  - 85.0
+  - 56.0
+  - 21.6
+- name: bottom_keepout
+  kind: box
+  min:
+  - 0
+  - 0
+  - -3.0
+  max:
+  - 85.0
+  - 56.0
+  - 0.0
+  exclude_cylinders:
+  - point:
+    - 3.5
+    - 3.5
+    - -4.0
+    direction:
+    - 0
+    - 0
+    - 1
+    radius: 3.1
+    length: 5.0
+  - point:
+    - 61.5
+    - 3.5
+    - -4.0
+    direction:
+    - 0
+    - 0
+    - 1
+    radius: 3.1
+    length: 5.0
+  - point:
+    - 3.5
+    - 52.5
+    - -4.0
+    direction:
+    - 0
+    - 0
+    - 1
+    radius: 3.1
+    length: 5.0
+  - point:
+    - 61.5
+    - 52.5
+    - -4.0
+    direction:
+    - 0
+    - 0
+    - 1
+    radius: 3.1
+    length: 5.0
+- name: usb_c_plug
+  kind: box
+  min:
+  - 4.699999999999999
+  - -25.0
+  - 1.6
+  max:
+  - 17.7
+  - 0.0
+  - 8.6
+- name: hdmi0_plug
+  kind: box
+  min:
+  - 19.8
+  - -25.0
+  - 1.6
+  max:
+  - 31.8
+  - 0.0
+  - 8.1
+- name: hdmi1_plug
+  kind: box
+  min:
+  - 33.2
+  - -25.0
+  - 1.6
+  max:
+  - 45.2
+  - 0.0
+  - 8.1
+- name: usb_a_upper_plug
+  kind: box
+  min:
+  - 85.0
+  - 39.5
+  - 1.6
+  max:
+  - 110.0
+  - 54.5
+  - 18.6
+- name: usb_a_lower_plug
+  kind: box
+  min:
+  - 85.0
+  - 21.6
+  - 1.6
+  max:
+  - 110.0
+  - 36.6
+  - 18.6
+- name: rj45_plug
+  kind: box
+  min:
+  - 85.0
+  - 1.6999999999999993
+  - 1.6
+  max:
+  - 110.0
+  - 18.7
+  - 16.6
+- name: sd_card_slot
+  kind: box
+  min:
+  - -25.0
+  - 22.0
+  - -3.0
+  max:
+  - 0.0
+  - 34.0
+  - 0.0
+arms:
+- id: ecr3
+  design: rpi5-enclosure
+  ecr: ecr3
+  inputs:
+  - inputs/ecr-3-fasteners.md
+  images: []
+  notes: Scored with `python -m opencad.truth score` after `python -m opencad ecr rpi5-enclosure <request>
+    --contract-delta <yaml> --label ecr3`; not a drafting run.
+observables:
+- id: two_solids
+  kind: solid_count
+  expected: 2
+- id: base_solid
+  kind: solid
+  point:
+  - 42.5
+  - 28.0
+  - -6.0
+  note: the base contains this point
+- id: lid_solid
+  kind: solid
+  point:
+  - 42.5
+  - 28.0
+  - 24.6
+  note: the lid contains this point
+- id: clear_pcb_slab
+  kind: clearance
+  a: all
+  b: pcb_slab
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_pcb_edge_band
+  kind: clearance
+  a: all
+  b: pcb_edge_band
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_top_envelope
+  kind: clearance
+  a: all
+  b: top_envelope
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_bottom_keepout
+  kind: clearance
+  a: all
+  b: bottom_keepout
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_usb_c_plug
+  kind: clearance
+  a: all
+  b: usb_c_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_hdmi0_plug
+  kind: clearance
+  a: all
+  b: hdmi0_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_hdmi1_plug
+  kind: clearance
+  a: all
+  b: hdmi1_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_usb_a_upper_plug
+  kind: clearance
+  a: all
+  b: usb_a_upper_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_usb_a_lower_plug
+  kind: clearance
+  a: all
+  b: usb_a_lower_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_rj45_plug
+  kind: clearance
+  a: all
+  b: rj45_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_sd_card_slot
+  kind: clearance
+  a: all
+  b: sd_card_slot
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: lid_on_base
+  kind: clearance
+  a: lid_solid
+  b: base_solid
+  min_gap: 0.0
+  max_gap: 0.1
+  note: lid rests on the base rim without interference
+- id: standoff_1_top
+  kind: face
+  plane: z
+  at: 0.0
+  normal: +
+  center:
+  - 3.5
+  - 3.5
+  tolerance: 0.3
+  note: standoff top meets the PCB bottom at the hole datum
+- id: standoff_1_pilot
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 3.5
+  - 3.5
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 1.25
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  length: 6.0
+  length_tolerance: 3.0
+  note: Ø2.5 pilot >= 5 deep (checked as 3..9)
+- id: standoff_2_top
+  kind: face
+  plane: z
+  at: 0.0
+  normal: +
+  center:
+  - 61.5
+  - 3.5
+  tolerance: 0.3
+  note: standoff top meets the PCB bottom at the hole datum
+- id: standoff_2_pilot
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 61.5
+  - 3.5
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 1.25
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  length: 6.0
+  length_tolerance: 3.0
+  note: Ø2.5 pilot >= 5 deep (checked as 3..9)
+- id: standoff_3_top
+  kind: face
+  plane: z
+  at: 0.0
+  normal: +
+  center:
+  - 3.5
+  - 52.5
+  tolerance: 0.3
+  note: standoff top meets the PCB bottom at the hole datum
+- id: standoff_3_pilot
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 3.5
+  - 52.5
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 1.25
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  length: 6.0
+  length_tolerance: 3.0
+  note: Ø2.5 pilot >= 5 deep (checked as 3..9)
+- id: standoff_4_top
+  kind: face
+  plane: z
+  at: 0.0
+  normal: +
+  center:
+  - 61.5
+  - 52.5
+  tolerance: 0.3
+  note: standoff top meets the PCB bottom at the hole datum
+- id: standoff_4_pilot
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 61.5
+  - 52.5
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 1.25
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  length: 6.0
+  length_tolerance: 3.0
+  note: Ø2.5 pilot >= 5 deep (checked as 3..9)
+- id: lid_screw_clearance_holes
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.6
+  radius_tolerance: 0.15
+  expected: 4
+  direction:
+  - 0
+  - 0
+  - 1
+  note: Ø3.2 through the lid flange, long sides only
+- id: pilot_holes_total
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.25
+  radius_tolerance: 0.1
+  expected: 8
+  direction:
+  - 0
+  - 0
+  - 1
+  note: 4 standoff + 4 side-boss pilots
+- id: side_screw_ym_x50
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.6
+  radius_tolerance: 0.15
+  expected_min: 1
+  direction:
+  - 0
+  - 0
+  - 1
+  region: &id001
+  - - 49.5
+    - -20.0
+    - -20.0
+  - - 50.5
+    - -0.5
+    - 60.0
+  note: lid clearance hole at x = 50.0 in the y < 0 wall
+- id: side_pilot_ym_x50
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.25
+  radius_tolerance: 0.1
+  expected_min: 1
+  direction:
+  - 0
+  - 0
+  - 1
+  region: *id001
+  note: Ø2.5 boss pilot under the x = 50.0 screw
+- id: side_screw_yp_x50
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.6
+  radius_tolerance: 0.15
+  expected_min: 1
+  direction:
+  - 0
+  - 0
+  - 1
+  region: &id002
+  - - 49.5
+    - 56.5
+    - -20.0
+  - - 50.5
+    - 76.0
+    - 60.0
+  note: lid clearance hole at x = 50.0 in the y > 56 wall
+- id: side_pilot_yp_x50
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.25
+  radius_tolerance: 0.1
+  expected_min: 1
+  direction:
+  - 0
+  - 0
+  - 1
+  region: *id002
+  note: Ø2.5 boss pilot under the x = 50.0 screw
+- id: side_screw_ym_x75
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.6
+  radius_tolerance: 0.15
+  expected_min: 1
+  direction:
+  - 0
+  - 0
+  - 1
+  region: &id003
+  - - 74.5
+    - -20.0
+    - -20.0
+  - - 75.5
+    - -0.5
+    - 60.0
+  note: lid clearance hole at x = 75.0 in the y < 0 wall
+- id: side_pilot_ym_x75
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.25
+  radius_tolerance: 0.1
+  expected_min: 1
+  direction:
+  - 0
+  - 0
+  - 1
+  region: *id003
+  note: Ø2.5 boss pilot under the x = 75.0 screw
+- id: side_screw_yp_x75
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.6
+  radius_tolerance: 0.15
+  expected_min: 1
+  direction:
+  - 0
+  - 0
+  - 1
+  region: &id004
+  - - 74.5
+    - 56.5
+    - -20.0
+  - - 75.5
+    - 76.0
+    - 60.0
+  note: lid clearance hole at x = 75.0 in the y > 56 wall
+- id: side_pilot_yp_x75
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.25
+  radius_tolerance: 0.1
+  expected_min: 1
+  direction:
+  - 0
+  - 0
+  - 1
+  region: *id004
+  note: Ø2.5 boss pilot under the x = 75.0 screw
+- id: wall_min
+  kind: thickness
+  min: 2.0
+  samples: 6000
+  max_thickness: 12.0
+  note: minimum wall/floor thickness by inward ray casting
+- id: headroom_probe
+  kind: probe
+  state: void
+  points:
+  - - 20
+    - 20
+    - 21.1
+  - - 65
+    - 40
+    - 21.1
+  - - 42.5
+    - 28
+    - 6.6
+  note: air above the board
+- id: floor_probe
+  kind: probe
+  state: solid
+  points:
+  - - 42.5
+    - 28
+    - -6.0
+  note: 'there is a floor under the component keep-out (requirement 1: the base contains (42.5, 28, -6))'
+notes:
+- 'Class C change-request case: the base case''s functional checks with the request''s revisions applied.'

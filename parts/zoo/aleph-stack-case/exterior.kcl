@@ -1,0 +1,38 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import innerXMin, innerXMax, innerYMin, innerYMax, floorTop, seamGap, roofBottom from "params.kcl"
+
+// Contract literals and their feasibility guards live in the shared params.kcl.
+// Follow the same live seam plane as datum.kcl when a parameter is edited.
+cavityRim = floorTop + seamGap
+toolOverrun = 0.02mm
+cavityToolBottom = cavityRim - toolOverrun
+cavityDepth = roofBottom - cavityToolBottom
+
+assert(innerXMax, isGreaterThan = innerXMin, error = "The cavity must have positive x span.")
+assert(innerYMax, isGreaterThan = innerYMin, error = "The cavity must have positive y span.")
+assert(roofBottom, isGreaterThan = cavityRim, error = "The cavity roof must lie above the open cap rim.")
+assert(cavityToolBottom, isGreaterThan = floorTop + 0.1mm, error = "The cavity tool must remain at least 0.1 mm above the separate cover.")
+
+// Body order is the foundation contract: [upperShell, bottomCover].
+// This group's sole cut opens the upper blank; later modules own all apertures.
+export fn exterior(@body) {
+  cavityPlane = offsetPlane(XY, offset = cavityToolBottom)
+  cavityProfile = sketch(on = cavityPlane) {
+    front = line(start = [innerXMin, innerYMin], end = [innerXMax, innerYMin])
+    right = line(start = [innerXMax, innerYMin], end = [innerXMax, innerYMax])
+    rear = line(start = [innerXMax, innerYMax], end = [innerXMin, innerYMax])
+    left = line(start = [innerXMin, innerYMax], end = [innerXMin, innerYMin])
+  }
+  cavityRegion = region(segments = [
+    cavityProfile.front,
+    cavityProfile.right
+  ])
+  cavityTool = extrude(cavityRegion, length = cavityDepth, method = NEW)
+  hollowCap = subtract(body[0], tools = [cavityTool])
+
+  // Hide the construction handles, not the consumed region or finished solid.
+  hide(cavityProfile.meta.sketch)
+  hide(cavityPlane)
+  return [hollowCap, body[1]]
+}

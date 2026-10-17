@@ -1,0 +1,59 @@
+{
+  "named_faces": {
+    "bottom": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 3914.922565133621,
+      "ok": true,
+      "position": 1.0842021724855044e-19,
+      "area_expected": 3914.923,
+      "area_ok": true,
+      "centroid_uv": [
+        39.999999999991644,
+        25.00000000010342
+      ]
+    },
+    "top": {
+      "plane": "z",
+      "at": 6.0,
+      "normal": "+",
+      "found": 1,
+      "area": 3914.922565104552,
+      "ok": true,
+      "position": 6.0,
+      "area_expected": 3914.923,
+      "area_ok": true,
+      "centroid_uv": [
+        40.0,
+        25.000000000000004
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "bottom",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": 3914.923,
+      "area_tolerance_rel": 0.002,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "top",
+      "plane": "z",
+      "at": 6.0,
+      "normal": "+",
+      "area": 3914.923,
+      "area_tolerance_rel": 0.002,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 6
+}

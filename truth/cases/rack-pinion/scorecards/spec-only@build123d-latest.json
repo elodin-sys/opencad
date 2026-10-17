@@ -1,0 +1,315 @@
+{
+  "case": "rack-pinion",
+  "arm": "spec-only",
+  "design": "rack-pinion",
+  "kind": "machine",
+  "mode": "reconstruction",
+  "backend": "build123d",
+  "truth_class": "C",
+  "scored_at": "2026-09-27T16:57:28Z",
+  "verdict": "PASS",
+  "error": null,
+  "accuracy_score": 100.0,
+  "summary": {
+    "required_pass": 8,
+    "required_total": 8,
+    "optional_pass": 0,
+    "optional_total": 0,
+    "performance_pass": 2,
+    "performance_scored": 2,
+    "performance_unresolved": 0,
+    "performance_total": 2,
+    "performance_by_split": {
+      "development": {
+        "required": 2,
+        "pass": 2,
+        "fail": 0,
+        "unresolved": 0,
+        "missing": 0
+      },
+      "held_out": {
+        "required": 0,
+        "pass": 0,
+        "fail": 0,
+        "unresolved": 0,
+        "missing": 0
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "the plate (-120..120, -50..30, -5..0) bounds the pinion (tips to y 22) and the rack at rest (x -100..100); parts to z 8",
+      "expected": [
+        240.0,
+        80.0,
+        13.0
+      ],
+      "measured": [
+        240.0,
+        80.0,
+        13.0
+      ],
+      "error": 0.0,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 3,
+      "measured": 3,
+      "ok": true
+    },
+    {
+      "id": "plate",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 95858.62833058844,
+        "bbox_min": [
+          -120.0,
+          -50.0,
+          -5.0
+        ],
+        "bbox_max": [
+          120.0,
+          30.0,
+          0.0
+        ],
+        "center_of_mass": [
+          -2.0053328398645373e-15,
+          -10.014747933688763,
+          -2.5
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 95858.63,
+        "measured": 95858.62833058844,
+        "band": 479.29315,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "pinion",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 9545.55466679258,
+        "bbox_min": [
+          -22.0,
+          -22.0,
+          0.0
+        ],
+        "bbox_max": [
+          22.0,
+          22.0,
+          8.0
+        ],
+        "center_of_mass": [
+          9.561970391608001e-12,
+          1.3129533003996145e-13,
+          4.0
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "rack",
+      "kind": "solid",
+      "required": true,
+      "note": "200 x 9.5 x 8 body plus 32 trapezoid teeth (tip 1.6357, root 4.9114, height 4.5)",
+      "measured": {
+        "volume": 18971.16159187418,
+        "bbox_min": [
+          -100.0,
+          -32.0,
+          0.0
+        ],
+        "bbox_max": [
+          100.0,
+          -17.999999999999787,
+          8.0
+        ],
+        "center_of_mass": [
+          -3.9543170676383324e-12,
+          -25.933105683788177,
+          4.0
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 18971.16,
+        "measured": 18971.16159187418,
+        "band": 94.8558,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "pinion_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 20,
+      "measured": 20,
+      "tip_radius": 22.000000000000394,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "pinion_bore",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          4.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          4.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 8.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 8.0,
+          "measured": 8.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pinion_on_rack",
+      "kind": "clearance",
+      "required": true,
+      "note": "in mesh at rest, never fused",
+      "measured": {
+        "gap": 0.047211751225539146,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": 0.15
+      },
+      "error": null,
+      "ok": true
+    }
+  ],
+  "performance": [
+    {
+      "id": "rackRatio",
+      "kind": "performance",
+      "quantity": "transmission_ratio",
+      "unit": "mm/deg",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "prediction": 0.3490658651365731,
+      "reference": 0.3490658503988659,
+      "error": 1.4737707221268437e-08,
+      "tolerance": 0.001,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    },
+    {
+      "id": "rackTravel",
+      "kind": "performance",
+      "quantity": "joint_range",
+      "unit": "mm",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "prediction": 125.66371144916633,
+      "reference": 125.66370614359172,
+      "error": 5.30557460365344e-06,
+      "tolerance": 0.1,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": "10 pass, 0 fail, 4 n/a",
+    "failed": []
+  },
+  "simulations": {},
+  "hash_binding": {
+    "manifest_sha256": "642a7910d2846819859675c1f5e2c191543733e96b4b8c8a383e80f98b4bfb6b",
+    "truth_files": {
+      "truth/rack-pinion-truth.yaml": "a6f3797f0137ff6114f573ec965aadc3a820028e6b583a47f98416ae0efb8197"
+    },
+    "input_files": {
+      "inputs/rack-pinion-spec.md": "87f6a8bbc15c559e23899017105cd36ee8b503a6238b00213d3b99103d903561"
+    },
+    "step_sha256": "99c23fe941148fdb4f2371b38cc0aa5b81e10584e66d0296919e5e923ad09b6d",
+    "assembly_source": {
+      "checkpoint.py": "c56d1617b4badae9105b8ed2d9a81a340d65c1387ac508690ba6acc6a8067d18",
+      "main.py": "c56d1617b4badae9105b8ed2d9a81a340d65c1387ac508690ba6acc6a8067d18"
+    },
+    "design_bundle": {
+      "assembly.yaml": "887104ae1c165132024f4665634586eb3725bd30c3af961d4469f205caca3360",
+      "brief.md": "83bd61f4157a0882a452e1255c0ab0bccea94d09acf47a530cd168f1dae4585e",
+      "sources/rack-pinion-spec.md": "87f6a8bbc15c559e23899017105cd36ee8b503a6238b00213d3b99103d903561"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-27T16:57:28Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "f067337b8ab648471ad40a647b21672f74d56978",
+      "dirty": true
+    }
+  }
+}

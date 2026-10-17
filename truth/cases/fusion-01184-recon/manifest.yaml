@@ -1,0 +1,291 @@
+id: fusion-01184-recon
+title: 'Held-out Fusion 360 Gallery body 36938_ae684b66_0002_2 (joint set joint_set_01184): reconstruction'
+truth_class: B
+role: validation
+source:
+  citation: Autodesk AI Lab, Fusion 360 Gallery Dataset, Assembly-Joint subset j1.0.0 (Willis et al.,
+    JoinABLe, CVPR 2022)
+  urls:
+  - https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/docs/assembly_joint.md
+  - https://fusion-360-gallery-dataset.s3.us-west-2.amazonaws.com/assembly/j1.0.0/j1.0.0.7z
+  accessed: '2026-09-17'
+  revision: j1.0.0
+  license: Fusion 360 Gallery Dataset License (non-commercial research); STEP bodies in mm, joint JSON
+    in cm
+intent: 'Reconstruct the mechanical part shown in the attached renders, sections and dimension sheet as
+  editable, parameterized KCL in the part''s own frame (bbox min [100.0, 0.0, 70.0], size [10.0, 88.0,
+  50.0] mm). Declare every hole, boss and shaft as an acceptance cylinder and every planar face level
+  as a named face; one solid; export STEP and STL. Held-out: the pipeline is frozen, the reference CAD
+  is evaluator-only.'
+inputs:
+- path: inputs/part-brief.md
+  kind: text
+  sha256: 1fd7a3e2fd439c3d2dcc9a64f656afc91fd568b74e39c10f1f9d2060cf3bd6ae
+- path: inputs/dimension-sheet.md
+  kind: text
+  sha256: 52b2551ba8b14028f430b8ffe7ec4f1af0abcb8101332afe6afbf55aed91fa3b
+- path: inputs/renders/front.png
+  kind: image
+  sha256: 5272bbaf14764c846990e1a9ad7dfc24e290864d97385d9eb15fc16b90e4c37c
+  units: mm
+- path: inputs/renders/iso-below.png
+  kind: image
+  sha256: 17b886df612534828ea253bfa72f51be8d7a40c36aa021149819bb0b89ac60ac
+  units: mm
+- path: inputs/renders/iso.png
+  kind: image
+  sha256: f669f71ff9706661274180a5cd82491dcaa42257da9b8a4f9759348b4bac11ce
+  units: mm
+- path: inputs/renders/iso2.png
+  kind: image
+  sha256: 0c7fb2de4b77e9215e890ebca772c020e1dd3a208e0133e584c6d1ae0d22c467
+  units: mm
+- path: inputs/renders/right.png
+  kind: image
+  sha256: 372740fcee48db7a8975f1baaef255264dd323c5d222f6bf2f523d3c5cb7fbea
+  units: mm
+- path: inputs/renders/section-x105.png
+  kind: image
+  sha256: bec3c9216cd6bbec90223c7116b14a514bd9775e9e34d1a743bedc31b9e08404
+  units: mm
+- path: inputs/renders/section-y44.png
+  kind: image
+  sha256: 8123d17a41ee6d08e2227537410a25742d86f773697b53621380ea14dbdfa2e7
+  units: mm
+- path: inputs/renders/section-z95.png
+  kind: image
+  sha256: 9791c0fa2267526758b2b7f3d0ebb84e91c9e5e21a8f3a2cdef9fc74fdecf3ca
+  units: mm
+- path: inputs/renders/top.png
+  kind: image
+  sha256: cb17ead244a8b2a12a76b5bc7c23339aa3c7e9ac3a8e9552586b3123ce060e75
+  units: mm
+- path: inputs/renders/render-notes.md
+  kind: text
+  sha256: f76626d9b84b32b68e7aeafe877b7bbd8a0e62a7418e931f01adc9de11783b9f
+truth:
+- path: truth/36938_ae684b66_0002_2.step
+  kind: cad
+  sha256: 42c4e021f3096d580b1678c4a8e9ab7c502661d18a62c367a88245b01aa75d55
+  units: mm
+- path: truth/36938_ae684b66_0002_2.stl
+  kind: mesh
+  sha256: 704666ae8a60581364acb5b46b0d7d68f2fd22a722b65e33805640851be8b92b
+  units: mm
+arms:
+- id: renders-and-sheet
+  design: fusion-01184-recon
+  inputs:
+  - inputs/part-brief.md
+  - inputs/dimension-sheet.md
+  - inputs/renders/front.png
+  - inputs/renders/iso-below.png
+  - inputs/renders/iso.png
+  - inputs/renders/iso2.png
+  - inputs/renders/right.png
+  - inputs/renders/section-x105.png
+  - inputs/renders/section-y44.png
+  - inputs/renders/section-z95.png
+  - inputs/renders/top.png
+  - inputs/renders/render-notes.md
+  images:
+  - inputs/renders/front.png
+  - inputs/renders/iso-below.png
+  - inputs/renders/iso.png
+  - inputs/renders/iso2.png
+  - inputs/renders/right.png
+  - inputs/renders/section-x105.png
+  - inputs/renders/section-y44.png
+  - inputs/renders/section-z95.png
+  - inputs/renders/top.png
+  notes: held-out; no tuning after the run
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 10.0
+  - 88.0
+  - 50.0
+  tolerance: 0.1
+- id: solid_count
+  kind: solid_count
+  expected: 1
+- id: volume
+  kind: volume
+  from:
+    file: truth/36938_ae684b66_0002_2.step
+    measure: volume
+  tolerance_rel: 0.01
+- id: center_of_mass
+  kind: center_of_mass
+  from:
+    file: truth/36938_ae684b66_0002_2.step
+    measure: center_of_mass
+  tolerance: 0.2
+- id: hole_d5_105_5_95
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 105.0
+  - 5.0
+  - 95.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 2.5
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  length: 50.0
+  length_tolerance: 0.2
+- id: pin_d8_104_4_95
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 104.0
+  - 4.0
+  - 95.0
+  direction:
+  - -0.0
+  - -0.0
+  - 1.0
+  radius: 4.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  length: 50.0
+  length_tolerance: 0.2
+- id: pin_d8_104_6_95
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 104.0
+  - 6.0
+  - 95.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 4.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  length: 50.0
+  length_tolerance: 0.2
+- id: pin_d8_106_4_95
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 106.0
+  - 4.0
+  - 95.0
+  direction:
+  - 0.0
+  - 0.0
+  - 1.0
+  radius: 4.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  length: 50.0
+  length_tolerance: 0.2
+- id: pin_d8_106_6_95
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 106.0
+  - 6.0
+  - 95.0
+  direction:
+  - -0.0
+  - -0.0
+  - 1.0
+  radius: 4.0
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  length: 50.0
+  length_tolerance: 0.2
+- id: pin_d5_105_48p9_95
+  kind: cylinder
+  cyl_kind: pin
+  point:
+  - 105.0
+  - 48.8538
+  - 95.0
+  direction:
+  - -0.0
+  - 1.0
+  - 0.0
+  radius: 2.5
+  radius_tolerance: 0.05
+  tolerance: 0.1
+  length: 78.2924
+  length_tolerance: 0.2
+- id: face_zp_120
+  kind: face
+  plane: z
+  at: 120.0
+  normal: +
+  mode: sum
+  expected: 66.631
+  area_tolerance_rel: 0.02
+  tolerance: 0.05
+- id: face_yn_0
+  kind: face
+  plane: y
+  at: 0.0
+  normal: '-'
+  mode: sum
+  expected: 100.0
+  area_tolerance_rel: 0.02
+  tolerance: 0.05
+- id: face_yp_10
+  kind: face
+  plane: y
+  at: 10.0
+  normal: +
+  mode: sum
+  expected: 90.273
+  area_tolerance_rel: 0.02
+  tolerance: 0.05
+- id: face_yp_88
+  kind: face
+  plane: y
+  at: 88.0
+  normal: +
+  mode: sum
+  expected: 19.635
+  area_tolerance_rel: 0.02
+  tolerance: 0.05
+- id: face_xp_110
+  kind: face
+  plane: x
+  at: 110.0
+  normal: +
+  mode: sum
+  expected: 100.0
+  area_tolerance_rel: 0.02
+  tolerance: 0.05
+- id: face_xn_100
+  kind: face
+  plane: x
+  at: 100.0
+  normal: '-'
+  mode: sum
+  expected: 100.0
+  area_tolerance_rel: 0.02
+  tolerance: 0.05
+- id: face_zn_70
+  kind: face
+  plane: z
+  at: 70.0
+  normal: '-'
+  mode: sum
+  expected: 66.631
+  area_tolerance_rel: 0.02
+  tolerance: 0.05
+- id: deviation
+  kind: deviation
+  reference: truth/36938_ae684b66_0002_2.stl
+  p95_max: 0.2
+  hausdorff_max: 1.0
+  silhouette_iou_min: 0.98
+notes:
+- 'Held-out generalization case: selected by seed before the pipeline freeze (truth/cases/_fusion360-selection.yaml).'

@@ -1,0 +1,14 @@
+Renders of the reference (nist-am-test-artifact.step): 9536 triangles, extents 141.421 x 141.421 x 17.000 mm, bbox min [-70.711, -70.711, -10.0] max [70.711, 70.711, 7.0]. Orthographic views with a mm grid; sections show the material outline.
+- top.png
+- bottom.png
+- front.png
+- right.png
+- iso.png
+- iso2.png
+- iso-below.png
+- section-z1.png
+- section-z-1.png
+- section-z5.png
+- section-z-5.png
+- section-x0.png
+- section-y0.png

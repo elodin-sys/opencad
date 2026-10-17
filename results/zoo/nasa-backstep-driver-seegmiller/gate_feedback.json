@@ -1,0 +1,580 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; every value carries provenance and a tolerance",
+      "ok": true,
+      "evidence": [
+        "designs/nasa-backstep-driver-seegmiller/contract.yaml: 7 parameters {'stated': 2, 'derived': 5}",
+        "open questions: 0"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources",
+      "details": {
+        "provenance": {
+          "stated": 2,
+          "derived": 5
+        },
+        "soft_values": 0,
+        "open_questions": []
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/nasa-backstep-driver-seegmiller/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/nasa-backstep-driver-seegmiller/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -1333.5,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            635.0,
+            152.4,
+            114.3
+          ],
+          "measured_min": [
+            -1333.5,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            635.0,
+            152.4,
+            114.3
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -1333.5,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            635.0,
+            152.4,
+            114.3
+          ],
+          "measured_min": [
+            -1333.5,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            635.0,
+            152.4,
+            114.3
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/nasa-backstep-driver-seegmiller/inspect.json volume = 31708968.84 vs 31708968.84",
+        "results/nasa-backstep-driver-seegmiller/inspect.json surface_area = 1050965.64 vs 1050965.64",
+        "results/nasa-backstep-driver-seegmiller/inspect.json center_of_mass = [-323.407, 76.2, 61.2849] vs [-323.406976744186, 76.2, 61.2848837209302]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 31708968.84,
+          "measured": 31708968.84,
+          "error": 0.0,
+          "band": 63417.9377,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 1050965.64,
+          "measured": 1050965.64,
+          "error": 0.0,
+          "band": 2101.9313,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            -323.406976744186,
+            76.2,
+            61.2848837209302
+          ],
+          "measured": [
+            -323.407,
+            76.2,
+            61.2849
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section and named face verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/nasa-backstep-driver-seegmiller/inspect.json features: 6/6 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": []
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/nasa-backstep-driver-seegmiller/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/nasa-backstep-driver-seegmiller/inspect.json agreement kcl=31708969.865576364 step=31708968.84 stl=31708969.4206439 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 31708969.865576364,
+        "step": 31708968.84,
+        "stl": 31708969.4206439,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "kcl_vs_step_rel": 3.2343415814747476e-08,
+        "stl_vs_step_rel": 1.8311661368386163e-08,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/nasa-backstep-driver-seegmiller/edit.json 3/3 edit tests ok; restore.ok = True"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, or the deliverable changed",
+      "knob": "make features derive from the named constants",
+      "details": {
+        "tests": [
+          {
+            "parameter": "channelWidth",
+            "delta": 12.7,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 2642414.07,
+                "measured": 2642414.0699999966,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  12.7,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  12.699999999999989,
+                  0.0
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          },
+          {
+            "parameter": "upstreamLength",
+            "delta": 12.7,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 196644.768,
+                "measured": 196644.7679999955,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  12.7,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  12.700000000000045,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          },
+          {
+            "parameter": "downstreamLength",
+            "delta": 12.7,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 221225.364,
+                "measured": 221225.36399999633,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  12.7,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  12.700000000000045,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552",
+          "re_export_sha256": "c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552",
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/nasa-backstep-driver-seegmiller/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=8",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 8,
+          "sketch_blocks": 2,
+          "feature_ops": 1,
+          "parameters": {
+            "stepHeight": {
+              "found": true,
+              "value": 12.7,
+              "unit": "mm",
+              "expected": 12.7,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "channelWidth": {
+              "found": true,
+              "value": 152.4,
+              "unit": "mm",
+              "expected": 152.4,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "downstreamHeight": {
+              "found": true,
+              "value": 114.3,
+              "unit": "mm",
+              "expected": 114.3,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "upstreamHeight": {
+              "found": true,
+              "value": 101.6,
+              "unit": "mm",
+              "expected": 101.6,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "roofAngle": {
+              "found": true,
+              "value": 0.0,
+              "unit": "deg",
+              "expected": 0.0,
+              "expected_unit": "deg",
+              "ok": true
+            },
+            "upstreamLength": {
+              "found": true,
+              "value": 1333.5,
+              "unit": "mm",
+              "expected": 1333.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "downstreamLength": {
+              "found": true,
+              "value": 635.0,
+              "unit": "mm",
+              "expected": 635.0,
+              "expected_unit": "mm",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "lines": 131,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/nasa-backstep-driver-seegmiller/export.json step.deterministic = True sha256 c6a4901ad133; stl=present; glb=present",
+        "results/nasa-backstep-driver-seegmiller/inspect.json valid = True solids = 1 (expected 1)",
+        "results/nasa-backstep-driver-seegmiller/inspect.json mesh watertight = True components = 1 void_shells = 0"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nasa-backstep-driver-seegmiller/export/nasa-backstep-driver-seegmiller.step",
+            "sha256": "c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552",
+            "bytes": 9773,
+            "deterministic": true,
+            "second_sha256": "c6a4901ad133768e27dc02b1b0db94d9e38d45f843b748765b36fb5ed4dea552"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nasa-backstep-driver-seegmiller/export/nasa-backstep-driver-seegmiller.stl",
+            "sha256": "dde29af338e5b7ca6d32b0be02d231a716d95e77bb1af2ac091d0bafec51a55d",
+            "bytes": 6495
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nasa-backstep-driver-seegmiller/export/nasa-backstep-driver-seegmiller.glb",
+            "sha256": "71850b530dbb9dd3cd69edb591ae0a6bf78dacd7d50fd159cedb8a77e0395309",
+            "bytes": 10552
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 40,
+          "vertices": 22,
+          "watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 31708969.4206439,
+          "surface_area": 1050965.660447,
+          "bbox_min": [
+            -1333.5,
+            -0.0,
+            0.0
+          ],
+          "bbox_max": [
+            635.0,
+            152.40001,
+            114.299995
+          ],
+          "center_of_mass": [
+            -323.4069755216783,
+            76.200005,
+            61.28488121304309
+          ]
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0a950-caab-78e3-af6e-8e59237f4aa7; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 14; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 14,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/nasa-backstep-driver-seegmiller/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/nasa-backstep-driver-seegmiller/verify.json hygiene.forbidden_imports = [] sketch_blocks = 2 feature_ops = 1 lines = 131"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "sketch_blocks": 2,
+        "feature_ops": 1
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

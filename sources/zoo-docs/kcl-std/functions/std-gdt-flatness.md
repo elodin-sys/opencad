@@ -1,0 +1,130 @@
+Source URL: https://zoo.dev/docs/kcl-std/functions/std-gdt-flatness
+Title: gdt::flatness
+
+# gdt::flatness
+
+GD&T annotation specifying how flat faces should be.
+
+GD&T annotation specifying how flat faces should be.
+
+```kcl
+gdt::flatness(
+  faces: [TaggedFace; 1+],
+  tolerance: number(Length),
+  precision?: number(_),
+  framePosition?: Point2d,
+  framePlane?: Plane,
+  leaderScale?: number(_),
+  fontSize?: number(Length),
+  annotationName?: string,
+): [GdtAnnotation; 1+]
+```
+
+This is part of model-based definition (MBD).
+
+### Arguments
+
+| Name | Type | Description | Required |
+|----------|------|-------------|----------|
+| `faces` | [[`TaggedFace`](/docs/kcl-std/types/std-types-TaggedFace); 1+] | The faces to be annotated. | Yes |
+| `tolerance` | [`number(Length)`](/docs/kcl-std/types/std-types-number) | The amount of deviation from a perfect plane that is acceptable. | Yes |
+| `precision` | [`number(_)`](/docs/kcl-std/types/std-types-number) | The number of decimal places to display. The default is `3`. Must be greater than or equal to `0` and less than or equal to `9`. | No |
+| `framePosition` | [`Point2d`](/docs/kcl-std/types/std-types-Point2d) | The position of the feature control frame relative to the leader arrow. The default is `[100mm, 100mm]`. | No |
+| `framePlane` | [`Plane`](/docs/kcl-std/types/std-types-Plane) | The plane in which to display the feature control frame. The default is `XY`. Other standard planes like `XZ` and `YZ` can also be used. The frame may be displayed in a plane parallel to the given plane. | No |
+| `leaderScale` | [`number(_)`](/docs/kcl-std/types/std-types-number) | Visual scale of the leader dot. The default is `1.0`, which maps to the calibrated normal dot size. The value is normalized against `fontSize` so the dot stays consistent as text size changes. Must be greater than `0`. | No |
+| `fontSize` | [`number(Length)`](/docs/kcl-std/types/std-types-number) | The model-space height to use for annotation text. The default is `10mm`. Explicit units are supported; bare numbers use the file's default length unit. This changes the scene size, not the internal raster texture quality. | No |
+| `annotationName` | [`string`](/docs/kcl-std/types/std-types-string) | Human-friendly name for this annotation in exports and model metadata. This is not displayed visually. | No |
+
+### Returns
+
+[[`GdtAnnotation`](/docs/kcl-std/types/std-types-GdtAnnotation); 1+]
+
+
+### Examples
+
+```kcl
+startSketchOn(XY)
+  |> startProfile(at = [0, 0])
+  |> line(end = [10, 0])
+  |> line(end = [0, 10])
+  |> line(end = [-10, 0])
+  |> line(end = [0, -10])
+  |> close()
+  |> extrude(length = 5, tagStart = $face1)
+gdt::flatness(faces = [face1], tolerance = 0.1mm)
+
+```
+
+
+![Rendered example of gdt::flatness 0](/kcl-test-outputs/serial_test_example_fn_std-gdt-flatness0.png)
+
+```kcl
+startSketchOn(XY)
+  |> startProfile(at = [0, 0])
+  |> line(end = [10, 0])
+  |> line(end = [0, 10])
+  |> line(end = [-10, 0])
+  |> line(end = [0, -10])
+  |> close()
+  |> extrude(length = 5, tagEnd = $face1)
+gdt::flatness(
+  faces = [face1],
+  tolerance = 0.02mm,
+  framePosition = [10mm, 20mm],
+  framePlane = XZ,
+)
+
+```
+
+
+![Rendered example of gdt::flatness 1](/kcl-test-outputs/serial_test_example_fn_std-gdt-flatness1.png)
+
+```kcl
+startSketchOn(XY)
+  |> startProfile(at = [0, 0])
+  |> line(end = [10, 0])
+  |> line(end = [0, 10])
+  |> line(end = [-10, 0], tag = $face1)
+  |> line(end = [0, -10])
+  |> close()
+  |> extrude(length = 5)
+gdt::flatness(
+  faces = [face1],
+  tolerance = 0.02mm,
+  framePosition = [10mm, 20mm],
+  framePlane = XZ,
+)
+
+```
+
+
+![Rendered example of gdt::flatness 2](/kcl-test-outputs/serial_test_example_fn_std-gdt-flatness2.png)
+
+```kcl
+blockProfile = sketch(on = XY) {
+  edge1 = line(start = [var 0mm, var 0mm], end = [var 10mm, var 0mm])
+  edge2 = line(start = [var 10mm, var 0mm], end = [var 10mm, var 6mm])
+  edge3 = line(start = [var 10mm, var 6mm], end = [var 0mm, var 6mm])
+  edge4 = line(start = [var 0mm, var 6mm], end = [var 0mm, var 0mm])
+  coincident([edge1.end, edge2.start])
+  coincident([edge2.end, edge3.start])
+  coincident([edge3.end, edge4.start])
+  coincident([edge4.end, edge1.start])
+  horizontal(edge1)
+  vertical(edge2)
+  horizontal(edge3)
+  vertical(edge4)
+}
+
+block = extrude(region(segments = [blockProfile.edge1, blockProfile.edge2]), length = 4mm, tagEnd = $top)
+gdt::flatness(
+  faces = [top],
+  tolerance = 0.05mm,
+  framePosition = [12mm, 8mm],
+  framePlane = XZ,
+)
+
+```
+
+
+![Rendered example of gdt::flatness 3](/kcl-test-outputs/serial_test_example_fn_std-gdt-flatness3.png)

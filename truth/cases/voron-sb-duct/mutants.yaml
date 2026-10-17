@@ -1,0 +1,46 @@
+# Deliberately wrong ducts the scorer must reject.
+mutants:
+- id: scaled_2pct
+  op: scale
+  factor: 1.02
+  expect_caught_by:
+  - bbox_size
+- id: left_duct_blocked
+  op: fill_box
+  min:
+  - -30
+  - -27
+  - 28
+  max:
+  - -14
+  - -4
+  - 32
+  expect_caught_by:
+  - passage_left_duct
+  note: a plug across the left duct at z 28..32
+- id: right_duct_missing
+  op: fill_box
+  min:
+  - 14
+  - -27
+  - 6
+  max:
+  - 33
+  - -4
+  - 57
+  expect_caught_by:
+  - passage_right_duct
+  note: the right duct filled solid
+- id: left_wall_opened
+  op: cut_box
+  min:
+  - -34
+  - -27.5
+  - 25
+  max:
+  - -27.5
+  - -5
+  - 35
+  expect_caught_by:
+  - passage_left_duct
+  note: outer duct wall removed; the passage leaks to the exterior

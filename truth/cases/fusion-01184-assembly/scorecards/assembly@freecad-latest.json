@@ -1,0 +1,271 @@
+{
+  "case": "fusion-01184-assembly",
+  "scored_at": "2026-09-21T01:23:17Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "234f8f9e-72c7-4922-a71b-58e9c575b43e",
+    "exit_code": 0,
+    "seconds": 179,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 1,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/freecad/fusion-01184-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "",
+      "commands_list": [
+        ".venv/bin/python -c \"from pathlib import Path; from skillkat.geomcheck import brep; ...\"",
+        ".venv/bin/ruff format --check parts/freecad/fusion-01184-assembly/main.py && .venv/bin/ruff check parts/freecad/fusion-01184-assembly/main.py",
+        ".venv/bin/python -m skillkat.truth assembly-check /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/work --entry /Users/danieldriscoll/dual/skillkat/parts/freecad/fusion-01184-assembly/main.py --backend freecad --ledger /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/worker/001-assemble/engine-ledger.jsonl"
+      ],
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 0.69,
+      "visual_check": "Visual: T-pin tube sits just off the plate face with the \u00d85 pin through the matching hole and continuing out the far side; front/top show pin and hole concentric and axes colinear; no interpenetration (critic interference 0.0 mm\u00b3, gap 0.0 mm)."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "234f8f9e-72c7-4922-a71b-58e9c575b43e",
+    "exit_code": 0,
+    "seconds": 179,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 1,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/freecad/fusion-01184-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "",
+      "commands_list": [
+        ".venv/bin/python -c \"from pathlib import Path; from skillkat.geomcheck import brep; ...\"",
+        ".venv/bin/ruff format --check parts/freecad/fusion-01184-assembly/main.py && .venv/bin/ruff check parts/freecad/fusion-01184-assembly/main.py",
+        ".venv/bin/python -m skillkat.truth assembly-check /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/work --entry /Users/danieldriscoll/dual/skillkat/parts/freecad/fusion-01184-assembly/main.py --backend freecad --ledger /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/worker/001-assemble/engine-ledger.jsonl"
+      ],
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 0.69,
+      "visual_check": "Visual: T-pin tube sits just off the plate face with the \u00d85 pin through the matching hole and continuing out the far side; front/top show pin and hole concentric and axes colinear; no interpenetration (critic interference 0.0 mm\u00b3, gap 0.0 mm)."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "mode": "modelled",
+  "program_executes": true,
+  "solid_count": {
+    "measured": 2,
+    "expected": 2,
+    "ok": true
+  },
+  "export_agreement": {
+    "ok": true,
+    "bodies": {
+      "36938_ae684b66_0002_2": {
+        "ok": true,
+        "volume_expected": 4863.7332993827795,
+        "volume_measured": 4863.733299382776,
+        "volume_rel": 7.479807347893402e-16,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 1.4147924612142642e-09,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 1.1462664279023953e-13
+      },
+      "36938_ae684b66_0001_2": {
+        "ok": true,
+        "volume_expected": 21691.095137819357,
+        "volume_measured": 21691.095137819364,
+        "volume_rel": 3.3543523588615315e-16,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 2.0561068367608267e-10,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 1.6876850730849092e-14
+      }
+    }
+  },
+  "export_integrity": {
+    "ok": true,
+    "valid": true,
+    "solids": 2,
+    "expected_solids": 2,
+    "watertight": true,
+    "deterministic": true
+  },
+  "hygiene": {
+    "ok": true,
+    "has_result": true,
+    "has_placements": true,
+    "cad_refs": [],
+    "truth_refs": [],
+    "files": [
+      "/Users/danieldriscoll/dual/skillkat/parts/freecad/fusion-01184-assembly/main.py"
+    ]
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": false,
+  "offset_truth_mm": -1.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 2.109974928660138e-06,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": -0.9999548894976558,
+      "expected": -1.0000000000000009,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 90.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 3.164244949926953e-05,
+      "truth_interference": 0.0,
+      "max": 1.0,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.0,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "36938_ae684b66_0002_2": {
+        "origin": [
+          -85.0,
+          -10.706,
+          -35.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -85.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            -10.706
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -35.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "36938_ae684b66_0001_2": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/handoff/assembly.html",
+    "motion": "revolute",
+    "native_glb": "/Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/handoff/assembly-native.glb"
+  }
+}

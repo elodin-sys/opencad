@@ -1,0 +1,753 @@
+schema_version: 1
+name: fusion-13786-recon
+intent: >-
+  Reconstruct the mechanical part shown in the attached renders, sections and dimension sheet
+  as editable, parameterized KCL in the part's own frame (bbox min [-50.0, -50.0, -0.0],
+  size [100.0, 100.0, 3.0] mm). Declare every hole, boss and shaft as an acceptance cylinder
+  and every planar face level as a named face; one solid; export STEP and STL. Held-out:
+  the pipeline is frozen, the reference CAD is evaluator-only. Authoritative numbers come
+  from sources/dimension-sheet.md (reference body 84608_204c01e6_0008_1); renders confirm
+  the elliptical through-slot, two short edge bores, centre hole, south chamfers and north
+  corner pins.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: >-
+    The intersection of the plate's XY centre lines, projected onto the bottom face:
+    [0, 0, 0]. This is the native frame of the dimension sheet (bbox min [-50, -50, 0],
+    max [50, 50, 3]). It is not the three-dimensional centroid of the solid.
+  axes:
+    x: >-
+      Along plateWidth, from the x = -50 edge toward x = +50. In the top and z = 1.5
+      orthographic views, +x is to the right. The two short Ø2 edge bores open on these
+      ±x faces at y = 42.
+    y: >-
+      Along plateHeight, from the y = -50 (chamfered) edge toward y = +50 (rounded pins).
+      In the same top view, +y is up. The elliptical slot sits entirely in y > 0.
+    z: >-
+      Normal to the bottom, pointing through the material toward the top: bottom z = 0,
+      top z = plateThickness = 3. Right-handed; the edge-bore axes lie at z = 1.5.
+  datums:
+    - name: bottomDatum
+      description: Intact bottom plane z = 0, outward normal -z. Fixes the thickness origin.
+    - name: topDatum
+      description: Top plane z = plateThickness = 3, outward normal +z. Through-features open here.
+    - name: xyCentre
+      description: >-
+        Vertical axis x = 0, y = 0 through the Ø5 centre hole. The dimension-sheet
+        envelope is symmetric about this axis in x.
+
+envelope:
+  min: [-50.0, -50.0, 0.0]
+  max: [50.0, 50.0, 3.0]
+  tolerance: 0.05
+
+parameters:
+  - name: plateWidth
+    value: 100
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Envelope: "size [100.0, 100.0, 3.0]"; part-brief.md frame'
+    tolerance: 0.05
+    description: Overall x span, centred about x = 0.
+  - name: plateHeight
+    value: 100
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Envelope: "size [100.0, 100.0, 3.0]"; part-brief.md frame'
+    tolerance: 0.05
+    description: Overall y span, centred about y = 0.
+  - name: plateThickness
+    value: 3
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Envelope: "size [100.0, 100.0, 3.0]"; iso.png "bbox 100.00 x 100.00 x 3.00 mm"'
+    tolerance: 0.05
+    description: Bottom-to-top z span. Bottom stays at zero during thickness edits.
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 8412.12
+        direction: increase
+        tolerance_rel: 0.03
+        bbox_delta: [0, 0, 1]
+      sweep:
+        values: [3, 4, 5]
+      infeasible_deltas: [-3]
+  - name: holeDia
+    value: 5
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Cylindrical features: hole diameter 5 at [0.0, 0.0, 1.5]'
+    tolerance: 0.05
+    description: Through-hole along z at the XY origin.
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: -25.918139
+        direction: decrease
+        tolerance_rel: 0.02
+        bbox_delta: [0, 0, 0]
+      sweep:
+        values: [4, 5, 6]
+      infeasible_deltas: [20]
+  - name: holeCentreX
+    value: 0
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Cylindrical features: hole Ø5 axis through [0.0, 0.0, 1.5]'
+    tolerance: 0.05
+    description: x coordinate of the Ø5 through-hole axis.
+  - name: holeCentreY
+    value: 0
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Cylindrical features: hole Ø5 axis through [0.0, 0.0, 1.5]'
+    tolerance: 0.05
+    description: y coordinate of the Ø5 through-hole axis.
+  - name: edgeHoleDia
+    value: 2
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Cylindrical features: hole diameter 2, axis [1, 0, 0] through [0.0, 42.0, 1.5]'
+    tolerance: 0.05
+    description: Diameter of each short edge bore (two coaxial holes, one per ±x face).
+  - name: edgeHoleY
+    value: 42
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Cylindrical features: axis through [0.0, 42.0, 1.5]; face centroids at x = ±45 are (42, 1.5)'
+    tolerance: 0.05
+    description: y coordinate of both Ø2 edge-bore axes.
+  - name: edgeHoleDepth
+    value: 5
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md planar faces at x = ±45, area 3.14 (π·1²) — blind ends of the Ø2 bores'
+    tolerance: 0.15
+    description: Depth of each edge bore from x = ±50 inward to x = ±45.
+  - name: edgeHoleZ
+    value: 1.5
+    unit: mm
+    provenance: derived
+    formula: plateThickness / 2
+    tolerance: 0.05
+    description: z of the edge-bore axes; the sheet lists 1.5, which is mid-thickness.
+  - name: pinDia
+    value: 6
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Cylindrical features: pin diameter 6 at [±47.0, 47.0, 1.5], partial 360'
+    tolerance: 0.05
+    description: Diameter of the two north-corner quarter-cylinder pins (rounded corners).
+  - name: pinCentreX
+    value: 47
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Cylindrical features: pin axes at [-47.0, 47.0] and [47.0, 47.0]'
+    tolerance: 0.05
+    description: Absolute x of each pin axis; pins sit at x = ±pinCentreX.
+  - name: pinCentreY
+    value: 47
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md Cylindrical features: pin axes at [±47.0, 47.0, 1.5]'
+    tolerance: 0.05
+    description: y of both pin axes (north edge, radius 3 reaches y = 50).
+  - name: chamferLeg
+    value: 5
+    unit: mm
+    provenance: stated
+    source: >-
+      sources/dimension-sheet.md inclined planes through [±47.5, -47.5, 0] with 45° normals,
+      and y = -50 face area 270 = (plateHeight - 2·5)·plateThickness
+    tolerance: 0.05
+    description: Isosceles 45° chamfer leg on the two south corners.
+  - name: topStrip
+    value: 10
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md section x = 0 region (45.02, 1.5) bbox 10×3 — solid from y = 40 to 50'
+    tolerance: 0.3
+    description: Solid strip above the elliptical slot at x = 0.
+  - name: midBridge
+    value: 9.5
+    unit: mm
+    provenance: stated
+    source: 'sources/dimension-sheet.md section x = 0 region (7.23, 1.5) bbox 9.5×3 — solid from y = 2.5 to 12'
+    tolerance: 0.3
+    description: Solid bridge at x = 0 between the Ø5 hole and the slot.
+  - name: slotCentreX
+    value: 0
+    unit: mm
+    provenance: measured
+    source: >-
+      sources/top.png and sources/section-z1.5.png: slot is symmetric about the x = 0 grid
+      line (11.31 px/mm); COM x = 0 in the dimension sheet
+    tolerance: 0.5
+    description: x of the elliptical through-slot centre.
+  - name: slotCentreY
+    value: 26
+    unit: mm
+    provenance: derived
+    formula: holeCentreY + holeDia / 2 + midBridge + slotRy
+    tolerance: 0.3
+    description: y of the elliptical slot centre (midway between y = 12 and y = 40 at x = 0).
+  - name: slotRx
+    value: 35
+    unit: mm
+    provenance: measured
+    source: >-
+      sources/top.png and sources/section-z1.5.png: left/right tips sit on the x = ±35
+      grid lines (section-z1.5 cols 452 and 1244; scale 11.31 px/mm from x = ±50 at cols 282/1413)
+    tolerance: 1.0
+    description: Semi-axis of the elliptical slot along x.
+  - name: slotRy
+    value: 14
+    unit: mm
+    provenance: derived
+    formula: (plateHeight / 2 - topStrip - holeCentreY - holeDia / 2 - midBridge) / 2
+    tolerance: 0.3
+    description: Semi-axis of the elliptical slot along y (y = 12 to 40 at x = 0).
+
+features:
+  - id: plateBlank
+    kind: extrude
+    count: 1
+    description: >-
+      100 × 100 × 3 mm rectangular plate, centred in XY, bottom on z = 0. Subsequent
+      chamfers, fillets, holes and the slot leave one solid.
+    parameters: [plateWidth, plateHeight, plateThickness]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[0, -25, 1.5], [20, -20, 1.5], [-20, -20, 1.5], [0, 7, 1.5], [0, 45, 1.5]]
+        note: Interior plate points clear of holes, slot, chamfers and pins by ≥ 4 mm.
+      - method: dimension
+        dimension: dimPlateWidth
+      - method: dimension
+        dimension: dimPlateHeight
+      - method: dimension
+        dimension: dimPlateThickness
+      - method: face
+        face: faceZMin
+      - method: face
+        face: faceZMax
+  - id: southChamfers
+    kind: chamfer
+    count: 2
+    description: >-
+      Two 45° through-thickness chamfers on the south corners. Planes x + y = -95 and
+      x - y = 95, cutting 5 mm off each south corner.
+    parameters: [chamferLeg, plateThickness]
+    verify:
+      - method: plane
+        plane: chamferNegX
+      - method: plane
+        plane: chamferPosX
+      - method: void
+        points: [[-49, -49, 1.5], [49, -49, 1.5]]
+        note: Outside each chamfer (x+y = -98 and x-y = 98); 2.1 mm from the plane.
+      - method: solid
+        points: [[-46, -46, 1.5], [46, -46, 1.5]]
+        note: Just inside each chamfer.
+      - method: face
+        face: faceYMin
+  - id: northFillets
+    kind: fillet
+    count: 2
+    description: >-
+      Two Ø6 (R3) quarter-cylinder pins at (±47, 47), partial 360°, blending the north
+      corners from the x = ±50 walls to the y = 50 wall.
+    parameters: [pinDia, pinCentreX, pinCentreY, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: pinCornerNegX
+      - method: cylinder
+        cylinder: pinCornerPosX
+      - method: void
+        points: [[-49.5, 49.5, 1.5], [49.5, 49.5, 1.5]]
+        note: Outside each R3 arc (distance to pin centre 3.54 > 3).
+      - method: solid
+        points: [[-47, 48.5, 1.5], [47, 48.5, 1.5]]
+        note: Inside each quarter-cylinder, 1.5 mm from the axis.
+      - method: face
+        face: faceYMax
+  - id: centreHole
+    kind: hole
+    count: 1
+    description: Ø5 through-hole along z at (0, 0), full thickness.
+    parameters: [holeDia, holeCentreX, holeCentreY, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: holeCentre
+      - method: void
+        points: [[0, 0, 1.5], [0, 0, 0.4], [0, 0, 2.6]]
+      - method: solid
+        points: [[4, 0, 1.5], [0, 4, 1.5]]
+        note: 1.5 mm outside the hole wall.
+      - method: section
+        section: sectionY0
+      - method: section
+        section: sectionZMid
+  - id: ovalSlot
+    kind: cut
+    count: 1
+    description: >-
+      Through-thickness elliptical slot, semi-axes slotRx × slotRy, centred at
+      (slotCentreX, slotCentreY). Visible in top.png and section-z1.5.png; not listed
+      as a cylinder (non-circular).
+    parameters: [slotCentreX, slotCentreY, slotRx, slotRy, plateThickness]
+    verify:
+      - method: void
+        points: [[0, 26, 1.5], [20, 26, 1.5], [-20, 26, 1.5], [0, 20, 1.5], [0, 32, 1.5]]
+        note: Slot interior; ≥ 5 mm from the inferred ellipse wall (tolerance 1.0 mm on slotRx).
+      - method: solid
+        points: [[0, 7, 1.5], [0, 45, 1.5], [0, -10, 1.5]]
+        note: Material south of the slot, in the top strip, and well below the hole.
+      - method: section
+        section: sectionX0
+      - method: section
+        section: sectionZMid
+      - method: count
+        section: sectionX0
+        count: 3
+  - id: edgeHoles
+    kind: hole
+    count: 2
+    description: >-
+      Two coaxial Ø2 blind bores along x at y = 42, z = 1.5, each 5 mm deep from the
+      ±x faces, ending on the circular faces at x = ±45. The dimension sheet lists one
+      Ø2 cylinder of length 100; section z = 1.5 shows two 5 mm notches, not a through-slot.
+    parameters: [edgeHoleDia, edgeHoleY, edgeHoleZ, edgeHoleDepth]
+    verify:
+      - method: cylinder
+        cylinder: holeEdgeNegX
+      - method: cylinder
+        cylinder: holeEdgePosX
+      - method: void
+        points: [[-47.5, 42, 1.5], [47.5, 42, 1.5]]
+        note: Mid-depth of each bore; 1 mm from the wall, 2.5 mm from each end.
+      - method: solid
+        points: [[0, 42, 1.5], [-40, 42, 1.5], [40, 42, 1.5]]
+        note: The mid-plate at y = 42 is solid; the bores do not meet.
+      - method: face
+        face: faceXNegInner
+      - method: face
+        face: faceXPosInner
+      - method: section
+        section: sectionZMid
+
+interfaces:
+  - name: plateEnvelope
+    description: Axis-aligned bounding box of the finished plate (must survive edits).
+    must_not_change: true
+    checks: [faceXMin, faceXMax, faceYMin, faceYMax, faceZMin, faceZMax, dimPlateWidth, dimPlateHeight, dimPlateThickness]
+  - name: centreBore
+    description: Ø5 through-hole on the XY origin; mating / alignment bore.
+    must_not_change: true
+    checks: [holeCentre, countHole5, sectionY0]
+  - name: edgeBores
+    description: Pair of short Ø2 bores on the ±x faces at y = 42, used as edge passages.
+    must_not_change: true
+    checks: [holeEdgeNegX, holeEdgePosX, faceXNegInner, faceXPosInner, dimEdgeHoleDepthNeg, dimEdgeHoleDepthPos, countHole2]
+  - name: cornerPins
+    description: Ø6 north-corner quarter-cylinder pins (rounded corners).
+    must_not_change: true
+    checks: [pinCornerNegX, pinCornerPosX, countPin6]
+  - name: southChamferFaces
+    description: The two 45° south-corner chamfer planes.
+    must_not_change: true
+    checks: [chamferNegX, chamferPosX]
+
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 25187.47
+    tolerance_rel: 0.01
+    provenance: stated
+    note: >-
+      sources/dimension-sheet.md Envelope and mass properties. Analytic check with a
+      35×14 ellipse, two 5 mm 45° chamfers, two R3 corners, Ø5 through-hole and two
+      Ø2×5 edge bores lands near 25205 mm³ (within this band).
+  surface_area:
+    expected: 18523.05
+    tolerance_rel: 0.02
+    provenance: stated
+    note: sources/dimension-sheet.md Envelope and mass properties (18523.05 mm²).
+  center_of_mass:
+    expected: [0.0, -4.716, 1.5]
+    tolerance: 0.5
+    provenance: stated
+    note: >-
+      sources/dimension-sheet.md centre of mass [-0.0, -4.716, 1.5]. y is south of
+      the origin because the elliptical slot removes mass in y > 0. z is mid-thickness.
+      Uniform-density geometric centroid; no mass assignment.
+  solid_count: 1
+  sections:
+    - id: sectionX0
+      plane: x
+      at: 0.0
+      expect:
+        area: 200.78
+        area_tolerance_rel: 0.02
+        loops: 3
+        holes: 0
+      description: >-
+        Three full-thickness bars at x = 0: y = [-50, -2.5], [2.5, 12], [40, 50].
+        Sheet 200.78 mm²; section-x0.png title 200.82 mm². The Ø2 edge bores do not
+        reach x = 0.
+    - id: sectionY0
+      plane: y
+      at: 0.0
+      expect:
+        area: 285.0
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 0
+      description: >-
+        Two 47.5 × 3 rectangles split by the Ø5 hole. Sheet 285 mm²; section-y0.png
+        title 285.01 mm². The slot does not reach y = 0.
+    - id: sectionZMid
+      plane: z
+      at: 1.5
+      expect:
+        area: 8391.82
+        area_tolerance_rel: 0.02
+        loops: 1
+        holes: 2
+      description: >-
+        Mid-thickness plan: outline with chamfers, north pins, two edge-bore notches,
+        the elliptical slot and the Ø5 hole. Sheet 8391.82 mm²; section-z1.5.png title
+        8393.50 mm². Outer loop 1, holes 2 (slot + centre hole).
+  faces:
+    - name: faceXMin
+      plane: x
+      at: -50
+      normal: "-"
+      area: 272.86
+      area_tolerance_rel: 0.02
+      tolerance: 0.05
+      center: [0.53, 1.5]
+      mode: one
+    - name: faceXMax
+      plane: x
+      at: 50
+      normal: "+"
+      area: 272.86
+      area_tolerance_rel: 0.02
+      tolerance: 0.05
+      center: [0.53, 1.5]
+      mode: one
+    - name: faceXNegInner
+      plane: x
+      at: -45
+      normal: "-"
+      area: 3.14
+      area_tolerance_rel: 0.05
+      tolerance: 0.15
+      center: [42.0, 1.5]
+      mode: one
+    - name: faceXPosInner
+      plane: x
+      at: 45
+      normal: "+"
+      area: 3.14
+      area_tolerance_rel: 0.05
+      tolerance: 0.15
+      center: [42.0, 1.5]
+      mode: one
+    - name: faceYMin
+      plane: y
+      at: -50
+      normal: "-"
+      area: 270.0
+      area_tolerance_rel: 0.01
+      tolerance: 0.05
+      center: [0.0, 1.5]
+      mode: one
+    - name: faceYMax
+      plane: y
+      at: 50
+      normal: "+"
+      area: 282.0
+      area_tolerance_rel: 0.01
+      tolerance: 0.05
+      center: [0.0, 1.5]
+      mode: one
+    - name: faceZMin
+      plane: z
+      at: 0
+      normal: "-"
+      area: 8331.1
+      area_tolerance_rel: 0.02
+      tolerance: 0.05
+      center: [0.0, -4.637]
+      mode: one
+    - name: faceZMax
+      plane: z
+      at: 3
+      normal: "+"
+      area: 8331.1
+      area_tolerance_rel: 0.02
+      tolerance: 0.05
+      center: [0.0, -4.637]
+      mode: one
+  cylinders:
+    - name: holeCentre
+      point: [0.0, 0.0, 1.5]
+      direction: [0.0, 0.0, 1.0]
+      kind: hole
+      diameter: 5
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 3
+      length_tolerance: 0.05
+      t_range: [-1.5, 1.5]
+      description: Ø5 through-hole on the origin, along z.
+    - name: holeEdgeNegX
+      point: [-47.5, 42.0, 1.5]
+      direction: [1.0, 0.0, 0.0]
+      kind: hole
+      diameter: 2
+      radius_tolerance: 0.05
+      axis_tolerance: 0.15
+      length: 5
+      length_tolerance: 0.15
+      t_range: [-2.5, 2.5]
+      description: Ø2 blind bore from x = -50 to x = -45 at y = 42.
+    - name: holeEdgePosX
+      point: [47.5, 42.0, 1.5]
+      direction: [1.0, 0.0, 0.0]
+      kind: hole
+      diameter: 2
+      radius_tolerance: 0.05
+      axis_tolerance: 0.15
+      length: 5
+      length_tolerance: 0.15
+      t_range: [-2.5, 2.5]
+      description: Ø2 blind bore from x = 45 to x = 50 at y = 42.
+    - name: pinCornerNegX
+      point: [-47.0, 47.0, 1.5]
+      direction: [0.0, 0.0, 1.0]
+      kind: pin
+      diameter: 6
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 3
+      length_tolerance: 0.05
+      t_range: [-1.5, 1.5]
+      description: Partial Ø6 quarter-cylinder at the north-west corner.
+    - name: pinCornerPosX
+      point: [47.0, 47.0, 1.5]
+      direction: [0.0, 0.0, 1.0]
+      kind: pin
+      diameter: 6
+      radius_tolerance: 0.05
+      axis_tolerance: 0.05
+      length: 3
+      length_tolerance: 0.05
+      t_range: [-1.5, 1.5]
+      description: Partial Ø6 quarter-cylinder at the north-east corner.
+  planes:
+    - name: chamferNegX
+      point: [-47.5, -47.5, 0.0]
+      normal: [-0.7071, -0.7071, 0.0]
+      area: 21.21
+      area_tolerance_rel: 0.02
+      tolerance: 0.05
+      angle_tolerance_deg: 0.5
+      description: South-west 45° chamfer (x + y = -95), area 5√2 × 3.
+    - name: chamferPosX
+      point: [47.5, -47.5, 0.0]
+      normal: [0.7071, -0.7071, 0.0]
+      area: 21.21
+      area_tolerance_rel: 0.02
+      tolerance: 0.05
+      angle_tolerance_deg: 0.5
+      description: South-east 45° chamfer (x - y = 95), area 5√2 × 3.
+  dimensions:
+    - name: dimPlateWidth
+      axis: x
+      expected: 100
+      tolerance: 0.05
+      between: [faceXMin, faceXMax]
+      description: Envelope x span.
+    - name: dimPlateHeight
+      axis: y
+      expected: 100
+      tolerance: 0.05
+      between: [faceYMin, faceYMax]
+      description: Envelope y span.
+    - name: dimPlateThickness
+      axis: z
+      expected: 3
+      tolerance: 0.05
+      between: [faceZMin, faceZMax]
+      description: Envelope z span.
+    - name: dimEdgeHoleDepthNeg
+      axis: x
+      expected: 5
+      tolerance: 0.15
+      between: [faceXMin, faceXNegInner]
+      description: Depth of the −x edge bore.
+    - name: dimEdgeHoleDepthPos
+      axis: x
+      expected: 5
+      tolerance: 0.15
+      between: [faceXPosInner, faceXMax]
+      description: Depth of the +x edge bore.
+  solids:
+    - name: plateBody
+      contains_point: [0.0, -25.0, 1.5]
+      description: The single plate solid.
+  probes:
+    - name: probePlateSolid
+      state: solid
+      points: [[0.0, -25.0, 1.5], [20.0, -20.0, 1.5], [0.0, 7.0, 1.5], [0.0, 45.0, 1.5]]
+      description: Material in the south half, the mid-bridge and the top strip.
+    - name: probeCentreVoid
+      state: void
+      points: [[0.0, 0.0, 1.5]]
+      description: Interior of the Ø5 through-hole.
+    - name: probeSlotVoid
+      state: void
+      points: [[0.0, 26.0, 1.5], [20.0, 26.0, 1.5]]
+      description: Interior of the elliptical slot.
+    - name: probeEdgeVoid
+      state: void
+      points: [[-47.5, 42.0, 1.5], [47.5, 42.0, 1.5]]
+      description: Interior of each short edge bore.
+  cylinder_counts:
+    - name: countHole5
+      diameter: 5
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [0.0, 0.0, 1.0]
+      expected: 1
+      description: One Ø5 through-hole along z.
+    - name: countHole2
+      diameter: 2
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [1.0, 0.0, 0.0]
+      expected: 2
+      description: Two Ø2 edge bores along x (sheet listed them as one length-100 cylinder).
+    - name: countPin6
+      diameter: 6
+      radius_tolerance: 0.05
+      kind: pin
+      direction: [0.0, 0.0, 1.0]
+      expected: 2
+      description: Two Ø6 north-corner pins.
+  deviation: null
+  blockout:
+    volume_min: 28800
+    volume_max: 30600
+  export_volume_tolerance_rel: 0.002
+
+references:
+  - path: sources/part-brief.md
+    kind: text
+    role: authoritative
+    sha256: 2996f2cd1a38ec182c89083d6f31db6ae63320cc65922ea89c3d094e3f437e99
+    units: mm
+    revision: Unversioned; SHA-256 identifies the revision. Prefix 2996f2cd1a38.
+    note: Held-out reconstruction brief; native frame and one-solid / STEP+STL requirement.
+  - path: sources/dimension-sheet.md
+    kind: text
+    role: authoritative
+    sha256: c4cd6838380b49927b9aec16481a3ceb634bde135f938fd2e2bf1382bd3b59f9
+    units: mm
+    revision: Unversioned; SHA-256 identifies the revision. Prefix c4cd6838380b.
+    note: Envelope, mass properties, planar faces, inclined planes, cylinders and sections.
+  - path: sources/render-notes.md
+    kind: text
+    role: illustrative
+    sha256: e843ea4b9fbd1a9ad59fda56da654bd1ab9f72c03bdcab66846ab4cf3c166662
+    units: mm
+    revision: Unversioned; SHA-256 identifies the revision. Prefix e843ea4b9fbd.
+    note: Lists the nine orthographic renders and the 8240-triangle reference mesh extents.
+  - path: sources/front.png
+    kind: image
+    role: illustrative
+    sha256: e3b05599a447ed2cae0a3b5576b6dc32ad2e0a0876634d9f0682737453811434
+    units: mm
+    note: Front ortho; 5 mm dark bar at x = -50..-45 is the south-west chamfer.
+  - path: sources/right.png
+    kind: image
+    role: illustrative
+    sha256: 4855a8d98972ec1c017ba93502daeef3fae4bcca20e568b37e4b4346098b6965
+    units: mm
+    note: Right ortho; dark south chamfer and lighter north pin on the x = 50 face.
+  - path: sources/top.png
+    kind: image
+    role: authoritative
+    sha256: d3469030e289763c536ca02dd90890de8b7e12b48ace93b867b1ff9d9a67769d
+    units: mm
+    note: Top ortho on a mm grid; used to measure the elliptical slot and count openings.
+  - path: sources/iso.png
+    kind: image
+    role: illustrative
+    sha256: 25f71ed888f526805d40c9fec1cf8cc0d0adebdb32b6291e9b4999dad4732146
+    units: mm
+    note: Isometric; edge bore visible on the +x face; bbox caption 100 × 100 × 3 mm.
+  - path: sources/iso2.png
+    kind: image
+    role: illustrative
+    sha256: feb2b2e25ca9714b8db635000980ce33cdacbcbd0ef00335cd6a27eb51b5e3f2
+    units: mm
+    note: Second isometric; same features from the opposite corner.
+  - path: sources/iso-below.png
+    kind: image
+    role: illustrative
+    sha256: 1f3cf8ee9d2c122426a1ad857d85ceb394bd0d0a93c4c1ce08648cf8fdc71c83
+    units: mm
+    note: Underside isometric; through-features and the +x edge bore.
+  - path: sources/section-x0.png
+    kind: drawing
+    role: authoritative
+    sha256: 891a08ff25cb1842a76877229cb2f872a6ecbd9a4cf51b34b56df93833643454
+    units: mm
+    note: Material outline at x = 0; three solid bars; title area 200.82 mm².
+  - path: sources/section-y0.png
+    kind: drawing
+    role: authoritative
+    sha256: 530c15ddb13ad3f0ff388f06f7f24a6c02d6632d5c43c4c3224020f646412c6c
+    units: mm
+    note: Material outline at y = 0; two bars split by the Ø5 hole; title area 285.01 mm².
+  - path: sources/section-z1.5.png
+    kind: drawing
+    role: authoritative
+    sha256: 807c6a6f70b4ae60f8a8b4b8033853bd1a579676ec9436c69e682fd58babf9f9
+    units: mm
+    note: Mid-thickness outline; slot, centre hole, edge notches, chamfers and pins.
+
+open_questions:
+  - >-
+    The dimension sheet lists one Ø2 hole of length 100 mm (extent x = -50..50), but
+    section-z1.5.png shows only two ~5 mm edge notches and the x = ±45 faces of area
+    π confirm blind ends. Are the two short bores the intended geometry (contract
+    assumption), or is the sheet's single through-cylinder correct?
+  - >-
+    The through-slot is an ellipse in the top and z = 1.5 views (continuously curved,
+    tips on x = ±35). No document names the conic. Is it a true ellipse, a stadium
+    (straight sides plus semicircles), or another oval? Semi-axes 35 × 14 mm are
+    measured/derived, not quoted.
+  - >-
+    Sheet volume 25187.47 mm³ and z = 1.5 area 8391.82 mm² differ by a few tenths of
+    a percent from the image titles (8393.50 mm²) and from an analytic 35×14 ellipse
+    (~25205 mm³). Which figure is the reconstruction target if they disagree?
+  - >-
+    What material, density and manufacturing process apply? None is stated; all remain
+    null and no mass is claimed.
+  - >-
+    The sheet reports 18 faces (10 planar). Eight non-planar faces are not itemised
+    beyond the four cylinders (five if the two edge bores are separate) and the slot
+    wall. Are there additional blends or splits on the slot?

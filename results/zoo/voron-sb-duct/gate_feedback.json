@@ -1,0 +1,1868 @@
+{
+  "ok": false,
+  "summary": {
+    "pass": 8,
+    "fail": 3,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "export_agreement",
+    "source_hygiene",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [
+    "features",
+    "edit_robustness",
+    "export_integrity"
+  ],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [
+    "features"
+  ],
+  "retryable_failed": [
+    "features",
+    "export_integrity",
+    "edit_robustness"
+  ],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/voron-sb-duct/contract.yaml: 57 parameters {'stated': 41, 'derived': 6, 'measured': 10}; sources unresolved {}; unanchored 0",
+        "open questions: 8 (blocking []); interfaces 6, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 41,
+          "derived": 6,
+          "measured": 10
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "Q1. Which section source is correct at y=-5 (table 1726.99 mm2, 3 loops/6 holes; image 55.37 mm2, 5 regions) and z=20 (table 765.96 mm2; image 618.29 mm2)? The draft uses table areas, a disclosed 25% z=20 band, and leaves exact y=-5 loop/hole counts unpinned pending resolution.",
+          "Q2. Does mirrored ducts mean exact mirrored top mouths as well as the principal routes and forks? The description suggests mirrored inlets, but top.png shows left x~-25..-10 and right x~5..18. The draft mirrors the core routes and probe stations while recording the visible asymmetric mouth transitions.",
+          "Q3. What are the exact loft centerlines, section profiles, bend radii, fork-divider shape and port boundaries between the supplied stations? Interpolate the shown routes with the stated nominal walls; do not invent unseen hardware geometry.",
+          "Q4. What are acceptable sealed air-volume ranges for each duct, and do the six proposed drawing-based plug boxes seal only the actual ports? No source gives per-duct volume limits; the passage checks report volume without a numeric band, and plug behavior needs validation against the eventual model.",
+          "Q5. How should the approximate 26 x 35 mm hotend pocket at z~9..44 be reconciled with the larger fan transition and z=54 rear roof? No hotend hardware envelope, exact cavity depth or fit clearance is supplied; no rectangular hardware keep-out is assumed.",
+          "Q6. What are the angular trim limits of the 20 partial cylindrical patches, the screw entry/chamfer profiles, and the lower mounting bores beyond the documented y=-7.5..0 segment? The axis/radius/length table is pinned, but full bores or full pins must not replace partial surfaces.",
+          "Q7. Which material, density, printing process details, shrink allowance and fit tolerances are intended? Material and density remain unknown; all tolerances here are digital reconstruction comparisons, not manufacturing qualification.",
+          "Q8. What upstream revision and cosmetic detail level should be retained? Source hashes pin this bundle, but no upstream commit, font, engraving depth, grille thickness or complete optional facet radii are provided; exterior mass properties remain diagnostic and hidden geometry is not scored."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "envelopeWidth",
+          "envelopeDepth",
+          "envelopeHeight",
+          "frontToBack",
+          "backLeftMain",
+          "backRightMain",
+          "backRightMount",
+          "backLeftOutletLip",
+          "backRightOutletLip",
+          "frontFanRim",
+          "topInletRim",
+          "nozzleBaseLeft",
+          "nozzleBaseRight",
+          "leftOutletInnerLip",
+          "rightOutletInnerLip",
+          "leftOutletReturn",
+          "rightOutletReturn",
+          "sec_z10",
+          "sec_z20",
+          "sec_z30",
+          "sec_z45",
+          "sec_z55",
+          "hotendLeftWall",
+          "hotendRightWall",
+          "hotendWallSpacing",
+          "hotendRearRoof",
+          "hotendBridgeBottom",
+          "hotendBridgeTopLeft",
+          "hotendBridgeTopRight",
+          "sec_y-12",
+          "sec_x0",
+          "topPilotA",
+          "topPilotB",
+          "topCounterboreA",
+          "topCounterboreB",
+          "topCounterboreFloorA",
+          "topCounterboreFloorB",
+          "rearUpperLeftBore",
+          "rearUpperRightBore",
+          "rearAuxLowerBore",
+          "rearAuxUpperBore",
+          "lowerLeftMountBore",
+          "lowerRightMountBore",
+          "upperLeftMountBoss",
+          "lowerLeftMountBoss",
+          "lowerRightMountBoss",
+          "rearCableNotch"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/voron-sb-duct/inspect.json bbox.max_error = 0.0 (tol 0.1)",
+        "results/voron-sb-duct/verify.json engine bbox.max_error = 2.74 (engine bbox differs: zoo kcl analyze can include cut-tool extents; disclosed, not gating)"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -35.534,
+            -27.4,
+            2.367
+          ],
+          "expected_max": [
+            35.534,
+            0.0,
+            61.5
+          ],
+          "measured_min": [
+            -35.534,
+            -27.4,
+            2.367
+          ],
+          "measured_max": [
+            35.534,
+            0.0,
+            61.5
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.1,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -35.534,
+            -27.4,
+            2.367
+          ],
+          "expected_max": [
+            35.534,
+            0.0,
+            61.5
+          ],
+          "measured_min": [
+            -37.2911,
+            -30.14,
+            0.9775
+          ],
+          "measured_max": [
+            36.2926,
+            2.74,
+            62.6648
+          ],
+          "max_error": 2.74,
+          "tolerance": 0.1,
+          "ok": false
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/voron-sb-duct/inspect.json volume = None vs None",
+        "results/voron-sb-duct/inspect.json surface_area = None vs None",
+        "results/voron-sb-duct/inspect.json center_of_mass = None vs None"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": false,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": false,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": false,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall and gear check verified on the STEP",
+      "ok": false,
+      "evidence": [
+        "results/voron-sb-duct/inspect.json features: 6/17 ok; failed required ['leftCoolingDuct', 'rightCoolingDuct', 'nozzleForks', 'hotendPocket', 'hotendFanOpening', 'topSteppedFasteners', 'lowerMounts', 'locatedCurvedTransitions', 'rearMatingPatches', 'nozzleUndersides']; failed optional ['cosmeticFanGrille']; unverified []",
+        "sections failed ['sec_x-22', 'sec_x22', 'sec_y-5', 'sec_y-12', 'sec_y-20', 'sec_z10', 'sec_z20', 'sec_z30', 'sec_z45', 'sec_z55']; faces failed ['backLeftMain', 'backRightMain', 'backLeftOutletLip', 'backRightOutletLip', 'frontFanRim', 'topInletRim', 'nozzleBaseLeft', 'nozzleBaseRight', 'rightRearSeat', 'hotendBridgeBottom', 'hotendBridgeTopRight', 'hotendBridgeTopLeft', 'lowerMountUndersideLeft', 'lowerMountUndersideRight']; cylinders failed ['leftRailConcaveBlend', 'lowerLeftMountBore', 'lowerRightBossBlendA', 'lowerRightBossBlendB']; planes failed []; dimensions failed []",
+        "multi-body/interior failed: passages ['leftRearBranch', 'leftFrontBranch', 'leftRightDuctIsolation'], cylinder_counts ['upperMountPair', 'rearAuxPair']"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [
+          "leftCoolingDuct",
+          "rightCoolingDuct",
+          "nozzleForks",
+          "hotendPocket",
+          "hotendFanOpening",
+          "topSteppedFasteners",
+          "lowerMounts",
+          "locatedCurvedTransitions",
+          "rearMatingPatches",
+          "nozzleUndersides"
+        ],
+        "failed_optional": [
+          "cosmeticFanGrille"
+        ],
+        "unverified": [],
+        "sections_failed": [
+          "sec_x-22",
+          "sec_x22",
+          "sec_y-5",
+          "sec_y-12",
+          "sec_y-20",
+          "sec_z10",
+          "sec_z20",
+          "sec_z30",
+          "sec_z45",
+          "sec_z55"
+        ],
+        "faces_failed": [
+          "backLeftMain",
+          "backRightMain",
+          "backLeftOutletLip",
+          "backRightOutletLip",
+          "frontFanRim",
+          "topInletRim",
+          "nozzleBaseLeft",
+          "nozzleBaseRight",
+          "rightRearSeat",
+          "hotendBridgeBottom",
+          "hotendBridgeTopRight",
+          "hotendBridgeTopLeft",
+          "lowerMountUndersideLeft",
+          "lowerMountUndersideRight"
+        ],
+        "cylinders_failed": [
+          "leftRailConcaveBlend",
+          "lowerLeftMountBore",
+          "lowerRightBossBlendA",
+          "lowerRightBossBlendB"
+        ],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [
+            "leftRearBranch",
+            "leftFrontBranch",
+            "leftRightDuctIsolation"
+          ],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [
+            "upperMountPair",
+            "rearAuxPair"
+          ],
+          "gears": [],
+          "meshes": []
+        },
+        "cylinders": {
+          "cavityLowerRelief": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "cavityUpperRelief": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 8.00000000005241e-05,
+            "ok": true
+          },
+          "leftInletTurn": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightRearRelief": {
+            "found": true,
+            "axis_offset": 3.552713678800501e-15,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "leftHotendDiagonalRelief": {
+            "found": true,
+            "axis_offset": 0.0007071067811861556,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightHotendDiagonalRelief": {
+            "found": true,
+            "axis_offset": 3.552713678800501e-15,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "topCounterboreA": {
+            "found": true,
+            "axis_offset": 9.930136612989092e-16,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "topCounterboreB": {
+            "found": true,
+            "axis_offset": 9.930136612989092e-16,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearAuxLowerBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearAuxUpperBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearUpperLeftBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearUpperRightBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearCableNotch": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 4.440892098500626e-16,
+            "ok": true
+          },
+          "rightObliqueReliefA": {
+            "found": true,
+            "axis_offset": 0.009813675770899952,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightObliqueReliefB": {
+            "found": true,
+            "axis_offset": 0.0033836433916793287,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "leftRailConcaveBlend": {
+            "found": true,
+            "axis_offset": 14.70458149693489,
+            "axis_tolerance": 0.5,
+            "radius_error": -0.29200000000000004,
+            "ok": false
+          },
+          "lowerLeftMountBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": false
+          },
+          "lowerRightMountBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "topPilotA": {
+            "found": true,
+            "axis_offset": 9.930136612989092e-16,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "topPilotB": {
+            "found": true,
+            "axis_offset": 9.930136612989092e-16,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightDuctConvexTurn": {
+            "found": true,
+            "axis_offset": 7.105427357601002e-15,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightCavityConvexBlend": {
+            "found": true,
+            "axis_offset": 7.32410687763558e-15,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "upperLeftMountBoss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightInletConvexTurn": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerLeftMountBoss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerRightBossBlendA": {
+            "found": false,
+            "axis_offset": null,
+            "axis_tolerance": 0.5,
+            "radius_error": null,
+            "ok": false
+          },
+          "lowerRightBossBlendB": {
+            "found": false,
+            "axis_offset": null,
+            "axis_tolerance": 0.5,
+            "radius_error": null,
+            "ok": false
+          },
+          "lowerRightMountBoss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.5,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "leftRailLowerBlend": {
+            "found": true,
+            "axis_offset": 3.552713678800501e-15,
+            "axis_tolerance": 0.5,
+            "radius_error": -2.220446049250313e-16,
+            "ok": true
+          },
+          "leftRailUpperBlend": {
+            "found": true,
+            "axis_offset": 3.552713678800501e-15,
+            "axis_tolerance": 0.5,
+            "radius_error": -2.220446049250313e-16,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "envelopeWidth": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "envelopeDepth": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "envelopeHeight": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "frontToBack": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "backLeftMain": {
+            "ok": false,
+            "kind": "face"
+          },
+          "backRightMain": {
+            "ok": false,
+            "kind": "face"
+          },
+          "backRightMount": {
+            "ok": true,
+            "kind": "face"
+          },
+          "backLeftOutletLip": {
+            "ok": false,
+            "kind": "face"
+          },
+          "backRightOutletLip": {
+            "ok": false,
+            "kind": "face"
+          },
+          "frontFanRim": {
+            "ok": false,
+            "kind": "face"
+          },
+          "topInletRim": {
+            "ok": false,
+            "kind": "face"
+          },
+          "nozzleBaseLeft": {
+            "ok": false,
+            "kind": "face"
+          },
+          "nozzleBaseRight": {
+            "ok": false,
+            "kind": "face"
+          },
+          "leftOutletInnerLip": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "rightOutletInnerLip": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "leftOutletReturn": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "rightOutletReturn": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "sec_z10": {
+            "ok": false,
+            "kind": "section"
+          },
+          "sec_z20": {
+            "ok": false,
+            "kind": "section"
+          },
+          "sec_z30": {
+            "ok": false,
+            "kind": "section"
+          },
+          "sec_z45": {
+            "ok": false,
+            "kind": "section"
+          },
+          "sec_z55": {
+            "ok": false,
+            "kind": "section"
+          },
+          "hotendLeftWall": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hotendRightWall": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hotendWallSpacing": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "hotendRearRoof": {
+            "ok": true,
+            "kind": "face"
+          },
+          "hotendBridgeBottom": {
+            "ok": false,
+            "kind": "face"
+          },
+          "hotendBridgeTopLeft": {
+            "ok": false,
+            "kind": "face"
+          },
+          "hotendBridgeTopRight": {
+            "ok": false,
+            "kind": "face"
+          },
+          "sec_y-12": {
+            "ok": false,
+            "kind": "section"
+          },
+          "sec_x0": {
+            "ok": true,
+            "kind": "section"
+          },
+          "topPilotA": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "topPilotB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "topCounterboreA": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "topCounterboreB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "topCounterboreFloorA": {
+            "ok": true,
+            "kind": "face"
+          },
+          "topCounterboreFloorB": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rearUpperLeftBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearUpperRightBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearAuxLowerBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearAuxUpperBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerLeftMountBore": {
+            "ok": false,
+            "kind": "cylinder"
+          },
+          "lowerRightMountBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "upperLeftMountBoss": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerLeftMountBoss": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerRightMountBoss": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearCableNotch": {
+            "ok": true,
+            "kind": "cylinder"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/voron-sb-duct/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/voron-sb-duct/inspect.json agreement kcl=57791.52238056137 step=57786.52656775332 stl=57791.521597478364 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 57791.52238056137,
+        "step": 57786.52656775332,
+        "stl": 57791.521597478364,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "kcl_vs_step_rel": 8.645290009249567e-05,
+        "stl_vs_step_rel": 8.643934878471211e-05,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": false,
+      "evidence": [
+        "results/voron-sb-duct/edit.json 0/2 edit tests ok; restore.ok = True",
+        "sweep 1/3 values; infeasible refused 2/2; interfaces pinned 47"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "topPilotDiameter",
+            "delta": 0.2,
+            "ok": false,
+            "checks": {
+              "volume_delta": {
+                "expected": -7.037167544041143,
+                "measured": -6.966795868080226,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 38,
+                "driven": [
+                  "hotendRearRoof",
+                  "sec_z55",
+                  "topCounterboreA",
+                  "topCounterboreB",
+                  "topCounterboreFloorA",
+                  "topCounterboreFloorB",
+                  "topInletRim",
+                  "topPilotA",
+                  "topPilotB"
+                ],
+                "ok": false,
+                "moved": [
+                  "backLeftMain",
+                  "backRightMain",
+                  "backLeftOutletLip",
+                  "backRightOutletLip",
+                  "frontFanRim",
+                  "topInletRim",
+                  "nozzleBaseLeft",
+                  "nozzleBaseRight",
+                  "sec_z10",
+                  "sec_z20",
+                  "sec_z30",
+                  "sec_z45",
+                  "sec_z55",
+                  "hotendBridgeBottom",
+                  "hotendBridgeTopLeft",
+                  "hotendBridgeTopRight",
+                  "sec_y-12",
+                  "lowerLeftMountBore"
+                ]
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": 3.0,
+                  "value": 5.7,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: zoo kcl export step failed (1):\nKCL execution failed: type: assert failed: Expected 5.7 to be less than 5 but it wasn't: Top pilot diameter must be positive and smaller than the counterbore."
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "topCounterboreDepth",
+            "delta": 0.4,
+            "ok": false,
+            "checks": {
+              "volume_delta": {
+                "expected": -11.127521179015048,
+                "measured": -11.127533523977036,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 38,
+                "driven": [
+                  "hotendRearRoof",
+                  "sec_z55",
+                  "topCounterboreA",
+                  "topCounterboreB",
+                  "topCounterboreFloorA",
+                  "topCounterboreFloorB",
+                  "topInletRim",
+                  "topPilotA",
+                  "topPilotB"
+                ],
+                "ok": false,
+                "moved": [
+                  "backLeftMain",
+                  "backRightMain",
+                  "backLeftOutletLip",
+                  "backRightOutletLip",
+                  "frontFanRim",
+                  "topInletRim",
+                  "nozzleBaseLeft",
+                  "nozzleBaseRight",
+                  "sec_z10",
+                  "sec_z20",
+                  "sec_z30",
+                  "sec_z45",
+                  "sec_z55",
+                  "hotendBridgeBottom",
+                  "hotendBridgeTopLeft",
+                  "hotendBridgeTopRight",
+                  "sec_y-12",
+                  "lowerLeftMountBore"
+                ]
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 2.5,
+                  "volume": 57801.890889734015,
+                  "bbox_size": [
+                    71.06800000000001,
+                    27.400000200000004,
+                    59.13300277203152
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 15.36432198069815,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": false,
+                      "moved": [
+                        "backLeftMain",
+                        "backRightMain",
+                        "backLeftOutletLip",
+                        "backRightOutletLip",
+                        "frontFanRim",
+                        "topInletRim",
+                        "nozzleBaseLeft",
+                        "nozzleBaseRight",
+                        "sec_z10",
+                        "sec_z20",
+                        "sec_z30",
+                        "sec_z45",
+                        "sec_z55",
+                        "hotendBridgeBottom",
+                        "hotendBridgeTopLeft",
+                        "hotendBridgeTopRight",
+                        "sec_y-12",
+                        "topCounterboreFloorA",
+                        "topCounterboreFloorB",
+                        "lowerLeftMountBore"
+                      ]
+                    }
+                  },
+                  "ok": false
+                },
+                {
+                  "value": 2.9,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 3.3,
+                  "volume": 57775.39903422934,
+                  "bbox_size": [
+                    71.06800000000001,
+                    27.400000200000004,
+                    59.13300277203152
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -11.127533523977036,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": false,
+                      "moved": [
+                        "backLeftMain",
+                        "backRightMain",
+                        "backLeftOutletLip",
+                        "backRightOutletLip",
+                        "frontFanRim",
+                        "topInletRim",
+                        "nozzleBaseLeft",
+                        "nozzleBaseRight",
+                        "sec_z10",
+                        "sec_z20",
+                        "sec_z30",
+                        "sec_z45",
+                        "sec_z55",
+                        "hotendBridgeBottom",
+                        "hotendBridgeTopLeft",
+                        "hotendBridgeTopRight",
+                        "sec_y-12",
+                        "lowerLeftMountBore"
+                      ]
+                    }
+                  },
+                  "ok": false
+                }
+              ],
+              "declared": 3,
+              "passed": 1,
+              "ok": false
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": 5.0,
+                  "value": 7.9,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: zoo kcl export step failed (1):\nKCL execution failed: type: assert failed: Expected 54 to be less than 53 but it wasn't: Top pilot must start below the driven counterbore floor and above the nozzle end."
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "d5cf02a057a3c5e9a06de78560d43e5001fb219e4295868b453bb08c5f4b6cf6",
+          "re_export_sha256": "d5cf02a057a3c5e9a06de78560d43e5001fb219e4295868b453bb08c5f4b6cf6",
+          "ok": true
+        },
+        "sweep": {
+          "values": 3,
+          "passed": 1
+        },
+        "infeasible": {
+          "declared": 2,
+          "refused": 2
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/voron-sb-duct/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=137",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [
+            "import overallWidth, overallDepth, nozzleEndZ, topZ, backY, overallHeight, halfWidth, frontY, ductCount, outletsPerDuct, ductWidth, ductDepth, ductWall, wallMinimum, hotendCavityWidth, hotendCavityHeight, hotendCavityBottomZ, hotendCavityTopZ, fanOpeningDiameter, fanCenterZ, ductMidCenterX, ductMidCenterY, leftInletCenterX, rightInletCenterX, leftInletWidth, rightInletWidth, inletDepth, inletCenterY, topHoleAx, topHoleAy, topHoleBx, topHoleBy, topPilotDiameter, topCounterboreDiameter, topPilotStartZ, topBoreCylinderEndZ, topCounterboreDepth, upperMountHalfSpacing, upperMountZ, upperMountDiameter, upperMountLeftStartY, upperMountRightStartY, rearBoreEndY, auxLowerX, auxLowerZ, auxUpperX, auxUpperZ, auxBoreDiameter, auxLowerStartY, auxUpperStartY, lowerMountHalfSpacing, lowerMountZ, lowerMountDiameter, lowerMountBoreLength, rearCableNotchDiameter, topCounterboreFloorZ, topPilotLength from \"params.kcl\"",
+            "import overallWidth, nozzleEndZ, topZ, backY, frontY, ductWall, hotendCavityWidth, hotendCavityHeight, hotendCavityBottomZ, hotendCavityTopZ, fanOpeningDiameter, fanCenterZ from \"params.kcl\"",
+            "import ductCount, outletsPerDuct, ductWidth, ductDepth, ductWall, wallMinimum, ductMidCenterX, ductMidCenterY, leftInletCenterX, leftInletWidth, inletDepth, inletCenterY, nozzleEndZ, topZ, backY, frontY, halfWidth from \"params.kcl\"",
+            "import datum from \"datum.kcl\"",
+            "import hotendCavity from \"hotendCavity.kcl\"",
+            "import leftDuct from \"leftDuct.kcl\"",
+            "import rearInterface from \"rearInterface.kcl\"",
+            "import rightDuct from \"rightDuct.kcl\"",
+            "import topFasteners from \"topFasteners.kcl\"",
+            "\nimport upperMountHalfSpacing, upperMountZ, upperMountDiameter, upperMountLeftStartY, upperMountRightStartY, rearBoreEndY, auxLowerX, auxLowerZ, auxUpperX, auxUpperZ, auxBoreDiameter, auxLowerStartY, auxUpperStartY, lowerMountHalfSpacing, lowerMountZ, lowerMountDiameter, lowerMountBoreLength, backY, frontY, overallWidth, overallDepth, halfWidth, wallMinimum from \"params.kcl\"",
+            "\nimport ductCount, outletsPerDuct, ductWidth, ductDepth, ductWall, wallMinimum, ductMidCenterX, ductMidCenterY, rightInletCenterX, rightInletWidth, inletDepth, inletCenterY, nozzleEndZ, topZ, backY, frontY, halfWidth from \"params.kcl\"",
+            "\nimport topHoleAx, topHoleAy, topHoleBx, topHoleBy, topPilotDiameter, topCounterboreDiameter, topPilotStartZ, topBoreCylinderEndZ, topCounterboreDepth, topCounterboreFloorZ, topPilotLength, rearCableNotchDiameter, topZ, backY from \"params.kcl\""
+          ],
+          "forbidden_imports": [],
+          "asserts": 137,
+          "sketch_blocks": 20,
+          "feature_ops": 81,
+          "parameters": {
+            "overallWidth": {
+              "found": true,
+              "value": 71.068,
+              "unit": "mm",
+              "expected": 71.068,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "overallDepth": {
+              "found": true,
+              "value": 27.4,
+              "unit": "mm",
+              "expected": 27.4,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "nozzleEndZ": {
+              "found": true,
+              "value": 2.367,
+              "unit": "mm",
+              "expected": 2.367,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topZ": {
+              "found": true,
+              "value": 61.5,
+              "unit": "mm",
+              "expected": 61.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "backY": {
+              "found": true,
+              "value": 0.0,
+              "unit": "mm",
+              "expected": 0.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "overallHeight": {
+              "found": true,
+              "value": 59.133,
+              "unit": "mm",
+              "expected": 59.133,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "halfWidth": {
+              "found": true,
+              "value": 35.534,
+              "unit": "mm",
+              "expected": 35.534,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "frontY": {
+              "found": true,
+              "value": -27.4,
+              "unit": "mm",
+              "expected": -27.4,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "ductCount": {
+              "found": true,
+              "value": 2.0,
+              "unit": "",
+              "expected": 2.0,
+              "expected_unit": "",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "outletsPerDuct": {
+              "found": true,
+              "value": 2.0,
+              "unit": "",
+              "expected": 2.0,
+              "expected_unit": "",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "ductWidth": {
+              "found": true,
+              "value": 8.0,
+              "unit": "mm",
+              "expected": 8.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "ductDepth": {
+              "found": true,
+              "value": 19.0,
+              "unit": "mm",
+              "expected": 19.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "ductWall": {
+              "found": true,
+              "value": 1.0,
+              "unit": "mm",
+              "expected": 1.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "wallMinimum": {
+              "found": true,
+              "value": 0.75,
+              "unit": "mm",
+              "expected": 0.75,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "hotendCavityWidth": {
+              "found": true,
+              "value": 26.0,
+              "unit": "mm",
+              "expected": 26.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "hotendCavityHeight": {
+              "found": true,
+              "value": 35.0,
+              "unit": "mm",
+              "expected": 35.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "hotendCavityBottomZ": {
+              "found": true,
+              "value": 9.0,
+              "unit": "mm",
+              "expected": 9.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "hotendCavityTopZ": {
+              "found": true,
+              "value": 44.0,
+              "unit": "mm",
+              "expected": 44.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "fanOpeningDiameter": {
+              "found": true,
+              "value": 37.5,
+              "unit": "mm",
+              "expected": 37.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "fanCenterZ": {
+              "found": true,
+              "value": 43.3,
+              "unit": "mm",
+              "expected": 43.3,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "ductMidCenterX": {
+              "found": true,
+              "value": 22.0,
+              "unit": "mm",
+              "expected": 22.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "ductMidCenterY": {
+              "found": true,
+              "value": -16.5,
+              "unit": "mm",
+              "expected": -16.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftInletCenterX": {
+              "found": true,
+              "value": -17.5,
+              "unit": "mm",
+              "expected": -17.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "rightInletCenterX": {
+              "found": true,
+              "value": 11.75,
+              "unit": "mm",
+              "expected": 11.75,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftInletWidth": {
+              "found": true,
+              "value": 15.0,
+              "unit": "mm",
+              "expected": 15.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "rightInletWidth": {
+              "found": true,
+              "value": 13.5,
+              "unit": "mm",
+              "expected": 13.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "inletDepth": {
+              "found": true,
+              "value": 8.2,
+              "unit": "mm",
+              "expected": 8.2,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "inletCenterY": {
+              "found": true,
+              "value": -19.0,
+              "unit": "mm",
+              "expected": -19.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topHoleAx": {
+              "found": true,
+              "value": -6.963,
+              "unit": "mm",
+              "expected": -6.963,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topHoleAy": {
+              "found": true,
+              "value": -3.939,
+              "unit": "mm",
+              "expected": -3.939,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topHoleBx": {
+              "found": true,
+              "value": 3.939,
+              "unit": "mm",
+              "expected": 3.939,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topHoleBy": {
+              "found": true,
+              "value": -6.963,
+              "unit": "mm",
+              "expected": -6.963,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topPilotDiameter": {
+              "found": true,
+              "value": 2.7,
+              "unit": "mm",
+              "expected": 2.7,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topCounterboreDiameter": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topPilotStartZ": {
+              "found": true,
+              "value": 54.0,
+              "unit": "mm",
+              "expected": 54.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topBoreCylinderEndZ": {
+              "found": true,
+              "value": 60.9,
+              "unit": "mm",
+              "expected": 60.9,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topCounterboreDepth": {
+              "found": true,
+              "value": 2.9,
+              "unit": "mm",
+              "expected": 2.9,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperMountHalfSpacing": {
+              "found": true,
+              "value": 12.7,
+              "unit": "mm",
+              "expected": 12.7,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperMountZ": {
+              "found": true,
+              "value": 55.424,
+              "unit": "mm",
+              "expected": 55.424,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperMountDiameter": {
+              "found": true,
+              "value": 4.6,
+              "unit": "mm",
+              "expected": 4.6,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperMountLeftStartY": {
+              "found": true,
+              "value": -6.0,
+              "unit": "mm",
+              "expected": -6.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperMountRightStartY": {
+              "found": true,
+              "value": -5.861,
+              "unit": "mm",
+              "expected": -5.861,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "rearBoreEndY": {
+              "found": true,
+              "value": -0.4,
+              "unit": "mm",
+              "expected": -0.4,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "auxLowerX": {
+              "found": true,
+              "value": -28.0,
+              "unit": "mm",
+              "expected": -28.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "auxLowerZ": {
+              "found": true,
+              "value": 19.0,
+              "unit": "mm",
+              "expected": 19.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "auxUpperX": {
+              "found": true,
+              "value": -25.0,
+              "unit": "mm",
+              "expected": -25.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "auxUpperZ": {
+              "found": true,
+              "value": 35.0,
+              "unit": "mm",
+              "expected": 35.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "auxBoreDiameter": {
+              "found": true,
+              "value": 4.7,
+              "unit": "mm",
+              "expected": 4.7,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "auxLowerStartY": {
+              "found": true,
+              "value": -4.2,
+              "unit": "mm",
+              "expected": -4.2,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "auxUpperStartY": {
+              "found": true,
+              "value": -4.257,
+              "unit": "mm",
+              "expected": -4.257,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lowerMountHalfSpacing": {
+              "found": true,
+              "value": 16.25,
+              "unit": "mm",
+              "expected": 16.25,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lowerMountZ": {
+              "found": true,
+              "value": 19.301,
+              "unit": "mm",
+              "expected": 19.301,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lowerMountDiameter": {
+              "found": true,
+              "value": 3.4,
+              "unit": "mm",
+              "expected": 3.4,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lowerMountBoreLength": {
+              "found": true,
+              "value": 7.5,
+              "unit": "mm",
+              "expected": 7.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "rearCableNotchDiameter": {
+              "found": true,
+              "value": 4.1,
+              "unit": "mm",
+              "expected": 4.1,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topCounterboreFloorZ": {
+              "found": true,
+              "value": 58.0,
+              "unit": "mm",
+              "expected": 58.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "topPilotLength": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 1847,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": false,
+      "evidence": [
+        "results/voron-sb-duct/export.json step.deterministic = True sha256 d5cf02a057a3; stl=present; glb=present",
+        "results/voron-sb-duct/inspect.json valid = True solids = 1 (expected 1)",
+        "results/voron-sb-duct/inspect.json mesh watertight = False components = 2 void_shells = 1"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/voron-sb-duct/export/voron-sb-duct.step",
+            "sha256": "d5cf02a057a3c5e9a06de78560d43e5001fb219e4295868b453bb08c5f4b6cf6",
+            "bytes": 804651,
+            "deterministic": true,
+            "second_sha256": "d5cf02a057a3c5e9a06de78560d43e5001fb219e4295868b453bb08c5f4b6cf6"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/voron-sb-duct/export/voron-sb-duct.stl",
+            "sha256": "6570a72f702ae9a33832abfd8a81defcc4f436da33942a15f19cf68c17951985",
+            "bytes": 980251
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/voron-sb-duct/export/voron-sb-duct.glb",
+            "sha256": "e31db4ea1800a6ac69b5dcfe79f937be3237162cdaa1b6b3034e4b3d2559385c",
+            "bytes": 1015908
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 5451,
+          "vertices": 2708,
+          "watertight": false,
+          "components_watertight": [
+            false,
+            true
+          ],
+          "solids_watertight": false,
+          "winding_consistent": true,
+          "components": 2,
+          "void_shells": 1,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 57791.521597478364,
+          "surface_area": 28334.58478061098,
+          "bbox_min": [
+            -35.533997,
+            -27.4,
+            2.367
+          ],
+          "bbox_max": [
+            35.533997,
+            -0.0,
+            61.5
+          ],
+          "center_of_mass": [
+            0.35537600044923023,
+            -14.158896349800822,
+            32.75807567961014
+          ],
+          "open_edges": {
+            "count": 3,
+            "bbox_min": [
+              -13.15,
+              -1.3156,
+              27.76
+            ],
+            "bbox_max": [
+              -13.15,
+              -1.3053,
+              27.76
+            ],
+            "centroid": [
+              -13.15,
+              -1.3105,
+              27.76
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 5dd0e004-9509-4b1a-a7cc-8ded047fc898; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 10; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 10,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/voron-sb-duct/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/voron-sb-duct/verify.json hygiene.forbidden_imports = [] sketch_blocks = 20 feature_ops = 81 lines = 1847"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "import overallWidth, overallDepth, nozzleEndZ, topZ, backY, overallHeight, halfWidth, frontY, ductCount, outletsPerDuct, ductWidth, ductDepth, ductWall, wallMinimum, hotendCavityWidth, hotendCavityHeight, hotendCavityBottomZ, hotendCavityTopZ, fanOpeningDiameter, fanCenterZ, ductMidCenterX, ductMidCenterY, leftInletCenterX, rightInletCenterX, leftInletWidth, rightInletWidth, inletDepth, inletCenterY, topHoleAx, topHoleAy, topHoleBx, topHoleBy, topPilotDiameter, topCounterboreDiameter, topPilotStartZ, topBoreCylinderEndZ, topCounterboreDepth, upperMountHalfSpacing, upperMountZ, upperMountDiameter, upperMountLeftStartY, upperMountRightStartY, rearBoreEndY, auxLowerX, auxLowerZ, auxUpperX, auxUpperZ, auxBoreDiameter, auxLowerStartY, auxUpperStartY, lowerMountHalfSpacing, lowerMountZ, lowerMountDiameter, lowerMountBoreLength, rearCableNotchDiameter, topCounterboreFloorZ, topPilotLength from \"params.kcl\"",
+          "import overallWidth, nozzleEndZ, topZ, backY, frontY, ductWall, hotendCavityWidth, hotendCavityHeight, hotendCavityBottomZ, hotendCavityTopZ, fanOpeningDiameter, fanCenterZ from \"params.kcl\"",
+          "import ductCount, outletsPerDuct, ductWidth, ductDepth, ductWall, wallMinimum, ductMidCenterX, ductMidCenterY, leftInletCenterX, leftInletWidth, inletDepth, inletCenterY, nozzleEndZ, topZ, backY, frontY, halfWidth from \"params.kcl\"",
+          "import datum from \"datum.kcl\"",
+          "import hotendCavity from \"hotendCavity.kcl\"",
+          "import leftDuct from \"leftDuct.kcl\"",
+          "import rearInterface from \"rearInterface.kcl\"",
+          "import rightDuct from \"rightDuct.kcl\"",
+          "import topFasteners from \"topFasteners.kcl\"",
+          "\nimport upperMountHalfSpacing, upperMountZ, upperMountDiameter, upperMountLeftStartY, upperMountRightStartY, rearBoreEndY, auxLowerX, auxLowerZ, auxUpperX, auxUpperZ, auxBoreDiameter, auxLowerStartY, auxUpperStartY, lowerMountHalfSpacing, lowerMountZ, lowerMountDiameter, lowerMountBoreLength, backY, frontY, overallWidth, overallDepth, halfWidth, wallMinimum from \"params.kcl\"",
+          "\nimport ductCount, outletsPerDuct, ductWidth, ductDepth, ductWall, wallMinimum, ductMidCenterX, ductMidCenterY, rightInletCenterX, rightInletWidth, inletDepth, inletCenterY, nozzleEndZ, topZ, backY, frontY, halfWidth from \"params.kcl\"",
+          "\nimport topHoleAx, topHoleAy, topHoleBx, topHoleBy, topPilotDiameter, topCounterboreDiameter, topPilotStartZ, topBoreCylinderEndZ, topCounterboreDepth, topCounterboreFloorZ, topPilotLength, rearCableNotchDiameter, topZ, backY from \"params.kcl\""
+        ],
+        "sketch_blocks": 20,
+        "feature_ops": 81
+      }
+    }
+  ],
+  "retry": {
+    "attempted": true,
+    "corrections": 1,
+    "reason": [
+      "features",
+      "export_integrity",
+      "edit_robustness"
+    ],
+    "gates_before": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": false,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": false,
+      "source_hygiene": true,
+      "export_integrity": false,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "gates_after": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": false,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": false,
+      "source_hygiene": true,
+      "export_integrity": false,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "history": [
+      {
+        "key": "correction-1",
+        "role": "correction",
+        "failed_after": [
+          "features",
+          "edit_robustness",
+          "export_integrity"
+        ],
+        "retryable_after": [
+          "features",
+          "export_integrity",
+          "edit_robustness"
+        ],
+        "signature": "edit_robustness,export_integrity,features|ok",
+        "kcl_changed": true,
+        "incomplete": true
+      }
+    ],
+    "stopped": "same failure after correction-1: edit_robustness,export_integrity,features|ok",
+    "stuck_class": "kernel-incomplete"
+  }
+}

@@ -1,0 +1,991 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<title>Pump Data Files Introduction</title>
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Batang;
+	panose-1:2 3 6 0 0 1 1 1 1 1;}
+@font-face
+	{font-family:"MS Gothic";
+	panose-1:2 11 6 9 7 2 5 8 2 4;}
+@font-face
+	{font-family:"MS Gothic";
+	panose-1:2 11 6 9 7 2 5 8 2 4;}
+@font-face
+	{font-family:Cambria;
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:"\@Batang";
+	panose-1:2 3 6 0 0 1 1 1 1 1;}
+@font-face
+	{font-family:"Times New \(W1\)";}
+@font-face
+	{font-family:"\@MS Gothic";
+	panose-1:2 11 6 9 7 2 5 8 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-right:0in;
+	margin-left:0in;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";
+	font-weight:bold;}
+h2
+	{mso-style-link:"Heading 2 Char";
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:6.0pt;
+	margin-left:0in;
+	page-break-after:avoid;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";
+	font-weight:bold;
+	font-style:italic;}
+h3
+	{mso-style-link:"Heading 3 Char";
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	page-break-after:avoid;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";
+	font-weight:normal;
+	text-decoration:underline;}
+p.MsoCommentText, li.MsoCommentText, div.MsoCommentText
+	{mso-style-link:"Comment Text Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Arial","sans-serif";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+p
+	{margin-right:0in;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+p.MsoCommentSubject, li.MsoCommentSubject, div.MsoCommentSubject
+	{mso-style-link:"Comment Subject Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	line-height:200%;
+	font-size:10.0pt;
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-link:"Balloon Text Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	line-height:200%;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Cambria","serif";
+	color:#365F91;
+	font-weight:bold;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-link:"Heading 2";
+	font-family:"Cambria","serif";
+	color:#4F81BD;
+	font-weight:bold;}
+span.Heading3Char
+	{mso-style-name:"Heading 3 Char";
+	mso-style-link:"Heading 3";
+	font-family:"Cambria","serif";
+	color:#4F81BD;
+	font-weight:bold;}
+span.CommentTextChar
+	{mso-style-name:"Comment Text Char";
+	mso-style-link:"Comment Text";
+	font-family:"Arial","sans-serif";}
+span.CommentSubjectChar
+	{mso-style-name:"Comment Subject Char";
+	mso-style-link:"Comment Subject";
+	font-family:"Arial","sans-serif";
+	font-weight:bold;}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	mso-style-link:"Balloon Text";
+	font-family:"Tahoma","sans-serif";}
+p.msochpdefault, li.msochpdefault, div.msochpdefault
+	{mso-style-name:msochpdefault;
+	margin-right:0in;
+	margin-left:0in;
+	font-size:10.0pt;
+	font-family:"Times New Roman","serif";}
+span.heading1char0
+	{mso-style-name:heading1char;
+	font-family:"Batang","serif";
+	font-weight:bold;}
+.MsoChpDefault
+	{font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=WordSection1>
+
+<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse'>
+ <tr style='height:45.0pt'>
+  <td width=282 style='width:140.8pt;background:aqua;padding:0in 0in 0in 0in;
+  height:45.0pt'>
+  <p class=MsoNormal><a href="Home.htm"><span style='font-family:"Times New \(W1\)";
+  color:yellow;text-decoration:none'><img border=0 width=258 height=86
+  src="Home_files/image001.gif"></span></a></p>
+  </td>
+  <td width=969 style='width:484.7pt;background:aqua;padding:0in 0in 0in 0in;
+  height:45.0pt'>
+  <p class=MsoNormal><span style='font-family:"Times New \(W1\)";color:yellow'><img
+  border=0 width=607 height=86 src="Home_files/image002.gif"></span></p>
+  </td>
+ </tr>
+ <tr style='height:5.25in'>
+  <td width=282 valign=top style='width:140.8pt;padding:2.9pt 0in 0in 0in;
+  height:5.25in'>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=279
+   style='width:139.3pt;border-collapse:collapse'>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:solid blue 1.5pt;border-right:none;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=3 style='width:116.8pt;border:solid blue 1.5pt;
+    border-left:none;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Home.htm">CPI – CFD Home</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=3 style='width:116.8pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Background.htm">Background</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=3 style='width:116.8pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Committee.htm">Technical Steering Committee</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=3 style='width:116.8pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Participants.htm">Participant Appreciation Page</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=3 style='width:116.8pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="SignUp.htm">Sign Up For Interlaboratory Study
+    2: Blood Pump</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid;height:20.8pt'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    background:#B4FFFF;padding:2.9pt 5.75pt 2.9pt 5.75pt;height:20.8pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=3 style='width:116.8pt;border:none;border-right:solid blue 1.5pt;
+    background:#B4FFFF;padding:2.9pt 5.75pt 2.9pt 0in;height:20.8pt'>
+    <p class=MsoNormal><a href="Pump_Info.htm">Interlaboratory Study 2: Blood
+    Pump Model Information</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 colspan=2 valign=top style='width:104.05pt;border:none;
+    border-right:solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a href="Pump_Info.htm">General
+    Information</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 colspan=2 valign=top style='width:104.05pt;border:none;
+    border-right:solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Geometry.htm">Pump Geometry</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 colspan=2 valign=top style='width:104.05pt;border:none;
+    border-right:solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_CAD.htm">CAD Files</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 colspan=2 valign=top style='width:104.05pt;border:none;
+    border-right:solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Experimental.htm">Experimental Setup</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 colspan=2 valign=top style='width:104.05pt;border:none;
+    border-right:solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Conditions.htm">Simulation Conditions</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 colspan=2 valign=top style='width:104.05pt;border:none;
+    border-right:solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Blood_Damage.htm">Estimate of Blood Damage</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 colspan=2 valign=top style='width:104.05pt;border:none;
+    border-right:solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Metrics.htm">Comparison Metrics</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 colspan=2 valign=top style='width:104.05pt;border:none;
+    border-right:solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Cross_Sections.htm">Cross-Sections and Surfaces</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    background:#B4FFFF;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    lang=FR>&nbsp;</span></p>
+    </td>
+    <td width=26 style='width:12.75pt;background:#B4FFFF;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 colspan=2 valign=top style='width:104.05pt;border:none;
+    border-right:solid blue 1.5pt;background:#B4FFFF;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal style='margin-bottom:3.0pt'><span style='font-size:10.0pt'><a
+    href="Pump_Info_Data_1.htm">Data Files</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    background:#B4FFFF;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;background:#B4FFFF;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+    </td>
+    <td width=29 valign=top style='width:.2in;background:#B4FFFF;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-bottom:3.0pt;text-align:center'><span
+    style='font-size:10.0pt'>&#9702;</span></p>
+    </td>
+    <td width=179 style='width:89.65pt;border:none;border-right:solid blue 1.5pt;
+    background:#B4FFFF;padding:0in 0in 0in 0in'>
+    <p class=MsoNormal style='margin-bottom:3.0pt'><span style='font-size:9.0pt'><a
+    href="Pump_Info_Data_1.htm">Introduction</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+    </td>
+    <td width=29 valign=top style='width:.2in;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-bottom:3.0pt;text-align:center'><span
+    style='font-size:10.0pt'>&#9702;</span></p>
+    </td>
+    <td width=179 style='width:89.65pt;border:none;border-right:solid blue 1.5pt;
+    padding:0in 0in 0in 0in'>
+    <p class=MsoNormal style='margin-bottom:3.0pt'><span style='font-size:9.0pt'><a
+    href="Pump_Info_Data_2.htm">Spreadsheet Data</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+    </td>
+    <td width=29 valign=top style='width:.2in;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-bottom:3.0pt;text-align:center'><span
+    style='font-size:10.0pt'>&#9702;</span></p>
+    </td>
+    <td width=179 style='width:89.65pt;border:none;border-right:solid blue 1.5pt;
+    padding:0in 0in 0in 0in'>
+    <p class=MsoNormal style='margin-bottom:3.0pt'><span style='font-size:9.0pt'><a
+    href="Pump_Info_Data_3.htm">Data for Cross-Sections &amp; Surfaces</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+    </td>
+    <td width=29 valign=top style='width:.2in;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-bottom:3.0pt;text-align:center'><span
+    style='font-size:10.0pt'>&#9702;</span></p>
+    </td>
+    <td width=179 style='width:89.65pt;border:none;border-right:solid blue 1.5pt;
+    padding:0in 0in 0in 0in'>
+    <p class=MsoNormal style='margin-bottom:3.0pt'><span style='font-size:9.0pt'><a
+    href="Pump_Info_Data_4.htm">Time Histories</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.75pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+    </td>
+    <td width=29 valign=top style='width:.2in;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-bottom:3.0pt;text-align:center'><span
+    style='font-size:10.0pt'>&#9702;</span></p>
+    </td>
+    <td width=179 style='width:89.65pt;border:none;border-right:solid blue 1.5pt;
+    padding:0in 0in 0in 0in'>
+    <p class=MsoNormal style='margin-bottom:3.0pt'><span style='font-size:9.0pt'><a
+    href="Pump_Info_Data_5.htm">Image Files</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    lang=FR>&nbsp;</span></p>
+    </td>
+    <td width=26 style='width:12.75pt;border:none;border-bottom:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 colspan=2 valign=top style='width:104.05pt;border-top:none;
+    border-left:none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal style='margin-bottom:3.0pt'><span style='font-size:10.0pt'><a
+    href="Pump_Data_Analysis.htm">Planned Data Analysis</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=3 style='width:116.8pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Submit.htm">Submit Data for Interlaboratory
+    Study 2: Blood Pump</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=3 style='width:116.8pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="FAQ.htm">Frequently Asked Questions</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.5pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=3 style='width:116.8pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Questions.htm">Questions/Comments</a></p>
+    </td>
+   </tr>
+  </table>
+  </td>
+  <td width=969 valign=top style='width:484.55pt;padding:2.9pt 5.75pt 2.9pt 5.75pt;
+  height:5.25in'>
+  <h1><a name="_Introduction_to_Data"></a><span style='color:maroon'>Introduction
+  to Data Files for Interlaboratory Study 2: Blood Pump</span></h1>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>We are requesting three
+       kinds of files, a single spreadsheet, ASCII text files with numerical
+       results, and image files.&nbsp; These files consist of:</li>
+   <ul style='margin-top:0in' type=circle>
+    <li class=MsoNormal style='margin-top:6.0pt;margin-bottom:6.0pt'>A single <a
+        href="Pump_Info_Data_2.htm">spreadsheet</a> with simulation parameters
+        and scalar results for <b><span style='color:#CC0000'>all</span></b>
+        the specified <a href="Pump_Info_Conditions.htm">operating conditions</a>.&nbsp;
+        This data includes the simulation parameters as well as the resulting
+        pump inlet and outlet pressures, shaft torque, etc.&nbsp; Give
+        time-averaged results for unsteady simulations.&nbsp; <b><span
+        style='color:#C00000'>Optional:</span></b> Include the absolute and
+        relative computed <a href="Pump_Info_Blood_Damage.htm">blood damage
+        index</a>.</li>
+    <li class=MsoNormal style='margin-bottom:6.0pt'><a
+        href="Pump_Info_Data_3.htm">Results files</a> in ASCII text format,
+        with numeric data along the <a
+        href="Pump_Info_Cross_Sections.htm#blade_passage_region">blade passage
+        plane</a> and the <a href="Pump_Info_Cross_Sections.htm#zx_outlet_plane">zx
+        outlet plane</a>, for <b><span style='color:#C00000'>all</span></b>
+        flow rates and pump speeds.</li>
+    <li class=MsoNormal style='margin-bottom:6.0pt'><a
+        href="Pump_Info_Data_3.htm">Results files</a> in ASCII text format,
+        with numeric data along the remaining <a
+        href="Pump_Info_Cross_Sections.htm#lower_gap_et_al">cross-sections</a>
+        and all <a href="Pump_Info_Cross_Sections.htm#_Surfaces">surfaces</a>,
+        for pump flow rate = 6.0 L/min and pump speed = 3500 rpm <b><span
+        style='color:#CC0000'>only</span></b>.</li>
+    <li class=MsoNormal style='margin-bottom:6.0pt'><b><span style='color:#CC0000'>For
+        unsteady simulations only</span></b>, a single <a
+        href="Pump_Info_Data_4.htm">results file</a> in ASCII text format, with
+        numeric data of time histories of some of the scalar outputs for pump
+        flow rate = 6.0 L/min and pump speed = 3500 rpm <b><span
+        style='color:#CC0000'>only</span></b>.</li>
+    <li class=MsoNormal style='margin-bottom:6.0pt'><a
+        href="Pump_Info_Data_5.htm">Images</a> of your mesh.&nbsp; We are
+        requesting four images of the mesh you used for pump flow rate = 6.0
+        L/min and pump speed = 3500 rpm.</li>
+   </ul>
+   <li class=MsoNormal style='margin-bottom:12.0pt'>Here is a list of the files
+       and filenames:</li>
+  </ul>
+  <div align=center>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=965
+   style='width:482.45pt;border-collapse:collapse'>
+   <tr style='height:.3in'>
+    <td width=353 nowrap style='width:2.45in;border:solid windowtext 1.5pt;
+    background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt;height:.3in'>
+    <p class=MsoNormal align=center style='text-align:center'><b><span
+    style='font-size:10.0pt'>File Content</span></b></p>
+    </td>
+    <td width=504 nowrap style='width:3.5in;border:solid windowtext 1.5pt;
+    border-left:none;background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt;
+    height:.3in'>
+    <p class=MsoNormal align=center style='text-align:center'><b><span
+    style='font-size:10.0pt'>File Name</span></b></p>
+    </td>
+    <td width=108 nowrap style='width:54.05pt;border:solid windowtext 1.5pt;
+    border-left:none;background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt;
+    height:.3in'>
+    <p class=MsoNormal align=center style='text-align:center'><b><span
+    style='font-size:10.0pt;font-family:"MS Gothic"'>&#10003;</span></b></p>
+    </td>
+   </tr>
+   <tr style='height:.3in'>
+    <td width=353 nowrap style='width:2.45in;border:solid windowtext 1.5pt;
+    border-top:none;padding:.05in 5.75pt .05in 5.75pt;height:.3in'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'><a href="Pump_Info_Data_2.htm">Simulation
+    Parameters and</a></span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    class=MsoHyperlink><span style='font-size:10.0pt'><a
+    href="Pump_Info_Data_2.htm">Results Spreadsheet</a></span></span></p>
+    </td>
+    <td width=504 nowrap style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:.05in 5.75pt .05in 5.75pt;height:.3in'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>simulation_parameters.xls</span></p>
+    </td>
+    <td width=108 nowrap style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:.05in 5.75pt .05in 5.75pt;height:.3in'>
+    <p class=MsoNormal align=center style='text-align:center'><b><span
+    style='font-size:10.0pt;font-family:"MS Gothic"'>&nbsp;</span></b></p>
+    </td>
+   </tr>
+   <tr style='height:59.4pt'>
+    <td width=353 style='width:2.45in;border:solid windowtext 1.5pt;border-top:
+    none;background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt;height:59.4pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><span
+    style='font-size:10.0pt'><a href="Pump_Info_Data_3.htm#_Cross-Sections">Blade
+    Passage Plane</a></span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt;color:#CC0000'>All</span><span style='font-size:
+    10.0pt'> pump flow rates and speeds</span></p>
+    </td>
+    <td width=504 style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt;height:59.4pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>blade_passage_plane_2.5_2500.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>blade_passage_plane_2.5_3500.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>blade_passage_plane_4.5_3500.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>blade_passage_plane_6.0_2500.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>blade_passage_plane_6.0_3500.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>blade_passage_plane_7.0_3500.txt</span></p>
+    </td>
+    <td width=108 style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt;height:59.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    </td>
+   </tr>
+   <tr style='height:50.25pt'>
+    <td width=353 style='width:2.45in;border:solid windowtext 1.5pt;border-top:
+    none;background:white;padding:.05in 5.75pt .05in 5.75pt;height:50.25pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><span
+    style='font-size:10.0pt'><a href="Pump_Info_Data_3.htm#_Cross-Sections">zx
+    Outlet Plane</a></span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt;color:#CC0000'>All</span><span style='font-size:
+    10.0pt'> pump flow rates and speeds</span></p>
+    </td>
+    <td width=504 style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:white;padding:.05in 5.75pt .05in 5.75pt;height:50.25pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>zx_outlet_plane_2.5_2500.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>zx_outlet_plane_2.5_3500.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>zx_outlet_plane_4.5_3500.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>zx_outlet_plane_6.0_2500.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>zx_outlet_plane_6.0_3500.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>zx_outlet_plane_7.0_3500.txt</span></p>
+    </td>
+    <td width=108 style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:white;padding:.05in 5.75pt .05in 5.75pt;height:50.25pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    </td>
+   </tr>
+   <tr style='height:50.25pt'>
+    <td width=353 style='width:2.45in;border:solid windowtext 1.5pt;border-top:
+    none;background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt;height:50.25pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><span
+    style='font-size:10.0pt'><a href="Pump_Info_Data_3.htm#remaining_planes">Remaining
+    Cross-Sections</a></span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Pump flow rate = 6.0 L/min and</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Pump speed = 3500 rpm <span style='color:#C00000'>only</span></span></p>
+    </td>
+    <td width=504 style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt;height:50.25pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>lower_gap.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>upper_gap.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>zx_inlet_plane.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>yz_inlet_plane.txt</span></p>
+    </td>
+    <td width=108 style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt;height:50.25pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=353 style='width:2.45in;border:solid windowtext 1.5pt;border-top:
+    none;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><span
+    style='font-size:10.0pt'><a href="Pump_Info_Data_3.htm#_Surfaces">All
+    Surfaces</a></span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Pump flow rate = 6.0 L/min and</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Pump speed = 3500 rpm <span style='color:#C00000'>only</span></span></p>
+    </td>
+    <td width=504 style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>throat.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>diffuser.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>rim.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>outlet_fillet.txt</span></p>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>rotor_upper_surface.txt</span></p>
+    </td>
+    <td width=108 style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=353 style='width:2.45in;border:solid windowtext 1.5pt;border-top:
+    none;background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><span
+    style='font-size:10.0pt'><a href="Pump_Info_Data_4.htm">Time Histories</a></span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Unsteady simulations <span style='color:#CC0000'>only</span></span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Pump flow rate = 6.0 L/min and</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Pump speed = 3500 rpm <span style='color:#C00000'>only</span></span></p>
+    </td>
+    <td width=504 style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='margin-bottom:3.0pt;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>time_histories.txt</span></p>
+    </td>
+    <td width=108 style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=353 style='width:2.45in;border:solid windowtext 1.5pt;border-top:
+    none;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'><a href="Pump_Info_Data_5.htm#_Housing_(click_on">Image
+    of Housing Mesh</a></span></p>
+    </td>
+    <td width=504 style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>housing_mesh.png</span></p>
+    </td>
+    <td width=108 style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=353 style='width:2.45in;border:solid windowtext 1.5pt;border-top:
+    none;background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'><a href="Pump_Info_Data_5.htm#_Rotor_(click_on">Image
+    of Rotor Mesh</a></span></p>
+    </td>
+    <td width=504 style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>rotor_mesh.png</span></p>
+    </td>
+    <td width=108 style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:#D9D9D9;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=353 style='width:2.45in;border:solid windowtext 1.5pt;border-top:
+    none;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'><a href="Pump_Info_Data_5.htm#_Image_of_Rotor">Image
+    of Rotor Blade End Mesh</a></span></p>
+    </td>
+    <td width=504 style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>rotor_blade_mesh.png</span></p>
+    </td>
+    <td width=108 style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=353 style='width:2.45in;border:solid windowtext 1.5pt;border-top:
+    none;background:#BFBFBF;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'><a
+    href="Pump_Info_Data_5.htm#_Cross-sectional_Image_of">Image of yz
+    Cross-section Mesh</a></span></p>
+    </td>
+    <td width=504 style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:#BFBFBF;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>yz_cross_section_mesh.png</span></p>
+    </td>
+    <td width=108 style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    background:#BFBFBF;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=353 style='width:2.45in;border:solid windowtext 1.5pt;border-top:
+    none;padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'><a href="Pump_Info_Data_5.htm#_Mesh_of_outlet_1">Image
+    of Outlet Fillet Mesh</a></span></p>
+    </td>
+    <td width=504 style='width:3.5in;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='margin-top:3.0pt;margin-right:0in;
+    margin-bottom:3.0pt;margin-left:0in;text-align:center'><span
+    style='font-size:10.0pt;font-family:"Courier New"'>outlet_fillet_mesh.png</span></p>
+    </td>
+    <td width=108 style='width:54.05pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:.05in 5.75pt .05in 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>&nbsp;</span></p>
+    </td>
+   </tr>
+  </table>
+  </div>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-top:12.0pt;margin-bottom:12.0pt'>Compress
+       your spreadsheet, data, and image files into <b><span style='color:#CC0000'>one</span></b>
+       *.zip or *.tar file.&nbsp; Encrypt your file with a password of your
+       choice.&nbsp; The *.zip or *.tar file filename should be a unique
+       identifier.&nbsp; Then <a href="Submit.htm">upload the zipped file to
+       our server</a>.&nbsp; Some filename examples:</li>
+  </ul>
+  <p style='margin-top:6.0pt;margin-right:0in;margin-bottom:6.0pt;margin-left:
+  70.0pt'><span style='font-size:10.0pt;font-family:"Courier New"'>Potassium_Chloride.zip</span></p>
+  <p style='margin-top:0in;margin-right:0in;margin-bottom:6.0pt;margin-left:
+  70.0pt'><span style='font-size:10.0pt;font-family:"Courier New"'>Gone_With_The_Wind.zip</span></p>
+  <p style='margin-top:0in;margin-right:0in;margin-bottom:6.0pt;margin-left:
+  70.0pt'><span style='font-size:10.0pt;font-family:"Courier New"'>Forever_Yours.tar</span></p>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-top:12.0pt'><a
+       href="mailto:cpi-cfd@fda.hhs.gov?subject=CPI%20Submit">Notify us</a>
+       that your submission is on the ftp server.&nbsp; In that email, also
+       provide us with the name of your zipped file and the encryption
+       password.&nbsp; This two part submission process should be sufficient to
+       protect the contents of your file.&nbsp; We will remove the file from
+       the server as soon as possible. &nbsp;For blinding during analysis, your
+       name and institution will be stripped out from the file headers and
+       replaced by a code.&nbsp; The original compressed file will be backed up
+       in case of computer problems.</li>
+  </ul>
+  <p class=MsoNormal>&nbsp;</p>
+  <p class=MsoNormal style='margin-top:6.0pt'><a href="#_Introduction_to_Data">Back
+  to Top</a></p>
+  <p class=MsoNormal>&nbsp;</p>
+  <p class=MsoNormal>&nbsp;</p>
+  <p class=MsoNormal align=center style='text-align:center'><a
+  href="Pump_Info.htm">Back To Interlaboratory Study 2: Blood Pump Information
+  Page</a></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal>&nbsp;</p>
+
+</div>
+
+</body>
+
+</html>

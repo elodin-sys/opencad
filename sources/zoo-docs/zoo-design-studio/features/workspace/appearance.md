@@ -1,0 +1,99 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/workspace/appearance
+Title: Appearance
+
+# Appearance
+
+Control body color and transparency in Zoo Design Studio.
+
+Appearance controls visual material properties of solid bodies and surfaces, including color, metalness, roughness, and opacity. Use Appearance to distinguish parts in multi-body models, communicate material intent, create realistic renderings, and improve visibility during complex modeling operations.
+
+## Options
+
+### Objects
+Select the solid bodies or surfaces you want to change the appearance of. You can apply appearance to:
+- Individual solid bodies
+- Surface bodies
+- Tagged geometry groups
+- Multiple items at once
+
+**Note:** Appearance only works on solids and surfaces, not on sketches or paths.
+
+### Color
+The base color for your object. You can specify this using:
+- Hex codes: `#FF5733`, `#1E90FF`
+- RGB values: `rgb(255, 87, 51)`
+- Named colors: `red`, `blue`, `forestgreen`
+
+### Metalness
+How metallic the material looks, expressed as a percentage from 0 to 100:
+- **0** - Non-metallic (plastic, rubber, ceramic, painted surfaces)
+- **100** - Fully metallic (aluminum, steel, brass, chrome)
+- **In between** - Mixed or weathered metals
+
+This affects how light reflects colored highlights on the surface.
+
+### Roughness
+How smooth or rough the surface appears, expressed as a percentage from 0 to 100:
+- **0** - Mirror-smooth (polished chrome, glass)
+- **10-30** - Brushed or satin finish (brushed aluminum)
+- **40-60** - Moderate (matte plastic, painted steel)
+- **70-100** - Very rough (unfinished wood, concrete, rubber)
+
+Lower values give sharp reflections; higher values give diffuse, soft reflections.
+
+### Opacity
+How transparent the material is, expressed as a percentage from 0 to 100:
+- **100** - Fully opaque (solid, can't see through)
+- **50** - Semi-transparent (glass, translucent plastic)
+- **0** - Fully transparent (invisible, but geometry still exists)
+
+Useful for seeing inside models or creating glass effects.
+
+**Note:** Although many PBR tools express these properties as normalized decimals from 0 to 1, Zoo Design Studio and KCL use percentages from 0 to 100.
+
+## Design Applications
+
+### Multi-Body Organization
+Use color to visually distinguish components in complex assemblies:
+- Color-code structural vs. cosmetic components
+- Differentiate mounting hardware by material (steel vs. aluminum vs. plastic)
+- Highlight critical features for design review
+
+### Material Intent Communication
+Represent intended manufacturing materials:
+- Aluminum: metalness=100, roughness=20, color=#C0C0C0 (brushed)
+- Anodized aluminum: metalness=100, roughness=30, color=#FF6600 (orange)
+- ABS plastic: metalness=0, roughness=50, color=#FFFFFF
+- Polished steel: metalness=100, roughness=10, color=#E0E0E0
+
+### Assembly Visualization
+Improve clarity in complex models:
+- Use opacity=30 on enclosures to view internal mechanisms
+- Color transparent components to show assemblies without hiding geometry
+- Distinguish mating surfaces with contrasting colors
+
+### Design Review and Rendering
+Prepare models for presentations:
+- Apply realistic materials for photorealistic rendering
+- Use appearance to match corporate color schemes
+- Create exploded views with color-coded subassemblies
+
+## PBR Material Workflow
+
+Zoo Design Studio uses Physically-Based Rendering (PBR) principles for appearance. The metalness/roughness workflow ensures:
+- Energy conservation (materials don't reflect more light than they receive)
+- Predictable behavior under different lighting conditions
+- Compatibility with industry-standard rendering engines
+
+### Common PBR Material Presets
+
+| Material | Color | Metalness | Roughness |
+|----------|-------|-----------|-----------|
+| Polished Aluminum | #C0C0C0 | 100 | 10 |
+| Brushed Aluminum | #B8B8B8 | 100 | 30 |
+| Anodized Red | #CC0000 | 100 | 25 |
+| Stainless Steel | #E0E0E0 | 100 | 15 |
+| Matte Plastic | #4A90E2 | 0 | 60 |
+| Glossy Plastic | #4A90E2 | 0 | 20 |
+| Rubber | #2C2C2C | 0 | 90 |
+| Glass | #FFFFFF | 0 | 0, opacity=20 |

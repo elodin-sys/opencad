@@ -1,0 +1,369 @@
+{
+  "named_faces": {
+    "top": {
+      "plane": "z",
+      "at": 212.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1624.015210557956,
+      "ok": true,
+      "position": 211.99999999999997,
+      "centroid_uv": [
+        1.474986961402802e-05,
+        -2.186892902909731
+      ]
+    },
+    "underside": {
+      "plane": "z",
+      "at": 208.0,
+      "normal": "-",
+      "found": 1,
+      "area": 1433.011376501366,
+      "ok": true,
+      "position": 208.00000000000003,
+      "centroid_uv": [
+        4.802039291414226e-07,
+        -1.500249996118408
+      ]
+    },
+    "ledgeUnderside": {
+      "plane": "z",
+      "at": 210.0,
+      "normal": "-",
+      "found": 2,
+      "area": 180.80611499154995,
+      "mode": "sum",
+      "ok": true,
+      "position": 209.99000000000004
+    },
+    "slotCeilings": {
+      "plane": "z",
+      "at": 211.0,
+      "normal": "-",
+      "found": 4,
+      "area": 83.65066114729247,
+      "mode": "sum",
+      "ok": true,
+      "position": 211.0,
+      "area_expected": 83.6507,
+      "area_ok": true
+    },
+    "boreFloor": {
+      "plane": "y",
+      "at": 27.78,
+      "normal": "+",
+      "found": 1,
+      "area": 8.042477193189871,
+      "ok": true,
+      "position": 27.78,
+      "area_expected": 8.0425,
+      "area_ok": true,
+      "centroid_uv": [
+        -6.661338147750939e-16,
+        207.5
+      ]
+    },
+    "bossBack": {
+      "plane": "y",
+      "at": 26.78,
+      "normal": "-",
+      "found": 1,
+      "area": 6.52438920372724,
+      "ok": true,
+      "position": 26.78,
+      "centroid_uv": [
+        4.9533524866003995e-17,
+        204.38917339830087
+      ]
+    },
+    "shoulder": {
+      "plane": "y",
+      "at": 13.98,
+      "normal": "+",
+      "found": 2,
+      "area": 93.54797031702799,
+      "mode": "sum",
+      "ok": true,
+      "position": 13.98
+    },
+    "windowBaseTop": {
+      "plane": "y",
+      "at": 7.98,
+      "normal": "-",
+      "found": 1,
+      "area": 48.345166004064,
+      "ok": true,
+      "position": 7.98,
+      "area_expected": 48.35,
+      "area_ok": true,
+      "centroid_uv": [
+        2.0816681711721685e-17,
+        210.0
+      ]
+    },
+    "windowBaseBottom": {
+      "plane": "y",
+      "at": -17.42,
+      "normal": "+",
+      "found": 1,
+      "area": 48.345166004064,
+      "ok": true,
+      "position": -17.42,
+      "area_expected": 48.35,
+      "area_ok": true,
+      "centroid_uv": [
+        2.0816681711721685e-17,
+        210.0
+      ]
+    },
+    "notchFloor": {
+      "plane": "y",
+      "at": -22.22,
+      "normal": "-",
+      "found": 1,
+      "area": 45.2,
+      "ok": true,
+      "position": -22.22,
+      "area_expected": 45.11,
+      "area_ok": true,
+      "centroid_uv": [
+        -9.367506770274758e-17,
+        210.0
+      ]
+    },
+    "stepRiser": {
+      "plane": "y",
+      "at": -22.5,
+      "normal": "-",
+      "found": 2,
+      "area": 59.16246761143591,
+      "mode": "sum",
+      "ok": true,
+      "position": -22.5
+    },
+    "windowBaseLeft": {
+      "plane": "x",
+      "at": -17.7,
+      "normal": "+",
+      "found": 1,
+      "area": 88.345166004032,
+      "ok": true,
+      "position": -17.7,
+      "area_expected": 88.35,
+      "area_ok": true,
+      "centroid_uv": [
+        -4.719999999995999,
+        210.0
+      ]
+    },
+    "windowBaseRight": {
+      "plane": "x",
+      "at": 17.7,
+      "normal": "-",
+      "found": 1,
+      "area": 88.345166004032,
+      "ok": true,
+      "position": 17.7,
+      "area_expected": 88.35,
+      "area_ok": true,
+      "centroid_uv": [
+        -4.719999999995999,
+        210.0
+      ]
+    },
+    "neckSideLeft": {
+      "plane": "x",
+      "at": -4.0,
+      "normal": "-",
+      "found": 1,
+      "area": 15.879042190136378,
+      "ok": true,
+      "position": -4.0,
+      "centroid_uv": [
+        28.775980650914644,
+        209.88096682158147
+      ]
+    },
+    "neckSideRight": {
+      "plane": "x",
+      "at": 4.0,
+      "normal": "+",
+      "found": 1,
+      "area": 15.879042190256019,
+      "ok": true,
+      "position": 4.0,
+      "centroid_uv": [
+        28.775980650927977,
+        209.88096682158647
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "top",
+      "plane": "z",
+      "at": 212.0,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "underside",
+      "plane": "z",
+      "at": 208.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "ledgeUnderside",
+      "plane": "z",
+      "at": 210.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "slotCeilings",
+      "plane": "z",
+      "at": 211.0,
+      "normal": "-",
+      "area": 83.6507,
+      "area_tolerance_rel": 0.05,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "boreFloor",
+      "plane": "y",
+      "at": 27.78,
+      "normal": "+",
+      "area": 8.0425,
+      "area_tolerance_rel": 0.05,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "bossBack",
+      "plane": "y",
+      "at": 26.78,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "shoulder",
+      "plane": "y",
+      "at": 13.98,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "windowBaseTop",
+      "plane": "y",
+      "at": 7.98,
+      "normal": "-",
+      "area": 48.35,
+      "area_tolerance_rel": 0.05,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "windowBaseBottom",
+      "plane": "y",
+      "at": -17.42,
+      "normal": "+",
+      "area": 48.35,
+      "area_tolerance_rel": 0.05,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "notchFloor",
+      "plane": "y",
+      "at": -22.22,
+      "normal": "-",
+      "area": 45.11,
+      "area_tolerance_rel": 0.05,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "stepRiser",
+      "plane": "y",
+      "at": -22.5,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "windowBaseLeft",
+      "plane": "x",
+      "at": -17.7,
+      "normal": "+",
+      "area": 88.35,
+      "area_tolerance_rel": 0.03,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "windowBaseRight",
+      "plane": "x",
+      "at": 17.7,
+      "normal": "-",
+      "area": 88.35,
+      "area_tolerance_rel": 0.03,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "neckSideLeft",
+      "plane": "x",
+      "at": -4.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "neckSideRight",
+      "plane": "x",
+      "at": 4.0,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": null,
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 43
+}

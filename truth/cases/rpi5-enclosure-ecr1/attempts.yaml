@@ -1,0 +1,267 @@
+attempts:
+- started: '2026-09-18T07:08:38Z'
+  arm: ecr1
+  backend: zoo
+  design: rpi5-enclosure
+  ecr: ecr1
+  stage_reached: init
+  request: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr1/inputs/ecr-1-headroom.md
+  delta: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr1/inputs/contract-delta.yaml
+  expect_infeasible: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-ecr1-1789715318
+  error: "design bundle problems:\n  - unexpected bundle entry 'ecr' (allowed: ['brief.md',\
+    \ 'contract.yaml', 'reference', 'sources'])"
+  seconds: 0
+  finished: '2026-09-18T07:08:39Z'
+- started: '2026-09-18T07:17:43Z'
+  arm: ecr1
+  backend: zoo
+  design: rpi5-enclosure
+  ecr:
+    ok: false
+    outcome: applied
+    refused: false
+    kcl_modified: true
+    verdict_note: null
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    preservation: true
+    codex:
+      thread_id: 01a0b32e-5a0f-7ab2-bd74-3e6f0c5c10e2
+      exit_code: 0
+      seconds: 247
+      commands: 6
+      usage:
+        input: 9510447
+        cached: 9200896
+        output: 63891
+        reasoning: 27523
+      run_dir: /Users/danieldriscoll/dual/skillkat/results/rpi5-enclosure/ecr/ecr1/codex
+      failure: ''
+      network_stalls: 0
+      network_wait_seconds: 0
+      network_recovered: false
+      timeline:
+        wall_seconds: 246
+        tool_seconds: 42
+        model_seconds: 204
+        commands: 6
+        longest_commands_s:
+        - 42.0
+        - 0.0
+        - 0.0
+        - 0.0
+        - 0.0
+  stage_reached: scored
+  request: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr1/inputs/ecr-1-headroom.md
+  delta: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr1/inputs/contract-delta.yaml
+  expect_infeasible: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-ecr1-1789715863
+  base_kcl_restored: true
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 28
+      required_total: 28
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 901
+  finished: '2026-09-18T07:32:44Z'
+- started: '2026-09-20T08:00:40Z'
+  arm: ecr1
+  design: rpi5-enclosure
+  ecr:
+    ok: true
+    outcome: applied
+    refused: false
+    kcl_modified: true
+    verdict_note: null
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    preservation: true
+    worker:
+      backend: cursor
+      role: ecr
+      model: inherit
+      order_id: 003-ecr
+      thread_id: 4f48ea14-6618-49c6-abf0-c7c87f8f7aec
+      exit_code: 0
+      seconds: 87
+      commands: 2
+      usage: {}
+      run_dir: /Users/danieldriscoll/dual/skillkat/results/cadquery/rpi5-enclosure/worker/003-ecr
+      failure: ''
+      fallback_from: null
+      metrics:
+        commands: 2
+        self_corrections: 0
+        engine_calls: 0
+        files_changed:
+        - /Users/danieldriscoll/dual/skillkat/parts/cadquery/rpi5-enclosure/main.py
+        incomplete: false
+        notes: ''
+        engine_ledger_calls: 3
+        engine_ledger_seconds: 8.23
+        visual_check: 'Visual: Front quarter has three taller open-to-rim notches
+          (USB-C, HDMI0, HDMI1) biased toward −x, closed above by the lid; back quarter
+          is a continuous taller wall with matching corner posts and no openings;
+          left quarter has one tall SD notch about mid-y with a low sill; right quarter
+          has three taller notches (RJ45, USB-A lower, USB-A upper); top is a flat
+          lid with four corner through-holes and no fold; underside is an unchanged
+          closed floor with four corner-post feet and four standoff/pilot circles
+          inset toward the USB-C side; side views show a hairline 0.05 mm lid–base
+          gap, no step or fold.'
+      network_stalls: 0
+      network_wait_seconds: 0
+      network_recovered: false
+      timeline: {}
+  stage_reached: scored
+  request: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr1/inputs/ecr-1-headroom.md
+  delta: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr1/inputs/contract-delta.yaml
+  expect_infeasible: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-ecr1
+  base_kcl_restored: true
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 28
+      required_total: 28
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 157
+  finished: '2026-09-20T08:03:17Z'
+- started: '2026-09-20T08:42:09Z'
+  arm: ecr1
+  design: rpi5-enclosure
+  ecr:
+    ok: true
+    outcome: applied
+    refused: false
+    kcl_modified: true
+    verdict_note: null
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    preservation: true
+    worker:
+      backend: cursor
+      role: ecr
+      model: inherit
+      order_id: 005-ecr
+      thread_id: 362a334b-749a-4d23-a1d1-517d5734228a
+      exit_code: 0
+      seconds: 83
+      commands: 6
+      usage: {}
+      run_dir: /Users/danieldriscoll/dual/skillkat/results/freecad/rpi5-enclosure/worker/005-ecr
+      failure: ''
+      fallback_from: null
+      metrics:
+        commands: 6
+        self_corrections: 0
+        engine_calls: 0
+        files_changed:
+        - /Users/danieldriscoll/dual/skillkat/parts/freecad/rpi5-enclosure/main.py
+        incomplete: false
+        notes: ''
+        engine_ledger_calls: 3
+        engine_ledger_seconds: 3.06
+        visual_check: 'Visual: hairline 0.05 mm lid/base split on all four sides;
+          front three USB-C/HDMI open-to-rim notches and SW/SE posts; back blank GPIO
+          wall and NW/NE posts; left SD notch and corner posts; right three USB-A/RJ45
+          notches and posts; top is footprint O with four Ø3 lid holes at the posts;
+          walls are 10 mm taller than the pre-ECR box with no new step, fold or flare;
+          underside is the same flat floor with four standoff pilots, four square
+          posts and the SD notch on the left.'
+      network_stalls: 0
+      network_wait_seconds: 0
+      network_recovered: false
+      timeline: {}
+  stage_reached: scored
+  request: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr1/inputs/ecr-1-headroom.md
+  delta: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr1/inputs/contract-delta.yaml
+  expect_infeasible: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-ecr1
+  base_kcl_restored: true
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 28
+      required_total: 28
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 131
+  finished: '2026-09-20T08:44:20Z'
+- started: '2026-09-20T08:46:25Z'
+  arm: ecr1
+  design: rpi5-enclosure
+  ecr:
+    ok: true
+    outcome: applied
+    refused: false
+    kcl_modified: true
+    verdict_note: null
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    preservation: true
+    worker:
+      backend: cursor
+      role: ecr
+      model: inherit
+      order_id: 005-ecr
+      thread_id: e036ad7c-2718-4575-9b50-f634fd0c103c
+      exit_code: 0
+      seconds: 102
+      commands: 2
+      usage: {}
+      run_dir: /Users/danieldriscoll/dual/skillkat/results/build123d/rpi5-enclosure/worker/005-ecr
+      failure: ''
+      fallback_from: null
+      metrics:
+        commands: 2
+        self_corrections: 0
+        engine_calls: 0
+        files_changed:
+        - /Users/danieldriscoll/dual/skillkat/parts/build123d/rpi5-enclosure/main.py
+        incomplete: false
+        notes: ''
+        engine_ledger_calls: 3
+        engine_ledger_seconds: 7.41
+        visual_check: 'Visual: Front quarter still has three open-to-rim notches between
+          taller square posts and no folds; back quarter is an uninterrupted taller
+          wall with both posts; left quarter has the SD notch to the same floor sill;
+          right quarter has RJ45 plus two USB-A stacks; top lid is the original O-plate
+          with four corner holes, now at z=31.6..35.6; underside is an unchanged blank
+          floor at z=-7.4 with four solid posts and no through-holes; iso shows four
+          interior standoffs and a separate lid; no unexpected gaps or asymmetry beyond
+          the connector layout.'
+      network_stalls: 0
+      network_wait_seconds: 0
+      network_recovered: false
+      timeline: {}
+  stage_reached: scored
+  request: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr1/inputs/ecr-1-headroom.md
+  delta: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr1/inputs/contract-delta.yaml
+  expect_infeasible: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-ecr1
+  base_kcl_restored: true
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 28
+      required_total: 28
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 180
+  finished: '2026-09-20T08:49:25Z'

@@ -1,0 +1,88 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/ml-ai
+Title: ML / AI
+
+# ML / AI
+
+AI-assisted modeling and analysis workflows in Zoo Design Studio.
+
+Zoo Design Studio includes AI-assisted workflows for geometry creation, design analysis, and
+iterative refinement.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/ml-ai/zookeeper-shaft-prompt.webp"
+  alt="Zoo Design Studio Zookeeper prompt field with a secondary shaft prompt"
+  aspect="992 / 622"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Describe the part or edit in the Zookeeper prompt, then refine the model with follow-up prompts
+</div>
+
+Most in-app ML and AI workflows route through
+[Zookeeper](/docs/zoo-design-studio/zookeeper), Zoo Design Studio's conversational CAD agent. Start
+there for the main user workflow around AI-assisted geometry creation, modification, and design
+reasoning.
+
+## Modes
+
+[Modes](/docs/zoo-design-studio/features/ml-ai/modes) covers Auto, Standard, and Thoughtful modes,
+including how each mode balances reasoning depth and speed, and how plan availability affects the
+selector.
+
+## Queue and Steer
+
+[Queue and Steer](/docs/zoo-design-studio/features/ml-ai/queue-and-steer) lets you add follow-up
+prompts while Zookeeper is still working and redirect the active task when your intent changes.
+
+## Zoodle
+
+[Zoodle](/docs/zoo-design-studio/features/ml-ai/zoodle) lets you draw directly on the model viewport
+and send that visual guidance to Zookeeper. Use it when a marked-up region, edge, or face is clearer
+than a text-only instruction.
+
+## Revertible AI Changes
+
+[Revertible AI Changes](/docs/zoo-design-studio/features/ml-ai/revertible-ai-changes) lets you
+explore larger Zookeeper edits with undo and redo. Use it to compare an AI-generated result against
+the previous design state, move through manual and AI edits together, and restore files created or
+deleted by Zookeeper.
+
+## Project Instructions
+
+[Project Instructions](/docs/zoo-design-studio/features/ml-ai/project-instructions) explains how to
+add an `AGENTS.md` file to a project for durable Zookeeper preferences such as units, naming,
+modeling conventions, and custom-function policy.
+
+## Troubleshooting unexpected Zookeeper behavior
+
+If Zookeeper takes a strange path, gets stuck, or produces a result that should have been simpler,
+ask it why. The answer can give useful context for your next step and help decide whether the
+behavior should be reported. For example:
+
+> This should have been a simple two-feature operation, but it took much longer and produced poor
+> results. What pushed you toward that strategy?
+
+That reply can help separate prompt ambiguity from a connection or runtime issue, reasoning failure,
+KCL or modeling-kernel issue, or system-prompt problem.
+
+If it still looks like a product issue, use **Export conversation** from the Zookeeper menu and send
+the export with what you expected and what happened. The export lets Zoo engineers inspect the
+reasoning, map it back to the actual steps Zookeeper took, and make targeted fixes.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/ml-ai/zookeeper-export-conversation.webp"
+  alt="Zookeeper menu showing the Export conversation action"
+  aspect="888 / 474"
+  maxHeightPx="360"
+/>
+<br />
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Export the Zookeeper conversation when you need to report unexpected behavior
+</div>
+
+Support channels:
+
+- [Zoo Community Forum](https://community.zoo.dev/) for workflow questions and public discussion.
+- [Discord](https://discord.gg/JQEpHR7Nt2) for faster back-and-forth with the team and other users.
+- [GitHub](https://github.com/KittyCAD/modeling-app/issues/new) for public bug reports.
+- [Support form](/contact?type=support) for direct support.

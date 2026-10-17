@@ -1,0 +1,430 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Functions and parametric design - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/declaring_functions.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="functions-and-parametric-design"><a class="header" href="#functions-and-parametric-design">Functions and parametric design</a></h1>
+<ul>
+<li><a href="#function-declaration">Function declaration</a></li>
+<li><a href="#mechanical-engineering-with-functions">Mechanical engineering with functions</a></li>
+<li><a href="#repeating-geometry-with-functions">Repeating geometry with functions</a></li>
+</ul>
+<p>In mechanical engineering, <em>parametric design</em> is a key tool that helps you avoid redundant work when you're designing the same object over and over again with slight tweaks. In software engineering, <em>functions</em> are a key tool that help you avoid redundant work when you're designing the same software over and over again with slight tweaks.</p>
+<p>That's right -- breaking a mechanical engineering project into several key parametric designs is basically the same as breaking a software engineering project into several key functions. KCL makes parametric design easy and convenient with functions. You'll declare functions to represent parametric designs, and you'll call those functions with specific arguments to produce specific designs with the right parameters. Let's see how.</p>
+<h2 id="function-declaration"><a class="header" href="#function-declaration">Function declaration</a></h2>
+<p>We briefly looked at function declarations when we covered pattern transforms. Let's write an example function declaration and analyze its parts.</p>
+<pre><code class="language-kcl">fn add(a, b) {
+  sum = a + b
+  return sum
+}
+</code></pre>
+<p>A function declaration has a few key parts. Let's look at each one, in the order they appear:</p>
+<ul>
+<li>The <code>fn</code> keyword</li>
+<li>The function's  <em>name</em></li>
+<li>Round parentheses <code>(</code> and <code>)</code></li>
+<li>Within those parentheses, a list of argument names</li>
+<li>Curly brackets <code>{</code> and <code>}</code></li>
+<li>Within those brackets, KCL code, which may end with a <code>return</code> statement.</li>
+</ul>
+<p>This function takes two arguments, <code>a</code> and <code>b</code>, adds them, and returns their sum as the function's output. When a function executes the <code>return</code> statement, it evaluates the expression after <code>return</code>, stops executing, and outputs that value. You can call our example function like this:</p>
+<pre><code class="language-kcl">sum = add(a = 1, b = 2)
+</code></pre>
+<p>Functions can also declare one <em>unlabeled</em> arg. If you do want to declare an unlabeled arg, it must be the first arg declared. When declaring an unlabeled arg, prefix it with <code>@</code>, like here:</p>
+<pre><code class="language-kcl">// The @ indicates an argument can be used without a label.
+// Note that only the first argument can use @.
+fn increment(@x) {
+  return x + 1
+}
+
+fn add(@x, delta) {
+  return x + delta
+}
+
+two = increment(1)
+three = add(1, delta = 2)
+</code></pre>
+<h2 id="mechanical-engineering-with-functions"><a class="header" href="#mechanical-engineering-with-functions">Mechanical engineering with functions</a></h2>
+<p>Let's use functions to build a parametric pipe flange. We can start with a specific design, with specific direct measurements. Then we'll learn how to parameterize it. Then we can easily make a lot of similar pipe flanges with different parameters.</p>
+<p>Here's a specific model. It's got 8 unthreaded holes, each with a radius of 4, and the overall model has a radius of 60. It's 10mm thick.</p>
+<pre><code class="language-kcl=specific_flange">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Sketch a big circle.
+bigCircleSketch = sketch(on = XZ) {
+  circle1 = circle(start = [var 0mm, var 10mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  vertical([circle1.center, circle1.start])
+  distance([circle1.start, circle1.center]) == 60
+}
+
+// Extrude it into a "base".
+bigCircle = region(segments = [bigCircleSketch.circle1])
+thickness = 10mm
+base = extrude(bigCircle, length = thickness, symmetric = true)
+
+// Start sketching a smaller circle
+smallCircleSketch = sketch(on = XZ) {
+  circle1 = circle(start = [var -0.83mm, var 8.27mm], center = [var 0mm, var 7.79mm])
+  vertical([circle1.center, ORIGIN])
+  vertical([circle1.center, circle1.start])
+  distance([circle1.start, circle1.center]) == 4
+}
+
+// Extrude that circle into a small cylinder,
+// then pattern it around, making little pegs.
+pegs = region(segments = [smallCircleSketch.circle1])
+  |&gt; extrude(length = thickness * 3, symmetric = true)
+  |&gt; translate(x = 50)
+  |&gt; patternCircular3d(instances = 8, axis = Y, useOriginal = true)
+
+// Remove the pegs from the base.
+baseWithHoles = subtract(base, tools = pegs)
+</code></pre>
+<p><model-viewer
+            alt="The pipe flange"
+            src="gltf/specific_flange/output.gltf"
+            poster="images/dynamic/specific_flange.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Its specific measurements, like number of holes, radius, thickness etc were chosen somewhat arbitrarily. What if we want to make another pipe flange in the future, with different measurements? We can turn this specific flange model into a parametric design by making it into a function. We'll define a function <code>flange</code> which takes in several parameters. Let's see:</p>
+<pre><code class="language-kcl=parametric_flange">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Define a parametric flange
+fn flange(numHoles, holeRadius, baseRadius, thickness, holeEdgeGap) {
+  // Sketch a big circle.
+  bigCircleSketch = sketch(on = XZ) {
+    circle1 = circle(start = [var 0mm, var 10mm], center = [var 0mm, var 0mm])
+    coincident([circle1.center, ORIGIN])
+    vertical([circle1.center, circle1.start])
+    distance([circle1.start, circle1.center]) == baseRadius
+  }
+
+  // Extrude it into a "base".
+  bigCircle = region(segments = [bigCircleSketch.circle1])
+  base = extrude(bigCircle, length = thickness, symmetric = true)
+
+  // Start sketching a smaller circle
+  smallCircleSketch = sketch(on = XZ) {
+    circle1 = circle(start = [var -0.83mm, var 8.27mm], center = [var 0mm, var 7.79mm])
+    vertical([circle1.center, ORIGIN])
+    vertical([circle1.center, circle1.start])
+    distance([circle1.start, circle1.center]) == holeRadius
+  }
+
+  // Extrude that circle into a small cylinder,
+  // then pattern it around, making little pegs.
+  pegs = region(segments = [smallCircleSketch.circle1])
+    |&gt; extrude(length = thickness * 3, symmetric = true)
+    |&gt; translate(x = baseRadius - holeEdgeGap)
+    |&gt; patternCircular3d(instances = numHoles, axis = Y, useOriginal = true)
+
+  // Remove the pegs from the base.
+  return subtract(base, tools = pegs)
+}
+
+// Call our parametric flange function, passing in specific parameter values, to make a specific flange.
+originalFlangeAgain = flange(
+  numHoles = 8,
+  holeRadius = 5,
+  baseRadius = 60,
+  thickness = 10,
+  holeEdgeGap = 10,
+)
+</code></pre>
+<p>First we defined a function for making a parametric flange. This lets us make many possible flanges. First, we made our original flange again. But we can also make a range of other flanges, by varying the parameters! Here's one:</p>
+<pre><code class="language-kcl">flange(
+  numHoles = 4,
+  holeRadius = 15,
+  baseRadius = 60,
+  thickness = 20,
+  holeEdgeGap = 20,
+)
+</code></pre>
+<p><img src="images/static/new_flange.png" alt="A different instantiation of the parametric flange" /></p>
+<p>And let's try one more:</p>
+<pre><code class="language-kcl">flange(
+  numHoles = 20,
+  holeRadius = 3,
+  baseRadius = 90,
+  thickness = 20,
+  holeEdgeGap = 15,
+)
+</code></pre>
+<p><img src="images/static/another_flange.png" alt="Another pipe flange" /></p>
+<p>Replacing specific KCL code for a specific design with a parametric function gives you the flexibility to generate a lot of very similar designs, varying their parameters by passing in different arguments to suit whatever your project's requirements are.</p>
+<h2 id="repeating-geometry-with-functions"><a class="header" href="#repeating-geometry-with-functions">Repeating geometry with functions</a></h2>
+<p>Functions can also be used to avoid writing the same code over and over again, in a single model. Sketch blocks can be quite long, because each constraint is typically on its own line, and complex models have a lot of constraints. Even just drawing a simple cube takes 16 lines of code: 4 to create lines, 4 to join those lines together via <code>coincident</code> constraints, and then 8 more to make the quadrilateral into a square of the chosen side length.</p>
+<p>If we wanted to make 3 cubes, we shouldn't copy and paste this code 3 times. That would be annoying to read. We could use the <code>clone()</code> function to copy the cube, and then use transform functions like <code>translate()</code> or <code>appearance()</code> to tweak the cube. But we could also make a reusable <code>cube</code> helper function, like this.</p>
+<pre><code class="language-kcl=two_cubes_purple_blue">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+/// Helper function to make a 3D cube with the given length and position along X.
+fn cube(sideLen, offset) {
+  sketch001 = sketch(on = XY) {
+    line1 = line(start = [var 0mm, var 0mm], end = [var 3.08mm, var 0mm])
+    line2 = line(start = [var 3.08mm, var 0mm], end = [var 3.08mm, var -3.01mm])
+    line3 = line(start = [var 3.08mm, var -3.01mm], end = [var 0mm, var -3.01mm])
+    line4 = line(start = [var 0mm, var -3.01mm], end = [var 0mm, var 0mm])
+    coincident([line1.end, line2.start])
+    coincident([line2.end, line3.start])
+    coincident([line3.end, line4.start])
+    coincident([line4.end, line1.start])
+    parallel([line2, line4])
+    parallel([line3, line1])
+    perpendicular([line1, line2])
+    horizontal(line3)
+    coincident([line1.start, ORIGIN])
+    equalLength([line1, line2, line3, line4])
+    fixed([line1.start, ORIGIN])
+    distance([line1.start, line1.end]) == sideLen
+  }
+  hide(sketch001)
+  return region(segments = [sketch001.line1, sketch001.line2])
+    |&gt; extrude(length = sideLen)
+    |&gt; translate(x = offset)
+}
+
+// Make two cubes, first one:
+cube(sideLen = 2, offset = 2)
+  |&gt; appearance(color = "#26b8ba", metalness = 70, roughness = 40)
+
+// And the second one:
+cube(sideLen = 1, offset = 5)
+  |&gt; appearance(color = "#d205e1", metalness = 70, roughness = 40)
+</code></pre>
+<p><model-viewer
+            alt="Two cubes created with the same cube function call."
+            src="gltf/two_cubes_purple_blue/output.gltf"
+            poster="images/dynamic/two_cubes_purple_blue.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+This is neater than copying and pasting the code to make 2 separate cubes, and it lets us have more control over the cube than using <code>clone()</code> and <code>translate()</code>. If we wanted to, say, tweak the height of each cube, we could add a new parameter <code>height</code> to our <code>cube</code> function. Or we could just alter the extrude length in the function body.</p>
+<p>By putting the details of "what does a cube look like" in a single function, we make our code both more readable, and easier to change in the future.</p>
+<p><strong>Note</strong>: Currently, Zoo Design Studio doesn't support using point-and-click UI to change geometry created in functions. That's something we hope to support in the future.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="patterns.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="map_reduce.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="patterns.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="map_reduce.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

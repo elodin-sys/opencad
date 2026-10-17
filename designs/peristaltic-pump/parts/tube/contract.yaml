@@ -1,0 +1,383 @@
+schema_version: 1
+name: peristaltic-pump-tube
+intent: >-
+  Silicone peristaltic tube (3.0 mm OD, 1.0 mm ID, 1.0 mm wall, durometer 50 A) of the Behrens et al.
+  open-source 3D-printed peristaltic pump (Sci. Rep. 10, 1543, 2020), modelled uncompressed as it lies in
+  the 3 mm stator track: a 180 deg bend of centreline radius 10.67 about the pump axis (track radius 12.17
+  minus half the OD, so the outer surface touches the track) through +x, continued by two straight legs
+  along -x to x = -30 (inlet at y = +10.67, outlet at y = -10.67) through the stator's tube slots and under
+  the clamp; constant annular section, open ends, no fittings. Authoritative: the user intent and
+  sources/behrens-pump-packet.md (tubing sizes); the stator STEP fixes the track radius.
+units:
+  length: mm
+  angle: deg
+material: "silicone rubber, durometer 50 A (peristaltic-grade tubing)"
+density_kg_m3: null
+process: "purchased extruded silicone tubing, modelled uncompressed (no roller occlusion)"
+release_status: reconstruction
+
+frame:
+  origin: "on the pump axis (centre of the 180 deg bend) in the tube's mid-plane; the tube centreline lies in z = 0"
+  axes:
+    x: "toward the pump's open side (the bend apex at x = +10.67); the legs run along -x to the open ends at x = -30"
+    y: "completes a right-handed frame; inlet leg at y = +10.67, outlet leg at y = -10.67; mirror plane y = 0"
+    z: "along the pump axis (rotor axis); mirror plane z = 0 (tube mid-plane)"
+  datums:
+    - name: A
+      description: "tube mid-plane z = 0 (contains the whole centreline)"
+    - name: B
+      description: "pump axis: the z axis through the origin, centre of the bend (assembly joint tubeSeat, point [0, 0, 0], axis [0, 0, 1])"
+    - name: C
+      description: "plane y = 0, mirror plane between the inlet and outlet legs"
+
+envelope:
+  min: [-30.0, -12.17, -1.5]
+  max: [12.17, 12.17, 1.5]
+  tolerance: 0.05
+
+parameters:
+  - name: tubeOuterDiameter
+    value: 3.0
+    unit: mm
+    provenance: stated
+    source: "user intent 'OD 3.0'; behrens-pump-packet.md '3 mm OD / 1 mm ID silicone tubing'"
+    tolerance: 0.01
+    description: "tube outer diameter (uncompressed)"
+  - name: tubeInnerDiameter
+    value: 1.0
+    unit: mm
+    provenance: stated
+    source: "user intent 'ID 1.0 (wall 1.0)'; behrens-pump-packet.md '3 mm OD / 1 mm ID'"
+    tolerance: 0.01
+    description: "tube bore diameter (uncompressed); wall = (OD - ID) / 2 = 1.0"
+    edit_test:
+      delta: -0.2
+      expect:
+        volume_delta: 26.442
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [0.8, 1.0, 1.2]
+      infeasible_deltas: [2.5, -1.0]
+  - name: trackRadius
+    value: 12.17
+    unit: mm
+    provenance: stated
+    source: "user intent 'track radius 12.17' (stator 6.1-peristaltic-pump-stator-3mm.step, STL cm units x 10)"
+    tolerance: 0.01
+    description: "stator track radius about the pump axis; the tube's outer surface touches it"
+  - name: centrelineRadius
+    value: 10.67
+    unit: mm
+    provenance: derived
+    formula: "trackRadius - tubeOuterDiameter / 2"
+    source: "user intent 'a 180 deg arc of radius 10.67 (track radius 12.17 minus half the OD)'"
+    tolerance: 0.01
+    description: "radius of the bend centreline about the pump axis; also the |y| of the two legs"
+  - name: bendAngle
+    value: 180
+    unit: deg
+    provenance: stated
+    source: "user intent 'a 180 deg arc ... from (0, -10.67) to (0, 10.67)' through +x"
+    tolerance: 0.01
+    description: "sweep angle of the bend about the pump axis, from -90 to +90 deg (through +x)"
+  - name: legLength
+    value: 30.0
+    unit: mm
+    provenance: stated
+    source: "user intent 'two straight legs parallel to -x from x = 0 to x = -30'"
+    tolerance: 0.01
+    description: "length of each straight leg along -x, from the bend tangent point at x = 0 to the open end"
+    edit_test:
+      delta: 5
+      expect:
+        volume_delta: 62.832
+        direction: increase
+        bbox_delta: [5, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [20, 30, 40]
+      infeasible_deltas: [-35]
+
+features:
+  - id: bend
+    kind: revolve
+    description: "annulus (OD tubeOuterDiameter, ID tubeInnerDiameter) centred at radius centrelineRadius in z = 0, revolved bendAngle = 180 deg about the z axis from -90 to +90 deg through +x (half torus); outer surface reaches the track radius at x = 12.17 and y = +-12.17"
+    parameters: [tubeOuterDiameter, tubeInnerDiameter, trackRadius, centrelineRadius, bendAngle]
+    verify:
+      - method: bbox
+      - method: section
+        section: apex
+      - method: dimension
+        dimension: spanY
+      - method: solid
+        points: [[11.67, 0, 0], [9.67, 0, 0], [10.67, 0, 1.0], [7.5448, 7.5448, 1.0], [7.5448, -7.5448, -1.0]]
+      - method: void
+        points: [[0, 0, 0], [5, 0, 0]]
+        note: "inside the U, 4.17 mm or more from the bend's inner surface"
+  - id: inletLeg
+    kind: extrude
+    description: "straight tube along -x at y = +centrelineRadius, z = 0, from the bend tangent point x = 0 to the open inlet end at x = -legLength"
+    parameters: [tubeOuterDiameter, tubeInnerDiameter, centrelineRadius, legLength]
+    verify:
+      - method: cylinder
+        cylinder: inletOuter
+      - method: cylinder
+        cylinder: inletBore
+      - method: face
+        face: inlet
+      - method: solid
+        points: [[-15, 11.67, 0], [-15, 9.67, 0], [-15, 10.67, 1.0], [-29.5, 10.67, -1.0]]
+  - id: outletLeg
+    kind: extrude
+    description: "straight tube along -x at y = -centrelineRadius, z = 0, from the bend tangent point x = 0 to the open outlet end at x = -legLength"
+    parameters: [tubeOuterDiameter, tubeInnerDiameter, centrelineRadius, legLength]
+    verify:
+      - method: cylinder
+        cylinder: outletOuter
+      - method: cylinder
+        cylinder: outletBore
+      - method: face
+        face: outlet
+      - method: solid
+        points: [[-15, -11.67, 0], [-15, -9.67, 0], [-15, -10.67, -1.0], [-29.5, -10.67, 1.0]]
+  - id: bore
+    kind: channel
+    description: "continuous 1.0 mm bore along the whole U centreline from the inlet mouth (x = -30, y = +10.67) to the outlet mouth (x = -30, y = -10.67); tangent-continuous at the leg/bend joints, no step"
+    parameters: [tubeInnerDiameter, centrelineRadius, legLength]
+    verify:
+      - method: section
+        section: midPlane
+      - method: count
+        section: midPlane
+        count: 2
+        note: "the bore splits the mid-plane section into two separate U strips end to end; a blocked bore joins them"
+      - method: section
+        section: legs
+      - method: void
+        points: [[-15, 0, 0]]
+        note: "between the legs, 9.17 mm from each; the 0.5 mm bore radius cannot host a void probe 1 mm from its wall"
+
+interfaces:
+  - name: tubeSeat
+    description: "assembly joint tubeSeat (rigid, own-frame point [0, 0, 0], axis [0, 0, 1]): mid-plane z = 0, mirror plane y = 0, outer surface on the track radius (y extent 2 x 12.17), tube height OD, and the two leg axes at y = +-10.67 through the stator slots and clamp; neither the bore nor the leg-length edit moves them"
+    must_not_change: true
+    checks: [mirrorZ, mirrorY, spanY, spanZ, inletOuter, outletOuter]
+
+acceptance:
+  volume:
+    expected: 587.608
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "A * L; A = pi/4 (3.0^2 - 1.0^2) = 2 pi = 6.28319; L = pi * 10.67 + 2 * 30 = 93.52079 (Pappus: the annulus centroid lies on the centreline)"
+  surface_area:
+    expected: 1187.783
+    tolerance_rel: 0.01
+    provenance: derived
+    note: "pi (3.0 + 1.0) * L + 2 A = 12.56637 * 93.52079 + 12.56637 (outer + bore walls + two annular ends)"
+  center_of_mass:
+    expected: [-7.1754, 0, 0]
+    tolerance: 0.05
+    provenance: derived
+    note: "x = [2 (R^2 A + pi/4 (ro^4 - ri^4)) - 15 * 2 A * 30] / V = (1438.521 - 5654.867) / 587.608; y = z = 0 by symmetry"
+  solid_count: 1
+  export_volume_tolerance_rel: 0.02
+  sections:
+    - id: midPlane
+      plane: z
+      at: 0
+      expect:
+        area: 187.042
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 0
+      description: "tube mid-plane: two 1.0 mm wall strips (inner and outer U) separated by the open bore; area = 2 * wall * L"
+    - id: legs
+      plane: x
+      at: -15
+      expect:
+        area: 12.566
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 2
+      description: "square cut through both legs: two annuli OD 3.0 / ID 1.0 at y = +-10.67"
+    - id: apex
+      plane: y
+      at: 0
+      expect:
+        area: 6.283
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "square cut through the bend apex: one annulus OD 3.0 / ID 1.0 centred at x = 10.67"
+  faces:
+    - name: inlet
+      plane: x
+      at: -30
+      normal: "-"
+      area: 6.283
+      area_tolerance_rel: 0.01
+      center: [10.67, 0]
+      mode: one
+    - name: outlet
+      plane: x
+      at: -30
+      normal: "-"
+      area: 6.283
+      area_tolerance_rel: 0.01
+      center: [-10.67, 0]
+      mode: one
+  cylinders:
+    - name: inletOuter
+      point: [-30, 10.67, 0]
+      direction: [1, 0, 0]
+      kind: pin
+      radius: 1.5
+      radius_tolerance: 0.01
+      description: "outer surface of the inlet leg; axis at y = +10.67, z = 0 (length left to the bore entry and faces so the leg-length edit keeps it)"
+    - name: outletOuter
+      point: [-30, -10.67, 0]
+      direction: [1, 0, 0]
+      kind: pin
+      radius: 1.5
+      radius_tolerance: 0.01
+      description: "outer surface of the outlet leg; axis at y = -10.67, z = 0"
+    - name: inletBore
+      point: [-30, 10.67, 0]
+      direction: [1, 0, 0]
+      kind: hole
+      radius: 0.5
+      radius_tolerance: 0.01
+      length: 30
+      length_tolerance: 0.05
+      t_range: [0, 30]
+      description: "bore of the inlet leg, x = -30 to 0"
+    - name: outletBore
+      point: [-30, -10.67, 0]
+      direction: [1, 0, 0]
+      kind: hole
+      radius: 0.5
+      radius_tolerance: 0.01
+      length: 30
+      length_tolerance: 0.05
+      t_range: [0, 30]
+      description: "bore of the outlet leg, x = -30 to 0"
+  dimensions:
+    - name: spanX
+      axis: x
+      expected: 42.17
+      tolerance: 0.05
+      description: "bbox extent along x = legLength + trackRadius"
+    - name: spanY
+      axis: y
+      expected: 24.34
+      tolerance: 0.05
+      description: "bbox extent along y = 2 * trackRadius (outer surface on the track)"
+    - name: spanZ
+      axis: z
+      expected: 3.0
+      tolerance: 0.05
+      description: "bbox extent along z = tubeOuterDiameter"
+  solids:
+    - name: tube
+      contains_point: [-15, 11.67, 0]
+      description: "the single tube solid (inlet leg wall)"
+  thickness:
+    - name: wall
+      min: 0.9
+      stat: p05
+      description: "radial wall (OD - ID) / 2 = 1.0; band allows tessellation of the 0.5 mm bore"
+  probes:
+    - name: inWall
+      state: solid
+      points: [[-15, 11.67, 0], [-15, -11.67, 0], [11.67, 0, 0], [10.67, 0, -1.0], [7.5448, 7.5448, 1.0]]
+      description: "mid-wall points, 0.5 mm from both tube surfaces"
+    - name: insideU
+      state: void
+      points: [[0, 0, 0], [-15, 0, 0], [5, 0, 0]]
+      description: "open space enclosed by the U (rotor side), 4.17 mm or more from every tube surface"
+  symmetry:
+    - name: mirrorY
+      plane: y
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+    - name: mirrorZ
+      plane: z
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 570
+    volume_max: 690
+  deviation: null
+
+references:
+  - path: sources/behrens-pump-packet.md
+    kind: text
+    role: authoritative
+    sha256: bdab3462725e9554f44290ad423461456b135361fc6bab52adb83e5a7b961bae
+    units: mm
+    note: "tubing sizes (3 mm OD / 1 mm ID, 50 A), test condition, part list"
+  - path: sources/6.1-peristaltic-pump-stator-3mm.step
+    kind: cad
+    role: authoritative
+    sha256: 6b531c2802d6d9605d8659b4cf54d25659df54942c976bdcff04cbbd7672bd16
+    units: cm
+    note: "stator track (radius 12.17 mm after x10) and the tube slots the legs pass through"
+  - path: sources/8-peristaltic-pump-clamp.step
+    kind: cad
+    role: illustrative
+    sha256: f948d46506a753fc7d160b323e1d5971ae638f2004d152bb3e3ec31e09f24994
+    units: cm
+    note: "clamp over the legs; not used for tube dimensions"
+  - path: sources/7.1-peristaltic-pump-lid-3mm.step
+    kind: cad
+    role: illustrative
+    sha256: a1a12d25456202fc4cc002c5363d7d1b463c31409ec005a6697ce4d167095c82
+    units: cm
+    note: "lid for the 3 mm tube; context only"
+  - path: sources/9-peristaltic-pump-rotor.step
+    kind: cad
+    role: illustrative
+    sha256: 996c2325ecae541f8a0b060d69add927e81f9233b26cdd3ddab105f1a90e562f
+    units: cm
+    note: "rotor with the roller pins; context only (the tube is modelled uncompressed)"
+  - path: sources/1-gear-box-base.step
+    kind: cad
+    role: illustrative
+    sha256: d63eaba9c1df2347b1a3cc5805a3f3ed12b02543237d9153ffa7a46b2dab9288
+    units: cm
+    note: "gearbox base; assembly context only"
+  - path: sources/2-small-gear-with-shelf.step
+    kind: cad
+    role: illustrative
+    sha256: 943cf69986d0810e5d4dd4b4f1307508561b4f0620361e9e163c47bf6ead20d7
+    units: cm
+    note: "gearbox motor gear; assembly context only"
+  - path: sources/3-stacked-gear.step
+    kind: cad
+    role: illustrative
+    sha256: 971d50c72c09b05d80cafb364090821e1777ec649e82339345000e8397d878dc
+    units: cm
+    note: "gearbox stacked gear; assembly context only"
+  - path: sources/4-gear-box-upper-case.step
+    kind: cad
+    role: illustrative
+    sha256: 41f6a78782749909ac611119009a52841b0666f8ea1c0d71bf764aec6700fa3d
+    units: cm
+    note: "gearbox upper case; assembly context only"
+  - path: sources/5-large-gear.step
+    kind: cad
+    role: illustrative
+    sha256: 47a710ed206130d114428870aeb2fa7ac577d3ae4f2cbba6491e986152cc01a3
+    units: cm
+    note: "gearbox output gear; assembly context only"
+
+open_questions:
+  - "Silicone density is not in the sources (typical 50 A silicone 1100-1200 kg/m3); density_kg_m3 is left null, so no mass claim."
+  - "The tube is modelled uncompressed; roller occlusion, tube stretch over the rollers and the clamp squeeze are not represented."
+  - "Bore patency has no void probe or passage: the 0.5 mm bore radius cannot host a point 1 mm from its wall. It is pinned by the midPlane section (2 separate strips), the legs and apex section holes, and the bore cylinders."
+  - "Leg length 30 mm and the straight exit along -x are taken from the intent; the real tube runs on past the clamp to fittings that are not modelled."
+  - "A drafting check sliced the stator STEP normal to its file y axis at y = 1.2, 2.1, 3.0 cm about (x, z) = (-2.05, -2.05) cm: the track vertices lie at r = 12.14-12.15 mm (x10), 0.02-0.03 mm inside the stated 12.17 (outside the 0.01 tolerance). The stated value is kept; the assembly may show a <= 0.03 mm tube/track overlap unless the track differs at the tube's mid-plane height."

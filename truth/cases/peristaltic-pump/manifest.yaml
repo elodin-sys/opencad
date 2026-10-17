@@ -1,0 +1,122 @@
+id: peristaltic-pump
+title: 'Behrens et al. 2020 open-source peristaltic pump: printed pump head and 4:1 gearbox assembled,
+  rollers on the tube, delivered flow'
+kind: machine
+truth_class: A
+role: validation
+source:
+  citation: Behrens, Fuller, Swist et al., Open-source, 3D-printed Peristaltic Pumps for Small Volume
+    Point-of-Care Liquid Handling, Sci Rep 10, 1543 (2020)
+  urls:
+  - https://www.nature.com/articles/s41598-020-58246-6
+  - https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41598-020-58246-6/MediaObjects/41598_2020_58246_MOESM2_ESM.zip
+  accessed: '2026-09-25'
+  revision: Dataset 1
+  license: CC BY 4.0
+intent: 'Assemble the open-source peristaltic pump of the attached packet from its published printed parts
+  (analysis mode: the part files are the reference geometry, placed as purchased bodies with the scale
+  their units need): the gearbox base as the datum, a purchased stepper motor, the 12-tooth motor gear,
+  the stacked gear and the output gear on their shafts, the rotor driven by the output gear, three purchased
+  ball-bearing rollers on the rotor pins, the 3 mm stator with its lid and clamp, and the 3 mm OD / 1
+  mm ID silicone tube as a modelled part lying in the stator track. Declare the gear transmissions from
+  the motor to the rotor, a motion sweep that passes every roller over the tube, and the peristaltic displacement
+  analysis at the packet''s test speed; predict the delivered flow and the motor-to-rotor drive ratio.'
+inputs:
+- path: inputs/behrens-pump-packet.md
+  kind: text
+  sha256: bdab3462725e9554f44290ad423461456b135361fc6bab52adb83e5a7b961bae
+  note: design description and test condition; no results
+- path: inputs/1-gear-box-base.step
+  kind: cad
+  sha256: d63eaba9c1df2347b1a3cc5805a3f3ed12b02543237d9153ffa7a46b2dab9288
+  units: cm (as published)
+  note: published STL converted to a STEP solid
+- path: inputs/2-small-gear-with-shelf.step
+  kind: cad
+  sha256: 943cf69986d0810e5d4dd4b4f1307508561b4f0620361e9e163c47bf6ead20d7
+  units: cm (as published)
+  note: published STL converted to a STEP solid
+- path: inputs/3-stacked-gear.step
+  kind: cad
+  sha256: 971d50c72c09b05d80cafb364090821e1777ec649e82339345000e8397d878dc
+  units: cm (as published)
+  note: published STL converted to a STEP solid
+- path: inputs/4-gear-box-upper-case.step
+  kind: cad
+  sha256: 41f6a78782749909ac611119009a52841b0666f8ea1c0d71bf764aec6700fa3d
+  units: cm (as published)
+  note: published STL converted to a STEP solid
+- path: inputs/5-large-gear.step
+  kind: cad
+  sha256: 47a710ed206130d114428870aeb2fa7ac577d3ae4f2cbba6491e986152cc01a3
+  units: cm (as published)
+  note: published STL converted to a STEP solid
+- path: inputs/6.1-peristaltic-pump-stator-3mm.step
+  kind: cad
+  sha256: 6b531c2802d6d9605d8659b4cf54d25659df54942c976bdcff04cbbd7672bd16
+  units: cm (as published)
+  note: published STL converted to a STEP solid
+- path: inputs/7.1-peristaltic-pump-lid-3mm.step
+  kind: cad
+  sha256: a1a12d25456202fc4cc002c5363d7d1b463c31409ec005a6697ce4d167095c82
+  units: cm (as published)
+  note: published STL converted to a STEP solid
+- path: inputs/8-peristaltic-pump-clamp.step
+  kind: cad
+  sha256: f948d46506a753fc7d160b323e1d5971ae638f2004d152bb3e3ec31e09f24994
+  units: cm (as published)
+  note: published STL converted to a STEP solid
+- path: inputs/9-peristaltic-pump-rotor.step
+  kind: cad
+  sha256: 996c2325ecae541f8a0b060d69add927e81f9233b26cdd3ddab105f1a90e562f
+  units: cm (as published)
+  note: published STL converted to a STEP solid
+truth:
+- path: truth/raw/behrens-dataset1.zip
+  kind: other
+  sha256: 911b2bbc88d019485613f0cf44aedc195d67909fe26fb1d313e6bcd587218dbd
+  note: the publisher's Dataset 1 (STL files)
+arms:
+- id: published-parts
+  design: peristaltic-pump
+  mode: analysis
+  inputs:
+  - inputs/behrens-pump-packet.md
+  - inputs/1-gear-box-base.step
+  - inputs/2-small-gear-with-shelf.step
+  - inputs/3-stacked-gear.step
+  - inputs/4-gear-box-upper-case.step
+  - inputs/5-large-gear.step
+  - inputs/6.1-peristaltic-pump-stator-3mm.step
+  - inputs/7.1-peristaltic-pump-lid-3mm.step
+  - inputs/8-peristaltic-pump-clamp.step
+  - inputs/9-peristaltic-pump-rotor.step
+  images: []
+  notes: 'Analysis mode: the worker receives the published part geometry; the measured flow is evaluator-only.'
+observables: []
+performance:
+- id: flowRate
+  quantity: flow_rate
+  unit: mL/min
+  case: rotor108
+  evidence: A
+  value: 1.62
+  uncertainty: 0.08
+  z_max: 2.0
+  source: 'paper text: at about 108 rpm the pump achieves 1.62 mL/min with the 3 mm OD / 1 mm ID tubing
+    (mass balance, three trials)'
+  note: 'uncertainty: the figure''s one-standard-deviation bars are not stated numerically; 5 % assumed
+    and logged'
+- id: driveRatio
+  quantity: transmission_ratio
+  unit: ''
+  evidence: C
+  value: 0.25
+  tolerance: 1.0e-09
+  source: 'paper: 4:1 gearbox; the published gears count 12 -> 24/12 -> 24 teeth (two external meshes,
+    the sense is kept)'
+  note: rotor turns per motor turn, measured from the tooth counts of the placed gears
+notes:
+- The 1.59 mm tubing configuration is a different physical machine (other stator) and is not scored here.
+- 'An ideal positive-displacement model is expected to over-predict: the paper''s flow is what the tube
+  actually delivers.'

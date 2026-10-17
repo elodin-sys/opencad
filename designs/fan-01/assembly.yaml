@@ -1,0 +1,217 @@
+schema_version: 1
+kind: assembly
+name: fan-01
+intent: >-
+  FAN-01 low-pressure axial fan (EAA benchmark fan N1UG) analysed from its supplied CAD in the rig frame: the nine-blade
+  rotor (tip radius 247.5) turns on a revolute joint about +y through (x, z) = (-400, 1515) inside the stationary duct
+  (inlet nozzle, Ø500 bore, diffuser), with the shaft and the downstream hub disc turning with it. The stationary flow
+  boundary the CAD lacks is derived: the chamber wall the duct passes through where the diffuser begins. The hub closure
+  the rotor ring mounts on is the supplied rotor's own closed web disc (y -410.6..-404.5), so no derived plug is built.
+  The air is a derived fluid body: the chamber-side settling region upstream of
+  the nozzle, the duct, and the ambient-side discharge region downstream of the diffuser, between an inlet cap and an
+  outlet cap. A steady OpenFOAM MRF analysis predicts the total-to-static pressure rise at 0.994, 1.403 and 1.804 m3/s
+  and the rotor torque at 1.403 m3/s, all at 1486 rpm, with a mesh-refinement pair at the design flow. Authoritative:
+  sources/fan01-packet.md and the four STEP files; figure-1-setup.png is illustrative.
+units: {length: mm, angle: deg}
+frame:
+  origin: origin of the supplied rig CAD (every STEP is in this frame, mm)
+  axes: {x: "rig x; the fan axis lies at x = -400", y: "fan axis, flow direction from the test chamber (-y) to ambient (+y)", z: "rig z; the fan axis lies at z = 1515"}
+  datums:
+    - {name: A, description: "fan axis x = -400, z = 1515, direction +y"}
+    - {name: B, description: "nozzle lip plane y = -510"}
+    - {name: C, description: "diffuser start / chamber wall upstream face y = -259"}
+envelope: {min: [-1000.0, -1010.0, 915.0], max: [200.0, 364.0, 2115.0], tolerance: 0.5}
+datum_part: duct
+parts:
+  - name: duct
+    kind: purchased
+    role: solid
+    catalog: {name: fan-duct, kind: step, path: sources/fan-duct.step, description: "supplied duct, rig frame, unchanged"}
+    description: >-
+      Duct with the inlet nozzle and the diffuser, one axisymmetric solid on the fan axis, y -510..-136: nozzle lip flange
+      y -510..-505 (r 298..325) and a bellmouth down to the bore; bore radius 250 (wall 2, outer 252) from the nozzle to
+      the diffuser; flanges y -455..-442 and -272..-259 (outer r 295); straight-cone diffuser y -259 (bore 250, outer 252)
+      to y -136 (bore 275, outer 277). Measured: volume 3.482e6 mm3, bbox x -725..-75, z 1190..1840.
+  - name: rotor
+    kind: purchased
+    role: solid
+    catalog: {name: fan-rotor, kind: step, path: sources/fan-rotor.step, description: "supplied rotor, rig frame, unchanged"}
+    description: >-
+      Rotor ring and nine NACA 4510 blades (zero skew), y -421..-306, tip radius 247.5 (tip gap 2.5 to the r 250 bore).
+      A closed web disc spans the hub centre (rotor material at every radius 0..89.8 for y -410.5..-404.6, evaluator
+      point classification) with a recess r < 89.8 open upstream of y -410.7; hub rim r 121..125 from y -415 to -306,
+      open downstream; volume 1.173e6 mm3. Blade leading edges lead in +rotation about +y (clockwise seen from the
+      suction side).
+  - name: shaft
+    kind: purchased
+    role: solid
+    catalog: {name: fan-shaft, kind: step, path: sources/fan-shaft.step, description: "supplied drive shaft, rig frame, unchanged"}
+    description: >-
+      Solid stepped drive shaft on the fan axis, y -404.5..-114: r 20 to y -324, r 19 to -207, steps through r 16 and
+      12.5 under the hub disc, a Ø15 journal y -131..-114. Its upstream end face y -404.5 meets the rotor web.
+  - name: hubDisc
+    kind: purchased
+    role: solid
+    catalog: {name: fan-hub, kind: step, path: sources/fan-hub.step, description: "supplied hub disc, rig frame, unchanged"}
+    description: "Ø170 hub disc on the shaft downstream of the rotor, y -193..-133; volume 4.00e5 mm3; no overlap with the shaft."
+  - name: chamberWall
+    kind: derived
+    role: solid
+    description: >-
+      Test chamber wall the duct passes through (figure 1, where the diffuser begins): a slab normal to +y, y -259..-159
+      (100 thick), spanning the whole fluid box cross-section x -1000..200, z 915..2115, minus the duct and minus a
+      cone through the middle of the diffuser wall (r 251 at y -259 to r 276 at y -136, overrun past both slab faces),
+      so it fills up to the duct's outer surface without overlapping it. Its upstream face touches the downstream flange
+      face at y -259, so the duct is the only passage from the chamber side to ambient. Built in the assembly source from
+      the duct geometry; stationary.
+  - name: air
+    kind: derived
+    role: fluid
+    description: >-
+      Flow region: the box x -1000..200, y -1010..364, z 915..2115 minus the chamberWall, duct, rotor, shaft and hubDisc
+      (disjoint or touching only), subtracted one at a time, keeping the one solid that contains the seed; the closed
+      96,761 mm3 pocket the wall seals in the downstream flange groove is dropped. Chamber side (settling region): y -1010
+      to the chamber wall at -259, around and upstream of the nozzle; the duct interior; ambient side (discharge region):
+      from the wall's downstream face y -159 to the outlet cap y 364. Built in the assembly source.
+parameters:
+  - {name: axisX, value: -400.0, unit: mm, tolerance: 0.1, provenance: stated, source: sources/fan01-packet.md CAD, description: fan axis x}
+  - {name: axisZ, value: 1515.0, unit: mm, tolerance: 0.1, provenance: stated, source: sources/fan01-packet.md CAD, description: fan axis z}
+  - {name: domainHalfWidth, value: 600.0, unit: mm, tolerance: 0.1, provenance: inferred, rationale: "2.4 duct radii from the axis, 275 clear of the r 325 nozzle lip flange; chamber and ambient sizes are not stated; sized so the refined far-field walls stay small", description: half width of the fluid box in x and z}
+  - {name: inletCapY, value: -1010.0, unit: mm, tolerance: 0.1, provenance: inferred, rationale: "1 D (500) upstream of the nozzle lip at y -510; inflow velocity at most 1.25 m/s", description: inlet cap plane}
+  - {name: outletCapY, value: 364.0, unit: mm, tolerance: 0.1, provenance: inferred, rationale: "1 D (500) downstream of the diffuser exit at y -136", description: outlet cap plane}
+  - {name: chamberWallY0, value: -259.0, unit: mm, tolerance: 0.1, provenance: stated, source: "sources/fan01-packet.md (wall where the diffuser begins; diffuser starts y -259)", description: chamber wall upstream face}
+  - {name: chamberWallThickness, value: 100.0, unit: mm, tolerance: 0.1, provenance: inferred, rationale: "figure 1 scaled on the 251 mm lip-to-diffuser length shows a wall of about 130 mm ending shortly before the diffuser exit; 100 keeps the exit 23 mm proud", description: chamber wall thickness}
+joints:
+  - name: rotorSpin
+    kind: revolute
+    parent: duct
+    child: rotor
+    parent_frame: {origin: [-400.0, -363.5, 1515.0], axis: [0.0, 1.0, 0.0]}
+    child_frame: {origin: [-400.0, -363.5, 1515.0], axis: [0.0, 1.0, 0.0]}
+    drive: {kind: motor, case_value: speedRpm, description: "1486 rpm, positive about +y (clockwise seen from the suction side)"}
+    description: rotor on the fan axis; both frames are the rig frame, so the rest placement is the identity
+  - name: shaftOnRotor
+    kind: rigid
+    parent: rotor
+    child: shaft
+    parent_frame: {origin: [-400.0, -363.5, 1515.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [-400.0, -363.5, 1515.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+  - name: hubDiscOnRotor
+    kind: rigid
+    parent: rotor
+    child: hubDisc
+    parent_frame: {origin: [-400.0, -363.5, 1515.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [-400.0, -363.5, 1515.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+  - name: chamberWallFixed
+    kind: rigid
+    parent: duct
+    child: chamberWall
+    parent_frame: {origin: [-400.0, -259.0, 1515.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [-400.0, -259.0, 1515.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+  - name: airFixed
+    kind: rigid
+    parent: duct
+    child: air
+    parent_frame: {origin: [-400.0, -363.5, 1515.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [-400.0, -363.5, 1515.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+fluid_volumes:
+  - name: air
+    body: air
+    walls: [duct, chamberWall]
+    minus: [rotor, shaft, hubDisc]
+    caps:
+      - {name: inletCap, point: [-400.0, -1010.0, 1515.0], normal: [0.0, -1.0, 0.0]}
+      - {name: outletCap, point: [-400.0, 364.0, 1515.0], normal: [0.0, 1.0, 0.0]}
+      - {name: sideXMin, point: [-1000.0, -200.0, 1515.0], normal: [-1.0, 0.0, 0.0]}
+      - {name: sideXMax, point: [200.0, -200.0, 1515.0], normal: [1.0, 0.0, 0.0]}
+      - {name: sideZMin, point: [-400.0, -200.0, 915.0], normal: [0.0, 0.0, -1.0]}
+      - {name: sideZMax, point: [-400.0, -200.0, 2115.0], normal: [0.0, 0.0, 1.0]}
+    seed: [-388.9, -902.7, 1526.3]
+    volume: {expected: 1.851e9, tolerance_rel: 0.03, provenance: derived, note: "box 1200 x 1200 x 1374 = 1.9786e9 minus chamberWall 1.2230e8 and the duct, rotor, shaft and hub disc; built in build123d: one valid solid of 1.8508e9 mm3 (3 shells) containing the seed"}
+    hausdorff_max: 5.0
+    description: settling region, duct and discharge region, closed by the inlet and outlet caps and the four box side planes
+boundaries:
+  - {name: inlet, role: inlet, body: air, select: plane, point: [-400.0, -1010.0, 1515.0], normal: [0.0, -1.0, 0.0], area: {expected: 1.44e6, tolerance_rel: 0.01, provenance: derived, note: 1200 x 1200 inlet cap}, description: chamber-side inlet cap}
+  - {name: outlet, role: outlet, body: air, select: plane, point: [-400.0, 364.0, 1515.0], normal: [0.0, 1.0, 0.0], area: {expected: 1.44e6, tolerance_rel: 0.01, provenance: derived, note: 1200 x 1200 outlet cap}, description: ambient-side outlet cap}
+  - {name: rotorWall, role: rotating_wall, body: air, select: touching, touching: rotor}
+  - {name: shaftWall, role: rotating_wall, body: air, select: touching, touching: shaft}
+  - {name: hubDiscWall, role: rotating_wall, body: air, select: touching, touching: hubDisc}
+  - {name: ductWall, role: wall, body: air, select: touching, touching: duct}
+  - {name: chamberWallFaces, role: wall, body: air, select: touching, touching: chamberWall}
+  - {name: sideWalls, role: wall, body: air, select: rest, description: "the four box side planes (chamber walls and the ambient far field), about 6.1 m2"}
+operating_cases:
+  - {id: q1403, values: {flowM3s: 1.403, flowLMin: 84180.0, speedRpm: 1486.0}, units: {flowM3s: m3/s, flowLMin: L/min, speedRpm: rpm}, split: development, source: "operating point named in the checks (1.403 m3/s); speed sources/fan01-packet.md Table 2", description: design flow; flowLMin = flowM3s x 60000}
+  - {id: q1804, values: {flowM3s: 1.804, flowLMin: 108240.0, speedRpm: 1486.0}, units: {flowM3s: m3/s, flowLMin: L/min, speedRpm: rpm}, split: held_out, source: "operating point named in the checks (1.804 m3/s); speed sources/fan01-packet.md Table 2"}
+  - {id: q0994, values: {flowM3s: 0.994, flowLMin: 59640.0, speedRpm: 1486.0}, units: {flowM3s: m3/s, flowLMin: L/min, speedRpm: rpm}, split: held_out, source: "operating point named in the checks (0.994 m3/s); speed sources/fan01-packet.md Table 2"}
+observables:
+  - {id: dpts_q1403, quantity: pressure_rise_total_to_static, unit: Pa, simulation: mrfDesign, case: q1403, averaging: steady, description: "outlet (ambient) static minus inlet (chamber) total pressure, ISO 5801"}
+  - {id: torque_q1403, quantity: torque, unit: N m, simulation: mrfDesign, case: q1403, averaging: steady, description: driving torque the rotating bodies absorb about the rotor axis (positive when the flow takes power)}
+  - {id: dpts_q1804, quantity: pressure_rise_total_to_static, unit: Pa, simulation: mrfOffDesign, case: q1804, averaging: steady}
+  - {id: dpts_q0994, quantity: pressure_rise_total_to_static, unit: Pa, simulation: mrfOffDesign, case: q0994, averaging: steady}
+simulations:
+  - id: mrfDesign
+    physics: cfd_steady
+    solver: openfoam
+    cases: [q1403]
+    bodies: [air, rotor]
+    inputs:
+      fluidDensity: {value: 1.204, unit: kg/m3, provenance: inferred, rationale: "air at 20 degC, 101.325 kPa; the packet's tip Mach 0.113 at 38.9 m/s gives a = 344 m/s (about 20 degC); air properties are not stated", uncertainty: 0.03}
+      fluidViscosity: {value: 1.813e-5, unit: Pa s, provenance: inferred, rationale: "air at 20 degC; the packet's tip Reynolds 1.50e5 at 38.9 m/s and 58 mm chord gives nu = 1.50e-5 m2/s", uncertainty: 3.0e-7}
+    settings: {flow_key: flowLMin, speed_key: speedRpm, inlet_turbulence_pct: 5.0, inlet_diameter_mm: 1354.1, cell_mm: 28.0, surface_level: 3, layers: 0, background_cells_max: 400000, iterations: 1500, processes: 8, timeout_s: 36000}
+    outputs: [dpts_q1403, torque_q1403]
+    regions:
+      - {name: tip, shape: rotor_tip, inside_mm: 2.0, outside_mm: 3.0, axial_margin_mm: 5.0}
+    refinement: [1.0, {factor: 1.0, regions: {tip: 1}, iterations: 3000}, {factor: 1.0, regions: {tip: 2}, iterations: 1500}]
+    description: >-
+      steady MRF simpleFoam k-omega SST at the design flow with a tip-gap mesh ladder: level 1.0 (walls 3.5 mm, rotating
+      walls 1.75 mm), then level 1.0 with the tip annulus refined one level (0.875 mm cells, 3000 iterations) and two
+      levels (0.4375 mm cells, 1500 iterations). The annulus runs from 2 mm inside to 3 mm outside the rotor's tip radius
+      (r 245.5..250.5 about the rotor axis) over the blade tips' axial reach plus 5 mm on each side, the rest of the mesh
+      as at level 1.0, so the ladder is a sensitivity study of the tip gap. inlet_diameter_mm is the equal-area diameter
+      of the 1200 x 1200 inlet cap
+  - id: mrfOffDesign
+    physics: cfd_steady
+    solver: openfoam
+    cases: [q1804, q0994]
+    bodies: [air, rotor]
+    inputs:
+      fluidDensity: {value: 1.204, unit: kg/m3, provenance: inferred, rationale: "air at 20 degC, 101.325 kPa (as mrfDesign); not stated", uncertainty: 0.03}
+      fluidViscosity: {value: 1.813e-5, unit: Pa s, provenance: inferred, rationale: "air at 20 degC (as mrfDesign); not stated", uncertainty: 3.0e-7}
+    settings: {flow_key: flowLMin, speed_key: speedRpm, inlet_turbulence_pct: 5.0, inlet_diameter_mm: 1354.1, cell_mm: 28.0, surface_level: 3, layers: 0, background_cells_max: 400000, iterations: 1500, processes: 8, timeout_s: 6000}
+    outputs: [dpts_q1804, dpts_q0994]
+    refinement: [1.0]
+    description: the same MRF analysis at the two off-design flows, level 1.0 mesh only
+acceptance:
+  clearances:
+    - {name: rotorTipGap, a: rotor, b: duct, min_gap: 2.0, description: "2.5 mm tip clearance to the r 250 bore"}
+    - {name: rotorToWall, a: rotor, b: chamberWall, min_gap: 50.0}
+    - {name: hubDiscToDuct, a: hubDisc, b: duct, min_gap: 50.0}
+  motions:
+    - {name: spin, drive: rotorSpin, range: [0.0, 40.0], steps: 8, interference_tolerance: 1.0, description: one blade pitch (360/9)}
+references:
+  - {path: sources/fan01-packet.md, kind: text, role: authoritative, sha256: 6aca0573ce272e5a183a7ce4532700154e7fa6e5e642f544c1a768f277a30fa6}
+  - {path: sources/fan-duct.step, kind: cad, role: authoritative, units: mm, sha256: 9b70daad9041bb6d47d6d276d23de0b4747d370e0bae2ea5dd6442fad57b0f74}
+  - {path: sources/fan-rotor.step, kind: cad, role: authoritative, units: mm, sha256: 6a526e10e9e1f9634d9eee157ad6b9758669141a03354609033ca3fac681932c}
+  - {path: sources/fan-shaft.step, kind: cad, role: authoritative, units: mm, sha256: 8a2716709cddba77254aad4885ba238d406cdb7de0a71ce4ec5b245e8e5eb426}
+  - {path: sources/fan-hub.step, kind: cad, role: authoritative, units: mm, sha256: 0b291d0c414b1ad6af321f45edcadaa7e23a332ad35a8247a00f859771da80c4}
+  - {path: sources/figure-1-setup.png, kind: image, role: illustrative, sha256: 23729299c2297dd027068d32f3bd8e59cbc03eb44b7a608863951488d5ce7ec6}
+open_questions:
+  - "Air properties are not stated: 1.204 kg/m3 and 1.813e-5 Pa s (20 degC, 101.325 kPa) are inferred from the packet's tip Mach and Reynolds numbers."
+  - "The chamber wall's thickness and exact position are not in the CAD; it is a 100 mm slab from the diffuser start y -259 (figure 1 is schematic, about 130 mm)."
+  - "Chamber and ambient sizes are not stated; the fluid box is 1200 x 1200 (600 from the axis), 500 upstream of the nozzle lip and 500 downstream of the diffuser exit, with no-slip side walls."
+  - "The rotor's hub cup (inside the rim r 121, y -404.5..-306) stays open downstream and is fluid; the CAD has no rear hub plate."
+  - "Inlet turbulence intensity is not stated; 5 % (adapter default) at the settling-region inlet."
+  - "The flow values in L/min (flowLMin) duplicate flowM3s x 60000 for the openfoam adapter's flow_key."
+  - "ECR 1 (hub region): hubClosure, its joint hubClosureFixed, its boundary hubClosureWall and parameter hubClosureRadius are removed. Evidence: the evaluator's point classification finds rotor material at every radius 0..89.8 for y -410.5..-404.6 (a closed web disc), and the plug overlapped it by 151,665 mm3 at every pose, failing motion_clear. The rotor itself closes the hub centre. A stationary plug in the upstream recess or the downstream cup would share faces with the rotor or leave thin gaps. The rotor description is corrected. The packet's 'nothing of the rotor lies inside r 89.7' does not hold for the supplied STEP."
+  - "ECR 1 (fluid validity): the chamber wall is now the slab minus the duct and minus a mid-wall cone. Evidence: the former straight-cone hole overlapped the duct by 100,986 mm3 (a sliver r 252..272.6, y -259..-159). Built in build123d: the new wall is valid with zero duct overlap. The box minus the chamberWall, duct, rotor, shaft and hubDisc is one valid solid of 1.8508e9 mm3 (3 shells) containing the seed, plus a closed 96,761 mm3 flange-groove pocket that is dropped."
+  - "ECR 1 (fluid box): the box shrinks from 1500 x 1500 x 2124 to 1200 x 1200 x 1374. Evidence: every wall patch is refined to one surface level, and the far-field walls (sideWalls 12.9 m2, chamberWallFaces 4.0 m2) were 93 % of the 18.2 m2 refined area. They are now about 6.1 and 2.5 m2. Envelope, caps, inlet/outlet points and areas (1.44e6 mm2), volume band and inlet_diameter_mm (1354.1, equal-area) follow."
+  - "ECR 1 (mesh and cost): cell_mm 28 with surface_level 3 gives walls 3.5 mm and rotating walls 1.75 mm at level 1.0. Measured by the evaluator (8 solver processes, ECR 2 evidence): a level-1.0 run meshes 3.78 M cells (adapter estimate 2.82 M) in about 960 s (4.2 min per M cells) and runs 1500 iterations in 4,315 s alone or 5,037 s beside another run (2.9 and 3.4 s per iteration), so a whole run takes about 5,300 s alone and about 6,000 s beside another run (5,995 s measured); the three finished level-1.0 runs total about 4.4 h. Level 0.7 has not yet meshed: snappyHexMesh was killed for memory at 10.8 M castellated cells in a 12 GB container (the adapter now requests 18 GB and retries once at twice that, up to 40 GB). At the level-1.0 ratio of measured to estimated cells (1.34), its adapter estimate of 5.90 M is about 7.9 M cells, meshed in about 2,000-2,400 s and solved in about 9,000-10,500 s, about 11,000-12,900 s in all. The four runs total about 7.5-8.0 h. The level-0.7 figures are unverified until it runs."
+  - "ECR 1 (refinement and timeout): mrfDesign keeps refinement [1.0, 0.7] at the design flow. mrfOffDesign now states [1.0], so the schema default [1.0, 0.5] no longer adds two 22 M-cell runs. timeout_s is 20000 for mrfDesign (both levels; 12000 before ECR 2) and 6000 for mrfOffDesign. Against the measured figures, mrfDesign's level-0.7 run (about 11,000-12,900 s) has 55-82 % margin and its level-1.0 run (5,995 s measured) over three times; mrfOffDesign's level-1.0 runs have about 14 % margin alone (about 5,275 s) and almost none beside another run (about 6,000 s). With the three level-1.0 runs cached, the timeout bounds the remaining level-0.7 run at 5.6 h; rerunning all four runs to their timeouts would take 14.4 h."
+  - "ECR 2 (timeout): mrfDesign timeout_s 12000 to 20000; no other setting changes. Evidence: the refinement gate failed because the level-0.7 run never meshed (killed for memory, which the adapter now handles); scaled from the measured level-1.0 run, it needs about 11,000-12,900 s, over the former 12000. 20000 keeps the ECR 1 policy of over 50 % margin (55 % on 12,900 s) and still covers a memory retry that reruns the whole meshing (about 15,300 s). The level-1.0 run shares the value (5,995 s measured). timeout_s is not written to a case file, so the three cached level-1.0 runs (about 4.4 h) are reused and only the level-0.7 run executes."
+  - "ECR 2 (cost figures): the ECR 1 mesh-and-cost and refinement-and-timeout notes now state the evaluator's measured run sizes and times in place of the ECR 1 estimates (level 1.0 2.5 M cells and 1.05 h; level 0.7 5.2 M cells, 7.8 GB and 2.2 h; 5.3 h for the four runs; over 50 % timeout margin; a 10 h bound). The fluid geometry, the boundaries and every setting written to a case file (cell_mm, surface_level, layers, background_cells_max, iterations, processes, inlet values) are unchanged."
+  - "mrfOffDesign timeout_s stays 6000 (ECR 2 changes only mrfDesign's): its two runs finished and are cached, but a level-1.0 run beside another run takes about 6,000 s (5,995 s measured), so a change that reruns them uncached should first raise it to about 9000 (50 % over 6,000 s)."
+  - "ECR 3 (tip-gap ladder): mrfDesign's refinement [1.0, 0.7] becomes [1.0, {factor: 1.0, regions: {tip: 1}, iterations: 3000}, {factor: 1.0, regions: {tip: 2}, iterations: 1500}] with the region tip (shape rotor_tip, inside_mm 2.0, outside_mm 3.0, axial_margin_mm 5.0): the annulus r 245.5..250.5 about the rotor axis (2 mm inside to 3 mm outside the tip radius 247.5) over the blade tips' axial reach plus 5 mm on each side, the rest of the mesh as at level 1.0. Evidence: the pipeline now resolves a prediction only when its finest three levels converge monotonically, which a pair cannot show. The 2.5 mm tip gap is 1.4 rotating-wall cells (1.75 mm) wide at level 1.0. With only the annulus refined one level (0.875 mm cells, 4,184,854 cells, 3000 iterations; evaluator sim study fan-01 mrfDesign --case q1403, each value the mean over the last fifth of its run), dpts_q1403 falls from 142.2 to 104.9 Pa (iteration spread 1.7, tail drift 1.5 %) and torque_q1403 from 2.472 to 2.065 N m: three quarters of the pressure-rise change (37.3 of 49.6 Pa) and 83 % of the torque change (0.407 of 0.489 N m) that refining the whole mesh to level 0.7 gave, so the mesh dependence lies in the tip gap. tip: 2 gives 0.4375 mm cells, about 5.7 across the gap, and the three levels give an observed order and an extrapolated value for the tip gap. Supersedes the ECR 1 refinement note for mrfDesign."
+  - "ECR 3 (iterations): the tip: 1 level runs 3000 iterations, as the evaluator ran it, and the tip: 2 level 1500 (settings.iterations stays 1500). Evidence: FAN-01's level-0.7 run (7.18 M cells, started from rest) settled within about 600 iterations, its last two 300-iteration window means agreeing within 0.3 %."
+  - "ECR 3 (timeout): mrfDesign timeout_s 20000 to 36000. Evidence: the tip: 2 level (about 7.6 M cells) needs about 16,000 s in the container (snappyHexMesh about 2,400 s, then 1500 iterations at about 9 s on 8 processes), near the former 20000. 36000 is 2.25 times that and keeps ECR 1's over-50 % margin after a memory retry that reruns the meshing (about 18,400 s). The level-1.0 run (5,995 s measured) and the tip: 1 run (4.18 M cells, 3000 iterations; its time is not in the evidence) share the value. Supersedes the ECR 2 timeout note."
+  - "ECR 3 (global pair evidence): re-parsed as each run's mean over its last fifth of iterations, dpts_q1403 is 142.2 Pa at level 1.0 (3,775,749 cells; iteration spread 4.1, tail drift 1.0 %) and 92.6 Pa at level 0.7 (7.18 M cells), and torque_q1403 2.472 and 1.983 N m (pair GCI 3.0 for the pressure rise and 1.38 for the torque). The level-0.7 run meshed 7.18 M cells (ECR 1 estimated about 7.9 M). The tip-gap ladder refines only the annulus and leaves the rest of the mesh as at level 1.0: it is a sensitivity study of the tip gap and does not assess the discretisation of the rest of the mesh, so mrfDesign's predictions stay unresolved."
+  - "ECR 3 (scope): mrfDesign.description now states the ladder (level 1.0, then the tip annulus refined one and two levels). Nothing else changes: mrfOffDesign keeps refinement [1.0] and timeout_s 6000, and the geometry, joints, boundaries, observables and every other mrfDesign setting (cell_mm, surface_level, layers, background_cells_max, iterations, processes, inlet values) stay as published."

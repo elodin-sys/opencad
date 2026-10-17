@@ -1,0 +1,616 @@
+attempts:
+- started: '2026-09-19T05:49:35Z'
+  arm: assembly
+  backend: zoo
+  design: fusion-16418-assembly
+  stage_reached: scored
+  force: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-16418-assembly-1789796975
+  worker: &id001
+    backend: cursor
+    role: assemble
+    model: claude-fable-5-1-thinking-max
+    order_id: 001-assemble
+    thread_id: 5697749f-d0e1-483a-9b44-9e09c4a24f27
+    exit_code: 0
+    seconds: 1115
+    commands: 11
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/fusion-16418-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 11
+      self_corrections: 2
+      engine_calls: 0
+      files_changed:
+      - results/fusion-16418-assembly/work/assembly.yaml
+      - results/fusion-16418-assembly/worker/001-assemble/result.md
+      - results/fusion-16418-assembly/worker/001-assemble/metrics.json
+      incomplete: false
+      notes: 'Body two at identity; body one origin [11.5, 4.25, -38], axes x [1,0,0]
+        y [0,-1,0] z [0,0,-1]. Measured axis angle 0 deg, line distance 0 mm, axial
+        offset -5.0000 mm, interference 0.5293 mm^3 (tooth tips 0.242 mm into the
+        20.0 mm channel walls), min distance 0. Offset sign assumed along body two''s
+        stored +Y axis per JoinABLe''s convention; the alternative is origin y = 14.25
+        (gear outside the back wall). Self-corrections: an OCP TopoDS.Face_s call
+        (replaced by reading the raw STEP text) and 404s on old Fusion API help URLs
+        (replaced by the JoinABLe source). No hosted engine calls.'
+      engine_ledger_calls: 0
+      engine_ledger_seconds: 0
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id001
+  codex_report:
+    Result: 'Deliverable written: `results/fusion-16418-assembly/work/assembly.yaml`.
+      Shared frame = body two''s local frame (mm).
+
+
+      | body | role | origin | x_axis | y_axis | z_axis |
+
+      | --- | --- | --- | --- | --- | --- |
+
+      | `23309_76dcf100_0002_1` (gear) | body one | [11.5, 4.25, -38.0] | [1, 0, 0]
+      | [0, -1, 0] | [0, 0, -1] |
+
+      | `23309_76dcf100_0003_2` (housing) | body two | [0, 0, 0] | [1, 0, 0] | [0,
+      1, 0] | [0, 0, 1] |
+
+
+      Body one''s rotation is 180 deg about its own X (det +1), i.e. the gear''s +Y
+      runs along the housing''s -Y (the joint''s "flipped" state); body two stays
+      at the identity.
+
+
+      Joint faces identified (both match the task''s bboxes exactly, so those bboxes
+      are the local frames):
+
+      - body one: the only r = 1.55 hole, axis (0, 1, 0) through the origin, extent
+      y 0..1, centre (0, 0.5, 0). The rest of the gear''s centre is a hex nut pocket
+      (circumradius 4, y 1..4); a hex boss (circumradius 5) stands on the +Y face
+      at y 3..4; the 36-tooth disc (tip dia 20.483) spans y 0..3.
+
+      - body two: the r = 1.55 through-hole in the 2.5 mm back wall at (11.5, y, -38),
+      extent y 7.5..10, centre (11.5, 8.75, -38). (A second r = 1.55 hole with a 3
+      mm tall r = 3 boss sits at z = -26, y 4.5..10.)
+
+
+      Measured in the shared frame with the scorer''s own arithmetic (`assembly_task.manifest_matrix`
+      / `transform_line`):
+
+      - placed body-one axis: origin (11.5, 3.75, -38.0), direction (0, -1, 0); body-two
+      axis: origin (11.5, 8.75, -38.0), direction (0, 1, 0)
+
+      - axis angle: 0.000000 deg (unsigned; the directions are exactly anti-parallel
+      = flipped)
+
+      - axis line distance: 0.000000 mm
+
+      - axial offset dot(o1 - o2, d2): -5.0000 mm (stated -5.00 mm)
+
+      - interference (`assembly.common_volume` on `assembly_task.apply` copies): 0.5293
+      mm^3; min distance 0.0000 mm. The common volume is confined to x 1.258..1.5
+      and 21.5..21.742, y 1.25..4.25, z -39.86..-36.14: the gear''s tooth tips (tip
+      radius 10.2417) enter the 20.0 mm wide channel''s side walls (x = 1.5 / 21.5)
+      by 0.242 mm. This is inherent to any coaxial placement inside the channel and
+      below the scorer''s 1.0 mm^3 floor.
+
+
+      Resulting placement: the gear lies inside the 7.5 mm deep channel at y 0.25..4.25:
+      hex boss 0.25 mm inside the channel''s open plane (y = 0), top face 0.25 mm
+      below the z = -26 boss end face (y = 4.5), tip circle 0.26 mm above the channel
+      floor (z = -48.5), flat face 3.25 mm from the back wall''s inner face (y = 7.5).'
+    Files changed: '- `results/fusion-16418-assembly/work/assembly.yaml` (new; the
+      deliverable)
+
+      - `results/fusion-16418-assembly/worker/001-assemble/result.md`, `metrics.json`,
+      `done` (protocol files)
+
+
+      No STEP file, contract, brief or anything under `truth/` was touched. No hosted
+      engine calls (engine ledger not created).'
+    Verification: 'Commands run (11 shell commands, all OpenCascade from `.venv`,
+      no Zoo engine):
+
+      1. `brep.read_step` / `brep.bbox` / `brep.cylinders` on both STEPs: gear bbox
+      [-10.2417, 0, -10.2417]..[10.2417, 4, 10.2417], bore r 1.55 hole centre (0,
+      0.5, 0) dir (0, 1, 0) t 0..1; housing bbox [0, 0, -50]..[23, 10, 19], r 1.55
+      holes at (11.5, 7.25, -26) t 4.5..10 and (11.5, 8.75, -38) t 7.5..10, r 3 boss
+      at z = -26 y 4.5..7.5.
+
+      2. `brep.planar_faces(gear)`: hex pocket y 1..4, hex boss y 3..4, disc faces
+      y 0 / 3.
+
+      3. Four candidate placements (gear +Y -> housing +/-Y, offset +/-5 mm along
+      housing +Y from the aligned position): interference / min distance = 3.94 mm^3
+      / 0 (unflipped, -5: gear also cuts 1.2 mm into the z = -26 boss), 0 / 3.25 mm
+      gap (unflipped, +5: floating), 0.53 mm^3 / 0 (flipped, -5: chosen), 0 / 0.25
+      mm gap (flipped, +5: gear outside the back wall). Only the flipped orientation
+      is physically consistent, which agrees with the task''s "flipped" flag given
+      the axis directions below.
+
+      4. Raw STEP text: both r 1.55 `CYLINDRICAL_SURFACE` placements have `center_axis
+      (0, 1, 0)` and `ref_axis (1, 0, 0)` (gear origin (0, 0, 0); housing origin (11.5,
+      0, -38)), so both joint axes are local +Y.
+
+      5. `results/fusion-*-assembly`: no sibling case has a scorecard yet (no empirical
+      calibration of the sign available).
+
+      6-10. Fetched the public dataset doc (`docs/assembly_joint.md`: `axis_line`
+      is in the assembled state, `transform` is local -> assembled; so rotation about
+      the axis is genuinely free for the scorer) and JoinABLe''s `joint/joint_environment.py`
+      (`get_transform_from_parameters`: align body one''s axis to body two''s, rotate
+      by `angle`, mirror through the plane at body two''s origin when `flip`, then
+      translate by `direction2 * offset`), i.e. the offset is applied along body two''s
+      axis direction. Two probes of the old Fusion API help URLs returned 404 and
+      were abandoned.
+
+      11. Final check of `assembly.yaml` (table below), using `assembly_task.manifest_matrix`,
+      `transform_line`, `apply`, `assembly.common_volume`, `assembly.min_distance`.
+
+
+      | quantity | measured | expected / limit |
+
+      | --- | --- | --- |
+
+      | axis angle | 0.000000 deg | <= 2 deg |
+
+      | axis line distance | 0.000000 mm | <= 0.5 mm |
+
+      | axial offset dot(o1 - o2, d2) | -5.0000 mm | -5.00 +/- 0.5 mm |
+
+      | interference volume | 0.5293 mm^3 | <= max(1.0, truth + 1.0) mm^3 |
+
+      | min distance (contact) | 0.0000 mm | <= 1.0 mm |
+
+      | det(R1) | 1.0 | +1 (proper rotation) |'
+    Open questions: '- Direction sign (resolved by assumption): I took the dataset''s
+      axis direction for body two''s hole to be the STEP surface `center_axis` (+Y
+      local) and applied the -5.00 mm offset along it, per JoinABLe''s convention,
+      which puts the gear inside the channel. If the dataset stored that direction
+      as -Y, the correct placement is the mirror image: body one origin [11.5, 14.25,
+      -38.0] with the same axes (gear outside the back wall at y 10.25..14.25, hex
+      boss 0.25 mm from the wall, zero interference). The two differ by exactly 10
+      mm along Y and cannot both be hedged within the 0.5 mm tolerance. Supporting
+      the chosen side: both STEP surfaces carry +Y axes and the flipped flag then
+      predicts exactly the one orientation that is physically clean; the gear layer
+      y 0.25..4.25 clears the z = -26 boss end face (y 4.5) and the channel''s open
+      plane by 0.25 mm each and the channel floor by 0.26 mm; the hole sits 10.5 mm
+      above the channel floor, matching the 10.24 mm tip radius.
+
+      - Which face: unambiguous (single r 1.55 bore on the gear; the r 1.55 hole at
+      z = -38 is the only face matching the task''s bbox on the housing).
+
+      - Rotation about the axis: the flip was realised as 180 deg about the gear''s
+      X (the `ref_axis` of both faces, dataset angle 0). Any rotation about the joint
+      axis is accepted.
+
+      - Interpenetration: the 0.53 mm^3 tooth-tip overlap with the channel side walls
+      is geometric (20.483 mm gear in a 20.0 mm channel), rotation-invariant, and
+      not removable without breaking colinearity; the scorer''s floor is 1.0 mm^3.
+
+      - During the doc lookup one `curl -o` wrote a 404 page to `/tmp/joint_offset.htm`
+      (outside the work directory); it was deleted.'
+  scorecard:
+    verdict: FAIL
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: false
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 1138
+  finished: '2026-09-19T06:08:33Z'
+- started: '2026-09-19T15:42:03Z'
+  arm: assembly
+  backend: zoo
+  design: fusion-16418-assembly
+  stage_reached: scored
+  force: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-16418-assembly-1789832523
+  worker: &id002
+    backend: cursor
+    role: assemble
+    model: claude-fable-5-1-thinking-max
+    order_id: 001-assemble
+    thread_id: c42d3604-fc2a-449d-a95d-bab6d80aaa90
+    exit_code: 0
+    seconds: 317
+    commands: 4
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/fusion-16418-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 4
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - /Users/danieldriscoll/dual/skillkat/results/fusion-16418-assembly/work/assembly.yaml
+      incomplete: false
+      notes: 'assembly-check PASS first try: angle 0 deg, line distance 0 mm, axial
+        offset -5.0 mm, flip anti-parallel, interference 0.5293 mm3 (two tooth tips
+        clipping the channel walls at the key-point pose, reported not removed), gap
+        0.0 mm. No hosted engine calls.'
+      engine_ledger_calls: 0
+      engine_ledger_seconds: 0
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id002
+  codex_report:
+    Result: 'Work order `001-assemble` (role `assemble`, part `fusion-16418-assembly`,
+      joint set `joint_set_16418`, Revolute "Rev3", `is_flipped` = true, `offset`
+      = -5.00 mm). Deliverable written: `results/fusion-16418-assembly/work/assembly.yaml`.
+      Local critic: `assembly-check PASS`, every line ok on the first placement (no
+      self-corrections).
+
+
+      Transforms (shared frame = body two''s local frame, mm; `x_axis`/`y_axis`/`z_axis`
+      are the images of the body''s local axes, `origin` the translation, p'' = R
+      p + origin):
+
+
+      - `23309_76dcf100_0002_1` (body one, gear): `origin: [11.5, 3.5, -38.0]`, `x_axis:
+      [1, 0, 0]`, `y_axis: [0, -1, 0]`, `z_axis: [0, 0, -1]` (180 deg about x).
+
+      - `23309_76dcf100_0003_2` (body two, housing): identity (`origin: [0, 0, 0]`,
+      axes = unit vectors).
+
+
+      Derivation: d1 = d2 = +y locally, so the flip needs R d1 = -y; R = diag(1, -1,
+      -1) does that. Colinearity puts body one''s axis at x = 11.5, z = -38 (body
+      two''s hole axis). K1'' = R (0, 1, 0) + origin = (11.5, origin_y - 1, -38);
+      (K1'' - K2'') . d2'' = (origin_y - 1) - 7.5 = -5 gives origin_y = 3.5, so K1''
+      = (11.5, 2.5, -38.0), K2'' = (11.5, 7.5, -38.0).
+
+
+      Critic''s numbers (`python -m skillkat.truth assembly-check`):
+
+
+      - axis angle: 0.0 deg (max 2.0) ok
+
+      - axis line distance: 0.0 mm (max 0.5) ok
+
+      - axial offset: -5.0 mm (expected -5.0 +/- 0.5) ok
+
+      - flip: anti-parallel (expected anti-parallel) ok
+
+      - interference: 0.5293 mm3 (critic threshold 1.0) ok; reported, not removed
+      (see below)
+
+      - gap: 0.0 mm (max 1.0) ok
+
+
+      Interference location (OpenCascade `BRepAlgoAPI_Common` bbox): x 1.258..21.742,
+      y 0.5..3.5, z -39.863..-36.137, i.e. the gear''s two outermost tooth tips (tip
+      radius 10.2417 about x = 11.5) clip the inner faces of the housing''s channel
+      side walls over the full 3 mm tooth thickness. It is a feature of the key-point
+      pose itself (the dataset''s gear tip diameter versus the channel width), so
+      per the brief the bodies stay on their key points.
+
+
+      Placed gear bbox: [1.258, -0.5, -48.242] .. [21.742, 3.5, -27.758]; it sits
+      inside the channel (open toward -y, floor at y 7.5..10) with its bore face toward
+      the floor and its 1 mm hub protruding 0.5 mm past the housing''s open face at
+      y = 0.'
+    Files changed: '- `/Users/danieldriscoll/dual/skillkat/results/fusion-16418-assembly/work/assembly.yaml`
+      (new)
+
+
+      No STEP file, `contract.yaml`, `brief.md`, or anything under `truth/` was touched.
+      No hosted engine calls (engine ledger not created).'
+    Verification: 'Commands run (4 shell commands, all from the repository root, none
+      hosted):
+
+
+      1. `ls -la` of the work directory, renders and order directory (inventory).
+
+      2. `.venv/bin/python -c "... brep.read_step / brep.bbox / brep.cylinders ..."`
+      on both STEP files. Measured: gear bbox [-10.242, 0, -10.242]..[10.242, 4.0,
+      10.242] (task: size [20.483, 4.0, 20.483], ok); gear bore: hole r 1.55 on axis
+      (0, *, 0), direction +y, y 0..1 (task: face bbox [-1.55, 0, -1.55]..[1.55, 1.0,
+      1.55], ok). Housing bbox [0, 0, -50]..[23, 10, 19] (task: size [23, 10, 69],
+      ok); joint hole: r 1.55 on axis (11.5, *, -38), direction +y, y 7.5..10 (task:
+      face bbox [9.95, 7.5, -39.55]..[13.05, 10.0, -36.45], ok). Both key points lie
+      on the measured axes.
+
+      3. `.venv/bin/python -m skillkat.truth assembly-check results/fusion-16418-assembly/work`
+      -> `PASS`, exit 0; numbers listed under Result. Expected vs measured: angle
+      0 vs <= 2 deg; line distance 0 vs <= 0.5 mm; offset -5.0 vs -5.0 +/- 0.5 mm;
+      flip anti-parallel vs anti-parallel; interference 0.5293 vs <= 1 mm3; gap 0.0
+      vs <= 1 mm.
+
+      4. `.venv/bin/python -c "... at.apply / BRepAlgoAPI_Common / brep.bbox ..."`
+      to locate the overlap: common volume 0.5293 mm3 (matches the critic), bbox as
+      stated under Result.
+
+
+      Renders inspected: all six PNGs (gear front/top/iso, housing front/top/iso).
+      They agree with the measurements: 32-ish tooth gear with a central bore and
+      a raised hub on one side; U-channel housing with a half-cylindrical upper shell,
+      two half-round bosses near the channel top, a bossed through-hole at z = -26
+      and a plain through-hole at z = -38 in the floor.'
+    Open questions: '- Rotation about the revolute axis is free; I used the simplest
+      flip (180 deg about x, joint angle effectively 0). Any rotation about the y
+      axis composed with it is equally valid.
+
+      - The 0.5293 mm3 tooth-tip/wall overlap is assumed to be present in the dataset''s
+      own assembled pose (the evaluator allows the dataset''s interference + 1 mm3);
+      the local critic cannot confirm the dataset''s own value without the truth.
+
+      - The gear''s bore is only 1 mm deep in the supplied STEP and the pose leaves
+      a 4 mm axial gap between the gear''s bore face (y = 3.5) and the housing floor
+      (y = 7.5); this follows directly from the stated key points and offset, and
+      was not second-guessed.'
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 424
+  finished: '2026-09-19T15:49:07Z'
+- started: '2026-09-21T01:38:07Z'
+  arm: assembly
+  design: fusion-16418-assembly
+  stage_reached: scored
+  force: false
+  mode: modelled
+  backend: build123d
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-16418-assembly
+  worker: &id003
+    backend: cursor
+    role: assemble
+    model: inherit
+    order_id: 001-assemble
+    thread_id: e4638b7b-9b47-42db-8bf5-5d2d275f35b9
+    exit_code: 0
+    seconds: 109
+    commands: 3
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/build123d/fusion-16418-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 3
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - parts/build123d/fusion-16418-assembly/main.py
+      - parts/build123d/fusion-16418-assembly/construction-log.md
+      incomplete: false
+      notes: ''
+      engine_ledger_calls: 1
+      engine_ledger_seconds: 5.23
+      visual_check: 'Visual: gear bore coaxial with the housing lower hole (axes aligned,
+        no axial gap at the joint); bodies touch in the cavity; slight interpenetration
+        at the rim/walls (0.53 mm³), not a clearance gap.'
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id003
+  codex_report:
+    Result: 'Body two (`23309_76dcf100_0003_2`) stays at the identity. Body one (`23309_76dcf100_0002_1`)
+      is placed with Rx(180) then translation `[11.5, 3.5, -38.0]` mm so d1'' = (0,
+      -1, 0) is anti-parallel to d2'' and K1'' = [11.5, 2.5, -38.0]. Critic: axis_angle_deg
+      0.0, axis_line_distance 0.0 mm, axial_offset -5.0 mm (expected -5.0), flip anti-parallel,
+      interference 0.5293 mm³, gap 0.0 mm. Agreement: both bodies volume_rel=0.0 hausdorff=0.0
+      mm; solid_count 2.'
+    Files changed: '- `parts/build123d/fusion-16418-assembly/main.py`
+
+      - `parts/build123d/fusion-16418-assembly/construction-log.md`'
+    Verification: "- `ruff format --check parts/build123d/fusion-16418-assembly/main.py`\
+      \ — already formatted\n- `ruff check parts/build123d/fusion-16418-assembly/main.py`\
+      \ — all checks passed\n- `python -m skillkat.truth assembly-check ... --entry\
+      \ .../main.py --backend build123d --ledger .../001-assemble/engine-ledger.jsonl`\n\
+      \  - axis_angle_deg: 0.0 (max 2.0)\n  - axis_line_distance: 0.0 mm (max 0.5)\n\
+      \  - axial_offset: -5.0 mm (expected -5.0 ± 0.5)\n  - flip: anti-parallel (expected\
+      \ anti-parallel)\n  - interference_mm3: 0.5293 (small overlap at the key-point\
+      \ pose; not moved)\n  - gap_mm: 0.0 (max 1.0)\n  - agreement 23309_76dcf100_0002_1:\
+      \ volume_rel=0.0 hausdorff=0.0 mm\n  - agreement 23309_76dcf100_0003_2: volume_rel=0.0\
+      \ hausdorff=0.0 mm\n  - solid_count: 2\n- Visual: gear bore coaxial with the\
+      \ housing lower hole (axes aligned, no axial gap at the joint); bodies touch\
+      \ in the cavity; slight interpenetration at the rim/walls (0.53 mm³), not a\
+      \ clearance gap."
+    Open questions: None. Revolute spin about the assembled axis was left at Rx(180)
+      with no extra yaw (dataset angle 0 rad; any spin is accepted).
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 136
+  finished: '2026-09-21T01:40:23Z'
+- started: '2026-09-21T01:38:07Z'
+  arm: assembly
+  design: fusion-16418-assembly
+  stage_reached: scored
+  force: false
+  mode: modelled
+  backend: freecad
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-16418-assembly
+  worker: &id004
+    backend: cursor
+    role: assemble
+    model: inherit
+    order_id: 001-assemble
+    thread_id: 9d91894a-b317-4559-b479-802a175039ec
+    exit_code: 0
+    seconds: 136
+    commands: 3
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 3
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - parts/freecad/fusion-16418-assembly/main.py
+      incomplete: false
+      notes: ''
+      commands_list:
+      - ruff format --check parts/freecad/fusion-16418-assembly/main.py
+      - ruff check parts/freecad/fusion-16418-assembly/main.py
+      - .venv/bin/python -m skillkat.truth assembly-check /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/work
+        --entry /Users/danieldriscoll/dual/skillkat/parts/freecad/fusion-16418-assembly/main.py
+        --backend freecad --ledger /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-16418-assembly/worker/001-assemble/engine-ledger.jsonl
+      engine_ledger_calls: 1
+      engine_ledger_seconds: 0.96
+      visual_check: 'Visual: iso and front show the gear seated in the housing cavity
+        on the lower joint hole, hex bore coaxial with the housing cylinder (axes
+        aligned); top shows the gear spanning the cavity toward the open face; bodies
+        contact (gap 0) with a small ~0.53 mm³ interpenetration at the teeth/walls,
+        left on the key-point pose.'
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id004
+  codex_report:
+    Result: 'Body two (`23309_76dcf100_0003_2`) stays at the identity. Body one (gear
+      `23309_76dcf100_0002_1`) is rotated 180° about X so d1'' = (0, -1, 0) is anti-parallel
+      to d2'' = (0, 1, 0), then translated by (11.5, 3.5, -38.0) mm so K1'' = (11.5,
+      2.5, -38.0) and (K1'' - K2'') · d2'' = -5.0. Placement matrices:
+
+
+      - `23309_76dcf100_0002_1`: [[1, 0, 0, 11.5], [0, -1, 0, 3.5], [0, 0, -1, -38.0],
+      [0, 0, 0, 1]]
+
+      - `23309_76dcf100_0003_2`: identity
+
+
+      Critic (assembly-check PASS): axis_angle_deg 0.0 (max 2.0); axis_line_distance
+      0.0 mm (max 0.5); axial_offset -5.0 mm (expected -5.0 ± 0.5); flip anti-parallel;
+      interference 0.5293 mm³; gap 0.0 mm (max 1.0). Key points placed: one [11.5,
+      2.5, -38.0] two [11.5, 7.5, -38.0]. Agreement: both bodies volume_rel=0.0 hausdorff=0.0
+      mm; solid_count 2.'
+    Files changed: '- `parts/freecad/fusion-16418-assembly/main.py`'
+    Verification: '- `ruff format --check parts/freecad/fusion-16418-assembly/main.py`
+      — already formatted
+
+      - `ruff check parts/freecad/fusion-16418-assembly/main.py` — all checks passed
+
+      - `.venv/bin/python -m skillkat.truth assembly-check ... --entry .../main.py
+      --backend freecad --ledger .../engine-ledger.jsonl` — PASS (numbers above)
+
+      - Visual: iso and front show the gear seated in the housing cavity on the lower
+      joint hole, hex bore coaxial with the housing cylinder (axes aligned); top shows
+      the gear spanning the cavity toward the open face; bodies contact (gap 0) with
+      a small ~0.53 mm³ interpenetration at the teeth/walls, left on the key-point
+      pose.'
+    Open questions: '- Revolute angle about the joint axis is free; used Rx(180) only
+      (no extra Ry), matching the dataset angle of 0. Used body two at identity.'
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 158
+  finished: '2026-09-21T01:40:45Z'
+- started: '2026-09-21T01:38:06Z'
+  arm: assembly
+  design: fusion-16418-assembly
+  stage_reached: scored
+  force: false
+  mode: modelled
+  backend: cadquery
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-16418-assembly
+  worker: &id005
+    backend: cursor
+    role: assemble
+    model: inherit
+    order_id: 001-assemble
+    thread_id: 5ce1680b-eb25-4f84-b1fd-506305295f77
+    exit_code: 0
+    seconds: 157
+    commands: 3
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-16418-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 3
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - parts/cadquery/fusion-16418-assembly/main.py
+      - parts/cadquery/fusion-16418-assembly/construction-log.md
+      incomplete: false
+      notes: CadQuery local export via assembly-check (1 ledger row); no hosted engine.
+      engine_ledger_calls: 1
+      engine_ledger_seconds: 5.53
+      visual_check: 'Visual: gear seated on the housing face at the lower r=1.55 hole;
+        bore and hole concentric on front and iso, axes colinear; contact at the hole
+        (gap 0); small bore/hole interpenetration (0.53 mm³); gear teeth clear of
+        the housing, no body-through-body clash.'
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id005
+  codex_report:
+    Result: "Body two (`23309_76dcf100_0003_2`) stays at the identity. Body one (`23309_76dcf100_0002_1`)\
+      \ is placed with R_x(180°) then t = [11.5, 3.5, −38.0] mm so d1' = −Y is anti-parallel\
+      \ to d2' = +Y and (K1' − K2') · d2' = −5.0. K1' = [11.5, 2.5, −38.0], K2' =\
+      \ [11.5, 7.5, −38.0]. Matrix:\n\n```\n[[1, 0, 0,  11.5],\n [0,-1, 0,   3.5],\n\
+      \ [0, 0,-1, -38.0],\n [0, 0, 0,   1  ]]\n```\n\nCritic (`assembly-check` PASS,\
+      \ RevoluteJointType): axis_angle_deg 0.0 (max 2), axis_line_distance 0.0 mm\
+      \ (max 0.5), axial_offset −5.0 mm (expected −5.0 ± 0.5), flip anti-parallel,\
+      \ interference 0.5293 mm³, gap 0.0 mm (max 1). Agreement: both bodies volume_rel=0.0\
+      \ hausdorff=0.0 mm; solid_count 2."
+    Files changed: '- `parts/cadquery/fusion-16418-assembly/main.py`
+
+      - `parts/cadquery/fusion-16418-assembly/construction-log.md`'
+    Verification: "- `.venv/bin/ruff format --check parts/cadquery/fusion-16418-assembly/main.py`\
+      \ — pass\n- `.venv/bin/ruff check parts/cadquery/fusion-16418-assembly/main.py`\
+      \ — pass\n- `python -m skillkat.truth assembly-check ... --entry .../main.py\
+      \ --backend cadquery --ledger .../engine-ledger.jsonl` — PASS\n  - axis_angle_deg:\
+      \ 0.0 (max 2.0)\n  - axis_line_distance: 0.0 (max 0.5)\n  - axial_offset: -5.0\
+      \ expected -5.0 (± 0.5)\n  - flip: anti-parallel\n  - interference_mm3: 0.5293\n\
+      \  - gap_mm: 0.0 (max 1.0)\n  - key points placed: one [11.5, 2.5, -38.0] two\
+      \ [11.5, 7.5, -38.0]\n  - agreement 23309_76dcf100_0002_1: volume_rel=0.0 hausdorff=0.0\
+      \ mm\n  - agreement 23309_76dcf100_0003_2: volume_rel=0.0 hausdorff=0.0 mm\n\
+      \  - solid_count: 2\n- Visual: gear seated on the housing face at the lower\
+      \ r=1.55 hole; bore and hole concentric on front and iso, axes colinear; contact\
+      \ at the hole (gap 0); small bore/hole interpenetration (0.53 mm³); gear teeth\
+      \ clear of the housing, no body-through-body clash."
+    Open questions: '- Revolute angle about the assembled axis was left at the R_x(180°)
+      pose (dataset angle 0 rad is accepted as any rotation about the axis). Body
+      two held at identity.
+
+      - Interference 0.53 mm³ is under 1 mm³; bodies were not moved off the key points.'
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 186
+  finished: '2026-09-21T01:41:12Z'

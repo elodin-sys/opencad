@@ -1,0 +1,619 @@
+attempts:
+- started: '2026-09-19T05:49:34Z'
+  arm: assembly
+  backend: zoo
+  design: fusion-15317-assembly
+  stage_reached: scored
+  force: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-15317-assembly-1789796974
+  worker: &id001
+    backend: cursor
+    role: assemble
+    model: claude-fable-5-1-thinking-max
+    order_id: 001-assemble
+    thread_id: 81a9e26c-f7b4-4d78-8597-ad7ec6214920
+    exit_code: 0
+    seconds: 870
+    commands: 10
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 10
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - /Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/work/assembly.yaml
+      incomplete: false
+      notes: 'Body one translated (0, -14.725755, 0) mm, body two identity: flange-underside
+        end of the r=44.45 face onto the bore-mouth end of the r=25.4 bore. Measured
+        angle 0 deg, line distance 0 mm, axial offset 0 mm, interference 0.0 mm^3,
+        gap 0.0 mm. Initial identity hypothesis (from the task''s ''assembled-frame
+        bbox'') was dropped before any deliverable was written after calibrating the
+        dataset convention on non-held-out joint sets (entity bbox is body-local;
+        is_flipped means anti-parallel axes). No hosted engine calls.'
+      engine_ledger_calls: 0
+      engine_ledger_seconds: 0
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id001
+  codex_report:
+    Result: 'Work order `001-assemble` (part `fusion-15317-assembly`, joint set `joint_set_15317`,
+      revolute joint "Rev28").
+
+
+      Transforms written to `results/fusion-15317-assembly/work/assembly.yaml` (mm,
+      one shared frame = body two''s local frame):
+
+
+      - `22337_e2f65ed2_0003_1` (body one): `origin: [0.0, -14.725755, 0.0]`, `x_axis:
+      [1,0,0]`, `y_axis: [0,1,0]`, `z_axis: [0,0,1]` (pure translation along the joint
+      axis, no rotation).
+
+      - `22337_e2f65ed2_0003_2` (body two): identity.
+
+
+      Joint faces identified with OpenCascade (`brep.cylinders`):
+
+
+      - Body one: convex cylinder r = 44.450 (Ø88.9 flange OD), axis +y through (0,·,0),
+      extent y ∈ [106.298, 125.348] — matches the task''s face bbox exactly. Body
+      one also has a Ø50.8 boss (r = 25.400, y ∈ [92.804, 106.298]) on the −y side
+      of the flange.
+
+      - Body two: concave cylinder r = 25.400 (Ø50.8 bore), axis y through (0,·,0),
+      extent y ∈ [77.285, 91.573], opening in the flat top face y = 91.573 — matches
+      the task''s face bbox exactly.
+
+
+      Placement: body one''s flange-underside end of the joint face (y = 106.298)
+      is moved onto body two''s bore-mouth end (y = 91.573): Δy = 91.572714 − 106.298469
+      = −14.725755 mm. The Ø50.8 boss enters the Ø50.8 bore (0.794 mm clearance at
+      the bore bottom), the flange underside seats on body two''s top face.
+
+
+      Measured after applying the transforms (script in Verification):
+
+
+      - axis angle: 0.000000° (both joint axes are the shared y axis)
+
+      - axis line distance: 0.000000 mm
+
+      - axial offset between the two key points along axis two: 0.000000 mm (task:
+      0.00 mm)
+
+      - interference (`assembly.common_volume`): 0.0 mm³; minimum distance: 0.0 mm
+      (contact)
+
+      - placed body one y-range [78.079, 110.623], body two y-range [62.998, 91.573]'
+    Files changed: '- `/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/work/assembly.yaml`
+      (new; the deliverable)
+
+
+      Nothing else was written in `work/`; the STEP files are untouched. No hosted
+      engine call was made (`engine_calls: 0`, no ledger).'
+    Verification: "Commands run (all `.venv/bin/python` heredoc scripts from the repository\
+      \ root, OpenCascade only):\n\n1. `ls` of the work and order directories.\n2.\
+      \ `brep.read_step` / `brep.bbox` / `brep.volume_props` / `brep.cylinders` /\
+      \ `brep.planar_faces` on both STEP bodies.\n   Measured vs expected: body one\
+      \ bbox [-44.45, 92.804, -44.45]..[44.45, 125.348, 44.45] (task size [88.9, 32.544,\
+      \ 88.9] ✓); body two bbox [-44.45, 62.998, -44.45]..[44.45, 91.573, 44.45] (task\
+      \ size [88.9, 28.575, 88.9] ✓); joint face one r=44.450, y ∈ [106.298, 125.348]\
+      \ (task [106.3, 125.35] ✓); joint face two r=25.400, y ∈ [77.285, 91.573] (task\
+      \ [77.28, 91.57] ✓).\n3–5. Located the Fusion 360 Gallery j1.0.0 download (`~/.cache/skillkat/downloads/fusion360/extract/j1.0.0/joint/`,\
+      \ 19,156 joint-set JSONs, read-only) to learn the dataset's frame conventions.\n\
+      6–7. Convention calibration on random **non-held-out** joint sets only (the\
+      \ five held-out ids 01184/12944/13786/15317/16418 excluded; no body geometry\
+      \ involved):\n   - `axis_line` origins are in the assembled frame and joints\
+      \ are solved: |(o1−o2)·d2| = |offset| with o1 on line two in 399/400 sets →\
+      \ with offset 0 the two key points coincide.\n   - entity `bounding_box` is\
+      \ body-local: for the 371/400 sets with a non-identity body-one transform, the\
+      \ assembled axis origin lies inside the *transformed* bbox in 365 and inside\
+      \ the untransformed bbox alone in 0 → the task text's \"assembled-frame bbox\"\
+      \ is the local bbox and does not fix body one's assembled position.\n   - `is_flipped\
+      \ = True` ⇔ assembled axis directions anti-parallel (47/47 cyl–cyl revolute\
+      \ sets; 0 exceptions among cyl–cyl joints); cylinder-face key points are only\
+      \ Start/Middle/End.\n8. Applied the chosen transform (`assembly_task.apply`)\
+      \ and measured: angle 0.000000°, line distance 0.000000 mm, axial offset 0.000000\
+      \ mm, `common_volume` 0.0 mm³, `min_distance` 0.0 mm. Raw STEP cylinder axes:\
+      \ face one +y (location y=115.823), face two −y (location y=91.573) → anti-parallel\
+      \ after a pure translation, consistent with `is_flipped = True`.\n9. Alternatives\
+      \ (same script pattern), body one y-range / interference / gap:\n   - identity:\
+      \ [92.804, 125.348] / 0.0 mm³ / gap 1.232 mm (no key-point pair gives Δy = 0;\
+      \ gap > 1 mm)\n   - underside end → bore middle (Δy −21.869): 39,133 mm³ interference\n\
+      \   - face middle → bore mouth (Δy −24.250): 46,901 mm³\n   - face middle →\
+      \ bore middle (Δy −31.395): 65,936 mm³\n   - flipped 180°, flange top → bore\
+      \ mouth: 0.0 mm³, gap 0 but the boss points away and the Ø50.8 bore stays empty;\
+      \ it would also make the axes parallel, contradicting `is_flipped = True`.\n\
+      10. Re-parsed the written `assembly.yaml` with the scorer's own `assembly_task.manifest_matrix`,\
+      \ re-applied both matrices and re-measured: angle 0.000000°, line distance 0.000000\
+      \ mm, axial offset 0.000000 mm, interference 0.000000 mm³, gap 0.000000 mm;\
+      \ probe points (0,80,0), (0,90,0), (20,85,0) are inside placed body one and\
+      \ outside body two (boss occupies the bore, flange sits above the top face).\n\
+      \nRenders inspected: all six PNGs. Body one front view: concentric circles r≈44.45\
+      \ and r≈25.4; top view: flange y≈106–125.35 with a 39.7 mm wide channel to y≈112.65\
+      \ and Ø11.1/Ø7.9 cross holes along x, boss y≈93–106 with a relief groove near\
+      \ y≈104; iso confirms boss on the −y side. Body two: r=50.8 arc about a z-parallel\
+      \ axis, flat top at y≈91.57, two Ø7.94 through holes along z at y≈70.9 and y≈84.4;\
+      \ the Ø50.8 bore is hidden in these views and was confirmed by the B-rep."
+    Open questions: '- Which key points: I assumed body one''s key point is the flange-underside
+      end of the Ø88.9 face and body two''s is the bore-mouth end of the Ø50.8 bore
+      (the only pairing that neither interpenetrates nor leaves the matching Ø50.8
+      boss/bore unused). Every other pairing/orientation is listed above with its
+      interference; the flipped flange-top-down pose is the one non-interfering alternative
+      and I rejected it on design intent plus the flip-flag sign.
+
+      - Direction sign: I assumed the STEP cylinder-axis directions preserve Fusion''s
+      surface axes (face one +y, bore −y), which makes a pure translation consistent
+      with `is_flipped = True`; the scorer''s angle check is sign-agnostic, so this
+      only affected the choice between the two non-interfering poses.
+
+      - Rotation about the joint axis left at 0 (dataset angle 0.0000 rad; any value
+      is accepted).
+
+      - The boss and bore are both exactly r = 25.400 (coincident surfaces after placement);
+      OpenCascade''s `Common` returned 0.0 mm³ for that, no NaN.'
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 1137
+  finished: '2026-09-19T06:08:31Z'
+- started: '2026-09-19T15:42:01Z'
+  arm: assembly
+  backend: zoo
+  design: fusion-15317-assembly
+  stage_reached: scored
+  force: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-15317-assembly-1789832521
+  worker: &id002
+    backend: cursor
+    role: assemble
+    model: claude-fable-5-1-thinking-max
+    order_id: 001-assemble
+    thread_id: 522af3c0-c044-4f8c-8b78-0dfdbd18ec4b
+    exit_code: 0
+    seconds: 235
+    commands: 6
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 6
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - /Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/work/assembly.yaml
+      - /Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble/result.md
+      - /Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble/metrics.json
+      incomplete: false
+      notes: 'Rev28 revolute: body two identity; body one translated [0, -14.7258,
+        0] with identity rotation (d1 already anti-parallel to d2). assembly-check
+        PASS first try: axis angle 0, line distance 0, axial offset 0, flip anti-parallel,
+        interference 0.1867 mm3 (coincident-face artifact at y=91.5727), gap 0.'
+      engine_ledger_calls: 0
+      engine_ledger_seconds: 0
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id002
+  codex_report:
+    Result: 'Placement for Revolute joint `Rev28` (joint set `joint_set_15317`), written
+      to `results/fusion-15317-assembly/work/assembly.yaml`:
+
+
+      - `22337_e2f65ed2_0003_2` (body two): identity (`origin [0, 0, 0]`, `x_axis
+      [1,0,0]`, `y_axis [0,1,0]`, `z_axis [0,0,1]`).
+
+      - `22337_e2f65ed2_0003_1` (body one): pure translation `origin [0.0, -14.7258,
+      0.0]`, rotation identity (`x_axis [1,0,0]`, `y_axis [0,1,0]`, `z_axis [0,0,1]`).
+
+
+      Derivation: with body two fixed, d2'' = d2 = [0, -1, 0] and K2'' = K2 = [0,
+      91.5727, 0]. Body one''s local axis d1 = [0, 1, 0] is already anti-parallel
+      to d2'' (`is_flipped` = true), so no rotation is needed; the translation is
+      t = K2 - K1 = [0, 91.5727 - 106.2985, 0] = [0, -14.7258, 0], which puts K1''
+      = K2'' exactly (line distance 0, axial offset (K1'' - K2'') . d2'' = 0 = `offset`).
+
+
+      Geometrically this drops body one''s r25.4 boss (local y 92.804..106.298) into
+      body two''s r25.4 bore (local y 77.285..91.573) with body one''s disc underside
+      flush on body two''s flat top face at y = 91.5727. The boss tip lands at world
+      y 78.0787, 0.794 mm above the bore bottom (77.2847).
+
+
+      Critic (`skillkat.truth assembly-check`) numbers, all ok:
+
+
+      - axis angle: 0.0 deg (max 2.0)
+
+      - axis line distance: 0.0 mm (max 0.5)
+
+      - axial offset: 0.0 mm (expected 0.0 +/- 0.5)
+
+      - flip: anti-parallel (expected anti-parallel)
+
+      - interference: 0.1867 mm3 (critic threshold 1.0; the evaluator allows max(1,
+      dataset''s own + 1))
+
+      - gap: 0.0 mm (max 1.0)
+
+      - key points placed: one [0.0, 91.5727, 0.0], two [0.0, 91.5727, 0.0]
+
+
+      The 0.1867 mm3 common volume is a coincident-face artifact: the Common solid''s
+      bbox is [-44.4498, 91.5727, -44.45] .. [44.4498, 91.5727, 44.45], i.e. zero
+      thickness at the shared plane y = 91.5727 (disc underside on body two''s top
+      face) plus the zero-clearance r25.4 boss/bore fit. Per the brief the bodies
+      were left on their key points rather than moved to remove it.'
+    Files changed: '- `/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/work/assembly.yaml`
+      (new, the deliverable)
+
+      - `/Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/worker/001-assemble/result.md`,
+      `metrics.json`, `done` (protocol files)
+
+
+      No STEP file, `contract.yaml`, `brief.md`, or anything under `truth/` was touched.'
+    Verification: "Commands run (from the repository root, `.venv/bin/python`; no\
+      \ hosted engine calls, `engine_calls` = 0):\n\n1. `ls -la` of the work dir,\
+      \ renders and order dir (inventory).\n2. OpenCascade measurement of both STEP\
+      \ bodies: `brep.read_step`, `brep.bbox`, `brep.cylinders`.\n   - body one bbox\
+      \ [-44.45, 92.8045, -44.45] .. [44.45, 125.3485, 44.45]; joint face = r44.45\
+      \ pin cylinder along +y, t 106.2985..125.3485 (matches task bbox y 106.298..125.348\
+      \ and K1 y 106.2985); boss r25.4 along y at 92.8045..94.3925 and 103.9175..106.2985\
+      \ (grooved between).\n   - body two bbox [-44.45, 62.9977, -44.45] .. [44.45,\
+      \ 91.5727, 44.45]; joint face = r25.4 hole cylinder along y, t 77.2847..91.5727\
+      \ (matches task bbox y 77.285..91.573 and K2 y 91.5727); underside is an r50.8\
+      \ convex cylinder about z.\n3. `.venv/bin/python -m skillkat.truth assembly-check\
+      \ /Users/danieldriscoll/dual/skillkat/results/fusion-15317-assembly/work` ->\
+      \ `assembly-check PASS (RevoluteJointType)`, every line ok (numbers above),\
+      \ exit 0.\n4. Independent re-application of the manifest with `assembly_task.manifest_matrix`\
+      \ / `apply`: placed body one bbox [-44.45, 78.0787, -44.45] .. [44.45, 110.6227,\
+      \ 44.45] (expected local y shifted by -14.7258: 92.8045 - 14.7258 = 78.0787,\
+      \ 125.3485 - 14.7258 = 110.6227, ok); body two unchanged; common volume 0.1867\
+      \ mm3 with a zero-thickness Common bbox at y = 91.5727.\n5. Listing of sibling\
+      \ assembly orders to match the `metrics.json` convention (none existed yet;\
+      \ the brief's schema was used).\n6. `touch` of the `done` file.\n\nRenders inspected:\
+      \ `22337_e2f65ed2_0003_1-{front,iso,top}.png` (disc r44.45 with a central r25.4\
+      \ boss, four r5.56 counterbored / r3.97 through holes along x in the disc rim,\
+      \ one small angled r1.13 hole) and `22337_e2f65ed2_0003_2-{front,iso,top}.png`\
+      \ (D-shaped block, flat top with the r25.4 bore, r3.97 cross holes along z,\
+      \ convex r50.8 underside). They agree with the measured cylinders and with the\
+      \ boss-in-bore reading of the joint.\n\nMeasured vs expected: axis angle 0.0\
+      \ vs <= 2 deg; line distance 0.0 vs <= 0.5 mm; axial offset 0.0 vs 0.0 +/- 0.5\
+      \ mm; flip anti-parallel vs anti-parallel; gap 0.0 vs <= 1 mm; interference\
+      \ 0.1867 vs <= 1 mm3 (critic floor)."
+    Open questions: '- Rotation about the revolute axis was left at 0 (identity).
+      The task accepts any rotation about a revolute axis; both mating features (r25.4
+      boss/bore, flat disc underside on a full 88.9 x 88.9 flat top) are axisymmetric
+      about the joint axis, so interference and gap do not depend on this angle. The
+      cross holes of the two bodies were not aligned on purpose since the joint does
+      not constrain them.
+
+      - The 0.1867 mm3 interference is attributed to coincident faces (zero-thickness
+      Common bbox); it was not removed by moving the bodies, following the brief.
+      The evaluator''s allowance (max(1, dataset''s own + 1) mm3) covers it even if
+      the dataset''s pose has zero interference.'
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 360
+  finished: '2026-09-19T15:48:02Z'
+- started: '2026-09-21T01:31:47Z'
+  arm: assembly
+  design: fusion-15317-assembly
+  stage_reached: scored
+  force: false
+  mode: modelled
+  backend: freecad
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-15317-assembly
+  worker: &id003
+    backend: cursor
+    role: assemble
+    model: inherit
+    order_id: 001-assemble
+    thread_id: 3753b484-907d-4366-b7dc-e8ec5a266687
+    exit_code: 0
+    seconds: 158
+    commands: 3
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-15317-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 3
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - parts/freecad/fusion-15317-assembly/main.py
+      incomplete: false
+      notes: ''
+      commands_list:
+      - ruff format --check parts/freecad/fusion-15317-assembly/main.py
+      - ruff check parts/freecad/fusion-15317-assembly/main.py
+      - python -m skillkat.truth assembly-check results/freecad/fusion-15317-assembly/work
+        --entry parts/freecad/fusion-15317-assembly/main.py --backend freecad --ledger
+        results/freecad/fusion-15317-assembly/worker/001-assemble/engine-ledger.jsonl
+      engine_ledger_calls: 1
+      engine_ledger_seconds: 1.52
+      visual_check: 'Visual: iso/front/top show the flange boss seated on the half-cylinder
+        +Y face with concentric joint axes (front: nested circles), contact at the
+        shared key-point plane and no visible gap; a slight 0.1867 mm3 interpenetration
+        at the boss/bore seat was left in place.'
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id003
+  codex_report:
+    Result: 'Body two at identity. Body one identity rotation (d1=(0,1,0) already
+      anti-parallel to d2=(0,-1,0)) and translation T=(0, -14.7258, 0) so K1 lands
+      on K2 (offset 0).
+
+
+      Placements (4x4 row-major mm):
+
+      - 22337_e2f65ed2_0003_1: [[1,0,0,0],[0,1,0,-14.7258],[0,0,1,0],[0,0,0,1]]
+
+      - 22337_e2f65ed2_0003_2: I
+
+
+      Critic: axis_angle 0.0 deg, axis_line_distance 0.0 mm, axial_offset 0.0 mm,
+      flip anti-parallel, interference 0.1867 mm3, gap 0.0 mm. Key points both [0.0,
+      91.5727, 0.0].
+
+      Agreement: both bodies volume_rel=0.0 hausdorff=0.0 mm; solid_count 2.'
+    Files changed: '- parts/freecad/fusion-15317-assembly/main.py'
+    Verification: "- `ruff format --check parts/freecad/fusion-15317-assembly/main.py`\
+      \ — already formatted\n- `ruff check parts/freecad/fusion-15317-assembly/main.py`\
+      \ — all checks passed\n- `python -m skillkat.truth assembly-check ... --entry\
+      \ .../main.py --backend freecad --ledger .../engine-ledger.jsonl` — PASS\n \
+      \ - axis_angle_deg 0.0 (max 2.0)\n  - axis_line_distance 0.0 (max 0.5)\n  -\
+      \ axial_offset 0.0 (expected 0.0 +/- 0.5)\n  - flip anti-parallel (expected\
+      \ anti-parallel)\n  - interference_mm3 0.1867 (small key-point overlap, not\
+      \ moved)\n  - gap_mm 0.0 (max 1.0)\n  - agreement both bodies volume_rel=0.0\
+      \ hausdorff=0.0 mm\n  - solid_count 2\nVisual: iso/front/top show the flange\
+      \ boss seated on the half-cylinder +Y face with concentric joint axes (front:\
+      \ nested circles), contact at the shared key-point plane and no visible gap;\
+      \ a slight 0.1867 mm3 interpenetration at the boss/bore seat was left in place."
+    Open questions: None. Revolute angle left at identity (any rotation about the
+      axis is accepted). Small interference reported, not corrected.
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 245
+  finished: '2026-09-21T01:35:53Z'
+- started: '2026-09-21T01:31:47Z'
+  arm: assembly
+  design: fusion-15317-assembly
+  stage_reached: scored
+  force: false
+  mode: modelled
+  backend: build123d
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-15317-assembly
+  worker: &id004
+    backend: cursor
+    role: assemble
+    model: inherit
+    order_id: 001-assemble
+    thread_id: 8abbe551-0511-4be8-9ff6-8b338c5f3b8d
+    exit_code: 0
+    seconds: 127
+    commands: 3
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/build123d/fusion-15317-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 3
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - parts/build123d/fusion-15317-assembly/main.py
+      - parts/build123d/fusion-15317-assembly/construction-log.md
+      incomplete: false
+      notes: ''
+      engine_ledger_calls: 1
+      engine_ledger_seconds: 6.02
+      visual_check: 'Visual: iso/front/top show the flange concentric with the D-body
+        on a shared Y axis; front circles are coaxial with no radial gap; top shows
+        face contact along the mating plane; a tiny 0.19 mm³ overlap at the key-point
+        mate (not moved).'
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id004
+  codex_report:
+    Result: 'Body two at identity. Body one identity rotation (d1=(0,1,0) already
+      anti-parallel to d2=(0,-1,0)) and translation t=[0, -14.7258, 0] so K1'' = K2''
+      = [0, 91.5727, 0].
+
+
+      Critic (assembly-check PASS, RevoluteJointType):
+
+      - axis_angle_deg: 0.0 (max 2.0)
+
+      - axis_line_distance: 0.0 mm (max 0.5)
+
+      - axial_offset: 0.0 mm (expected 0.0 ± 0.5)
+
+      - flip: anti-parallel (expected anti-parallel)
+
+      - interference_mm3: 0.1867 (small key-point overlap; not moved)
+
+      - gap_mm: 0.0 (max 1.0)
+
+      - agreement 22337_e2f65ed2_0003_1: volume_rel=0.0 hausdorff=0.0 mm
+
+      - agreement 22337_e2f65ed2_0003_2: volume_rel=0.0 hausdorff=0.0 mm
+
+      - solid_count: 2'
+    Files changed: '- parts/build123d/fusion-15317-assembly/main.py
+
+      - parts/build123d/fusion-15317-assembly/construction-log.md'
+    Verification: '- `ruff format --check parts/build123d/fusion-15317-assembly/main.py`
+      — already formatted
+
+      - `ruff check parts/build123d/fusion-15317-assembly/main.py` — all checks passed
+
+      - `python -m skillkat.truth assembly-check ... --entry .../main.py --backend
+      build123d --ledger .../engine-ledger.jsonl` — PASS; numbers above
+
+      - Visual: iso/front/top show the flange concentric with the D-body on a shared
+      Y axis; front circles are coaxial with no radial gap; top shows face contact
+      along the mating plane; a tiny 0.19 mm³ overlap at the key-point mate (not moved).'
+    Open questions: None. Joint axes were already anti-parallel in the local frames,
+      so the only free revolute angle used is 0 (identity rotation about Y).
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 255
+  finished: '2026-09-21T01:36:02Z'
+- started: '2026-09-21T01:31:46Z'
+  arm: assembly
+  design: fusion-15317-assembly
+  stage_reached: scored
+  force: false
+  mode: modelled
+  backend: cadquery
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-15317-assembly
+  worker: &id005
+    backend: cursor
+    role: assemble
+    model: inherit
+    order_id: 001-assemble
+    thread_id: eb13db2f-c4a8-420d-ba49-109d9c00b14b
+    exit_code: 0
+    seconds: 116
+    commands: 3
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-15317-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 3
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - parts/cadquery/fusion-15317-assembly/main.py
+      incomplete: false
+      notes: CadQuery local export via assembly-check (1 ledger row); no hosted engine.
+      commands_list:
+      - ruff format --check parts/cadquery/fusion-15317-assembly/main.py
+      - ruff check parts/cadquery/fusion-15317-assembly/main.py
+      - .venv/bin/python -m skillkat.truth assembly-check ... --entry parts/cadquery/fusion-15317-assembly/main.py
+        --backend cadquery --ledger worker/001-assemble/engine-ledger.jsonl
+      engine_ledger_calls: 1
+      engine_ledger_seconds: 5.97
+      visual_check: 'Visual: flange of body one seated on the flat diametral face
+        of body two at the shared key point, axes colinear (concentric circles in
+        front; coaxial disc-in-half-cylinder in iso), bodies in contact (gap 0), small
+        interpenetration 0.1867 mm³ at the mating faces not visible as a gross clash.'
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id005
+  codex_report:
+    Result: 'Body two (`22337_e2f65ed2_0003_2`) stays at the identity. Body one (`22337_e2f65ed2_0003_1`)
+      is translated only: local axes d1=+Y and d2=−Y are already anti-parallel, matching
+      `is_flipped` true, so no rotation is required.
+
+
+      - K1 = [0.0, 106.2985, 0.0], d1 = [0, 1, 0]
+
+      - K2 = [0.0, 91.5727, 0.0], d2 = [0, −1, 0]
+
+      - Target K1'' = K2 + offset * d2 = [0.0, 91.5727, 0.0]
+
+      - T = K1'' − K1 = [0.0, −14.7258, 0.0]
+
+
+      placements:
+
+      - `22337_e2f65ed2_0003_1`: translation [0.0, −14.7258, 0.0], rotation identity
+
+      - `22337_e2f65ed2_0003_2`: identity
+
+
+      Critic (assembly-check PASS, RevoluteJointType):
+
+      - axis_angle_deg: 0.0 (max 2.0)
+
+      - axis_line_distance: 0.0 mm (max 0.5)
+
+      - axial_offset: 0.0 mm (expected 0.0 ± 0.5)
+
+      - flip: anti-parallel (expected anti-parallel)
+
+      - interference_mm3: 0.1867
+
+      - gap_mm: 0.0 (max 1.0)
+
+      - key points placed: one [0.0, 91.5727, 0.0] two [0.0, 91.5727, 0.0]
+
+      - agreement 22337_e2f65ed2_0003_1: volume_rel=0.0 hausdorff=0.0 mm
+
+      - agreement 22337_e2f65ed2_0003_2: volume_rel=0.0 hausdorff=0.0 mm
+
+      - solid_count: 2 expected 2'
+    Files changed: '- `parts/cadquery/fusion-15317-assembly/main.py`'
+    Verification: '- `ruff format --check` and `ruff check` on `main.py`: pass
+
+      - `.venv/bin/python -m skillkat.truth assembly-check ... --entry .../main.py
+      --backend cadquery --ledger .../engine-ledger.jsonl`: PASS (numbers above)
+
+      - Visual: flange of body one seated on the flat diametral face of body two at
+      the shared key point, axes colinear (concentric circles in front; coaxial disc-in-half-cylinder
+      in iso), bodies in contact (gap 0), small interpenetration 0.1867 mm³ at the
+      mating faces not visible as a gross clash.'
+    Open questions: '- Dataset joint angle is 0.0000 rad; any rotation about the revolute
+      axis is accepted, so identity rotation was used.
+
+      - Interference 0.1867 mm³ left as-is (task: do not move bodies off the key points
+      to clear a small overlap).'
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 369
+  finished: '2026-09-21T01:37:55Z'

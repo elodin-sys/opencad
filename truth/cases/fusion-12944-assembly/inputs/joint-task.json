@@ -1,0 +1,75 @@
+{
+  "set": "joint_set_12944",
+  "joint_name": "Rev15",
+  "joint_type": "RevoluteJointType",
+  "rotation_axis": "ZAxisJointDirection",
+  "limits": {},
+  "body_one": "22303_e9723631_0014_1",
+  "body_two": "22303_e9723631_0013_1",
+  "one": {
+    "surface_type": "CylinderSurfaceType",
+    "radius_mm": 9.0,
+    "bbox_local_mm": [
+      [
+        -9.0,
+        0.0,
+        -9.0
+      ],
+      [
+        9.0,
+        15.0,
+        9.0
+      ]
+    ],
+    "key_point_type": "EndKeyPoint",
+    "key_point_local_mm": [
+      0.0,
+      15.0,
+      0.0
+    ],
+    "axis_direction_local": [
+      0.0,
+      -1.0,
+      0.0
+    ]
+  },
+  "two": {
+    "surface_type": "CylinderSurfaceType",
+    "radius_mm": 8.9635,
+    "bbox_local_mm": [
+      [
+        -8.963,
+        -59.0,
+        -8.963
+      ],
+      [
+        8.963,
+        0.0,
+        8.963
+      ]
+    ],
+    "key_point_type": "MiddleKeyPoint",
+    "key_point_local_mm": [
+      0.0,
+      -29.5,
+      0.0
+    ],
+    "axis_direction_local": [
+      0.0,
+      -1.0,
+      0.0
+    ]
+  },
+  "offset_mm": 0.0,
+  "angle_rad": 3.141592653589793,
+  "is_flipped": true,
+  "evaluator": {
+    "axis_angle_max_deg": 2.0,
+    "axis_line_distance_max_mm": 0.5,
+    "axial_offset_tolerance_mm": 0.5,
+    "interference_max_mm3": "max(1, dataset's own interference + 1)",
+    "gap_max_mm": 1.0,
+    "axial_offset_definition": "(K1' - K2') . d2' where K1', K2' are the two key points and d2' body two's axis direction, all after placement; must equal offset_mm",
+    "flip_definition": "is_flipped true: body one's placed axis_direction_local is anti-parallel to body two's placed axis_direction_local; false: parallel"
+  }
+}

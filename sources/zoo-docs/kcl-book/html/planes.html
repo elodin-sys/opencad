@@ -1,0 +1,394 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Planes - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/planes.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="planes"><a class="header" href="#planes">Planes</a></h1>
+<ul>
+<li><a href="#offset-planes">Offset planes</a></li>
+<li><a href="#custom-planes">Custom planes</a></li>
+<li><a href="#planeof">planeOf</a></li>
+</ul>
+<p>A plane is a 2D surface that exists in 3D space. KCL has its own <a href="https://zoo.dev/docs/kcl-std/types/std-types-Plane">plane type</a>, which is mostly used for starting a sketch. We've previously sketched on standard planes like XY (remember, there are six -- XY, YZ, XZ, -XY, -YZ and -XZ). But you can easily define your own planes too! We'll look at custom planes in this chapter.</p>
+<h2 id="offset-planes"><a class="header" href="#offset-planes">Offset planes</a></h2>
+<p>You can use the <a href="https://zoo.dev/docs/kcl-std/functions/std-offsetPlane"><code>offsetPlane</code></a> function to copy any other plane, but moved some direction up or down the third axis. For example, let's draw a small circle on XY, a medium circle on a plane 10 units above it, and a big circle 20 units above it.</p>
+<pre><code class="language-kcl=three_offset_planes">r = 10
+sketch001 = sketch(on = XY) {
+  circle1 = circle(start = [var -0.52mm, var 0.56mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  // Construction geometry line, used for the radius constraint.
+  radiusLine = line(start = [var -0.52mm, var 0.56mm], end = [var 0mm, var 0mm], construction = true)
+  coincident([radiusLine.start, circle1.start])
+  coincident([radiusLine.end, circle1.center])
+  // Constrain the circle's radius.
+  distance([radiusLine.start, radiusLine.end]) == r
+  vertical(radiusLine)
+}
+
+// Note the `offsetPlane` call!
+sketch002 = sketch(on = offsetPlane(XY, offset = 10)) {
+  circle1 = circle(start = [var -0.52mm, var 0.56mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  line1 = line(start = [var -0.52mm, var 0.56mm], end = [var 0mm, var 0mm], construction = true)
+  coincident([line1.start, circle1.start])
+  coincident([line1.end, circle1.center])
+  distance([line1.start, line1.end]) == r * 2
+  vertical(line1)
+}
+
+// Another `offsetPlane` call, offset even further!
+sketch003 = sketch(on = offsetPlane(XY, offset = 20)) {
+  circle1 = circle(start = [var -0.52mm, var 0.56mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  line1 = line(start = [var -0.52mm, var 0.56mm], end = [var 0mm, var 0mm], construction = true)
+  coincident([line1.start, circle1.start])
+  coincident([line1.end, circle1.center])
+  distance([line1.start, line1.end]) == r * 3
+  vertical(line1)
+}
+</code></pre>
+<p><model-viewer
+            alt="Circles on the XY plane and 10 above it and 20 above it"
+            src="gltf/three_offset_planes/output.gltf"
+            poster="images/dynamic/three_offset_planes.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Offset planes are a quick and easy way to create new planes by using some other plane as a template. But what if you want to create a plane that actually points in a different direction, i.e. has different axes? What if you wanted to create a plane that was pointing at an unusual angle from the global X Y and Z axes? Let's try it.</p>
+<h2 id="custom-planes"><a class="header" href="#custom-planes">Custom planes</a></h2>
+<p>You can define your own plane with your own axes like this:</p>
+<pre><code class="language-kcl">customPlane = {
+  origin = { x = 0, y = 1, z = 0},
+  xAxis = { x = 1, y = 0, z = 0 },
+  yAxis = { x = 0, y = 0, z = 1 },
+}
+</code></pre>
+<p>Note the custom plane has a few properties:</p>
+<ul>
+<li>An origin, which is a 3D point in space, using the global coordinate system (i.e. it's relative to the overall scene)</li>
+<li>X and Y axes, which are defined as vectors</li>
+</ul>
+<p>The plane's Z axis is the cross product of its X and Y axes. It's uniquely determined, so you don't need to specify it. The Z axis respects the <a href="https://en.wikipedia.org/wiki/Right-hand_rule">right-hand rule</a>.</p>
+<p>Now let's use this custom plane in a sketch. We'll build two identical cylinders, but one is on the standard XY plane, and one is on the custom plane we defined above.</p>
+<pre><code class="language-kcl=custom_plane">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+customPlane = {
+  origin = { x = 0, y = 6, z = 0 },
+  xAxis = { x = 1, y = 0.5, z = 0 },
+  yAxis = { x = 0, y = 0.5, z = 1 }
+}
+
+// Build a cylinder on a custom plane
+sketch001 = sketch(on = customPlane) {
+  circle1 = circle(start = [var -0.52mm, var 0.56mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  line1 = line(start = [var -0.52mm, var 0.56mm], end = [var 0mm, var 0mm], construction = true)
+  coincident([line1.start, circle1.start])
+  coincident([line1.end, circle1.center])
+  distance([line1.start, line1.end]) == 1
+  vertical(line1)
+}
+region001 = region(segments = [sketch001.circle1])
+extrude001 = extrude(region001, length = 2)
+
+// Build the same cylinder, but on the XY plane.
+sketch002 = sketch(on = XY) {
+  circle1 = circle(start = [var -0.52mm, var 0.56mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  line1 = line(start = [var -0.52mm, var 0.56mm], end = [var 0mm, var 0mm], construction = true)
+  coincident([line1.start, circle1.start])
+  coincident([line1.end, circle1.center])
+  distance([line1.start, line1.end]) == 1
+  vertical(line1)
+}
+region002 = region(segments = [sketch002.circle1])
+extrude002 = extrude(region002, length = 2)
+</code></pre>
+<p><model-viewer
+            alt="One cylinder on XY plane and another on a custom plane"
+            src="gltf/custom_plane/output.gltf"
+            poster="images/dynamic/custom_plane.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Great! Custom planes give you a lot of power and flexibility. You can draw sketches in any orientation now. But they can be a bit verbose and complicated to define, so you should use <a href="https://zoo.dev/docs/kcl-std/functions/std-offsetPlane"><code>offsetPlane</code></a> if you've already defined a plane on the same X and Y axis. You can even combine <code>offsetPlane</code> and custom planes, like this:</p>
+<pre><code class="language-kcl">// Make a custom plane.
+customPlane = {
+  origin = { x = 0, y = 1, z = 0},
+  xAxis = { x = 1, y = 0, z = 0 },
+  yAxis = { x = 0, y = 0, z = 1 },
+}
+// Now offset it 20 up its normal axis.
+newPlane = offsetPlane(customPlane, offset = 20)
+</code></pre>
+<h2 id="planeof"><a class="header" href="#planeof">planeOf</a></h2>
+<p>There's one last method to create a plane: via the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-planeOf"><code>planeOf</code></a> function. You can choose some 3D solid in your KCL file, and get the plane that its face lies on using <code>planeOf(mySolid, face = myFace)</code>. For example:</p>
+<pre><code class="language-kcl">// Make a square
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+sketch001 = sketch(on = XY) {
+  line1 = line(start = [var -1.53mm, var -1.41mm], end = [var 1.99mm, var -1.41mm])
+  line2 = line(start = [var 1.99mm, var -1.41mm], end = [var 1.99mm, var 1.42mm])
+  line3 = line(start = [var 1.99mm, var 1.42mm], end = [var -1.53mm, var 1.42mm])
+  line4 = line(start = [var -1.53mm, var 1.42mm], end = [var -1.53mm, var -1.41mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+}
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+
+// Make an arc to sweep the square along
+sketch002 = sketch(on = YZ) {
+  line1 = line(start = [var 0mm, var 0mm], end = [var 0mm, var 2.39mm])
+  coincident([line1.start, ORIGIN])
+  vertical([line1.end, ORIGIN])
+  arc1 = arc(start = [var 0mm, var 2.39mm], end = [var -2.32mm, var 5.96mm], center = [var -3.91mm, var 2.39mm])
+  coincident([line1.end, arc1.start])
+  tangent([line1, arc1])
+}
+
+// Sweep the square along the arc
+sweep001 = sweep(region001, path = [sketch002.line1, sketch002.arc1])
+
+// Store the plane at the end of the sweep
+p = planeOf(sweep001, face = END)
+</code></pre>
+<p>This plane can be used for sketching on, or altered with <a href="https://zoo.dev/docs/kcl-std/functions/std-offsetPlane"><code>offsetPlane</code></a>.</p>
+<p>We've covered three different ways to create planes:</p>
+<ul>
+<li>Offsetting from an existing plane</li>
+<li>Manually defining a plane with axes and an origin</li>
+<li>Using the plane of a face.</li>
+</ul>
+<p>Combined with the six standard planes, you have a wide range of planes that you can use to sketch on, or build solids with. In the next chapter, we'll look at how to manipulate and change those solids.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="sketch_on_face.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="transform_3d.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="sketch_on_face.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="transform_3d.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

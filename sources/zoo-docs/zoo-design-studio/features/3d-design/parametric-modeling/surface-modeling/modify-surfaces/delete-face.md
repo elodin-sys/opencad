@@ -1,0 +1,85 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/modify-surfaces/delete-face
+Title: Delete Face
+
+# Delete Face
+
+Delete selected faces from surface geometry in Zoo Design Studio.
+
+Delete Face removes selected faces from a solid or polysurface. Use it when a body needs an
+intentional opening, when a split created a face you want to discard, or when imported geometry
+contains a bad patch that should be rebuilt.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/modify-surfaces/delete-face/delete-face.gif"
+  alt="Deleting a selected face in Zoo Design Studio"
+  aspect="649 / 593"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Select one or more faces, then run Delete Face to remove them from the body
+</div>
+
+## Selection
+
+Select the face or faces you want to remove. Delete Face can remove multiple faces in one feature,
+as long as they belong to the selected solid or surface body.
+
+## When to use it
+
+- Open a solid body by removing a cap, wall, or end face
+- Remove a face created by [Split](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/modify-surfaces/split)
+- Delete an unwanted surface patch before replacing it with new surface geometry
+- Simplify imported geometry by removing faces you do not need
+
+## What changes
+
+Deleting a face from a closed solid makes the result open. The surrounding edges become free
+boundaries, and features that referenced the deleted face may need to be edited.
+
+If the result is not what you expected, undo the operation or edit the Delete Face feature in the
+feature tree.
+
+## Are you interested in code?
+
+Zoo Design Studio writes KCL behind the scenes. Delete Face is the `deleteFace` function applied to
+one or more selected faces.
+
+Here is a small open-box example. The sketch creates a rectangular prism, tags the top cap during
+the extrude, then deletes the top face and one side face.
+
+```kcl
+@settings(defaultLengthUnit = mm)
+
+// Delete Face example
+// Remove selected faces from an extruded rectangular body.
+boxWidth = 20mm
+boxDepth = 24mm
+boxHeight = 15mm
+
+boxSketch = sketch(on = XY) {
+  bottomEdge = line(start = [var 0mm, var 0mm], end = [var 20mm, var 0mm])
+  rightEdge = line(start = [var 20mm, var 0mm], end = [var 20mm, var 24mm])
+  topEdge = line(start = [var 20mm, var 24mm], end = [var 0mm, var 24mm])
+  leftEdge = line(start = [var 0mm, var 24mm], end = [var 0mm, var 0mm])
+
+  coincident([bottomEdge.start, ORIGIN])
+  coincident([bottomEdge.end, rightEdge.start])
+  coincident([rightEdge.end, topEdge.start])
+  coincident([topEdge.end, leftEdge.start])
+  coincident([leftEdge.end, bottomEdge.start])
+  horizontal(bottomEdge)
+  vertical(rightEdge)
+  horizontal(topEdge)
+  vertical(leftEdge)
+  horizontalDistance([bottomEdge.start, bottomEdge.end]) == boxWidth
+  verticalDistance([bottomEdge.start, leftEdge.start]) == boxDepth
+}
+
+baseRegion = region(point = [boxWidth / 2, boxDepth / 2], sketch = boxSketch)
+closedBox = extrude(baseRegion, length = boxHeight, tagEnd = $topFace)
+hiddenBoxSketch = hide(boxSketch)
+openSurface = deleteFace(closedBox, faces = [topFace, baseRegion.tags.leftEdge])
+```
+
+Want to find out more about the `deleteFace` function? [Check it out](/docs/kcl-std/functions/std-solid-deleteFace)
+in our KCL docs.

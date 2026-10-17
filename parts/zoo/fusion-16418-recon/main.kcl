@@ -1,0 +1,10 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// fusion-16418-recon: 36-tooth disc with a pointy-top hex boss, hex socket and Ø3.1 floor bore.
+// Parameters live in params.kcl; datum.kcl is the toothed disc (gearTeeth.toothedDisc) plus the hex boss;
+// hexDrive cuts the socket and the floor bore.
+import datum from "datum.kcl"
+import hexDrive from "hexDrive.kcl"
+
+datum
+  |> hexDrive(%)

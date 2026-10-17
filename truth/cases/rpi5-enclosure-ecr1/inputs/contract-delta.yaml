@@ -1,0 +1,396 @@
+parameters:
+- name: headroom
+  value: 30.0
+  edit_test:
+    delta: 5
+    expect:
+      volume_delta: 3560
+      direction: increase
+      tolerance_rel: 0.02
+      bbox_delta:
+      - 0
+      - 0
+      - 5
+    sweep:
+      min: 15
+      max: 35
+      steps: 10
+    infeasible_deltas:
+    - -31.0
+envelope:
+  min:
+  - -8.5
+  - -8.5
+  - -7.4
+  max:
+  - 93.5
+  - 64.5
+  - 35.6
+  tolerance: 0.1
+acceptance:
+  volume:
+    expected: 65110.287
+    tolerance_rel: 0.005
+    provenance: measured (reference model)
+    note: 'ECR-1 reference: the passing STEP with its wall band raised 10 mm, corner pilots following the rim and the lid
+      translated (scripts/rpi5_ecr_deltas.py).'
+  center_of_mass:
+    expected:
+    - 41.5186
+    - 29.2144
+    - 15.8743
+    tolerance: 0.2
+    provenance: measured (reference model)
+    note: ECR-1 reference geometry centroid (scripts/rpi5_ecr_deltas.py).
+  blockout:
+    volume_min: 235000
+    volume_max: 275000
+  solids:
+  - name: base
+    contains_point:
+    - 42.5
+    - 28
+    - -6
+    volume:
+      expected: 41845.785
+      tolerance_rel: 0.005
+      provenance: measured (reference model)
+      note: ECR-1 reference geometry
+    description: Exact source-contained point; connected shell, floor, standoffs and square corner posts.
+  - name: lid
+    contains_point:
+    - 42.5
+    - 28
+    - 34.6
+    volume:
+      expected: 23264.503
+      tolerance_rel: 0.005
+      provenance: measured (reference model)
+      note: ECR-1 reference geometry
+    description: Exact source-contained point; separate flat cover with four through holes.
+  hardware:
+  - name: pcb_slab
+    kind: box
+    min:
+    - 0
+    - 0
+    - 0
+    max:
+    - 85
+    - 56
+    - 1.6
+    description: Source requirement 3 PCB slab, copied exactly; not exported as a body.
+  - name: bottom_components
+    kind: box
+    min:
+    - 0
+    - 0
+    - -3.0
+    max:
+    - 85
+    - 56
+    - 0
+    exclude_cylinders:
+    - point:
+      - 3.5
+      - 3.5
+      - -3
+      direction:
+      - 0
+      - 0
+      - 1
+      radius: 3.1
+      length: 3
+    - point:
+      - 61.5
+      - 3.5
+      - -3
+      direction:
+      - 0
+      - 0
+      - 1
+      radius: 3.1
+      length: 3
+    - point:
+      - 3.5
+      - 52.5
+      - -3
+      direction:
+      - 0
+      - 0
+      - 1
+      radius: 3.1
+      length: 3
+    - point:
+      - 61.5
+      - 52.5
+      - -3
+      direction:
+      - 0
+      - 0
+      - 1
+      radius: 3.1
+      length: 3
+    description: Source lower keep-out minus four component-free cylinders, radius 3.1, on the mounting axes. Cylinder exclusions
+      apply only to this bottom keep-out.
+  - name: top_components
+    kind: box
+    min:
+    - 0
+    - 0
+    - 1.6
+    max:
+    - 85
+    - 56
+    - 21.6
+    description: Source top envelope; checked at nominal headroom 20 only.
+  - name: board_edge_clearance
+    kind: box
+    min:
+    - -0.5
+    - -0.5
+    - 0
+    max:
+    - 85.5
+    - 56.5
+    - 21.6
+    description: Derived rectangular lateral expansion by edgeClearance, up to the nominal roof. This checks edge clearance
+      without incorrectly demanding a 0.5 mm gap from the standoffs that contact the PCB bottom.
+  - name: usb_c_plug
+    kind: box
+    min:
+    - 4.699999999999999
+    - -25.0
+    - 1.6
+    max:
+    - 17.7
+    - 0.0
+    - 8.6
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear it.
+  - name: hdmi0_plug
+    kind: box
+    min:
+    - 19.8
+    - -25.0
+    - 1.6
+    max:
+    - 31.8
+    - 0.0
+    - 8.1
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear it.
+  - name: hdmi1_plug
+    kind: box
+    min:
+    - 33.2
+    - -25.0
+    - 1.6
+    max:
+    - 45.2
+    - 0.0
+    - 8.1
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear it.
+  - name: usb_a_upper_plug
+    kind: box
+    min:
+    - 85.0
+    - 39.5
+    - 1.6
+    max:
+    - 110.0
+    - 54.5
+    - 18.6
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear it.
+  - name: usb_a_lower_plug
+    kind: box
+    min:
+    - 85.0
+    - 21.6
+    - 1.6
+    max:
+    - 110.0
+    - 36.6
+    - 18.6
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear it.
+  - name: rj45_plug
+    kind: box
+    min:
+    - 85.0
+    - 1.6999999999999993
+    - 1.6
+    max:
+    - 110.0
+    - 18.7
+    - 16.6
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear it.
+  - name: sd_card_slot
+    kind: box
+    min:
+    - -25.0
+    - 22.0
+    - -3.0
+    max:
+    - 0.0
+    - 34.0
+    - 0.0
+    description: Verbatim requirement 4 plug/card envelope in board coordinates; all enclosure material must clear it.
+  dimensions:
+  - name: overall_z
+    expected: 43.0
+  faces:
+  - name: base_rim
+    at: 31.55
+  - name: lid_underside
+    at: 31.6
+  - name: lid_exterior
+    at: 35.6
+  - name: corner_1_pilot_bottom
+    at: 26.55
+  - name: corner_2_pilot_bottom
+    at: 26.55
+  - name: corner_3_pilot_bottom
+    at: 26.55
+  - name: corner_4_pilot_bottom
+    at: 26.55
+  - name: usb_c_plug_jamb_low
+    area: 71.88
+    center:
+    - -1.7
+    - 16.575
+  - name: usb_c_plug_jamb_high
+    area: 71.88
+    center:
+    - -1.7
+    - 16.575
+  - name: hdmi0_plug_jamb_low
+    area: 71.88
+    center:
+    - -1.7
+    - 16.575
+  - name: hdmi0_plug_jamb_high
+    area: 71.88
+    center:
+    - -1.7
+    - 16.575
+  - name: hdmi1_plug_jamb_low
+    area: 71.88
+    center:
+    - -1.7
+    - 16.575
+  - name: hdmi1_plug_jamb_high
+    area: 71.88
+    center:
+    - -1.7
+    - 16.575
+  - name: usb_a_upper_plug_jamb_low
+    area: 71.88
+    center:
+    - 86.7
+    - 16.575
+  - name: usb_a_upper_plug_jamb_high
+    area: 71.88
+    center:
+    - 86.7
+    - 16.575
+  - name: usb_a_lower_plug_jamb_low
+    area: 71.88
+    center:
+    - 86.7
+    - 16.575
+  - name: usb_a_lower_plug_jamb_high
+    area: 71.88
+    center:
+    - 86.7
+    - 16.575
+  - name: rj45_plug_jamb_low
+    area: 71.88
+    center:
+    - 86.7
+    - 16.575
+  - name: rj45_plug_jamb_high
+    area: 71.88
+    center:
+    - 86.7
+    - 16.575
+  - name: sd_card_slot_jamb_low
+    area: 82.92
+    center:
+    - -1.7
+    - 14.275
+  - name: sd_card_slot_jamb_high
+    area: 82.92
+    center:
+    - -1.7
+    - 14.275
+  probes:
+  - name: corner_pilots_void
+    points:
+    - - -4.5
+      - -4.5
+      - 29.05
+    - - 89.5
+      - -4.5
+      - 29.05
+    - - -4.5
+      - 60.5
+      - 29.05
+    - - 89.5
+      - 60.5
+      - 29.05
+  - name: lid_holes_void
+    points:
+    - - -4.5
+      - -4.5
+      - 33.6
+    - - 89.5
+      - -4.5
+      - 33.6
+    - - -4.5
+      - 60.5
+      - 33.6
+    - - 89.5
+      - 60.5
+      - 33.6
+  - name: required_body_points
+    points:
+    - - 42.5
+      - 28
+      - -6
+    - - 42.5
+      - 28
+      - 34.6
+  sections:
+  - id: rim_pilots_section
+    at: 29.0
+    expect:
+      area: 692.365
+      area_tolerance_rel: 0.01
+      loops: 7
+      holes: 4
+  - id: lid_section
+    at: 33.6
+    expect:
+      area: 5816.126
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 4
+  surface_area:
+    expected: 46753.125
+    tolerance_rel: 0.01
+    provenance: measured (reference model)
+    note: ECR-1 reference geometry surface area (scripts/rpi5_ecr_deltas.py).
+features:
+- id: lid
+  verify:
+  - method: section
+    section: lid_section
+  - method: face
+    face: lid_underside
+  - method: face
+    face: lid_exterior
+  - method: dimension
+    dimension: lid_thickness
+  - method: solid
+    points:
+    - - 42.5
+      - 28
+      - 34.6

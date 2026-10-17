@@ -1,0 +1,228 @@
+{
+  "ok": false,
+  "summary": "13 pass, 1 fail, 0 n/a",
+  "passed": [
+    "parts_pass",
+    "bom_complete",
+    "joint_fidelity",
+    "clearances",
+    "motion_clear",
+    "fluid_domain",
+    "export_agreement",
+    "performance",
+    "conservation",
+    "source_hygiene",
+    "boundaries_complete",
+    "provenance",
+    "evidence_separation"
+  ],
+  "failed": [
+    "refinement"
+  ],
+  "not_applicable": [],
+  "retryable_failed": [],
+  "tier_a_failed": [],
+  "gates": [
+    {
+      "id": "parts_pass",
+      "tier": "A",
+      "title": "Every part design passed its own 12 gates and has a handoff STEP",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/parts.json designs.<design>.gates_ok: mixer-01-housing=True, mixer-01-impeller=True"
+      ],
+      "failure_means": "a part is wrong on its own, before any placement",
+      "knob": "the part's own pipeline (correct that design)",
+      "details": {
+        "failing": []
+      }
+    },
+    {
+      "id": "bom_complete",
+      "tier": "A",
+      "title": "Every body of the bill of materials is in the export, once, with a placement",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/verify.json solid_count = 4 (expected 4); placements.missing = []; unmatched = []"
+      ],
+      "failure_means": "a body is missing, duplicated or fused",
+      "knob": "the assembly source's `result` / `placements`",
+      "details": {
+        "solid_count": {
+          "measured": 4,
+          "expected": 4,
+          "ok": true
+        },
+        "missing": []
+      }
+    },
+    {
+      "id": "joint_fidelity",
+      "tier": "A",
+      "title": "Every joint's child frame lies on its parent frame (axis, offset, rest angle)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/verify.json joints.joints.<joint>.checks; failing: none"
+      ],
+      "failure_means": "a body sits off its joint axis or at the wrong offset or phase",
+      "knob": "the placement transforms in the assembly source",
+      "details": {
+        "failing": []
+      }
+    },
+    {
+      "id": "clearances",
+      "tier": "A",
+      "title": "Static clearances and seats at rest",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/verify.json clearances.<name>; failing: none"
+      ],
+      "failure_means": "bodies interpenetrate or do not seat at rest",
+      "knob": "the placement (or the part if its interface is wrong)",
+      "details": {
+        "failing": []
+      }
+    },
+    {
+      "id": "motion_clear",
+      "tier": "A",
+      "title": "Every drive moves through its range without interference; gears mesh; ratios match tooth counts",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/kinematics.json motions.<name>.max_interference: impellerTurn=0",
+        "results/build123d/mixer-01/kinematics.json transmissions.<name>: "
+      ],
+      "failure_means": "the machine jams, collides or is geared wrong",
+      "knob": "phasing and placement in the assembly source, or the part geometry",
+      "details": {
+        "failing": []
+      }
+    },
+    {
+      "id": "fluid_domain",
+      "tier": "A",
+      "title": "Each fluid region is one sealed piece within its volume band and agrees with the source's fluid body",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/domains.json fluids.<name>: water sealed=True volume=52425.4427940255"
+      ],
+      "failure_means": "the analyses would run on a leaking or wrong fluid region",
+      "knob": "walls and caps in the parts, the fluid booleans in the source",
+      "details": {
+        "failing": []
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Each exported body equals its part handoff x placement; the assembled envelope matches",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/verify.json agreement.bodies.<body>.volume_rel/hausdorff_mm; envelope.max_error = 1.0000000116860974e-07 (tol 0.1)"
+      ],
+      "failure_means": "a body was rebuilt, scaled or clipped instead of placed",
+      "knob": "the assembly source (import, never rebuild)",
+      "details": null
+    },
+    {
+      "id": "performance",
+      "tier": "B",
+      "title": "Every predicted observable meets the requirement the sources state over its numerical band (value +- 2 u_numerical)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/simulate.json observables.<id>.requirement: pressureRiseCfd=3915 (band 1697..6132)",
+        "undetermined (the band straddles the requirement): none",
+        "unavailable predictions: none"
+      ],
+      "failure_means": "the machine does not do what the sources require at an operating case",
+      "knob": "the design (a new change request), never the inputs",
+      "details": {
+        "unmet": [],
+        "undetermined": [],
+        "unavailable": []
+      }
+    },
+    {
+      "id": "conservation",
+      "tier": "B",
+      "title": "Energy, mass and force balances of every analysis close within their tolerance",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/simulate.json simulations.<id>.conservation: cfd.mass_balance=9.019340090232896e-05"
+      ],
+      "failure_means": "an analysis created or lost energy/mass: its predictions are not evidence",
+      "knob": "the analysis setup (boundaries, time step), never a fitted input",
+      "details": null
+    },
+    {
+      "id": "refinement",
+      "tier": "B",
+      "title": "Every prediction of a mesh ladder is resolved: all its levels finished and the grid-convergence index is within tolerance",
+      "ok": false,
+      "evidence": [
+        "results/build123d/mixer-01/simulate.json simulations.<id>.refinement.observables: cfd: pressureRiseCfd GCI 0.283 unresolved (the finest levels are oscillatory; GCI 0.283 > 0.05), impellerTorque GCI 0.246 unresolved (the finest levels are oscillatory; GCI 0.246 > 0.05)",
+        "no discretisation estimate (one mesh level): none"
+      ],
+      "failure_means": "the prediction depends on the mesh: its discretisation error is unknown or above tolerance, so it supports no value",
+      "knob": "the refinement ladder (levels, regions, iterations) and mesh settings",
+      "details": {
+        "unresolved": {
+          "cfd": [
+            "impellerTorque",
+            "pressureRiseCfd"
+          ]
+        },
+        "no_estimate": []
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "C",
+      "title": "The assembly source imports only its declared inputs, formats and lints clean",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/verify.json hygiene: cad_refs=[] truth_refs=[]; ruff format True, ruff check True"
+      ],
+      "failure_means": "the source reads files it must not, or is unformatted",
+      "knob": "the assembly source",
+      "details": null
+    },
+    {
+      "id": "boundaries_complete",
+      "tier": "C",
+      "title": "Every face of a bounded body carries exactly one named boundary",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/domains.json boundaries.<body>.unassigned/conflicts: none"
+      ],
+      "failure_means": "an analysis would load a surface nobody named",
+      "knob": "boundary selectors in the contract (a drafting fix) or a missing face in the part",
+      "details": null
+    },
+    {
+      "id": "provenance",
+      "tier": "C",
+      "title": "Stage JSONs carry provenance stamps; part handoffs are hash-bound; inputs carry provenance",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/<stage>.json provenance present for ['verify', 'kinematics', 'domains', 'simulate']; parts.json designs.<d>.step_sha256 present: True"
+      ],
+      "failure_means": "an artefact cannot be traced to its inputs",
+      "knob": "re-run the stage",
+      "details": null
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "No worker-visible artefact reads truth; the assembly source only places declared inputs",
+      "ok": true,
+      "evidence": [
+        "results/build123d/mixer-01/verify.json hygiene.truth_refs = []"
+      ],
+      "failure_means": "evaluator truth leaked into the design",
+      "knob": "remove the reference",
+      "details": null
+    }
+  ]
+}

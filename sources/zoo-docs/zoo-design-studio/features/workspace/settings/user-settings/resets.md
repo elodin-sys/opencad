@@ -1,0 +1,26 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/workspace/settings/user-settings/resets
+Title: Resets
+
+# Resets
+
+Reset onboarding, settings, and layout in Zoo Design Studio.
+
+The `Resets` section contains recovery actions for onboarding, saved settings, and workspace layout.
+
+## Onboarding
+
+### Replay Onboarding
+
+Replay the onboarding process.
+
+## Reset Settings
+
+Restore settings to their default values.
+
+On desktop, your settings are saved in a file in the app data folder for your operating system, and
+the reset area also includes `Show in folder`. The reset action for this tab is `Reset user-level
+settings`.
+
+## Layout
+
+Reset to the default layout.

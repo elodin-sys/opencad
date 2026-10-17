@@ -1,0 +1,326 @@
+id: nist-amb2022-01-bridge
+title: 'NIST AM Bench AMB2022-01 individual bridge artifact (IN718 LPBF benchmark part): 12 legs, 45 deg
+  overhangs, pointed taper, 11 top tabs, hollow leg L10 with four thin walls'
+truth_class: B
+role: validation
+source:
+  citation: NIST AM Bench 2022, AMB2022-01 Benchmark Measurements and Challenge Problems; dataset 'AM
+    Bench 2022 3D Build Modeling Challenge Description Data (AMB2022-01)', doi:10.18434/mds2-2607, /CAD_Geometry/
+  urls:
+  - https://www.nist.gov/ambench/amb2022-01-benchmark-measurements-and-challenge-problems
+  - https://doi.org/10.18434/mds2-2607
+  - https://data.nist.gov/od/ds/ark:/88434/mds2-2607/CAD_Geometry/AMB2022-01-AMMT-PartCAD.STL
+  - https://data.nist.gov/od/ds/ark:/88434/mds2-2607/CAD_Geometry/AMB2022-01-AMMT-PartCAD.STEP
+  accessed: '2026-09-15'
+  revision: Figure 3 drawing updated by NIST 2023-09-20; PartCAD.STEP exported from SolidWorks 2021 on
+    2022-03-14; STL/STEP sha256 verified against NIST's published .sha256 files
+  license: NIST public data (US Government work)
+intent: 'Reconstruct the NIST AMB2022-01 individual bridge artifact as editable, parameterized KCL from
+  the attached NIST description excerpts and figures; Figure 3 is the dimensioned plan and elevation drawing
+  and is authoritative for every external dimension. Frame: x along the 75 mm length with x = 0 at the
+  pointed (45 degree tapered) end and x increasing toward the far end, y across the 5 mm width with y
+  = 0 at one long side face, z vertical from the build plate (z = 0) upward. Model the tapered nose, the
+  tall solid end block, the twelve legs with their 45 degree overhangs merging into the solid bridge,
+  the eleven 1 mm wide top tabs on a 7 mm pitch, and the hollow leg L10 with its 0.5 mm outer walls, 1
+  mm base, four 4 mm tall internal thin walls parallel to x, and flat ceiling, exactly as documented.
+  Where the sources do not fix a dimension (the single- and double-track thin-wall widths), record it
+  as an open question and use a clearly labelled inferred value with a wide tolerance rather than approximating
+  silently. One solid; export STEP and STL. Reference geometry supplied by NIST is for inspection only:
+  the deliverable must be editable construction, never an import.'
+inputs:
+- path: inputs/nist-amb2022-01-description.md
+  kind: text
+  sha256: ad20b8b64ceffc5122b055fd97c5e12b4b89b3cd2d52876ba74afb4d66cf2094
+  note: geometry excerpts of the NIST challenge description
+- path: inputs/nist-figure3-drawing.png
+  kind: drawing
+  sha256: a2377f44a5d37ee5e2193817bc33f079d664fae8c9df7bd675480f9e97b37d49
+  units: mm
+  note: 'Figure 3 (2023-09-20 update): dimensioned plan and elevation views'
+- path: inputs/nist-figure4-legs-thinwalls.png
+  kind: image
+  sha256: a55dce91299778420a4970d51478be5856a89b291644459d93b7cb71524b7417
+  note: 'Figure 4: leg numbering (L1 at the far end, L12 nearest the block) and the L10 thin-wall scan
+    pattern'
+- path: inputs/nist-figure1-overview.png
+  kind: image
+  sha256: 8cfc5aa92c73cb51cae87d1238b865d1c33565d5757e27244c19eb1e90e62142
+  note: 'Figure 1: rendered overview'
+- path: inputs/AMB2022-01-AMMT-PartCAD.STL
+  kind: mesh
+  sha256: d92f368a35952ff877624f3d15fb0e38c099e2528cfd96bf1d76a868a088e1f4
+  units: mm
+  note: 'NIST-published mesh of the part (mesh-input arm only); 6 shells: main body plus five inverted
+    pocket shells'
+truth:
+- path: truth/AMB2022-01-AMMT-PartCAD.STL
+  kind: mesh
+  sha256: d92f368a35952ff877624f3d15fb0e38c099e2528cfd96bf1d76a868a088e1f4
+  units: mm
+  note: NIST-published mesh; consistent with the Figure 3 drawing (legs reach the plate, 0.5 mm tabs,
+    12.5 mm overall). Primary geometric truth.
+- path: truth/AMB2022-01-AMMT-PartCAD.STEP
+  kind: cad
+  sha256: 623ee615d015bb231accdff3594592c3c7c563d98c463bd21680da2c0005d055
+  units: mm
+  note: 'NIST-published B-rep (SolidWorks 2021). Differs from the drawing: leg bottoms at z = 0.6 (block
+    at z = 0) and 0.25 mm tabs (12.25 overall). Recorded as a documented source discrepancy; scored only
+    as an optional check.'
+arms:
+- id: drawing-only
+  design: nist-amb2022-01-bridge
+  inputs:
+  - inputs/nist-amb2022-01-description.md
+  - inputs/nist-figure3-drawing.png
+  - inputs/nist-figure4-legs-thinwalls.png
+  - inputs/nist-figure1-overview.png
+  images:
+  - inputs/nist-figure3-drawing.png
+  - inputs/nist-figure4-legs-thinwalls.png
+  - inputs/nist-figure1-overview.png
+  notes: Drawing and text only. Thin-wall widths are undocumented and must appear as an open question
+    with an inferred value.
+- id: mesh-input
+  design: nist-amb2022-01-bridge-mesh
+  inputs:
+  - inputs/nist-amb2022-01-description.md
+  - inputs/nist-figure3-drawing.png
+  - inputs/nist-figure4-legs-thinwalls.png
+  - inputs/AMB2022-01-AMMT-PartCAD.STL
+  images:
+  - inputs/nist-figure3-drawing.png
+  - inputs/nist-figure4-legs-thinwalls.png
+  reference:
+    mesh: inputs/AMB2022-01-AMMT-PartCAD.STL
+    units: mm
+    axes: null
+    datum: min
+    expect_size_mm:
+    - 75
+    - 5
+    - 12.5
+    sections:
+    - z=3
+    - z=6
+    - z=9
+    - z=12.3
+    - x=30.5
+  notes: The NIST mesh is ingested as a measured reference model (measured (reference model) provenance).
+    The deliverable must still be construction, not an import; the independence gate checks this.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 75
+  - 5
+  - 12.5
+  tolerance: 0.05
+- id: volume
+  kind: volume
+  from:
+    file: truth/AMB2022-01-AMMT-PartCAD.STL
+    measure: volume
+  tolerance_rel: 0.006
+  note: 3679.06 mm3 net (main body minus the five sealed pockets); 0.6 % allows for the undocumented thin-wall
+    widths
+- id: solid_count
+  kind: solid_count
+  expected: 1
+- id: center_of_mass
+  kind: center_of_mass
+  from:
+    file: truth/AMB2022-01-AMMT-PartCAD.STL
+    measure: center_of_mass
+  tolerance: 0.15
+- id: legs_section_z3
+  kind: section
+  plane: z
+  at: 3.0
+  expected:
+    area: 235.39
+    loops: 13
+    holes: 5
+    regions:
+    - center:
+      - 10.11
+      - 2.5
+      size:
+      - 19
+      - 5
+    - center:
+      - 22.25
+      - 2.5
+      size:
+      - 2.5
+      - 5
+    - center:
+      - 25.75
+      - 2.5
+      size:
+      - 0.5
+      - 5
+    - center:
+      - 30.5
+      - 2.5
+      size:
+      - 5
+      - 5
+    - center:
+      - 36.25
+      - 2.5
+      size:
+      - 2.5
+      - 5
+    - center:
+      - 39.75
+      - 2.5
+      size:
+      - 0.5
+      - 5
+    - center:
+      - 44.5
+      - 2.5
+      size:
+      - 5
+      - 5
+    - center:
+      - 50.25
+      - 2.5
+      size:
+      - 2.5
+      - 5
+    - center:
+      - 53.75
+      - 2.5
+      size:
+      - 0.5
+      - 5
+    - center:
+      - 58.5
+      - 2.5
+      size:
+      - 5
+      - 5
+    - center:
+      - 64.25
+      - 2.5
+      size:
+      - 2.5
+      - 5
+    - center:
+      - 67.75
+      - 2.5
+      size:
+      - 0.5
+      - 5
+    - center:
+      - 72.5
+      - 2.5
+      size:
+      - 5
+      - 5
+  area_tolerance_rel: 0.015
+  tolerance: 0.2
+  note: thirteen downward members (block + 12 legs) at mid-leg height; L10 ring carries five sealed pockets
+- id: overhang_section_z6
+  kind: section
+  plane: z
+  at: 6.0
+  expected:
+    area: 308.75
+    loops: 13
+    holes: 0
+  area_tolerance_rel: 0.01
+  note: 'inside the 45 deg overhang band (z 5..7): every member has grown by 1 mm on its +x side'
+- id: bridge_section_z9
+  kind: section
+  plane: z
+  at: 9.0
+  expected:
+    area: 368.75
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.005
+  note: 'solid bridge: 75 x 5 minus the two nose taper triangles'
+- id: tabs_section
+  kind: section
+  plane: z
+  at: 12.3
+  expected:
+    area: 55.0
+    loops: 11
+    holes: 0
+  area_tolerance_rel: 0.01
+  note: eleven 1 x 5 tabs
+- id: l10_cavity_section
+  kind: section
+  plane: x
+  at: 30.5
+  expected:
+    area: 46.64
+    loops: 1
+    holes: 5
+  area_tolerance_rel: 0.03
+  note: 'through the hollow leg: 5 x 12.5 minus the 4 x 4 cavity plus four thin walls'
+- id: block_section_x10
+  kind: section
+  plane: x
+  at: 10.0
+  expected:
+    area: 60.0
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.005
+- id: bottom_face
+  kind: face
+  plane: z
+  at: 0.0
+  normal: '-'
+  expected: 248.75
+  tolerance: 0.05
+  area_tolerance_rel: 0.01
+  mode: sum
+- id: bridge_top_face
+  kind: face
+  plane: z
+  at: 12.0
+  normal: +
+  expected: 313.75
+  tolerance: 0.05
+  area_tolerance_rel: 0.01
+  mode: sum
+- id: tab_tops
+  kind: face
+  plane: z
+  at: 12.5
+  normal: +
+  expected: 55.0
+  tolerance: 0.05
+  area_tolerance_rel: 0.01
+  mode: sum
+- id: deviation_vs_nist_mesh
+  kind: deviation
+  reference: truth/AMB2022-01-AMMT-PartCAD.STL
+  p95_max: 0.15
+  hausdorff_max: 0.6
+  silhouette_iou_min: 0.98
+- id: deviation_vs_nist_step_variant
+  kind: deviation
+  required: false
+  reference: truth/AMB2022-01-AMMT-PartCAD.STEP
+  p95_max: 0.8
+  note: 'documented discrepancy: the STEP has legs from z = 0.6 and 0.25 mm tabs; this optional check
+    records how far the drawing-faithful model sits from it'
+downstream_targets:
+- name: part_deflection_after_partial_cut
+  value: 0
+  units: mm (CMM ridge heights, see NIST 3.4)
+  note: NIST measured ridge-height deflection after EDM partial separation; requires a build-process model,
+    never a CAD comparison
+notes:
+- 'Leg numbering (Figure 4): L1 is the 5 mm leg at the far end (x 70..75), L12 the 2.5 mm leg nearest
+  the block (x 21..23.5); L10 (x 28..33) is hollow.'
+- 'Leg pattern along +x from the block (0..19): [gap 2, 2.5, gap 2, 0.5, gap 2, 5] repeating with a 14
+  mm pitch; each member is vertical to z = 5 and chamfers 45 deg on its +x side from z = 5 to 7.'
+- STEP vs drawing/STL discrepancy recorded above; the drawing-faithful STL is primary truth because the
+  2023 drawing update post-dates the STEP export.

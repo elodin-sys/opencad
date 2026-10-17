@@ -1,0 +1,868 @@
+{
+  "case": "voron-sb-duct",
+  "arm": "renders-sections-sheet",
+  "design": "voron-sb-duct",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/freecad/voron-sb-duct",
+  "truth_class": "B",
+  "role": "validation",
+  "scored_at": "2026-09-22T11:37:21Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 21,
+    "required_total": 21,
+    "optional_pass": 0,
+    "optional_total": 2
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        71.068,
+        27.4,
+        59.133
+      ],
+      "measured": [
+        71.068,
+        27.400000000000208,
+        59.133000000000266
+      ],
+      "error": 2.6290081223123707e-13,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": false,
+      "note": "diagnostic: styling surfaces are cosmetic",
+      "expected": 40073.2601304934,
+      "measured": 44240.70430595756,
+      "error": 4167.444175464159,
+      "band": 2404.3956078296037,
+      "ok": false
+    },
+    {
+      "id": "passage_left_duct",
+      "kind": "passage",
+      "required": true,
+      "note": "air path left_duct; reference passage volume 4343 mm3",
+      "measured": {
+        "connected": true,
+        "reaches_exterior": false,
+        "passage_volume": 4872.064000000001
+      },
+      "a_state": "interior",
+      "b_state": "interior",
+      "checks": {
+        "measured": 4872.064000000001,
+        "min": 3474.3,
+        "max": 5211.4,
+        "ok": true
+      },
+      "expected": {
+        "connected": true,
+        "volume_min": 3474.3,
+        "volume_max": 5211.4
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "passage_right_duct",
+      "kind": "passage",
+      "required": true,
+      "note": "air path right_duct; reference passage volume 4301 mm3",
+      "measured": {
+        "connected": true,
+        "reaches_exterior": false,
+        "passage_volume": 3935.4880000000007
+      },
+      "a_state": "interior",
+      "b_state": "interior",
+      "checks": {
+        "measured": 3935.4880000000007,
+        "min": 3440.4,
+        "max": 5160.7,
+        "ok": true
+      },
+      "expected": {
+        "connected": true,
+        "volume_min": 3440.4,
+        "volume_max": 5160.7
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "ducts_separate",
+      "kind": "passage",
+      "required": true,
+      "note": "the two part-cooling ducts must not share air",
+      "measured": {
+        "connected": false,
+        "reaches_exterior": false,
+        "passage_volume": 4872.064000000001
+      },
+      "a_state": "interior",
+      "b_state": "interior",
+      "checks": null,
+      "expected": {
+        "connected": false,
+        "volume_min": null,
+        "volume_max": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "section_ym12",
+      "kind": "section",
+      "required": true,
+      "note": "material at the station: 1 loops, 5 holes in the reference",
+      "plane": "y",
+      "at": -12.0,
+      "measured": {
+        "area": 1496.7591008469758,
+        "loops": 1,
+        "holes": 5
+      },
+      "checks": {
+        "area": {
+          "expected": 1412.07,
+          "measured": 1496.7591008469758,
+          "ok": true
+        },
+        "holes": {
+          "expected": 5,
+          "measured": 5,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_ym20",
+      "kind": "section",
+      "required": true,
+      "note": "material at the station: 3 loops, 6 holes in the reference",
+      "plane": "y",
+      "at": -20.0,
+      "measured": {
+        "area": 1489.4166195589041,
+        "loops": 5,
+        "holes": 3
+      },
+      "checks": {
+        "area": {
+          "expected": 1459.74,
+          "measured": 1489.4166195589041,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_z10",
+      "kind": "section",
+      "required": true,
+      "note": "material at the station: 3 loops, 4 holes in the reference",
+      "plane": "z",
+      "at": 10.0,
+      "measured": {
+        "area": 445.12308736283626,
+        "loops": 5,
+        "holes": 4
+      },
+      "checks": {
+        "area": {
+          "expected": 435.42,
+          "measured": 445.12308736283626,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_z30",
+      "kind": "section",
+      "required": true,
+      "note": "material at the station: 2 loops, 2 holes in the reference",
+      "plane": "z",
+      "at": 30.0,
+      "measured": {
+        "area": 737.9213589390339,
+        "loops": 2,
+        "holes": 2
+      },
+      "checks": {
+        "area": {
+          "expected": 739.16,
+          "measured": 737.9213589390339,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_z45",
+      "kind": "section",
+      "required": true,
+      "note": "material at the station: 3 loops, 2 holes in the reference",
+      "plane": "z",
+      "at": 45.0,
+      "measured": {
+        "area": 609.2875416351101,
+        "loops": 4,
+        "holes": 2
+      },
+      "checks": {
+        "area": {
+          "expected": 565.96,
+          "measured": 609.2875416351101,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "wall_min",
+      "kind": "thickness",
+      "required": true,
+      "note": "reference p05 0.87 mm, p50 2.98 mm",
+      "measured": {
+        "min": 0.07000017166137659,
+        "p01": 0.1990013122558608,
+        "p05": 0.7999992370605483,
+        "p50": 3.799999237060548
+      },
+      "stat": "p05",
+      "expected": {
+        "min": 0.75
+      },
+      "thinnest_points": [
+        [
+          -15.67,
+          -7.54,
+          18.282
+        ],
+        [
+          17.93,
+          -7.154,
+          19.555
+        ],
+        [
+          -29.077,
+          -4.32,
+          18.45
+        ],
+        [
+          -28.122,
+          -4.32,
+          18.61
+        ],
+        [
+          17.58,
+          -4.629,
+          15.932
+        ]
+      ],
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "hole_d5_m7p0_m3p9_59p4",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d85, 2.9 long",
+      "expected": {
+        "point": [
+          -6.963,
+          -3.939,
+          59.45
+        ],
+        "direction": [
+          -0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.5,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -6.963,
+          -3.939,
+          59.475
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.5,
+        "length": 2.950000000000003,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d5_3p9_m7p0_59p4",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d85, 2.9 long",
+      "expected": {
+        "point": [
+          3.939,
+          -6.963,
+          59.45
+        ],
+        "direction": [
+          -0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.5,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          3.939,
+          -6.963,
+          59.45
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 2.5,
+        "length": 2.8999999999999986,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d4p7_m28p0_m2p3_19p0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d84.7, 3.8 long",
+      "expected": {
+        "point": [
+          -28.0,
+          -2.3,
+          19.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 2.35,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -28.0,
+          -2.13,
+          19.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 2.35,
+        "length": 4.140000000000001,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d4p7_m25p0_m2p3_35p0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d84.7, 3.86 long",
+      "expected": {
+        "point": [
+          -25.0,
+          -2.329,
+          35.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 2.35,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -25.0,
+          -2.1285,
+          35.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 2.35,
+        "length": 4.257,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d4p6_m12p7_m3p2_55p4",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d84.6, 5.6 long",
+      "expected": {
+        "point": [
+          -12.7,
+          -3.2,
+          55.424
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 2.3,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -12.7,
+          -3.0,
+          55.424
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 2.3,
+        "length": 6.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d4p6_12p7_m3p1_55p4",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d84.6, 5.46 long",
+      "expected": {
+        "point": [
+          12.7,
+          -3.131,
+          55.424
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 2.3,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          12.7,
+          -2.9305,
+          55.424
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 2.3,
+        "length": 5.861,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3p4_m16p2_m3p7_19p3",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83.4, 7.5 long",
+      "expected": {
+        "point": [
+          -16.25,
+          -3.75,
+          19.301
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 1.7,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -16.25,
+          -3.75,
+          19.301
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "length": 7.5,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3p4_16p3_m3p7_19p3",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83.4, 7.5 long",
+      "expected": {
+        "point": [
+          16.25,
+          -3.75,
+          19.301
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 1.7,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          16.25,
+          -3.75,
+          19.301
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "length": 7.5,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d2p7_m7p0_m3p9_56p0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d82.7, 4 long",
+      "expected": {
+        "point": [
+          -6.963,
+          -3.939,
+          56.0
+        ],
+        "direction": [
+          -0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.35,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -6.963,
+          -3.939,
+          55.75
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.35,
+        "length": 4.5,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d2p7_3p9_m7p0_56p0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d82.7, 4 long",
+      "expected": {
+        "point": [
+          3.939,
+          -6.963,
+          56.0
+        ],
+        "direction": [
+          -0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.35,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          3.939,
+          -6.963,
+          56.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.35,
+        "length": 4.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "deviation_vs_voron",
+      "kind": "deviation",
+      "required": false,
+      "note": "",
+      "measured": {
+        "p95": 3.942634745133518,
+        "hausdorff_estimate": 11.209219598508163,
+        "silhouette_iou_min": 0.824682501279624,
+        "volume_ratio": 1.1020166763864807
+      },
+      "checks": {
+        "p95": {
+          "max": 1.0,
+          "measured": 3.942634745133518,
+          "ok": false
+        },
+        "hausdorff": {
+          "max": 5.0,
+          "measured": 11.209219598508163,
+          "ok": false
+        },
+        "silhouette_iou": {
+          "min": 0.9,
+          "measured": 0.824682501279624,
+          "ok": false
+        }
+      },
+      "ok": false
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "29813e0f5abc78771f865972922842d07a7cc2317b6c77346081b9dabb81636c",
+    "truth_files": {
+      "truth/sb-printhead-front.step": "7739f3c78e67a49da8a58fb7c4139b395fb7d9b49fbe879a345ab46386595359",
+      "truth/sb-printhead-front.stl": "6670543c94844598150c628b20405327e47ac5a4a740db5a13f972d69ea2509b",
+      "truth/LICENSE-GPL-3.0.txt": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    "input_files": {
+      "inputs/voron-duct-description.md": "6393278735f162422209a12eb2ac58b40a8446fd7ebd46f9d419992a8b322623",
+      "inputs/dimension-sheet.md": "3d150ee78d7c71e164535fe895088ffa4d6d75114b58edd6328fff4c47c695bf",
+      "inputs/renders/back.png": "d9993a7951305125b17849520dc3e4c593395cd32e33913a96e816f8ad86d78b",
+      "inputs/renders/bottom.png": "99a231fa19ee41312e13e5235b253b6171240a53631fbf94471c4e645c9f3465",
+      "inputs/renders/front.png": "545e3b87263e28c5d3ec34276955fb4796248332983d2cb49684c082202dbfb3",
+      "inputs/renders/iso-below.png": "5414dfaf4b3c5fb32a2a42897ff413d0507e7cb5ee2320238c5b55c837b3bd92",
+      "inputs/renders/iso.png": "a53d5ef420cd2e45ef1942b8cfd74e9eaeed82b33961f3292e4cd0e1f0478436",
+      "inputs/renders/iso2.png": "cfb622b1cf2de0621babf230fe4f377a990ef9946d58e5d955b758c9f5ebf12e",
+      "inputs/renders/left.png": "a83a406028cfd1bc310776c2f0dbc4673dbb2ba88ebff0e472b53ad421a0640d",
+      "inputs/renders/right.png": "1f14cfe9a9de8a8327a3bc12b991464d85c6adef10c453a56161a6b650cf8b8d",
+      "inputs/renders/section-x-22.png": "906479b97107a387f93734009e482a1acc4d75a5cb6248f771ca3f3c21a88b61",
+      "inputs/renders/section-x0.png": "30db4695d01c4e2003cbb782debc4a2b3d23ef76c3c16dd9e909edcc7d102059",
+      "inputs/renders/section-x22.png": "79b4f1c7e3912577c067c94093f09d39c34c00614892ee0feeb0a53d7e7ae26c",
+      "inputs/renders/section-y-12.png": "74706b6b2d6db03fda484965c3f4d48bb5b989228adb13b016f3c05e12c11b72",
+      "inputs/renders/section-y-20.png": "e781d9072805478672deecc52820cbd86e53bd009b9fbd069821bc956731ef7e",
+      "inputs/renders/section-y-5.png": "7bea7ed7c698ff28593792036b35fbc018c616541aab1781bf97c073385a3869",
+      "inputs/renders/section-z10.png": "8db2da999a0d047e26f34a264313a178cc6239c3dff22ee2cc55c055fa433c96",
+      "inputs/renders/section-z20.png": "7b13af9a25b7bc409aaae9b72f126ee1fe5588f789c46445f3b6cdfdc88962c9",
+      "inputs/renders/section-z30.png": "9553a783bcec14250054a90b8a863b43302fb9944fc146c2cbc73f185aabf918",
+      "inputs/renders/section-z45.png": "b72331aead4d9c114de497d1bd77f6ad435396d064b488b73603c04d3c7ca4c8",
+      "inputs/renders/section-z55.png": "8176c82680b60fd3ad92c5b3478a21a6268b169ad22d2f45f0461cf20f413e6b",
+      "inputs/renders/top.png": "c035e03a2df785aafcdb61474a38934d50799a6c09d2ce653e8936d1dadd20cc",
+      "inputs/renders/render-notes.md": "8e01aeb577033da71d8a610d78928238f48355dce9e0971edbc621f990ca0b6b"
+    },
+    "source": {
+      "datum.py": "38c8080211bb1584f0e9a67d310249ee0b0060fa56f66b9d057c80fc9ab43c65",
+      "exterior.py": "e6ae570220edccade64e9ad4ab76094e8fd02789b93e7f5019b21c9461f93529",
+      "fasteners.py": "989821f5beb0a535d880af27e1740537691198ab03205aa726807f6552be8a01",
+      "hotendCavity.py": "eaf0eb0bc86bccfb97979653d6b944feef2eebad5955246f4dd4b927d61b7c1a",
+      "leftDuct.py": "21f68192558a69f9e2fb6c6a3d135b6fe359fc487b5f84026d210319a4bb055e",
+      "main.py": "1deec03d28c96a46f06eb172db7899cbd9c6a77b1b34455535e1eb19655c1ef0",
+      "nozzleForks.py": "9543a86323a9f326a7263607828d91e4bc98d83c85a7199c7c3e8d49032e2b69",
+      "params.py": "b9ab0f7baf655dabd2a49233b4e498ccb404360f57f9aa371ec64755d627bf2d",
+      "rightDuct.py": "32932a818f7704592cfbfe5832b6a67cca85a8e3ed889d5815e58b186d193588"
+    },
+    "kcl": {},
+    "step_sha256": "3d3876b6f2033ea9b8e73eb2d7fafcc6a42fe01b25845dfcb8d8c22efc6fd35a",
+    "design_bundle": {
+      "brief.md": "39e9e48c802bec7b878bfe360c91b9602eafeb4680b9d8e6403a23b7994dd3aa",
+      "contract.yaml": "3534bf7e8ede5c66cba7916f2341bdd517e1ff4637d28756099d4a697cfb1e49",
+      "sources/back.png": "d9993a7951305125b17849520dc3e4c593395cd32e33913a96e816f8ad86d78b",
+      "sources/bottom.png": "99a231fa19ee41312e13e5235b253b6171240a53631fbf94471c4e645c9f3465",
+      "sources/dimension-sheet.md": "3d150ee78d7c71e164535fe895088ffa4d6d75114b58edd6328fff4c47c695bf",
+      "sources/front.png": "545e3b87263e28c5d3ec34276955fb4796248332983d2cb49684c082202dbfb3",
+      "sources/iso-below.png": "5414dfaf4b3c5fb32a2a42897ff413d0507e7cb5ee2320238c5b55c837b3bd92",
+      "sources/iso.png": "a53d5ef420cd2e45ef1942b8cfd74e9eaeed82b33961f3292e4cd0e1f0478436",
+      "sources/iso2.png": "cfb622b1cf2de0621babf230fe4f377a990ef9946d58e5d955b758c9f5ebf12e",
+      "sources/left.png": "a83a406028cfd1bc310776c2f0dbc4673dbb2ba88ebff0e472b53ad421a0640d",
+      "sources/render-notes.md": "8e01aeb577033da71d8a610d78928238f48355dce9e0971edbc621f990ca0b6b",
+      "sources/right.png": "1f14cfe9a9de8a8327a3bc12b991464d85c6adef10c453a56161a6b650cf8b8d",
+      "sources/section-x-22.png": "906479b97107a387f93734009e482a1acc4d75a5cb6248f771ca3f3c21a88b61",
+      "sources/section-x0.png": "30db4695d01c4e2003cbb782debc4a2b3d23ef76c3c16dd9e909edcc7d102059",
+      "sources/section-x22.png": "79b4f1c7e3912577c067c94093f09d39c34c00614892ee0feeb0a53d7e7ae26c",
+      "sources/section-y-12.png": "74706b6b2d6db03fda484965c3f4d48bb5b989228adb13b016f3c05e12c11b72",
+      "sources/section-y-20.png": "e781d9072805478672deecc52820cbd86e53bd009b9fbd069821bc956731ef7e",
+      "sources/section-y-5.png": "7bea7ed7c698ff28593792036b35fbc018c616541aab1781bf97c073385a3869",
+      "sources/section-z10.png": "8db2da999a0d047e26f34a264313a178cc6239c3dff22ee2cc55c055fa433c96",
+      "sources/section-z20.png": "7b13af9a25b7bc409aaae9b72f126ee1fe5588f789c46445f3b6cdfdc88962c9",
+      "sources/section-z30.png": "9553a783bcec14250054a90b8a863b43302fb9944fc146c2cbc73f185aabf918",
+      "sources/section-z45.png": "b72331aead4d9c114de497d1bd77f6ad435396d064b488b73603c04d3c7ca4c8",
+      "sources/section-z55.png": "8176c82680b60fd3ad92c5b3478a21a6268b169ad22d2f45f0461cf20f413e6b",
+      "sources/top.png": "c035e03a2df785aafcdb61474a38934d50799a6c09d2ce653e8936d1dadd20cc",
+      "sources/voron-duct-description.md": "6393278735f162422209a12eb2ac58b40a8446fd7ebd46f9d419992a8b322623"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-22T11:37:21Z",
+    "skillkat_version": "0.1.0",
+    "backend": "freecad",
+    "engine_version": "['1', '1', '3', '20260725 (Git shallow)', 'Unknown', '2026/07/25 04:52:02', 'grafted,grafted', '145529fe741292ff0b3977a01195bf0247425794']",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2848d707c592c1dc6c1668a3e9f19c078c8e084c",
+      "dirty": true
+    }
+  },
+  "backend": "freecad"
+}

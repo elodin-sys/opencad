@@ -1,0 +1,340 @@
+schema_version: 1
+name: planetary-set-sun
+intent: >-
+  Sun gear of the planetary-set assembly, drafted in its own frame: axis +z through the origin,
+  bottom face z = 0, face width 10 (z 0..10). 24 external involute teeth, module 2, pressure angle
+  20 deg, zero profile shift: pitch radius 24, tip radius 26, root radius 21.5, base radius 22.553.
+  Involute flanks with 12-16 points per flank from the base circle to the tip; below the base circle
+  each flank continues as a radial line down to the root circle, with no fillet. Every tooth is
+  thinned by 0.10 mm at the pitch circle (tooth thickness pi x 2 / 2 - 0.10 = 3.0416 mm), giving a
+  circular backlash of 0.20 mm with each planet. A tooth is centred on +x (tooth centres at
+  k x 15 deg). D10 bore through on the axis. The bottom face z = 0 stands on the base plate and the
+  top face z = 10 carries the carrier; the sun is the motor-driven member and meshes with the three
+  planets at centre distance 36. Authoritative source: sources/planetary-set-spec.md (text only).
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "on the gear axis, in the plane of the bottom face (z = 0); the centre of the D10 bore at its lower mouth"
+  axes:
+    x: "radial, through the centre line of one tooth (tooth centres at k x 15 deg from +x, k = 0..23)"
+    y: "radial, completing a right-handed frame; +y also passes through a tooth centre (k = 6)"
+    z: "gear axis, up from the bottom face (z = 0, on the base plate) to the top face (z = 10, under the carrier)"
+  datums:
+    - name: A
+      description: "bottom face, z = 0; seats on the base plate top"
+    - name: B
+      description: "bore axis, the z axis through the origin; revolute joint sunSpin, point [0, 0, 0], axis [0, 0, 1]"
+    - name: C
+      description: "angular datum: the tooth centred on +x (XZ plane through that tooth's centre line)"
+
+envelope:
+  min: [-26, -26, 0]
+  max: [26, 26, 10]
+  tolerance: 0.05
+
+parameters:
+  - name: teeth
+    value: 24
+    unit: ""
+    provenance: stated
+    source: "intent; planetary-set-spec.md parameter table, Sun row"
+    tolerance: 0.5
+    description: "number of external teeth"
+  - name: gearModule
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "intent; planetary-set-spec.md parameter table, Module"
+    tolerance: 0.001
+    description: "gear module"
+  - name: pressureAngle
+    value: 20
+    unit: deg
+    provenance: stated
+    source: "intent; planetary-set-spec.md parameter table, Pressure angle"
+    tolerance: 0.01
+    description: "standard pressure angle of the involute"
+  - name: profileShift
+    value: 0
+    unit: ""
+    provenance: stated
+    source: "intent; planetary-set-spec.md parameter table, Profile shift"
+    tolerance: 0.001
+    description: "profile shift coefficient"
+  - name: faceWidth
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "intent; planetary-set-spec.md Sun row, face width 10 (z 0..10)"
+    tolerance: 0.01
+    description: "axial thickness of the gear, bottom face z = 0 to top face z = faceWidth"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 3372.35
+        direction: increase
+        bbox_delta: [0, 0, 2]
+        tolerance_rel: 0.02
+      sweep:
+        values: [8, 10, 12]
+      infeasible_deltas: [-10]
+  - name: toothThinning
+    value: 0.10
+    unit: mm
+    provenance: stated
+    source: "intent; planetary-set-spec.md Circular backlash row: thin every external tooth by 0.10 mm at its pitch circle"
+    tolerance: 0.001
+    description: "reduction of the circular tooth thickness at the pitch circle (half of the 0.20 mm sun-planet backlash)"
+    edit_test:
+      delta: 0.1
+      expect:
+        volume_delta: -106.875
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.05
+  - name: boreDiameter
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "intent (D10 bore through on the axis); planetary-set-spec.md Sun row, bore D10"
+    tolerance: 0.01
+    description: "through bore on the gear axis"
+  - name: pitchRadius
+    value: 24
+    unit: mm
+    provenance: derived
+    formula: "teeth * gearModule / 2"
+    source: "stated as 24 in the intent and the spec"
+    tolerance: 0.001
+    description: "pitch circle radius"
+  - name: tipRadius
+    value: 26
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius + gearModule * (1 + profileShift)"
+    source: "stated as 26 in the intent and the spec"
+    tolerance: 0.001
+    description: "tip (addendum) circle radius"
+  - name: rootRadius
+    value: 21.5
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius - gearModule * (1.25 - profileShift)"
+    source: "stated as 21.5 in the intent and the spec"
+    tolerance: 0.001
+    description: "root (dedendum) circle radius"
+  - name: baseRadius
+    value: 22.5526
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius * cos(pressureAngle)"
+    source: "stated as 22.553 in the intent and the spec"
+    tolerance: 0.001
+    description: "base circle radius; the involute starts here, a radial line continues below it to the root"
+  - name: toothThickness
+    value: 3.0416
+    unit: mm
+    provenance: derived
+    formula: "pi * gearModule / 2 - toothThinning"
+    source: "stated as 3.0416 in the intent"
+    tolerance: 0.001
+    description: "circular tooth thickness at the pitch circle"
+  - name: flankPoints
+    value: 14
+    unit: ""
+    provenance: inferred
+    tolerance: 2
+    rationale: "the sources state 12-16 points per flank from the base circle to the tip; 14 is the middle of that range and any value in 12..16 satisfies the source"
+    description: "number of involute points per flank, base circle to tip"
+
+features:
+  - id: gearBlank
+    kind: extrude
+    description: "24-tooth external involute profile (root circle, radial flank below the base circle, involute flank to the tip circle, tip land) extruded from z = 0 to z = faceWidth"
+    parameters: [teeth, gearModule, pressureAngle, profileShift, faceWidth, pitchRadius, tipRadius, rootRadius, baseRadius, flankPoints]
+    verify:
+      - method: bbox
+      - method: section
+        section: midZ
+      - method: face
+        face: bottomFace
+      - method: face
+        face: topFace
+      - method: dimension
+        dimension: faceWidthZ
+      - method: dimension
+        dimension: tipSpanX
+      - method: dimension
+        dimension: tipSpanY
+  - id: teethPattern
+    kind: pattern
+    description: "24 identical teeth at k x 15 deg, one centred on +x; every tooth thinned by toothThinning at the pitch circle (thickness toothThickness), no root fillet"
+    parameters: [teeth, toothThinning, toothThickness, pitchRadius, baseRadius, rootRadius, tipRadius]
+    count: 24
+    verify:
+      - method: solid
+        points: [[24, 0, 5], [0, 24, 5], [-24, 0, 5], [0, -24, 5]]
+        note: "pitch-circle points on tooth centre lines at 0, 90, 180, 270 deg (1.52 mm from each flank)"
+      - method: void
+        points: [[24.2904, 3.1979, 5], [24.2904, -3.1979, 5]]
+        note: "tooth-space centres at +-7.5 deg, r = 24.5 (about 1.7 mm from each flank, 1.5 mm inside the tip circle)"
+  - id: bore
+    kind: hole
+    description: "D10 through bore on the z axis"
+    parameters: [boreDiameter, faceWidth]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: void
+        points: [[0, 0, 2], [0, 0, 5], [0, 0, 8]]
+      - method: count
+        section: midZ
+        count: 1
+
+interfaces:
+  - name: sunSpin
+    description: "revolute joint sunSpin of the assembly: the bore axis (z axis through the origin) and the tooth-symmetric mirror planes x = 0 and y = 0 that intersect on it; neither edit test moves or resizes them"
+    must_not_change: true
+    checks: [bore, mirrorX, mirrorY]
+  - name: seat
+    description: "datum A: the bottom face z = 0 stands on the base plate top; neither edit test moves it"
+    must_not_change: true
+    checks: [bottomFace]
+
+acceptance:
+  volume:
+    expected: 16861.76
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "faceWidth * A, A = pi*rootRadius^2 + teeth*toothArea - pi*(boreDiameter/2)^2 = 1452.20 + 24*13.0214 - 78.54 = 1686.176 mm^2; toothArea = integral of 2*psi(r)*r dr from rootRadius to tipRadius, psi(r) = toothThickness/(2*pitchRadius) + inv(20 deg) - inv(acos(baseRadius/r)) above the base circle and constant below it"
+  surface_area:
+    expected: 6833.58
+    tolerance_rel: 0.02
+    provenance: derived
+    note: "2*A + faceWidth*P + faceWidth*pi*boreDiameter; outer perimeter P = 24*(root arc 2.2630 + 2 radial lines 1.0526 + 2 involutes baseRadius*tan(alpha_tip)^2 + tip land 1.3228) = 314.706 mm"
+  center_of_mass:
+    expected: [0, 0, 5]
+    tolerance: 0.05
+    provenance: derived
+    note: "24-fold symmetric profile about the z axis; mid face width"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 5
+      expect:
+        area: 1686.18
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "gear profile at mid face width: one toothed outer loop, one bore hole"
+  faces:
+    - name: bottomFace
+      plane: z
+      at: 0
+      normal: "-"
+      center: [0, 0]
+      mode: one
+    - name: topFace
+      plane: z
+      at: 10
+      normal: "+"
+      area: 1686.18
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 10
+      radius_tolerance: 0.02
+      axis_tolerance: 0.02
+      description: "D10 through bore on the gear axis; the sunSpin joint axis"
+  dimensions:
+    - name: faceWidthZ
+      axis: z
+      expected: 10
+      tolerance: 0.02
+      between: [bottomFace, topFace]
+      description: "face width between the bottom and top faces"
+    - name: tipSpanX
+      axis: x
+      expected: 52
+      tolerance: 0.05
+      description: "bbox extent along x = 2 * tipRadius (teeth centred on +x and -x)"
+    - name: tipSpanY
+      axis: y
+      expected: 52
+      tolerance: 0.05
+      description: "bbox extent along y = 2 * tipRadius (teeth centred on +y and -y)"
+  solids:
+    - name: sun
+      contains_point: [15, 0, 5]
+      description: "the single sun gear solid"
+  probes:
+    - name: toothCentres
+      state: solid
+      points: [[24, 0, 5], [0, 24, 5], [-24, 0, 5], [0, -24, 5]]
+      description: "pitch-circle points on the tooth centre lines at 0, 90, 180 and 270 deg: a tooth is centred on +x"
+    - name: hub
+      state: solid
+      points: [[15, 0, 5], [0, 15, 5], [-15, 0, 5], [0, -15, 5]]
+      description: "web between the bore and the root circle"
+    - name: toothSpaces
+      state: void
+      points: [[24.2904, 3.1979, 5], [24.2904, -3.1979, 5]]
+      description: "tooth-space centres at +-7.5 deg, r = 24.5"
+    - name: boreVoid
+      state: void
+      points: [[0, 0, 2], [0, 0, 5], [0, 0, 8]]
+      description: "on the axis inside the through bore"
+  cylinder_counts:
+    - name: boreCount
+      diameter: 10
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+      description: "exactly one D10 bore"
+  gears:
+    - name: sunTeeth
+      solid: sun
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      at: 5
+      module: 2
+      teeth: 24
+      description: "24 external teeth, module 2, sectioned at mid face width"
+  symmetry:
+    - name: mirrorY
+      plane: y
+      at: 0
+    - name: mirrorX
+      plane: x
+      at: 0
+  blockout:
+    volume_min: 20000
+    volume_max: 21300
+
+references:
+  - path: sources/planetary-set-spec.md
+    kind: text
+    role: authoritative
+    sha256: 2a8bca0f4ffa01692bc1a5879aeb8b02a1d728b2cbe39448f181197d86ca14ca
+    units: mm
+    revision: "as supplied 2026-09-25"
+    note: "planetary gear set design specification; the Sun row, the backlash rule, the flank construction and the part-frame paragraph fix this part"
+
+open_questions:
+  - "The number of involute points per flank is only bounded (12-16); flankPoints = 14 is inferred as the middle of the range."
+  - "Material, density and process are not stated; mass and manufacturing claims are out of scope."
+  - "The sources give no chamfers, edge breaks or keyway on the bore; none are modelled."
+  - "Meshing with the planets (centre distance 36, flank gap at most 0.2 mm, zero interference) is an assembly-level requirement checked on the planetary-set assembly, not on this single part."

@@ -1,0 +1,54 @@
+# cadquery sources
+
+Fetched into `sources/cadquery/` (`scripts/fetch_sources.py --backend cadquery`).
+
+- `doc/apireference.rst`
+- `doc/assy.rst`
+- `doc/citing.rst`
+- `doc/classreference.rst`
+- `doc/cqgi.rst`
+- `doc/designprinciples.rst`
+- `doc/examples.rst`
+- `doc/extending.rst`
+- `doc/fileformat.rst`
+- `doc/free-func.rst`
+- `doc/importexport.rst`
+- `doc/index.rst`
+- `doc/installation.rst`
+- `doc/intro.rst`
+- `doc/primer.rst`
+- `doc/quickstart.rst`
+- `doc/roadmap.rst`
+- `doc/selectors.rst`
+- `doc/sketch.rst`
+- `doc/vis.rst`
+- `doc/workplane.rst`
+- `examples/Ex001_Simple_Block.py`
+- `examples/Ex002_Block_With_Bored_Center_Hole.py`
+- `examples/Ex003_Pillow_Block_With_Counterbored_Holes.py`
+- `examples/Ex004_Extruded_Cylindrical_Plate.py`
+- `examples/Ex005_Extruded_Lines_and_Arcs.py`
+- `examples/Ex006_Moving_the_Current_Working_Point.py`
+- `examples/Ex007_Using_Point_Lists.py`
+- `examples/Ex008_Polygon_Creation.py`
+- `examples/Ex009_Polylines.py`
+- `examples/Ex010_Defining_an_Edge_with_a_Spline.py`
+- `examples/Ex011_Mirroring_Symmetric_Geometry.py`
+- `examples/Ex012_Creating_Workplanes_on_Faces.py`
+- `examples/Ex013_Locating_a_Workplane_on_a_Vertex.py`
+- `examples/Ex014_Offset_Workplanes.py`
+- `examples/Ex015_Rotated_Workplanes.py`
+- `examples/Ex016_Using_Construction_Geometry.py`
+- `examples/Ex017_Shelling_to_Create_Thin_Features.py`
+- `examples/Ex018_Making_Lofts.py`
+- `examples/Ex019_Counter_Sunk_Holes.py`
+- `examples/Ex020_Rounding_Corners_with_Fillets.py`
+- `examples/Ex021_Splitting_an_Object.py`
+- `examples/Ex022_Revolution.py`
+- `examples/Ex023_Sweep.py`
+- `examples/Ex024_Sweep_With_Multiple_Sections.py`
+- `examples/Ex025_Swept_Helix.py`
+- `examples/Ex026_Case_Seam_Lip.py`
+- `examples/Ex100_Lego_Brick.py`
+- `examples/Ex101_InterpPlate.py`
+- `examples/Ex102_DXF_with_HLR.py`

@@ -1,0 +1,13 @@
+# PIV-experiment pressure head (outlet minus inlet, blood-analog fluid, n = 4 laboratory datasets), mean +- 1 SD.
+source: Hariharan P. et al. (2018) Cardiovasc Eng Technol 9(4):623-640, doi:10.1007/s13239-018-00378-y, Fig. 5 and Results text
+stated:  # given in the text ("a maximum pressure rise of 349 +- 16 mmHg ... condition #2 ... a minimum rise of 62 +- 20 mmHg ... condition #4")
+  C2: {mmHg: 349, sd_mmHg: 16}
+  C4: {mmHg: 62, sd_mmHg: 20}
+digitized:  # Fig. 5 blue (PIV) markers, page rendered at 500 dpi; axis ticks every 50 mmHg at 2.07 px/mmHg; value = error-bar midpoint
+  method: scripts in results/_spikes (tick rows 1172.5 -> 0 and 344.5 -> 400 mmHg); stated points re-read as C2 347, C4 65.7
+  digitization_uncertainty_mmHg: 4
+  C1: {mmHg: 168, sd_mmHg: 14}
+  C3: {mmHg: 313, sd_mmHg: 18}
+  C5: {mmHg: 265, sd_mmHg: 22}
+  C6: {mmHg: 208, sd_mmHg: 35}
+mmHg_to_Pa: 133.322

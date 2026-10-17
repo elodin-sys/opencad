@@ -1,0 +1,233 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve
+Title: Revolve Solid
+
+# Revolve Solid
+
+Revolve sketch profiles into solids with the Revolve Solid tool in Zoo Design Studio.
+
+Use Revolve to rotate a 2D sketch profile around an axis, generating rotationally symmetric solids. Revolve is ideal for creating shafts, bottles, flanges, turned components, and any geometry with circular symmetry.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/revolve.webp"
+  alt="Revolved solid model shown in Zoo Design Studio"
+  aspect="1934 / 2404"
+  maxHeightPx={640}
+/>
+
+## Sketches
+Select one or more sketch regions to revolve. A closed sketch encloses an area, and Zoo Design
+Studio exposes that filled area as a selectable `region`. For a solid revolve, select the region, not
+the individual sketch segments. Segments define the profile boundary, but the filled region is the
+cross-section that becomes the revolved solid.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/selection-sketch.webp"
+  alt="Closed sketch outline before selecting the filled sketch region"
+  aspect="1718 / 1658"
+  maxHeightPx={420}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Sketch edges define the boundary, but the outline itself is not the solid profile selection
+</div>
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/selection-region.webp"
+  alt="Filled sketch region selected for Revolve Solid"
+  aspect="1718 / 1658"
+  maxHeightPx={420}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Select the filled sketch `region` to revolve it into a solid
+</div>
+
+The selected region becomes the cross-section of the revolved solid. Make sure it does not cross the
+axis of revolution, because that can create invalid self-intersecting geometry.
+
+## Axis Type
+Choose whether to revolve around a sketch axis (`X`, or `Y`) or around an existing edge in your model.
+
+### Sketch Axis
+If you chose "Sketch Axis" above, pick which axis to use in the sketch's coordinate system. The
+profile spins around that axis, so changing the axis changes the resulting solid even when the
+selected region stays the same.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/axis-x.webp"
+  alt="Revolve Solid result created around the sketch X axis"
+  aspect="2130 / 1956"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Revolve around the sketch `X` axis
+</div>
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/axis-y.webp"
+  alt="Revolve Solid result created around the sketch Y axis"
+  aspect="2130 / 1956"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Revolve around the sketch `Y` axis
+</div>
+
+### Edge
+If you chose `Edge` above, select a straight sketch edge or model edge to use as the revolution `axis`.
+The selected region revolves around that edge instead of one of the sketch axes.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/axis-edge-sketch.webp"
+  alt="Straight sketch edge selected as the Revolve Solid axis"
+  aspect="1086 / 898"
+  maxHeightPx={340}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Select a straight sketch `edge` to use as the axis
+</div>
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/axis-edge-revolve.webp"
+  alt="Revolve Solid result created around a selected sketch edge"
+  aspect="2130 / 1956"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Revolve around the selected `edge`
+</div>
+
+## Angle
+How many `degrees` to rotate. Common choices:
+
+
+  <FramedImage
+    src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/angle-360.webp"
+    alt="Revolve Solid with 360 degree angle"
+    aspect="2130 / 1956"
+    maxHeightPx={340}
+  />
+  <div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+    `360°` - full revolution
+  </div>
+
+
+  <FramedImage
+    src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/angle-180.webp"
+    alt="Revolve Solid with 180 degree angle"
+    aspect="2130 / 1956"
+    maxHeightPx={340}
+  />
+  <div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+    `180°` - half revolution
+  </div>
+
+Or any custom angle for partial features
+
+## Symmetric
+Enable this to revolve equally in both directions from the sketch. Your specified angle gets split in half, rotating both ways from the starting position.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/symmetric.webp"
+  alt="Symmetric revolve: angle split in both directions"
+  aspect="2130 / 1956"
+  maxHeightPx={340}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Symmetric: angle split equally both ways
+</div>
+
+## Bidirectional Angle
+When creating a non-symmetric bidirectional revolve, this sets the rotation amount in the opposite direction.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/bidirectional.webp"
+  alt="Bidirectional revolve: different angles in each direction"
+  aspect="2130 / 1956"
+  maxHeightPx={340}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Bidirectional: different angles in each direction<br/>
+  In this example, the revolve uses two different angles: `180°` in one direction and `90°` in the other. This allows you to create features that extend unequally from the sketch, giving you more control and flexibility for asymmetric or custom shapes.
+</div>
+
+## Start Tag and End Tag
+Tag the start face (at the sketch location) or end face (at the final rotation angle) to reference them in later features. This is mainly used for referencing faces from other objects or features, especially in code or scripts. In the usual point-and-click UI flow, you don't need to set these tags. This is mostly for advanced users who want precise control or automation.
+
+## Tolerance
+Controls the small-distance threshold used to decide whether entities are coincident, intersecting, coplanar, or similar. For normal revolves, leave this at its default value. Change it only when troubleshooting very small or nearly coincident geometry.
+
+## Body Type
+Choose `solid` for a watertight solid geometry, or `surface` for a thin shell with no thickness.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve-solid/surface.webp"
+  alt="Surface revolve: hollow surface without end caps"
+  aspect="2130 / 1956"
+  maxHeightPx={340}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  In this example, switching Body Type to <b>Surface</b> creates a hollow surface without the end caps.<br/>
+  If you want to learn more about surface modeling, see the <a href="/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/revolve">Surface Revolve</a> page.
+</div>
+
+## Parameter Reference
+
+`sketches`: The selected profile or profiles. In the UI, select filled regions for solid revolves,
+not their boundary segments.
+
+`axis`: The revolution axis. Use a local sketch axis such as `X` or `Y`, or select a straight
+edge/segment as the axis.
+
+`angle`: The revolution angle. Defaults to a full `360deg` revolve.
+
+`tolerance`: Sets the coincidence/intersection threshold for very small geometry checks. Usually
+leave this at the default.
+
+`symmetric`: Splits the revolve equally to both sides of the starting sketch position.
+
+`bidirectionalAngle`: Adds a second revolve angle in the opposite direction. Ignored when
+`symmetric` is enabled.
+
+`tagStart`: Names the start face for later reference.
+
+`tagEnd`: Names the end face for later reference.
+
+`bodyType`: Creates either a solid body or a surface body.
+
+
+## Prefer to learn by watching?
+If you want to find out more in a different way, check out our video walkthrough:
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+  <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+    <iframe
+      src="https://www.youtube.com/embed/akD34Y2fk3w"
+      allowFullScreen="allowfullscreen"
+      mozallowfullscreen="mozallowfullscreen"
+      msallowfullscreen="msallowfullscreen"
+      oallowfullscreen="oallowfullscreen"
+      webkitallowfullscreen="webkitallowfullscreen"
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+      }}
+    />
+  </div>
+</div>
+
+## Are you interested in code?
+
+Zoo Design Studio writes KCL behind the scenes. Here’s an example of a solid revolve in KCL:
+
+```kcl
+sketch001 = sketch(on = XZ) {
+  circle1 = circle(start = [var -3mm, var 1mm], center = [var -4mm, var 2mm])
+}
+hidden001 = hide(sketch001)
+region001 = region(point = [-4mm, 2mm], sketch = sketch001)
+revolve001 = revolve(region001, angle = 360deg, axis = Y)
+```
+
+Want to find out more about the `revolve` function? [Check it out](/docs/kcl-std/functions/std-sketch-revolve) in our KCL docs.

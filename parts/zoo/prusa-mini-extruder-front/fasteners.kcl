@@ -1,0 +1,493 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import plateWidth, plateThickness, bottomZ, lugMaxZ, halfWidth, counterboreDiameter, leftPivotX, pivotCounterboreStart, upperLeftScrewX, upperLeftScrewZ, longCounterboreEnd, lowerLeftScrewX, lowerLeftScrewZ, rightPivotX, upperRightScrewX, upperRightScrewZ, rightCounterboreEnd, upperLeftPilotDiameter, longPilotStart, lowerLeftPilotDiameter, screwDiameter, pivotPilotEnd, leftNutX, leftNutZ, nutPilotStart, lugNutX, lugNutZ, lowerNutX, lowerNutZ, rightPilotStart, upperLeftBossDiameter, lugBossDiameter, nutLeftFlatX, nutRightFlatX, nutFullDepth, nutRectEnd, longCounterboreFullDepth, rightCounterboreFullDepth, nutAcrossFlats, nutCornerRadius, bridgeLayerHeight, longPilotLength, pivotMouthDiameter from "params.kcl"
+
+// Contract literals and their individual edit guards live in params.kcl.
+// The two D3.5 pilots are independently editable. These bridge dimensions are
+// manufacturing dimensions, deliberately independent of either pilot diameter.
+leftBridgeWidth = 3.5mm
+nutBridgeWidth = 3.4mm
+rightBridgeWidth = 3.4mm
+fastenerOverrun = 0.02mm
+fastenerTolerance = 0.001mm
+counterboreRadius = counterboreDiameter / 2
+nutHalfFlat = nutAcrossFlats / 2
+nutHalfCorner = nutCornerRadius / 2
+
+assert(plateThickness, isGreaterThan = longPilotStart, error = "The long pilots need a positive final cylinder")
+assert(plateWidth, isGreaterThan = 2 * counterboreDiameter, error = "The plate must contain distinct screw stations")
+assert(halfWidth, isGreaterThan = abs(leftPivotX), error = "The left pivot axis must be inside the side datum")
+assert(bottomZ, isLessThan = lowerLeftScrewZ - counterboreRadius, error = "The lower counterbore must remain above the bottom datum")
+assert(lugMaxZ, isGreaterThan = lugNutZ + nutCornerRadius, error = "The hex trap must remain below the lug crown")
+assert(
+  counterboreDiameter,
+  isGreaterThan = pivotMouthDiameter,
+  isLessThan = upperLeftBossDiameter - 0.2mm,
+  error = "Counterbores must retain their shoulders and boss walls",
+)
+assert(
+  upperLeftPilotDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = leftBridgeWidth * sqrt(2_),
+  error = "upperLeftPilotDiameter must be positive and leave the square bridge corners",
+)
+assert(
+  lowerLeftPilotDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = leftBridgeWidth * sqrt(2_),
+  error = "lowerLeftPilotDiameter must be positive and leave the square bridge corners",
+)
+assert(
+  screwDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = pivotMouthDiameter,
+  error = "The six screw pilots must be narrower than the pivot mouths",
+)
+assert(
+  pivotMouthDiameter,
+  isGreaterThan = screwDiameter,
+  isLessThan = counterboreDiameter,
+  error = "Pivot mouths must leave an annular counterbore shoulder",
+)
+assert(
+  pivotPilotEnd,
+  isGreaterThan = 0mm,
+  isLessThan = pivotCounterboreStart,
+  error = "Pivot mouths need positive axial length",
+)
+assert(pivotCounterboreStart, isLessThan = plateThickness, error = "Pivot counterbores must be shallower than the plate")
+assert(
+  longCounterboreFullDepth,
+  isGreaterThan = 0mm,
+  isLessThan = longCounterboreEnd,
+  error = "Long counterbores need the first printable bridge layer",
+)
+assert(longCounterboreEnd, isLessThan = longPilotStart, error = "Long counterbores need the square bridge layer")
+assert(
+  rightCounterboreFullDepth,
+  isGreaterThan = 0mm,
+  isLessThan = rightCounterboreEnd,
+  error = "Right counterbore needs its first bridge layer",
+)
+assert(rightCounterboreEnd, isLessThan = rightPilotStart, error = "Right counterbore needs its square bridge layer")
+assert(rightPilotStart, isLessThan = plateThickness, error = "Right pilot must pass through the remaining plate")
+assert(
+  nutFullDepth,
+  isGreaterThan = 0mm,
+  isLessThan = nutRectEnd,
+  error = "Nut traps need positive depth and a first bridge layer",
+)
+assert(nutRectEnd, isLessThan = nutPilotStart, error = "Nut traps need a square bridge layer")
+assert(nutPilotStart, isLessThan = plateThickness, error = "Nut pilots must pass through the remaining plate")
+assert(
+  bridgeLayerHeight,
+  isGreaterThan = fastenerOverrun,
+  isLessThan = nutFullDepth,
+  error = "Printable bridge layer must be positive and smaller than the trap depth",
+)
+// longPilotLength is the contract's derived plateThickness - longPilotStart.
+// Use the physical endpoint parameters without an equality lock.
+assert(
+  longPilotLength,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness,
+  error = "Long pilot length must fit the plate",
+)
+assert(
+  nutAcrossFlats,
+  isGreaterThan = nutBridgeWidth,
+  isLessThan = lugBossDiameter - 0.2mm,
+  error = "Hex flats must retain bridge ledges and lug walls",
+)
+assert(
+  nutCornerRadius,
+  isGreaterThan = nutBridgeWidth / 2,
+  isLessThan = lugBossDiameter / 2 - 0.1mm,
+  error = "Hex corners must fit inside the lug",
+)
+assert(nutHalfCorner, isLessThan = nutBridgeWidth / 2, error = "The horizontal support band must intersect the hex's inclined sides")
+assert(
+  nutLeftFlatX,
+  isGreaterThan = -halfWidth + 0.1mm,
+  isLessThan = leftNutX - (nutBridgeWidth / 2),
+  error = "Left hex flat must leave both side wall and bridge ledge",
+)
+assert(
+  nutRightFlatX,
+  isGreaterThan = leftNutX + nutBridgeWidth / 2,
+  isLessThan = 0mm,
+  error = "Right hex flat must leave a bridge ledge",
+)
+assert(upperLeftScrewX - counterboreRadius, isGreaterThan = -halfWidth + 0.1mm, error = "Upper-left counterbore must retain its outside wall")
+assert(lowerLeftScrewX - counterboreRadius, isGreaterThan = -halfWidth + 0.1mm, error = "Lower-left counterbore must remain inside the plate")
+assert(lowerLeftScrewZ - counterboreRadius, isGreaterThan = -23.35mm, error = "Lower counterbore exceeds the assigned fastener region")
+assert(upperLeftScrewZ + counterboreRadius, isLessThan = 31.34mm, error = "Upper-left counterbore exceeds the assigned fastener region")
+assert(rightPivotX + counterboreRadius, isLessThan = 23.35mm, error = "Right pivot exceeds the assigned fastener region")
+assert(upperRightScrewX + counterboreRadius, isLessThan = 23.35mm, error = "Upper-right screw exceeds the assigned fastener region")
+assert(upperRightScrewZ - counterboreRadius, isGreaterThan = -23.35mm, error = "Upper-right screw must stay above the region floor")
+assert(upperRightScrewZ + counterboreRadius, isLessThan = 31.34mm, error = "Upper-right screw must stay below the region roof")
+assert(leftNutX - nutHalfFlat, isGreaterThan = -halfWidth + 0.1mm, error = "Left nut trap must retain its side wall")
+assert(leftNutZ - nutCornerRadius, isGreaterThan = -23.35mm, error = "Left hex exceeds the assigned fastener region")
+assert(leftNutZ + nutCornerRadius, isLessThan = 31.34mm, error = "Left hex exceeds the assigned fastener region")
+assert(lugNutX + nutHalfFlat, isLessThan = 12.5mm, error = "Lug trap must stay clear of the filament region")
+assert(lugNutZ + nutCornerRadius, isLessThan = 31.34mm, error = "Lug hex exceeds the assigned fastener region")
+assert(lowerNutX + nutHalfFlat, isLessThan = 15.4mm, error = "Lower nut trap must stay clear of the clamp region")
+assert(lowerNutZ - nutCornerRadius, isGreaterThan = -23.35mm, error = "Lower hex exceeds the assigned fastener region")
+assert(upperLeftScrewX + counterboreRadius, isLessThan = 23.35mm, error = "Upper-left counterbore exceeds the region's right boundary")
+assert(lowerLeftScrewX + counterboreRadius, isLessThan = 23.35mm, error = "Lower-left counterbore exceeds the region's right boundary")
+assert(upperRightScrewX - counterboreRadius, isGreaterThan = -26.5mm, error = "Upper-right counterbore exceeds the region's left boundary")
+assert(upperLeftScrewZ - counterboreRadius, isGreaterThan = -23.35mm, error = "Upper-left counterbore exceeds the region floor")
+assert(lowerLeftScrewZ + counterboreRadius, isLessThan = 31.34mm, error = "Lower-left counterbore exceeds the region roof")
+assert(rightPivotX - counterboreRadius, isGreaterThan = -26.5mm, error = "Right pivot exceeds the region's left boundary")
+assert(leftPivotX - (pivotMouthDiameter / 2), isGreaterThan = -halfWidth + 0.1mm, error = "The left pilot mouth must retain its side wall before the open counterbore")
+assert(leftPivotX + counterboreRadius, isLessThan = 23.35mm, error = "Left pivot exceeds the region's right boundary")
+assert(lugNutX - nutHalfFlat, isGreaterThan = -26.4mm, error = "Lug hex exceeds the region's left boundary")
+assert(lowerNutX - nutHalfFlat, isGreaterThan = -26.4mm, error = "Lower hex exceeds the region's left boundary")
+assert(lugNutZ - nutCornerRadius, isGreaterThan = -23.35mm, error = "Lug hex exceeds the region floor")
+assert(lowerNutZ + nutCornerRadius, isLessThan = 31.34mm, error = "Lower hex exceeds the region roof")
+
+// Sketch x/z profiles horizontally, then rotate exactly into the plate frame.
+// Each stack is trimmed from one blank; no union along matching cylindrical
+// bridge surfaces is needed. The pilots begin at their exact contract stations.
+fn fastenerPrism(@profile, fromY, toY) {
+  raw = extrude(profile, length = toY - fromY, method = NEW)
+  turned = rotate(raw, roll = 90deg, global = true)
+  positioned = translate(turned, y = toY, global = true)
+  finished = clone(positioned)
+  hide(profile)
+  hide([raw, turned, positioned])
+  return finished
+}
+
+fn roundFastenerTool(@toolRadius, fromY, toY) {
+  s = sketch(on = XY) {
+    c = circle(center = [0mm, 0mm], start = [toolRadius, 0mm])
+  }
+  r = region(segments = [s.c])
+  tool = fastenerPrism(r, fromY = fromY, toY = toY)
+  hide(r)
+  return tool
+}
+
+// Revolved pilots preserve analytic cylinder surfaces in STEP exports.
+fn turnedPilotTool(@toolRadius, fromY, toY) {
+  s = sketch(on = XY) {
+    a = line(start = [0mm, fromY], end = [toolRadius, fromY])
+    b = line(start = [toolRadius, fromY], end = [toolRadius, toY])
+    c = line(start = [toolRadius, toY], end = [0mm, toY])
+    d = line(start = [0mm, toY], end = [0mm, fromY])
+  }
+  r = region(segments = [s.a, s.b])
+  raw = revolve(r, axis = Y, angle = 360deg)
+  finished = clone(raw)
+  hide(r)
+  hide(raw)
+  return finished
+}
+
+// A connected C-shaped tool removes both opposing strips. Its connecting
+// edge is outside the stack blank, so only the two intended bridge walls cut.
+fn bridgeNotch(@halfBand, extent, fromY, toY) {
+  outside = extent + 2 * fastenerOverrun
+  inside = extent + fastenerOverrun
+  s = sketch(on = XY) {
+    a = line(start = [-outside, -outside], end = [outside, -outside])
+    b = line(start = [outside, -outside], end = [outside, outside])
+    c = line(start = [outside, outside], end = [-outside, outside])
+    d = line(start = [-outside, outside], end = [-outside, halfBand])
+    e = line(start = [-outside, halfBand], end = [inside, halfBand])
+    f = line(start = [inside, halfBand], end = [inside, -halfBand])
+    g = line(start = [inside, -halfBand], end = [-outside, -halfBand])
+    h = line(start = [-outside, -halfBand], end = [-outside, -outside])
+  }
+  r = region(segments = [s.a, s.b])
+  tool = fastenerPrism(r, fromY = fromY, toY = toY)
+  hide(r)
+  return tool
+}
+
+fn steppedBridge(@blank, bridgeWidth, extent, fullEnd, bridgeEnd, pilotStart) {
+  zNotch = bridgeNotch(
+    bridgeWidth / 2,
+    extent = extent,
+    fromY = fullEnd,
+    toY = pilotStart + fastenerOverrun,
+  )
+  xNotchRaw = bridgeNotch(
+    bridgeWidth / 2,
+    extent = extent,
+    fromY = bridgeEnd,
+    toY = pilotStart + fastenerOverrun,
+  )
+  xNotch = rotate(xNotchRaw, pitch = 90deg, global = true)
+  bandBlank = subtract(blank, tools = [zNotch], tolerance = fastenerTolerance)
+  squareBlank = subtract(bandBlank, tools = [xNotch], tolerance = fastenerTolerance)
+  finished = clone(squareBlank)
+  hide([
+    blank,
+    zNotch,
+    xNotchRaw,
+    xNotch,
+    bandBlank,
+    squareBlank
+  ])
+  return finished
+}
+
+fn counterboreStack(@pilotDiameter, bridgeWidth, fullEnd, bridgeEnd, pilotStart, x, z) {
+  blank = roundFastenerTool(counterboreRadius, fromY = -fastenerOverrun, toY = pilotStart)
+  stepped = steppedBridge(
+    blank,
+    bridgeWidth = bridgeWidth,
+    extent = counterboreRadius,
+    fullEnd = fullEnd,
+    bridgeEnd = bridgeEnd,
+    pilotStart = pilotStart,
+  )
+  bridge = translate(
+    stepped,
+    x = x,
+    z = z,
+    global = true,
+  )
+  // An inscribed pilot may overlap into the square's existing void. A larger
+  // editable pilot starts exactly at the shoulder, so it cannot shave a bridge.
+  pilotFrom = if pilotDiameter <= bridgeWidth {
+    pilotStart - fastenerOverrun
+  } else {
+    pilotStart
+  }
+  pilotRaw = turnedPilotTool(pilotDiameter / 2, fromY = pilotFrom, toY = plateThickness + fastenerOverrun)
+  // Align the counterbore pilot seam with the fixed bridge axes; this keeps
+  // the small shoulder faces stable when the pilot diameter crosses 3.5 mm.
+  pilot = translate(
+    rotate(pilotRaw, pitch = 0deg, global = true),
+    x = x,
+    z = z,
+    global = true,
+  )
+  return { bridge = bridge, pilot = pilot }
+}
+
+fn nutStack(@x, z, flatLeft, flatRight) {
+  s = sketch(on = XY) {
+    a = line(start = [0mm, -nutCornerRadius], end = [flatRight, -nutHalfCorner])
+    b = line(start = [flatRight, -nutHalfCorner], end = [flatRight, nutHalfCorner])
+    c = line(start = [flatRight, nutHalfCorner], end = [0mm, nutCornerRadius])
+    d = line(start = [0mm, nutCornerRadius], end = [flatLeft, nutHalfCorner])
+    e = line(start = [flatLeft, nutHalfCorner], end = [flatLeft, -nutHalfCorner])
+    f = line(start = [flatLeft, -nutHalfCorner], end = [0mm, -nutCornerRadius])
+  }
+  r = region(segments = [s.a, s.b])
+  blank = fastenerPrism(r, fromY = -fastenerOverrun, toY = nutPilotStart)
+  stepped = steppedBridge(
+    blank,
+    bridgeWidth = nutBridgeWidth,
+    extent = nutCornerRadius,
+    fullEnd = nutFullDepth,
+    bridgeEnd = nutRectEnd,
+    pilotStart = nutPilotStart,
+  )
+  hide(r)
+  bridge = translate(
+    stepped,
+    x = x,
+    z = z,
+    global = true,
+  )
+  pilotFrom = if screwDiameter <= nutBridgeWidth {
+    nutPilotStart - fastenerOverrun
+  } else {
+    nutPilotStart
+  }
+  pilotRaw = turnedPilotTool(screwDiameter / 2, fromY = pilotFrom, toY = plateThickness + fastenerOverrun)
+  // Put the cylinder seam between the square bridge tangencies.
+  pilot = translate(
+    rotate(pilotRaw, pitch = 45deg, global = true),
+    x = x,
+    z = z,
+    global = true,
+  )
+  return { bridge = bridge, pilot = pilot }
+}
+
+fn pivotStack(@x) {
+  // A single revolved section preserves exact cylindrical endpoints and the
+  // short tapered mouth. Q4: mouth diameter remains raster measured.
+  rp = screwDiameter / 2
+  rm = pivotMouthDiameter / 2
+  s = sketch(on = XY) {
+    a = line(start = [0mm, -fastenerOverrun], end = [rp, -fastenerOverrun])
+    b = line(start = [rp, -fastenerOverrun], end = [rp, pivotPilotEnd])
+    c = line(start = [rp, pivotPilotEnd], end = [rm, pivotCounterboreStart])
+    d = line(
+      start = [rm, pivotCounterboreStart],
+      end = [
+        counterboreRadius,
+        pivotCounterboreStart
+      ],
+    )
+    e = line(
+      start = [
+        counterboreRadius,
+        pivotCounterboreStart
+      ],
+      end = [
+        counterboreRadius,
+        plateThickness + fastenerOverrun
+      ],
+    )
+    f = line(
+      start = [
+        counterboreRadius,
+        plateThickness + fastenerOverrun
+      ],
+      end = [0mm, plateThickness + fastenerOverrun],
+    )
+    g = line(start = [0mm, plateThickness + fastenerOverrun], end = [0mm, -fastenerOverrun])
+  }
+  r = region(segments = [s.a, s.b])
+  raw = revolve(r, axis = Y, angle = 360deg)
+  positioned = translate(raw, x = x, global = true)
+  finished = clone(positioned)
+  hide(r)
+  hide([raw, positioned])
+  return finished
+}
+
+fn openLeftPivot() {
+  // The semicircle and straight opening share one outline, avoiding tangent
+  // overlapping tools at z = +/- counterboreRadius.
+  mouthRadius = pivotMouthDiameter / 2
+  pilotRadius = screwDiameter / 2
+  leftEnd = -halfWidth - leftPivotX - fastenerOverrun
+  opening = sketch(on = XY) {
+    a = line(start = [leftEnd, -counterboreRadius], end = [0mm, -counterboreRadius])
+    b = arc(
+      start = [0mm, -counterboreRadius],
+      end = [0mm, counterboreRadius],
+      center = [0mm, 0mm],
+      direction = CCW,
+    )
+    c = line(start = [0mm, counterboreRadius], end = [leftEnd, counterboreRadius])
+    d = line(start = [leftEnd, counterboreRadius], end = [leftEnd, -counterboreRadius])
+  }
+  openingRegion = region(segments = [opening.a, opening.b])
+  openingTool = fastenerPrism(openingRegion, fromY = pivotCounterboreStart, toY = plateThickness + fastenerOverrun)
+  mouth = sketch(on = XY) {
+    a = line(start = [0mm, -fastenerOverrun], end = [pilotRadius, -fastenerOverrun])
+    b = line(start = [pilotRadius, -fastenerOverrun], end = [pilotRadius, pivotPilotEnd])
+    c = line(start = [pilotRadius, pivotPilotEnd], end = [mouthRadius, pivotCounterboreStart])
+    d = line(
+      start = [mouthRadius, pivotCounterboreStart],
+      end = [
+        mouthRadius,
+        pivotCounterboreStart + fastenerOverrun
+      ],
+    )
+    e = line(
+      start = [
+        mouthRadius,
+        pivotCounterboreStart + fastenerOverrun
+      ],
+      end = [
+        0mm,
+        pivotCounterboreStart + fastenerOverrun
+      ],
+    )
+    f = line(
+      start = [
+        0mm,
+        pivotCounterboreStart + fastenerOverrun
+      ],
+      end = [0mm, -fastenerOverrun],
+    )
+  }
+  mouthRegion = region(segments = [mouth.a, mouth.b])
+  mouthTool = revolve(mouthRegion, axis = Y, angle = 360deg)
+  combined = union([openingTool, mouthTool], tolerance = fastenerTolerance)
+  positioned = translate(combined, x = leftPivotX, global = true)
+  finished = clone(positioned)
+  hide([openingRegion, mouthRegion])
+  hide([
+    openingTool,
+    mouthTool,
+    combined,
+    positioned
+  ])
+  return finished
+}
+
+export fn fasteners(@body) {
+  upperLeft = counterboreStack(
+    upperLeftPilotDiameter,
+    bridgeWidth = leftBridgeWidth,
+    fullEnd = longCounterboreFullDepth,
+    bridgeEnd = longCounterboreEnd,
+    pilotStart = longPilotStart,
+    x = upperLeftScrewX,
+    z = upperLeftScrewZ,
+  )
+  lowerLeft = counterboreStack(
+    lowerLeftPilotDiameter,
+    bridgeWidth = leftBridgeWidth,
+    fullEnd = longCounterboreFullDepth,
+    bridgeEnd = longCounterboreEnd,
+    pilotStart = longPilotStart,
+    x = lowerLeftScrewX,
+    z = lowerLeftScrewZ,
+  )
+  upperRight = counterboreStack(
+    screwDiameter,
+    bridgeWidth = rightBridgeWidth,
+    fullEnd = rightCounterboreFullDepth,
+    bridgeEnd = rightCounterboreEnd,
+    pilotStart = rightPilotStart,
+    x = upperRightScrewX,
+    z = upperRightScrewZ,
+  )
+  leftNut = nutStack(
+    leftNutX,
+    z = leftNutZ,
+    flatLeft = nutLeftFlatX - leftNutX,
+    flatRight = nutRightFlatX - leftNutX,
+  )
+  lugNut = nutStack(
+    lugNutX,
+    z = lugNutZ,
+    flatLeft = -nutHalfFlat,
+    flatRight = nutHalfFlat,
+  )
+  lowerNut = nutStack(
+    lowerNutX,
+    z = lowerNutZ,
+    flatLeft = -nutHalfFlat,
+    flatRight = nutHalfFlat,
+  )
+  leftPivot = openLeftPivot()
+  rightPivot = pivotStack(rightPivotX)
+  // The single stock subtraction accepts the complete cutter set. Keeping
+  // the pilot tools separate avoids coplanar unions at their exact starts;
+  // changing either D3.5 pilot therefore cuts only y=10.1..plateThickness.
+  allTools = [
+    upperLeft.bridge,
+    upperLeft.pilot,
+    lowerLeft.bridge,
+    lowerLeft.pilot,
+    upperRight.bridge,
+    upperRight.pilot,
+    leftNut.bridge,
+    leftNut.pilot,
+    lugNut.bridge,
+    lugNut.pilot,
+    lowerNut.bridge,
+    lowerNut.pilot,
+    leftPivot,
+    rightPivot
+  ]
+  cutBody = subtract(body, tools = allTools, tolerance = fastenerTolerance)
+  finished = clone(cutBody)
+  hide(allTools)
+  hide([body, cutBody])
+  return finished
+}

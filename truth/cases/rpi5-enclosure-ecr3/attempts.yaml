@@ -1,0 +1,303 @@
+attempts:
+- started: '2026-09-18T08:07:24Z'
+  arm: ecr3
+  backend: zoo
+  design: rpi5-enclosure
+  ecr:
+    ok: false
+    outcome: applied
+    refused: false
+    kcl_modified: true
+    verdict_note: null
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    preservation: false
+    codex:
+      thread_id: 01a0b32e-5a0f-7ab2-bd74-3e6f0c5c10e2
+      exit_code: 0
+      seconds: 2830
+      commands: 24
+      usage:
+        input: 25492983
+        cached: 24876800
+        output: 207086
+        reasoning: 134652
+      run_dir: /Users/danieldriscoll/dual/skillkat/results/rpi5-enclosure/ecr/ecr3/codex
+      failure: ''
+      network_stalls: 0
+      network_wait_seconds: 0
+      network_recovered: false
+      timeline:
+        wall_seconds: 2828
+        tool_seconds: 444
+        model_seconds: 2384
+        commands: 24
+        longest_commands_s:
+        - 281.3
+        - 70.2
+        - 64.4
+        - 21.2
+        - 3.7
+  stage_reached: scored
+  request: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr3/inputs/ecr-3-fasteners.md
+  delta: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr3/inputs/contract-delta.yaml
+  expect_infeasible: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-ecr3-1789718844
+  base_kcl_restored: true
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 36
+      required_total: 36
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 4172
+  finished: '2026-09-18T09:16:56Z'
+- started: '2026-09-20T08:00:40Z'
+  arm: ecr3
+  design: rpi5-enclosure
+  ecr:
+    ok: false
+    outcome: refused
+    refused: true
+    kcl_modified: false
+    verdict_note: refused a request the contract considered feasible
+    gates: null
+    preservation: null
+    worker:
+      backend: cursor
+      role: ecr
+      model: inherit
+      order_id: 003-ecr
+      thread_id: 362a334b-749a-4d23-a1d1-517d5734228a
+      exit_code: 0
+      seconds: 370
+      commands: 4
+      usage: {}
+      run_dir: /Users/danieldriscoll/dual/skillkat/results/freecad/rpi5-enclosure/worker/003-ecr
+      failure: ''
+      fallback_from: null
+      metrics:
+        commands: 4
+        self_corrections: 1
+        engine_calls: 0
+        files_changed: []
+        incomplete: false
+        notes: INFEASIBLE; main.py restored to pre-ECR checkpoint
+        engine_ledger_calls: 1
+        engine_ledger_seconds: 1.44
+        visual_check: 'Visual: request refused; geometry remains the corner-fastener
+          two-solid enclosure with no new side-wall step, fold or flange.'
+      network_stalls: 0
+      network_wait_seconds: 0
+      network_recovered: false
+      timeline: {}
+  stage_reached: ecr
+  request: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr3/inputs/ecr-3-fasteners.md
+  delta: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr3/inputs/contract-delta.yaml
+  expect_infeasible: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-ecr3
+  base_kcl_restored: true
+  score_error: 'ScoreError: no handoff STEP at /Users/danieldriscoll/dual/skillkat/results/freecad/rpi5-enclosure/ecr/ecr3/handoff/rpi5-enclosure.step;
+    run the pipeline first (`python -m skillkat ecr rpi5-enclosure ... --label ecr3`)'
+  seconds: 428
+  finished: '2026-09-20T08:07:48Z'
+- started: '2026-09-20T08:37:50Z'
+  arm: ecr3
+  design: rpi5-enclosure
+  ecr:
+    ok: true
+    outcome: applied
+    refused: false
+    kcl_modified: true
+    verdict_note: null
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    preservation: true
+    worker:
+      backend: cursor
+      role: ecr
+      model: inherit
+      order_id: 004-ecr
+      thread_id: 362a334b-749a-4d23-a1d1-517d5734228a
+      exit_code: 0
+      seconds: 201
+      commands: 8
+      usage: {}
+      run_dir: /Users/danieldriscoll/dual/skillkat/results/freecad/rpi5-enclosure/worker/004-ecr
+      failure: ''
+      fallback_from: null
+      metrics:
+        commands: 8
+        self_corrections: 0
+        engine_calls: 0
+        files_changed:
+        - /Users/danieldriscoll/dual/skillkat/parts/freecad/rpi5-enclosure/main.py
+        incomplete: false
+        notes: ''
+        engine_ledger_calls: 3
+        engine_ledger_seconds: 4.4
+        visual_check: 'Visual: hairline 0.05 mm lid/base split on all four sides;
+          front three USB-C/HDMI notches with two side bosses and corner feet; back
+          blank GPIO wall with matching bosses and feet; left SD notch and corner
+          feet only (no short-wall bosses); right three USB-A/RJ45 notches and corner
+          feet; top is the wall rectangle plus four long-side flanges with Ø3.2 holes
+          at x=50 and x=75, base feet visible beyond the lid, no corner lugs; underside
+          is a flat floor with four 8×8 feet, four side-boss pads, four standoff pilots
+          and the SD notch on the left; no unexpected step, fold or gap.'
+      network_stalls: 0
+      network_wait_seconds: 0
+      network_recovered: false
+      timeline: {}
+  stage_reached: scored
+  request: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr3/inputs/ecr-3-fasteners.md
+  delta: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr3/inputs/contract-delta.yaml
+  expect_infeasible: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-ecr3
+  base_kcl_restored: true
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 36
+      required_total: 36
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 237
+  finished: '2026-09-20T08:41:47Z'
+- started: '2026-09-20T08:42:09Z'
+  arm: ecr3
+  design: rpi5-enclosure
+  ecr:
+    ok: true
+    outcome: applied
+    refused: false
+    kcl_modified: true
+    verdict_note: null
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    preservation: true
+    worker:
+      backend: cursor
+      role: ecr
+      model: inherit
+      order_id: 004-ecr
+      thread_id: e036ad7c-2718-4575-9b50-f634fd0c103c
+      exit_code: 0
+      seconds: 167
+      commands: 3
+      usage: {}
+      run_dir: /Users/danieldriscoll/dual/skillkat/results/build123d/rpi5-enclosure/worker/004-ecr
+      failure: ''
+      fallback_from: null
+      metrics:
+        commands: 3
+        self_corrections: 0
+        engine_calls: 0
+        files_changed:
+        - /Users/danieldriscoll/dual/skillkat/parts/build123d/rpi5-enclosure/main.py
+        incomplete: false
+        notes: ''
+        engine_ledger_calls: 3
+        engine_ledger_seconds: 7.8
+        visual_check: 'Visual: Front quarter has three open-to-rim notches and two
+          mid-side bosses (not at the corners), with square feet only at the floor;
+          back quarter is a plain wall with two matching bosses and floor feet; left
+          quarter has the SD notch and floor-only corner feet; right quarter has RJ45
+          plus two USB-A stacks and floor feet; top lid is a wall rectangle plus four
+          side flanges with holes and no corner lugs; underside is a blank floor with
+          four corner feet, four side-boss pads and no through-holes; iso shows four
+          interior standoffs and a separate flanged lid; no folds or unexpected gaps.'
+      network_stalls: 0
+      network_wait_seconds: 0
+      network_recovered: false
+      timeline: {}
+  stage_reached: scored
+  request: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr3/inputs/ecr-3-fasteners.md
+  delta: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr3/inputs/contract-delta.yaml
+  expect_infeasible: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-ecr3
+  base_kcl_restored: true
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 36
+      required_total: 36
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 245
+  finished: '2026-09-20T08:46:13Z'
+- started: '2026-09-20T08:46:25Z'
+  arm: ecr3
+  design: rpi5-enclosure
+  ecr:
+    ok: true
+    outcome: applied
+    refused: false
+    kcl_modified: true
+    verdict_note: null
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    preservation: true
+    worker:
+      backend: cursor
+      role: ecr
+      model: inherit
+      order_id: 005-ecr
+      thread_id: 4f48ea14-6618-49c6-abf0-c7c87f8f7aec
+      exit_code: 0
+      seconds: 177
+      commands: 2
+      usage: {}
+      run_dir: /Users/danieldriscoll/dual/skillkat/results/cadquery/rpi5-enclosure/worker/005-ecr
+      failure: ''
+      fallback_from: null
+      metrics:
+        commands: 2
+        self_corrections: 0
+        engine_calls: 0
+        files_changed:
+        - /Users/danieldriscoll/dual/skillkat/parts/cadquery/rpi5-enclosure/main.py
+        incomplete: false
+        notes: ''
+        engine_ledger_calls: 3
+        engine_ledger_seconds: 9.84
+        visual_check: 'Visual: Front quarter has three open-to-rim notches biased
+          toward −x and two side bosses toward +x, with floor-only corner feet at
+          both ends; back quarter is a continuous wall with the matching pair of side
+          bosses and floor feet; left quarter has one SD notch and floor feet, no
+          tall corner posts; right quarter has three port notches and floor feet;
+          top is a wall-footprint lid plus four side flanges with Ø3.2 holes and no
+          corner lugs (feet peek past the lid); underside is a closed floor with four
+          corner feet, four standoff circles inset toward USB-C, and side-boss pads
+          on the long sides; hairline 0.05 mm lid–base gap, no fold.'
+      network_stalls: 0
+      network_wait_seconds: 0
+      network_recovered: false
+      timeline: {}
+  stage_reached: scored
+  request: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr3/inputs/ecr-3-fasteners.md
+  delta: /Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure-ecr3/inputs/contract-delta.yaml
+  expect_infeasible: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-ecr3
+  base_kcl_restored: true
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 36
+      required_total: 36
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 259
+  finished: '2026-09-20T08:50:44Z'

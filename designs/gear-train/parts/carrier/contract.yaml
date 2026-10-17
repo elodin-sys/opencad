@@ -1,0 +1,316 @@
+schema_version: 1
+name: gear-train-carrier
+intent: >-
+  Carrier plate of the gear-train assembly (spur-gear pair on a carrier plate), modelled in its
+  own frame, which is the assembly (specification) frame: origin on the pinion axis in the top
+  face, +x toward the wheel axis, +z up. A 110 x 50 x 5 mm rectangular plate from corner
+  (-25, -25, -5) to (85, 25, 0) with sharp edges, with two clearance holes along z through the
+  full thickness z = -5..0: D6 on the pinion axis at (0, 0) and D8 on the wheel axis at (60, 0).
+  The top face z = 0 is the seat of both gears (their bottom faces touch it); the two hole axes are
+  the pinion and wheel revolute joint axes (pinionSpin, wheelSpin). Authoritative source:
+  sources/gear-pair-spec.md (text).
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "on the pinion axis in the plate's top face: [0,0,0] is the centre of the D6 pinion hole at z = 0 (assembly/specification frame)"
+  axes:
+    x: "from the pinion axis toward the wheel axis (wheel axis at x = 60); along the 110 mm plate length, plate spans x = -25..85"
+    y: "across the 50 mm plate width, right-handed with x and z; plate spans y = -25..25, both hole axes lie on y = 0"
+    z: "up, parallel to both gear axes; the plate occupies z = -5..0 and the gears sit above z = 0"
+  datums:
+    - name: A
+      description: "top face z = 0, the gear seat (bottom faces of pinion and wheel touch it)"
+    - name: B
+      description: "pinion axis: line x = 0, y = 0 along z (axis of the D6 hole, joint pinionSpin)"
+    - name: C
+      description: "wheel axis: line x = 60, y = 0 along z (axis of the D8 hole, joint wheelSpin)"
+
+envelope:
+  min: [-25, -25, -5]
+  max: [85, 25, 0]
+  tolerance: 0.05
+
+parameters:
+  - name: plateLength
+    value: 110
+    unit: mm
+    provenance: stated
+    source: "sources/gear-pair-spec.md, table row 'Carrier plate' (110 x 50 x 5 mm)"
+    tolerance: 0.01
+    description: "plate extent along x, from plateXMin to plateXMin + plateLength (-25..85)"
+  - name: plateWidth
+    value: 50
+    unit: mm
+    provenance: stated
+    source: "sources/gear-pair-spec.md, table row 'Carrier plate' (110 x 50 x 5 mm, corner y = -25..25)"
+    tolerance: 0.01
+    description: "plate extent along y, centred on the axis line y = 0 (-plateWidth/2..plateWidth/2)"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 5500
+        direction: increase
+        bbox_delta: [0, 10, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [40, 50, 60]
+      infeasible_deltas: [-45]
+  - name: plateThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "sources/gear-pair-spec.md, table row 'Carrier plate' (110 x 50 x 5 mm, corner z = -5..0)"
+    tolerance: 0.01
+    description: "plate thickness; the top face stays at z = 0 and the plate extends down to z = -plateThickness"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 5421.46
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.02
+      sweep:
+        values: [3, 5, 8]
+      infeasible_deltas: [-5]
+  - name: plateXMin
+    value: -25
+    unit: mm
+    provenance: stated
+    source: "sources/gear-pair-spec.md, table row 'Carrier plate' (corner at (-25, -25, -5))"
+    tolerance: 0.01
+    description: "x of the plate's -x end face (25 mm behind the pinion axis)"
+  - name: pinionBoreDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "sources/gear-pair-spec.md, table rows 'Pinion' (bore D6) and 'Carrier plate' (D6 clearance hole on the gear axis)"
+    tolerance: 0.01
+    description: "diameter of the through clearance hole on the pinion axis (0, 0)"
+  - name: wheelBoreDiameter
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "sources/gear-pair-spec.md, table rows 'Wheel' (bore D8) and 'Carrier plate' (D8 clearance hole on the gear axis)"
+    tolerance: 0.01
+    description: "diameter of the through clearance hole on the wheel axis (centerDistance, 0)"
+  - name: centerDistance
+    value: 60
+    unit: mm
+    provenance: stated
+    source: "sources/gear-pair-spec.md, table rows 'Wheel' (axis at (60, 0)) and 'Centre distance' (60 mm = (20 + 40) x 2 / 2)"
+    tolerance: 0.01
+    description: "x of the wheel axis; the pinion axis is the origin, so this is the pinion-wheel centre distance"
+
+features:
+  - id: plate
+    kind: extrude
+    description: >-
+      rectangle x = plateXMin..plateXMin + plateLength (-25..85), y = -plateWidth/2..plateWidth/2
+      (-25..25), extruded downward by plateThickness from the top face z = 0 to z = -5; sharp
+      edges, no fillets or chamfers
+    parameters: [plateLength, plateWidth, plateThickness, plateXMin]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[30, 12, -2.5], [-20, -20, -2.5], [80, 20, -2.5]]
+      - method: face
+        face: top
+      - method: face
+        face: bottom
+      - method: dimension
+        dimension: lengthX
+      - method: dimension
+        dimension: widthY
+      - method: dimension
+        dimension: thicknessZ
+  - id: pinionHole
+    kind: hole
+    description: "D6 clearance hole on the pinion axis (0, 0), along z through the full thickness z = -5..0"
+    parameters: [pinionBoreDiameter]
+    verify:
+      - method: cylinder
+        cylinder: pinionBore
+      - method: void
+        points: [[0, 0, -2.5]]
+      - method: section
+        section: midZ
+      - method: section
+        section: boreLine
+  - id: wheelHole
+    kind: hole
+    description: "D8 clearance hole on the wheel axis (centerDistance, 0) = (60, 0), along z through the full thickness z = -5..0"
+    parameters: [wheelBoreDiameter, centerDistance]
+    verify:
+      - method: cylinder
+        cylinder: wheelBore
+      - method: void
+        points: [[60, 0, -2.5]]
+      - method: section
+        section: nearTop
+      - method: section
+        section: nearBottom
+
+interfaces:
+  - name: gearSeat
+    description: "top face z = 0: seat of the pinion and the wheel (their bottom faces touch it, separate solids); the width and thickness edits keep it at z = 0"
+    must_not_change: true
+    checks: [top]
+  - name: pinionJoint
+    description: "revolute joint pinionSpin: axis through own-frame point (0, 0, 0) along +z, the D6 hole axis"
+    must_not_change: true
+    checks: [pinionBore]
+  - name: wheelJoint
+    description: "revolute joint wheelSpin: axis through own-frame point (60, 0, 0) along +z, the D8 hole axis"
+    must_not_change: true
+    checks: [wheelBore]
+
+acceptance:
+  volume:
+    expected: 27107.30
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "plateLength*plateWidth*plateThickness - pi/4*(pinionBoreDiameter^2 + wheelBoreDiameter^2)*plateThickness = 27500 - 125*pi"
+  surface_area:
+    expected: 12662.83
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "2*(110*50 - 25*pi) top+bottom + 2*(110+50)*5 sides + pi*(6+8)*5 hole walls = 12600 + 20*pi"
+  center_of_mass:
+    expected: [29.878, 0, -2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "x = (27500*30 - 80*pi*60) / (27500 - 125*pi) (pinion hole volume 45*pi at x = 0, wheel hole 80*pi at x = 60); y = 0 by symmetry; z = -plateThickness/2"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: -2.5
+      expect:
+        area: 5421.46
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 2
+      description: "mid-thickness section: plate outline with both clearance holes (110*50 - 25*pi)"
+    - id: nearTop
+      plane: z
+      at: -0.5
+      expect:
+        area: 5421.46
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 2
+      description: "0.5 mm below the seat: both holes open at the top"
+    - id: nearBottom
+      plane: z
+      at: -4.5
+      expect:
+        area: 5421.46
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 2
+      description: "0.5 mm above the underside: both holes run through the full thickness"
+    - id: boreLine
+      plane: y
+      at: 1
+      expect:
+        area: 482.99
+        area_tolerance_rel: 0.005
+        loops: 3
+        holes: 0
+      description: "section 1 mm off the axis line: the two holes split the 110 x 5 strip into three islands; area 550 - 5*(2*sqrt(8) + 2*sqrt(15))"
+  faces:
+    - name: top
+      plane: z
+      at: 0
+      normal: "+"
+      mode: one
+    - name: bottom
+      plane: z
+      at: -5
+      normal: "-"
+      area: 5421.46
+      area_tolerance_rel: 0.002
+      mode: one
+  cylinders:
+    - name: pinionBore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      radius_tolerance: 0.02
+      axis_tolerance: 0.05
+      description: "D6 clearance hole on the pinion axis (joint pinionSpin)"
+    - name: wheelBore
+      point: [60, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 8
+      radius_tolerance: 0.02
+      axis_tolerance: 0.05
+      description: "D8 clearance hole on the wheel axis (joint wheelSpin)"
+  dimensions:
+    - name: lengthX
+      axis: x
+      expected: 110
+      tolerance: 0.05
+      description: "plate length, bbox extent along x"
+    - name: widthY
+      axis: y
+      expected: 50
+      tolerance: 0.05
+      description: "plate width, bbox extent along y"
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "plate thickness between the underside and the gear seat"
+  solids:
+    - name: carrier
+      contains_point: [30, 12, -2.5]
+      description: "the single carrier plate solid"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[30, 12, -2.5], [-20, -20, -2.5], [80, 20, -2.5]]
+    - name: inPinionHole
+      state: void
+      points: [[0, 0, -2.5]]
+    - name: inWheelHole
+      state: void
+      points: [[60, 0, -2.5]]
+  cylinder_counts:
+    - name: pinionHoles
+      diameter: 6
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+    - name: wheelHoles
+      diameter: 8
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+  blockout:
+    volume_min: 26500
+    volume_max: 27600
+
+references:
+  - path: sources/gear-pair-spec.md
+    kind: text
+    role: authoritative
+    sha256: 0acea6d35513df93499f95e7242721b64488c45819f6e58ebd09ed627fb09d87
+    units: mm
+    revision: "as supplied"
+    note: "spur-gear pair on a carrier plate specification; the 'Carrier plate' row and the frame paragraph define this part"
+
+open_questions:
+  - "Material, density and manufacturing process of the carrier are not stated; no mass claim is made."
+  - "Hole fit class is not stated: D6 and D8 are modelled exactly at nominal (same as the gear bores), no running clearance added."

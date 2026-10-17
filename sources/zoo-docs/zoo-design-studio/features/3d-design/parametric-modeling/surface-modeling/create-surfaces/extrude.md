@@ -1,0 +1,186 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude
+Title: Extrude Surface
+
+# Extrude Surface
+
+Create surface extrusions from sketch profiles and body edges in Zoo Design Studio.
+
+Use the same Extrude tool used in
+[Extrude Solid](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/extrude),
+then set `bodyType` to `surface` to create an open surface instead of a closed solid. You can extrude
+a sketch segment, sketch region, or an edge from an existing body. This is useful for reference
+geometry, patch workflows, and downstream surface edits that should remain open rather than forming
+a volumetric body.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude/extrude-surface.gif"
+  alt="Surface extrude workflow in Zoo Design Studio"
+  aspect="1512 / 948"
+  maxWidthPx="800"
+/>
+
+## Body Type
+
+The `bodyType` parameter controls what kind of geometry Extrude creates. Set `bodyType` to
+`surface` when you want a surface body, which is an open shell with no thickness, instead of a
+watertight solid body. This is the same Body Type control described in the solid Extrude workflow,
+the only difference is that here you are intentionally choosing the surface output mode.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude/extrude.webp"
+  alt="Extrude tool with bodyType set to surface in Zoo Design Studio"
+  aspect="1696 / 2536"
+  maxHeightPx={640}
+/>
+
+## Profiles
+
+Select one or more sketch segments, body edges, or sketch regions to extrude. A segment or body
+edge creates a sheet surface that extends from that curve. A region uses the complete enclosed
+profile and creates an open surface body instead of a solid.
+
+To extrude an existing body's edge, start Extrude and select the edge in the viewport. Set
+`bodyType` to `surface`; edge extrusions cannot create a solid directly. Use `method = new` to keep
+the new surface separate. `method = merge` is not currently supported for edge extrusion.
+
+You can extrude multiple body edges together, but you cannot mix body edges with sketch or face
+profiles in the same `extrude` call. Use separate extrusions instead.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude/select-body-edge.webp"
+  alt="An edge selected on an existing body for surface extrusion"
+  aspect="1 / 1"
+  maxHeightPx={420}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Selected body edge
+</div>
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude/select-segment.webp"
+  alt="Extrude surface with a selected segment"
+  aspect="1696 / 2536"
+  maxHeightPx={320}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Selected sketch segment
+</div>
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude/select-region.webp"
+  alt="Extrude surface with a selected region"
+  aspect="1696 / 2536"
+  maxHeightPx={320}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Selected sketch region
+</div>
+
+## Direction
+
+By default, a sketch profile extrudes along its sketch plane normal. When extruding a body edge,
+Zoo Design Studio infers a direction halfway between the normals of the two faces beside the edge.
+
+Use `direction` to override that default. In the command palette, select a sketch segment or an
+existing body edge to supply the direction. In KCL, `direction` also accepts a three-component
+vector, a tagged edge, or an edge returned by an edge query. The selected curve supplies only its
+direction; `length` still controls how far the profile is extruded.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude/edge-extrude.webp"
+  alt="A body edge extruded with its inferred direction"
+  aspect="1 / 1"
+  maxHeightPx={360}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Body edge extruded in the inferred direction
+</div>
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude/edge-extrude-direction.webp"
+  alt="A body edge extruded with a custom direction"
+  aspect="1 / 1"
+  maxHeightPx={360}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  The same edge extruded with <code>direction = [1, 0, 1]</code>
+</div>
+
+For example, all of these forms are valid:
+
+```kcl
+extrude(profile, length = 5, direction = [1, 0, 1])
+extrude(profile, length = 5, direction = directionSketch.line1)
+extrude(profile, length = 5, direction = getOppositeEdge(edgeTag))
+```
+
+## Other Parameters
+
+`Length`, `Extrude To Face`, `Symmetric`, and `Bidirectional Length` work as described in
+[Extrude Solid](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/extrude).
+Because an extruded edge or sketch segment creates no start or end cap, `Start Tag` and `End Tag`
+are not available for those profiles. `direction` and `twistAngle` cannot be used together. See the
+[`extrude` KCL reference](/docs/kcl-std/functions/std-sketch-extrude) for every parameter and
+combination.
+
+## Surface Extrude In The Aquarium
+
+For a real model that uses Surface Extrude, open [this car bumper in the
+Aquarium](https://zoo.dev/aquarium/b0a8d539-ca56-43e4-8eb5-150dbffbdb49), our public model
+gallery.
+
+<a href="https://zoo.dev/aquarium/b0a8d539-ca56-43e4-8eb5-150dbffbdb49">
+  <FramedImage
+    src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/sweep/bumper.webp"
+    alt="Car bumper model using Surface Extrude in the Aquarium"
+    aspect="1778 / 968"
+    maxWidthPx="800"
+  />
+</a>
+
+## Are you interested in code?
+
+Zoo Design Studio writes KCL behind the scenes. A surface extrusion is an `extrude` call with
+`bodyType = SURFACE`, applied to a sketch segment, body edge, or profile.
+
+```kcl
+mySketch = sketch(on = XY) {
+  arc1 = arc(
+    start = [var 0mm, var 2mm],
+    end = [var 0mm, var -1mm],
+    center = [var 0mm, var 0mm],
+  )
+}
+
+surfaceExtrude = extrude(mySketch.arc1, length = 5, bodyType = SURFACE)
+```
+
+To extrude an edge from an existing body, reference the edge directly or use an edge-query
+function. This example extrudes the edge opposite a tagged sketch segment and uses another sketch
+segment for its direction:
+
+```kcl
+@settings(kclVersion = 2.0)
+
+baseSketch = sketch(on = XY) {
+  line1 = line(start = [var 0mm, var 0mm], end = [var 10mm, var 0mm])
+  line2 = line(start = [var 10mm, var 0mm], end = [var 10mm, var 5mm])
+  line3 = line(start = [var 10mm, var 5mm], end = [var 0mm, var 5mm])
+  line4 = line(start = [var 0mm, var 5mm], end = [var 0mm, var 0mm])
+}
+base = extrude(region(point = [5mm, 2mm], sketch = baseSketch), length = 5)
+
+directionSketch = sketch(on = YZ) {
+  line1 = line(start = [var 0mm, var 0mm], end = [var 1mm, var 1mm])
+}
+
+edgeSurface = extrude(
+  getOppositeEdge(base.sketch.tags.line1),
+  length = 8,
+  direction = directionSketch.line1,
+  bodyType = SURFACE,
+  method = NEW,
+)
+```
+
+Want to find out more about the `extrude` function? [Check it out](/docs/kcl-std/functions/std-sketch-extrude)
+in our KCL docs.

@@ -1,0 +1,206 @@
+{
+  "named_faces": {
+    "bottom": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 3064.995690054916,
+      "ok": true,
+      "position": 0.0,
+      "center_expected": [
+        34.7955,
+        22.465
+      ],
+      "center_error": 2.4328446584834225e-05,
+      "centroid_uv": [
+        34.795524191066896,
+        22.464997418218537
+      ]
+    },
+    "pcbTop": {
+      "plane": "z",
+      "at": 1.2,
+      "normal": "+",
+      "found": 1,
+      "area": 2616.555690054916,
+      "ok": true,
+      "position": 1.2,
+      "area_expected": 2616.5557,
+      "area_ok": true,
+      "center_expected": [
+        34.795,
+        22.065
+      ],
+      "center_error": 0.00030741719008984815,
+      "centroid_uv": [
+        34.794757101810745,
+        22.06481157017641
+      ]
+    },
+    "socTop": {
+      "plane": "z",
+      "at": 3.83,
+      "normal": "+",
+      "found": 1,
+      "area": 448.44,
+      "ok": true,
+      "position": 3.83,
+      "area_expected": 448.44,
+      "area_ok": true,
+      "center_expected": [
+        34.8,
+        24.8
+      ],
+      "center_error": 3.552713678800501e-15,
+      "centroid_uv": [
+        34.8,
+        24.799999999999997
+      ]
+    },
+    "fingerEdge": {
+      "plane": "y",
+      "at": 0.0,
+      "normal": "-",
+      "found": 2,
+      "area": 80.27999999999999,
+      "mode": "sum",
+      "ok": true,
+      "position": 0.0
+    },
+    "mountEdge": {
+      "plane": "y",
+      "at": 45.0,
+      "normal": "+",
+      "found": 1,
+      "area": 82.08,
+      "ok": true,
+      "position": 45.0,
+      "area_expected": 82.08,
+      "area_ok": true,
+      "centroid_uv": [
+        34.800000000000004,
+        0.6
+      ]
+    },
+    "leftNotchFloor": {
+      "plane": "x",
+      "at": 1.75,
+      "normal": "-",
+      "found": 1,
+      "area": 3.2400000000000033,
+      "ok": true,
+      "position": 1.75,
+      "area_expected": 3.24,
+      "area_ok": true,
+      "centroid_uv": [
+        20.0,
+        0.5999999999999999
+      ]
+    },
+    "rightNotchFloor": {
+      "plane": "x",
+      "at": 67.85,
+      "normal": "+",
+      "found": 1,
+      "area": 3.2400000000000033,
+      "ok": true,
+      "position": 67.85,
+      "area_expected": 3.24,
+      "area_ok": true,
+      "centroid_uv": [
+        20.0,
+        0.5999999999999999
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "bottom",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        34.7955,
+        22.465
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "pcbTop",
+      "plane": "z",
+      "at": 1.2,
+      "normal": "+",
+      "area": 2616.5557,
+      "area_tolerance_rel": 0.002,
+      "tolerance": null,
+      "center": [
+        34.795,
+        22.065
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "socTop",
+      "plane": "z",
+      "at": 3.83,
+      "normal": "+",
+      "area": 448.44,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        34.8,
+        24.8
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "fingerEdge",
+      "plane": "y",
+      "at": 0.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "mountEdge",
+      "plane": "y",
+      "at": 45.0,
+      "normal": "+",
+      "area": 82.08,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "leftNotchFloor",
+      "plane": "x",
+      "at": 1.75,
+      "normal": "-",
+      "area": 3.24,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "rightNotchFloor",
+      "plane": "x",
+      "at": 67.85,
+      "normal": "+",
+      "area": 3.24,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 22
+}

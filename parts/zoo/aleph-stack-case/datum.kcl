@@ -1,0 +1,55 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import innerXMin, innerXMax, innerYMin, innerYMax, wallThickness, floorTop, floorThickness, seamGap, roofBottom, roofThickness from "params.kcl"
+
+// Two blanks retained from the passed blockout. No feature geometry is built here.
+// Live envelope dimensions: wall edits grow stock outward from fixed cavity
+// planes. Roof, floor and seam gauges are independent. The named derived
+// contract constants above remain nominal reference values, not equality locks.
+blockXMin = innerXMin - wallThickness
+blockXMax = innerXMax + wallThickness
+blockYMin = innerYMin - wallThickness
+blockYMax = innerYMax + wallThickness
+blockFloorBottom = floorTop - floorThickness
+blockShellBottom = floorTop + seamGap
+blockRoofTop = roofBottom + roofThickness
+blockLength = blockXMax - blockXMin
+blockWidth = blockYMax - blockYMin
+blockUpperHeight = blockRoofTop - blockShellBottom
+assert(blockLength, isGreaterThan = 0mm, error = "Envelope x span must be positive.")
+assert(blockWidth, isGreaterThan = 0mm, error = "Envelope y span must be positive.")
+assert(blockUpperHeight, isGreaterThan = roofThickness, error = "Upper blank must extend below its roof stock.")
+
+// Primary upper-cap blank: no cavity, openings, mounting holes or small features.
+upperPlane = offsetPlane(XY, offset = blockShellBottom)
+upperProfile = sketch(on = upperPlane) {
+  front = line(start = [blockXMin, blockYMin], end = [blockXMax, blockYMin])
+  right = line(start = [blockXMax, blockYMin], end = [blockXMax, blockYMax])
+  rear = line(start = [blockXMax, blockYMax], end = [blockXMin, blockYMax])
+  left = line(start = [blockXMin, blockYMax], end = [blockXMin, blockYMin])
+}
+upperRegion = region(segments = [upperProfile.front, upperProfile.right])
+export upperShell = extrude(upperRegion, length = blockUpperHeight, method = NEW)
+
+// Separate primary bottom-cover blank. Datum z=0 stays at the base PCB bottom.
+coverPlane = offsetPlane(XY, offset = blockFloorBottom)
+coverProfile = sketch(on = coverPlane) {
+  front = line(start = [blockXMin, blockYMin], end = [blockXMax, blockYMin])
+  right = line(start = [blockXMax, blockYMin], end = [blockXMax, blockYMax])
+  rear = line(start = [blockXMax, blockYMax], end = [blockXMin, blockYMax])
+  left = line(start = [blockXMin, blockYMax], end = [blockXMin, blockYMin])
+}
+coverRegion = region(segments = [coverProfile.front, coverProfile.right])
+export bottomCover = extrude(coverRegion, length = floorThickness, method = NEW)
+
+// Hide solved construction sketches through their Sketch handles. The consumed
+// regions identify the final solids and must remain visible. No datum axes.
+hide([
+  upperProfile.meta.sketch,
+  coverProfile.meta.sketch
+])
+hide([upperPlane, coverPlane, XY])
+
+// Stable body order for every module: [upperShell, bottomCover].
+// A module returns both bodies, replacing only its owned body; never union them.
+export datum = [upperShell, bottomCover]

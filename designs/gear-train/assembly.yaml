@@ -1,0 +1,122 @@
+schema_version: 1
+kind: assembly
+name: gear-train
+intent: >-
+  Spur-gear pair on a carrier plate from sources/gear-pair-spec.md (the only source; text, authoritative): a 20-tooth
+  pinion and a 40-tooth wheel, module 2, pressure angle 20 deg, no profile shift, face width 8, each tooth thinned 0.05
+  at its pitch circle for 0.10 total circular backlash, on revolute joints on a 110 x 50 x 5 carrier plate at the pinion
+  axis (0, 0) and the wheel axis (60, 0). The pinion (a tooth centred on +x) is the motor-driven joint; the wheel (a
+  tooth space centred toward the pinion) follows through a -0.5 gear transmission. Acceptance: one pinion pitch (18 deg)
+  of rotation with zero interference and a flank gap of at most 0.15; the transmission ratio is predicted from the
+  placed geometry.
+units: {length: mm, angle: deg}
+frame:
+  origin: pinion axis in the carrier top face (the specification's origin)
+  axes: {x: from the pinion axis toward the wheel axis, y: completes a right-handed frame, z: "gear axes, up, normal to the carrier top face"}
+  datums:
+    - {name: A, description: carrier top face z = 0 (the seat of both gears)}
+    - {name: B, description: pinion axis x = y = 0}
+    - {name: C, description: "wheel axis x = 60, y = 0"}
+envelope: {min: [-25.0, -41.92, -5.0], max: [101.92, 41.92, 8.0], tolerance: 0.1}
+datum_part: carrier
+parts:
+  - name: carrier
+    kind: modelled
+    design: gear-train-carrier
+    intent: >-
+      Carrier plate in its own frame, which is the assembly (specification) frame: origin on the pinion axis in the top
+      face, +x toward the wheel axis, +z up. A 110 x 50 x 5 rectangular plate from corner (-25, -25, -5) to (85, 25, 0)
+      with sharp edges. Two clearance holes along z through the full thickness z = -5..0: D6 on the pinion axis at
+      (0, 0) and D8 on the wheel axis at (60, 0). Interfaces: the top face z = 0 is the seat of both gears (their bottom
+      faces touch it); the two hole axes are the pinion and wheel revolute joint axes.
+    description: datum part; stationary plate carrying both gear axes
+  - name: pinion
+    kind: modelled
+    design: gear-train-pinion
+    intent: >-
+      Spur pinion in its own frame: axis +z through the origin, bottom face z = 0, top face z = 8 (face width 8). 20
+      teeth, module 2, pressure angle 20 deg, profile shift 0: pitch radius 20, base radius 18.794 (20 cos 20 deg), tip
+      radius 22 (addendum 1.0 m), root radius 17.5 (dedendum 1.25 m). Each flank is a true involute of the base circle
+      from the base circle to the tip circle (12-16 sample points per flank), continued radially from the base circle
+      down to the root circle, with a tip arc on r = 22, a root arc on r = 17.5 and no fillets. Tooth thickness at the
+      pitch circle 3.0916 (pi m / 2 - 0.05: thinned 0.05 for backlash, split equally between the two flanks). Phase: one
+      tooth is centred on +x (its symmetry line on the +x axis). D6 bore through on the axis. Interfaces: the bottom face
+      z = 0 seats on the carrier top; the bore axis is the joint axis; the flanks mesh with the wheel at centre distance 60.
+    description: motor-driven input gear
+  - name: wheel
+    kind: modelled
+    design: gear-train-wheel
+    intent: >-
+      Spur wheel in its own frame: axis +z through the origin, bottom face z = 0, top face z = 8 (face width 8). 40
+      teeth, module 2, pressure angle 20 deg, profile shift 0: pitch radius 40, base radius 37.588 (40 cos 20 deg), tip
+      radius 42 (addendum 1.0 m), root radius 37.5 (dedendum 1.25 m). Each flank is a true involute of the base circle
+      from the base circle to the tip circle (12-16 sample points per flank), continued radially from the base circle
+      down to the root circle, with a tip arc on r = 42, a root arc on r = 37.5 and no fillets. Tooth thickness at the
+      pitch circle 3.0916 (pi m / 2 - 0.05, split equally between the two flanks). Phase in its own frame: one tooth is
+      centred on +x, as on the pinion; the half-pitch turn (4.5 deg = pi/40 rad) that puts a tooth space toward the
+      pinion is the assembly joint's rest angle, not part of this part. D8 bore through on the axis. Interfaces: the
+      bottom face z = 0 seats on the carrier top; the bore axis is the joint axis; the flanks mesh with the pinion.
+    description: output gear, driven by the pinion
+parameters:
+  - {name: gearModule, value: 2.0, unit: mm, provenance: stated, tolerance: 0.001, source: "sources/gear-pair-spec.md, Module row", description: module of both gears}
+  - {name: pressureAngle, value: 20.0, unit: deg, provenance: stated, tolerance: 0.01, source: "sources/gear-pair-spec.md, Pressure angle row"}
+  - {name: pinionTeeth, value: 20.0, unit: "", provenance: stated, tolerance: 0.5, source: "sources/gear-pair-spec.md, Pinion row", description: tooth count (an integer)}
+  - {name: wheelTeeth, value: 40.0, unit: "", provenance: stated, tolerance: 0.5, source: "sources/gear-pair-spec.md, Wheel row", description: tooth count (an integer)}
+  - {name: faceWidth, value: 8.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/gear-pair-spec.md, Face width row", description: both gears from z = 0 to z = 8}
+  - {name: circularBacklash, value: 0.1, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/gear-pair-spec.md, Circular backlash and Motion rows", description: "total at the pitch circle, each tooth thinned 0.05; the band reaches the spec's 0.15 maximum flank gap"}
+  - {name: centreDistance, value: 60.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/gear-pair-spec.md, Centre distance row", formula: "gearModule * (pinionTeeth + wheelTeeth) / 2", description: pinion to wheel axis distance along +x}
+  - {name: pinionPitch, value: 18.0, unit: deg, provenance: derived, tolerance: 1.0e-4, formula: "360 / pinionTeeth", description: one pinion tooth pitch; the motion sweep and mesh check range}
+  - {name: wheelPhase, value: 4.5, unit: deg, provenance: derived, tolerance: 0.01, formula: "180 / wheelTeeth", source: "sources/gear-pair-spec.md, Tooth phase row (half a pitch, pi/40)", description: rest angle of the wheel's tooth-centre ref from +x; puts a tooth space toward the pinion}
+  - {name: gearRatio, value: -0.5, unit: "", provenance: derived, tolerance: 1.0e-5, formula: "-pinionTeeth / wheelTeeth", source: "sources/gear-pair-spec.md, Motion row (half the pinion's speed, opposite sense)"}
+joints:
+  - name: pinionSpin
+    kind: revolute
+    parent: carrier
+    child: pinion
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 0.0
+    angle: 0.0
+    drive: {kind: motor, speed: 1.0, description: "input joint; speed defaulted to 1 rpm (the unit animation speed) because the spec states none; the ratio and the mesh sweep do not depend on it"}
+    description: pinion on the D6 hole axis at (0, 0), bottom face on the carrier top; at rest a tooth is centred on +x
+  - name: wheelSpin
+    kind: revolute
+    parent: carrier
+    child: wheel
+    parent_frame: {origin: [60.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 0.0
+    angle: 4.5
+    drive: {kind: free, description: driven through gearPair}
+    description: wheel on the D8 hole axis at (60, 0), bottom face on the carrier top; the rest angle wheelPhase turns a tooth space toward the pinion
+transmissions:
+  - name: gearPair
+    kind: gear
+    driver: pinionSpin
+    driven: wheelSpin
+    ratio: -0.5
+    mesh: {pitch_deg: 18.0, steps: 18, backlash_max: 0.15}
+    description: external spur mesh, 20 -> 40 teeth, opposite sense (-20/40); backlash_max is the spec's 0.15 flank gap
+observables:
+  - id: gearRatio
+    quantity: transmission_ratio
+    unit: ""
+    expected: {expected: -0.5, tolerance: 1.0e-5, provenance: derived, note: "-20/40; the spec's Motion row: the wheel turns at half the pinion's speed in the opposite sense"}
+    description: wheel rotation over pinion rotation, measured by the evaluator from the placed geometry (no simulation)
+acceptance:
+  solid_count: 3
+  clearances:
+    - {name: pinionSeat, a: pinion, b: carrier, min_gap: 0.0, max_gap: 0.01, description: "pinion bottom face z = 0 on the carrier top face: touching but separate"}
+    - {name: wheelSeat, a: wheel, b: carrier, min_gap: 0.0, max_gap: 0.01, description: "wheel bottom face z = 0 on the carrier top face: touching but separate"}
+    - {name: flankGap, a: pinion, b: wheel, min_gap: 0.0, max_gap: 0.15, description: "meshed flanks at rest: zero interference and a flank gap of at most 0.15 (spec Motion row); designed 0.047 per side (0.05 cos 20 deg)"}
+  motions:
+    - {name: onePitch, drive: pinionSpin, range: [0.0, 18.0], steps: 18, description: "one pinion pitch; the wheel follows 0 to -9 deg through gearPair"}
+references:
+  - {path: sources/gear-pair-spec.md, kind: text, role: authoritative, sha256: 0acea6d35513df93499f95e7242721b64488c45819f6e58ebd09ed627fb09d87, note: the only source; its reference involutes are evaluator-only}
+open_questions:
+  - The spec states no materials or densities; none is declared and the assembly mass is not checked.
+  - The spec states no pinion speed and no operating case; the pinion drive speed is defaulted to 1 rpm for the animation only (the ratio and the mesh sweep do not depend on speed).
+  - The spec gives no root fillet or tip rounding; the flanks continue radially from the base circle to the root circle (the pinion root 17.5 is 1.29 below its base circle 18.79, the wheel root 37.5 is 0.09 below 37.59) with sharp tip and root corners.
+  - "'Thin each tooth by 0.05 mm at its pitch circle' is read as a pitch-circle tooth thickness of pi m / 2 - 0.05 = 3.0916 on both gears (0.025 per flank), which gives the stated 0.10 total circular backlash."
+  - The spec names no shafts, pins or bearings; the gears are located only by their revolute joints on the D6 and D8 carrier holes, whose fit is not stated.
+  - The spec asks for one editable KCL file with three solids; here each body is its own build123d part design and the assembly source places the three exported solids.

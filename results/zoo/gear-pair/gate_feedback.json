@@ -1,0 +1,1077 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/gear-pair/contract.yaml: 23 parameters {'stated': 22, 'derived': 1}; sources unresolved {}; unanchored 0",
+        "open questions: 4 (blocking []); interfaces 4, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 22,
+          "derived": 1
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "Which below-base-circle root transition is intended: radial extension, generated trochoid, or a specified fillet? The root radii are stated, but the transition is not; gear volume, area, and surface estimates provisionally use sharp radial extensions, with no invented fillet radius.",
+          "What material, density, manufacturing process, and production fit tolerances are intended? These are unspecified; material, density_kg_m3, and process remain null, and the stated \u00d86/\u00d88 carrier holes receive no added clearance allowance.",
+          "How will the evaluator-only involute p95 <= 0.10 mm requirement be reported? No reference geometry is supplied and PartContract has no reference-free per-gear profile-deviation field; analytic probes cannot establish that percentile, so acceptance.deviation remains null.",
+          "What evidence will certify zero interference between the sampled sweep poses? The required continuous full-pitch motion is retained, but the available inspector uses discrete poses with local refinement and a fixed 0.001 mm3 Boolean tolerance."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "carrierTop",
+          "carrierLength",
+          "carrierWidth",
+          "carrierPinionHole",
+          "pinionBottom",
+          "carrierWheelHole",
+          "wheelBottom",
+          "gearMidsection"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/gear-pair/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/gear-pair/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -25.0,
+            -41.921745526,
+            -5.0
+          ],
+          "expected_max": [
+            101.921745526,
+            41.921745526,
+            8.0
+          ],
+          "measured_min": [
+            -25.0,
+            -41.9218,
+            -5.0
+          ],
+          "measured_max": [
+            101.9218,
+            41.9218,
+            8.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -25.0,
+            -41.921745526,
+            -5.0
+          ],
+          "expected_max": [
+            101.921745526,
+            41.921745526,
+            8.0
+          ],
+          "measured_min": [
+            -25.0,
+            -41.9217,
+            -5.0
+          ],
+          "measured_max": [
+            101.9217,
+            41.9217,
+            8.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/gear-pair/inspect.json volume = 76043.0276 vs 76043.033397564",
+        "results/gear-pair/inspect.json surface_area = 31468.5977 vs 31468.596211209",
+        "results/gear-pair/inspect.json center_of_mass = [41.7295, -0.0, 1.6829] vs [41.729506395, 0.0, 1.682924417]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 76043.033397564,
+          "measured": 76043.0276,
+          "error": 0.0058,
+          "band": 760.4303,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 31468.596211209,
+          "measured": 31468.5977,
+          "error": 0.0015,
+          "band": 944.0579,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            41.729506395,
+            0.0,
+            1.682924417
+          ],
+          "measured": [
+            41.7295,
+            -0.0,
+            1.6829
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.15,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall and gear check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/gear-pair/inspect.json features: 9/9 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "cylinders": {
+          "pinionBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.01,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "wheelBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.01,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "carrierPinionHole": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.01,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "carrierWheelHole": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.01,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "carrierTop": {
+            "ok": true,
+            "kind": "face"
+          },
+          "carrierLength": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "carrierWidth": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "carrierPinionHole": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "pinionBottom": {
+            "ok": true,
+            "kind": "face"
+          },
+          "carrierWheelHole": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "wheelBottom": {
+            "ok": true,
+            "kind": "face"
+          },
+          "gearMidsection": {
+            "ok": true,
+            "kind": "section"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/gear-pair/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/gear-pair/inspect.json agreement kcl=76031.29434099326 step=76043.02757614842 stl=76031.29066327644 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 76031.29434099326,
+        "step": 76043.02757614842,
+        "stl": 76031.29066327644,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "kcl_vs_step_rel": 0.00015429731731038713,
+        "stl_vs_step_rel": 0.00015434568094010016,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/gear-pair/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 6/6 values; infeasible refused 2/2; interfaces pinned 8"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "gearFaceWidth",
+            "delta": 2.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 12233.933119816,
+                "measured": 12233.931664461852,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  2.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  2.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 3,
+                "measured": 3,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 5,
+                "driven": [
+                  "assemblySpanX",
+                  "assemblySpanY",
+                  "assemblySpanZ",
+                  "gearMidsection",
+                  "pinionBore",
+                  "pinionBottom",
+                  "pinionFaceWidth",
+                  "pinionSeat",
+                  "pinionTop",
+                  "wheelBore",
+                  "wheelBottom",
+                  "wheelFaceWidth",
+                  "wheelSeat",
+                  "wheelTop"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 6.0,
+                  "volume": 63809.095911686716,
+                  "bbox_size": [
+                    126.92175,
+                    83.8435,
+                    11.000000100000001
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 3,
+                      "measured": 3,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -2.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        -2.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -12233.931664461707,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 8.0,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 10.0,
+                  "volume": 88276.95924061027,
+                  "bbox_size": [
+                    126.92175,
+                    83.8435,
+                    15.000000100000001
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 3,
+                      "measured": 3,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        2.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        2.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 12233.931664461852,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -8.0,
+                  "value": 0.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: zoo kcl export step failed (1):\nKCL execution failed: type: assert failed: Expected 0 to be greater than 0 but it wasn't: Dimensions, module and tooth height factors must be positive"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "totalBacklash",
+            "delta": 0.05,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -53.55,
+                "measured": -53.52108632506861,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  -0.00080288,
+                  -0.00160576,
+                  0.0
+                ],
+                "measured": [
+                  -0.0008062375016066881,
+                  -0.0016124750032133761,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 3,
+                "measured": 3,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 5,
+                "driven": [
+                  "assemblySpanX",
+                  "assemblySpanY",
+                  "assemblySpanZ",
+                  "gearMidsection",
+                  "pinionBottom",
+                  "pinionFaceWidth",
+                  "pinionSeat",
+                  "pinionTop",
+                  "wheelBottom",
+                  "wheelFaceWidth",
+                  "wheelSeat",
+                  "wheelTop"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 0.08,
+                  "volume": 76064.48590930749,
+                  "bbox_size": [
+                    126.92207,
+                    83.84414,
+                    13.000000100000001
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 3,
+                      "measured": 3,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.00032115200000000006,
+                        0.0006423040000000001,
+                        -0.0
+                      ],
+                      "measured": [
+                        0.0003200000000020964,
+                        0.0006399999999899819,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 21.458333159069298,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 0.1,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 0.15,
+                  "volume": 75989.50648982335,
+                  "bbox_size": [
+                    126.9209437624984,
+                    83.84188752499679,
+                    13.000000100000001
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 3,
+                      "measured": 3,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0008028799999999997,
+                        -0.0016057599999999995,
+                        0.0
+                      ],
+                      "measured": [
+                        -0.0008062375016066881,
+                        -0.0016124750032133761,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -53.52108632506861,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": 6.5,
+                  "value": 6.6,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: zoo kcl export step failed (1):\nKCL execution failed: type: assert failed: Expected -0.05091454615585267 to be greater than 0 but it wasn't: Backlash or shift erased the tooth tip"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "edabb6498d7c3b5b03635b5e53c64a4274a638a554c45721d03cacb1b26da816",
+          "re_export_sha256": "edabb6498d7c3b5b03635b5e53c64a4274a638a554c45721d03cacb1b26da816",
+          "ok": true
+        },
+        "sweep": {
+          "values": 6,
+          "passed": 6
+        },
+        "infeasible": {
+          "declared": 2,
+          "refused": 2
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/gear-pair/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=32",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 32,
+          "sketch_blocks": 2,
+          "feature_ops": 3,
+          "parameters": {
+            "gearModule": {
+              "found": true,
+              "value": 2.0,
+              "unit": "mm",
+              "expected": 2.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pressureAngle": {
+              "found": true,
+              "value": 20.0,
+              "unit": "deg",
+              "expected": 20.0,
+              "expected_unit": "deg",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "profileShift": {
+              "found": true,
+              "value": 0.0,
+              "unit": "",
+              "expected": 0.0,
+              "expected_unit": "",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pinionTeeth": {
+              "found": true,
+              "value": 20.0,
+              "unit": "",
+              "expected": 20.0,
+              "expected_unit": "",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "wheelTeeth": {
+              "found": true,
+              "value": 40.0,
+              "unit": "",
+              "expected": 40.0,
+              "expected_unit": "",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pinionBoreDiameter": {
+              "found": true,
+              "value": 6.0,
+              "unit": "mm",
+              "expected": 6.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "wheelBoreDiameter": {
+              "found": true,
+              "value": 8.0,
+              "unit": "mm",
+              "expected": 8.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "centerDistance": {
+              "found": true,
+              "value": 60.0,
+              "unit": "mm",
+              "expected": 60.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "gearFaceWidth": {
+              "found": true,
+              "value": 8.0,
+              "unit": "mm",
+              "expected": 8.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "addendumFactor": {
+              "found": true,
+              "value": 1.0,
+              "unit": "",
+              "expected": 1.0,
+              "expected_unit": "",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "dedendumFactor": {
+              "found": true,
+              "value": 1.25,
+              "unit": "",
+              "expected": 1.25,
+              "expected_unit": "",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "totalBacklash": {
+              "found": true,
+              "value": 0.1,
+              "unit": "mm",
+              "expected": 0.1,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pinionPhase": {
+              "found": true,
+              "value": 0.0,
+              "unit": "deg",
+              "expected": 0.0,
+              "expected_unit": "deg",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pinionAxisX": {
+              "found": true,
+              "value": 0.0,
+              "unit": "mm",
+              "expected": 0.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "pinionAxisY": {
+              "found": true,
+              "value": 0.0,
+              "unit": "mm",
+              "expected": 0.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "wheelAxisY": {
+              "found": true,
+              "value": 0.0,
+              "unit": "mm",
+              "expected": 0.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "gearBaseZ": {
+              "found": true,
+              "value": 0.0,
+              "unit": "mm",
+              "expected": 0.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "carrierLength": {
+              "found": true,
+              "value": 110.0,
+              "unit": "mm",
+              "expected": 110.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "carrierWidth": {
+              "found": true,
+              "value": 50.0,
+              "unit": "mm",
+              "expected": 50.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "carrierThickness": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "carrierMinX": {
+              "found": true,
+              "value": -25.0,
+              "unit": "mm",
+              "expected": -25.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "carrierMinY": {
+              "found": true,
+              "value": -25.0,
+              "unit": "mm",
+              "expected": -25.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "wheelPhase": {
+              "found": true,
+              "value": 4.5,
+              "unit": "deg",
+              "expected": 4.5,
+              "expected_unit": "deg",
+              "ok": true,
+              "file": "main.kcl"
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 597,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/gear-pair/export.json step.deterministic = True sha256 edabb6498d7c; stl=present; glb=present",
+        "results/gear-pair/inspect.json valid = True solids = 3 (expected 3)",
+        "results/gear-pair/inspect.json mesh watertight = True components = 3 void_shells = 0"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/gear-pair/export/gear-pair.step",
+            "sha256": "edabb6498d7c3b5b03635b5e53c64a4274a638a554c45721d03cacb1b26da816",
+            "bytes": 2914640,
+            "deterministic": true,
+            "second_sha256": "edabb6498d7c3b5b03635b5e53c64a4274a638a554c45721d03cacb1b26da816"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/gear-pair/export/gear-pair.stl",
+            "sha256": "7c9a57c72d9b2418d5c50543ec58d0a251c5b7ca559ef49009d1c4ab31a922ab",
+            "bytes": 1293533
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/gear-pair/export/gear-pair.glb",
+            "sha256": "c2d272d327eb8c121e91f1c11d96a02c0bfa1105c870c39c3206cbda2ef09a4c",
+            "bytes": 3036284
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 3,
+          "measured": 3,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 7460,
+          "vertices": 3728,
+          "watertight": true,
+          "components_watertight": [
+            true,
+            true,
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 3,
+          "void_shells": 0,
+          "solid_shells": 3,
+          "degenerate_faces": 0,
+          "volume": 76031.29066327644,
+          "surface_area": 31464.739486610473,
+          "bbox_min": [
+            -25.0,
+            -41.92175,
+            -5.0
+          ],
+          "bbox_max": [
+            101.92175,
+            41.92175,
+            8.0
+          ],
+          "center_of_mass": [
+            41.72974263447525,
+            1.6708364957268453e-11,
+            1.6823512540759575
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0b6f8-9826-7d32-80f5-3553a0992fb2; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 19; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 19,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/gear-pair/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/gear-pair/verify.json hygiene.forbidden_imports = [] sketch_blocks = 2 feature_ops = 3 lines = 597"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "sketch_blocks": 2,
+        "feature_ops": 3
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

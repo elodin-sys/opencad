@@ -1,0 +1,302 @@
+schema_version: 1
+name: crank-slider-ground
+intent: >-
+  Ground plate (body ground) of the offset crank-slider assembly crank-slider, modelled in its own
+  frame, which is the assembly frame: origin on the crank axis O on the plate's top face, z up,
+  x parallel to the guide. Rectangular plate 200 (x) x 70 (y) x 5 (z) from corner (-40, -30, -5)
+  to (160, 40, 0), with one D6 through hole on the crank axis O at (0, 0) along z; no other
+  features (no rail, slot or boss). Interfaces: the top face z = 0 carries the crank's bottom face
+  around O (revolute pivot, the motor) and the slider's bottom face sliding along the guide line
+  y = 10 parallel to +x (the slider spans x = 54..145 over a revolution). Volume 69858.63 mm3
+  (200 x 70 x 5 minus the D6 hole). Authoritative source: sources/crank-slider-spec.md (text only).
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "on the crank axis O on the plate's top face: the centre of the D6 pivot hole at z = 0; this is also the crank-slider assembly frame"
+  axes:
+    x: "parallel to the slider guide (+x is the guide direction); the plate spans x = -40..160"
+    y: "across the plate toward the guide offset; the guide line is y = 10 (offset e = 10 from O); the plate spans y = -30..40"
+    z: "up, normal to the plate and parallel to every pin axis; top face z = 0, bottom face z = -5"
+  datums:
+    - name: A
+      description: "top face z = 0: the mating face the crank and the slider bottom faces rest on"
+    - name: B
+      description: "crank axis O: the line x = 0, y = 0 parallel to z, axis of the D6 pivot hole (joint crankPivot)"
+    - name: C
+      description: "guide line y = 10, z = 0, parallel to +x, along which the slider slides (joint guide)"
+
+envelope:
+  min: [-40, -30, -5]
+  max: [160, 40, 0]
+  tolerance: 0.05
+
+parameters:
+  - name: plateLength
+    value: 200
+    unit: mm
+    provenance: stated
+    source: "sources/crank-slider-spec.md, part table, Ground row: plate 200 x 70 x 5"
+    tolerance: 0.01
+    description: "plate length along x (the guide direction), measured from plateXMin toward +x; plateXMin stays fixed under edits"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 3500
+        direction: increase
+        bbox_delta: [10, 0, 0]
+        tolerance_rel: 0.01
+      sweep:
+        values: [190, 200, 220]
+      infeasible_deltas: [-200]
+  - name: plateWidth
+    value: 70
+    unit: mm
+    provenance: stated
+    source: "sources/crank-slider-spec.md, part table, Ground row: plate 200 x 70 x 5"
+    tolerance: 0.01
+    description: "plate width along y, measured from plateYMin toward +y"
+  - name: plateThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "sources/crank-slider-spec.md, part table, Ground row (x 5) and layers: ground z -5..0"
+    tolerance: 0.01
+    description: "plate thickness along z; the plate hangs below the top face z = 0 (datum A), so it spans z = -plateThickness..0 and grows downward under edits"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 13971.73
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.01
+      sweep:
+        values: [4, 5, 6]
+      infeasible_deltas: [-5]
+  - name: plateXMin
+    value: -40
+    unit: mm
+    provenance: stated
+    source: "sources/crank-slider-spec.md, part table, Ground row: corner (-40, -30, -5)"
+    tolerance: 0.01
+    description: "x of the plate's -x end face (40 mm behind the crank axis O)"
+  - name: plateYMin
+    value: -30
+    unit: mm
+    provenance: stated
+    source: "sources/crank-slider-spec.md, part table, Ground row: corner (-40, -30, -5)"
+    tolerance: 0.01
+    description: "y of the plate's -y side face"
+  - name: pivotHoleDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "sources/crank-slider-spec.md, part table, Ground row: D6 hole at the crank axis O (0, 0)"
+    tolerance: 0.01
+    description: "diameter of the through hole on the crank axis O, axis along z"
+
+features:
+  - id: plate
+    kind: extrude
+    description: "rectangle plateLength x plateWidth with its min corner at (plateXMin, plateYMin), extruded from z = 0 down to z = -plateThickness; no rail, slot or boss"
+    parameters: [plateLength, plateWidth, plateThickness, plateXMin, plateYMin]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[100, 10, -2.5], [-35, -25, -2.5], [155, 35, -2.5]]
+      - method: face
+        face: top
+      - method: face
+        face: bottom
+      - method: dimension
+        dimension: lengthX
+      - method: dimension
+        dimension: widthY
+      - method: dimension
+        dimension: thicknessZ
+      - method: section
+        section: guideLine
+  - id: pivotHole
+    kind: hole
+    description: "D6 through hole on the crank axis O at (0, 0), axis along z, through the full plate thickness"
+    parameters: [pivotHoleDiameter]
+    verify:
+      - method: cylinder
+        cylinder: pivotHole
+      - method: void
+        points: [[0, 0, -2.5]]
+      - method: section
+        section: midZ
+      - method: count
+        section: pivotX
+        count: 2
+
+interfaces:
+  - name: crankPivot
+    description: "revolute joint crankPivot (the motor): the crank's bottom face bears on the top face z = 0 around O and its pivot runs on the D6 hole axis; the assembly mounts the crank at own-frame point [0, 0, 0], axis [0, 0, 1]. Neither edit test moves the top face or the hole."
+    must_not_change: true
+    checks: [top, pivotHole]
+  - name: guide
+    description: "prismatic joint guide: the slider's bottom face slides on the top face z = 0 along the line y = 10 parallel to +x, footprint x = 54..145, y = 2..18 over a revolution; the assembly mounts the slider at own-frame point [0, 10, 0], axis [1, 0, 0]. Neither edit test moves the top face or splits the plate along y = 10."
+    must_not_change: true
+    checks: [top, guideLine]
+
+acceptance:
+  volume:
+    expected: 69858.63
+    tolerance: 20
+    provenance: derived
+    note: "plateLength * plateWidth * plateThickness - pi * (pivotHoleDiameter / 2)^2 * plateThickness = 70000 - 45 pi; tolerance is 1/7 of the hole volume (141.37) so a missing hole fails"
+  surface_area:
+    expected: 30737.70
+    tolerance: 5
+    provenance: derived
+    note: "2 (L W - pi r^2) + 2 (L + W) T + 2 pi r T = 27943.45 + 2700 + 94.25 = 30700 + 12 pi"
+  center_of_mass:
+    expected: [60.1214, 5.0101, -2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "x = L W T (plateXMin + L/2) / V = 4200000 / 69858.63; y = L W T (plateYMin + W/2) / V = 350000 / 69858.63; the hole sits on x = y = 0 and spans the full thickness, so z = -T/2"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: -2.5
+      expect:
+        area: 13971.73
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 1
+      description: "mid-thickness section: the plate rectangle with the D6 pivot hole (L W - pi r^2)"
+    - id: pivotX
+      plane: x
+      at: 0
+      expect:
+        area: 320
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 0
+      description: "section through the pivot hole axis: the hole splits the 70 x 5 strip into two rectangles (W T - D T)"
+    - id: guideLine
+      plane: y
+      at: 10
+      expect:
+        loops: 1
+        holes: 0
+      description: "section along the guide line y = 10: one continuous strip, no slot or hole under the slider (area L T = 1000 at nominal, left unpinned because the edits change it)"
+  faces:
+    - name: top
+      plane: z
+      at: 0
+      normal: "+"
+      mode: one
+    - name: bottom
+      plane: z
+      at: -5
+      normal: "-"
+      area: 13971.73
+      area_tolerance_rel: 0.001
+      mode: one
+    - name: xMin
+      plane: x
+      at: -40
+      normal: "-"
+      area: 350
+      area_tolerance_rel: 0.002
+      mode: one
+    - name: xMax
+      plane: x
+      at: 160
+      normal: "+"
+      area: 350
+      area_tolerance_rel: 0.002
+      mode: one
+    - name: yMin
+      plane: y
+      at: -30
+      normal: "-"
+      area: 1000
+      area_tolerance_rel: 0.002
+      mode: one
+    - name: yMax
+      plane: y
+      at: 40
+      normal: "+"
+      area: 1000
+      area_tolerance_rel: 0.002
+      mode: one
+  cylinders:
+    - name: pivotHole
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      radius_tolerance: 0.02
+      axis_tolerance: 0.05
+      description: "D6 through hole on the crank axis O; no length given so the thickness edit leaves this pinned item unchanged (through-ness is checked by the bottom face area and the midZ section)"
+  dimensions:
+    - name: lengthX
+      axis: x
+      expected: 200
+      tolerance: 0.05
+      between: [xMin, xMax]
+      description: "plate length between the -x and +x end faces"
+    - name: widthY
+      axis: y
+      expected: 70
+      tolerance: 0.05
+      between: [yMin, yMax]
+      description: "plate width between the -y and +y side faces"
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "plate thickness between the bottom face and the top face"
+  solids:
+    - name: body
+      contains_point: [100, 10, -2.5]
+      description: "the single ground plate solid"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[100, 10, -2.5], [-35, -25, -2.5], [155, 35, -2.5]]
+      description: "plate material under the guide mid-span and near two opposite corners"
+    - name: guideSupport
+      state: solid
+      points: [[54, 2, -2.5], [54, 18, -2.5], [145, 2, -2.5], [145, 18, -2.5]]
+      description: "the corners of the slider's footprint over a revolution (x 54..145, y 2..18) lie over plate material"
+    - name: inPivotHole
+      state: void
+      points: [[0, 0, -2.5]]
+      description: "on the pivot hole axis at mid-thickness, 3 mm from the bore wall and 2.5 mm from both faces"
+  cylinder_counts:
+    - name: pivotHoles
+      diameter: 6
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+      description: "exactly one D6 vertical hole"
+  blockout:
+    volume_min: 68000
+    volume_max: 71000
+
+references:
+  - path: sources/crank-slider-spec.md
+    kind: text
+    role: authoritative
+    sha256: cd01ebc4dc4d7289a786bef3bca834eb565dd9f6109941bbcc2ec04b879c0d1c
+    units: mm
+    revision: "none stated"
+    note: "Ground row of the part table, frame, layers and joints of the offset crank-slider"
+
+open_questions:
+  - "Material, density and process are not stated; the contract makes no mass claim and analyze uses its default density."
+  - "The D6 pivot hole's fit is not stated (no pin diameter or fit class); it is modelled at nominal D6."
+  - "Edge breaks are not stated; the plate is modelled with sharp edges."

@@ -1,0 +1,41 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry
+Title: Sketch Geometry
+
+# Sketch Geometry
+
+Fundamental sketch geometry in Zoo Design Studio.
+
+Sketch geometry is the set of primitive curves and points that define a sketch profile. These are the
+building blocks for constraints, dimensions, and downstream modeling features.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/line/line.gif"
+  alt="Line sketch geometry in Zoo Design Studio"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Sketch geometry primitives define the editable profile
+</div>
+
+This section covers the basic geometry used to define profile shape:
+[Line](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/line),
+[Point](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/point),
+[Circle](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/circle),
+[Arc](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/arc),
+and [Rectangle](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/rectangle).
+
+Lines define edges, centerlines, and profile boundaries. Points establish reference locations and
+constraint anchors. Circles and arcs define round geometry such as holes, bosses, and radiused
+transitions. Rectangles provide a fast way to create orthogonal four-sided profiles for pads,
+pockets, slots, and base features.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/rectangle/rectangle.gif"
+  alt="Rectangle sketch geometry in Zoo Design Studio"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Closed profiles can create selectable sketch regions for 3D features
+</div>

@@ -1,0 +1,12 @@
+Source URL: https://zoo.dev/docs/glossary/endpoint
+Title: Endpoint
+
+# Endpoint
+
+A single callable service within an API.
+
+When discussing [APIs](/docs/glossary/application-programming-interface-api), an "endpoint" is a single service that is offered by a [host](/docs/glossary/host) software that can be requested by a [client](/docs/glossary/client). An endpoint on an API hosted on the internet is usually represented by a URL, such as `https://api.zoo.dev/user`.
+
+Some endpoints may ask the host to fetch and return some data, like [getting your user](https://zoo.dev/docs/api/users/get-your-user), or ask them to perform some work for the client and return the result, like [converting a CAD file](https://zoo.dev/docs/api/file/convert-cad-file-with-defaults).
+
+Zoo has endpoints for hardware design actions, managing your user, and more.

@@ -1,0 +1,26 @@
+id: fusion-16418-assembly
+kind: assembly
+set: joint_set_16418
+bodies:
+- 23309_76dcf100_0002_1
+- 23309_76dcf100_0003_2
+source:
+  citation: Autodesk AI Lab, Fusion 360 Gallery Dataset, Assembly-Joint subset j1.0.0
+    (Willis et al., JoinABLe, CVPR 2022)
+  urls:
+  - https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/docs/assembly_joint.md
+  - https://fusion-360-gallery-dataset.s3.us-west-2.amazonaws.com/assembly/j1.0.0/j1.0.0.7z
+  accessed: '2026-09-17'
+  revision: j1.0.0
+  license: Fusion 360 Gallery Dataset License (non-commercial research); STEP bodies
+    in mm, joint JSON in cm
+inputs:
+- inputs/assembly-task.md
+- inputs/joint-task.json
+- inputs/23309_76dcf100_0002_1.step
+- inputs/23309_76dcf100_0003_2.step
+truth:
+- truth/joint_set.json
+deliverable: assembly.yaml
+scorer: opencad.truth.assembly_task.score
+task_text_version: 2

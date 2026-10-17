@@ -1,0 +1,317 @@
+schema_version: 1
+kind: assembly
+name: peristaltic-pump
+intent: >-
+  Open-source 3D-printed peristaltic pump of Behrens et al. (Sci. Rep. 10, 1543, 2020), assembled in analysis mode from the
+  published printed parts (sources/*.step, authoritative geometry, STL units = cm, placed at scale 10): the gearbox base is the
+  datum; a purchased NEMA 17 stepper hangs under it; a reverted 12 -> 24 / 12 -> 24 spur train (motor gear, stacked gear on a
+  countershaft 30 mm off the motor axis, output gear coaxial with the motor) drives the pump rotor 4:1; three purchased 623 ball
+  bearings on the rotor's D3 pins roll the 3 mm OD / 1 mm ID silicone tube (modelled) against the R12.17 track of the 3 mm stator,
+  which sits on the gearbox upper case under its lid, with the tube clamp on the stator's inlet side. Predict the delivered flow
+  at the packet's test condition (108 rpm rotor, water, free outlet) and the motor-to-rotor drive ratio.
+  sources/behrens-pump-packet.md is authoritative for the design and the test condition.
+units: {length: mm, angle: deg}
+frame:
+  origin: gearbox-base STEP origin at scale 10 (the base's own frame); the NEMA 17 face of the base is the plane y = 0
+  axes: {x: "base file x (motor axis at x = -20.5)", y: "motor / rotor axis direction, up from the motor face toward the pump", z: "base file z (countershaft at z = -50.5, motor axis at z = -20.5)"}
+  datums:
+    - {name: A, description: "base motor face y = 0 (NEMA 17 bolt square 31 x 31 centred on the motor axis)"}
+    - {name: B, description: "motor, output gear and rotor axis x = -20.5, z = -20.5, along +y"}
+    - {name: C, description: "base top face y = 12 (gear seat and upper-case seat)"}
+envelope: {min: [-51.0, -40.0, -71.93], max: [10.0, 75.0, 10.0], tolerance: 1.5}
+datum_part: base
+parts:
+  - name: base
+    kind: purchased
+    catalog: {name: gearbox-base, kind: step, path: sources/1-gear-box-base.step, scale: 10.0}
+    material: ABS
+    density_kg_m3: 1040
+    description: >-
+      Printed gearbox base (part 1), own frame = assembly frame. Plate y = 0..12 with the D26 motor boss hole on (-20.5, -20.5),
+      NEMA 17 holes D3.6 on the 31 x 31 square around it, six D3.6 case-screw holes at (-31, 5), (-10, 5), (-46, -10), (5, -10),
+      (-46, -31), (5, -31); countershaft boss D16.9 on (-20.5, -50.5) from y = -39.25 (foot) to y = 12.
+  - name: motor
+    kind: purchased
+    catalog: {name: nema17-stepper, kind: box, min: [-21.15, -21.15, -40.0], max: [21.15, 21.15, 0.0]}
+    material: steel
+    description: >-
+      Purchased NEMA 17 stepper in its own frame: face z = 0, body 42.3 x 42.3 x 40 below it, D5 x 24 shaft on +z through the
+      origin (shaft not modelled as a separate body), 31 mm bolt square.
+  - name: motorGear
+    kind: purchased
+    catalog: {name: motor-gear-12t, kind: step, path: sources/2-small-gear-with-shelf.step, scale: 10.0}
+    material: ABS
+    density_kg_m3: 1040
+    description: >-
+      Printed 12-tooth motor gear (part 2), own frame: axis +z through the origin, teeth z = 0..5.5 (tip D23.64), hub z = 5.5..9
+      (D16.1), flared shelf z = 9..11 (D23.64), D5.1 bore for the motor shaft; a tooth is centred on +x.
+  - name: stackedGear
+    kind: purchased
+    catalog: {name: stacked-gear-24t-12t, kind: step, path: sources/3-stacked-gear.step, scale: 10.0}
+    material: ABS
+    density_kg_m3: 1040
+    description: >-
+      Printed compound gear (part 3), own frame: axis +z through the origin, 24 teeth z = 0..9.5 (tip D43.06), 12 teeth
+      z = 9.5..17 (tip D23.64), D6.1 bore; teeth of both stages centred on +x.
+  - name: outputGear
+    kind: purchased
+    catalog: {name: output-gear-24t, kind: step, path: sources/5-large-gear.step, scale: 10.0}
+    material: ABS
+    density_kg_m3: 1040
+    description: >-
+      Printed 24-tooth output gear (part 5), own frame: axis +z through the origin, teeth z = 0..6 (tip D43.06), D6.1 bore with a
+      recessed hub pocket (r 6..15, z = 1..4); a tooth is centred on +x.
+  - name: upperCase
+    kind: purchased
+    catalog: {name: gearbox-upper-case, kind: step, path: sources/4-gear-box-upper-case.step, scale: 10.0}
+    material: ABS
+    density_kg_m3: 1040
+    description: >-
+      Printed gearbox upper case (part 4), own frame = file frame x 10: bottom face y = 0 with six D3.6 case-screw holes at (-26, -5),
+      (-5, -5), (-26, -56), (-5, -56), (10, -20), (10, -41); top face y = 31 with the four D3.6 pump holes on the 31 x 31 square around
+      (-15.5, -30.5); stepped output bore on (-15.5, -30.5): D25 (y 17.5..23), D16.2 through the top (y 17.5..31).
+  - name: stator
+    kind: purchased
+    catalog: {name: stator-3mm, kind: step, path: sources/6.1-peristaltic-pump-stator-3mm.step, scale: 10.0}
+    material: ABS
+    density_kg_m3: 1040
+    description: >-
+      Printed stator for the 3 mm tube (part 6.1), own frame = file frame x 10: block x -41..0, z -41..0, y 5..21 (underside y = 5) with the track bore R12.17
+      on (-20.55, -20.5) along y, raised -x half (x -51..-20.5) to y = 37 with the tube ear, flange with four D3.6 holes on the 31 x 31 square around (-20.5, -20.5) (y = 5..10), tube slots and two D3.6
+      clamp holes at (-46, -9.34) and (-46, -31.66) on the -x side (y = 27.5..30).
+  - name: lid
+    kind: purchased
+    catalog: {name: lid-3mm, kind: step, path: sources/7.1-peristaltic-pump-lid-3mm.step, scale: 10.0}
+    material: ABS
+    density_kg_m3: 1040
+    description: "Printed lid for the 3 mm tube (part 7.1), own frame = file frame x 10: half ring x -41..0, z -41..-21.2, y 2..14 (underside y = 2), inner wall R10.0 about (-20.5, -20.5) with an R1.6 tube groove centred at r 10.0, y 7.0."
+  - name: clamp
+    kind: purchased
+    catalog: {name: tube-clamp, kind: step, path: sources/8-peristaltic-pump-clamp.step, scale: 10.0}
+    material: ABS
+    density_kg_m3: 1040
+    description: Printed tube clamp (part 8), own frame = file frame x 10, bar 33 x 4 x 10 with two D3.6 holes at (-27.66, -5) and (-5.34, -5), axis y.
+  - name: rotor
+    kind: purchased
+    catalog: {name: pump-rotor, kind: step, path: sources/9-peristaltic-pump-rotor.step, scale: 10.0}
+    material: ABS
+    density_kg_m3: 1040
+    description: >-
+      Printed pump rotor (part 9), own frame = file frame x 10: axis along y through (-2.887, -5.0), D6.1 centre bore, y = -6..6.8;
+      three D3.0 roller pins at (0, 0), (-8.66, -5.0), (0, -10.0) (pitch radius 5.77, 120 deg apart); a 4.2 mm bearing gap between the plates at y = -1.42..2.77.
+  - name: roller1
+    kind: purchased
+    catalog: {name: bearing-623, kind: cylinder, point: [0.0, 0.0, -2.0], direction: [0.0, 0.0, 1.0], radius: 5.0, length: 4.0}
+    material: steel
+    description: purchased 623 ball bearing (3 x 10 x 4) in its own frame, axis +z through the origin, mid-plane z = 0; roller on pin (0, 0)
+  - name: roller2
+    kind: purchased
+    catalog: {name: bearing-623, kind: cylinder, point: [0.0, 0.0, -2.0], direction: [0.0, 0.0, 1.0], radius: 5.0, length: 4.0}
+    material: steel
+    description: purchased 623 ball bearing (3 x 10 x 4), roller on pin (-8.66, -5.0)
+  - name: roller3
+    kind: purchased
+    catalog: {name: bearing-623, kind: cylinder, point: [0.0, 0.0, -2.0], direction: [0.0, 0.0, 1.0], radius: 5.0, length: 4.0}
+    material: steel
+    description: purchased 623 ball bearing (3 x 10 x 4), roller on pin (0, -10.0)
+  - name: tube
+    kind: modelled
+    design: peristaltic-pump-tube
+    role: compliant
+    material: silicone 50A
+    density_kg_m3: 1100
+    intent: >-
+      Silicone peristaltic tube, OD 3.0, ID 1.0 (wall 1.0), durometer 50 A, lying uncompressed in the stator track. Own frame:
+      origin on the pump axis in the tube's mid-plane, +z = pump axis, +x toward the pump's open side; the tube lies in the plane
+      z = 0. Centreline: a 180 deg arc of radius 10.67 (track radius 12.17 minus half the OD, so the outer surface touches the track)
+      about the origin through +x from (0, -10.67) to (0, 10.67), continued by two straight legs parallel to -x from x = 0 to
+      x = -30 (the inlet and outlet through the stator's tube slots and under the clamp). Open ends at x = -30 are the inlet
+      (y = +10.67) and outlet (y = -10.67); constant section, no fittings.
+parameters:
+  - {name: unitScale, value: 10.0, unit: "", provenance: derived, tolerance: 1.0e-6, formula: "31 mm NEMA 17 bolt spacing / 3.1 file units", description: STL file units are cm; every printed part is placed at scale 10}
+  - {name: centreDistance, value: 30.0, unit: mm, provenance: measured (reference model), tolerance: 0.1, source: sources/1-gear-box-base.step, description: "motor axis (-20.5, -20.5) to countershaft (-20.5, -50.5); both meshes share it (reverted train)"}
+  - {name: gearRatio, value: 0.25, unit: "", provenance: derived, tolerance: 1.0e-6, formula: "(12/24) * (12/24)", source: sources/behrens-pump-packet.md, description: rotor / motor angle; the packet states a 4:1 gearbox}
+  - {name: trackRadius, value: 12.17, unit: mm, provenance: measured (reference model), tolerance: 0.05, source: sources/6.1-peristaltic-pump-stator-3mm.step, description: stator track bore radius}
+  - {name: pinPitchRadius, value: 5.774, unit: mm, provenance: measured (reference model), tolerance: 0.02, source: sources/9-peristaltic-pump-rotor.step, description: rotor axis to roller pin axis}
+  - {name: occlusionGap, value: 1.40, unit: mm, provenance: derived, tolerance: 0.1, formula: "trackRadius - pinPitchRadius - 623 bearing OD / 2", description: radial roller-to-track space; the tube's double wall is 2.0}
+joints:
+  - name: motorMount
+    kind: rigid
+    parent: base
+    child: motor
+    parent_frame: {origin: [-20.5, 0.0, -20.5], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: motor face on the base's motor face y = 0, shaft up the motor axis
+  - name: motorSpin
+    kind: revolute
+    parent: motor
+    child: motorGear
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 12.0
+    angle: 0.0
+    drive: {kind: motor, case_value: motorRpm, description: stepper speed = rotor speed / gearRatio}
+    description: motor gear on the D5 shaft, teeth seated on the base top face (assembly y = 12..23); a tooth points at the countershaft (own +y)
+  - name: stackedSpin
+    kind: revolute
+    parent: base
+    child: stackedGear
+    parent_frame: {origin: [-20.5, 12.0, -50.5], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    angle: 7.5
+    drive: {kind: free, description: driven through stage1}
+    description: compound gear on the countershaft boss (assembly y = 12..29), half a 24T pitch so a gap faces the motor gear's tooth
+  - name: outputSpin
+    kind: revolute
+    parent: base
+    child: outputGear
+    parent_frame: {origin: [-20.5, 23.0, -20.5], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    angle: 3.75
+    drive: {kind: free, description: driven through stage2}
+    description: output gear coaxial with the motor, resting on the motor gear's shelf (assembly y = 23..29), phased to the stacked 12T
+  - name: upperCaseMount
+    kind: rigid
+    parent: base
+    child: upperCase
+    parent_frame: {origin: [-20.5, 12.0, -20.5], axis: [0.0, 1.0, 0.0], ref: [0.0, 0.0, 1.0]}
+    child_frame: {origin: [-15.5, 0.0, -30.5], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    description: upper case bottom face on the base top face, turned -90 deg about y so its six case-screw holes land on the base's six
+  - name: rotorDrive
+    kind: rigid
+    parent: outputGear
+    child: rotor
+    parent_frame: {origin: [0.0, 0.0, 44.125], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [-2.887, 0.0, -5.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    description: rotor on the D6 output shaft through the upper case and stator block (assembly y = 61.1..73.9), roller mid-plane at the tube mid-plane y = 67.8 (stator y 29.8)
+  - name: statorMount
+    kind: rigid
+    parent: upperCase
+    child: stator
+    parent_frame: {origin: [-15.5, 31.0, -30.5], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [-20.5, 5.0, -20.5], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    description: stator underside (own y = 5, where its solid starts) on the upper case top face, bolt squares aligned (track coaxial with the rotor), assembly y = 43..75
+  - name: lidMount
+    kind: rigid
+    parent: stator
+    child: lid
+    parent_frame: {origin: [-20.5, 24.8, -20.5], axis: [0.0, 1.0, 0.0], ref: [0.0, 0.0, 1.0]}
+    child_frame: {origin: [-20.5, 2.0, -20.5], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    description: >-
+      half-ring lid over the stator's open +x half, turned -90 deg about y so its own z < -20.5 half sits beside the raised -x
+      half; its underside (own y = 2, where its solid starts) at stator y 24.8 puts its R1.6 tube groove (own y 7.0) on the tube
+      plane stator y 29.8, level with the ear slots (y 30.0), and its top (own y 14) at 36.8, flush with the stator top 37 (assembly y 62.8..74.8)
+  - name: clampMount
+    kind: rigid
+    parent: stator
+    child: clamp
+    parent_frame: {origin: [-46.0, 30.0, -20.5], axis: [0.0, 1.0, 0.0], ref: [0.0, 0.0, 1.0]}
+    child_frame: {origin: [-16.5, 0.0, -5.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    description: clamp across the tube legs on the stator's -x face y = 30, its two holes on the stator's clamp holes
+  - name: tubeSeat
+    kind: rigid
+    parent: stator
+    child: tube
+    parent_frame: {origin: [-20.5, 29.8, -20.5], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: tube arc on the +x half (backed by the lid lip), legs out toward -x through the slots of the raised -x half (z = -9.8 and -31.2) under the clamp
+  - name: roller1Pin
+    kind: rigid
+    parent: rotor
+    child: roller1
+    parent_frame: {origin: [0.0, 0.675, 0.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: bearing on pin (0, 0); outer-race spin on the tube is not tracked
+  - name: roller2Pin
+    kind: rigid
+    parent: rotor
+    child: roller2
+    parent_frame: {origin: [-8.66, 0.675, -5.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+  - name: roller3Pin
+    kind: rigid
+    parent: rotor
+    child: roller3
+    parent_frame: {origin: [0.0, 0.675, -10.0], axis: [0.0, 1.0, 0.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+transmissions:
+  - name: stage1
+    kind: gear
+    driver: motorSpin
+    driven: stackedSpin
+    ratio: -0.5
+    mesh: {pitch_deg: 30.0, steps: 12, backlash_max: 0.5, interference_tolerance: 2.0}
+    description: motor 12T -> stacked 24T at 30 mm centres, opposite sense
+  - name: stage2
+    kind: gear
+    driver: stackedSpin
+    driven: outputSpin
+    ratio: -0.5
+    mesh: {pitch_deg: 30.0, steps: 12, backlash_max: 0.5, interference_tolerance: 2.0}
+    description: stacked 12T -> output 24T at 30 mm centres, opposite sense; motor to rotor +0.25 (4:1, same sense)
+operating_cases:
+  - {id: rotor108, values: {rotorRpm: 108.0, motorRpm: 432.0}, units: {rotorRpm: rpm, motorRpm: rpm}, split: development, source: "sources/behrens-pump-packet.md, Test condition used by this case", description: "3 mm OD / 1 mm ID tube, stator 6.1 and lid 7.1, deionized water at room temperature, free outlet; motorRpm = rotorRpm / gearRatio"}
+observables:
+  - {id: flowRate, quantity: flow_rate, unit: mL/min, simulation: peristaltic, case: rotor108, body: tube, location: [-31.17, 67.8, -50.5], averaging: time_averaged, description: "delivered volumetric flow of water at 108 rpm rotor speed, at the free tube outlet end (assembly frame)"}
+  - {id: driveRatio, quantity: transmission_ratio, unit: "", averaging: steady, expected: {expected: 0.25, tolerance: 1.0e-6, provenance: derived, note: "(12/24)(12/24), same sense; the packet states a 4:1 gearbox"}, description: rotor (outputSpin) angle / motor (motorSpin) angle from the placed geometry}
+simulations:
+  - id: peristaltic
+    physics: reduced
+    solver: reduced:peristaltic
+    cases: [rotor108]
+    bodies: [rotor, stator, roller1, roller2, roller3]
+    inputs:
+      tubeInnerDiameter: {value: 1.0, unit: mm, provenance: stated, source: "sources/behrens-pump-packet.md, Design and Test condition"}
+      tubeOuterDiameter: {value: 3.0, unit: mm, provenance: stated, source: "sources/behrens-pump-packet.md, Design and Test condition"}
+    settings: {speed_key: rotorRpm}
+    outputs: [flowRate]
+    description: roller displacement of the 1 mm lumen along the track per rotor revolution times the rotor speed; free outlet, no slip or backflow model
+acceptance:
+  clearances:
+    - {name: rotorInStator, a: rotor, b: stator, min_gap: 0.2}
+    - {name: rotorUnderLid, a: rotor, b: lid, min_gap: 0.1}
+    - {name: roller1Track, a: roller1, b: stator, min_gap: 0.5}
+    - {name: roller2Track, a: roller2, b: stator, min_gap: 0.5}
+    - {name: roller3Track, a: roller3, b: stator, min_gap: 0.5}
+    - {name: outputGearInCase, a: outputGear, b: upperCase, min_gap: 0.0}
+    - {name: stackedGearInCase, a: stackedGear, b: upperCase, min_gap: 0.0}
+    - {name: motorOnBase, a: motor, b: base, min_gap: 0.0, max_gap: 0.2}
+    - {name: caseOnBase, a: upperCase, b: base, min_gap: 0.0, max_gap: 0.2}
+    - {name: statorOnCase, a: stator, b: upperCase, min_gap: 0.0, max_gap: 0.2}
+  motions:
+    - name: rollerPass
+      drive: motorSpin
+      range: [0.0, 1440.0]
+      steps: 48
+      interference_tolerance: 2.0
+      pairs: [[rotor, stator], [rotor, lid], [rotor, tube], [roller1, stator], [roller2, stator], [roller3, stator], [outputGear, upperCase], [stackedGear, upperCase], [motorGear, stackedGear], [stackedGear, outputGear]]
+      description: one full rotor revolution (four motor turns) so every roller passes over the whole 180 deg tube arc; roller-tube squeeze is intended and excluded
+references:
+  - {path: sources/behrens-pump-packet.md, kind: text, role: authoritative, sha256: bdab3462725e9554f44290ad423461456b135361fc6bab52adb83e5a7b961bae}
+  - {path: sources/1-gear-box-base.step, kind: cad, role: authoritative, units: cm, sha256: d63eaba9c1df2347b1a3cc5805a3f3ed12b02543237d9153ffa7a46b2dab9288}
+  - {path: sources/2-small-gear-with-shelf.step, kind: cad, role: authoritative, units: cm, sha256: 943cf69986d0810e5d4dd4b4f1307508561b4f0620361e9e163c47bf6ead20d7}
+  - {path: sources/3-stacked-gear.step, kind: cad, role: authoritative, units: cm, sha256: 971d50c72c09b05d80cafb364090821e1777ec649e82339345000e8397d878dc}
+  - {path: sources/4-gear-box-upper-case.step, kind: cad, role: authoritative, units: cm, sha256: 41f6a78782749909ac611119009a52841b0666f8ea1c0d71bf764aec6700fa3d}
+  - {path: sources/5-large-gear.step, kind: cad, role: authoritative, units: cm, sha256: 47a710ed206130d114428870aeb2fa7ac577d3ae4f2cbba6491e986152cc01a3}
+  - {path: sources/6.1-peristaltic-pump-stator-3mm.step, kind: cad, role: authoritative, units: cm, sha256: 6b531c2802d6d9605d8659b4cf54d25659df54942c976bdcff04cbbd7672bd16}
+  - {path: sources/7.1-peristaltic-pump-lid-3mm.step, kind: cad, role: authoritative, units: cm, sha256: a1a12d25456202fc4cc002c5363d7d1b463c31409ec005a6697ce4d167095c82}
+  - {path: sources/8-peristaltic-pump-clamp.step, kind: cad, role: authoritative, units: cm, sha256: f948d46506a753fc7d160b323e1d5971ae638f2004d152bb3e3ec31e09f24994}
+  - {path: sources/9-peristaltic-pump-rotor.step, kind: cad, role: authoritative, units: cm, sha256: 996c2325ecae541f8a0b060d69add927e81f9233b26cdd3ddab105f1a90e562f}
+open_questions:
+  - "ECR 004 statorMount: child origin y 0 -> 5. Evidence: the evaluator measured a 5 mm statorOnCase gap; the supplied stator solid spans own y 5..37 (the draft read the STEP axis-placement point #12 at (0, 0, 0) as geometry). With the underside y = 5 on the upper-case top the re-posed solids measure a 0.0 mm gap and no overlap; the stator now spans assembly y 43..75."
+  - "ECR 004 rotorDrive: offset 49.125 -> 44.125, so the rotor follows the stator 5 mm down and the roller mid-plane stays on the tube plane (stator y 29.8, assembly y 67.8). The rotor-to-stator pose is unchanged, so rotorInStator and the roller clearances keep their values."
+  - "ECR 004 lidMount: child origin y 0 -> 2 and parent origin y 21 -> 24.8. Evidence: the supplied lid solid spans own y 2..14 (the same #12 misreading); its R1.6 tube groove is centred at own (r 10.0, y 7.0), and the stator ear's two tube slots are R1.7 half-rounds centred at stator y 30.0 (z -25.5 and -15.5). The groove now lies on the tube plane (stator y 29.8) and the lid top (36.8) is flush with the stator top (37); re-posed, the lid does not overlap the stator or the rotor."
+  - "ECR 004 envelope: min z -70 -> -71.93 and max y 80 -> 75. Evidence: the evaluator measured the stacked gear's tips (R21.533 about z = -50.5) at z = -71.93 at rest, overhanging the base's z = -70 edge; the stator seat fix lowers the top to y = 75. The re-posed assembly measures min [-51, -40, -71.93] and max [10, 75, 10]."
+  - "ECR 004 gear meshes: interference_tolerance 2.0 mm3 on stage1, stage2 and rollerPass; backlash_max unchanged. Evidence: the published gears are faceted STL conversions whose tips overlap about one facet at the 30 mm centre distance the base bosses fix. The evaluator measured 1.5..1.64 mm3 with zero backlash at every ratio-locked phase; the rest-phase intersections measure 1.195 mm3 (motorGear / stackedGear) and 1.503 mm3 (stackedGear / outputGear)."
+  - "ECR 004 observable flowRate: location y 72.8 -> 67.8, the tube outlet end after the stator moved 5 mm down."
+  - "Open (outside this ECR, part catalog / intent / settings): the 623 rollers (reach R10.77) cut into the lid's R10.0 inner wall beside the groove, 3.41 mm3 (roller1) and 1.69 mm3 (roller2) at rest; no clearance or sweep pair covers roller / lid. A 693 (3 x 8 x 4, reach R9.77) would clear the wall by 0.23 mm and leave 1.83 mm to the R11.6 groove bottom (8.5 % squeeze of the 2 mm double wall). The occluding track on the lid half is then R11.6, not the stator's R12.17 (settings.track_radius_mm)."
+  - "Open (outside this ECR, tube intent): the tube overlaps the lid by 57.2 mm3 at rest. Its drafted R10.67 centreline follows the stator bore (R12.17 - 1.5), while the lid groove puts the tube centre at R10.1; the ear slots put the legs at stator z = -20.5 +- 5.0, not +- 10.67."
+  - "Open: nothing identified supports the lid at stator y 24.8; the stator's +x half top is y 21, 3.8 mm below, and seating the lid there would put its groove 3.8 mm under the tube plane and the ear slots."
+  - "Bearing size is inferred: the packet gives no BOM; 623 (3 x 10 x 4) fits the D3 pins and the rotor's 4.2 mm race gap and leaves a 1.40 mm gap to the stator's R12.17 bore; see the lid finding above for 693."
+  - "Axial stack is inferred from the part faces: gears seated on the base top y = 12, output gear on the motor gear's shelf (y = 23), the stator unflipped with its underside on the upper case, the half-ring lid turned -90 deg; the output shaft (D6, not in the part files) is not modelled and the rotor is rigid to the output gear."
+  - "The tube mid-plane (stator y = 29.8, assembly y = 67.8) is estimated from the ear slots (centred at y 30.0) and the lid groove; the stator orientation on the upper case (0 deg of four bolt-square options) is not stated."
+  - "The stacked gear's countershaft (D6.1 bore) has no hole in the base boss; its pin is not modelled."
+  - "The motor gear shelf (D23.64 flare from z = 9) may graze the stacked 24T tip (8.47 mm from the motor axis) at y 21..21.5; the assembly check decides."
+  - "The motor body length (40 mm) is a NEMA 17 default; the packet names no model."
+  - "Roller outer-race spin on the tube is not tracked (rollers rigid to the rotor); tube squeeze by the rollers is intended and excluded from the motion interference pairs."
+release_status: training-only

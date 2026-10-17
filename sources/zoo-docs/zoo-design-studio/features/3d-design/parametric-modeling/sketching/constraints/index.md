@@ -1,0 +1,43 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints
+Title: Constraints
+
+# Constraints
+
+Apply geometric constraints to sketches in Zoo Design Studio.
+
+Constraints define geometric relationships between sketch entities so the profile behaves predictably
+when dimensions or upstream references change. Use them to control connection, alignment,
+orientation, and equality without manually redrawing geometry.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/parallel/parallel.gif"
+  alt="Parallel constraint applied to sketch geometry"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Constraints preserve design relationships as the sketch changes
+</div>
+
+This section covers the core geometric constraint types used in Zoo Design Studio sketches:
+[Coincident](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/coincident),
+[Parallel](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/parallel),
+[Perpendicular](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/perpendicular),
+[Equal](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/equal),
+[Vertical](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/vertical),
+[Horizontal](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/horizontal),
+[Midpoint](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/midpoint),
+[Fixed](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/fixed),
+[Tangent](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/tangent),
+and [Symmetry](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/symmetry).
+For measured values, see
+[Dimensions](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions),
+including [Distance](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/distance),
+[Angle](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/angle),
+[Radius](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/radius),
+and [Diameter](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/diameter).
+
+Coincident, parallel, perpendicular, midpoint, tangent, and symmetry constraints control how sketch
+entities connect and orient to one another. Equal, vertical, horizontal, and fixed constraints
+preserve consistent shape, alignment, and location as the sketch regenerates, helping the sketch
+remain stable when dimensions or references change.

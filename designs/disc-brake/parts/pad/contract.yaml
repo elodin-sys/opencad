@@ -1,0 +1,398 @@
+schema_version: 1
+name: disc-brake-pad
+intent: >-
+  Brake pad of the COMSOL 6.3 Application Library model "Heat Generation in a Disc Brake", rebuilt in
+  millimetres as one solid in its own frame, which is the assembly frame (COMSOL global coordinates;
+  the pad is the fixed datum of the disc-brake assembly). Packet construction steps 3-4: a closed
+  outline of four cubic Bezier curves in the work plane z = 13, extruded +z by 6.5 to z = 19.5.
+  B1 (0, 135), (20, 135), (50, 130), (40, 105) with weight 2.5 on (50, 130); B2 (40, 105), (30, 80),
+  (35, 90), (0, 90); B3 (0, 90), (-35, 90), (-30, 80), (-40, 105); B4 (-40, 105), (-50, 130),
+  (-20, 135), (0, 135) with weight 2.5 on (-50, 130); every other weight 1. Mirror-symmetric about
+  x = 0. Faces: contact face z = 13 resting on the disc rubbing face, top face z = 19.5, outer side wall
+  (B1, B4) and inner side wall (B2, B3), both parallel to z. No backing plate, chamfers or fillets.
+  sources/comsol-brake-disc-packet.md is authoritative; figures 1, 2, 3 and 5 are illustrative.
+units:
+  length: mm
+  angle: deg
+material: "brake pad friction material (COMSOL Table 1 'Pad': rho 2000 kg/m3, Cp 935 J/(kg K), k 8.7 W/(m K), emissivity 0.8)"
+density_kg_m3: 2000
+process: "simulation solid domain (COMSOL rebuild; no manufacturing process stated)"
+release_status: reconstruction
+
+frame:
+  origin: "COMSOL global origin converted m -> mm: on the disc rotation axis in the disc's symmetry (bottom) plane z = 0; the pad does not contain the origin"
+  axes:
+    x: "COMSOL global x; the pad is mirror-symmetric about x = 0"
+    y: "COMSOL global y; the pad lies on +y (inner apex y = 90, outer apex y = 135, centroid y = 111.905)"
+    z: "COMSOL global z = the disc rotation axis; +z from the disc symmetry plane (z = 0) through the disc rubbing face (z = 13) into the pad (z = 13..19.5)"
+  datums:
+    - name: A
+      description: "contact face z = 13 (bottom of the pad, rests on the disc rubbing face; outward normal -z)"
+    - name: B
+      description: "mirror plane x = 0"
+    - name: C
+      description: "disc rotation axis x = y = 0 along z (the assembly's discSpin axis)"
+
+envelope:
+  min: [-44.694, 88.025, 13]
+  max: [44.694, 135.0, 19.5]
+  tolerance: 0.05
+
+parameters:
+  - name: padBaseZ
+    value: 13
+    unit: mm
+    provenance: stated
+    source: "comsol-brake-disc-packet.md, Geometry construction step 3: work plane at z = 0.013 m"
+    tolerance: 0.01
+    description: "z of the work plane = contact face (the disc rubbing face, disc thickness 0.013 m)"
+  - name: padThickness
+    value: 6.5
+    unit: mm
+    provenance: stated
+    source: "comsol-brake-disc-packet.md, Geometry construction step 4: extrude the outline by 0.0065 m"
+    tolerance: 0.01
+    description: "extrusion distance along +z; top face at padBaseZ + padThickness = 19.5"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 3544.39
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.01
+      sweep:
+        values: [4.5, 6.5, 8.5]
+      infeasible_deltas: [-6.5]
+  - name: outerApexY
+    value: 135
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Cubic Bezier 1 control point 1 (0, 0.135) = Cubic Bezier 4 control point 4"
+    tolerance: 0.01
+    description: "outer-edge apex on x = 0 (start of B1, end of B4)"
+  - name: outerCtrlAx
+    value: 20
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Cubic Bezier 1 control point 2 (0.02, 0.135); mirrored as Bezier 4 control point 3 (-0.02, 0.135)"
+    tolerance: 0.01
+    description: "x of B1 control point 2 (B4 control point 3 at -x)"
+  - name: outerCtrlAy
+    value: 135
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Cubic Bezier 1 control point 2 (0.02, 0.135)"
+    tolerance: 0.01
+    description: "y of B1 control point 2 and B4 control point 3"
+  - name: outerCtrlBx
+    value: 50
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Cubic Bezier 1 control point 3 (0.05, 0.13); mirrored as Bezier 4 control point 2 (-0.05, 0.13)"
+    tolerance: 0.01
+    description: "x of the weighted control point of B1 (B4 at -x)"
+  - name: outerCtrlBy
+    value: 130
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Cubic Bezier 1 control point 3 (0.05, 0.13)"
+    tolerance: 0.01
+    description: "y of the weighted control point of B1 and B4"
+  - name: outerCtrlBWeight
+    value: 2.5
+    unit: ""
+    provenance: stated
+    source: "packet step 3: Bezier 1 weight of control point 3 = 2.5; Bezier 4 weight of control point 2 = 2.5"
+    tolerance: 0.001
+    description: "rational weight on (+-50, 130); every other control point has weight 1"
+    edit_test:
+      delta: 0.5
+      expect:
+        volume_delta: 177.65
+        direction: increase
+        bbox_delta: [1.127, 0, 0]
+        tolerance_rel: 0.02
+  - name: cornerX
+    value: 40
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Bezier 1 control point 4 = Bezier 2 control point 1 (0.04, 0.105); mirrored (-0.04, 0.105)"
+    tolerance: 0.01
+    description: "x of the outer/inner wall junction (B1 end, B2 start; B3 end, B4 start at -x)"
+  - name: cornerY
+    value: 105
+    unit: mm
+    provenance: stated
+    source: "packet step 3, (0.04, 0.105) and (-0.04, 0.105)"
+    tolerance: 0.01
+    description: "y of the outer/inner wall junctions"
+  - name: innerCtrlAx
+    value: 30
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Cubic Bezier 2 control point 2 (0.03, 0.08); mirrored as Bezier 3 control point 3 (-0.03, 0.08)"
+    tolerance: 0.01
+    description: "x of B2 control point 2 (B3 control point 3 at -x)"
+  - name: innerCtrlAy
+    value: 80
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Cubic Bezier 2 control point 2 (0.03, 0.08)"
+    tolerance: 0.01
+    description: "y of B2 control point 2 and B3 control point 3"
+  - name: innerCtrlBx
+    value: 35
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Cubic Bezier 2 control point 3 (0.035, 0.09); mirrored as Bezier 3 control point 2 (-0.035, 0.09)"
+    tolerance: 0.01
+    description: "x of B2 control point 3 (B3 control point 2 at -x)"
+  - name: innerCtrlBy
+    value: 90
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Cubic Bezier 2 control point 3 (0.035, 0.09)"
+    tolerance: 0.01
+    description: "y of B2 control point 3 and B3 control point 2"
+  - name: innerApexY
+    value: 90
+    unit: mm
+    provenance: stated
+    source: "packet step 3, Cubic Bezier 2 control point 4 (0, 0.09) = Cubic Bezier 3 control point 1"
+    tolerance: 0.01
+    description: "inner-edge apex on x = 0 (end of B2, start of B3)"
+
+features:
+  - id: outline
+    kind: profile
+    description: >-
+      closed outline in the plane z = padBaseZ: B1 (0, outerApexY) -> (outerCtrlAx, outerCtrlAy) ->
+      (outerCtrlBx, outerCtrlBy; weight outerCtrlBWeight) -> (cornerX, cornerY); B2 (cornerX, cornerY) ->
+      (innerCtrlAx, innerCtrlAy) -> (innerCtrlBx, innerCtrlBy) -> (0, innerApexY); B3 and B4 are the
+      x-mirrors of B2 and B1, traversed onward to close the loop
+    parameters: [outerApexY, outerCtrlAx, outerCtrlAy, outerCtrlBx, outerCtrlBy, outerCtrlBWeight, cornerX, cornerY, innerCtrlAx, innerCtrlAy, innerCtrlBx, innerCtrlBy, innerApexY]
+    verify:
+      - method: section
+        section: midZ
+      - method: section
+        section: axialX0
+      - method: dimension
+        dimension: spanX
+      - method: dimension
+        dimension: spanY
+  - id: pad
+    kind: extrude
+    description: "the outline extruded +z by padThickness from z = 13 to z = 19.5; one solid, no fillets or chamfers"
+    parameters: [padBaseZ, padThickness]
+    verify:
+      - method: bbox
+      - method: face
+        face: contactFace
+      - method: face
+        face: topFace
+      - method: dimension
+        dimension: thicknessZ
+      - method: solid
+        points: [[0, 112, 16.25], [35, 112, 16.25], [-35, 112, 16.25]]
+      - method: void
+        points: [[0, 112, 21], [0, 112, 11.5]]
+  - id: outerWall
+    kind: wall
+    description: "outer side wall swept by B1 and B4, parallel to z; widest at y = 121.47 (x = +-44.694), max radius 135.225"
+    parameters: [outerApexY, outerCtrlAx, outerCtrlAy, outerCtrlBx, outerCtrlBy, outerCtrlBWeight, cornerX, cornerY]
+    verify:
+      - method: section
+        section: widthY120
+      - method: solid
+        points: [[0, 130, 16.25], [20, 125, 16.25], [-20, 125, 16.25]]
+      - method: void
+        points: [[0, 138, 16.25]]
+  - id: innerWall
+    kind: wall
+    description: "inner side wall swept by B2 and B3, parallel to z; dips to y = 88.025 at x = +-27.79 between the corners and the inner apex (0, 90)"
+    parameters: [cornerX, cornerY, innerCtrlAx, innerCtrlAy, innerCtrlBx, innerCtrlBy, innerApexY]
+    verify:
+      - method: section
+        section: widthY100
+      - method: count
+        section: innerDipY89
+        count: 2
+      - method: solid
+        points: [[0, 95, 16.25], [36, 108, 16.25], [-36, 108, 16.25]]
+      - method: void
+        points: [[0, 85, 16.25], [40, 95, 16.25], [-40, 95, 16.25]]
+
+interfaces:
+  - name: discContact
+    description: >-
+      the contact face z = 13 resting on the disc rubbing face (the COMSOL thermal-contact boundary) and
+      the mirror plane x = 0 that locate the pad in the assembly frame; the thickness and weight edits
+      move neither
+    must_not_change: true
+    checks: [contactPlane, mirrorX]
+
+acceptance:
+  volume:
+    expected: 23038.51
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "outline area 3544.386 (Green's theorem on the four rational Beziers) * padThickness 6.5"
+  surface_area:
+    expected: 8613.89
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "2 * 3544.386 + perimeter 234.634 (outer 134.156 + inner 100.479) * 6.5"
+  center_of_mass:
+    expected: [0, 111.905, 16.25]
+    tolerance: 0.05
+    provenance: derived
+    note: "outline centroid (0, 111.905); z = padBaseZ + padThickness / 2"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 16.25
+      expect:
+        area: 3544.39
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+      description: "mid-thickness cut = the outline area"
+    - id: axialX0
+      plane: x
+      at: 0
+      expect:
+        area: 292.5
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "cut on the mirror plane: y 90..135 by z 13..19.5"
+    - id: widthY120
+      plane: y
+      at: 120
+      expect:
+        area: 579.98
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "outer-wall width near the widest station: x = +-44.614"
+    - id: widthY100
+      plane: y
+      at: 100
+      expect:
+        area: 494.02
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "inner-wall width below the corners: x = +-38.001"
+    - id: innerDipY89
+      plane: y
+      at: 89
+      expect:
+        area: 177.89
+        area_tolerance_rel: 0.02
+        loops: 2
+        holes: 0
+        islands_min: 2
+      description: "cut through the inner-wall dip below y = 90: two islands x = +-18.12..31.81"
+  faces:
+    - name: contactFace
+      plane: z
+      at: 13
+      normal: "-"
+      area: 3544.39
+      area_tolerance_rel: 0.002
+      center: [0, 111.905]
+      mode: one
+    - name: topFace
+      plane: z
+      at: 19.5
+      normal: "+"
+      area: 3544.39
+      area_tolerance_rel: 0.002
+      center: [0, 111.905]
+      mode: one
+  planes:
+    - name: contactPlane
+      point: [0, 111.9, 13]
+      normal: [0, 0, -1]
+      tolerance: 0.02
+      description: "contact plane z = 13 without an area, so outline edits keep the interface check valid"
+  dimensions:
+    - name: spanX
+      axis: x
+      expected: 89.388
+      tolerance: 0.05
+      description: "bbox width, 2 * 44.694 (outer wall at y = 121.47)"
+    - name: spanY
+      axis: y
+      expected: 46.975
+      tolerance: 0.05
+      description: "bbox depth, 135 - 88.025 (inner-wall dip at x = +-27.79)"
+    - name: thicknessZ
+      axis: z
+      expected: 6.5
+      tolerance: 0.02
+      between: [contactFace, topFace]
+      description: "pad thickness between contact and top faces"
+  solids:
+    - name: pad
+      contains_point: [0, 112, 16.25]
+      description: "the single pad solid"
+  probes:
+    - name: padMaterial
+      state: solid
+      points: [[0, 112, 16.25], [35, 112, 16.25], [-35, 112, 16.25], [20, 125, 16.25], [-20, 125, 16.25], [0, 95, 16.25], [0, 130, 16.25]]
+      description: "points 3 mm or more inside every wall and face"
+    - name: outsideOutline
+      state: void
+      points: [[0, 85, 16.25], [0, 138, 16.25], [40, 95, 16.25], [-40, 95, 16.25], [0, 112, 21], [0, 112, 11.5]]
+      description: "below the inner apex, beyond the outer apex, below the corners, above the top face, below the contact face"
+  symmetry:
+    - name: mirrorX
+      plane: x
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+      source: "sources/comsol-brake-disc-packet.md: Bezier 3 and 4 control points and weights are the x-mirror of Bezier 2 and 1"
+  blockout:
+    volume_min: 21000
+    volume_max: 25000
+
+references:
+  - path: sources/comsol-brake-disc-packet.md
+    kind: text
+    role: authoritative
+    sha256: 85535fc3210d6d0174945725ecf1a1f29351991bc272ba55fc138b0ad254638d
+    units: m
+    revision: "COMSOL Multiphysics 6.3 Application Library brake_disc documentation, accessed 2026-09-25"
+    note: "geometry construction steps 3-4 define the pad; Table 1 gives the pad material"
+  - path: sources/figure-1-geometry.png
+    kind: image
+    role: illustrative
+    sha256: 8c7faad09a9d6663c0a39fe6e18e5e721807c6750bf3b40b7ab67f95a36f5c54
+    units: m
+    note: "isometric render: disc, hub and the pad on +y; no dimension lines"
+  - path: sources/figure-2-velocity.png
+    kind: image
+    role: illustrative
+    sha256: 05a0b5ceb2f81378a47ef8ac2b41edbf948dfe3c0c3392cb62b1c0ef8c56ccc1
+    note: "v(t) plot; no pad geometry"
+  - path: sources/figure-3-acceleration.png
+    kind: image
+    role: illustrative
+    sha256: bb3f0ef43eaca917061fb013edd68fece3342aebec4ef0244089d6216d71c2dd
+    note: "a(t) plot; no pad geometry"
+  - path: sources/figure-5-probe-line.png
+    kind: image
+    role: illustrative
+    sha256: f3ffe42b7cc21121f49b80d52056b377c9aa4b90aec2d13ac0fbac1ecba5d0d5
+    units: m
+    note: "wireframe with the radial result probe line on the disc surface; pad outline edges visible"
+
+open_questions:
+  - "The pad material is named only 'Pad' in Table 1 (rho 2000 kg/m3, Cp 935, k 8.7, emissivity 0.8); no friction-material grade is stated."
+  - "The contact face is exactly coplanar with the disc rubbing face z = 13 (zero gap, zero overlap); the assembly must treat it as face contact, not interference."
+  - "The model is a half-disc (symmetry plane z = 0) with one pad per side; only the upper pad (z = 13..19.5) is this part. Its mirror below z = 0 is implied, not modelled."
+  - "The pad's angular position (centred on +y) is fixed only by the control points; the packet states no caliper angle or clearance to the hub (radius 80) and disc rim (radius 140), which the outline respects at r = 90.000..135.225."
+  - "Figures 1 and 5 carry no dimension lines; they confirm topology (one bean-shaped slab about half the disc thickness on the rubbing face) but no values."

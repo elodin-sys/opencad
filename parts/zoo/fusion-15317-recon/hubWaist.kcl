@@ -1,0 +1,60 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Groove shoulder of the hub waist: an extruded ring (single planar face at grooveY) that
+// trims the lip ledge left by the revolved hub profile in datum.kcl. The concave waist
+// silhouette itself is revolved with the hub because the engine rejects a revolved bowl
+// tool combined with this ring.
+import grooveY, grooveInnerRadius, grooveFaceArea, hubNeckRadius, hubNeckY, hubWaistY, hubRadius, hubYMin, flangeYMin from "params.kcl"
+
+assert(hubRadius, isGreaterThan = 0mm, error = "hub radius must be positive")
+assert(hubNeckRadius, isGreaterThan = 0mm, error = "neck radius must be positive")
+assert(hubNeckRadius, isLessThan = grooveInnerRadius, error = "neck must sit inside the groove shoulder")
+assert(grooveInnerRadius, isLessThan = hubRadius, error = "groove inner radius must sit inside the hub OD")
+assert(hubWaistY, isGreaterThan = hubYMin, error = "waist must not reach the hub bottom")
+assert(grooveY, isLessThan = flangeYMin, error = "shoulder must not reach the flange underside")
+assert(hubWaistY, isLessThan = hubNeckY, error = "waist must meet the OD below the neck")
+assert(hubNeckY, isLessThan = grooveY, error = "neck must sit below the groove shoulder")
+assert(grooveFaceArea, isGreaterThan = 0mm, error = "groove shoulder area must be positive")
+
+// Overrun past the hub OD so the ring subtract is not coplanar with the cylinder.
+odOverrun = 0.3mm
+outerR = hubRadius + odOverrun
+
+// Same lip geometry as datum.kcl: the ring must start inside the ledge cavity (below the
+// ledge at lipEndY) and end at the shoulder, so its only face left on the part is the shoulder.
+lipRadius = grooveInnerRadius - hubNeckRadius
+lipTopY = hubNeckY + lipRadius
+lipEndY = hubNeckY + lipRadius * sin(60deg)
+ringBottomY = lipTopY - 0.6mm
+ringLen = grooveY - ringBottomY
+
+assert(lipTopY, isLessThan = grooveY, error = "lip crest must sit below the groove shoulder")
+assert(ringBottomY, isGreaterThan = hubNeckY, error = "ring must end above the neck")
+assert(ringBottomY, isLessThan = lipEndY, error = "ring must start inside the ledge cavity")
+assert(outerR, isGreaterThan = grooveInnerRadius, error = "ring outer must exceed the shoulder inner radius")
+
+// Circles at file scope (diameter/radius inside `fn` scaled wrong on this part).
+// Extrude along +Z, then rotate onto +Y and slide to ringBottomY.
+ringSketch = sketch(on = XY) {
+  outer = circle(start = [outerR, 0mm], center = [0mm, 0mm])
+  inner = circle(start = [grooveInnerRadius, 0mm], center = [0mm, 0mm])
+  coincident([outer.center, ORIGIN])
+  coincident([inner.center, ORIGIN])
+  horizontal([outer.start, outer.center])
+  horizontal([inner.start, inner.center])
+  radius(outer) == outerR
+  radius(inner) == grooveInnerRadius
+}
+hide(ringSketch)
+
+fn waistTube() {
+  outerCyl = extrude(region(segments = [ringSketch.outer]), length = ringLen, method = NEW)
+  innerCyl = extrude(region(segments = [ringSketch.inner]), length = ringLen, method = NEW)
+  return subtract(outerCyl, tools = [innerCyl])
+    |> rotate(axis = X, angle = -90deg, global = true)
+    |> translate(y = ringBottomY, global = true)
+}
+
+export fn hubWaist(@body) {
+  return subtract(body, tools = [waistTube()])
+}

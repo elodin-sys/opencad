@@ -1,0 +1,1551 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/sprite-aleph-v2/parts/vtx-mount/contract.yaml: 64 parameters {'stated': 59, 'derived': 1, 'inferred': 4}; sources unresolved {}; unanchored 2",
+        "open questions: 4 (blocking []); interfaces 3, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 59,
+          "derived": 1,
+          "inferred": 4
+        },
+        "soft_values": 4,
+        "open_questions": [
+          "Changed (revision 1, reviewer notes): Amendment 5 closes the extent conflict: requestedSpanZ is 8.5 mm +/-0.1 and mountMinZ is 203.5; the extent is z203.5..212, set by the unchanged R4 boss on axis207.5 and plate top212. The proposal shifted the v1 extent by+3 but the verified cover screw by+3.5 (204 to207.5). Nothing mates below203.5; pack end201 leaves extra clearance, so material down to203 has no function. Envelope min is [-27, -29.85, 203.5], replacing the provisional y-31 estimate with the reviewer-reported built bbox min [-27.0, -29.849, 203.5]. The shell inner section minus0.3 is retained; orchestrator ray checks report gaps0.34 at z210 and0.30 at z212, abs(x)14. Intent, extent descriptions and brief tables are aligned; boss, plate208..212 (plateSpan4), neck, interfaces and all other acceptance values are unchanged.",
+          "Exact normal-offset cover inner crown, shared R6..R8 facet blends and fork-tip extrema require coordinated CAD. Neck y31.75 at207.5 is approximate; a constant y31.75 face across203.5..212 can collide with the descending crown. Recompute its varying extent and final x/y envelope before release.",
+          "PartContract cannot numerically enforce arbitrary contour offsets or a mating cover sweep using section loop counts. Independently verify perimeter gap0.3 +/-0.05, skirt abs(x)<=26.2 above14.8, neck gap0.3 +/-0.05, screw coaxiality within0.1, front boss seating and zero interference with the actual cover/shell STEP.",
+          "Glue support footprint and adhesive thickness are unspecified and belong to mainShell. Preserve compatible window/pocket/ledge topology without moving M2 axes; verify retained local faces and fillets after trimming. Finished volume, area and CoM are uncomputed; historical whole-part metrics and mesh fidelity are excluded."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [
+          "plateTopZ",
+          "perimeterClearance"
+        ],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "bore",
+          "boss",
+          "boreFloor",
+          "frontScrewAxis",
+          "m2InnerLF",
+          "m2InnerRF",
+          "m2InnerLB",
+          "m2InnerRB",
+          "m2OuterLF",
+          "m2OuterRF",
+          "m2OuterLB",
+          "m2OuterRB",
+          "top",
+          "underside",
+          "ledgeUnderside",
+          "plateSpan",
+          "mirrorX",
+          "skirtPassage",
+          "fitAssembly203",
+          "fitAssembly204",
+          "fitAssembly205",
+          "fitAssembly206",
+          "fitAssembly207",
+          "fitAssembly208",
+          "fitAssembly209",
+          "fitAssembly210",
+          "fitAssembly211p7",
+          "fitAssembly212"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json bbox.max_error = 0.233 (tol 1.0)",
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/verify.json engine bbox.max_error = 0.233"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -27.0,
+            -29.85,
+            203.5
+          ],
+          "expected_max": [
+            27.0,
+            33.0,
+            212.0
+          ],
+          "measured_min": [
+            -27.0,
+            -29.849,
+            203.5
+          ],
+          "measured_max": [
+            27.0,
+            32.767,
+            212.0
+          ],
+          "max_error": 0.233,
+          "tolerance": 1.0,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -27.0,
+            -29.85,
+            203.5
+          ],
+          "expected_max": [
+            27.0,
+            33.0,
+            212.0
+          ],
+          "measured_min": [
+            -27.0,
+            -29.849,
+            203.5
+          ],
+          "measured_max": [
+            27.0,
+            32.767,
+            212.0
+          ],
+          "max_error": 0.233,
+          "tolerance": 1.0,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json volume = None vs None",
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json surface_area = None vs None",
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json center_of_mass = None vs None"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": false,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": false,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": false,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json features: 9/9 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared",
+        "symmetry mirrorX: max 0.006 mm at (-12.3, -29.2, 210.9), p95 0.000 (tol 0.1 / 0.05) [fine STEP tessellation]"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "bore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "boss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "bossFillet": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.1,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "neckFlareLeft": {
+            "found": true,
+            "axis_offset": 0.019999999999999574,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "neckFlareRight": {
+            "found": true,
+            "axis_offset": 0.019999999999999574,
+            "axis_tolerance": 0.2,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "m2InnerLF": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "m2InnerRF": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "m2InnerLB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "m2InnerRB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "m2OuterLF": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "m2OuterRF": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "m2OuterLB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "m2OuterRB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "slotEndInnerLF": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "slotEndInnerRF": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "slotEndInnerLB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "slotEndInnerRB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "slotEndOuterLF": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "slotEndOuterRF": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "slotEndOuterLB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "slotEndOuterRB": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "bore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "boss": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "boreFloor": {
+            "ok": true,
+            "kind": "face"
+          },
+          "frontScrewAxis": {
+            "ok": true,
+            "kind": "section"
+          },
+          "m2InnerLF": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "m2InnerRF": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "m2InnerLB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "m2InnerRB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "m2OuterLF": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "m2OuterRF": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "m2OuterLB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "m2OuterRB": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "top": {
+            "ok": true,
+            "kind": "face"
+          },
+          "underside": {
+            "ok": true,
+            "kind": "face"
+          },
+          "ledgeUnderside": {
+            "ok": true,
+            "kind": "face"
+          },
+          "plateSpan": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "mirrorX": {
+            "ok": true,
+            "kind": "symmetry"
+          },
+          "skirtPassage": {
+            "ok": true,
+            "kind": "section"
+          },
+          "fitAssembly203": {
+            "ok": true,
+            "kind": "section"
+          },
+          "fitAssembly204": {
+            "ok": true,
+            "kind": "section"
+          },
+          "fitAssembly205": {
+            "ok": true,
+            "kind": "section"
+          },
+          "fitAssembly206": {
+            "ok": true,
+            "kind": "section"
+          },
+          "fitAssembly207": {
+            "ok": true,
+            "kind": "section"
+          },
+          "fitAssembly208": {
+            "ok": true,
+            "kind": "section"
+          },
+          "fitAssembly209": {
+            "ok": true,
+            "kind": "section"
+          },
+          "fitAssembly210": {
+            "ok": true,
+            "kind": "section"
+          },
+          "fitAssembly211p7": {
+            "ok": true,
+            "kind": "section"
+          },
+          "fitAssembly212": {
+            "ok": true,
+            "kind": "section"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json agreement engine=6335.621229865474 step=6335.621225581158 stl=6336.7558672027735 (rel tol 0.01; independent=False)",
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json agreement.manifold = 6336.755867202774 (Manifold kernel witness, rel vs STEP 0.00017908924495600018; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 6335.621229865474,
+        "kcl": 6335.621229865474,
+        "step": 6335.621225581158,
+        "stl": 6336.7558672027735,
+        "tolerance_rel": 0.01,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "manifold": 6336.755867202774,
+        "manifold_vs_step_rel": 0.00017908924495600018,
+        "engine_vs_step_rel": 6.762266259039434e-10,
+        "kcl_vs_step_rel": 6.762266259039434e-10,
+        "stl_vs_step_rel": 0.00017908924495585663,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 3/3 values; infeasible refused 1/1; interfaces pinned 28"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "slotWidth",
+            "delta": 0.4,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -50.0,
+                "measured": -49.99546172056216,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 28,
+                "driven": [
+                  "secZ19675",
+                  "slotCeilings",
+                  "slotEndInnerLB",
+                  "slotEndInnerLF",
+                  "slotEndInnerRB",
+                  "slotEndInnerRF",
+                  "slotEndOuterLB",
+                  "slotEndOuterLF",
+                  "slotEndOuterRB",
+                  "slotEndOuterRF"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "slotDepth",
+            "delta": 0.5,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -41.83,
+                "measured": -41.82532990403888,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 28,
+                "driven": [
+                  "secZ19675",
+                  "slotCeilings",
+                  "slotEndInnerLB",
+                  "slotEndInnerLF",
+                  "slotEndInnerRB",
+                  "slotEndInnerRF",
+                  "slotEndOuterLB",
+                  "slotEndOuterLF",
+                  "slotEndOuterRB",
+                  "slotEndOuterRF"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 2.5,
+                  "volume": 6377.446555485199,
+                  "bbox_size": [
+                    54.000000200000756,
+                    62.61600109792428,
+                    8.500000200001097
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 41.8253299040407,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 3.0,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 3.5,
+                  "volume": 6293.795895677119,
+                  "bbox_size": [
+                    54.000000200000756,
+                    62.61600109792428,
+                    8.500000200001097
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -41.82532990403888,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": 1.2,
+                  "value": 4.2,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: slotDepth must leave positive skin\", \"class\": \"program\", \"timings\": {\"failed_s\": 2.108, \"main_s\": 2.108}}"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "7a87ddf7bfc7f9a7e65b69f50fe4eac541df5441345b1b0c95db8a0301cd5817",
+          "re_export_sha256": "7a87ddf7bfc7f9a7e65b69f50fe4eac541df5441345b1b0c95db8a0301cd5817",
+          "ok": true
+        },
+        "sweep": {
+          "values": 3,
+          "passed": 3
+        },
+        "infeasible": {
+          "declared": 1,
+          "refused": 1
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=37 unused={'skinThickness': {'defined_in': 'params.py', 'edit_test': False, 'ok': True}, 'sourceRebaseZ': {'defined_in': 'params.py', 'edit_test': False, 'ok': True}, 'neckAtScrewY': {'defined_in': 'params.py', 'edit_test': False, 'ok': True}, 'splitStartY': {'defined_in': 'params.py', 'edit_test': False, 'ok': True}, 'splitEndZ': {'defined_in': 'params.py', 'edit_test': False, 'ok': True}}",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "build123d",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "build123d",
+            "params",
+            "math",
+            "build123d",
+            "params",
+            "build123d",
+            "exterior",
+            "params",
+            "datum",
+            "exterior",
+            "insertSeat",
+            "vtxLattice",
+            "math",
+            "build123d",
+            "params"
+          ],
+          "forbidden_imports": [],
+          "asserts": 37,
+          "sketch_blocks": 37,
+          "feature_ops": 37,
+          "construction_ops": {
+            "calls": 37,
+            "has_result": true
+          },
+          "parameters": {
+            "plateTopZ": {
+              "found": true,
+              "value": 212.0,
+              "expected": 212.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "plateThickness": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "topLayerThickness": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "ledgeInset": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "ledgeStartY": {
+              "found": true,
+              "value": 0.0,
+              "expected": 0.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "shoulderY": {
+              "found": true,
+              "value": 13.98,
+              "expected": 13.98,
+              "file": "params.py",
+              "ok": true
+            },
+            "shoulderCornerRadius": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "notchHalfWidth": {
+              "found": true,
+              "value": 10.25,
+              "expected": 10.25,
+              "file": "params.py",
+              "ok": true
+            },
+            "notchFloorY": {
+              "found": true,
+              "value": -22.22,
+              "expected": -22.22,
+              "file": "params.py",
+              "ok": true
+            },
+            "notchCornerRadius": {
+              "found": true,
+              "value": 4.6,
+              "expected": 4.6,
+              "file": "params.py",
+              "ok": true
+            },
+            "stepY": {
+              "found": true,
+              "value": -22.5,
+              "expected": -22.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "neckHalfWidth": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "neckFlareRadius": {
+              "found": true,
+              "value": 14.0,
+              "expected": 14.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "neckFlareTangentY": {
+              "found": true,
+              "value": 26.77,
+              "expected": 26.77,
+              "file": "params.py",
+              "ok": true
+            },
+            "bossRadius": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "bossAxisZ": {
+              "found": true,
+              "value": 207.5,
+              "expected": 207.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "bossBackY": {
+              "found": true,
+              "value": 26.78,
+              "expected": 26.78,
+              "file": "params.py",
+              "ok": true
+            },
+            "bossFilletRadius": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "boreDiameter": {
+              "found": true,
+              "value": 3.2,
+              "expected": 3.2,
+              "file": "params.py",
+              "ok": true
+            },
+            "boreFloorY": {
+              "found": true,
+              "value": 27.78,
+              "expected": 27.78,
+              "file": "params.py",
+              "ok": true
+            },
+            "m2HoleDiameter": {
+              "found": true,
+              "value": 2.1,
+              "expected": 2.1,
+              "file": "params.py",
+              "ok": true
+            },
+            "innerPatternPitch": {
+              "found": true,
+              "value": 20.0,
+              "expected": 20.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "outerPatternPitch": {
+              "found": true,
+              "value": 25.4,
+              "expected": 25.4,
+              "file": "params.py",
+              "ok": true
+            },
+            "patternCenterY": {
+              "found": true,
+              "value": -4.72,
+              "expected": -4.72,
+              "file": "params.py",
+              "ok": true
+            },
+            "slotWidth": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "slotDepth": {
+              "found": true,
+              "value": 3.0,
+              "expected": 3.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "skinThickness": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "armWidth": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "windowBaseX": {
+              "found": true,
+              "value": 17.7,
+              "expected": 17.7,
+              "file": "params.py",
+              "ok": true
+            },
+            "windowBaseY": {
+              "found": true,
+              "value": 12.7,
+              "expected": 12.7,
+              "file": "params.py",
+              "ok": true
+            },
+            "windowCornerRadius": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "perimeterClearance": {
+              "found": true,
+              "value": 0.3,
+              "expected": 0.3,
+              "file": "params.py",
+              "ok": true
+            },
+            "mountMinZ": {
+              "found": true,
+              "value": 203.5,
+              "expected": 203.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "sourceRebaseZ": {
+              "found": true,
+              "value": 13.0,
+              "expected": 13.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "neckClearance": {
+              "found": true,
+              "value": 0.3,
+              "expected": 0.3,
+              "file": "params.py",
+              "ok": true
+            },
+            "neckAtScrewY": {
+              "found": true,
+              "value": 31.75,
+              "expected": 31.75,
+              "file": "params.py",
+              "ok": true
+            },
+            "skirtMaxX": {
+              "found": true,
+              "value": 26.2,
+              "expected": 26.2,
+              "file": "params.py",
+              "ok": true
+            },
+            "skirtThresholdY": {
+              "found": true,
+              "value": 14.8,
+              "expected": 14.8,
+              "file": "params.py",
+              "ok": true
+            },
+            "skinWall": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "widthStartZ": {
+              "found": true,
+              "value": 202.0,
+              "expected": 202.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "widthStartValue": {
+              "found": true,
+              "value": 30.0,
+              "expected": 30.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "widthEndZ": {
+              "found": true,
+              "value": 249.3,
+              "expected": 249.3,
+              "file": "params.py",
+              "ok": true
+            },
+            "widthEndValue": {
+              "found": true,
+              "value": 13.1,
+              "expected": 13.1,
+              "file": "params.py",
+              "ok": true
+            },
+            "widthEndSlope": {
+              "found": true,
+              "value": -0.4,
+              "expected": -0.4,
+              "file": "params.py",
+              "ok": true
+            },
+            "crownStartZ": {
+              "found": true,
+              "value": 185.0,
+              "expected": 185.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "crownStartValue": {
+              "found": true,
+              "value": 37.5,
+              "expected": 37.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "crownEndZ": {
+              "found": true,
+              "value": 256.7,
+              "expected": 256.7,
+              "file": "params.py",
+              "ok": true
+            },
+            "crownEndValue": {
+              "found": true,
+              "value": 7.8,
+              "expected": 7.8,
+              "file": "params.py",
+              "ok": true
+            },
+            "crownEndSlope": {
+              "found": true,
+              "value": -0.72,
+              "expected": -0.72,
+              "file": "params.py",
+              "ok": true
+            },
+            "keelStartZ": {
+              "found": true,
+              "value": 125.0,
+              "expected": 125.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "keelStartValue": {
+              "found": true,
+              "value": -37.5,
+              "expected": -37.5,
+              "file": "params.py",
+              "ok": true
+            },
+            "keelEndZ": {
+              "found": true,
+              "value": 249.3,
+              "expected": 249.3,
+              "file": "params.py",
+              "ok": true
+            },
+            "keelEndValue": {
+              "found": true,
+              "value": -22.9,
+              "expected": -22.9,
+              "file": "params.py",
+              "ok": true
+            },
+            "keelEndSlope": {
+              "found": true,
+              "value": 0.35,
+              "expected": 0.35,
+              "file": "params.py",
+              "ok": true
+            },
+            "morphStartZ": {
+              "found": true,
+              "value": 202.0,
+              "expected": 202.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "morphEndZ": {
+              "found": true,
+              "value": 225.0,
+              "expected": 225.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "splitStartY": {
+              "found": true,
+              "value": 15.0,
+              "expected": 15.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "splitEndZ": {
+              "found": true,
+              "value": 216.0,
+              "expected": 216.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "facetSideY": {
+              "found": true,
+              "value": 23.4,
+              "expected": 23.4,
+              "file": "params.py",
+              "ok": true
+            },
+            "facetEndX": {
+              "found": true,
+              "value": 17.6,
+              "expected": 17.6,
+              "file": "params.py",
+              "ok": true
+            },
+            "bodyBlendRadius": {
+              "found": true,
+              "value": 7.0,
+              "expected": 7.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "envelopeHalfWidth": {
+              "found": true,
+              "value": 27.0,
+              "expected": 27.0,
+              "file": "params.py",
+              "ok": true
+            },
+            "envelopeMinY": {
+              "found": true,
+              "value": -29.85,
+              "expected": -29.85,
+              "file": "params.py",
+              "ok": true
+            },
+            "envelopeMaxY": {
+              "found": true,
+              "value": 33.0,
+              "expected": 33.0,
+              "file": "params.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {
+            "skinThickness": {
+              "defined_in": "params.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "sourceRebaseZ": {
+              "defined_in": "params.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "neckAtScrewY": {
+              "defined_in": "params.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "splitStartY": {
+              "defined_in": "params.py",
+              "edit_test": false,
+              "ok": true
+            },
+            "splitEndZ": {
+              "defined_in": "params.py",
+              "edit_test": false,
+              "ok": true
+            }
+          },
+          "lines": 588,
+          "numeric_literals": 313,
+          "source_size": {
+            "lines": 588,
+            "numeric_literals": 313,
+            "max_lines": 4000,
+            "max_literals": 6000,
+            "ok": true
+          },
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/export.json step.deterministic = True sha256 7a87ddf7bfc7; stl=present; glb=present",
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json valid = True solids = 1 (expected 1)",
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = False; manifold witness = 6336.755867202774"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/sprite-aleph-v2/parts/vtx-mount/export/sprite-aleph-v2-vtx-mount.step",
+            "sha256": "7a87ddf7bfc7f9a7e65b69f50fe4eac541df5441345b1b0c95db8a0301cd5817",
+            "bytes": 3413016,
+            "deterministic": true,
+            "second_sha256": "7a87ddf7bfc7f9a7e65b69f50fe4eac541df5441345b1b0c95db8a0301cd5817",
+            "determinism_source": "edit restore re-export"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/sprite-aleph-v2/parts/vtx-mount/export/sprite-aleph-v2-vtx-mount.stl",
+            "sha256": "a281de6dc8c9153d6eba123af065d30d6c366b2cc8fafd48a9b003f1a481fee2",
+            "bytes": 198584
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/build123d/sprite-aleph-v2/parts/vtx-mount/export/sprite-aleph-v2-vtx-mount.glb",
+            "sha256": "f6a48478d2e6e67150afab3f544877fcefa0bb47c20d4e5806345de8e1e72611",
+            "bytes": 72008
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 6336.755867202774,
+          "faces": 3970,
+          "vertices": 1963,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 6336.7558672027735,
+          "surface_area": 5402.816568254784,
+          "bbox_min": [
+            -27.0,
+            -29.848989486694336,
+            203.5
+          ],
+          "bbox_max": [
+            27.0,
+            32.76700973510742,
+            212.0
+          ],
+          "center_of_mass": [
+            0.00021872602410027048,
+            -0.695782111442648,
+            209.9572754794884
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0f546-3fd6-7cb1-bd5b-6eb7d64d4320; engine versions ['0.12.0']; engine calls 7; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 7,
+        "allow_errors": false,
+        "engine_versions": [
+          "0.12.0"
+        ],
+        "zoo_versions": [
+          "0.12.0"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = prototype; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "prototype",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present, no traced geometry",
+      "ok": true,
+      "evidence": [
+        "results/build123d/sprite-aleph-v2/parts/vtx-mount/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 37, 'has_result': True} lines = 588"
+      ],
+      "failure_means": "the deliverable is a re-export or a trace of the reference, not a design",
+      "knob": "rebuild from construction with dimensions as parameters; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "build123d",
+          "params",
+          "math",
+          "build123d",
+          "params",
+          "build123d",
+          "exterior",
+          "params",
+          "datum",
+          "exterior",
+          "insertSeat",
+          "vtxLattice",
+          "math",
+          "build123d",
+          "params"
+        ],
+        "construction_ops": {
+          "calls": 37,
+          "has_result": true
+        },
+        "sketch_blocks": 37,
+        "feature_ops": 37,
+        "source_size": {
+          "lines": 588,
+          "numeric_literals": 313,
+          "max_lines": 4000,
+          "max_literals": 6000,
+          "ok": true
+        }
+      }
+    }
+  ],
+  "retry": {
+    "attempted": true,
+    "corrections": 1,
+    "reason": [
+      "source_hygiene"
+    ],
+    "gates_before": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": true,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": true,
+      "source_hygiene": false,
+      "export_integrity": true,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "gates_after": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": true,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": true,
+      "source_hygiene": true,
+      "export_integrity": true,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "history": [
+      {
+        "key": "correction-1",
+        "role": "correction",
+        "failed_after": [],
+        "retryable_after": [],
+        "signature": "|ok|-",
+        "kcl_changed": true,
+        "incomplete": false,
+        "failing_count": 0,
+        "failing_items": [],
+        "reverted_to_checkpoint": false,
+        "budget_s": 900.0,
+        "contract_changed": false
+      }
+    ],
+    "stopped": "gates pass",
+    "stuck_class": null
+  }
+}

@@ -1,0 +1,254 @@
+schema_version: 1
+name: nottingham-bearing-shaft
+intent: >-
+  Instrumented EN24T steel shaft (Ra 0.1 um) of the University of Nottingham highly loaded half-journal
+  bearing rig, in its own frame: rotation axis +z through the origin, origin at mid-length, which is
+  mid-way between the two supporting cylindrical roller bearings (230 apart) and sits on the bush axial
+  centreline at rest. A plain D100.0 cylinder (radius 50.0, diameter tolerance 0.01) from z = -115 to
+  z = +115 (length 230, the support span; bearing seats, shoulders and the drive end are not stated and
+  not modelled). Interfaces: the journal surface runs concentrically in the D100.2 bush bore over
+  z = -37.5..+37.5 of this frame with a 0.1 mm radial clearance and is the inner, moving wall of the oil
+  film; the end faces z = -115 and z = +115 are the support-bearing stations. No keyways, pockets or
+  holes (the ultrasonic film sensors are not modelled). Authoritative source: sources/bearing-packet.md
+  (Layton et al. 2026, Lubricants 14(2) 76, section 2, text only, no CAD). Body `shaft` of the assembly
+  `nottingham-bearing`, attached by the revolute joint `journal` at [0, 0, 0] about +z.
+units:
+  length: mm
+  angle: deg
+material: "EN24T steel (Ra 0.1 um surface finish)"
+density_kg_m3: 7850
+process: "turned and ground to Ra 0.1 um (finish stated; process nominal)"
+release_status: reconstruction
+
+frame:
+  origin: >-
+    on the shaft axis at mid-length: mid-way between the two support-bearing stations (end faces
+    z = -115 and z = +115) and on the bush axial centreline at rest; the revolute joint `journal`
+    attaches the shaft here
+  axes:
+    x: >-
+      radial, perpendicular to z and fixed in the shaft; the part is axisymmetric about z, so the
+      angular zero of x has no geometric effect (the joint's zero angle defines it)
+    y: "radial, completing the right-handed set (y = z cross x)"
+    z: >-
+      along the rotation axis, from the -z support station (z = -115) to the +z support station
+      (z = +115); the shaft turns positively about +z (right-hand rule)
+  datums:
+    - name: A
+      description: "shaft axis: the z axis through the origin, axis of the D100.0 journal cylinder and of the revolute joint"
+    - name: B
+      description: "mid-span plane z = 0: mid-way between the support bearings, the bush axial centreline at rest"
+    - name: C
+      description: "end face z = -115: the -z support-bearing station"
+    - name: D
+      description: "end face z = +115: the +z support-bearing station"
+
+envelope:
+  min: [-50, -50, -115]
+  max: [50, 50, 115]
+  tolerance: 0.05
+
+parameters:
+  - name: shaftDiameter
+    value: 100.0
+    unit: mm
+    provenance: stated
+    source: >-
+      sources/bearing-packet.md, Unit under test: shaft diameter 100.0 mm (bush bore 100.2 mm, 100 um
+      radial clearance), manufactured within a tolerance of 0.01 mm; intent: D100.0, radius 50.0
+    tolerance: 0.01
+    description: "outer (journal) diameter of the plain shaft; the model radius is shaftDiameter / 2 = 50.0"
+  - name: shaftLength
+    value: 230
+    unit: mm
+    provenance: stated
+    source: >-
+      sources/bearing-packet.md, Unit under test: supported by two cylindrical roller bearings 230 mm
+      apart; intent: plain cylinder from z = -115 to z = +115, length 230 = the support span
+    tolerance: 0.01
+    description: "shaft length along z, centred on the origin (end faces at -shaftLength/2 and +shaftLength/2)"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 78539.82
+        direction: increase
+        bbox_delta: [0, 0, 10]
+        tolerance_rel: 0.01
+      sweep:
+        values: [200, 230, 260]
+      infeasible_deltas: [-240]
+
+features:
+  - id: shaft
+    kind: extrude
+    description: >-
+      plain D100.0 solid cylinder coaxial with +z and centred on the origin, from z = -shaftLength/2 = -115
+      to z = +shaftLength/2 = +115; no shoulders, bearing seats, drive end, chamfers, keyways, pockets or holes
+    parameters: [shaftDiameter, shaftLength]
+    verify:
+      - method: bbox
+      - method: cylinder
+        cylinder: journal
+      - method: face
+        face: endMinus
+      - method: face
+        face: endPlus
+      - method: dimension
+        dimension: supportSpan
+      - method: section
+        section: mid
+      - method: section
+        section: axialY
+      - method: solid
+        points: [[0, 0, 0], [0, 0, -114], [0, 0, 114], [49, 0, 0], [0, -49, 0]]
+      - method: void
+        points: [[52, 0, 0], [0, 0, 117], [0, 0, -117]]
+
+interfaces:
+  - name: journalSurface
+    description: >-
+      the D100.0 outer cylinder coaxial with +z through the origin; its band z = -37.5..+37.5 runs
+      concentrically in the D100.2 bush bore with a 0.1 mm radial clearance at zero load and is the inner,
+      moving wall of the oil film; the revolute joint `journal` attaches the shaft at [0, 0, 0] about +z.
+      The shaftLength edit test moves neither the axis, the diameter nor the mid-span plane.
+    must_not_change: true
+    checks: [journal, midSpan]
+  - name: supportStations
+    description: >-
+      the end faces z = -115 and z = +115 (support-bearing stations, 230 apart, symmetric about the
+      mid-span origin). The shaftLength edit test moves both faces symmetrically, so only the mid-span
+      symmetry is pinned; their positions are checked by endMinus, endPlus and supportSpan in acceptance.
+    must_not_change: true
+    checks: [midSpan]
+
+acceptance:
+  volume:
+    expected: 1806415.78
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "pi * (shaftDiameter/2)^2 * shaftLength = pi * 50^2 * 230"
+  surface_area:
+    expected: 87964.59
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "pi * shaftDiameter * shaftLength + 2 * pi * (shaftDiameter/2)^2 = 72256.63 + 2 * 7853.98"
+  center_of_mass:
+    expected: [0, 0, 0]
+    tolerance: 0.01
+    provenance: derived
+    note: "axisymmetric about z and mirror-symmetric about z = 0"
+  solid_count: 1
+  sections:
+    - id: mid
+      plane: z
+      at: 0
+      expect:
+        area: 7853.98
+        loops: 1
+        holes: 0
+      description: "mid-span / bush centreline section: solid D100.0 disc, pi * 50^2, no bore"
+    - id: stationMinus
+      plane: z
+      at: -110
+      expect:
+        area: 7853.98
+        loops: 1
+        holes: 0
+      description: "5 mm inboard of the -z support station: still the plain D100.0 disc (no seat or shoulder)"
+    - id: stationPlus
+      plane: z
+      at: 110
+      expect:
+        area: 7853.98
+        loops: 1
+        holes: 0
+      description: "5 mm inboard of the +z support station: still the plain D100.0 disc (no seat or shoulder)"
+    - id: axialX
+      plane: x
+      at: 0
+      expect:
+        area: 23000
+        loops: 1
+        holes: 0
+      description: "axial section through the axis: 100 x 230 rectangle, no cross holes along y"
+    - id: axialY
+      plane: y
+      at: 0
+      expect:
+        area: 23000
+        loops: 1
+        holes: 0
+      description: "axial section through the axis: 100 x 230 rectangle, no cross holes along x"
+  faces:
+    - name: endMinus
+      plane: z
+      at: -115
+      normal: "-"
+      area: 7853.98
+      center: [0, 0]
+      mode: one
+    - name: endPlus
+      plane: z
+      at: 115
+      normal: "+"
+      area: 7853.98
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: journal
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 100.0
+      radius_tolerance: 0.005
+      axis_tolerance: 0.01
+      description: >-
+        the D100.0 outer cylinder (journal band z = -37.5..+37.5 plus the rest of the shaft); radius
+        tolerance = half the stated 0.01 mm diameter tolerance
+  dimensions:
+    - name: supportSpan
+      axis: z
+      expected: 230
+      tolerance: 0.05
+      between: [endMinus, endPlus]
+      description: "distance between the support-bearing stations (end faces)"
+  solids:
+    - name: shaftBody
+      contains_point: [0, 0, 0]
+      description: "the single solid"
+  probes:
+    - name: inShaft
+      state: solid
+      points: [[0, 0, 0], [0, 0, -114], [0, 0, 114], [49, 0, 0], [0, -49, 0], [-49, 0, 37], [0, 49, -37]]
+      description: "material on the axis 1 mm inside both end faces (no centre holes) and 1 mm under the journal surface"
+    - name: outsideShaft
+      state: void
+      points: [[52, 0, 0], [0, -52, -100], [0, 52, 100], [0, 0, 117], [0, 0, -117]]
+      description: "air 2 mm outside the D100.0 surface and 2 mm beyond each end face (no seats, collars or drive end)"
+  symmetry:
+    - name: midSpan
+      plane: z
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 1750000
+    volume_max: 1860000
+
+references:
+  - path: sources/bearing-packet.md
+    kind: text
+    role: authoritative
+    sha256: 59abf634a3867c0c21ea6118b6bf08e72e4cfdfc5d0eb56ceacbfd8c8d944c4b
+    units: mm
+    revision: "Layton et al. 2026, Lubricants 14(2) 76, doi:10.3390/lubricants14020076, section 2 transcription"
+    note: "shaft D100.0 +-0.01, EN24T Ra 0.1, bearings 230 apart, bush 75 long with D100.2 bore"
+
+open_questions:
+  - "Bearing seats, shoulders, the drive end and the shaft length beyond the support bearings are not stated; the shaft is modelled as a plain D100.0 cylinder ending at the support stations (z = +-115), per the intent."
+  - "The packet does not state that the bush sits mid-way between the support bearings; the intent places the bush axial centreline at the mid-span origin."
+  - "The support span of 230 mm is taken as bearing centre to bearing centre and the stations are modelled as the end faces; the bearing widths and seat positions are not stated."
+  - "'Manufactured within a tolerance of 0.01 mm' is read as +-0.01 mm on the diameter (radius +-0.005); a total band of 0.01 would halve it."
+  - "The two ultrasonic film sensors, the shaft thermocouples (1 mm below the surface) and the RLS magnetic ring are not modelled; their axial and angular positions are not stated."
+  - "Density 7850 kg/m3 is a handbook value for EN24T; the packet does not state it."
+  - "End-face chamfers or edge breaks are not stated; sharp edges are modelled."

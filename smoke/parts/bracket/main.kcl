@@ -1,0 +1,73 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Smoke-test bracket plate: tags, getCommonEdge fillet, hole::holes, assert.
+plateWidth = 80mm
+plateHeight = 50mm
+plateThickness = 6mm
+holeDiameter = 4.5mm
+holeInset = 10mm
+cornerRadius = 5mm
+
+assert(plateThickness, isGreaterThan = holeDiameter / 2, error = "plate too thin for M4 clearance holes")
+
+outline = sketch(on = XY) {
+  bottom = line(start = [var 0mm, var 0mm], end = [var 80mm, var 0mm])
+  right = line(start = [var 80mm, var 0mm], end = [var 80mm, var 50mm])
+  top = line(start = [var 80mm, var 50mm], end = [var 0mm, var 50mm])
+  left = line(start = [var 0mm, var 50mm], end = [var 0mm, var 0mm])
+  coincident([bottom.end, right.start])
+  coincident([right.end, top.start])
+  coincident([top.end, left.start])
+  coincident([left.end, bottom.start])
+  horizontal(bottom)
+  horizontal(top)
+  vertical(right)
+  vertical(left)
+  coincident([bottom.start, ORIGIN])
+  horizontalDistance([bottom.start, bottom.end]) == plateWidth
+  verticalDistance([bottom.start, left.start]) == plateHeight
+}
+plateRegion = region(segments = [outline.bottom, outline.right])
+plateBlank = extrude(plateRegion, length = plateThickness, tagEnd = $topFace)
+
+plateRounded = fillet(
+  plateBlank,
+  radius = cornerRadius,
+  tags = [
+    getCommonEdge(faces = [
+      plateRegion.tags.bottom,
+      plateRegion.tags.right
+    ]),
+    getCommonEdge(faces = [
+      plateRegion.tags.right,
+      plateRegion.tags.top
+    ]),
+    getCommonEdge(faces = [
+      plateRegion.tags.top,
+      plateRegion.tags.left
+    ]),
+    getCommonEdge(faces = [
+      plateRegion.tags.left,
+      plateRegion.tags.bottom
+    ])
+  ],
+)
+
+bracket = hole::holes(
+  plateRounded,
+  face = topFace,
+  holeBottom = hole::flat(),
+  holeBody = hole::blind(depth = plateThickness, diameter = holeDiameter),
+  holeType = hole::simple(),
+  // cutsAt is in the END face's local frame, which for an XY extrusion is [globalY, globalX]
+  // (verified 2026-09-13 with zoo 0.2.196: cutAt = [10, 40] lands at global (40, 10)).
+  cutsAt = [
+    [holeInset, holeInset],
+    [holeInset, plateWidth - holeInset],
+    [
+      plateHeight - holeInset,
+      plateWidth - holeInset
+    ],
+    [plateHeight - holeInset, holeInset]
+  ],
+)

@@ -1,0 +1,165 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import baseBoardThickness, carrierBottom, carrierTop, wallThickness, portMargin, innerXMax, innerYMin, innerYMax from "params.kcl"
+
+// Contract literals and their general feasibility guards live in params.kcl.
+// Recompute the outer planes from the fixed cavity and live wall gauge: the
+// nominal outerXMax / outerYMin / outerYMax exports are reference dimensions.
+normalOverrun = 0.02mm
+rightInner = innerXMax - normalOverrun
+rightOuter = innerXMax + wallThickness
+frontOuter = innerYMin - wallThickness
+frontInner = innerYMin + normalOverrun
+rearInner = innerYMax - normalOverrun
+rearOuter = innerYMax + wallThickness
+
+// Tangential hardware projections, expanded only by portMargin. Wall and
+// heatsink-margin edits leave every x/y aperture edge and z extent unchanged.
+windowFloor = baseBoardThickness - portMargin
+headerCeiling = 5.98mm + portMargin
+rearLeft = 8.08mm - portMargin
+rearRight = 73.33mm + portMargin
+frontLeft = 31.73mm - portMargin
+frontRight = 75.18mm + portMargin
+j9Left = 42.16mm - portMargin
+j9Right = 50.90mm + portMargin
+j9Floor = carrierBottom - 3.11mm - portMargin
+j8Left = 62.31mm - portMargin
+j8Right = 71.25mm + portMargin
+j8Floor = carrierBottom - 3.37mm - portMargin
+carrierCeiling = carrierBottom + portMargin
+powerLow = 6.65mm - portMargin
+powerHigh = 16.71mm + portMargin
+powerCeiling = carrierTop + 3.11mm + portMargin
+sideUsbLow = 36.43mm - portMargin
+sideUsbHigh = 45.37mm + portMargin
+sideUsbCeiling = 4.94mm + portMargin
+
+assert(wallThickness, isGreaterThan = 0mm, error = "Service windows require positive wall stock.")
+assert(
+  windowFloor,
+  isGreaterThan = 0mm,
+  isLessThan = sideUsbCeiling,
+  error = "Window floors must remain above the base datum and below their ceilings.",
+)
+assert(
+  j9Floor,
+  isGreaterThan = windowFloor,
+  isLessThan = headerCeiling,
+  error = "J9 must overlap the lower front window without reaching its floor.",
+)
+assert(
+  j8Floor,
+  isGreaterThan = windowFloor,
+  isLessThan = headerCeiling,
+  error = "J8 must overlap the lower front window without reaching its floor.",
+)
+assert(carrierCeiling, isGreaterThan = headerCeiling, error = "Carrier USB windows must rise above the lower header opening.")
+assert(j8Left - j9Right, isGreaterThan = 2.1mm, error = "The upper front windows must retain a structural web.")
+assert(j9Left, isGreaterThan = frontLeft, error = "J9 must lie inside the lower front projection.")
+assert(j8Right, isLessThan = frontRight, error = "J8 must lie inside the lower front projection.")
+assert(
+  powerCeiling,
+  isGreaterThan = carrierCeiling,
+  isLessThan = 23.52mm - 2.1mm,
+  error = "The merged power/J10 opening must clear the thermal band.",
+)
+assert(sideUsbLow - powerHigh, isGreaterThan = 2.1mm, error = "The two right-wall openings must remain separated.")
+assert(innerXMax + wallThickness, isLessThanOrEqual = 97.51mm, error = "Right-wall stock must fit the service-window region.")
+assert(innerYMin - wallThickness, isGreaterThanOrEqual = -10.7mm, error = "Front-wall stock must fit the service-window region.")
+assert(innerYMax + wallThickness, isLessThanOrEqual = 60.7mm, error = "Rear-wall stock must fit the service-window region.")
+
+// Six exact rectangular tools, flush outside and overrunning into cavity air.
+// Their supporting surfaces therefore keep the engine bounds on the case.
+// The helper creates no geometry until serviceWindows invokes it.
+fn windowTool(xLow, xHigh, yLow, yHigh, zLow, zHigh) {
+  assert(xHigh, isGreaterThan = xLow, error = "Window tool x span must be positive.")
+  assert(yHigh, isGreaterThan = yLow, error = "Window tool y span must be positive.")
+  assert(zHigh, isGreaterThan = zLow, error = "Window tool height must be positive.")
+  toolPlane = offsetPlane(XY, offset = zLow)
+  profile = sketch(on = toolPlane) {
+    front = line(start = [xLow, yLow], end = [xHigh, yLow])
+    right = line(start = [xHigh, yLow], end = [xHigh, yHigh])
+    rear = line(start = [xHigh, yHigh], end = [xLow, yHigh])
+    left = line(start = [xLow, yHigh], end = [xLow, yLow])
+  }
+  toolRegion = region(segments = [profile.front, profile.right])
+  tool = extrude(toolRegion, length = zHigh - zLow, method = NEW)
+  hide(toolRegion)
+  hide(profile.meta.sketch)
+  hide(toolPlane)
+  return tool
+}
+
+export fn serviceWindows(@body) {
+  rear = windowTool(
+    xLow = rearLeft,
+    xHigh = rearRight,
+    yLow = rearInner,
+    yHigh = rearOuter,
+    zLow = windowFloor,
+    zHigh = headerCeiling,
+  )
+  frontLower = windowTool(
+    xLow = frontLeft,
+    xHigh = frontRight,
+    yLow = frontOuter,
+    yHigh = frontInner,
+    zLow = windowFloor,
+    zHigh = headerCeiling,
+  )
+  carrierJ9 = windowTool(
+    xLow = j9Left,
+    xHigh = j9Right,
+    yLow = frontOuter,
+    yHigh = frontInner,
+    zLow = j9Floor,
+    zHigh = carrierCeiling,
+  )
+  carrierJ8 = windowTool(
+    xLow = j8Left,
+    xHigh = j8Right,
+    yLow = frontOuter,
+    yHigh = frontInner,
+    zLow = j8Floor,
+    zHigh = carrierCeiling,
+  )
+  powerAndJ10 = windowTool(
+    xLow = rightInner,
+    xHigh = rightOuter,
+    yLow = powerLow,
+    yHigh = powerHigh,
+    zLow = windowFloor,
+    zHigh = powerCeiling,
+  )
+  baseJ11A1 = windowTool(
+    xLow = rightInner,
+    xHigh = rightOuter,
+    yLow = sideUsbLow,
+    yHigh = sideUsbHigh,
+    zLow = windowFloor,
+    zHigh = sideUsbCeiling,
+  )
+
+  // Union first so the overlapping lower/J9/J8 projections form one mouth,
+  // retaining the nominal 8.41 mm web above z=7.48. Cut the upper cap once.
+  serviceTool = union([
+    rear,
+    frontLower,
+    carrierJ9,
+    carrierJ8,
+    powerAndJ10,
+    baseJ11A1
+  ])
+  windowedUpper = subtract(body[0], tools = [serviceTool])
+  hide([
+    rear,
+    frontLower,
+    carrierJ9,
+    carrierJ8,
+    powerAndJ10,
+    baseJ11A1,
+    serviceTool
+  ])
+  return [windowedUpper, body[1]]
+}

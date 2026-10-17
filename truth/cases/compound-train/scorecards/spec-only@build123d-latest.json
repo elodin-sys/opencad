@@ -1,0 +1,542 @@
+{
+  "case": "compound-train",
+  "arm": "spec-only",
+  "design": "compound-train",
+  "kind": "machine",
+  "mode": "reconstruction",
+  "backend": "build123d",
+  "truth_class": "C",
+  "scored_at": "2026-09-27T17:08:44Z",
+  "verdict": "PASS",
+  "error": null,
+  "accuracy_score": 100.0,
+  "summary": {
+    "required_pass": 14,
+    "required_total": 14,
+    "optional_pass": 0,
+    "optional_total": 0,
+    "performance_pass": 2,
+    "performance_scored": 2,
+    "performance_unresolved": 0,
+    "performance_total": 2,
+    "performance_by_split": {
+      "development": {
+        "required": 2,
+        "pass": 2,
+        "fail": 0,
+        "unresolved": 0,
+        "missing": 0
+      },
+      "held_out": {
+        "required": 0,
+        "pass": 0,
+        "fail": 0,
+        "unresolved": 0,
+        "missing": 0
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "the plate (-25..170, -50..50, -5..0) bounds every gear (output tips reach x 167, y +-47; gears up to z 16.5)",
+      "expected": [
+        195.0,
+        100.0,
+        21.5
+      ],
+      "measured": [
+        195.0,
+        100.0,
+        21.5
+      ],
+      "error": 0.0,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 4,
+      "measured": 4,
+      "ok": true
+    },
+    {
+      "id": "plate",
+      "kind": "solid",
+      "required": true,
+      "note": "195 x 100 x 5 minus \u00d86 and two \u00d88 holes",
+      "measured": {
+        "volume": 96855.97350601408,
+        "bbox_min": [
+          -25.0,
+          -50.0,
+          -5.0
+        ],
+        "bbox_max": [
+          170.0,
+          50.0,
+          0.0
+        ],
+        "center_of_mass": [
+          72.5150015177143,
+          1.8085947921480487e-16,
+          -2.5
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 96855.97,
+        "measured": 96855.97350601408,
+        "band": 484.27985,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "pinion",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 9545.55466679259,
+        "bbox_min": [
+          -22.0,
+          -22.0,
+          0.0
+        ],
+        "bbox_max": [
+          22.0,
+          22.0,
+          8.0
+        ],
+        "center_of_mass": [
+          9.552324361535994e-12,
+          1.3640735402306428e-13,
+          4.0
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "idler",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 44413.27742474177,
+        "bbox_min": [
+          18.078254474050013,
+          -41.921745525949994,
+          0.0
+        ],
+        "bbox_max": [
+          101.92174552595043,
+          41.921745525950435,
+          16.0
+        ],
+        "center_of_mass": [
+          60.000000000011546,
+          -9.445019329642845e-12,
+          4.905893463769366
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "output",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 50031.01595609869,
+        "bbox_min": [
+          73.01820193733883,
+          -46.99882371801393,
+          8.5
+        ],
+        "bbox_max": [
+          166.9974688324822,
+          46.9518161820298,
+          16.5
+        ],
+        "center_of_mass": [
+          120.00000000000188,
+          2.674672692402291e-12,
+          12.5
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "pinion_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 20,
+      "measured": 20,
+      "tip_radius": 22.000000000000394,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "idler_large_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 40,
+      "measured": 40,
+      "tip_radius": 42.00000000000109,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "idler_small_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 15,
+      "measured": 15,
+      "tip_radius": 17.000000000000675,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "output_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 45,
+      "measured": 45,
+      "tip_radius": 47.000000000001,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "idler_bore",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          60.0,
+          0.0,
+          8.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          60.0,
+          0.0,
+          8.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "length": 16.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 16.0,
+          "measured": 16.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "output_bore",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          120.0,
+          0.0,
+          12.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          120.0,
+          0.0,
+          12.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "length": 8.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 8.0,
+          "measured": 8.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "first_mesh",
+      "kind": "gear_mesh",
+      "required": true,
+      "note": "",
+      "measured": {
+        "max_interference": 0.0,
+        "gap_min": 0.04774079317521846,
+        "gap_max": 0.050552932272562356
+      },
+      "poses": [
+        [
+          0.0,
+          0.0,
+          0.0506,
+          true
+        ],
+        [
+          1.5,
+          0.0,
+          0.0477,
+          true
+        ],
+        [
+          3.0,
+          0.0,
+          0.0489,
+          true
+        ],
+        [
+          6.0,
+          0.0,
+          0.0481,
+          true
+        ],
+        [
+          9.0,
+          0.0,
+          0.0487,
+          true
+        ],
+        [
+          12.0,
+          0.0,
+          0.0481,
+          true
+        ],
+        [
+          15.0,
+          0.0,
+          0.0489,
+          true
+        ],
+        [
+          18.0,
+          0.0,
+          0.0506,
+          true
+        ]
+      ],
+      "expected": {
+        "interference": 0.0,
+        "backlash_max": 0.15
+      },
+      "ok": true
+    },
+    {
+      "id": "second_mesh",
+      "kind": "gear_mesh",
+      "required": true,
+      "note": "",
+      "measured": {
+        "max_interference": 0.0,
+        "gap_min": 0.04711843137823647,
+        "gap_max": 0.048254074732540314
+      },
+      "poses": [
+        [
+          0.0,
+          0.0,
+          0.0478,
+          true
+        ],
+        [
+          4.0,
+          0.0,
+          0.0475,
+          true
+        ],
+        [
+          6.0,
+          0.0,
+          0.0483,
+          true
+        ],
+        [
+          8.0,
+          0.0,
+          0.048,
+          true
+        ],
+        [
+          10.0,
+          0.0,
+          0.0474,
+          true
+        ],
+        [
+          12.0,
+          0.0,
+          0.0477,
+          true
+        ],
+        [
+          16.0,
+          0.0,
+          0.0473,
+          true
+        ],
+        [
+          20.0,
+          0.0,
+          0.0471,
+          true
+        ],
+        [
+          24.0,
+          0.0,
+          0.0478,
+          true
+        ]
+      ],
+      "expected": {
+        "interference": 0.0,
+        "backlash_max": 0.15
+      },
+      "ok": true
+    }
+  ],
+  "performance": [
+    {
+      "id": "trainRatio",
+      "kind": "performance",
+      "quantity": "transmission_ratio",
+      "unit": "",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "prediction": 0.16666666666666666,
+      "reference": 0.16666666666666666,
+      "error": 0.0,
+      "tolerance": 1e-09,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    },
+    {
+      "id": "outputAt360",
+      "kind": "performance",
+      "quantity": "joint_value",
+      "unit": "deg",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "prediction": 60.0,
+      "reference": 60.0,
+      "error": 0.0,
+      "tolerance": 1e-06,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": "10 pass, 0 fail, 4 n/a",
+    "failed": []
+  },
+  "simulations": {},
+  "hash_binding": {
+    "manifest_sha256": "d8d2498c461c5a25388ebee784474c12617c0b72742479ede065f774f2672ef2",
+    "truth_files": {
+      "truth/compound-train-truth.yaml": "fe9bfd8953cd9707492db2fc68e4a4bbca4c3ab9b31caa78ea90d7b79e914511"
+    },
+    "input_files": {
+      "inputs/compound-train-spec.md": "e2734c43ae1d2aa36320d0b7680e21616422e902b471b3eb98295e3292296af5"
+    },
+    "step_sha256": "6ce066893abb44cc1c66f223d3b6f8c8b1e3f640a44a3fc0d2c6e6b4d68665ac",
+    "assembly_source": {
+      "checkpoint.py": "65b3d6bd7c126f73be5268fe01053d7b7a79fbb4221ad0845a31a1c76761ccf5",
+      "main.py": "65b3d6bd7c126f73be5268fe01053d7b7a79fbb4221ad0845a31a1c76761ccf5"
+    },
+    "design_bundle": {
+      "assembly.yaml": "dd737c415852834e7ee9f5effbbd96553070175ca98c9cab658f661e6a2772ab",
+      "brief.md": "fc929ca91b070b7b15c4fa85d07b2e85a7ea8f3ec8238e6cf12e4de90a11e1f4",
+      "sources/compound-train-spec.md": "e2734c43ae1d2aa36320d0b7680e21616422e902b471b3eb98295e3292296af5"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-27T17:08:44Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "f067337b8ab648471ad40a647b21672f74d56978",
+      "dirty": true
+    }
+  }
+}

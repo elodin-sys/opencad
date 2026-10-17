@@ -1,0 +1,2268 @@
+{
+  "case": "prusa-mini-extruder-front",
+  "arm": "renders-and-sheet",
+  "design": "prusa-mini-extruder-front",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/prusa-mini-extruder-front",
+  "truth_class": "B",
+  "role": "validation",
+  "scored_at": "2026-09-21T21:20:48Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 33,
+    "required_total": 33,
+    "optional_pass": 19,
+    "optional_total": 20
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        53.0,
+        14.001,
+        63.72
+      ],
+      "measured": [
+        53.00000010000001,
+        14.000000199999999,
+        63.720000100007404
+      ],
+      "error": 0.0009998000000006613,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": false,
+      "note": "diagnostic: the fan-duct lobe and embossed text are cosmetic",
+      "expected": 29833.563535171925,
+      "measured": 30136.080328391196,
+      "error": 302.51679321927077,
+      "band": 1491.6781767585962,
+      "ok": true
+    },
+    {
+      "id": "center_of_mass",
+      "kind": "center_of_mass",
+      "required": false,
+      "note": "",
+      "expected": [
+        -0.7028272592884086,
+        6.9885205318155394,
+        -2.702754838554198
+      ],
+      "measured": [
+        -0.6175391427304006,
+        6.988939851484317,
+        -2.6479355983407467
+      ],
+      "error": 0.08528811655800805,
+      "ok": true
+    },
+    {
+      "id": "hole_d26_m2_16p4_y11",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d826, extent 8..14 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          -2.0,
+          11.0,
+          16.4
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 13.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -2.0,
+          10.984999999999886,
+          16.4
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 13.0,
+        "length": 6.03000000000023,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 6.0,
+          "measured": 6.03000000000023,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d22p5_m2_0_y1p5",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d822.5, extent 0..3 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          -2.0,
+          1.5,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 11.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -2.0,
+          1.49,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 11.25,
+        "length": 2.980000000000001,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 3.0,
+          "measured": 2.980000000000001,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d16_m2_16p4_y5p5",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d816, extent 3..8 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          -2.0,
+          5.5,
+          16.4
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 8.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -2.0,
+          5.4750000000000005,
+          16.4
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 8.0,
+        "length": 4.99,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 4.99,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d14_m2_0_y12p18",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d814, extent 10.4..14 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          -2.0,
+          12.1806,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 7.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -2.0,
+          12.180499999999999,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 7.0,
+        "length": 3.639000000000001,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 3.6388,
+          "measured": 3.639000000000001,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d12p68_21p17_m24p67_y7",
+      "kind": "cylinder",
+      "required": false,
+      "note": "hole \u00d812.7, extent -3.98..-0.975 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          21.1721,
+          7.0,
+          -24.6727
+        ],
+        "direction": [
+          0.7071,
+          -0.0,
+          0.7071
+        ],
+        "radius": 6.3421,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          21.171910716563,
+          7.0,
+          -24.67208928343
+        ],
+        "direction": [
+          0.7071067811865476,
+          0.0,
+          0.7071067811865476
+        ],
+        "radius": 6.342,
+        "length": 3.0000000000005067,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0005656854298968511,
+      "radius_error": -0.00010000000000065512,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0005656854298968511,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d12p63_25p62_7p5_y7",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d812.6, extent -9..24 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          25.6177,
+          7.0,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 6.3152,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          25.618,
+          7.0,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 6.315,
+        "length": 33.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0002999999999993008,
+      "radius_error": -0.00019999999999953388,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999993008,
+          "ok": true
+        },
+        "length": {
+          "expected": 33.0,
+          "measured": 33.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d12_m2_16p4_y1p5",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d812, extent 0..3 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          -2.0,
+          1.5,
+          16.4
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 6.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -2.0,
+          1.49,
+          16.4
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 6.0,
+        "length": 2.98,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 3.0,
+          "measured": 2.98,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d11p5_26p02_m20p04_y7",
+      "kind": "cylinder",
+      "required": false,
+      "note": "hole \u00d811.5, extent -26.3..-4.08 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          26.0232,
+          7.0,
+          -20.036
+        ],
+        "direction": [
+          0.1736,
+          -0.0,
+          0.9848
+        ],
+        "radius": 5.75,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          26.02318484171528,
+          7.0,
+          -20.040518248168084
+        ],
+        "direction": [
+          0.1736027776670195,
+          0.0,
+          0.9848157571781108
+        ],
+        "radius": 5.75,
+        "length": 22.31317153119342,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0007694523200138505,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0007694523200138505,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d11p5_28p75_13p75_y7",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d811.5, extent 0..27.5 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          28.75,
+          7.0,
+          13.7532
+        ],
+        "direction": [
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "radius": 5.75,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          28.75,
+          7.0,
+          13.772028189100501
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 5.75,
+        "length": 27.554056378201,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 27.5065,
+          "measured": 27.554056378201,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d9p5_25p17_7p5_y5p5",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d89.5, extent -9..24 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          25.1705,
+          5.5,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.75,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          25.171,
+          5.5,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.75,
+        "length": 33.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0004999999999988347,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0004999999999988347,
+          "ok": true
+        },
+        "length": {
+          "expected": 33.0,
+          "measured": 33.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d9p5_25p17_7p5_y8p5",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d89.5, extent -9..24 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          25.1705,
+          8.5,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.75,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          25.171,
+          8.5,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.75,
+        "length": 33.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0004999999999988347,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0004999999999988347,
+          "ok": true
+        },
+        "length": {
+          "expected": 33.0,
+          "measured": 33.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d8p79_20p75_m24p25_y5p14",
+      "kind": "cylinder",
+      "required": false,
+      "note": "hole \u00d88.79, extent -3.98..-0.975 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          20.7533,
+          5.1435,
+          -24.254
+        ],
+        "direction": [
+          0.7071,
+          -0.0,
+          0.7071
+        ],
+        "radius": 4.3935,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          20.753910716563002,
+          5.143,
+          -24.254089283429998
+        ],
+        "direction": [
+          0.7071067811865476,
+          0.0,
+          0.7071067811865476
+        ],
+        "radius": 4.3935,
+        "length": 3.0000000000005067,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0007035623604914328,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0007035623604914328,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d8p79_20p75_m24p25_y8p86",
+      "kind": "cylinder",
+      "required": false,
+      "note": "hole \u00d88.79, extent -3.98..-0.975 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          20.7533,
+          8.8565,
+          -24.254
+        ],
+        "direction": [
+          0.7071,
+          -0.0,
+          0.7071
+        ],
+        "radius": 4.3935,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          20.753910716563,
+          8.857,
+          -24.25408928343
+        ],
+        "direction": [
+          0.7071067811865476,
+          0.0,
+          0.7071067811865476
+        ],
+        "radius": 4.3935,
+        "length": 3.000000000000502,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0007035623604901705,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0007035623604901705,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d8_24p72_m22p26_y5p5",
+      "kind": "cylinder",
+      "required": false,
+      "note": "hole \u00d88, extent -19..-16.2 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          24.7151,
+          5.5,
+          -22.2635
+        ],
+        "direction": [
+          0.1736,
+          -0.0,
+          0.9848
+        ],
+        "radius": 4.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          24.715775420015664,
+          5.5,
+          -22.263748654191453
+        ],
+        "direction": [
+          0.1736027776670195,
+          0.0,
+          0.9848157571781108
+        ],
+        "radius": 4.0,
+        "length": 2.809000000009096,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0007083313388157016,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0007083313388157016,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d8_25p36_m18p58_y8p5",
+      "kind": "cylinder",
+      "required": false,
+      "note": "hole \u00d88, extent -23.4..-4.41 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          25.3649,
+          8.5,
+          -18.5782
+        ],
+        "direction": [
+          0.1736,
+          -0.0,
+          0.9848
+        ],
+        "radius": 4.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          25.65485896006399,
+          8.5,
+          -16.93650516205755
+        ],
+        "direction": [
+          0.1736027776670195,
+          0.0,
+          0.9848157571781108
+        ],
+        "radius": 4.0,
+        "length": 15.516797810051163,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0005533688625936375,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0005533688625936375,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d8_27p85_9p81_y5p5",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d88, extent 0..19.6 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          27.8486,
+          5.5,
+          9.8125
+        ],
+        "direction": [
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          27.849,
+          5.5,
+          9.8475
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "length": 19.595,
+        "kind": "hole"
+      },
+      "axis_offset": 0.00039999999999906777,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.00039999999999906777,
+          "ok": true
+        },
+        "length": {
+          "expected": 19.625,
+          "measured": 19.595,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d8_27p85_12p36_y8p5",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d88, extent 0..24.7 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          27.8486,
+          8.5,
+          12.3559
+        ],
+        "direction": [
+          -0.0,
+          -0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          27.849,
+          8.5,
+          12.356
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "length": 24.752,
+        "kind": "hole"
+      },
+      "axis_offset": 0.00039999999999906777,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.00039999999999906777,
+          "ok": true
+        },
+        "length": {
+          "expected": 24.7117,
+          "measured": 24.752,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d6p5_m23p92_0_y11p25",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d86.5, extent 8.5..14 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          -23.9203,
+          11.25,
+          0.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 3.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -23.92,
+          11.23,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 3.25,
+        "length": 5.539999999999999,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0002999999999993008,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999993008,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.5,
+          "measured": 5.539999999999999,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d6p5_m18p5_22_y4p9",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d86.5, extent 0..9.8 along the axis",
+      "expected": {
+        "point": [
+          -18.5,
+          4.9,
+          22.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 3.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -18.5,
+          4.900000000000001,
+          22.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 3.25,
+        "length": 9.800000000000002,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 9.8,
+          "measured": 9.800000000000002,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d6p5_m17_m20_y4p9",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d86.5, extent 0..9.8 along the axis",
+      "expected": {
+        "point": [
+          -17.0,
+          4.9,
+          -20.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 3.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -17.0,
+          4.900000000000001,
+          -20.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 3.25,
+        "length": 9.800000000000002,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 9.8,
+          "measured": 9.800000000000002,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d6p5_19p92_0_y11p25",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d86.5, extent 8.5..14 along the axis",
+      "expected": {
+        "point": [
+          19.9203,
+          11.25,
+          0.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 3.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          19.92,
+          11.23,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 3.25,
+        "length": 5.539999999999999,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0002999999999993008,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999993008,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.5,
+          "measured": 5.539999999999999,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d6p5_20_17_y3p9",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d86.5, extent 0..7.8 along the axis",
+      "expected": {
+        "point": [
+          20.0,
+          3.9,
+          17.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 3.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          20.0,
+          3.900000000000023,
+          17.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 3.25,
+        "length": 7.800000000000046,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.8,
+          "measured": 7.800000000000046,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d5p5_22p09_m15_y2p32",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d85.5, extent 0..4.65 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          22.0879,
+          2.3244,
+          -15.0
+        ],
+        "direction": [
+          -0.0,
+          1.0,
+          -0.0
+        ],
+        "radius": 2.75,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          22.088,
+          2.3395,
+          -15.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 2.75,
+        "length": 4.679,
+        "kind": "hole"
+      },
+      "axis_offset": 9.999999999976694e-05,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 9.999999999976694e-05,
+          "ok": true
+        },
+        "length": {
+          "expected": 4.6488,
+          "measured": 4.679,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d4_14p71_30_y4p62",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d84, extent 0..9.24 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          14.7082,
+          4.6209,
+          30.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 2.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          14.708,
+          4.641,
+          30.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 2.0,
+        "length": 9.282,
+        "kind": "hole"
+      },
+      "axis_offset": 0.00019999999999953388,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.00019999999999953388,
+          "ok": true
+        },
+        "length": {
+          "expected": 9.2417,
+          "measured": 9.282,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d4_20p27_30_y10p74",
+      "kind": "cylinder",
+      "required": false,
+      "note": "hole \u00d84, extent 20.1..25 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          20.2742,
+          10.7397,
+          30.0
+        ],
+        "direction": [
+          0.9538,
+          0.3003,
+          -0.0
+        ],
+        "radius": 2.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          20.275772461354368,
+          10.740671073751471,
+          30.0
+        ],
+        "direction": [
+          0.9538407632561003,
+          0.30031283414303156,
+          0.0
+        ],
+        "radius": 2.0,
+        "length": 4.878745697805002,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0004540194065105945,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0004540194065105945,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3p5_m18p5_22_y12p05",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83.5, extent 10.1..14 along the axis",
+      "expected": {
+        "point": [
+          -18.5,
+          12.05,
+          22.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.75,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -18.5,
+          12.05,
+          22.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.75,
+        "length": 3.9000000000000004,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 3.9,
+          "measured": 3.9000000000000004,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3p5_m17_m20_y12p05",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83.5, extent 10.1..14 along the axis",
+      "expected": {
+        "point": [
+          -17.0,
+          12.05,
+          -20.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.75,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -17.0,
+          12.05,
+          -20.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.75,
+        "length": 3.9000000000000004,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 3.9,
+          "measured": 3.9000000000000004,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3p4_m23p92_0_y3p91",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83.4, extent 0..7.81 along the axis",
+      "expected": {
+        "point": [
+          -23.9203,
+          3.9066,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -23.92,
+          3.899,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "length": 7.798,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0002999999999993008,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999993008,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.8131,
+          "measured": 7.798,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3p4_m22_15_y9p3",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83.4, extent 4.6..14 along the axis",
+      "expected": {
+        "point": [
+          -22.0,
+          9.3,
+          15.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          -22.0,
+          9.3,
+          15.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "length": 9.4,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 9.4,
+          "measured": 9.4,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3p4_8_28_y9p3",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83.4, extent 4.6..14 along the axis",
+      "expected": {
+        "point": [
+          8.0,
+          9.3,
+          28.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          8.0,
+          9.3,
+          28.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "length": 9.4,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 9.4,
+          "measured": 9.4,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3p4_12_m17_y9p3",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83.4, extent 4.6..14 along the axis",
+      "expected": {
+        "point": [
+          12.0,
+          9.3,
+          -17.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          12.0,
+          9.3,
+          -17.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "length": 9.4,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 9.4,
+          "measured": 9.4,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3p4_19p92_0_y3p91",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83.4, extent 0..7.81 along the axis",
+      "expected": {
+        "point": [
+          19.9203,
+          3.9066,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          19.92,
+          3.899,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "length": 7.798,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0002999999999993008,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999993008,
+          "ok": true
+        },
+        "length": {
+          "expected": 7.8131,
+          "measured": 7.798,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "hole_d3p4_20_17_y11p05",
+      "kind": "cylinder",
+      "required": true,
+      "note": "hole \u00d83.4, extent 8.1..14 along the axis",
+      "expected": {
+        "point": [
+          20.0,
+          11.05,
+          17.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          20.0,
+          11.05,
+          17.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 1.7,
+        "length": 5.9,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.9,
+          "measured": 5.9,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d11_m18p5_22_y11",
+      "kind": "cylinder",
+      "required": false,
+      "note": "pin \u00d811, extent 8..14 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          -18.5,
+          11.0,
+          22.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 5.5,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          -18.5,
+          11.0,
+          22.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 5.5,
+        "length": 6.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d10_8_28_y7",
+      "kind": "cylinder",
+      "required": false,
+      "note": "pin \u00d810, extent 0..14 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          8.0,
+          7.0,
+          28.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 5.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          8.0,
+          7.0,
+          28.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "radius": 5.0,
+        "length": 14.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d9p18_21p17_m24p67_y7",
+      "kind": "cylinder",
+      "required": false,
+      "note": "pin \u00d89.18, extent -3.98..-0.975 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          21.1721,
+          7.0,
+          -24.6727
+        ],
+        "direction": [
+          0.7071,
+          -0.0,
+          0.7071
+        ],
+        "radius": 4.5921,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          21.17191071656115,
+          7.0,
+          -24.67208928343385
+        ],
+        "direction": [
+          0.7071067811865476,
+          0.0,
+          0.7071067811865476
+        ],
+        "radius": 4.592,
+        "length": 3.0000000000065823,
+        "kind": "pin"
+      },
+      "axis_offset": 0.000565685428485024,
+      "radius_error": -0.00010000000000065512,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.000565685428485024,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d9p13_25p62_7p5_y7",
+      "kind": "cylinder",
+      "required": false,
+      "note": "pin \u00d89.13, extent -9..24 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          25.6177,
+          7.0,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.5652,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          25.618,
+          7.0,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.565,
+        "length": 33.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0002999999999993008,
+      "radius_error": -0.00019999999999953388,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0002999999999993008,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d6_25p17_7p88_y8p5",
+      "kind": "cylinder",
+      "required": false,
+      "note": "pin \u00d86, extent -8.24..24 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          25.1705,
+          8.5,
+          7.8789
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          25.171,
+          8.5,
+          7.878999999999962
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 32.242000000000075,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0004999999999988347,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0004999999999988347,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d5p29_20p75_m24p25_y5p14",
+      "kind": "cylinder",
+      "required": false,
+      "note": "pin \u00d85.29, extent -3.98..-0.975 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          20.7533,
+          5.1435,
+          -24.254
+        ],
+        "direction": [
+          0.7071,
+          -0.0,
+          0.7071
+        ],
+        "radius": 2.6435,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          20.753910716563826,
+          5.143,
+          -24.254089283431174
+        ],
+        "direction": [
+          0.7071067811865476,
+          0.0,
+          0.7071067811865476
+        ],
+        "radius": 2.6435,
+        "length": 3.000000000000991,
+        "kind": "pin"
+      },
+      "axis_offset": 0.000703562361486458,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.000703562361486458,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "pin_d5p29_20p75_m24p25_y8p86",
+      "kind": "cylinder",
+      "required": false,
+      "note": "pin \u00d85.29, extent -3.98..-0.975 along the axis (partial arc)",
+      "expected": {
+        "point": [
+          20.7533,
+          8.8565,
+          -24.254
+        ],
+        "direction": [
+          0.7071,
+          -0.0,
+          0.7071
+        ],
+        "radius": 2.6435,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          20.7539107165615,
+          8.857,
+          -24.2540892834335
+        ],
+        "direction": [
+          0.7071067811865476,
+          0.0,
+          0.7071067811865476
+        ],
+        "radius": 2.6435,
+        "length": 3.0000000000075735,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0007035623614851956,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.1,
+          "measured": 0.0007035623614851956,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "back_mating_face",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 2218.123319939439,
+      "expected_area": 2166.04,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "front_face",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "y",
+      "at": 14.0,
+      "normal": "+",
+      "found": 1,
+      "area": 2293.3922699137,
+      "expected_area": 2279.29,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "bottom_face",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": -30.0,
+      "normal": "-",
+      "found": 1,
+      "area": 573.5326418814029,
+      "expected_area": 573.52,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "left_side_face",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "x",
+      "at": -26.5,
+      "normal": "-",
+      "found": 1,
+      "area": 606.9909445764035,
+      "expected_area": 607.2,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "right_side_faces",
+      "kind": "face",
+      "required": false,
+      "note": "",
+      "plane": "x",
+      "at": 26.5,
+      "normal": "+",
+      "found": 6,
+      "area": 117.96022686577258,
+      "expected_area": 106.85,
+      "mode": "sum",
+      "ok": true
+    },
+    {
+      "id": "section_y7",
+      "kind": "section",
+      "required": true,
+      "note": "mid-plate: keyhole and every through hole",
+      "plane": "y",
+      "at": 7.0,
+      "measured": {
+        "area": 2199.4999662019836,
+        "loops": 1,
+        "holes": 11
+      },
+      "checks": {
+        "area": {
+          "expected": 2186.594,
+          "measured": 2199.4999662019836,
+          "ok": true
+        },
+        "holes": {
+          "expected": 11,
+          "measured": 11,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_y1p5",
+      "kind": "section",
+      "required": false,
+      "note": "back recesses",
+      "plane": "y",
+      "at": 1.5,
+      "measured": {
+        "area": 2213.867230235732,
+        "loops": 1,
+        "holes": 9
+      },
+      "checks": {
+        "area": {
+          "expected": 2203.295,
+          "measured": 2213.867230235732,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "section_y12",
+      "kind": "section",
+      "required": false,
+      "note": "front counterbores and nut traps",
+      "plane": "y",
+      "at": 12.0,
+      "measured": {
+        "area": 2165.0742639894306,
+        "loops": 1,
+        "holes": 7
+      },
+      "checks": {
+        "area": {
+          "expected": 2148.308,
+          "measured": 2165.0742639894306,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "deviation_vs_prusa",
+      "kind": "deviation",
+      "required": false,
+      "note": "diagnostic exterior agreement; cosmetic lobe and text differences are expected",
+      "measured": {
+        "p95": 0.21706122625668114,
+        "hausdorff_estimate": 5.599138893815711,
+        "silhouette_iou_min": 0.973899565539609,
+        "volume_ratio": 1.0103337056409403
+      },
+      "checks": {
+        "p95": {
+          "max": 0.8,
+          "measured": 0.21706122625668114,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 4.0,
+          "measured": 5.599138893815711,
+          "ok": false
+        },
+        "silhouette_iou": {
+          "min": 0.93,
+          "measured": 0.973899565539609,
+          "ok": true
+        }
+      },
+      "ok": false
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "6b5dd42e11826db484a62864a9071ed856afe19fb42a8aace637cbcf865e96a4",
+    "truth_files": {
+      "truth/MINI-extruder-front.stp": "8146b4dc6e543acf365034561bcce7124ca653e2c0a3dd33a486617501c814d7",
+      "truth/MINI-extruder-front.stl": "fe017c76001559d6b294f26dd074597cfa9ec470fada426327926cfc06ce8f18",
+      "truth/LICENSE-GPL-3.0.txt": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    "input_files": {
+      "inputs/prusa-extruder-front-description.md": "68bb9d8de0d472b48ee4d006368d8317942fb1662c46fa57ca40444a3270e3fc",
+      "inputs/dimension-sheet.md": "8114a967a9bfa8f1b8cb70e979bda39f2e6a02b28eee8c3c2a906a5389d6e93c",
+      "inputs/renders/back.png": "0082b3fc7dba786305b2403e8d454471030bf13072317f94c55cd314add6fc85",
+      "inputs/renders/bottom.png": "ffcb4f042cf21f1af12962ce8e25164d444a06b3949523f7b80853c5112764d8",
+      "inputs/renders/front.png": "5eb8d869e83a8b6fda807d1a89c6a2340416e9fcc6ba7e9156e5ad9090891415",
+      "inputs/renders/iso-below.png": "a88b88b12b762c2f233eb945e824d56e66618b4595732be098034a98fea0f4e7",
+      "inputs/renders/iso.png": "b020791e7cac6906a7849143eacd5a451367a29067b7005ef9ba6031fb40490b",
+      "inputs/renders/iso2.png": "71fc8bd6986eeaaaa6ca80f0bc33b3263ab695c169a03c11adc27834e2366dfe",
+      "inputs/renders/left.png": "0e619ab6438f959e407e5c85024d515dcf7893d28a4f4442300eaaf2ec8ec392",
+      "inputs/renders/right.png": "058b38e8a33e018052f9ecce5dad1dc4ac49d7f09475300dd7760bb47516e15c",
+      "inputs/renders/section-x-18.5.png": "631dc2ecc85bb8d7ecf1ae2592d716be3f79226a496944f9649ad8422b637881",
+      "inputs/renders/section-x0.png": "5948745dc3a39d6be9f315b77bff89c305a1ed817e0db31efa3a9b66e811dba8",
+      "inputs/renders/section-y1.5.png": "35f64ab977673fb8c50df3c20af3c5bff32470d319d67c36e77518ef06675a51",
+      "inputs/renders/section-y12.png": "2adcdb2843aec7741582b66c0e07c3a6a955b5ea989eb2a9ec0a9c94e3004a83",
+      "inputs/renders/section-y7.png": "010bf57ad6582553c9cf903435bc324dd6629f191dd1ab16d90c258a4cca497d",
+      "inputs/renders/section-z-20.png": "4525f85f7d8aad2c964b1d88a2abe5ed4e5086bdff8103449b6e88ac4c28ab8b",
+      "inputs/renders/section-z0.png": "21d566609ed38ef40a873d62e8b99c37fb9ab24a897ebb55fc724db4aef8094a",
+      "inputs/renders/section-z17.png": "09015d9730b123e12ab2950371d63cd2cdcf87d9b8ff6fb5ea037df1333d5016",
+      "inputs/renders/top.png": "723eafa804a379697e33524c77c45951f601d3515f889ef73cd459437721c335",
+      "inputs/renders/render-notes.md": "d55bcc4dd15907bcbd350f4f13f8203ae1108e811702c8146c8dc571529e1728"
+    },
+    "source": {
+      "datum.py": "eff398854a97e043825d5e97743ec6893928482ef83618b2ceb0701f432a03b1",
+      "exterior.py": "389ba678a94abea7e46b240c47e5bd49f538770ed6083562b6de7ed1a5a038d8",
+      "fasteners.py": "057675b5660fd7f2b872e44c3979a55eb2875d9c72f3a3f688965caaaa89cd7b",
+      "keyhole.py": "53ada37d421b74f077ef465c5697ec73076b4bf141309b8377c1b70351b2a724",
+      "main.py": "e1c853263eae113665ba14a6b540d392f335bfecdea3aeee122aff11934913d7",
+      "params.py": "96741965695b02d86d72bb65ee461cab9c4ce106f5ceae928c037526bbf62a53",
+      "sideClamp.py": "509c4dab5e1f195b4fd4600a1caa3abb5f7a91209e8dc5267d4598bb723e4fd5"
+    },
+    "kcl": {},
+    "step_sha256": "ec8d240fcd68027e6672f68993ed3d310ae2056e5835b9a0bd29c1aa2cabae4d",
+    "design_bundle": {
+      "brief.md": "26dcac076923ac95a5f64e80fbf84a7045bd674af3b77118086f46c1fb30f5c0",
+      "contract.yaml": "e583274c0fc16e98298252326156b41d145930d61acd2cab0820a3fdd9b91396",
+      "sources/back.png": "0082b3fc7dba786305b2403e8d454471030bf13072317f94c55cd314add6fc85",
+      "sources/bottom.png": "ffcb4f042cf21f1af12962ce8e25164d444a06b3949523f7b80853c5112764d8",
+      "sources/dimension-sheet.md": "8114a967a9bfa8f1b8cb70e979bda39f2e6a02b28eee8c3c2a906a5389d6e93c",
+      "sources/front.png": "5eb8d869e83a8b6fda807d1a89c6a2340416e9fcc6ba7e9156e5ad9090891415",
+      "sources/iso-below.png": "a88b88b12b762c2f233eb945e824d56e66618b4595732be098034a98fea0f4e7",
+      "sources/iso.png": "b020791e7cac6906a7849143eacd5a451367a29067b7005ef9ba6031fb40490b",
+      "sources/iso2.png": "71fc8bd6986eeaaaa6ca80f0bc33b3263ab695c169a03c11adc27834e2366dfe",
+      "sources/left.png": "0e619ab6438f959e407e5c85024d515dcf7893d28a4f4442300eaaf2ec8ec392",
+      "sources/prusa-extruder-front-description.md": "68bb9d8de0d472b48ee4d006368d8317942fb1662c46fa57ca40444a3270e3fc",
+      "sources/render-notes.md": "d55bcc4dd15907bcbd350f4f13f8203ae1108e811702c8146c8dc571529e1728",
+      "sources/right.png": "058b38e8a33e018052f9ecce5dad1dc4ac49d7f09475300dd7760bb47516e15c",
+      "sources/section-x-18.5.png": "631dc2ecc85bb8d7ecf1ae2592d716be3f79226a496944f9649ad8422b637881",
+      "sources/section-x0.png": "5948745dc3a39d6be9f315b77bff89c305a1ed817e0db31efa3a9b66e811dba8",
+      "sources/section-y1.5.png": "35f64ab977673fb8c50df3c20af3c5bff32470d319d67c36e77518ef06675a51",
+      "sources/section-y12.png": "2adcdb2843aec7741582b66c0e07c3a6a955b5ea989eb2a9ec0a9c94e3004a83",
+      "sources/section-y7.png": "010bf57ad6582553c9cf903435bc324dd6629f191dd1ab16d90c258a4cca497d",
+      "sources/section-z-20.png": "4525f85f7d8aad2c964b1d88a2abe5ed4e5086bdff8103449b6e88ac4c28ab8b",
+      "sources/section-z0.png": "21d566609ed38ef40a873d62e8b99c37fb9ab24a897ebb55fc724db4aef8094a",
+      "sources/section-z17.png": "09015d9730b123e12ab2950371d63cd2cdcf87d9b8ff6fb5ea037df1333d5016",
+      "sources/top.png": "723eafa804a379697e33524c77c45951f601d3515f889ef73cd459437721c335"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-21T21:20:50Z",
+    "skillkat_version": "0.1.0",
+    "backend": "cadquery",
+    "engine_version": "2.8.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2848d707c592c1dc6c1668a3e9f19c078c8e084c",
+      "dirty": true
+    }
+  },
+  "backend": "cadquery"
+}

@@ -1,0 +1,68 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids
+Title: Create Solids
+
+# Create Solids
+
+Build solid bodies from sketches and section profiles in Zoo Design Studio.
+
+Create Solids covers the primary features used to generate solid bodies from sketch profiles,
+section transitions, and driven paths. These are usually the first operations that establish the core
+shape of a part.
+
+## Video Walkthrough
+
+<div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ position: 'relative', width: '100%', paddingBottom: '56.25%' }}>
+        <iframe
+            src="https://www.youtube.com/embed/KRYgKR6it60"
+            title="Extrude, Sweep, Loft, and Revolve in Zoo Design Studio"
+            allowFullScreen="allowfullscreen"
+            mozallowfullscreen="mozallowfullscreen"
+            msallowfullscreen="msallowfullscreen"
+            oallowfullscreen="oallowfullscreen"
+            webkitallowfullscreen="webkitallowfullscreen"
+            style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+            }}
+        />
+    </div>
+</div>
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/create-solids.webp"
+  alt="Solid body created from sketch-based features in Zoo Design Studio"
+  aspect="1934 / 2404"
+  maxHeightPx={640}
+/>
+
+## Choose a Tool
+
+### [Extrude](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/extrude)
+
+Best for prisms, bosses, pockets, and base bodies that extend from a sketch plane. Select the filled
+sketch region, then set a length or target face.
+
+### [Sweep](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/sweep)
+
+Best for pipes, rails, cable paths, and profiles that follow a guide curve. Select the filled profile
+region, then select each path segment one by one.
+
+### [Loft](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/loft)
+
+Best for tapered transitions and bodies that change section shape along their length. Select two or
+more filled sketch regions in order.
+
+### [Revolve](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/revolve)
+
+Best for turned parts, bottles, shafts, flanges, and rotationally symmetric bodies. Select the filled
+sketch region, then choose the revolve axis.
+
+## Selection Rule
+
+For the profile, select the filled region inside the sketch, not the sketch segment that outlines it.
+Sweep is the exception only for its path: the path is made from selected segments, and those segments
+must be selected individually because they are not chained automatically.

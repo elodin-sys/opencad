@@ -1,0 +1,332 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import upperMountHalfSpacing, upperMountZ, upperMountDiameter, upperMountLeftStartY, upperMountRightStartY, rearBoreEndY, auxLowerX, auxLowerZ, auxUpperX, auxUpperZ, auxBoreDiameter, auxLowerStartY, auxUpperStartY, lowerMountHalfSpacing, lowerMountZ, lowerMountDiameter, lowerMountBoreLength, backY, frontY, overallWidth, overallDepth, halfWidth, wallMinimum from "params.kcl"
+
+assert(upperMountDiameter, isGreaterThan = 0mm, error = "Upper mount bore must be positive.")
+assert(upperMountDiameter, isLessThan = upperMountHalfSpacing, error = "Upper mount bore must stay inside its half-spacing.")
+assert(upperMountLeftStartY, isLessThan = rearBoreEndY, error = "Left upper bore must start before its rear end.")
+assert(upperMountRightStartY, isLessThan = rearBoreEndY, error = "Right upper bore must start before its rear end.")
+assert(rearBoreEndY, isLessThan = backY, error = "Rear bore end must sit in front of the back datum.")
+assert(auxBoreDiameter, isGreaterThan = 0mm, error = "Auxiliary bore must be positive.")
+assert(auxLowerStartY, isLessThan = rearBoreEndY, error = "Lower aux bore must start before its rear end.")
+assert(auxUpperStartY, isLessThan = rearBoreEndY, error = "Upper aux bore must start before its rear end.")
+assert(lowerMountDiameter, isGreaterThan = 0mm, error = "Lower mount bore must be positive.")
+assert(lowerMountDiameter, isLessThan = lowerMountHalfSpacing, error = "Lower mount bore must stay inside its half-spacing.")
+assert(lowerMountBoreLength, isGreaterThan = 0mm, error = "Lower mount bore length must be positive.")
+assert(lowerMountBoreLength, isLessThan = overallDepth, error = "Lower mount bore must stay inside the envelope depth.")
+assert(frontY, isLessThan = backY, error = "Front face must stay forward of the back datum.")
+assert(wallMinimum, isGreaterThan = 0mm, error = "Wall minimum must be positive.")
+assert(overallWidth, isGreaterThan = 2 * halfWidth - 1mm, error = "Envelope width must cover both half-widths.")
+
+overrun = 0.03mm
+leftSeatY = -4.665mm
+leftRailX = -14.465mm
+leftSeatXOut = -21.0mm
+leftSeatZLo = 23.21mm
+leftSeatZHi = 51.21mm
+rightSeatY = -3.8mm
+rightSeatXIn = 12.95mm
+rightSeatXOut = 30.44mm
+rightSeatZLo = 15.0mm
+rightSeatZHi = 34.65mm
+blendAWellY = -6.184mm
+slotBlendRadius = 1.992mm
+lowerRightBossRadius = 3.2185mm
+bossBlendRadius = 4.0mm
+auxPilotExtra = 2.0mm
+upperLeftBossRadius = 5.7mm
+lowerLeftBossRadius = 4.7mm
+cavityBlendRadius = 8.0mm
+rearReliefRadius = 10.0mm
+obliqueRadius = 2.0mm
+pocketBorderX = 13.15mm
+
+fn boxAlongY(@x0, x1, z0, z1, yStart, yLength) {
+  plane = {
+    origin = { x = 0mm, y = yStart, z = 0mm },
+    xAxis = { x = 1, y = 0, z = 0 },
+    yAxis = { x = 0, y = 0, z = 1 }
+  }
+  profile = sketch(on = plane) {
+    south = line(start = [x0, z0], end = [x1, z0])
+    east = line(start = [x1, z0], end = [x1, z1])
+    north = line(start = [x1, z1], end = [x0, z1])
+    west = line(start = [x0, z1], end = [x0, z0])
+  }
+  tool = extrude(
+    region(segments = [profile.south, profile.east]),
+    length = yLength,
+    direction = [0, 1, 0],
+    method = NEW,
+  )
+  hide(profile)
+  return tool
+}
+
+fn cylinderAlongY(@cx, yStart, cz, rad, yLength) {
+  plane = {
+    origin = { x = cx, y = yStart, z = cz },
+    xAxis = { x = 1, y = 0, z = 0 },
+    yAxis = { x = 0, y = 0, z = 1 }
+  }
+  profile = sketch(on = plane) {
+    rim = circle(center = [0mm, 0mm], start = [rad, 0mm])
+  }
+  tool = extrude(
+    region(segments = [profile.rim]),
+    length = yLength,
+    direction = [0, 1, 0],
+    method = NEW,
+  )
+  hide(profile)
+  return tool
+}
+
+fn obliqueCutter(@px, py, pz, rad, halfLength, axisX, axisZ, tilt) {
+  raw = cylinderAlongY(
+    0mm,
+    yStart = -halfLength,
+    cz = 0mm,
+    rad = rad,
+    yLength = 2 * halfLength,
+  )
+  aimed = rotate(
+    raw,
+    axis = [axisX, 0, axisZ],
+    angle = tilt,
+    global = true,
+  )
+  return translate(
+    aimed,
+    x = px,
+    y = py,
+    z = pz,
+    global = true,
+  )
+}
+
+export fn rearInterface(@body) {
+  leftPocket = boxAlongY(
+    leftSeatXOut,
+    x1 = leftRailX,
+    z0 = leftSeatZLo,
+    z1 = leftSeatZHi,
+    yStart = leftSeatY - overrun,
+    yLength = backY - leftSeatY + 2 * overrun,
+  )
+  leftUpperBlend = cylinderAlongY(
+    -20.147mm,
+    yStart = leftSeatY - overrun,
+    cz = 41.463mm,
+    rad = slotBlendRadius,
+    yLength = backY - leftSeatY + 2 * overrun,
+  )
+  leftLowerBlend = cylinderAlongY(
+    -21.775mm,
+    yStart = leftSeatY - overrun,
+    cz = 27.388mm,
+    rad = slotBlendRadius,
+    yLength = backY - leftSeatY + 2 * overrun,
+  )
+  leftSlotTool = subtract(leftPocket, tools = [leftUpperBlend, leftLowerBlend])
+  afterLeft = subtract(body, tools = [leftSlotTool])
+
+  rightPocket = boxAlongY(
+    rightSeatXIn,
+    x1 = rightSeatXOut,
+    z0 = rightSeatZLo,
+    z1 = rightSeatZHi,
+    yStart = rightSeatY - overrun,
+    yLength = backY - rightSeatY + 2 * overrun,
+  )
+  lowerRightBoss = cylinderAlongY(
+    lowerMountHalfSpacing,
+    yStart = rightSeatY - overrun,
+    cz = lowerMountZ,
+    rad = lowerRightBossRadius,
+    yLength = backY - rightSeatY + 2 * overrun,
+  )
+  rightSeatTool = subtract(rightPocket, tools = [lowerRightBoss])
+  afterIsland = subtract(afterLeft, tools = [rightSeatTool])
+
+  rearRelief = cylinderAlongY(
+    18.491mm,
+    yStart = rightSeatY + 0.05mm,
+    cz = 17.626mm,
+    rad = rearReliefRadius,
+    yLength = 1.191mm,
+  )
+  reliefLimit = boxAlongY(
+    18.50mm,
+    x1 = 30.0mm,
+    z0 = 10.0mm,
+    z1 = 18.0mm,
+    yStart = rightSeatY + 0.05mm,
+    yLength = 1.191mm,
+  )
+  rearReliefTool = intersect([rearRelief, reliefLimit])
+  afterRelief = subtract(afterIsland, tools = [rearReliefTool])
+
+  leftUpperWell = boxAlongY(
+    -18.0mm,
+    x1 = leftRailX,
+    z0 = 51.55mm,
+    z1 = 58.60mm,
+    yStart = leftSeatY - overrun,
+    yLength = backY - leftSeatY + 2 * overrun,
+  )
+  upperLeftBoss = cylinderAlongY(
+    -upperMountHalfSpacing,
+    yStart = leftSeatY - overrun,
+    cz = upperMountZ,
+    rad = upperLeftBossRadius,
+    yLength = backY - leftSeatY + 2 * overrun,
+  )
+  leftUpperWellTool = subtract(leftUpperWell, tools = [upperLeftBoss])
+  afterUpperWell = subtract(afterRelief, tools = [leftUpperWellTool])
+
+  leftLowerWell = boxAlongY(
+    -20.0mm,
+    x1 = leftRailX,
+    z0 = 16.50mm,
+    z1 = 22.90mm,
+    yStart = leftSeatY - overrun,
+    yLength = backY - leftSeatY + 2 * overrun,
+  )
+  lowerLeftBoss = cylinderAlongY(
+    -lowerMountHalfSpacing,
+    yStart = leftSeatY - overrun,
+    cz = lowerMountZ,
+    rad = lowerLeftBossRadius,
+    yLength = backY - leftSeatY + 2 * overrun,
+  )
+  leftLowerWellTool = subtract(leftLowerWell, tools = [lowerLeftBoss])
+  afterLowerWell = subtract(afterUpperWell, tools = [leftLowerWellTool])
+
+  cavityPocket = boxAlongY(
+    pocketBorderX,
+    x1 = 18.70mm,
+    z0 = 36.0mm,
+    z1 = 45.50mm,
+    yStart = rightSeatY - overrun,
+    yLength = backY - rightSeatY + 2 * overrun,
+  )
+  cavityBlend = cylinderAlongY(
+    10.658mm,
+    yStart = rightSeatY - overrun,
+    cz = 40.871mm,
+    rad = cavityBlendRadius,
+    yLength = backY - rightSeatY + 2 * overrun,
+  )
+  cavityTool = subtract(cavityPocket, tools = [cavityBlend])
+  afterCavity = subtract(afterLowerWell, tools = [cavityTool])
+
+  obliqueA = obliqueCutter(
+    20.102mm,
+    py = -3.583mm,
+    pz = 15.573mm,
+    rad = obliqueRadius,
+    halfLength = 2.106mm + overrun,
+    axisX = 0.6853,
+    axisZ = -0.7282,
+    tilt = 50.726deg,
+  )
+  afterObliqueA = subtract(afterCavity, tools = [obliqueA])
+  obliqueB = obliqueCutter(
+    21.417mm,
+    py = -3.196mm,
+    pz = 14.219mm,
+    rad = obliqueRadius,
+    halfLength = 1.624mm + overrun,
+    axisX = 0.0964,
+    axisZ = -0.9954,
+    tilt = 52.615deg,
+  )
+  afterSeats = subtract(afterObliqueA, tools = [obliqueB])
+
+  upperLeftBore = cylinderAlongY(
+    -upperMountHalfSpacing,
+    yStart = upperMountLeftStartY,
+    cz = upperMountZ,
+    rad = upperMountDiameter / 2,
+    yLength = backY - upperMountLeftStartY + overrun,
+  )
+  upperRightBore = cylinderAlongY(
+    upperMountHalfSpacing,
+    yStart = upperMountRightStartY,
+    cz = upperMountZ,
+    rad = upperMountDiameter / 2,
+    yLength = backY - upperMountRightStartY + overrun,
+  )
+  afterUpper = subtract(afterSeats, tools = [upperLeftBore, upperRightBore])
+
+  auxLowerBore = cylinderAlongY(
+    auxLowerX,
+    yStart = auxLowerStartY,
+    cz = auxLowerZ,
+    rad = auxBoreDiameter / 2,
+    yLength = backY - auxLowerStartY + overrun,
+  )
+  auxUpperBore = cylinderAlongY(
+    auxUpperX,
+    yStart = auxUpperStartY,
+    cz = auxUpperZ,
+    rad = auxBoreDiameter / 2,
+    yLength = backY - auxUpperStartY + overrun,
+  )
+  afterAux = subtract(afterUpper, tools = [auxLowerBore, auxUpperBore])
+
+  lowerLeftBore = cylinderAlongY(
+    -lowerMountHalfSpacing,
+    yStart = -lowerMountBoreLength - overrun,
+    cz = lowerMountZ,
+    rad = lowerMountDiameter / 2,
+    yLength = lowerMountBoreLength + 2 * overrun,
+  )
+  lowerRightBore = cylinderAlongY(
+    lowerMountHalfSpacing,
+    yStart = -lowerMountBoreLength - overrun,
+    cz = lowerMountZ,
+    rad = lowerMountDiameter / 2,
+    yLength = lowerMountBoreLength + 2 * overrun,
+  )
+  afterLower = subtract(afterAux, tools = [lowerLeftBore, lowerRightBore])
+
+  auxHalf = 1.45mm
+  auxLowerPilot = boxAlongY(
+    auxLowerX - auxHalf,
+    x1 = auxLowerX + auxHalf,
+    z0 = auxLowerZ - auxHalf,
+    z1 = auxLowerZ + auxHalf,
+    yStart = auxLowerStartY - auxPilotExtra,
+    yLength = auxPilotExtra + overrun,
+  )
+  auxUpperPilot = boxAlongY(
+    auxUpperX - auxHalf,
+    x1 = auxUpperX + auxHalf,
+    z0 = auxUpperZ - auxHalf,
+    z1 = auxUpperZ + auxHalf,
+    yStart = auxUpperStartY - auxPilotExtra,
+    yLength = auxPilotExtra + overrun,
+  )
+  afterPilots = subtract(afterLower, tools = [auxLowerPilot, auxUpperPilot])
+
+  accessHalf = 1.7mm
+  accessLeft = boxAlongY(
+    -lowerMountHalfSpacing - accessHalf,
+    x1 = -lowerMountHalfSpacing + accessHalf,
+    z0 = lowerMountZ - accessHalf,
+    z1 = lowerMountZ + accessHalf,
+    yStart = frontY,
+    yLength = -frontY - 8.0mm,
+  )
+  accessRight = boxAlongY(
+    lowerMountHalfSpacing - accessHalf,
+    x1 = lowerMountHalfSpacing + accessHalf,
+    z0 = lowerMountZ - accessHalf,
+    z1 = lowerMountZ + accessHalf,
+    yStart = frontY,
+    yLength = -frontY - 8.0mm,
+  )
+  return subtract(afterPilots, tools = [accessLeft, accessRight])
+}

@@ -1,0 +1,85 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/loft
+Title: Loft Surface
+
+# Loft Surface
+
+Loft surface sections with the Loft Surface tool in Zoo Design Studio.
+
+Use the same Loft tool used in
+[Loft Solid](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/loft),
+then set `bodyType` to `surface` to blend between section profiles as an open surface instead of a
+closed solid. This is useful for fairings, covers, and transitional shapes that should remain
+editable as surface geometry rather than closing into a solid.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/loft/loft-surface.gif"
+  alt="Surface loft workflow in Zoo Design Studio"
+  aspect="1512 / 948"
+  maxWidthPx="800"
+/>
+
+## Body Type
+
+The `bodyType` parameter controls whether Loft creates a solid body or a surface body. Set
+`bodyType` to `surface` when you want a shell with no thickness instead of a solid body. This is
+the same Body Type behavior described in the solid Loft workflow, the difference is simply that this
+surface page is focused on the surface output mode.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/loft/loft.webp"
+  alt="Loft tool with bodyType set to surface in Zoo Design Studio"
+  aspect="1820 / 1274"
+  maxHeightPx={800}
+/>
+
+## Selection
+
+Choose a sketch segment when the surface should use a single edge as its profile. If the sketch
+forms a closed region, choose the region to use the full enclosed profile instead.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/loft/select-segment.webp"
+  alt="Loft surface with a selected segment"
+  aspect="1820 / 1274"
+  maxHeightPx={400}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Selected sketch segment
+</div>
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/loft/select-region.webp"
+  alt="Loft surface with a selected region"
+  aspect="1820 / 1274"
+  maxHeightPx={400}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Selected sketch region
+</div>
+
+## Other Parameters
+
+All other Loft parameters, such as `Sketches`, `Surface Degree (V-Direction)`,
+`Bezier Approximation`, `Base Curve Index`, and `Start Tag / End Tag`, work the same way as they do in
+[Loft Solid](/docs/zoo-design-studio/features/3d-design/parametric-modeling/solid-modeling/create-solids/loft).
+For the full parameter reference, visit the solid modeling section.
+
+## Are you interested in code?
+
+Zoo Design Studio writes KCL behind the scenes. A surface loft is just a `loft` call with `bodyType = SURFACE`, applied to multiple sketches.
+
+```kcl
+sketch1 = sketch(on = -XY) {
+  arc(start = [var 2mm, var -7mm], end = [var 13mm, var -7mm], center = [var 7mm, var -6mm])
+}
+
+sketch2 = sketch(on = XZ) {
+  arc(start = [var -16mm, var 18mm], end = [var -16mm, var 6mm], center = [var -16mm, var 10mm])
+}
+
+sketch3 = sketch(on = XY) {
+  arc(start = [var 4mm, var 16mm], end = [var -10mm, var 19mm], center = [var -3mm, var 17mm])
+}
+loftSurface = loft([sketch1, sketch2, sketch3], bodyType = SURFACE)
+```
+
+Want to find out more about the `loft` function? [Check it out](/docs/kcl-std/functions/std-sketch-loft) in our KCL docs.

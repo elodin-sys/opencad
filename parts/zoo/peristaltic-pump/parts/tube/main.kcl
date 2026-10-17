@@ -1,0 +1,62 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+tubeOuterDiameter = 3mm
+tubeInnerDiameter = 1mm
+trackRadius = 12.17mm
+centrelineRadius = 10.67mm
+bendAngle = 180deg
+legLength = 30mm
+
+// Nominal centrelineRadius = trackRadius - tubeOuterDiameter / 2.
+// Datum A: z=0; datum B: the z axis; datum C: y=0.
+outerRadius = tubeOuterDiameter / 2
+assert(tubeOuterDiameter, isGreaterThan = 0mm, error = "The outside diameter must be positive.")
+assert(tubeInnerDiameter, isGreaterThan = 0mm, error = "The bore diameter must be positive.")
+assert(tubeInnerDiameter, isLessThan = tubeOuterDiameter, error = "The bore must leave a positive wall.")
+assert(trackRadius, isGreaterThan = tubeOuterDiameter, error = "The track must clear the tube diameter.")
+assert(centrelineRadius, isGreaterThan = outerRadius, error = "The bend must not intersect itself.")
+assert(centrelineRadius, isLessThan = trackRadius, error = "The centreline must lie inside the track.")
+assert(bendAngle, isGreaterThan = 0deg, error = "The bend angle must be positive.")
+assert(bendAngle, isLessThan = 360deg, error = "The bend must leave two distinct tangent ends.")
+assert(legLength, isGreaterThan = 0mm, error = "Each straight leg must have positive length.")
+
+// The annular region follows the tangent line/arc/line centreline.
+// The circular arc produces the toroidal bend; straight spans produce cylinders.
+inletX = (centrelineRadius * sin(bendAngle)): mm
+inletY = (-centrelineRadius * cos(bendAngle)): mm
+inletEndX = inletX + (legLength * cos(bendAngle)): mm
+inletEndY = inletY + (legLength * sin(bendAngle)): mm
+centreline = sketch(on = XY) {
+  outletLine = line(start = [-legLength, -centrelineRadius], end = [0mm, -centrelineRadius])
+  bendArc = arc(start = [0mm, -centrelineRadius], end = [inletX, inletY], center = [0mm, 0mm])
+  inletLine = line(start = [inletX, inletY], end = [inletEndX, inletEndY])
+}
+sectionPlane = offsetPlane(YZ, offset = -legLength)
+sectionSketch = sketch(on = sectionPlane) {
+  outside = circle(start = [var -10.67mm, var 1.5mm], center = [var -10.67mm, var 0mm])
+  inside = circle(start = [var -10.67mm, var 0.5mm], center = [var -10.67mm, var 0mm])
+  coincident([
+    outside.center,
+    [-centrelineRadius, 0mm]
+  ])
+  coincident([inside.center, outside.center])
+  vertical([outside.start, outside.center])
+  vertical([inside.start, inside.center])
+  diameter(outside) == tubeOuterDiameter
+  diameter(inside) == tubeInnerDiameter
+}
+// region detects the inner circle as a hole in the outer loop.
+annulus = region(segments = [sectionSketch.outside])
+tube = sweep(
+  annulus,
+  path = [
+    centreline.outletLine,
+    centreline.bendArc,
+    centreline.inletLine
+  ],
+  sectional = true,
+  tagStart = $outlet,
+  tagEnd = $inlet,
+)
+hide([sectionPlane, YZ, XY])
+tube

@@ -1,0 +1,1413 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// NIST AM test artifact. Datum A is z=0; all dimensions are editable.
+// Literal contract parameters; derived reference sizes are used only for clearance checks.
+baseSide = 100mm
+baseRotation = 45deg
+baseThickness = 10mm
+baseHalfDiagonal = 70.71067811865474mm
+mainPinDiameter = 4mm
+mainPinHeight = 7mm
+pinFirstRadius = 20mm
+pinPitch = 10mm
+pinsPerArm = 4
+mainHoleDiameter = 4mm
+mainHoleRadius = 60mm
+centerHoleDiameter = 10mm
+lowerBossDiameter = 20mm
+lowerBossHeight = 4mm
+upperBossDiameter = 15mm
+upperBossHeight = 3mm
+stairInnerOffset = 12mm
+stairTread = 10mm
+stairFirstHeight = 3mm
+stairIncrement = 1mm
+rampLowHeight = 1mm
+rampRise = 1mm
+rampRun = 25mm
+rampLanding = 2.5mm
+rampWidth = 5mm
+rampStartRadius = 15mm
+fineHeightDepth = 2mm
+fineSizeA = 2mm
+fineSizeB = 1.5mm
+fineSizeC = 1mm
+fineSizeD = 0.5mm
+fineSizeE = 0.25mm
+fineFirstX = 28.284mm
+fineFirstY = 21.213mm
+finePitch = 5mm
+rectOuterInset = 1mm
+rectLengthRatio = 3
+rectStartV1 = 2mm
+rectStartV2 = 6mm
+rectStartV3 = 11mm
+rectStartV4 = 14mm
+rectStartV5 = 17.5mm
+rectStartV6 = 19.5mm
+rectStartV7 = 22mm
+rectStartV8 = 23mm
+rectStartV9 = 24.5mm
+rectStartV10 = 25mm
+lateralCenterZ = -5mm
+lateralFirstStation = 40mm
+lateralPitch = 10mm
+lateralSmallDiameter = 3mm
+lateralSmallDepth = 3mm
+lateralLargeDiameter = 6mm
+lateralLargeDepth = 5mm
+lateralSmallSquare = 3mm
+lateralLargeSquare = 6mm
+lateralSmallDiamond = 3mm
+lateralSmallDiamondDepth = 3mm
+lateralLargeDiamond = 6mm
+lateralTallHeight = 6mm
+lateralWideHeight = 4mm
+lateralApexAngle = 60deg
+lateralTallWidth = 3.4641016151377535mm
+lateralWideWidth = 6.9282032302755105mm
+
+// Scalar diagonal coordinates: eu cross ev = -Z.
+eu = [
+  cos(baseRotation),
+  sin(baseRotation),
+  0
+]
+ev = [
+  sin(baseRotation),
+  -cos(baseRotation),
+  0
+]
+epsilon = fineSizeE / 10
+halfSide = baseSide / 2
+
+fn xy(@u, v) {
+  return [
+    u * eu[0] + v * ev[0],
+    u * eu[1] + v * ev[1]
+  ]
+}
+
+// Sanity and clearance guards; no equality locks between contract parameters.
+assert(
+  min([
+    baseSide,
+    baseThickness,
+    baseHalfDiagonal,
+    mainPinDiameter,
+    mainPinHeight,
+    pinFirstRadius,
+    pinPitch,
+    mainHoleDiameter,
+    mainHoleRadius,
+    centerHoleDiameter,
+    lowerBossDiameter,
+    lowerBossHeight,
+    upperBossDiameter,
+    upperBossHeight,
+    stairInnerOffset,
+    stairTread,
+    stairFirstHeight,
+    stairIncrement,
+    rampLowHeight,
+    rampRise,
+    rampRun,
+    rampLanding,
+    rampWidth,
+    rampStartRadius,
+    fineHeightDepth,
+    fineSizeA,
+    fineSizeB,
+    fineSizeC,
+    fineSizeD,
+    fineSizeE,
+    fineFirstX,
+    fineFirstY,
+    finePitch,
+    rectOuterInset,
+    rectStartV1,
+    rectStartV2,
+    rectStartV3,
+    rectStartV4,
+    rectStartV5,
+    rectStartV6,
+    rectStartV7,
+    rectStartV8,
+    rectStartV9,
+    rectStartV10,
+    lateralFirstStation,
+    lateralPitch,
+    lateralSmallDiameter,
+    lateralSmallDepth,
+    lateralLargeDiameter,
+    lateralLargeDepth,
+    lateralSmallSquare,
+    lateralLargeSquare,
+    lateralSmallDiamond,
+    lateralSmallDiamondDepth,
+    lateralLargeDiamond,
+    lateralTallHeight,
+    lateralWideHeight,
+    lateralTallWidth,
+    lateralWideWidth
+  ]),
+  isGreaterThan = 0mm,
+  error = "Dimensions and reference clearances must be positive",
+)
+assert(pinsPerArm, isGreaterThan = 0, error = "Each pin arm needs at least one pin")
+assertIs(pinsPerArm == floor(pinsPerArm), error = "pinsPerArm must be integral")
+assert(rectLengthRatio, isGreaterThan = 0)
+assert(baseRotation, isGreaterThan = 0deg, isLessThan = 90deg)
+assert(lateralApexAngle, isGreaterThan = 0deg, isLessThan = 90deg)
+assert(lowerBossDiameter, isGreaterThan = upperBossDiameter)
+assert(upperBossDiameter, isGreaterThan = centerHoleDiameter)
+assert(baseThickness, isGreaterThan = stairFirstHeight + 4 * stairIncrement)
+assert(baseThickness, isGreaterThan = fineHeightDepth)
+assert(mainPinDiameter, isLessThan = pinPitch)
+assert(pinFirstRadius - (mainPinDiameter / 2), isGreaterThan = lowerBossDiameter / 2)
+assert(pinFirstRadius + (pinsPerArm - 1) * pinPitch + mainPinDiameter / 2, isLessThan = mainHoleRadius - (mainHoleDiameter / 2))
+// The three rounded derived constants are references, never independent shape drivers.
+assert(baseHalfDiagonal, isGreaterThan = mainHoleRadius + mainHoleDiameter / 2)
+assert(baseHalfDiagonal, isGreaterThan = stairInnerOffset + 3 * stairTread)
+assert(max([lateralTallWidth, lateralWideWidth]), isLessThan = lateralPitch)
+assert(rampStartRadius, isGreaterThan = lowerBossDiameter / 2)
+assert(rampStartRadius + rampRun + 2 * rampLanding, isLessThan = halfSide)
+assert(rampWidth / 2, isLessThan = halfSide)
+assert(rectOuterInset + rectLengthRatio * fineSizeA, isLessThan = halfSide)
+assert(finePitch, isGreaterThan = fineSizeA)
+assert(fineSizeA, isGreaterThan = fineSizeB)
+assert(fineSizeB, isGreaterThan = fineSizeC)
+assert(fineSizeC, isGreaterThan = fineSizeD)
+assert(fineSizeD, isGreaterThan = fineSizeE)
+assert(lowerBossDiameter / 2, isLessThan = halfSide)
+axisProjection = max([
+  abs(eu[0]),
+  abs(eu[1]),
+  abs(ev[0]),
+  abs(ev[1])
+])
+assert(mainHoleRadius * axisProjection + mainHoleDiameter / 2, isLessThan = halfSide)
+assert((pinFirstRadius + (pinsPerArm - 1) * pinPitch) * axisProjection + mainPinDiameter / 2, isLessThan = halfSide)
+fn containedXy(@point, padding) {
+  assert(abs(point[0] * eu[0] + point[1] * eu[1]) + padding, isLessThan = halfSide)
+  assert(abs(point[0] * ev[0] + point[1] * ev[1]) + padding, isLessThan = halfSide)
+  return 0
+}
+containedXy(
+  [
+    -stairInnerOffset - (3 * stairTread),
+    stairInnerOffset
+  ],
+  padding = 0mm,
+)
+containedXy(
+  [
+    -stairInnerOffset - (3 * stairTread),
+    -stairInnerOffset
+  ],
+  padding = 0mm,
+)
+containedXy([-stairInnerOffset, stairInnerOffset], padding = 0mm)
+containedXy([-stairInnerOffset, -stairInnerOffset], padding = 0mm)
+containedXy(
+  [
+    -stairInnerOffset,
+    stairInnerOffset + 3 * stairTread
+  ],
+  padding = 0mm,
+)
+containedXy(
+  [
+    -stairInnerOffset,
+    -(stairInnerOffset + 3 * stairTread)
+  ],
+  padding = 0mm,
+)
+containedXy(
+  [
+    -stairInnerOffset - stairTread,
+    stairInnerOffset + 3 * stairTread
+  ],
+  padding = 0mm,
+)
+containedXy(
+  [
+    -stairInnerOffset - stairTread,
+    -(stairInnerOffset + 3 * stairTread)
+  ],
+  padding = 0mm,
+)
+containedXy(
+  [
+    -stairInnerOffset - stairTread,
+    stairInnerOffset + stairTread
+  ],
+  padding = 0mm,
+)
+containedXy(
+  [
+    -stairInnerOffset - stairTread,
+    -(stairInnerOffset + stairTread)
+  ],
+  padding = 0mm,
+)
+containedXy(
+  [
+    -stairInnerOffset - (3 * stairTread),
+    stairInnerOffset + stairTread
+  ],
+  padding = 0mm,
+)
+containedXy(
+  [
+    -stairInnerOffset - (3 * stairTread),
+    -(stairInnerOffset + stairTread)
+  ],
+  padding = 0mm,
+)
+containedXy(
+  [
+    fineFirstX + 0 * finePitch * ev[0],
+    fineFirstY + 0 * finePitch * ev[1]
+  ],
+  padding = fineSizeA / 2,
+)
+containedXy(
+  [
+    fineFirstX + 1 * finePitch * ev[0],
+    fineFirstY + 1 * finePitch * ev[1]
+  ],
+  padding = fineSizeB / 2,
+)
+containedXy(
+  [
+    fineFirstX + 2 * finePitch * ev[0],
+    fineFirstY + 2 * finePitch * ev[1]
+  ],
+  padding = fineSizeC / 2,
+)
+containedXy(
+  [
+    fineFirstX + 3 * finePitch * ev[0],
+    fineFirstY + 3 * finePitch * ev[1]
+  ],
+  padding = fineSizeD / 2,
+)
+containedXy(
+  [
+    fineFirstX + 4 * finePitch * ev[0],
+    fineFirstY + 4 * finePitch * ev[1]
+  ],
+  padding = fineSizeE / 2,
+)
+assert(rectStartV1 + fineSizeA, isLessThan = halfSide)
+assert(rectStartV2, isGreaterThan = rectStartV1 + fineSizeA)
+assert(rectStartV2 + fineSizeA, isLessThan = halfSide)
+assert(rectStartV3, isGreaterThan = rectStartV2 + fineSizeA)
+assert(rectStartV3 + fineSizeB, isLessThan = halfSide)
+assert(rectStartV4, isGreaterThan = rectStartV3 + fineSizeB)
+assert(rectStartV4 + fineSizeB, isLessThan = halfSide)
+assert(rectStartV5, isGreaterThan = rectStartV4 + fineSizeB)
+assert(rectStartV5 + fineSizeC, isLessThan = halfSide)
+assert(rectStartV6, isGreaterThan = rectStartV5 + fineSizeC)
+assert(rectStartV6 + fineSizeC, isLessThan = halfSide)
+assert(rectStartV7, isGreaterThan = rectStartV6 + fineSizeC)
+assert(rectStartV7 + fineSizeD, isLessThan = halfSide)
+assert(rectStartV8, isGreaterThan = rectStartV7 + fineSizeD)
+assert(rectStartV8 + fineSizeD, isLessThan = halfSide)
+assert(rectStartV9, isGreaterThan = rectStartV8 + fineSizeD)
+assert(rectStartV9 + fineSizeE, isLessThan = halfSide)
+assert(rectStartV10, isGreaterThan = rectStartV9 + fineSizeE)
+assert(rectStartV10 + fineSizeE, isLessThan = halfSide)
+assert(abs(lateralFirstStation - (0 * lateralPitch)) + lateralSmallDiameter / 2, isLessThan = halfSide)
+assert(lateralCenterZ + lateralSmallDiameter / 2, isLessThan = 0mm)
+assert(lateralCenterZ - (lateralSmallDiameter / 2), isGreaterThan = -baseThickness)
+assert(lateralSmallDepth, isLessThan = halfSide)
+assert(lateralPitch, isGreaterThan = (lateralSmallDiameter + lateralSmallSquare) / 2)
+assert(abs(lateralFirstStation - (1 * lateralPitch)) + lateralSmallSquare / 2, isLessThan = halfSide)
+assert(lateralCenterZ + lateralSmallSquare / 2, isLessThan = 0mm)
+assert(lateralCenterZ - (lateralSmallSquare / 2), isGreaterThan = -baseThickness)
+assert(lateralSmallDepth, isLessThan = halfSide)
+assert(lateralPitch, isGreaterThan = (lateralSmallSquare + lateralSmallDiamond) / 2)
+assert(abs(lateralFirstStation - (2 * lateralPitch)) + lateralSmallDiamond / 2, isLessThan = halfSide)
+assert(lateralCenterZ + lateralSmallDiamond / 2, isLessThan = 0mm)
+assert(lateralCenterZ - (lateralSmallDiamond / 2), isGreaterThan = -baseThickness)
+assert(lateralSmallDiamondDepth, isLessThan = halfSide)
+assert(lateralPitch, isGreaterThan = (lateralSmallDiamond + lateralLargeDiameter) / 2)
+assert(abs(lateralFirstStation - (3 * lateralPitch)) + lateralLargeDiameter / 2, isLessThan = halfSide)
+assert(lateralCenterZ + lateralLargeDiameter / 2, isLessThan = 0mm)
+assert(lateralCenterZ - (lateralLargeDiameter / 2), isGreaterThan = -baseThickness)
+assert(lateralLargeDepth, isLessThan = halfSide)
+assert(lateralPitch, isGreaterThan = (lateralLargeDiameter + lateralLargeSquare) / 2)
+assert(abs(lateralFirstStation - (4 * lateralPitch)) + lateralLargeSquare / 2, isLessThan = halfSide)
+assert(lateralCenterZ + lateralLargeSquare / 2, isLessThan = 0mm)
+assert(lateralCenterZ - (lateralLargeSquare / 2), isGreaterThan = -baseThickness)
+assert(lateralLargeDepth, isLessThan = halfSide)
+assert(lateralPitch, isGreaterThan = (lateralLargeSquare + lateralLargeDiamond) / 2)
+assert(abs(lateralFirstStation - (5 * lateralPitch)) + lateralLargeDiamond / 2, isLessThan = halfSide)
+assert(lateralCenterZ + lateralLargeDiamond / 2, isLessThan = 0mm)
+assert(lateralCenterZ - (lateralLargeDiamond / 2), isGreaterThan = -baseThickness)
+assert(lateralLargeDepth, isLessThan = halfSide)
+assert(lateralPitch, isGreaterThan = (lateralLargeDiamond + lateralTallHeight * tan(lateralApexAngle / 2)) / 2)
+assert(abs(lateralFirstStation - (6 * lateralPitch)) + lateralTallHeight * tan(lateralApexAngle / 2) / 2, isLessThan = halfSide)
+assert(lateralCenterZ + lateralTallHeight / 2, isLessThan = 0mm)
+assert(lateralCenterZ - (lateralTallHeight / 2), isGreaterThan = -baseThickness)
+assert(lateralLargeDepth, isLessThan = halfSide)
+assert(lateralPitch, isGreaterThan = (lateralTallHeight * tan(lateralApexAngle / 2) + lateralWideHeight / tan(lateralApexAngle / 2)) / 2)
+assert(abs(lateralFirstStation - (7 * lateralPitch)) + lateralWideHeight / tan(lateralApexAngle / 2) / 2, isLessThan = halfSide)
+assert(lateralCenterZ + lateralWideHeight / 2, isLessThan = 0mm)
+assert(lateralCenterZ - (lateralWideHeight / 2), isGreaterThan = -baseThickness)
+assert(lateralLargeDepth, isLessThan = halfSide)
+
+// Step 1: local square, transformed into the diamond's exact datum plane.
+// Compact local coordinates avoid inflated raw-sketch bounds in the CLI.
+basePlane = {
+  origin = { x = 0mm, y = 0mm, z = 0mm },
+  xAxis = { x = eu[0], y = eu[1], z = 0 },
+  yAxis = { x = -ev[0], y = -ev[1], z = 0 }
+}
+baseSketch = sketch(on = basePlane) {
+  sideNorthEast = line(start = [halfSide, -halfSide], end = [halfSide, halfSide])
+  sideNorthWest = line(start = [halfSide, halfSide], end = [-halfSide, halfSide])
+  sideSouthWest = line(start = [-halfSide, halfSide], end = [-halfSide, -halfSide])
+  sideSouthEast = line(start = [-halfSide, -halfSide], end = [halfSide, -halfSide])
+}
+baseRegion = region(segments = [
+  baseSketch.sideNorthEast,
+  baseSketch.sideNorthWest
+])
+diamondBase = extrude(
+  baseRegion,
+  length = -baseThickness,
+  tagStart = $baseBottom,
+  tagEnd = $datumA,
+)
+
+// Convert a global XY point into the queried horizontal face's local coordinates.
+fn faceXy(@point, plane) {
+  dx = point[0] - plane.origin[0]
+  dy = point[1] - plane.origin[1]
+  return [
+    (dx * plane.xAxis[0] + dy * plane.xAxis[1]): mm,
+    (dx * plane.yAxis[0] + dy * plane.yAxis[1]): mm
+  ]
+}
+
+// Step 2: central bosses, merged by native face extrusion.
+aPlane = planeOf(diamondBase, face = datumA)
+lowerSketch = sketch(on = faceOf(diamondBase, face = datumA)) {
+  lowerCircle = circle(center = faceXy([0mm, 0mm], plane = aPlane), start = faceXy([lowerBossDiameter / 2, 0mm], plane = aPlane))
+}
+lowerRegion = region(segments = [lowerSketch.lowerCircle])
+withLowerBoss = extrude(lowerRegion, length = lowerBossHeight, tagEnd = $lowerBossCap)
+upperPlane = planeOf(withLowerBoss, face = lowerBossCap)
+upperSketch = sketch(on = faceOf(withLowerBoss, face = lowerBossCap)) {
+  upperCircle = circle(center = faceXy([0mm, 0mm], plane = upperPlane), start = faceXy([upperBossDiameter / 2, 0mm], plane = upperPlane))
+}
+upperRegion = region(segments = [upperSketch.upperCircle])
+withCentralBosses = extrude(upperRegion, length = upperBossHeight, tagEnd = $upperBossCap)
+centerBoreSketch = sketch(on = offsetPlane(XY, offset = -baseThickness - epsilon)) {
+  centerBore = circle(center = [0mm, 0mm], start = [centerHoleDiameter / 2, 0mm])
+}
+centerBoreRegion = region(segments = [centerBoreSketch.centerBore])
+centerBoreTool = extrude(centerBoreRegion, length = baseThickness + lowerBossHeight + upperBossHeight + 2 * epsilon)
+withCenterBore = subtract(withCentralBosses, tools = [centerBoreTool])
+
+// Step 3: the +X datum hole and its three axis companions.
+mainHoleSketch = sketch(on = offsetPlane(XY, offset = -baseThickness - epsilon)) {
+  datumC = circle(
+    center = [mainHoleRadius, 0mm],
+    start = [
+      mainHoleRadius + mainHoleDiameter / 2,
+      0mm
+    ],
+  )
+}
+mainHoleRegion = region(segments = [mainHoleSketch.datumC])
+mainHoleTool = extrude(mainHoleRegion, length = baseThickness + 2 * epsilon)
+mainHoleTools = patternCircular3d(
+  mainHoleTool,
+  instances = 4,
+  axis = Z,
+  center = [0mm, 0mm, 0mm],
+  arcDegrees = 360deg,
+)
+withDatumHoles = subtract(withCenterBore, tools = mainHoleTools)
+hide([
+  baseRegion,
+  lowerRegion,
+  upperRegion,
+  centerBoreRegion,
+  mainHoleRegion
+])
+hide([aPlane, upperPlane, basePlane, XY])
+
+// Step 4: pattern only the small pin body, never the plate.
+mainPinSketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  mainPin = circle(
+    center = [pinFirstRadius, 0mm],
+    start = [
+      pinFirstRadius + mainPinDiameter / 2,
+      0mm
+    ],
+  )
+}
+mainPinRegion = region(segments = [mainPinSketch.mainPin])
+mainPinSeed = extrude(mainPinRegion, length = mainPinHeight + epsilon, tagEnd = $mainPinCap)
+pinArm = patternLinear3d(
+  mainPinSeed,
+  instances = pinsPerArm,
+  distance = pinPitch,
+  axis = X,
+)
+mainPins = patternCircular3d(
+  pinArm,
+  instances = 4,
+  axis = Z,
+  center = [0mm, 0mm, 0mm],
+  arcDegrees = 360deg,
+)
+withMainPins = union(concat([withDatumHoles], items = mainPins))
+hide(mainPinRegion)
+
+// Steps 5 and 6: construct each L as one prism and trim four end bands.
+// The full-prism method avoids native layered extrusions leaving contact solids.
+a = stairInnerOffset
+t = stairTread
+stairTop = stairFirstHeight + 4 * stairIncrement
+raisedStairBlankSketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = [-a - (3 * t), a], end = [-a, a])
+  edge2 = line(start = [-a, a], end = [-a, a + 3 * t])
+  edge3 = line(start = [-a, a + 3 * t], end = [-a - t, a + 3 * t])
+  edge4 = line(start = [-a - t, a + 3 * t], end = [-a - t, a + t])
+  edge5 = line(start = [-a - t, a + t], end = [-a - (3 * t), a + t])
+  edge6 = line(start = [-a - (3 * t), a + t], end = [-a - (3 * t), a])
+}
+raisedStairBlankRegion = region(segments = [
+  raisedStairBlankSketch.edge1,
+  raisedStairBlankSketch.edge2
+])
+raisedStairBlank = extrude(raisedStairBlankRegion, length = stairTop + epsilon, tagEnd = $raisedElbowCap)
+raisedTrimOuterxSketch = sketch(on = offsetPlane(XY, offset = stairFirstHeight + 0 * stairIncrement)) {
+  edge1 = line(start = [-a - (3 * t) - epsilon, a - epsilon], end = [-a - (2 * t), a - epsilon])
+  edge2 = line(start = [-a - (2 * t), a - epsilon], end = [-a - (2 * t), a + t + epsilon])
+  edge3 = line(
+    start = [-a - (2 * t), a + t + epsilon],
+    end = [
+      -a - (3 * t) - epsilon,
+      a + t + epsilon
+    ],
+  )
+  edge4 = line(
+    start = [
+      -a - (3 * t) - epsilon,
+      a + t + epsilon
+    ],
+    end = [-a - (3 * t) - epsilon, a - epsilon],
+  )
+}
+raisedTrimOuterxRegion = region(segments = [
+  raisedTrimOuterxSketch.edge1,
+  raisedTrimOuterxSketch.edge2
+])
+raisedTrimOuterxTool = extrude(raisedTrimOuterxRegion, length = 4 * stairIncrement + epsilon)
+raisedStairTrim1 = subtract(raisedStairBlank, tools = [raisedTrimOuterxTool])
+raisedTrimOuterySketch = sketch(on = offsetPlane(XY, offset = stairFirstHeight + 1 * stairIncrement)) {
+  edge1 = line(start = [-a - t - epsilon, a + 2 * t], end = [-a + epsilon, a + 2 * t])
+  edge2 = line(start = [-a + epsilon, a + 2 * t], end = [-a + epsilon, a + 3 * t + epsilon])
+  edge3 = line(start = [-a + epsilon, a + 3 * t + epsilon], end = [-a - t - epsilon, a + 3 * t + epsilon])
+  edge4 = line(start = [-a - t - epsilon, a + 3 * t + epsilon], end = [-a - t - epsilon, a + 2 * t])
+}
+raisedTrimOuteryRegion = region(segments = [
+  raisedTrimOuterySketch.edge1,
+  raisedTrimOuterySketch.edge2
+])
+raisedTrimOuteryTool = extrude(raisedTrimOuteryRegion, length = 3 * stairIncrement + epsilon)
+raisedStairTrim2 = subtract(raisedStairTrim1, tools = [raisedTrimOuteryTool])
+raisedTrimMiddlexSketch = sketch(on = offsetPlane(XY, offset = stairFirstHeight + 2 * stairIncrement)) {
+  edge1 = line(start = [-a - (3 * t) - epsilon, a - epsilon], end = [-a - t, a - epsilon])
+  edge2 = line(start = [-a - t, a - epsilon], end = [-a - t, a + t])
+  edge3 = line(start = [-a - t, a + t], end = [-a - t - epsilon, a + t + epsilon])
+  edge4 = line(
+    start = [-a - t - epsilon, a + t + epsilon],
+    end = [
+      -a - (3 * t) - epsilon,
+      a + t + epsilon
+    ],
+  )
+  edge5 = line(
+    start = [
+      -a - (3 * t) - epsilon,
+      a + t + epsilon
+    ],
+    end = [-a - (3 * t) - epsilon, a - epsilon],
+  )
+}
+raisedTrimMiddlexRegion = region(segments = [
+  raisedTrimMiddlexSketch.edge1,
+  raisedTrimMiddlexSketch.edge2
+])
+raisedTrimMiddlexTool = extrude(raisedTrimMiddlexRegion, length = 2 * stairIncrement + epsilon)
+raisedStairTrim3 = subtract(raisedStairTrim2, tools = [raisedTrimMiddlexTool])
+raisedTrimMiddleySketch = sketch(on = offsetPlane(XY, offset = stairFirstHeight + 3 * stairIncrement)) {
+  edge1 = line(start = [-a - (3 * t) - epsilon, a + t], end = [-a + epsilon, a + t])
+  edge2 = line(start = [-a + epsilon, a + t], end = [-a + epsilon, a + 3 * t + epsilon])
+  edge3 = line(
+    start = [-a + epsilon, a + 3 * t + epsilon],
+    end = [
+      -a - (3 * t) - epsilon,
+      a + 3 * t + epsilon
+    ],
+  )
+  edge4 = line(
+    start = [
+      -a - (3 * t) - epsilon,
+      a + 3 * t + epsilon
+    ],
+    end = [-a - (3 * t) - epsilon, a + t],
+  )
+}
+raisedTrimMiddleyRegion = region(segments = [
+  raisedTrimMiddleySketch.edge1,
+  raisedTrimMiddleySketch.edge2
+])
+raisedTrimMiddleyTool = extrude(raisedTrimMiddleyRegion, length = 1 * stairIncrement + epsilon)
+raisedStairTrim4 = subtract(raisedStairTrim3, tools = [raisedTrimMiddleyTool])
+// Reflect the completed tool across y=0 and z=0 in one proper rotation.
+recessedStairTool = clone(raisedStairTrim4)
+  |> rotate(roll = 180deg)
+withRaisedStair = union([withMainPins, raisedStairTrim4])
+withStaircases = subtract(withRaisedStair, tools = [recessedStairTool])
+hide([
+  raisedStairBlankRegion,
+  raisedTrimOuterxRegion,
+  raisedTrimOuteryRegion,
+  raisedTrimMiddlexRegion,
+  raisedTrimMiddleyRegion
+])
+
+// Step 7: exact ramp side section. Axes (ev,+Z) have normal -eu.
+r0 = rampStartRadius
+r1 = r0 + rampLanding
+r2 = r1 + rampRun
+r3 = r2 + rampLanding
+hLow = rampLowHeight
+hHigh = rampLowHeight + rampRise
+rampPlane = {
+  origin = {
+    x = eu[0] * rampWidth / 2,
+    y = eu[1] * rampWidth / 2,
+    z = 0mm
+  },
+  xAxis = { x = ev[0], y = ev[1], z = 0 },
+  yAxis = { x = 0, y = 0, z = 1 }
+}
+rampSketch = sketch(on = rampPlane) {
+  root = line(start = [r0, -epsilon], end = [r3, -epsilon])
+  lowEnd = line(start = [r3, -epsilon], end = [r3, hLow])
+  lowLanding = line(start = [r3, hLow], end = [r2, hLow])
+  incline = line(start = [r2, hLow], end = [r1, hHigh])
+  highLanding = line(start = [r1, hHigh], end = [r0, hHigh])
+  highEnd = line(start = [r0, hHigh], end = [r0, -epsilon])
+}
+rampRegion = region(segments = [rampSketch.root, rampSketch.lowEnd])
+rampBody = extrude(
+  rampRegion,
+  length = rampWidth,
+  tagStart = $rampSidePositive,
+  tagEnd = $rampSideNegative,
+)
+withRamp = union([withStaircases, rampBody])
+hide(rampRegion)
+hide(rampPlane)
+
+// Step 8: eight blind side cavities on q=-baseSide/2. Axes (eu,+Z) have normal +ev.
+// The 60-degree rhombi have straight edges, with exact trigonometric widths.
+tallWidth = lateralTallHeight * tan(lateralApexAngle / 2)
+wideWidth = lateralWideHeight / tan(lateralApexAngle / 2)
+lateralPlane = {
+  origin = {
+    x = (-halfSide - epsilon) * ev[0],
+    y = (-halfSide - epsilon) * ev[1],
+    z = 0mm
+  },
+  xAxis = { x = eu[0], y = eu[1], z = 0 },
+  yAxis = { x = 0, y = 0, z = 1 }
+}
+
+lateralSmallRoundStation = lateralFirstStation - (0 * lateralPitch)
+lateralSmallRoundSketch = sketch(on = lateralPlane) {
+  bore = circle(
+    center = [
+      lateralSmallRoundStation,
+      lateralCenterZ
+    ],
+    start = [
+      lateralSmallRoundStation + lateralSmallDiameter / 2,
+      lateralCenterZ
+    ],
+  )
+}
+lateralSmallRoundRegion = region(segments = [lateralSmallRoundSketch.bore])
+lateralSmallRoundTool = extrude(lateralSmallRoundRegion, length = lateralSmallDepth + epsilon, tagEnd = $lateralSmallRoundBack)
+withLateralSmallRound = subtract(withRamp, tools = [lateralSmallRoundTool])
+
+lateralSmallSquareStation = lateralFirstStation - (1 * lateralPitch)
+lateralSmallSquareSketch = sketch(on = lateralPlane) {
+  wall1 = line(
+    start = [
+      lateralSmallSquareStation - (lateralSmallSquare / 2),
+      lateralCenterZ - (lateralSmallSquare / 2)
+    ],
+    end = [
+      lateralSmallSquareStation + lateralSmallSquare / 2,
+      lateralCenterZ - (lateralSmallSquare / 2)
+    ],
+  )
+  wall2 = line(
+    start = [
+      lateralSmallSquareStation + lateralSmallSquare / 2,
+      lateralCenterZ - (lateralSmallSquare / 2)
+    ],
+    end = [
+      lateralSmallSquareStation + lateralSmallSquare / 2,
+      lateralCenterZ + lateralSmallSquare / 2
+    ],
+  )
+  wall3 = line(
+    start = [
+      lateralSmallSquareStation + lateralSmallSquare / 2,
+      lateralCenterZ + lateralSmallSquare / 2
+    ],
+    end = [
+      lateralSmallSquareStation - (lateralSmallSquare / 2),
+      lateralCenterZ + lateralSmallSquare / 2
+    ],
+  )
+  wall4 = line(
+    start = [
+      lateralSmallSquareStation - (lateralSmallSquare / 2),
+      lateralCenterZ + lateralSmallSquare / 2
+    ],
+    end = [
+      lateralSmallSquareStation - (lateralSmallSquare / 2),
+      lateralCenterZ - (lateralSmallSquare / 2)
+    ],
+  )
+}
+lateralSmallSquareRegion = region(segments = [
+  lateralSmallSquareSketch.wall1,
+  lateralSmallSquareSketch.wall2
+])
+lateralSmallSquareTool = extrude(lateralSmallSquareRegion, length = lateralSmallDepth + epsilon, tagEnd = $lateralSmallSquareBack)
+withLateralSmallSquare = subtract(withLateralSmallRound, tools = [lateralSmallSquareTool])
+
+lateralSmallDiamondStation = lateralFirstStation - (2 * lateralPitch)
+lateralSmallDiamondSketch = sketch(on = lateralPlane) {
+  wall1 = line(
+    start = [
+      lateralSmallDiamondStation,
+      lateralCenterZ - (lateralSmallDiamond / 2)
+    ],
+    end = [
+      lateralSmallDiamondStation + lateralSmallDiamond / 2,
+      lateralCenterZ
+    ],
+  )
+  wall2 = line(
+    start = [
+      lateralSmallDiamondStation + lateralSmallDiamond / 2,
+      lateralCenterZ
+    ],
+    end = [
+      lateralSmallDiamondStation,
+      lateralCenterZ + lateralSmallDiamond / 2
+    ],
+  )
+  wall3 = line(
+    start = [
+      lateralSmallDiamondStation,
+      lateralCenterZ + lateralSmallDiamond / 2
+    ],
+    end = [
+      lateralSmallDiamondStation - (lateralSmallDiamond / 2),
+      lateralCenterZ
+    ],
+  )
+  wall4 = line(
+    start = [
+      lateralSmallDiamondStation - (lateralSmallDiamond / 2),
+      lateralCenterZ
+    ],
+    end = [
+      lateralSmallDiamondStation,
+      lateralCenterZ - (lateralSmallDiamond / 2)
+    ],
+  )
+}
+lateralSmallDiamondRegion = region(segments = [
+  lateralSmallDiamondSketch.wall1,
+  lateralSmallDiamondSketch.wall2
+])
+lateralSmallDiamondTool = extrude(lateralSmallDiamondRegion, length = lateralSmallDiamondDepth + epsilon, tagEnd = $lateralSmallDiamondBack)
+withLateralSmallDiamond = subtract(withLateralSmallSquare, tools = [lateralSmallDiamondTool])
+
+lateralLargeRoundStation = lateralFirstStation - (3 * lateralPitch)
+lateralLargeRoundSketch = sketch(on = lateralPlane) {
+  bore = circle(
+    center = [
+      lateralLargeRoundStation,
+      lateralCenterZ
+    ],
+    start = [
+      lateralLargeRoundStation + lateralLargeDiameter / 2,
+      lateralCenterZ
+    ],
+  )
+}
+lateralLargeRoundRegion = region(segments = [lateralLargeRoundSketch.bore])
+lateralLargeRoundTool = extrude(lateralLargeRoundRegion, length = lateralLargeDepth + epsilon, tagEnd = $lateralLargeRoundBack)
+withLateralLargeRound = subtract(withLateralSmallDiamond, tools = [lateralLargeRoundTool])
+
+lateralLargeSquareStation = lateralFirstStation - (4 * lateralPitch)
+lateralLargeSquareSketch = sketch(on = lateralPlane) {
+  wall1 = line(
+    start = [
+      lateralLargeSquareStation - (lateralLargeSquare / 2),
+      lateralCenterZ - (lateralLargeSquare / 2)
+    ],
+    end = [
+      lateralLargeSquareStation + lateralLargeSquare / 2,
+      lateralCenterZ - (lateralLargeSquare / 2)
+    ],
+  )
+  wall2 = line(
+    start = [
+      lateralLargeSquareStation + lateralLargeSquare / 2,
+      lateralCenterZ - (lateralLargeSquare / 2)
+    ],
+    end = [
+      lateralLargeSquareStation + lateralLargeSquare / 2,
+      lateralCenterZ + lateralLargeSquare / 2
+    ],
+  )
+  wall3 = line(
+    start = [
+      lateralLargeSquareStation + lateralLargeSquare / 2,
+      lateralCenterZ + lateralLargeSquare / 2
+    ],
+    end = [
+      lateralLargeSquareStation - (lateralLargeSquare / 2),
+      lateralCenterZ + lateralLargeSquare / 2
+    ],
+  )
+  wall4 = line(
+    start = [
+      lateralLargeSquareStation - (lateralLargeSquare / 2),
+      lateralCenterZ + lateralLargeSquare / 2
+    ],
+    end = [
+      lateralLargeSquareStation - (lateralLargeSquare / 2),
+      lateralCenterZ - (lateralLargeSquare / 2)
+    ],
+  )
+}
+lateralLargeSquareRegion = region(segments = [
+  lateralLargeSquareSketch.wall1,
+  lateralLargeSquareSketch.wall2
+])
+lateralLargeSquareTool = extrude(lateralLargeSquareRegion, length = lateralLargeDepth + epsilon, tagEnd = $lateralLargeSquareBack)
+withLateralLargeSquare = subtract(withLateralLargeRound, tools = [lateralLargeSquareTool])
+
+lateralLargeDiamondStation = lateralFirstStation - (5 * lateralPitch)
+lateralLargeDiamondSketch = sketch(on = lateralPlane) {
+  wall1 = line(
+    start = [
+      lateralLargeDiamondStation,
+      lateralCenterZ - (lateralLargeDiamond / 2)
+    ],
+    end = [
+      lateralLargeDiamondStation + lateralLargeDiamond / 2,
+      lateralCenterZ
+    ],
+  )
+  wall2 = line(
+    start = [
+      lateralLargeDiamondStation + lateralLargeDiamond / 2,
+      lateralCenterZ
+    ],
+    end = [
+      lateralLargeDiamondStation,
+      lateralCenterZ + lateralLargeDiamond / 2
+    ],
+  )
+  wall3 = line(
+    start = [
+      lateralLargeDiamondStation,
+      lateralCenterZ + lateralLargeDiamond / 2
+    ],
+    end = [
+      lateralLargeDiamondStation - (lateralLargeDiamond / 2),
+      lateralCenterZ
+    ],
+  )
+  wall4 = line(
+    start = [
+      lateralLargeDiamondStation - (lateralLargeDiamond / 2),
+      lateralCenterZ
+    ],
+    end = [
+      lateralLargeDiamondStation,
+      lateralCenterZ - (lateralLargeDiamond / 2)
+    ],
+  )
+}
+lateralLargeDiamondRegion = region(segments = [
+  lateralLargeDiamondSketch.wall1,
+  lateralLargeDiamondSketch.wall2
+])
+lateralLargeDiamondTool = extrude(lateralLargeDiamondRegion, length = lateralLargeDepth + epsilon, tagEnd = $lateralLargeDiamondBack)
+withLateralLargeDiamond = subtract(withLateralLargeSquare, tools = [lateralLargeDiamondTool])
+
+lateralTallRhombusStation = lateralFirstStation - (6 * lateralPitch)
+lateralTallRhombusSketch = sketch(on = lateralPlane) {
+  wall1 = line(
+    start = [
+      lateralTallRhombusStation,
+      lateralCenterZ - (lateralTallHeight / 2)
+    ],
+    end = [
+      lateralTallRhombusStation + tallWidth / 2,
+      lateralCenterZ
+    ],
+  )
+  wall2 = line(
+    start = [
+      lateralTallRhombusStation + tallWidth / 2,
+      lateralCenterZ
+    ],
+    end = [
+      lateralTallRhombusStation,
+      lateralCenterZ + lateralTallHeight / 2
+    ],
+  )
+  wall3 = line(
+    start = [
+      lateralTallRhombusStation,
+      lateralCenterZ + lateralTallHeight / 2
+    ],
+    end = [
+      lateralTallRhombusStation - (tallWidth / 2),
+      lateralCenterZ
+    ],
+  )
+  wall4 = line(
+    start = [
+      lateralTallRhombusStation - (tallWidth / 2),
+      lateralCenterZ
+    ],
+    end = [
+      lateralTallRhombusStation,
+      lateralCenterZ - (lateralTallHeight / 2)
+    ],
+  )
+}
+lateralTallRhombusRegion = region(segments = [
+  lateralTallRhombusSketch.wall1,
+  lateralTallRhombusSketch.wall2
+])
+lateralTallRhombusTool = extrude(lateralTallRhombusRegion, length = lateralLargeDepth + epsilon, tagEnd = $lateralTallRhombusBack)
+withLateralTallRhombus = subtract(withLateralLargeDiamond, tools = [lateralTallRhombusTool])
+
+lateralWideRhombusStation = lateralFirstStation - (7 * lateralPitch)
+lateralWideRhombusSketch = sketch(on = lateralPlane) {
+  wall1 = line(
+    start = [
+      lateralWideRhombusStation,
+      lateralCenterZ - (lateralWideHeight / 2)
+    ],
+    end = [
+      lateralWideRhombusStation + wideWidth / 2,
+      lateralCenterZ
+    ],
+  )
+  wall2 = line(
+    start = [
+      lateralWideRhombusStation + wideWidth / 2,
+      lateralCenterZ
+    ],
+    end = [
+      lateralWideRhombusStation,
+      lateralCenterZ + lateralWideHeight / 2
+    ],
+  )
+  wall3 = line(
+    start = [
+      lateralWideRhombusStation,
+      lateralCenterZ + lateralWideHeight / 2
+    ],
+    end = [
+      lateralWideRhombusStation - (wideWidth / 2),
+      lateralCenterZ
+    ],
+  )
+  wall4 = line(
+    start = [
+      lateralWideRhombusStation - (wideWidth / 2),
+      lateralCenterZ
+    ],
+    end = [
+      lateralWideRhombusStation,
+      lateralCenterZ - (lateralWideHeight / 2)
+    ],
+  )
+}
+lateralWideRhombusRegion = region(segments = [
+  lateralWideRhombusSketch.wall1,
+  lateralWideRhombusSketch.wall2
+])
+lateralWideRhombusTool = extrude(lateralWideRhombusRegion, length = lateralLargeDepth + epsilon, tagEnd = $lateralWideRhombusBack)
+withLateralWideRhombus = subtract(withLateralTallRhombus, tools = [lateralWideRhombusTool])
+hide([
+  lateralSmallRoundRegion,
+  lateralSmallSquareRegion,
+  lateralSmallDiamondRegion,
+  lateralLargeRoundRegion,
+  lateralLargeSquareRegion,
+  lateralLargeDiamondRegion,
+  lateralTallRhombusRegion,
+  lateralWideRhombusRegion
+])
+hide(lateralPlane)
+
+// Step 9: five round bosses and five blind cylindrical pockets.
+// Reflection across eu is v -> -v, which swaps x and y at 45 degrees.
+fn reflectedXy(@point) {
+  u = point[0] * eu[0] + point[1] * eu[1]
+  v = point[0] * ev[0] + point[1] * ev[1]
+  return xy(u, v = -v)
+}
+fineCenterA = [
+  fineFirstX + 0 * finePitch * ev[0],
+  fineFirstY + 0 * finePitch * ev[1]
+]
+fineReflectedCenterA = reflectedXy(fineCenterA)
+finePinASketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  boundary = circle(
+    center = fineCenterA,
+    start = [
+      fineCenterA[0] + fineSizeA / 2,
+      fineCenterA[1]
+    ],
+  )
+}
+finePinARegion = region(segments = [finePinASketch.boundary])
+finePinATool = extrude(finePinARegion, length = fineHeightDepth + epsilon, tagEnd = $finePinACap)
+withFinePinA = union([withLateralWideRhombus, finePinATool])
+fineHoleASketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  boundary = circle(
+    center = fineReflectedCenterA,
+    start = [
+      fineReflectedCenterA[0] + fineSizeA / 2,
+      fineReflectedCenterA[1]
+    ],
+  )
+}
+fineHoleARegion = region(segments = [fineHoleASketch.boundary])
+fineHoleATool = extrude(fineHoleARegion, length = -fineHeightDepth - epsilon, tagStart = $fineHoleACap)
+withFineHoleA = subtract(withFinePinA, tools = [fineHoleATool])
+fineCenterB = [
+  fineFirstX + 1 * finePitch * ev[0],
+  fineFirstY + 1 * finePitch * ev[1]
+]
+fineReflectedCenterB = reflectedXy(fineCenterB)
+finePinBSketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  boundary = circle(
+    center = fineCenterB,
+    start = [
+      fineCenterB[0] + fineSizeB / 2,
+      fineCenterB[1]
+    ],
+  )
+}
+finePinBRegion = region(segments = [finePinBSketch.boundary])
+finePinBTool = extrude(finePinBRegion, length = fineHeightDepth + epsilon, tagEnd = $finePinBCap)
+withFinePinB = union([withFineHoleA, finePinBTool])
+fineHoleBSketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  boundary = circle(
+    center = fineReflectedCenterB,
+    start = [
+      fineReflectedCenterB[0] + fineSizeB / 2,
+      fineReflectedCenterB[1]
+    ],
+  )
+}
+fineHoleBRegion = region(segments = [fineHoleBSketch.boundary])
+fineHoleBTool = extrude(fineHoleBRegion, length = -fineHeightDepth - epsilon, tagStart = $fineHoleBCap)
+withFineHoleB = subtract(withFinePinB, tools = [fineHoleBTool])
+fineCenterC = [
+  fineFirstX + 2 * finePitch * ev[0],
+  fineFirstY + 2 * finePitch * ev[1]
+]
+fineReflectedCenterC = reflectedXy(fineCenterC)
+finePinCSketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  boundary = circle(
+    center = fineCenterC,
+    start = [
+      fineCenterC[0] + fineSizeC / 2,
+      fineCenterC[1]
+    ],
+  )
+}
+finePinCRegion = region(segments = [finePinCSketch.boundary])
+finePinCTool = extrude(finePinCRegion, length = fineHeightDepth + epsilon, tagEnd = $finePinCCap)
+withFinePinC = union([withFineHoleB, finePinCTool])
+fineHoleCSketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  boundary = circle(
+    center = fineReflectedCenterC,
+    start = [
+      fineReflectedCenterC[0] + fineSizeC / 2,
+      fineReflectedCenterC[1]
+    ],
+  )
+}
+fineHoleCRegion = region(segments = [fineHoleCSketch.boundary])
+fineHoleCTool = extrude(fineHoleCRegion, length = -fineHeightDepth - epsilon, tagStart = $fineHoleCCap)
+withFineHoleC = subtract(withFinePinC, tools = [fineHoleCTool])
+fineCenterD = [
+  fineFirstX + 3 * finePitch * ev[0],
+  fineFirstY + 3 * finePitch * ev[1]
+]
+fineReflectedCenterD = reflectedXy(fineCenterD)
+finePinDSketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  boundary = circle(
+    center = fineCenterD,
+    start = [
+      fineCenterD[0] + fineSizeD / 2,
+      fineCenterD[1]
+    ],
+  )
+}
+finePinDRegion = region(segments = [finePinDSketch.boundary])
+finePinDTool = extrude(finePinDRegion, length = fineHeightDepth + epsilon, tagEnd = $finePinDCap)
+withFinePinD = union([withFineHoleC, finePinDTool])
+fineHoleDSketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  boundary = circle(
+    center = fineReflectedCenterD,
+    start = [
+      fineReflectedCenterD[0] + fineSizeD / 2,
+      fineReflectedCenterD[1]
+    ],
+  )
+}
+fineHoleDRegion = region(segments = [fineHoleDSketch.boundary])
+fineHoleDTool = extrude(fineHoleDRegion, length = -fineHeightDepth - epsilon, tagStart = $fineHoleDCap)
+withFineHoleD = subtract(withFinePinD, tools = [fineHoleDTool])
+fineCenterE = [
+  fineFirstX + 4 * finePitch * ev[0],
+  fineFirstY + 4 * finePitch * ev[1]
+]
+fineReflectedCenterE = reflectedXy(fineCenterE)
+finePinESketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  boundary = circle(
+    center = fineCenterE,
+    start = [
+      fineCenterE[0] + fineSizeE / 2,
+      fineCenterE[1]
+    ],
+  )
+}
+finePinERegion = region(segments = [finePinESketch.boundary])
+finePinETool = extrude(finePinERegion, length = fineHeightDepth + epsilon, tagEnd = $finePinECap)
+withFinePinE = union([withFineHoleD, finePinETool])
+fineHoleESketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  boundary = circle(
+    center = fineReflectedCenterE,
+    start = [
+      fineReflectedCenterE[0] + fineSizeE / 2,
+      fineReflectedCenterE[1]
+    ],
+  )
+}
+fineHoleERegion = region(segments = [fineHoleESketch.boundary])
+fineHoleETool = extrude(fineHoleERegion, length = -fineHeightDepth - epsilon, tagStart = $fineHoleECap)
+withFineHoleE = subtract(withFinePinE, tools = [fineHoleETool])
+
+// Step 10: ten exact rectangular bosses, with ten reflected blind slots.
+rectOuter = halfSide - rectOuterInset
+rectBoss1Sketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeA), v = rectStartV1 + fineSizeA), end = xy(rectOuter, v = rectStartV1 + fineSizeA))
+  edge2 = line(start = xy(rectOuter, v = rectStartV1 + fineSizeA), end = xy(rectOuter, v = rectStartV1))
+  edge3 = line(start = xy(rectOuter, v = rectStartV1), end = xy(rectOuter - (rectLengthRatio * fineSizeA), v = rectStartV1))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeA), v = rectStartV1), end = xy(rectOuter - (rectLengthRatio * fineSizeA), v = rectStartV1 + fineSizeA))
+}
+rectBoss1Region = region(segments = [
+  rectBoss1Sketch.edge1,
+  rectBoss1Sketch.edge2
+])
+rectBoss1Tool = extrude(rectBoss1Region, length = fineHeightDepth + epsilon, tagEnd = $rectBoss1Cap)
+withRectBoss1 = union([withFineHoleE, rectBoss1Tool])
+rectSlot1Sketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeA), v = -rectStartV1), end = xy(rectOuter, v = -rectStartV1))
+  edge2 = line(start = xy(rectOuter, v = -rectStartV1), end = xy(rectOuter, v = -(rectStartV1 + fineSizeA)))
+  edge3 = line(start = xy(rectOuter, v = -(rectStartV1 + fineSizeA)), end = xy(rectOuter - (rectLengthRatio * fineSizeA), v = -(rectStartV1 + fineSizeA)))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeA), v = -(rectStartV1 + fineSizeA)), end = xy(rectOuter - (rectLengthRatio * fineSizeA), v = -rectStartV1))
+}
+rectSlot1Region = region(segments = [
+  rectSlot1Sketch.edge1,
+  rectSlot1Sketch.edge2
+])
+rectSlot1Tool = extrude(rectSlot1Region, length = -fineHeightDepth - epsilon, tagStart = $rectSlot1Cap)
+withRectSlot1 = subtract(withRectBoss1, tools = [rectSlot1Tool])
+rectBoss2Sketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeA), v = rectStartV2 + fineSizeA), end = xy(rectOuter, v = rectStartV2 + fineSizeA))
+  edge2 = line(start = xy(rectOuter, v = rectStartV2 + fineSizeA), end = xy(rectOuter, v = rectStartV2))
+  edge3 = line(start = xy(rectOuter, v = rectStartV2), end = xy(rectOuter - (rectLengthRatio * fineSizeA), v = rectStartV2))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeA), v = rectStartV2), end = xy(rectOuter - (rectLengthRatio * fineSizeA), v = rectStartV2 + fineSizeA))
+}
+rectBoss2Region = region(segments = [
+  rectBoss2Sketch.edge1,
+  rectBoss2Sketch.edge2
+])
+rectBoss2Tool = extrude(rectBoss2Region, length = fineHeightDepth + epsilon, tagEnd = $rectBoss2Cap)
+withRectBoss2 = union([withRectSlot1, rectBoss2Tool])
+rectSlot2Sketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeA), v = -rectStartV2), end = xy(rectOuter, v = -rectStartV2))
+  edge2 = line(start = xy(rectOuter, v = -rectStartV2), end = xy(rectOuter, v = -(rectStartV2 + fineSizeA)))
+  edge3 = line(start = xy(rectOuter, v = -(rectStartV2 + fineSizeA)), end = xy(rectOuter - (rectLengthRatio * fineSizeA), v = -(rectStartV2 + fineSizeA)))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeA), v = -(rectStartV2 + fineSizeA)), end = xy(rectOuter - (rectLengthRatio * fineSizeA), v = -rectStartV2))
+}
+rectSlot2Region = region(segments = [
+  rectSlot2Sketch.edge1,
+  rectSlot2Sketch.edge2
+])
+rectSlot2Tool = extrude(rectSlot2Region, length = -fineHeightDepth - epsilon, tagStart = $rectSlot2Cap)
+withRectSlot2 = subtract(withRectBoss2, tools = [rectSlot2Tool])
+rectBoss3Sketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeB), v = rectStartV3 + fineSizeB), end = xy(rectOuter, v = rectStartV3 + fineSizeB))
+  edge2 = line(start = xy(rectOuter, v = rectStartV3 + fineSizeB), end = xy(rectOuter, v = rectStartV3))
+  edge3 = line(start = xy(rectOuter, v = rectStartV3), end = xy(rectOuter - (rectLengthRatio * fineSizeB), v = rectStartV3))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeB), v = rectStartV3), end = xy(rectOuter - (rectLengthRatio * fineSizeB), v = rectStartV3 + fineSizeB))
+}
+rectBoss3Region = region(segments = [
+  rectBoss3Sketch.edge1,
+  rectBoss3Sketch.edge2
+])
+rectBoss3Tool = extrude(rectBoss3Region, length = fineHeightDepth + epsilon, tagEnd = $rectBoss3Cap)
+withRectBoss3 = union([withRectSlot2, rectBoss3Tool])
+rectSlot3Sketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeB), v = -rectStartV3), end = xy(rectOuter, v = -rectStartV3))
+  edge2 = line(start = xy(rectOuter, v = -rectStartV3), end = xy(rectOuter, v = -(rectStartV3 + fineSizeB)))
+  edge3 = line(start = xy(rectOuter, v = -(rectStartV3 + fineSizeB)), end = xy(rectOuter - (rectLengthRatio * fineSizeB), v = -(rectStartV3 + fineSizeB)))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeB), v = -(rectStartV3 + fineSizeB)), end = xy(rectOuter - (rectLengthRatio * fineSizeB), v = -rectStartV3))
+}
+rectSlot3Region = region(segments = [
+  rectSlot3Sketch.edge1,
+  rectSlot3Sketch.edge2
+])
+rectSlot3Tool = extrude(rectSlot3Region, length = -fineHeightDepth - epsilon, tagStart = $rectSlot3Cap)
+withRectSlot3 = subtract(withRectBoss3, tools = [rectSlot3Tool])
+rectBoss4Sketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeB), v = rectStartV4 + fineSizeB), end = xy(rectOuter, v = rectStartV4 + fineSizeB))
+  edge2 = line(start = xy(rectOuter, v = rectStartV4 + fineSizeB), end = xy(rectOuter, v = rectStartV4))
+  edge3 = line(start = xy(rectOuter, v = rectStartV4), end = xy(rectOuter - (rectLengthRatio * fineSizeB), v = rectStartV4))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeB), v = rectStartV4), end = xy(rectOuter - (rectLengthRatio * fineSizeB), v = rectStartV4 + fineSizeB))
+}
+rectBoss4Region = region(segments = [
+  rectBoss4Sketch.edge1,
+  rectBoss4Sketch.edge2
+])
+rectBoss4Tool = extrude(rectBoss4Region, length = fineHeightDepth + epsilon, tagEnd = $rectBoss4Cap)
+withRectBoss4 = union([withRectSlot3, rectBoss4Tool])
+rectSlot4Sketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeB), v = -rectStartV4), end = xy(rectOuter, v = -rectStartV4))
+  edge2 = line(start = xy(rectOuter, v = -rectStartV4), end = xy(rectOuter, v = -(rectStartV4 + fineSizeB)))
+  edge3 = line(start = xy(rectOuter, v = -(rectStartV4 + fineSizeB)), end = xy(rectOuter - (rectLengthRatio * fineSizeB), v = -(rectStartV4 + fineSizeB)))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeB), v = -(rectStartV4 + fineSizeB)), end = xy(rectOuter - (rectLengthRatio * fineSizeB), v = -rectStartV4))
+}
+rectSlot4Region = region(segments = [
+  rectSlot4Sketch.edge1,
+  rectSlot4Sketch.edge2
+])
+rectSlot4Tool = extrude(rectSlot4Region, length = -fineHeightDepth - epsilon, tagStart = $rectSlot4Cap)
+withRectSlot4 = subtract(withRectBoss4, tools = [rectSlot4Tool])
+rectBoss5Sketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeC), v = rectStartV5 + fineSizeC), end = xy(rectOuter, v = rectStartV5 + fineSizeC))
+  edge2 = line(start = xy(rectOuter, v = rectStartV5 + fineSizeC), end = xy(rectOuter, v = rectStartV5))
+  edge3 = line(start = xy(rectOuter, v = rectStartV5), end = xy(rectOuter - (rectLengthRatio * fineSizeC), v = rectStartV5))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeC), v = rectStartV5), end = xy(rectOuter - (rectLengthRatio * fineSizeC), v = rectStartV5 + fineSizeC))
+}
+rectBoss5Region = region(segments = [
+  rectBoss5Sketch.edge1,
+  rectBoss5Sketch.edge2
+])
+rectBoss5Tool = extrude(rectBoss5Region, length = fineHeightDepth + epsilon, tagEnd = $rectBoss5Cap)
+withRectBoss5 = union([withRectSlot4, rectBoss5Tool])
+rectSlot5Sketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeC), v = -rectStartV5), end = xy(rectOuter, v = -rectStartV5))
+  edge2 = line(start = xy(rectOuter, v = -rectStartV5), end = xy(rectOuter, v = -(rectStartV5 + fineSizeC)))
+  edge3 = line(start = xy(rectOuter, v = -(rectStartV5 + fineSizeC)), end = xy(rectOuter - (rectLengthRatio * fineSizeC), v = -(rectStartV5 + fineSizeC)))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeC), v = -(rectStartV5 + fineSizeC)), end = xy(rectOuter - (rectLengthRatio * fineSizeC), v = -rectStartV5))
+}
+rectSlot5Region = region(segments = [
+  rectSlot5Sketch.edge1,
+  rectSlot5Sketch.edge2
+])
+rectSlot5Tool = extrude(rectSlot5Region, length = -fineHeightDepth - epsilon, tagStart = $rectSlot5Cap)
+withRectSlot5 = subtract(withRectBoss5, tools = [rectSlot5Tool])
+rectBoss6Sketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeC), v = rectStartV6 + fineSizeC), end = xy(rectOuter, v = rectStartV6 + fineSizeC))
+  edge2 = line(start = xy(rectOuter, v = rectStartV6 + fineSizeC), end = xy(rectOuter, v = rectStartV6))
+  edge3 = line(start = xy(rectOuter, v = rectStartV6), end = xy(rectOuter - (rectLengthRatio * fineSizeC), v = rectStartV6))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeC), v = rectStartV6), end = xy(rectOuter - (rectLengthRatio * fineSizeC), v = rectStartV6 + fineSizeC))
+}
+rectBoss6Region = region(segments = [
+  rectBoss6Sketch.edge1,
+  rectBoss6Sketch.edge2
+])
+rectBoss6Tool = extrude(rectBoss6Region, length = fineHeightDepth + epsilon, tagEnd = $rectBoss6Cap)
+withRectBoss6 = union([withRectSlot5, rectBoss6Tool])
+rectSlot6Sketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeC), v = -rectStartV6), end = xy(rectOuter, v = -rectStartV6))
+  edge2 = line(start = xy(rectOuter, v = -rectStartV6), end = xy(rectOuter, v = -(rectStartV6 + fineSizeC)))
+  edge3 = line(start = xy(rectOuter, v = -(rectStartV6 + fineSizeC)), end = xy(rectOuter - (rectLengthRatio * fineSizeC), v = -(rectStartV6 + fineSizeC)))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeC), v = -(rectStartV6 + fineSizeC)), end = xy(rectOuter - (rectLengthRatio * fineSizeC), v = -rectStartV6))
+}
+rectSlot6Region = region(segments = [
+  rectSlot6Sketch.edge1,
+  rectSlot6Sketch.edge2
+])
+rectSlot6Tool = extrude(rectSlot6Region, length = -fineHeightDepth - epsilon, tagStart = $rectSlot6Cap)
+withRectSlot6 = subtract(withRectBoss6, tools = [rectSlot6Tool])
+rectBoss7Sketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeD), v = rectStartV7 + fineSizeD), end = xy(rectOuter, v = rectStartV7 + fineSizeD))
+  edge2 = line(start = xy(rectOuter, v = rectStartV7 + fineSizeD), end = xy(rectOuter, v = rectStartV7))
+  edge3 = line(start = xy(rectOuter, v = rectStartV7), end = xy(rectOuter - (rectLengthRatio * fineSizeD), v = rectStartV7))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeD), v = rectStartV7), end = xy(rectOuter - (rectLengthRatio * fineSizeD), v = rectStartV7 + fineSizeD))
+}
+rectBoss7Region = region(segments = [
+  rectBoss7Sketch.edge1,
+  rectBoss7Sketch.edge2
+])
+rectBoss7Tool = extrude(rectBoss7Region, length = fineHeightDepth + epsilon, tagEnd = $rectBoss7Cap)
+withRectBoss7 = union([withRectSlot6, rectBoss7Tool])
+rectSlot7Sketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeD), v = -rectStartV7), end = xy(rectOuter, v = -rectStartV7))
+  edge2 = line(start = xy(rectOuter, v = -rectStartV7), end = xy(rectOuter, v = -(rectStartV7 + fineSizeD)))
+  edge3 = line(start = xy(rectOuter, v = -(rectStartV7 + fineSizeD)), end = xy(rectOuter - (rectLengthRatio * fineSizeD), v = -(rectStartV7 + fineSizeD)))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeD), v = -(rectStartV7 + fineSizeD)), end = xy(rectOuter - (rectLengthRatio * fineSizeD), v = -rectStartV7))
+}
+rectSlot7Region = region(segments = [
+  rectSlot7Sketch.edge1,
+  rectSlot7Sketch.edge2
+])
+rectSlot7Tool = extrude(rectSlot7Region, length = -fineHeightDepth - epsilon, tagStart = $rectSlot7Cap)
+withRectSlot7 = subtract(withRectBoss7, tools = [rectSlot7Tool])
+rectBoss8Sketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeD), v = rectStartV8 + fineSizeD), end = xy(rectOuter, v = rectStartV8 + fineSizeD))
+  edge2 = line(start = xy(rectOuter, v = rectStartV8 + fineSizeD), end = xy(rectOuter, v = rectStartV8))
+  edge3 = line(start = xy(rectOuter, v = rectStartV8), end = xy(rectOuter - (rectLengthRatio * fineSizeD), v = rectStartV8))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeD), v = rectStartV8), end = xy(rectOuter - (rectLengthRatio * fineSizeD), v = rectStartV8 + fineSizeD))
+}
+rectBoss8Region = region(segments = [
+  rectBoss8Sketch.edge1,
+  rectBoss8Sketch.edge2
+])
+rectBoss8Tool = extrude(rectBoss8Region, length = fineHeightDepth + epsilon, tagEnd = $rectBoss8Cap)
+withRectBoss8 = union([withRectSlot7, rectBoss8Tool])
+rectSlot8Sketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeD), v = -rectStartV8), end = xy(rectOuter, v = -rectStartV8))
+  edge2 = line(start = xy(rectOuter, v = -rectStartV8), end = xy(rectOuter, v = -(rectStartV8 + fineSizeD)))
+  edge3 = line(start = xy(rectOuter, v = -(rectStartV8 + fineSizeD)), end = xy(rectOuter - (rectLengthRatio * fineSizeD), v = -(rectStartV8 + fineSizeD)))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeD), v = -(rectStartV8 + fineSizeD)), end = xy(rectOuter - (rectLengthRatio * fineSizeD), v = -rectStartV8))
+}
+rectSlot8Region = region(segments = [
+  rectSlot8Sketch.edge1,
+  rectSlot8Sketch.edge2
+])
+rectSlot8Tool = extrude(rectSlot8Region, length = -fineHeightDepth - epsilon, tagStart = $rectSlot8Cap)
+withRectSlot8 = subtract(withRectBoss8, tools = [rectSlot8Tool])
+rectBoss9Sketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeE), v = rectStartV9 + fineSizeE), end = xy(rectOuter, v = rectStartV9 + fineSizeE))
+  edge2 = line(start = xy(rectOuter, v = rectStartV9 + fineSizeE), end = xy(rectOuter, v = rectStartV9))
+  edge3 = line(start = xy(rectOuter, v = rectStartV9), end = xy(rectOuter - (rectLengthRatio * fineSizeE), v = rectStartV9))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeE), v = rectStartV9), end = xy(rectOuter - (rectLengthRatio * fineSizeE), v = rectStartV9 + fineSizeE))
+}
+rectBoss9Region = region(segments = [
+  rectBoss9Sketch.edge1,
+  rectBoss9Sketch.edge2
+])
+rectBoss9Tool = extrude(rectBoss9Region, length = fineHeightDepth + epsilon, tagEnd = $rectBoss9Cap)
+withRectBoss9 = union([withRectSlot8, rectBoss9Tool])
+rectSlot9Sketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeE), v = -rectStartV9), end = xy(rectOuter, v = -rectStartV9))
+  edge2 = line(start = xy(rectOuter, v = -rectStartV9), end = xy(rectOuter, v = -(rectStartV9 + fineSizeE)))
+  edge3 = line(start = xy(rectOuter, v = -(rectStartV9 + fineSizeE)), end = xy(rectOuter - (rectLengthRatio * fineSizeE), v = -(rectStartV9 + fineSizeE)))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeE), v = -(rectStartV9 + fineSizeE)), end = xy(rectOuter - (rectLengthRatio * fineSizeE), v = -rectStartV9))
+}
+rectSlot9Region = region(segments = [
+  rectSlot9Sketch.edge1,
+  rectSlot9Sketch.edge2
+])
+rectSlot9Tool = extrude(rectSlot9Region, length = -fineHeightDepth - epsilon, tagStart = $rectSlot9Cap)
+withRectSlot9 = subtract(withRectBoss9, tools = [rectSlot9Tool])
+rectBoss10Sketch = sketch(on = offsetPlane(XY, offset = -epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeE), v = rectStartV10 + fineSizeE), end = xy(rectOuter, v = rectStartV10 + fineSizeE))
+  edge2 = line(start = xy(rectOuter, v = rectStartV10 + fineSizeE), end = xy(rectOuter, v = rectStartV10))
+  edge3 = line(start = xy(rectOuter, v = rectStartV10), end = xy(rectOuter - (rectLengthRatio * fineSizeE), v = rectStartV10))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeE), v = rectStartV10), end = xy(rectOuter - (rectLengthRatio * fineSizeE), v = rectStartV10 + fineSizeE))
+}
+rectBoss10Region = region(segments = [
+  rectBoss10Sketch.edge1,
+  rectBoss10Sketch.edge2
+])
+rectBoss10Tool = extrude(rectBoss10Region, length = fineHeightDepth + epsilon, tagEnd = $rectBoss10Cap)
+withRectBoss10 = union([withRectSlot9, rectBoss10Tool])
+rectSlot10Sketch = sketch(on = offsetPlane(XY, offset = epsilon)) {
+  edge1 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeE), v = -rectStartV10), end = xy(rectOuter, v = -rectStartV10))
+  edge2 = line(start = xy(rectOuter, v = -rectStartV10), end = xy(rectOuter, v = -(rectStartV10 + fineSizeE)))
+  edge3 = line(start = xy(rectOuter, v = -(rectStartV10 + fineSizeE)), end = xy(rectOuter - (rectLengthRatio * fineSizeE), v = -(rectStartV10 + fineSizeE)))
+  edge4 = line(start = xy(rectOuter - (rectLengthRatio * fineSizeE), v = -(rectStartV10 + fineSizeE)), end = xy(rectOuter - (rectLengthRatio * fineSizeE), v = -rectStartV10))
+}
+rectSlot10Region = region(segments = [
+  rectSlot10Sketch.edge1,
+  rectSlot10Sketch.edge2
+])
+rectSlot10Tool = extrude(rectSlot10Region, length = -fineHeightDepth - epsilon, tagStart = $rectSlot10Cap)
+withRectSlot10 = subtract(withRectBoss10, tools = [rectSlot10Tool])
+
+// All construction tools have been consumed; only the connected artifact remains.
+hide([
+  finePinARegion,
+  fineHoleARegion,
+  finePinBRegion,
+  fineHoleBRegion,
+  finePinCRegion,
+  fineHoleCRegion,
+  finePinDRegion,
+  fineHoleDRegion,
+  finePinERegion,
+  fineHoleERegion,
+  rectBoss1Region,
+  rectSlot1Region,
+  rectBoss2Region,
+  rectSlot2Region,
+  rectBoss3Region,
+  rectSlot3Region,
+  rectBoss4Region,
+  rectSlot4Region,
+  rectBoss5Region,
+  rectSlot5Region,
+  rectBoss6Region,
+  rectSlot6Region,
+  rectBoss7Region,
+  rectSlot7Region,
+  rectBoss8Region,
+  rectSlot8Region,
+  rectBoss9Region,
+  rectSlot9Region,
+  rectBoss10Region,
+  rectSlot10Region
+])
+artifact = withRectSlot10
+artifact

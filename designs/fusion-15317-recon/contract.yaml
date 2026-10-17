@@ -1,0 +1,873 @@
+schema_version: 1
+name: fusion-15317-recon
+intent: >-
+  Reconstruct the mechanical part shown in the attached renders, sections and dimension sheet
+  as editable, parameterized KCL in the part's own frame (bbox min [-44.45, 92.804, -44.45],
+  size [88.9, 32.544, 88.9] mm). The part is Fusion Gallery body 22337_e2f65ed2_0003_1
+  (joint set joint_set_15317): a Ø88.9 flange disk with a through U-slot and two stepped
+  arm bores, on a Ø50.8 hub with a revolved waist. Declare every hole, boss and shaft as an
+  acceptance cylinder and every planar face level as a named face; one solid; export STEP
+  and STL. Held-out: the pipeline is frozen, the reference CAD is evaluator-only.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+frame:
+  origin: >-
+    Native reference-model origin [0,0,0] on the common Y axis of the hub and flange
+    cylinders. This origin is not on the solid: the hub bottom is at y = 92.804. Do not
+    rebase the bounding-box minimum to the origin.
+  axes:
+    x: >-
+      Perpendicular to the hub axis, toward the +X arm (positive bbox x). front.png plots
+      x horizontally; the U-slot walls sit at x = ±19.844.
+    y: >-
+      Along the hub and flange axis, from the hub toward the slotted +Y face. Hub bottom
+      y = 92.804, flange underside y = 106.298, arm tops y = 125.348.
+    z: >-
+      Completes a right-handed frame in the disk plane. front.png plots z vertically; the
+      +Z rim is the top of that view. The two small rim holes both sit at x = -5.077.
+  datums:
+    - name: A
+      description: Hub bottom face y = 92.804, outward normal -y, area 2026.83 mm2 (the Ø50.8 end).
+    - name: B
+      description: Hub and flange axis, the Y axis through [0, 0, 0].
+    - name: C
+      description: U-slot midplane x = 0, halfway between the slot walls at x = ±19.844.
+envelope:
+  min: [-44.45, 92.804, -44.45]
+  max: [44.45, 125.348, 44.45]
+  tolerance: 0.05
+
+parameters:
+  - name: flangeDia
+    value: 88.9
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: Flange outer diameter; equals the x and z envelope extents.
+  - name: hubDia
+    value: 50.8
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: Hub outer diameter on the cylindrical end and on the groove-shoulder OD.
+  - name: hubYMin
+    value: 92.804
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: Hub bottom plane (datum A). Decreasing this value lengthens the hub in -Y.
+    edit_test:
+      delta: -2
+      expect:
+        volume_delta: 4053.66
+        direction: increase
+        bbox_delta: [0, 2, 0]
+        tolerance_rel: 0.02
+      infeasible_deltas: [14]
+  - name: flangeYMin
+    value: 106.298
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: Flange underside and hub-to-flange junction plane.
+  - name: flangeYMax
+    value: 125.348
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: Arm-top plane. Increasing this value thickens the flange in +Y.
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 5599.76
+        direction: increase
+        bbox_delta: [0, 2, 0]
+        tolerance_rel: 0.02
+      sweep:
+        min: 123.348
+        max: 127.348
+        steps: 3
+  - name: slotY
+    value: 112.648
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: U-slot floor (+y face). Decreasing this value cuts the slot deeper.
+    edit_test:
+      delta: -1
+      expect:
+        volume_delta: -3407.28
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      infeasible_deltas: [-7]
+  - name: slotHalf
+    value: 19.844
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: Half-width of the U-slot; walls at x = ±slotHalf.
+  - name: grooveY
+    value: 103.917
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: Planar -y shoulder of the hub waist, an annulus on the hub OD.
+  - name: grooveFaceArea
+    value: 414.95
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.5
+    description: Area of the single planar face at y = grooveY (used to recover the inner radius).
+  - name: holeMajorDia
+    value: 11.113
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: Larger coaxial diameter of each arm bore.
+  - name: holeMinorDia
+    value: 7.938
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: Smaller coaxial diameter of each arm bore.
+  - name: holeY
+    value: 118.204
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.05
+    description: Y of the −Z major bore and both minor bores.
+  - name: holeZ
+    value: 19.05
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.05
+    description: "Absolute z of the minor bores and the -Z major bore."
+  - name: holeMajorPosY
+    value: 118.139
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.05
+    description: Y of the +Z Ø11.113 axis; 0.065 mm from holeY.
+  - name: holeMajorPosZ
+    value: 18.923
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.05
+    description: Z of the +Z Ø11.113 axis; 0.127 mm from holeZ.
+  - name: rimHoleDia
+    value: 2.261
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: Diameter of the two short rim holes.
+  - name: rimHoleY
+    value: 109.594
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.05
+    description: Y of both rim-hole axes (in the flange web).
+  - name: rimHoleX
+    value: -5.077
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.05
+    description: X of both rim-hole axis stations; both holes are clocked toward -X.
+  - name: rimHoleZ
+    value: 39.746
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.05
+    description: "Absolute z of the rim-hole centres of extent."
+  - name: rimHoleLen
+    value: 8.763
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.05
+    description: Axial length of each rim hole from the Ø88.9 skin inward.
+  - name: xFace
+    value: 36.512
+    unit: mm
+    provenance: stated
+    source: sources/dimension-sheet.md
+    tolerance: 0.02
+    description: "Absolute x of the four small planar faces at the arm-bore (y,z) stations."
+  - name: hubNeckRadius
+    value: 21.1
+    unit: mm
+    provenance: measured
+    source: sources/section-z0.png
+    tolerance: 0.4
+    description: Minimum hub radius on the revolved waist (section-z0 outline).
+  - name: hubNeckY
+    value: 102.2
+    unit: mm
+    provenance: measured
+    source: sources/section-z0.png
+    tolerance: 0.4
+    description: Y of the waist minimum radius.
+  - name: hubWaistY
+    value: 94.5
+    unit: mm
+    provenance: measured
+    source: sources/section-z0.png
+    tolerance: 0.5
+    description: Y where the waist profile meets the hub OD again, above the short cylindrical end.
+  - name: flangeRadius
+    value: 44.45
+    unit: mm
+    provenance: derived
+    formula: flangeDia / 2
+    tolerance: 0.02
+    description: Flange outer radius; envelope |x| and |z|.
+  - name: hubRadius
+    value: 25.4
+    unit: mm
+    provenance: derived
+    formula: hubDia / 2
+    tolerance: 0.02
+    description: Hub outer radius.
+  - name: flangeThick
+    value: 19.05
+    unit: mm
+    provenance: derived
+    formula: flangeYMax - flangeYMin
+    tolerance: 0.02
+    description: Flange axial length; matches the Ø88.9 pin length on the sheet.
+  - name: hubLen
+    value: 13.494
+    unit: mm
+    provenance: derived
+    formula: flangeYMin - hubYMin
+    tolerance: 0.02
+    description: Hub axial length including the waist; matches the Ø50.8 pin length.
+  - name: slotDepth
+    value: 12.7
+    unit: mm
+    provenance: derived
+    formula: flangeYMax - slotY
+    tolerance: 0.02
+    description: U-slot depth from the arm tops.
+  - name: slotWidth
+    value: 39.688
+    unit: mm
+    provenance: derived
+    formula: 2 * slotHalf
+    tolerance: 0.02
+    description: Full U-slot width between the x = ±slotHalf walls.
+  - name: overallY
+    value: 32.544
+    unit: mm
+    provenance: derived
+    formula: flangeYMax - hubYMin
+    tolerance: 0.02
+    description: Envelope y size.
+  - name: grooveInnerRadius
+    value: 22.651
+    unit: mm
+    provenance: derived
+    formula: sqrt(hubRadius * hubRadius - grooveFaceArea / pi)
+    tolerance: 0.05
+    description: Inner radius of the grooveY annulus, assuming a full 360 deg ring on the hub.
+
+features:
+  - id: hub
+    kind: revolve
+    description: Ø50.8 hub from hubYMin to flangeYMin, with a short cylindrical end then a revolved waist.
+    parameters: [hubDia, hubRadius, hubYMin, flangeYMin, hubLen, hubNeckRadius, hubNeckY, hubWaistY, grooveY, grooveInnerRadius]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[0, 98.0, 0]]
+        note: Inside the remaining hub core, more than 5 mm from the waist and the end face.
+      - method: face
+        face: hubBottom
+      - method: cylinder
+        cylinder: hubOd
+      - method: dimension
+        dimension: dimHubLen
+  - id: flange
+    kind: extrude
+    description: Ø88.9 disk from flangeYMin to flangeYMax.
+    parameters: [flangeDia, flangeRadius, flangeYMin, flangeYMax, flangeThick]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[0, 109.4, 0]]
+        note: Flange web below the slot floor, on the Y axis, away from the rim holes.
+      - method: face
+        face: flangeBottom
+      - method: cylinder
+        cylinder: flangeOd
+      - method: dimension
+        dimension: dimFlangeThick
+      - method: section
+        section: secYWeb
+  - id: u_slot
+    kind: pocket
+    description: Through U-slot, walls at x = ±slotHalf, floor at slotY, open at flangeYMax and through z.
+    parameters: [slotY, slotHalf, slotWidth, slotDepth, flangeYMax, flangeRadius]
+    verify:
+      - method: void
+        points: [[0, 119.0, 0]]
+        note: Mid-slot air, 6 mm above the floor and 19.8 mm from each wall.
+      - method: face
+        face: slotFloor
+      - method: face
+        face: slotWallNegX
+      - method: face
+        face: slotWallPosX
+      - method: face
+        face: armTopPosX
+      - method: face
+        face: armTopNegX
+      - method: section
+        section: secZ0
+      - method: dimension
+        dimension: dimSlotWidth
+      - method: dimension
+        dimension: dimSlotDepth
+  - id: hub_waist
+    kind: revolve
+    description: >-
+      Revolved concave waist on the hub. Planar -y shoulder at grooveY (annulus to grooveInnerRadius);
+      profile dips to hubNeckRadius at hubNeckY and meets the hub OD again at hubWaistY. Revolve the
+      section-z0 silhouette; it is not a single circular fillet.
+    parameters: [grooveY, grooveInnerRadius, grooveFaceArea, hubNeckRadius, hubNeckY, hubWaistY, hubRadius]
+    verify:
+      - method: void
+        points: [[23.5, 102.2, 0]]
+        note: In the waist cut, 2.4 mm outside the measured neck and 1.9 mm inside the hub OD.
+      - method: solid
+        points: [[0, 98.0, 0]]
+      - method: face
+        face: grooveShoulder
+      - method: section
+        section: secX0
+      - method: section
+        section: secZ0
+  - id: arm_bores
+    kind: hole
+    count: 2
+    description: >-
+      Two stepped through-bores along X, one at +Z and one at -Z. Each has a Ø11.113 cylinder and a
+      coaxial Ø7.938 cylinder. Four small planar faces at x = ±xFace sit at the bore stations.
+    parameters: [holeMajorDia, holeMinorDia, holeY, holeZ, holeMajorPosY, holeMajorPosZ, xFace]
+    verify:
+      - method: void
+        points:
+          - [30.0, 118.2, 19.05]
+          - [30.0, 118.2, -19.05]
+          - [-30.0, 118.2, 19.05]
+          - [-30.0, 118.2, -19.05]
+        note: On the minor-bore axes inside each arm, 10 mm from the slot wall.
+      - method: cylinder
+        cylinder: holeMajorPosZ
+      - method: cylinder
+        cylinder: holeMajorNegZ
+      - method: cylinder
+        cylinder: holeMinorPosZ
+      - method: cylinder
+        cylinder: holeMinorNegZ
+      - method: face
+        face: boreShoulderNegXPosZ
+      - method: face
+        face: boreShoulderNegXNegZ
+      - method: face
+        face: boreShoulderPosXNegZ
+      - method: face
+        face: boreShoulderPosXPosZ
+  - id: rim_holes
+    kind: hole
+    count: 2
+    description: Two short Ø2.261 holes drilled from the flange OD toward the Y axis, both clocked at x = -5.077.
+    parameters: [rimHoleDia, rimHoleY, rimHoleX, rimHoleZ, rimHoleLen]
+    verify:
+      - method: void
+        points:
+          - [-5.077, 109.594, 39.746]
+          - [-5.077, 109.594, -39.746]
+        note: Sheet centres of extent, on each rim-hole axis.
+      - method: cylinder
+        cylinder: rimHolePosZ
+      - method: cylinder
+        cylinder: rimHoleNegZ
+      - method: section
+        section: secYWeb
+      - method: count
+        section: secYWeb
+        count: 1
+
+interfaces:
+  - name: hubSeat
+    description: Hub end face and hub OD; the seating cylinder and datum A.
+    must_not_change: true
+    checks: [hubBottom, hubOd, dimHubLen]
+  - name: flangeOd
+    description: Flange outer cylinder and envelope x/z.
+    must_not_change: true
+    checks: [flangeOd, bboxX, bboxZ]
+  - name: slot
+    description: U-slot walls, floor and arm tops.
+    must_not_change: true
+    checks: [slotFloor, slotWallNegX, slotWallPosX, armTopPosX, armTopNegX, dimSlotWidth, dimSlotDepth]
+  - name: armBores
+    description: Stepped X-axis bores through the arms.
+    must_not_change: true
+    checks: [holeMajorPosZ, holeMajorNegZ, holeMinorPosZ, holeMinorNegZ]
+  - name: rimHoles
+    description: Short radial rim holes in the flange web.
+    must_not_change: true
+    checks: [rimHolePosZ, rimHoleNegZ]
+
+acceptance:
+  volume:
+    expected: 93854.25
+    tolerance_rel: 0.002
+    provenance: stated
+    note: sources/dimension-sheet.md envelope and mass properties. Not a closed construction formula because the hub waist is a measured revolve.
+  surface_area:
+    expected: 23161.97
+    tolerance_rel: 0.01
+    provenance: stated
+    note: sources/dimension-sheet.md; waist and bore-step edges dominate the uncertainty.
+  center_of_mass:
+    expected: [0.004, 110.098, -0.001]
+    tolerance: 0.1
+    provenance: stated
+    note: sources/dimension-sheet.md. The +x offset matches the two rim holes both sitting at x = -5.077.
+  solid_count: 1
+  sections:
+    - id: secX0
+      plane: x
+      at: 0.0
+      expect:
+        area: 1201.08
+        loops: 1
+        holes: 0
+        area_tolerance_rel: 0.01
+      description: Through the slot midplane; hub waist plus the flange web under the slot (19.84 x 88.9 bbox).
+    - id: secYWeb
+      plane: y
+      at: 109.076
+      expect:
+        area: 6171.07
+        loops: 1
+        holes: 0
+        area_tolerance_rel: 0.01
+      description: Through the flange web; full Ø88.9 disk minus the two rim-hole notches.
+    - id: secZ0
+      plane: z
+      at: 0.0
+      expect:
+        area: 1826.08
+        loops: 1
+        holes: 0
+        area_tolerance_rel: 0.01
+      description: Through the Y axis; U-slot profile and hub waist, missing the arm bores at z = ±19.
+  faces:
+    - name: hubBottom
+      plane: y
+      at: 92.804
+      normal: "-"
+      area: 2026.83
+      area_tolerance_rel: 0.01
+      center: [0.0, 0.0]
+      mode: one
+    - name: grooveShoulder
+      plane: y
+      at: 103.917
+      normal: "-"
+      area: 414.95
+      area_tolerance_rel: 0.01
+      center: [0.0, 0.0]
+      mode: one
+    - name: flangeBottom
+      plane: y
+      at: 106.298
+      normal: "-"
+      area: 4180.34
+      area_tolerance_rel: 0.01
+      center: [0.0, 0.0]
+      mode: one
+    - name: slotFloor
+      plane: y
+      at: 112.648
+      normal: "+"
+      area: 3407.28
+      area_tolerance_rel: 0.01
+      center: [0.0, 0.0]
+      mode: one
+    - name: armTopPosX
+      plane: y
+      at: 125.348
+      normal: "+"
+      area: 1399.94
+      area_tolerance_rel: 0.01
+      center: [29.97, 0.0]
+      mode: one
+    - name: armTopNegX
+      plane: y
+      at: 125.348
+      normal: "+"
+      area: 1399.94
+      area_tolerance_rel: 0.01
+      center: [-29.97, 0.0]
+      mode: one
+    - name: slotWallNegX
+      plane: x
+      at: -19.844
+      normal: "+"
+      area: 867.76
+      area_tolerance_rel: 0.01
+      center: [119.13, 0.0]
+      mode: one
+    - name: slotWallPosX
+      plane: x
+      at: 19.844
+      normal: "-"
+      area: 867.76
+      area_tolerance_rel: 0.01
+      center: [119.13, 0.0]
+      mode: one
+    - name: boreShoulderNegXPosZ
+      plane: x
+      at: -36.512
+      normal: "-"
+      area: 25.73
+      area_tolerance_rel: 0.05
+      center: [117.96, 18.57]
+      mode: one
+    - name: boreShoulderNegXNegZ
+      plane: x
+      at: -36.512
+      normal: "-"
+      area: 25.73
+      area_tolerance_rel: 0.05
+      center: [118.2, -19.05]
+      mode: one
+    - name: boreShoulderPosXNegZ
+      plane: x
+      at: 36.512
+      normal: "+"
+      area: 25.73
+      area_tolerance_rel: 0.05
+      center: [118.2, -19.05]
+      mode: one
+    - name: boreShoulderPosXPosZ
+      plane: x
+      at: 36.512
+      normal: "+"
+      area: 25.73
+      area_tolerance_rel: 0.05
+      center: [117.96, 18.57]
+      mode: one
+  cylinders:
+    - name: holeMajorPosZ
+      point: [0.0, 118.139, 18.923]
+      direction: [1.0, 0.0, 0.0]
+      kind: hole
+      diameter: 11.113
+      radius_tolerance: 0.05
+      length: 84.785
+      length_tolerance: 0.1
+      t_range: [-42.393, 42.393]
+      description: +Z Ø11.113 arm bore (sheet axis is 0.14 mm from the +Z minor bore).
+    - name: holeMajorNegZ
+      point: [0.0, 118.204, -19.05]
+      direction: [1.0, 0.0, 0.0]
+      kind: hole
+      diameter: 11.113
+      radius_tolerance: 0.05
+      length: 84.705
+      length_tolerance: 0.1
+      t_range: [-42.352, 42.352]
+      description: −Z Ø11.113 arm bore, coaxial with holeMinorNegZ.
+    - name: holeMinorPosZ
+      point: [0.0, 118.204, 19.05]
+      direction: [1.0, 0.0, 0.0]
+      kind: hole
+      diameter: 7.938
+      radius_tolerance: 0.05
+      length: 71.436
+      length_tolerance: 0.05
+      t_range: [-35.718, 35.718]
+      description: +Z Ø7.938 arm bore.
+    - name: holeMinorNegZ
+      point: [0.0, 118.204, -19.05]
+      direction: [1.0, 0.0, 0.0]
+      kind: hole
+      diameter: 7.938
+      radius_tolerance: 0.05
+      length: 71.436
+      length_tolerance: 0.05
+      t_range: [-35.718, 35.718]
+      description: −Z Ø7.938 arm bore.
+    - name: rimHoleNegZ
+      point: [-5.077, 109.594, -39.746]
+      direction: [0.1267, 0.0, 0.9919]
+      kind: hole
+      diameter: 2.261
+      radius_tolerance: 0.05
+      length: 8.763
+      length_tolerance: 0.05
+      description: Rim hole on the −Z side; axis aimed at [0, 109.594, 0].
+    - name: rimHolePosZ
+      point: [-5.077, 109.594, 39.746]
+      direction: [0.1267, 0.0, -0.9919]
+      kind: hole
+      diameter: 2.261
+      radius_tolerance: 0.05
+      length: 8.763
+      length_tolerance: 0.05
+      description: Rim hole on the +Z side; axis aimed at [0, 109.594, 0].
+    - name: flangeOd
+      point: [0.0, 115.823, 0.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: pin
+      diameter: 88.9
+      radius_tolerance: 0.05
+      length: 19.05
+      length_tolerance: 0.05
+      t_range: [-9.525, 9.525]
+      description: Flange outer cylinder, y = 106.298 .. 125.348 from the origin.
+    - name: hubOd
+      point: [0.0, 99.551, 0.0]
+      direction: [0.0, 1.0, 0.0]
+      kind: pin
+      diameter: 50.8
+      radius_tolerance: 0.05
+      length: 13.494
+      length_tolerance: 0.05
+      t_range: [-6.747, 6.747]
+      description: Hub outer cylinder, y = 92.804 .. 106.298 from the origin. The waist is a cut in this pin.
+  planes: []
+  dimensions:
+    - name: bboxX
+      axis: x
+      expected: 88.9
+      tolerance: 0.05
+      description: Envelope x extent.
+    - name: bboxY
+      axis: y
+      expected: 32.544
+      tolerance: 0.05
+      description: Envelope y extent.
+    - name: bboxZ
+      axis: z
+      expected: 88.9
+      tolerance: 0.05
+      description: Envelope z extent.
+    - name: dimFlangeThick
+      axis: y
+      expected: 19.05
+      tolerance: 0.05
+      between: [flangeBottom, armTopPosX]
+      description: Flange underside to +X arm top.
+    - name: dimHubLen
+      axis: y
+      expected: 13.494
+      tolerance: 0.05
+      between: [hubBottom, flangeBottom]
+      description: Hub bottom to flange underside.
+    - name: dimSlotDepth
+      axis: y
+      expected: 12.7
+      tolerance: 0.05
+      between: [slotFloor, armTopPosX]
+      description: Slot floor to +X arm top.
+    - name: dimSlotWidth
+      axis: x
+      expected: 39.688
+      tolerance: 0.05
+      between: [slotWallNegX, slotWallPosX]
+      description: Distance between the U-slot walls.
+  probes:
+    - name: solidHub
+      state: solid
+      points: [[0.0, 98.0, 0.0]]
+      description: Hub core.
+    - name: solidFlangeWeb
+      state: solid
+      points: [[0.0, 109.4, 0.0]]
+      description: Flange web below the slot.
+    - name: solidArms
+      state: solid
+      points: [[32.0, 118.0, 0.0], [-32.0, 118.0, 0.0]]
+      description: Arm interiors at z = 0, away from the bores at z = ±19.
+    - name: voidSlot
+      state: void
+      points: [[0.0, 119.0, 0.0]]
+      description: U-slot air.
+    - name: voidArmBores
+      state: void
+      points:
+        - [30.0, 118.2, 19.05]
+        - [30.0, 118.2, -19.05]
+        - [-30.0, 118.2, 19.05]
+        - [-30.0, 118.2, -19.05]
+      description: Inside each arm bore.
+    - name: voidRimHoles
+      state: void
+      points:
+        - [-5.077, 109.594, 39.746]
+        - [-5.077, 109.594, -39.746]
+      description: Rim-hole axis stations.
+    - name: voidHubWaist
+      state: void
+      points: [[23.5, 102.2, 0.0]]
+      description: Inside the revolved waist cut.
+  cylinder_counts:
+    - name: countHoleMajor
+      diameter: 11.113
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [1.0, 0.0, 0.0]
+      expected: 4
+    - name: countHoleMinor
+      diameter: 7.938
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [1.0, 0.0, 0.0]
+      expected: 4
+    - name: countRimHole
+      diameter: 2.261
+      radius_tolerance: 0.05
+      kind: hole
+      expected: 2
+    - name: countFlangeOd
+      diameter: 88.9
+      radius_tolerance: 0.05
+      kind: pin
+      direction: [0.0, 1.0, 0.0]
+      expected: 1
+    - name: countHubOd
+      diameter: 50.8
+      radius_tolerance: 0.05
+      kind: pin
+      direction: [0.0, 1.0, 0.0]
+      expected: 2
+  passages: []
+  deviation: null
+  blockout:
+    volume_min: 138000
+    volume_max: 153000
+
+references:
+  - path: sources/part-brief.md
+    kind: text
+    role: authoritative
+    sha256: fea46397ecd044590030f38633e3e60c28abea496e851cbc4baa47889d535a69
+    units: mm
+    note: Held-out reconstruction intent and native-frame bbox.
+  - path: sources/dimension-sheet.md
+    kind: table
+    role: authoritative
+    sha256: 055b0252cd087bedcd08c49afaaa4f9ef6fd05ba7f0d3834e70d8b336417e9ef
+    units: mm
+    note: Envelope, planar faces, cylinders and section areas measured on the reference in this frame.
+  - path: sources/render-notes.md
+    kind: text
+    role: illustrative
+    sha256: 46cf083458c3f2a1ac64c26c809f10ab559471b94192782a9291f9dfa1da8ff6
+    units: mm
+    note: Render list and triangle/extent summary.
+  - path: sources/front.png
+    kind: image
+    role: illustrative
+    sha256: 851b92e727e9151808661f83ccb064bf2f58d2db633f6f80d85c68a1be22a6d5
+    units: mm
+    note: Orthographic +Y view; concentric Ø88.9 and Ø50.8.
+  - path: sources/top.png
+    kind: image
+    role: illustrative
+    sha256: 3ebe6a6196abf14994269b4f6601334eb288c4a70d7bac339644d70eca04ddbc
+    units: mm
+    note: Orthographic +Z view; U-slot, arm-bore breakouts, one rim hole, hub waist.
+  - path: sources/right.png
+    kind: image
+    role: illustrative
+    sha256: 97c7ca216278f6f537f33bf4dbdfb995a2f58a3f26aeeba72086db3daa846c4e
+    units: mm
+    note: Orthographic +X view; two arm-bore circles and the hub waist profile.
+  - path: sources/iso.png
+    kind: image
+    role: illustrative
+    sha256: 90103a8151088b33e7c6537ba1bdaba890f61b929c5699bc3e4e16c6d255617b
+    units: mm
+    note: Hub-side isometric; waist ring, U-slot, rim hole, OD bore openings.
+  - path: sources/iso2.png
+    kind: image
+    role: illustrative
+    sha256: 901ea7a39121072db27b185b6d2d2da6daceae1785d4c85e207703b4e5a5ae46
+    units: mm
+    note: Slot-side isometric; slot walls with bore openings and arm tops.
+  - path: sources/iso-below.png
+    kind: image
+    role: illustrative
+    sha256: 85f3d7eddfaa93a6ef089e4a4a55db753289472b8ef7212850061cc365274503
+    units: mm
+    note: Underside isometric; hub end, waist, flange underside, rim hole.
+  - path: sources/section-x0.png
+    kind: drawing
+    role: illustrative
+    sha256: 1de58db74d5b158a3a307c7bb60b4222ebb8a77ed6de9198d106294f94223b9e
+    units: mm
+    note: Material outline at x = 0; hub waist and flange web.
+  - path: sources/section-y109.076.png
+    kind: drawing
+    role: illustrative
+    sha256: bd136eaae5c4e3b66eab7c7d466fc945dc9fc84173bea851848d008b67af7e8a
+    units: mm
+    note: Material outline at y = 109.076; disk plus two rim-hole notches.
+  - path: sources/section-z0.png
+    kind: drawing
+    role: illustrative
+    sha256: 16661511e33e3572ab42ccffec13991ffc2ed70a5435c6f83cdecac84e928351
+    units: mm
+    note: Material outline at z = 0; used to measure the hub-waist polyline.
+
+open_questions:
+  - >-
+    Hub waist generating curve: section-z0 outline is not a single circular fillet
+    (algebraic fit R ≈ 8.0 mm about (r,y) ≈ (29.65, 102.21) has 0.36 mm rms residual).
+    Construct by revolving the section-z0 / section-x0 silhouette. Neck radius 21.1 mm at
+    y ≈ 102.2 and return to the hub OD at y ≈ 94.5 are pixel-measured (±0.4 mm).
+  - >-
+    The +Z Ø11.113 axis is at [0, 118.139, 18.923] while the +Z Ø7.938 is at
+    [0, 118.204, 19.05] (0.14 mm). The −Z pair is coaxial. Treat as a stepped bore; the
+    offset may be reference-tessellation noise.
+  - >-
+    Four planar faces at x = ±36.512 (25.73 mm2 each) sit at the bore (y,z) centroids.
+    36.512 = 44.45 − 7.938. They may be counterbore shoulders or clipped step faces; the
+    axial profile between Ø11.113 and Ø7.938 is not drawn.
+  - >-
+    Both rim holes are clocked at x = −5.077 (azimuth about 7.3 deg off ±Z toward −X).
+    No source states a design angle; the sheet values and the COM x = 0.004 are the evidence.
+  - Material, density and manufacturing process are unspecified.
+  - No reference mesh is in the bundle (held-out); acceptance.deviation is unset.

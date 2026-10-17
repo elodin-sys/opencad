@@ -1,0 +1,709 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Creating 3D shapes - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/sketch3d.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="modeling-3d-shapes"><a class="header" href="#modeling-3d-shapes">Modeling 3D shapes</a></h1>
+<ul>
+<li><a href="#regions-and-extrudes">Regions and Extrudes</a>
+<ul>
+<li><a href="#picking-a-region">Picking a region</a>
+<ul>
+<li><a href="#selecting-by-segments">Selecting by segments</a></li>
+</ul>
+</li>
+<li><a href="#extruding-a-region">Extruding a region</a></li>
+<li><a href="#advanced-extrude-options">Advanced extrude options</a></li>
+</ul>
+</li>
+<li><a href="#sweep">Sweep</a>
+<ul>
+<li><a href="#advanced-sweep-options">Advanced sweep options</a></li>
+</ul>
+</li>
+<li><a href="#revolve">Revolve</a>
+<ul>
+<li><a href="#spheres">Spheres</a></li>
+</ul>
+</li>
+<li><a href="#lofts">Lofts</a></li>
+</ul>
+<p>Previous chapters covered designing 2D shapes. Now it's time to design 3D shapes!</p>
+<p>3D shapes are usually made by adding depth to a 2D shape. There are two common ways engineers do this: by extruding or revolving 2D shapes into 3D. There's some less common ways too, including sweeps and lofts. In this chapter, we'll go through each of these! Let's get started with the most common method: extruding.</p>
+<h2 id="regions-and-extrudes"><a class="header" href="#regions-and-extrudes">Regions and Extrudes</a></h2>
+<p>Extruding takes a 2D shape and "pulls" it out of the plane, stretching it outwards into a third dimension. Let's start with the constrained pill shape we built in the previous chapter:</p>
+<pre><code class="language-kcl">pill = sketch(on = XZ) {
+  line1 = line(start = [var -4.18mm, var 5.88mm], end = [var 1.34mm, var 5.85mm])
+  line2 = line(start = [var 1.32mm, var 4.12mm], end = [var -4.19mm, var 4.15mm])
+  arc1 = arc(start = [var -4.18mm, var 5.88mm], end = [var -4.19mm, var 4.15mm], center = [var -4.18mm, var 5.01mm])
+  arc2 = arc(start = [var 1.32mm, var 4.12mm], end = [var 1.34mm, var 5.85mm], center = [var 1.33mm, var 4.99mm])
+  coincident([arc1.start, line1.start])
+  coincident([line1.end, arc2.end])
+  coincident([arc2.start, line2.start])
+  coincident([line2.end, arc1.end])
+  parallel([line1, line2])
+  equalLength([line1, line2])
+  equalRadius([arc2, arc1])
+  tangent([line1, arc1])
+  tangent([line1, arc2])
+}
+</code></pre>
+<p>It should look like this:</p>
+<p><img src="images/static/pill_sketch.png" alt="2D pill, before extruding" /></p>
+<p>Now we're going to extrude it up into the third axis, making a 3D solid.</p>
+<pre><code class="language-kcl=pill_3d">pill = sketch(on = XZ) {
+  line1 = line(start = [var -4.18mm, var 5.88mm], end = [var 1.34mm, var 5.85mm])
+  line2 = line(start = [var 1.32mm, var 4.12mm], end = [var -4.19mm, var 4.15mm])
+  arc1 = arc(start = [var -4.18mm, var 5.88mm], end = [var -4.19mm, var 4.15mm], center = [var -4.18mm, var 5.01mm])
+  arc2 = arc(start = [var 1.32mm, var 4.12mm], end = [var 1.34mm, var 5.85mm], center = [var 1.33mm, var 4.99mm])
+  coincident([arc1.start, line1.start])
+  coincident([line1.end, arc2.end])
+  coincident([arc2.start, line2.start])
+  coincident([line2.end, arc1.end])
+  parallel([line1, line2])
+  equalLength([line1, line2])
+  equalRadius([arc2, arc1])
+  tangent([line1, arc1])
+  tangent([line1, arc2])
+}
+
+// Add these lines!
+region001 = region(segments = [pill.line1, pill.arc2])
+extrude001 = extrude(region001, length = 1)
+</code></pre>
+<p>You should see something like this:</p>
+<p><model-viewer
+            alt="2D pill extruded into 3D"
+            src="gltf/pill_3d/output.gltf"
+            poster="images/dynamic/pill_3d.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer></p>
+<blockquote>
+<p>NOTE: If you're reading this book online, the above graphic should be an interactive 3D model. You can use your mouse (or touchpad) to spin the model, zoom in and out, pan around the 3D scene, etc.</p>
+</blockquote>
+<p>We added two different functions to our program: <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-region"><code>region</code></a> and <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-extrude"><code>extrude</code></a>. They work together: <code>region</code> lets you pick out a closed region of 2D space from your sketch, and <code>extrude</code> transforms that region into a 3D solid.</p>
+<h3 id="picking-a-region"><a class="header" href="#picking-a-region">Picking a region</a></h3>
+<p>We need <code>region</code> because a sketch can contain lots of geometry. In the previous chapters, we used calls to <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-line"><code>line</code></a> and <a href="https://zoo.dev/docs/kcl-std/functions/std-solver-arc"><code>arc</code></a> to create closed shapes, like rhombuses and pills. But a sketch could contain multiple shapes, or free-floating lines that aren't part of any closed shape at all. Here's an example sketch:</p>
+<p><img src="images/static/region_demo.png" alt="A sketch with two closed shapes and some free-floating lines" /></p>
+<p>This sketch contains two closed shapes (a triangle and a square) as well as other lines. So, when we use the <code>extrude</code> function, we have to say which closed region we want to extrude by naming segments that bound it.</p>
+<h4 id="selecting-by-segments"><a class="header" href="#selecting-by-segments">Selecting by segments</a></h4>
+<p>Pass <code>segments</code> one or more segments that are part of the region you want. With multiple segments, <code>region</code> traces the first segment from its start point to the intersection with the second segment, then turns at each intersection until it returns to the first segment. Here we selected two connected segments:</p>
+<pre><code>region(segments = [pill.line1, pill.arc2])
+</code></pre>
+<p>If the boundary is a single closed segment (i.e., a circle) pass just that one segment:</p>
+<pre><code>region(segments = [circleSketch.circle1])
+</code></pre>
+<p>If the supplied segments could trace more than one boundary, use <code>direction</code> to choose clockwise or counterclockwise traversal and <code>intersectionIndex</code> to choose which intersection to follow. See the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-region"><code>region</code></a> reference for details.</p>
+<h3 id="extruding-a-region"><a class="header" href="#extruding-a-region">Extruding a region</a></h3>
+<p>Once you have a region of 2D space, you can turn that 2D space into 3D. We use the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-extrude"><code>extrude</code></a> function to take a region and say, "extrude it up into the 3rd dimension". <code>extrude</code> takes a distance, which is how far along the third axis to extrude. Every plane has a <em>normal</em>: the axis perpendicular to the plane. For the plane XZ, this is the Y axis. That normal is the direction that <code>extrude</code> uses to add depth to your 2D region, making it 3D.</p>
+<h3 id="advanced-extrude-options"><a class="header" href="#advanced-extrude-options">Advanced extrude options</a></h3>
+<ul>
+<li><code>bidirectionalLength = &lt;number&gt;</code>: In addition to extruding up by <code>length</code>, also extrude <em>down</em> by this much.</li>
+<li><code>symmetric = true</code>: Instead of extruding up by <code>length</code>, extrude up half the length, and down half the length. So, if you sketch on <code>XY</code> and then <code>extrude(length = 10)</code>, it'll extrude 10 from <code>Z=0</code> to <code>Z=10</code>. But if you use <code>extrude(length = 10, symmetric = true)</code> it'll go from <code>Z=-5</code> to <code>Z=5</code>.</li>
+<li><code>to = &lt;target&gt;</code>: Set a target (you can use a point, axis, plane, edge, face, sketch or solid), and this will extrude until it makes the solid reach the target (or as close as it can possibly get).</li>
+<li><code>twistAngle = 30deg</code>: While extruding, twist the sketch around its center. Or choose some other point to twist around, via <code>twistCenter</code>. Change the twist speed with <code>twistAngleStep</code>.</li>
+</ul>
+<h2 id="sweep"><a class="header" href="#sweep">Sweep</a></h2>
+<p>An extrude takes some 2D region and drags it up in a straight line along the normal axis. A <em>sweep</em> is like an extrude, but the shape isn't just moved along a straight line: it could be moved along any path. Let's reuse our previous pill-shape example, but this time we'll sweep it instead of extruding it. First, we have to define a path that the sweep will take. Let's add one:</p>
+<pre><code class="language-kcl=path_for_sweep">pillSketch = sketch(on = YZ) {
+  line1 = line(start = [var -4.18mm, var 5.88mm], end = [var 1.34mm, var 5.85mm])
+  line2 = line(start = [var 1.32mm, var 4.12mm], end = [var -4.19mm, var 4.15mm])
+  arc1 = arc(start = [var -4.18mm, var 5.88mm], end = [var -4.19mm, var 4.15mm], center = [var -4.18mm, var 5.01mm])
+  arc2 = arc(start = [var 1.32mm, var 4.12mm], end = [var 1.34mm, var 5.85mm], center = [var 1.33mm, var 4.99mm])
+  coincident([arc1.start, line1.start])
+  coincident([line1.end, arc2.end])
+  coincident([arc2.start, line2.start])
+  coincident([line2.end, arc1.end])
+  parallel([line1, line2])
+  equalLength([line1, line2])
+  equalRadius([arc2, arc1])
+  tangent([line1, arc1])
+  tangent([line1, arc2])
+}
+pillRegion = region(segments = [pillSketch.line1, pillSketch.arc2])
+
+pathSketch = sketch(on = XZ) {
+  line1 = line(start = [var 0mm, var 5.06mm], end = [var -5.02mm, var 4.93mm])
+  vertical([line1.start, ORIGIN])
+  arc1 = arc(start = [var -4.54mm, var 12.82mm], end = [var -5.02mm, var 4.93mm], center = [var -5.12mm, var 8.9mm])
+  coincident([line1.end, arc1.end])
+  tangent([line1, arc1])
+}
+</code></pre>
+<p><img src="images/dynamic/path_for_sweep.png" alt="2D fallback: A 2D pill shape and a path we&#39;re going to sweep it along" title="2D fallback: A 2D pill shape and a path we&#39;re going to sweep it along" /></p>
+<p>Our variable <code>pathSketch</code> has two lines (one straight line, one arc). Note that they <em>don't</em> form a region! They form an <em>open profile</em>, i.e. a sequence of lines that doesn't close back in on itself.</p>
+<p>Now we'll add the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-sweep"><code>sweep</code></a> call, like <code>sweep(pillRegion, path = [pathSketch.line1, pathSketch.arc1])</code>, which will drag our 2D pill sketch along the path we defined. We'll add it to the bottom of our code:</p>
+<pre><code class="language-kcl=path_for_sweep_complete">// This is the same in the previous example program:
+pillSketch = sketch(on = YZ) {
+  line1 = line(start = [var -4.18mm, var 5.88mm], end = [var 1.34mm, var 5.85mm])
+  line2 = line(start = [var 1.32mm, var 4.12mm], end = [var -4.19mm, var 4.15mm])
+  arc1 = arc(start = [var -4.18mm, var 5.88mm], end = [var -4.19mm, var 4.15mm], center = [var -4.18mm, var 5.01mm])
+  arc2 = arc(start = [var 1.32mm, var 4.12mm], end = [var 1.34mm, var 5.85mm], center = [var 1.33mm, var 4.99mm])
+  coincident([arc1.start, line1.start])
+  coincident([line1.end, arc2.end])
+  coincident([arc2.start, line2.start])
+  coincident([line2.end, arc1.end])
+  parallel([line1, line2])
+  equalLength([line1, line2])
+  equalRadius([arc2, arc1])
+  tangent([line1, arc1])
+  tangent([line1, arc2])
+}
+pillRegion = region(segments = [pillSketch.line1, pillSketch.arc2])
+
+pathSketch = sketch(on = XZ) {
+  line1 = line(start = [var 0mm, var 5.06mm], end = [var -5.02mm, var 4.93mm])
+  vertical([line1.start, ORIGIN])
+  arc1 = arc(start = [var -4.54mm, var 12.82mm], end = [var -5.02mm, var 4.93mm], center = [var -5.12mm, var 8.9mm])
+  coincident([line1.end, arc1.end])
+  tangent([line1, arc1])
+}
+
+// Add this new line of code to your program!
+// Sweep the pill-shaped region along the given path.
+sweep(pillRegion, path = [pathSketch.line1, pathSketch.arc1])
+</code></pre>
+<p><model-viewer
+            alt="2D pill swept along path into 3D"
+            src="gltf/path_for_sweep_complete/output.gltf"
+            poster="images/dynamic/path_for_sweep_complete.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Sweeps and extrudes are pretty similar! A sweep is basically a generalization of extrudes to allow extruding along more complicated paths. Or conversely, you could say an extrude is just a sweep whose path has to be a straight line along the normal to the plane.</p>
+<h3 id="advanced-sweep-options"><a class="header" href="#advanced-sweep-options">Advanced sweep options</a></h3>
+<p>The <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-sweep"><code>sweep</code></a> call has several other options you can set, listed in its documentation. Here are some optional parameters you can use to tweak the exact algorithm Zoo uses to compute the sweep:</p>
+<ul>
+<li><code>version = 1</code> or <code>version = 2</code> will change which Zoo sweep algorithm to use. The default, 0, means the Zoo engine will use whichever it thinks is best. 1 is the version we first launched Zoo with, and 2 is a new improved version that works better in many cases.</li>
+<li><code>translateProfileToPath = true</code> moves the profile onto the path before the sweep starts, instead of starting the sweep from wherever the profile already sits. Defaults to <code>false</code>, and requires <code>version = 2</code>.</li>
+<li><code>orientProfilePerpendicular = true</code> re-orients the profile so it's perpendicular to the path before the sweep starts. Defaults to <code>false</code>, and requires <code>version = 2</code>.</li>
+<li><code>sectional = true</code> will divide the swept path into several different stages, one per line in the path. The default is <code>sectional = false</code>.</li>
+</ul>
+<p><strong>NOTE</strong>: Older KCL used a <code>relativeTo</code> parameter (set to <code>sweep::TRAJECTORY</code> or <code>sweep::SKETCH_PLANE</code>) to control how the swept shape moved along the path. It's deprecated -- use <code>translateProfileToPath</code> and <code>orientProfilePerpendicular</code> instead.</p>
+<p>If your sweep looks strange, try playing around with these options, or read the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-sweep"><code>sweep</code></a> docs page for more information.</p>
+<h2 id="revolve"><a class="header" href="#revolve">Revolve</a></h2>
+<p>Revolves are another common way to make a 3D shape. Let's start with a 2D shape, like a basic circle.</p>
+<pre><code class="language-kcl=circle">circleSketch = sketch(on = XZ) {
+  // Sketch a circle whose center is [20, 0].
+  circle1 = circle(start = [var 0mm, var 1mm], center = [var 0mm, var 0mm])
+  fixed([circle1.center, [20, 0]])
+
+  // Use construction geometry to set the circle's radius to 1mm.
+  vertical([circle1.start, circle1.center])
+  line1 = line(start = [var 0mm, var 0mm], end = [var 0mm, var 1mm], construction = true)
+  coincident([line1.start, circle1.center])
+  coincident([line1.end, circle1.start])
+  distance([line1.start, line1.end]) == 1mm
+}
+</code></pre>
+<p><img src="images/dynamic/circle.png" alt="2D fallback: A 2D circle before revolving." title="2D fallback: A 2D circle before revolving." /></p>
+<p>Note that we placed the circle at <code>[20, 0]</code>, i.e. 20 units away from the global origin.</p>
+<p>The <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-revolve"><code>revolve</code></a> function takes a shape and revolves it, by dragging it around an axis. Let's revolve our circle around the Y axis (which is perpendicular to XZ, the plane we're sketching on), to make a ring shape. Because the circle being revolved is 20 units away from the global origin, the ring produced by the revolve should have a radius of 20.</p>
+<pre><code class="language-kcl=donut">circleSketch = sketch(on = XZ) {
+  // Sketch a circle whose center is [20, 0].
+  circle1 = circle(start = [var 0mm, var 1mm], center = [var 0mm, var 0mm])
+  fixed([circle1.center, [20, 0]])
+
+  // Use construction geometry to set the circle's radius to 1mm.
+  vertical([circle1.start, circle1.center])
+  line1 = line(start = [var 0mm, var 0mm], end = [var 0mm, var 1mm], construction = true)
+  coincident([line1.start, circle1.center])
+  coincident([line1.end, circle1.start])
+  distance([line1.start, line1.end]) == 1mm
+}
+
+// Pick the region inside the circle
+region001 = region(segments = [circleSketch.circle1])
+
+// Revolve it around the center of the scene
+revolve001 = revolve(region001, axis = Y)
+</code></pre>
+<p><model-viewer
+            alt="The circle has been revolved around an axis to make a donut"
+            src="gltf/donut/output.gltf"
+            poster="images/dynamic/donut.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Beautiful. If we'd placed the original circle closer to the origin, the ring would be smaller.</p>
+<p><a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-revolve"><code>revolve</code></a> has an optional argument called <code>angle</code>. In the above example, we didn't provide it, so it defaulted to 360 degrees. But we can set it to 240 degrees, and get two thirds of a donut:</p>
+<pre><code class="language-kcl=donut240">// This part is the same as the previous example:
+circleSketch = sketch(on = XZ) {
+  circle1 = circle(start = [var 0mm, var 1mm], center = [var 0mm, var 0mm])
+  fixed([circle1.center, [20, 0]])
+  vertical([circle1.start, circle1.center])
+  line1 = line(start = [var 0mm, var 0mm], end = [var 0mm, var 1mm], construction = true)
+  coincident([line1.start, circle1.center])
+  coincident([line1.end, circle1.start])
+  distance([line1.start, line1.end]) == 1mm
+}
+region001 = region(segments = [circleSketch.circle1])
+
+// Change the angle to 240deg
+revolve001 = revolve(region001, angle = 240deg, axis = Y)
+</code></pre>
+<p><model-viewer
+            alt="The circle has been revolved partway around an axis to make a donut"
+            src="gltf/donut240/output.gltf"
+            poster="images/dynamic/donut240.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer></p>
+<h3 id="spheres"><a class="header" href="#spheres">Spheres</a></h3>
+<p>You can make a sphere by revolving a semicircle its full 360 degrees. First, let's make a semicircle:</p>
+<pre><code class="language-kcl=semicircle">semiCircleSketch = sketch(on = XZ) {
+  arc1 = arc(start = [var 1.81mm, var -2.03mm], end = [var -1.91mm, var 1.94mm], center = [var 0mm, var 0mm])
+  coincident([arc1.center, ORIGIN])
+  line1 = line(start = [var 0mm, var 1.74mm], end = [var 0mm, var 0mm])
+  vertical([line1.start, ORIGIN])
+  coincident([line1.end, arc1.center])
+  line2 = line(start = [var 0mm, var 0mm], end = [var 0mm, var -1.92mm])
+  coincident([line2.start, line1.end])
+  vertical([line2.end, ORIGIN])
+  equalLength([line1, line2])
+  distance([line1.start, line1.end]) == 1.83mm
+  coincident([line1.start, arc1.end])
+  coincident([arc1.start, line2.end])
+}
+</code></pre>
+<p><img src="images/dynamic/semicircle.png" alt="2D fallback: Sketching a semicircle" title="2D fallback: Sketching a semicircle" /></p>
+<p>Then we can revolve that semicircle 360 degrees to make a sphere:</p>
+<pre><code class="language-kcl=sphere">semiCircleSketch = sketch(on = XZ) {
+  arc1 = arc(start = [var 1.81mm, var -2.03mm], end = [var -1.91mm, var 1.94mm], center = [var 0mm, var 0mm])
+  coincident([arc1.center, ORIGIN])
+  line1 = line(start = [var 0mm, var 1.74mm], end = [var 0mm, var 0mm])
+  vertical([line1.start, ORIGIN])
+  coincident([line1.end, arc1.center])
+  line2 = line(start = [var 0mm, var 0mm], end = [var 0mm, var -1.92mm])
+  coincident([line2.start, line1.end])
+  vertical([line2.end, ORIGIN])
+  equalLength([line1, line2])
+  distance([line1.start, line1.end]) == 1.83mm
+  coincident([line1.start, arc1.end])
+  coincident([arc1.start, line2.end])
+}
+
+semiCircleRegion = region(segments = [semiCircleSketch.arc1, semiCircleSketch.line1])
+revolve001 = revolve(semiCircleRegion, axis = Y)
+</code></pre>
+<p><img src="images/dynamic/sphere.png" alt="2D fallback: Revolving a semicircle makes a sphere" title="2D fallback: Revolving a semicircle makes a sphere" /></p>
+<p>Note that here, we omitted the <code>angle</code> argument from the <code>revolve</code> call because it defaults to 360 degrees.</p>
+<h2 id="lofts"><a class="header" href="#lofts">Lofts</a></h2>
+<p>All previous methods -- extrudes, sweeps, revolves -- took a single 2D shape and made a single 3D solid. Lofts are a little different -- they take <em>multiple</em> 2D shapes and join them to make a single 3D shape. A <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-loft"><code>loft</code></a> interpolates between various sketches, creating a volume that smoothly blends from one shape into another. Let's see an example:</p>
+<pre><code class="language-kcl=loft_basic">// Sketch a square
+square = sketch(on = XY) {
+  line1 = line(start = [var 0mm, var -2mm], end = [var 2mm, var -2mm])
+  line2 = line(start = [var 2mm, var -2mm], end = [var 2mm, var 0mm])
+  line3 = line(start = [var 2mm, var 0mm], end = [var 0mm, var 0mm])
+  line4 = line(start = [var 0mm, var 0mm], end = [var 0mm, var -2mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  perpendicular([line4, line1])
+  coincident([line4.start, [-5mm, 5mm]])
+  distance([line3.start, line3.end]) == 10mm
+}
+
+// Sketch a circle, 10mm above the square.
+circle = sketch(on = offsetPlane(XY, offset = 10mm)) {
+  circle1 = circle(start = [var 0mm, var 1.5mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  vertical([circle1.start, circle1.center])
+  distance([circle1.start, circle1.center]) == 1.5mm
+}
+
+// Pick out the right regions from each sketch.
+squareRegion = region(segments = [square.line1, square.line2])
+circleRegion = region(segments = [circle.circle1])
+
+// Loft the square into the circle.
+loft([squareRegion, circleRegion])
+</code></pre>
+<p><model-viewer
+            alt="Basic loft of a square into a circle"
+            src="gltf/loft_basic/output.gltf"
+            poster="images/dynamic/loft_basic.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Note that we used the <a href="https://zoo.dev/docs/kcl-std/functions/std-offsetPlane"><code>offsetPlane</code></a> function to start the circle sketch above the XY plane. We'll cover offsetPlane more in the chapter on <a href="planes.html">planes</a>. The <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-loft"><code>loft</code></a> function has a few other advanced options you can set. One of these is <code>vDegree</code>, which affects how smoothly KCL interpolates between the shapes. Take a look at these two examples, which are identical except for vDegree. This example uses <code>vDegree = 1</code>:</p>
+<pre><code class="language-kcl=loft_vd1">// Sketch a square
+square = sketch(on = XY) {
+  line1 = line(start = [var 0mm, var -2mm], end = [var 2mm, var -2mm])
+  line2 = line(start = [var 2mm, var -2mm], end = [var 2mm, var 0mm])
+  line3 = line(start = [var 2mm, var 0mm], end = [var 0mm, var 0mm])
+  line4 = line(start = [var 0mm, var 0mm], end = [var 0mm, var -2mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  perpendicular([line4, line1])
+  coincident([line4.start, [-5mm, 5mm]])
+  distance([line3.start, line3.end]) == 10mm
+}
+
+// Sketch a circle, 10mm above the square.
+circle = sketch(on = offsetPlane(XY, offset = 10mm)) {
+  circle1 = circle(start = [var 0mm, var 1.5mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  vertical([circle1.start, circle1.center])
+  distance([circle1.start, circle1.center]) == 1.5mm
+}
+
+// Another square, above the other shapes.
+square2 = sketch(on = offsetPlane(XY, offset = 20mm)) {
+  line1 = line(start = [var 0mm, var -2mm], end = [var 2mm, var -2mm])
+  line2 = line(start = [var 2mm, var -2mm], end = [var 2mm, var 0mm])
+  line3 = line(start = [var 2mm, var 0mm], end = [var 0mm, var 0mm])
+  line4 = line(start = [var 0mm, var 0mm], end = [var 0mm, var -2mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  perpendicular([line4, line1])
+  coincident([line4.start, [-5mm, 5mm]])
+  distance([line3.start, line3.end]) == 10mm
+}
+
+// Pick out the right regions from each sketch.
+squareRegion = region(segments = [square.line1, square.line2])
+circleRegion = region(segments = [circle.circle1])
+squareRegion2 = region(segments = [square2.line1, square2.line2])
+
+// Loft the square into the circle.
+loftedSolid = loft([squareRegion, circleRegion, squareRegion2], vDegree = 1)
+</code></pre>
+<p><model-viewer
+            alt="Loft with vDegree 1"
+            src="gltf/loft_vd1/output.gltf"
+            poster="images/dynamic/loft_vd1.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+The following loft is identical, but we set <code>vDegree = 2</code>. That's actually the default, so we don't need to set it, but for the sake of example we'll explicitly set it there.</p>
+<details><summary>Click here for the same KCL code, but using vDegree = 2</summary>
+<pre><code class="language-kcl=loft_vd2">// Sketch a square
+square = sketch(on = XY) {
+  line1 = line(start = [var 0mm, var -2mm], end = [var 2mm, var -2mm])
+  line2 = line(start = [var 2mm, var -2mm], end = [var 2mm, var 0mm])
+  line3 = line(start = [var 2mm, var 0mm], end = [var 0mm, var 0mm])
+  line4 = line(start = [var 0mm, var 0mm], end = [var 0mm, var -2mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  perpendicular([line4, line1])
+  coincident([line4.start, [-5mm, 5mm]])
+  distance([line3.start, line3.end]) == 10mm
+}
+
+// Sketch a circle, 10mm above the square.
+circle = sketch(on = offsetPlane(XY, offset = 10mm)) {
+  circle1 = circle(start = [var 0mm, var 1.5mm], center = [var 0mm, var 0mm])
+  coincident([circle1.center, ORIGIN])
+  vertical([circle1.start, circle1.center])
+  distance([circle1.start, circle1.center]) == 1.5mm
+}
+
+// Another square, above the other shapes.
+square2 = sketch(on = offsetPlane(XY, offset = 20mm)) {
+  line1 = line(start = [var 0mm, var -2mm], end = [var 2mm, var -2mm])
+  line2 = line(start = [var 2mm, var -2mm], end = [var 2mm, var 0mm])
+  line3 = line(start = [var 2mm, var 0mm], end = [var 0mm, var 0mm])
+  line4 = line(start = [var 0mm, var 0mm], end = [var 0mm, var -2mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+  equalLength([line1, line2, line3, line4])
+  perpendicular([line4, line1])
+  coincident([line4.start, [-5mm, 5mm]])
+  distance([line3.start, line3.end]) == 10mm
+}
+
+// Pick out the right regions from each sketch.
+squareRegion = region(segments = [square.line1, square.line2])
+circleRegion = region(segments = [circle.circle1])
+squareRegion2 = region(segments = [square2.line1, square2.line2])
+
+// Loft the square into the circle.
+// This time use vDegree = 2. This is the default, so you don't actually
+// need to set it. We're setting it here for the sake of example.
+loftedSolid = loft([squareRegion, circleRegion, squareRegion2], vDegree = 2)
+</code></pre>
+</details>
+<p><model-viewer
+            alt="Loft with vDegree 2"
+            src="gltf/loft_vd2/output.gltf"
+            poster="images/dynamic/loft_vd2.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+As you can see, the <code>vDegree</code> makes a big difference. You can view other options on the <a href="https://zoo.dev/docs/kcl-std/functions/std-sketch-loft"><code>loft</code></a> docs page.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="sketch2d_curves_constraints.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="fillets.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="sketch2d_curves_constraints.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="fillets.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

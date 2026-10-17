@@ -1,0 +1,123 @@
+{
+  "named_faces": {
+    "bottom": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 784.5130643098971,
+      "ok": true,
+      "position": 0.0,
+      "center_expected": [
+        20.0,
+        0.0
+      ],
+      "center_error": 4.855423455965501e-09,
+      "centroid_uv": [
+        19.999999995144577,
+        2.6541412297131917e-12
+      ]
+    },
+    "top": {
+      "plane": "z",
+      "at": 5.0,
+      "normal": "+",
+      "found": 1,
+      "area": 784.5130643098971,
+      "ok": true,
+      "position": 5.0,
+      "center_expected": [
+        20.0,
+        0.0
+      ],
+      "center_error": 4.855423455965501e-09,
+      "centroid_uv": [
+        19.999999995144577,
+        2.6541412297131917e-12
+      ]
+    },
+    "sideNegY": {
+      "plane": "y",
+      "at": -8.0,
+      "normal": "-",
+      "found": 1,
+      "area": 200.00000000000242,
+      "ok": true,
+      "position": -7.99999753013,
+      "area_expected": 200.0,
+      "area_ok": true,
+      "centroid_uv": [
+        19.99371367217576,
+        2.5
+      ]
+    },
+    "sidePosY": {
+      "plane": "y",
+      "at": 8.0,
+      "normal": "+",
+      "found": 1,
+      "area": 200.00000000000242,
+      "ok": true,
+      "position": 7.99999753013,
+      "area_expected": 200.0,
+      "area_ok": true,
+      "centroid_uv": [
+        19.99371367217576,
+        2.5
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "bottom",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        20.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "top",
+      "plane": "z",
+      "at": 5.0,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        20.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "sideNegY",
+      "plane": "y",
+      "at": -8.0,
+      "normal": "-",
+      "area": 200.0,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "sidePosY",
+      "plane": "y",
+      "at": 8.0,
+      "normal": "+",
+      "area": 200.0,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 5
+}

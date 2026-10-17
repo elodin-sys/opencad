@@ -1,0 +1,75 @@
+{
+  "named_faces": {
+    "contactFace": {
+      "plane": "z",
+      "at": 13.0,
+      "normal": "-",
+      "found": 1,
+      "area": 3544.386136446322,
+      "ok": true,
+      "position": 13.0,
+      "area_expected": 3544.39,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        111.905
+      ],
+      "center_error": 0.00032551408979486496,
+      "centroid_uv": [
+        1.5388789421971794e-12,
+        111.9053255140898
+      ]
+    },
+    "topFace": {
+      "plane": "z",
+      "at": 19.5,
+      "normal": "+",
+      "found": 1,
+      "area": 3544.386136446322,
+      "ok": true,
+      "position": 19.5,
+      "area_expected": 3544.39,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        111.905
+      ],
+      "center_error": 0.00032551408979486496,
+      "centroid_uv": [
+        1.5388789421971794e-12,
+        111.9053255140898
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "contactFace",
+      "plane": "z",
+      "at": 13.0,
+      "normal": "-",
+      "area": 3544.39,
+      "area_tolerance_rel": 0.002,
+      "tolerance": null,
+      "center": [
+        0.0,
+        111.905
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "topFace",
+      "plane": "z",
+      "at": 19.5,
+      "normal": "+",
+      "area": 3544.39,
+      "area_tolerance_rel": 0.002,
+      "tolerance": null,
+      "center": [
+        0.0,
+        111.905
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 2
+}

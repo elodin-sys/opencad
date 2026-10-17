@@ -1,0 +1,32 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design
+Title: 3D Design
+
+# 3D Design
+
+Core 3D design workflows in Zoo Design Studio.
+
+3D Design covers the core workflows used to create, edit, and inspect CAD geometry in Zoo Design
+Studio. This section brings together the tools used to define parametric parts, inspect geometry,
+and build assemblies.
+
+Most part-modeling workflows begin in
+[Parametric Modeling](/docs/zoo-design-studio/features/3d-design/parametric-modeling), where
+sketches drive solid features, surface features, transforms, and construction geometry. From there,
+use [Assemblies](/docs/zoo-design-studio/features/3d-design/assemblies) to position multiple parts
+in a shared design context. Use
+[Geometric Analysis](/docs/zoo-design-studio/features/3d-design/geometric-analysis) to inspect
+model measurements while you work. For interface areas such as the
+[Feature Tree](/docs/zoo-design-studio/features/workspace/feature-tree),
+[Bodies Pane](/docs/zoo-design-studio/features/workspace/body-pane), and
+[Code Editor](/docs/zoo-design-studio/features/workspace/code-editor), see
+[Workspace](/docs/zoo-design-studio/features/workspace).
+
+<FramedImage
+    src="/documentation-assets/docs/zoo-design-studio/features/3d-design/3d-design.webp"
+    alt="3D Design overview in Zoo Design Studio"
+    aspect="740 / 1486"
+    maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+    3D Design: Core modeling and assembly workflows in Zoo Design Studio
+</div>

@@ -1,0 +1,396 @@
+{
+  "case": "chiral-keyplate",
+  "arm": "text-only",
+  "design": "chiral-keyplate",
+  "ecr": null,
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/build123d/chiral-keyplate",
+  "truth_class": "D",
+  "role": "calibration",
+  "scored_at": "2026-09-20T05:52:39Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 14,
+    "required_total": 14,
+    "optional_pass": 0,
+    "optional_total": 0
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "",
+      "expected": [
+        80,
+        80,
+        8
+      ],
+      "measured": [
+        80.0,
+        80.0,
+        8.0
+      ],
+      "error": 0.0,
+      "ok": true
+    },
+    {
+      "id": "volume",
+      "kind": "volume",
+      "required": true,
+      "note": "",
+      "expected": 49664.0,
+      "measured": 49664.0,
+      "error": 0.0,
+      "band": 99.328,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 1,
+      "measured": 1,
+      "ok": true
+    },
+    {
+      "id": "center_of_mass",
+      "kind": "center_of_mass",
+      "required": true,
+      "note": "",
+      "expected": [
+        6.867358915207154e-18,
+        -5.493887132165723e-17,
+        3.9381443298969083
+      ],
+      "measured": [
+        -6.409534987526676e-17,
+        -6.867358915207154e-17,
+        3.9381443298969083
+      ],
+      "error": 7.096270879047392e-17,
+      "ok": true
+    },
+    {
+      "id": "below_slots",
+      "kind": "section",
+      "required": true,
+      "note": "below the pocket floors the plate is a solid square",
+      "plane": "z",
+      "at": 2.0,
+      "measured": {
+        "area": 6399.999999999999,
+        "loops": 1,
+        "holes": 0
+      },
+      "checks": {
+        "area": {
+          "expected": 6400.0,
+          "measured": 6399.999999999999,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 0,
+          "measured": 0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "through_slots",
+      "kind": "section",
+      "required": true,
+      "note": "one remaining loop with four holes; the solid-region centre is at the origin for both handednesses",
+      "plane": "z",
+      "at": 6.0,
+      "measured": {
+        "area": 6015.999999999999,
+        "loops": 1,
+        "holes": 4
+      },
+      "checks": {
+        "area": {
+          "expected": 6016.0,
+          "measured": 6015.999999999999,
+          "ok": true
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 4,
+          "measured": 4,
+          "ok": true
+        },
+        "regions": {
+          "expected_count": 1,
+          "measured_count": 1,
+          "rows": [
+            {
+              "expected": {
+                "center": [
+                  0.0,
+                  0.0
+                ],
+                "size": [
+                  80.0,
+                  80.0
+                ]
+              },
+              "measured": {
+                "center": [
+                  3.023586109617448e-16,
+                  7.55896527404362e-17
+                ],
+                "size": [
+                  80.0,
+                  80.0
+                ],
+                "area": 6015.999999999999
+              },
+              "center_error": 3.116641224525779e-16,
+              "ok": true
+            }
+          ],
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "slot_a_floor",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 4.0,
+      "normal": "+",
+      "found": 1,
+      "area": 96.0,
+      "expected_area": 96.0,
+      "mode": "one",
+      "center": [
+        20.0,
+        8.0
+      ],
+      "centroid_uv": [
+        20.0,
+        8.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "slot_b_floor",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 4.0,
+      "normal": "+",
+      "found": 1,
+      "area": 95.99999999999999,
+      "expected_area": 96.0,
+      "mode": "one",
+      "center": [
+        -8.0,
+        20.0
+      ],
+      "centroid_uv": [
+        -8.000000000000002,
+        20.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "slot_c_floor",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 4.0,
+      "normal": "+",
+      "found": 1,
+      "area": 96.0,
+      "expected_area": 96.0,
+      "mode": "one",
+      "center": [
+        -20.0,
+        -8.0
+      ],
+      "centroid_uv": [
+        -20.0,
+        -8.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "slot_d_floor",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 4.0,
+      "normal": "+",
+      "found": 1,
+      "area": 95.99999999999999,
+      "expected_area": 96.0,
+      "mode": "one",
+      "center": [
+        8.0,
+        -20.0
+      ],
+      "centroid_uv": [
+        8.000000000000002,
+        -20.0
+      ],
+      "ok": true
+    },
+    {
+      "id": "plate_bottom",
+      "kind": "face",
+      "required": true,
+      "note": "",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 6399.999999999999,
+      "expected_area": 6400.0,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        -5.551115123125784e-17,
+        5.329070518200752e-16
+      ],
+      "ok": true
+    },
+    {
+      "id": "plate_top",
+      "kind": "face",
+      "required": true,
+      "note": "top face is the plate outline minus the four slots; area is the same on the mirror",
+      "plane": "z",
+      "at": 8.0,
+      "normal": "+",
+      "found": 1,
+      "area": 6015.999999999999,
+      "expected_area": 6016.0,
+      "mode": "one",
+      "center": null,
+      "centroid_uv": [
+        -9.070758328852344e-16,
+        -4.535379164426172e-16
+      ],
+      "ok": true
+    },
+    {
+      "id": "deviation_vs_truth",
+      "kind": "deviation",
+      "required": true,
+      "note": "silhouette IoU of this envelope is 1.0 even against the mirrored mesh; p95 is the check that sees handedness",
+      "measured": {
+        "p95": 2.5618982671915014e-14,
+        "hausdorff_estimate": 2.480000278066503e-12,
+        "silhouette_iou_min": 1.0,
+        "volume_ratio": 1.0
+      },
+      "checks": {
+        "p95": {
+          "max": 0.05,
+          "measured": 2.5618982671915014e-14,
+          "ok": true
+        },
+        "hausdorff": {
+          "max": 0.5,
+          "measured": 2.480000278066503e-12,
+          "ok": true
+        },
+        "silhouette_iou": {
+          "min": 0.99,
+          "measured": 1.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "not_matching_mirror",
+      "kind": "not_matching",
+      "required": true,
+      "note": "measured p95 between truth and the YZ mirror is 2.082 mm; min_distance is about half of that",
+      "measured": {
+        "p95": 2.0820021003749134,
+        "hausdorff_estimate": 4.0,
+        "silhouette_iou_min": 1.0,
+        "volume_ratio": 1.0
+      },
+      "checks": {
+        "p95_exceeds": {
+          "min": 1.0,
+          "measured": 2.0820021003749134,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "882831f9f4026f7f548948097b2987bd6050c19972e8b5c93a1399b768115444",
+    "truth_files": {
+      "truth/chiral-keyplate.step": "cbcb134a8a53e706d96636cbd8b97fb6194b2e700df62e90241ab4337b305e30",
+      "truth/chiral-keyplate.stl": "66fd37ed2691d42d0a5e64a535d41ef2a9a6864e940e358d86ea2ad2e1507514",
+      "truth/chiral-keyplate-mirrored.stl": "7a8a82cf47d0edef6657643fbebff8c4d95b305d4f48069e7b3e363866016857"
+    },
+    "input_files": {
+      "inputs/chiral-keyplate-spec.md": "0036c51f5df296508a684f749dc85a5e789cc0b325273221082d1a28eff95798"
+    },
+    "source": {
+      "main.py": "d7244a31960935847ce06abde2fad1cfb974f35fec11f7e65d22715d8149d48e"
+    },
+    "kcl": {},
+    "step_sha256": "7e8c29620ec51794b8a45b70dc82692b8fb3f28ebe21670e9f065df19f958128",
+    "design_bundle": {
+      "brief.md": "f6a252e998932396c53a2619c52823a8059638d185c4409c18682ce4fc1ec8ff",
+      "contract.yaml": "9f020a7ff789ae11ce8b4c1012a7f94e584b131c85a698ff2573d41f820abb34",
+      "sources/chiral-keyplate-spec.md": "0036c51f5df296508a684f749dc85a5e789cc0b325273221082d1a28eff95798"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-20T05:52:41Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2750651461ce329095e189d2b6e635ac797b95cd",
+      "dirty": true
+    }
+  },
+  "backend": "build123d"
+}

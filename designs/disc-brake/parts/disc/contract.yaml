@@ -1,0 +1,347 @@
+schema_version: 1
+name: disc-brake-disc
+intent: >-
+  Half-thickness brake disc with its hub, one solid, in its own frame: rotation axis +z through the
+  origin, symmetry face on z = 0; at rest this frame coincides with the assembly (COMSOL, mm) frame.
+  Packet construction steps 1-2: disc cylinder radius 140, z = 0..13, fused with the coaxial hub
+  cylinder radius 80, z = 13..23. Faces it provides: the symmetry face z = 0 (full radius-140 disc,
+  the half-model cut plane); the rubbing face z = 13, the annulus r = 80..140 on which the pad rests
+  (the pad footprint covers r = 90.0..135.2 at 69..111 deg from +x); the outer rim cylinder r = 140
+  (z = 0..13); the hub side cylinder r = 80 (z = 13..23); the hub top z = 23. No bore, bolt holes,
+  vents, chamfers or fillets (the reference model has none). Volume pi (140^2 x 13 + 80^2 x 10) =
+  1,001,540 mm3; bounding box [-140, -140, 0]..[140, 140, 23]; centroid (0, 0, 8.809). This is the
+  disc body of the assembly disc-brake (the COMSOL 6.3 Application Library model "Heat Generation in
+  a Disc Brake"), attached by the revolute joint discSpin at own-frame point [0, 0, 0], axis
+  [0, 0, 1]. Authoritative source: sources/comsol-brake-disc-packet.md; figures 1, 2, 3 and 5 are
+  illustrative.
+units:
+  length: mm
+  angle: deg
+material: "disc material of packet Table 1 (rho 7870 kg/m3, Cp 449 J/(kg K), k 82 W/(m K), emissivity 0.28); grade not named"
+density_kg_m3: 7870
+process: "none stated: simulation reference geometry (COMSOL thermal half-model cut at the z = 0 symmetry plane)"
+release_status: reconstruction
+
+frame:
+  origin: "on the rotation axis at the centre of the symmetry face (disc bottom, z = 0); the COMSOL model origin, which at rest is the assembly origin"
+  axes:
+    x: "COMSOL / assembly +x, in the symmetry plane; pad footprint angles (69..111 deg) are measured from +x toward +y"
+    y: "COMSOL / assembly +y, in the symmetry plane; the pad footprint is centred on +y (r = 90.0..135.2)"
+    z: "rotation axis, normal to the symmetry face, from the symmetry face (z = 0) through the rubbing face (z = 13) to the hub top (z = 23); the disc surface velocity v_d = (v/R)(-y, x) is a positive (counter-clockwise) rotation about +z"
+  datums:
+    - name: A
+      description: "symmetry face z = 0: the full radius-140 disc bottom, the half-model cut plane"
+    - name: B
+      description: "rotation axis: the z axis through the origin, common axis of the disc and hub cylinders (revolute joint discSpin)"
+    - name: C
+      description: "rubbing face z = 13: the annulus r = 80..140 between the hub and the rim, on which the pad rests"
+
+envelope:
+  min: [-140, -140, 0]
+  max: [140, 140, 23]
+  tolerance: 0.05
+
+parameters:
+  - name: discRadius
+    value: 140
+    unit: mm
+    provenance: stated
+    source: "packet, Geometry construction step 1 (Cylinder 1 radius 0.14 m) and Model definition (disc radius 0.14 m)"
+    tolerance: 0.01
+    description: "outer radius of the disc cylinder (outer rim r = 140)"
+    edit_test:
+      delta: 5
+      expect:
+        volume_delta: 58198.0
+        direction: increase
+        bbox_delta: [10, 10, 0]
+        tolerance_rel: 0.02
+      infeasible_deltas: [-70]
+  - name: discThickness
+    value: 13
+    unit: mm
+    provenance: stated
+    source: "packet, Geometry construction step 1 (Cylinder 1 height 0.013 m, base at z = 0) and Model definition (thickness 0.013 m)"
+    tolerance: 0.01
+    description: "half-model disc thickness from the symmetry face z = 0 to the rubbing face; the hub stands on the rubbing face (step 2 positions it at z = 0.013)"
+  - name: hubRadius
+    value: 80
+    unit: mm
+    provenance: stated
+    source: "packet, Geometry construction step 2 (Cylinder 2 radius 0.08 m)"
+    tolerance: 0.01
+    description: "radius of the coaxial hub cylinder; inner edge of the rubbing annulus"
+    edit_test:
+      delta: 5
+      expect:
+        volume_delta: 25918.1
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [60, 80, 85]
+      infeasible_deltas: [70]
+  - name: hubHeight
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "packet, Geometry construction step 2 (Cylinder 2 height 0.01 m, positioned at z = 0.013)"
+    tolerance: 0.01
+    description: "hub height above the rubbing face (hub z = discThickness..discThickness + hubHeight = 13..23)"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 40212.4
+        direction: increase
+        bbox_delta: [0, 0, 2]
+        tolerance_rel: 0.02
+      sweep:
+        values: [6, 10, 14]
+      infeasible_deltas: [-10]
+
+features:
+  - id: disc
+    kind: extrude
+    description: "packet step 1 (Cylinder 1): circle of radius discRadius centred on the axis in the z = 0 plane, extruded +z by discThickness (z = 0..13); provides the symmetry face z = 0, the outer rim cylinder r = 140 and the rubbing annulus at z = 13 (r = hubRadius..discRadius)"
+    parameters: [discRadius, discThickness]
+    verify:
+      - method: bbox
+      - method: section
+        section: midDisc
+      - method: face
+        face: symmetryFace
+      - method: face
+        face: rubbingFace
+      - method: cylinder
+        cylinder: outerRim
+      - method: dimension
+        dimension: discThicknessZ
+      - method: solid
+        points: [[125, 0, 6.5], [0, 125, 6.5], [-125, 0, 6.5], [0, -125, 6.5]]
+        note: "disc material near the rim, one point per quarter"
+  - id: hub
+    kind: boss
+    description: "packet step 2 (Cylinder 2): coaxial cylinder of radius hubRadius standing on the rubbing face, z = discThickness..discThickness + hubHeight (13..23), fused with the disc into one solid; provides the hub side cylinder r = 80 and the hub top z = 23"
+    parameters: [hubRadius, hubHeight, discThickness]
+    verify:
+      - method: section
+        section: midHub
+      - method: section
+        section: axialX
+      - method: face
+        face: hubTop
+      - method: cylinder
+        cylinder: hubSide
+      - method: dimension
+        dimension: hubHeightZ
+      - method: solid
+        points: [[40, 40, 18], [-40, -40, 18]]
+      - method: void
+        points: [[110, 0, 18], [0, 110, 18], [-110, 0, 18], [0, -110, 18]]
+        note: "air above the rubbing annulus outside the hub, one point per quarter"
+
+interfaces:
+  - name: discSpin
+    description: "revolute joint frame: the assembly attaches the disc at own-frame point [0, 0, 0] with axis [0, 0, 1]; the part stays a solid of revolution about the z axis with its symmetry face on z = 0. No edit test moves the axis or the z = 0 plane."
+    must_not_change: true
+    checks: [mirrorX, mirrorY, symmetryPlane]
+  - name: symmetryBoundary
+    description: "the z = 0 half-model cut plane (datum A) that carries the symmetry boundary condition (packet: symmetry on the disc bottom)"
+    must_not_change: true
+    checks: [symmetryPlane]
+  - name: padSeat
+    description: "the rubbing face z = 13 (datum C) on which the pad rests; the pad footprint r = 90.0..135.2 at 69..111 deg stays on the annulus r = hubRadius..discRadius. The radius and hub-height edits resize the annulus but never move its plane."
+    must_not_change: true
+    checks: [padSeatPlane]
+
+acceptance:
+  volume:
+    expected: 1001539.7
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "pi (discRadius^2 discThickness + hubRadius^2 hubHeight) = pi (140^2 x 13 + 80^2 x 10) = 318,800 pi"
+  surface_area:
+    expected: 139612.4
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "symmetry face pi 140^2 + rim 2 pi 140 x 13 + rubbing annulus pi (140^2 - 80^2) + hub side 2 pi 80 x 10 + hub top pi 80^2 = 44,440 pi"
+  center_of_mass:
+    expected: [0, 0, 8.809]
+    tolerance: 0.05
+    provenance: derived
+    note: "z = (140^2 x 13 x 6.5 + 80^2 x 10 x 18) / (140^2 x 13 + 80^2 x 10) = 2,808,200 / 318,800 = 8.8087; x = y = 0 by axisymmetry"
+  solid_count: 1
+  sections:
+    - id: midDisc
+      plane: z
+      at: 6.5
+      expect:
+        area: 61575.2
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+      description: "disc mid-thickness: full radius-140 circle, no bore, bolt holes or vents"
+    - id: midHub
+      plane: z
+      at: 18
+      expect:
+        area: 20106.2
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+      description: "hub mid-height: full radius-80 circle, no bore"
+    - id: axialX
+      plane: x
+      at: 0
+      expect:
+        area: 5240
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 0
+      description: "axial section through the rotation axis: 280 x 13 disc rectangle plus 160 x 10 hub rectangle, one stepped loop, no bore or vents"
+  faces:
+    - name: symmetryFace
+      plane: z
+      at: 0
+      normal: "-"
+      area: 61575.2
+      area_tolerance_rel: 0.002
+      center: [0, 0]
+      mode: one
+    - name: rubbingFace
+      plane: z
+      at: 13
+      normal: "+"
+      area: 41469.0
+      area_tolerance_rel: 0.002
+      center: [0, 0]
+      mode: one
+    - name: hubTop
+      plane: z
+      at: 23
+      normal: "+"
+      area: 20106.2
+      area_tolerance_rel: 0.002
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: outerRim
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 140
+      radius_tolerance: 0.05
+      length: 13
+      length_tolerance: 0.05
+      t_range: [0, 13]
+      description: "outer rim cylinder r = 140, z = 0..13"
+    - name: hubSide
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 80
+      radius_tolerance: 0.05
+      length: 10
+      length_tolerance: 0.05
+      t_range: [13, 23]
+      description: "hub side cylinder r = 80, z = 13..23"
+  planes:
+    - name: symmetryPlane
+      point: [0, 0, 0]
+      normal: [0, 0, -1]
+      description: "position-only pin of the z = 0 symmetry face (no area, so the radius edits keep it)"
+    - name: padSeatPlane
+      point: [0, 112.5, 13]
+      normal: [0, 0, 1]
+      description: "position-only pin of the rubbing face at the pad footprint centre (r = 112.5 on +y)"
+  dimensions:
+    - name: discThicknessZ
+      axis: z
+      expected: 13
+      tolerance: 0.05
+      between: [symmetryFace, rubbingFace]
+      description: "half-model disc thickness"
+    - name: hubHeightZ
+      axis: z
+      expected: 10
+      tolerance: 0.05
+      between: [rubbingFace, hubTop]
+      description: "hub height above the rubbing face"
+    - name: overallHeightZ
+      axis: z
+      expected: 23
+      tolerance: 0.05
+      description: "bbox extent along z: symmetry face to hub top"
+    - name: diameterX
+      axis: x
+      expected: 280
+      tolerance: 0.05
+      description: "bbox extent along x: disc diameter"
+    - name: diameterY
+      axis: y
+      expected: 280
+      tolerance: 0.05
+      description: "bbox extent along y: disc diameter"
+  probes:
+    - name: axisSolid
+      state: solid
+      points: [[0, 0, 1], [0, 0, 12], [0, 0, 14], [0, 0, 22]]
+      description: "material on the rotation axis through the disc and the hub: no bore"
+    - name: padFootprintSolid
+      state: solid
+      points: [[0, 91, 12], [0, 134, 12], [40, 105, 12], [-40, 105, 12]]
+      description: "disc material 1 mm under the inner, outer, right and left extremes of the pad outline (packet step 3 Bezier end points)"
+    - name: padSpaceVoid
+      state: void
+      points: [[0, 91, 16], [0, 134, 16], [40, 105, 16], [-40, 105, 16]]
+      description: "the pad's volume (z = 13..19.5 over its footprint) is empty in the disc part; the hub stays inside r = 90"
+  symmetry:
+    - name: mirrorX
+      plane: x
+      at: 0
+    - name: mirrorY
+      plane: y
+      at: 0
+  blockout:
+    volume_min: 970000
+    volume_max: 1035000
+
+references:
+  - path: sources/comsol-brake-disc-packet.md
+    kind: text
+    role: authoritative
+    sha256: 85535fc3210d6d0174945725ecf1a1f29351991bc272ba55fc138b0ad254638d
+    units: "m (contract converts to mm)"
+    revision: "COMSOL Multiphysics 6.3 Application Library, brake_disc, accessed 2026-09-25"
+    note: "model definition, Table 1 materials, geometry construction steps 1-4, physics settings, probe line; results section not included"
+  - path: sources/figure-1-geometry.png
+    kind: image
+    role: illustrative
+    sha256: 8c7faad09a9d6663c0a39fe6e18e5e721807c6750bf3b40b7ab67f95a36f5c54
+    units: m
+    note: "isometric render: thin disc, raised coaxial hub, pad on +y; axis ticks every 0.1 m, no dimension lines"
+  - path: sources/figure-2-velocity.png
+    kind: image
+    role: illustrative
+    sha256: 05a0b5ceb2f81378a47ef8ac2b41edbf948dfe3c0c3392cb62b1c0ef8c56ccc1
+    units: "m/s vs s"
+    note: "v(t): 25 m/s to t = 2 s, linear to 5 m/s at t = 4 s, then constant; no geometry"
+  - path: sources/figure-3-acceleration.png
+    kind: image
+    role: illustrative
+    sha256: bb3f0ef43eaca917061fb013edd68fece3342aebec4ef0244089d6216d71c2dd
+    units: "m/s^2 vs s"
+    note: "a(t): -10 m/s^2 from t = 2 to 4 s with smoothed steps; no geometry"
+  - path: sources/figure-5-probe-line.png
+    kind: image
+    role: illustrative
+    sha256: f3ffe42b7cc21121f49b80d52056b377c9aa4b90aec2d13ac0fbac1ecba5d0d5
+    units: m
+    note: "wireframe with the red radial probe line (0, 0, 12.9)..(-47, 131.6, 12.9) mm, just inside the rubbing face and the rim"
+
+open_questions:
+  - "The reference is a simplified thermal half-model: no centre bore, bolt circle, hat or vents are defined by any source, so a manufacturable disc would need features this contract deliberately omits."
+  - "The disc material grade is not named; packet Table 1 gives only rho 7870 kg/m3, Cp 449 J/(kg K), k 82 W/(m K) and emissivity 0.28 (density_kg_m3 uses 7870)."
+  - "Whether the physical disc carries the radius-80 hub on both faces (as mirroring the half-model at z = 0 implies) is not stated; this part is the half-model only."
+  - "No geometric feature fixes the angular orientation about z; +x and +y follow the COMSOL / assembly axes by convention (the pad sits at 69..111 deg)."
+  - "r_wheel and T_air are not stated in the packet; they drive the rotation and thermal boundary conditions, not this geometry."

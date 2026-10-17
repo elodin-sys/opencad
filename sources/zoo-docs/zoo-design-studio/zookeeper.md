@@ -1,0 +1,182 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/zookeeper
+Title: Zookeeper
+
+# Zookeeper
+
+Zookeeper user guide
+
+## Zookeeper, an AI Agent for CAD
+
+Modern CAD work is full of repetition. Engineers redraw the same patterns, rebuild similar features, and make small, mechanical changes over and over—spending time on low-value execution instead of higher-value design decisions.
+
+At Zoo, we’re building **Zookeeper**: an ML-powered agent that uses LLMs to generate and modify CAD models.
+
+![Image](/documentation-assets/pages/zookeeper/zookeeper-doc-1.png)
+
+LLMs need clear, human-readable code to work well. To have your own code, you need your own kernel. Zoo built both—a readable CAD [language](https://zoo.dev/research/introducing-kcl) and a custom 3D [kernel](https://zoo.dev/research/zoo-cad-engine-overview)—which is why Zookeeper works so well with LLMs. Most other CAD systems rely on legacy kernels with opaque representations that LLMs struggle to work with.
+
+Zookeeper works alongside existing CAD tools rather than replacing them.
+
+## The Agent at a Glance
+
+By combining LLM-based reasoning, conversation, full model context, and selection awareness, Zookeeper supports a range of workflows:
+
+- Reasoning about design intent through conversation  
+- Direct creation and modification of CAD geometry  
+- Access to model-derived information  
+- Awareness of selections and context  
+
+This lets you move from intent to execution, and from execution to evaluation—using the same system throughout.
+
+## Conversation as a Design Interface
+
+Conversation is not just chat—it’s a way to scope, reason about, and coordinate design work before and during modeling.
+
+In Zookeeper, conversation can be used for a wide range of design-adjacent tasks:
+
+- Acting as a domain expert across CAD, manufacturing, and engineering requirements
+- Scoping work before any geometry is created  
+- Guiding users step by step through a design or modification  
+- Reviewing and approving designs  
+- Reusing and adapting existing designs  
+- Generating summaries of design changes for collaborators
+- Generating work-order drafts for subcontractors
+- Understanding assemblies end-to-end
+- Creating and managing design variants  
+
+The value here is coordination. Conversation captures intent explicitly, instead of forcing it to be inferred later from geometry alone.
+
+![Image](/documentation-assets/pages/zookeeper/zookeeper-doc-2.png)
+
+In traditional workflows, much of this context is lost—buried in meeting notes, emails, or institutional memory. By treating conversation as a first-class interface, we can keep intent close to the geometry it informs.
+
+## Turning Intent into Geometry
+
+Conversation alone does not make a part.
+
+Zookeeper creates and edits real, parametric CAD geometry through **incremental, structured natural language commands**.
+
+Instead of relying on one-shot descriptions of an entire model, designs are built up step by step. Features are created, dimensions are adjusted, and constraints are refined iteratively—mirroring how engineers actually work in CAD.
+
+![Image](/documentation-assets/pages/zookeeper/zookeeper-doc-3.jpeg)
+
+This process produces real models with a full feature tree and editable parameters, so designs can be inspected, modified, and extended just like hand-built CAD.
+
+You set intent and constraints; Zookeeper handles the repetitive, low-level edits. It can also generate parametric variants on demand to compare options.
+
+### Keep project preferences with the project
+
+Follow-up prompts are best for instructions that apply to the current task. For conventions that
+should apply every time Zookeeper works in a project, add an `AGENTS.md` file. Project instructions
+can define defaults such as units, naming, comments, manufacturing assumptions, or when Zookeeper
+should use custom KCL functions.
+
+Zookeeper also keeps its own working documents in the project, as Markdown files it creates and
+updates on its own judgment to track decisions, task state, and context. `AGENTS.md` it leaves to
+you.
+
+See [Project Instructions](/docs/zoo-design-studio/features/ml-ai/project-instructions) for the file
+format, examples, precedence rules, and the documents Zookeeper maintains itself.
+
+### Choose reuse or point-and-click sketch editing
+
+Zookeeper keeps sketches at the top level by default because Zoo Design Studio's point-and-click
+tools cannot currently edit sketches inside custom KCL function bodies. Ask for custom functions,
+or set that preference in `AGENTS.md`, when reusable parameterized features matter more than
+point-and-click access to their internal sketches.
+
+For KCL details, see [Functions](/docs/kcl-lang/functions), the
+[solver module](/docs/kcl-std/modules/std-solver), and
+[`region`](/docs/kcl-std/functions/std-sketch-region).
+
+## Model-Aware Tools
+
+Beyond geometry creation, the agent has access to tools that extract quantitative, model-derived information directly from the CAD model.
+
+These tools expose model-derived properties—such as:
+
+- Center of mass
+- Mass
+- Volume
+- Surface area
+
+Traditionally, accessing this information requires breaking focus: switching tools, running separate analyses, or manually inspecting the model. With Zookeeper, these queries become part of the same conversational loop as design and modification.
+
+![Image](/documentation-assets/pages/zookeeper/zookeeper-doc-4.jpeg)
+
+The goal is to shorten the distance between evaluating a model and deciding what to change next.
+
+## Selection Awareness
+
+A critical detail: the agent is aware of what you have selected.
+
+When you point at a face, an edge, a feature, or a part, the agent understands that context. This allows interactions to be precise without being verbose.
+
+![Image](/documentation-assets/pages/zookeeper/zookeeper-doc-5.jpeg)
+
+Instead of trying to explain in words exactly where a change should happen, you can simply select the relevant geometry. This reduces friction and keeps interactions grounded in the model itself.
+
+## Internet-Aware Reasoning
+
+Zookeeper can access the internet to pull in external references such as standards, documentation, specifications, and examples.
+
+This allows design decisions to be grounded in real-world constraints without leaving the modeling environment. Instead of switching contexts to search for information, relevant sources can be brought directly into the same conversational loop used for design and modification.
+
+![Image](/documentation-assets/pages/zookeeper/zookeeper-doc-6.jpeg)
+
+By combining live external information with full model context, the agent can reason about designs not just in isolation, but against the standards and references they need to meet.
+
+## Agent Modes
+
+Zookeeper supports three modes: Auto, Thoughtful, and Standard.
+
+Auto mode selects the most appropriate model and reasoning effort for the task. It is the best starting point when you want Zookeeper to balance speed, cost, and capability automatically.
+
+Thoughtful mode is slower, but it consistently produces higher-quality results on complex modeling and multi-step workflows, so it is generally the best default for CAD work.
+
+Standard mode trades some depth for speed. It works well for simpler geometry changes, quick iterations, and is more than sufficient for tasks like web search, documentation lookup, and conversational reasoning around a design.
+
+Mode availability depends on your plan. Unavailable modes remain visible in the selector with upgrade messaging, but they cannot be selected until your plan includes them. Free users can use Auto mode. Paid plans include Auto, Standard, and Thoughtful.
+
+The selector keeps unavailable modes visible so users can see what an upgraded plan unlocks.
+
+<div className="max-w-[50rem] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start my-6">
+  <div className="w-full">
+    <h3>Free plan</h3>
+    <img
+      src="/documentation-assets/pages/zookeeper/zookeeper-mode-selector-free.png"
+      alt="Zookeeper mode selector for a Free user with Standard and Thoughtful unavailable and Auto selected"
+    />
+    <p>Standard and Thoughtful remain visible with upgrade messaging, while Auto stays selectable.</p>
+  </div>
+  <div className="w-full">
+    <h3>Paid plans</h3>
+    <img
+      src="/documentation-assets/pages/zookeeper/zookeeper-mode-selector-paid.png"
+      alt="Zookeeper mode selector for a paid user with Standard, Thoughtful, and Auto available"
+    />
+    <p>Standard, Thoughtful, and Auto are all selectable.</p>
+  </div>
+</div>
+
+## What's Coming Next
+
+The agent described above is only the beginning. An upcoming capability will extend both its reach and its usefulness.
+
+- **Fleets of agents** will make it possible to manage a team of Zookeeper agents working concurrently. Agents can be assigned to different features, components, or projects in parallel, or coordinate to complete a single task faster.
+
+This feature will expand the bandwidth between the designer’s intent and the system that represents it.
+
+## CAD as Collaboration
+
+Taken together, these capabilities change how CAD systems are used.
+
+Instead of isolated tools that rely on constant manual input, they become collaborative systems—able to reason about intent, suggest next steps, and act alongside the user.
+
+The goal is to give engineers more time to focus on high-value design decisions by removing unnecessary friction from their workflow—enabling faster iteration, clearer intent, better communication, and fewer opportunities for context to be lost.
+
+## Closing Thoughts
+
+Zoo brings conversation, execution, and model context into a single system.
+
+By keeping intent close to geometry—and reducing friction between thinking, editing, and evaluation—it supports faster, clearer engineering work.

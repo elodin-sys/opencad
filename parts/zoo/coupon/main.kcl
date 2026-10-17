@@ -1,0 +1,41 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+width = 60mm
+height = 40mm
+thickness = 4mm
+
+assert(width, isGreaterThan = 0mm, error = "width must be positive")
+assert(height, isGreaterThan = 0mm, error = "height must be positive")
+assert(thickness, isGreaterThan = 0mm, error = "thickness must be positive")
+
+// Training coupon. Datum A is XY at z = 0; datum B is YZ at x = 0.
+// Literal solver guesses initialize the rectangle; constraints drive its size.
+profile = sketch(on = XY) {
+  front = line(start = [var 0mm, var 0mm], end = [var 60mm, var 0mm])
+  right = line(start = [var 60mm, var 0mm], end = [var 60mm, var 40mm])
+  rear = line(start = [var 60mm, var 40mm], end = [var 0mm, var 40mm])
+  left = line(start = [var 0mm, var 40mm], end = [var 0mm, var 0mm])
+
+  coincident([front.end, right.start])
+  coincident([right.end, rear.start])
+  coincident([rear.end, left.start])
+  coincident([left.end, front.start])
+  horizontal(front)
+  horizontal(rear)
+  vertical(right)
+  vertical(left)
+  coincident([front.start, ORIGIN])
+  horizontalDistance([front.start, front.end]) == width
+  verticalDistance([right.start, right.end]) == height
+}
+
+plateRegion = region(segments = [profile.front, profile.right])
+
+// The bottom cap is datum A; plateRegion.tags.left identifies datum B.
+coupon = extrude(
+  plateRegion,
+  length = thickness,
+  symmetric = false,
+  tagStart = $bottom,
+  tagEnd = $top,
+)

@@ -1,0 +1,54 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd
+Title: GD&T Annotations (MBD)
+
+# GD&T Annotations (MBD)
+
+Model-based GD&T annotation workflows in Zoo Design Studio.
+
+GD&T Annotations (MBD) let you define geometric tolerances and datum references directly on the 3D
+model as part of a model-based definition workflow.
+
+Start with [Datum](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/datum) to
+establish reference geometry. Then choose the GD&T control that matches the inspection requirement:
+
+- Form controls:
+  [Circularity](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/circularity),
+  [Cylindricity](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/cylindricity),
+  [Flatness](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/flatness),
+  and [Straightness](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/straightness)
+- Profile controls:
+  [Profile](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/profile),
+  [Profile Line](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/profile-line),
+  and
+  [Profile Surface](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/profile-surface)
+- Orientation controls:
+  [Angularity](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/angularity),
+  [Parallelism](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/parallelism),
+  and
+  [Perpendicularity](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/perpendicularity)
+- Location and runout controls:
+  [Concentricity](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/concentricity),
+  [Position](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/position),
+  [Runout](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/runout),
+  and [Symmetry](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/symmetry)
+- Other model-based definition callouts:
+  [Annotation](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/annotation),
+  [Distance](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/distance),
+  and [Note](/docs/zoo-design-studio/features/documentation/gdt-annotations-mbd/note)
+
+## Are you interested in code?
+
+Zoo Design Studio writes KCL behind the scenes. GD&T annotations use the `gdt` module in the KCL
+standard library.
+
+```kcl
+gdt::datum(face = datumFace, name = "A")
+gdt::flatness(faces = [mountingFace], tolerance = 0.05mm)
+gdt::circularity(edges = [roundEdge], tolerance = 0.05mm)
+gdt::profileSurface(faces = [contouredFace], tolerance = 0.1mm, datums = ["A"])
+gdt::position(faces = [holeFace], tolerance = 0.08mm, datums = ["A"])
+gdt::angularity(faces = [controlledSurface], tolerance = 0.1mm, datums = ["A"])
+```
+
+Want to find out more about the `gdt` module? [Check it out](/docs/kcl-std/modules/std-gdt) in our
+KCL docs.

@@ -1,0 +1,156 @@
+{
+  "case": "fusion-01184-assembly",
+  "scored_at": "2026-09-19T15:47:27Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "claude-fable-5-1-thinking-max",
+    "order_id": "001-assemble",
+    "thread_id": "b4d4b677-b95b-4ed2-a826-c8aec4aec983",
+    "exit_code": 0,
+    "seconds": 195,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/work/assembly.yaml"
+      ],
+      "incomplete": false,
+      "notes": "Revolute Rev3: body two at identity; body one translated by [-85, -10.706, -35] with identity rotation so K1' = [20, -1, 60] on body two's hole axis at offset -1.0. assembly-check PASS on the first run (angle 0, line distance 0, offset -1.0, parallel, interference 0, gap 0). Rotation about the revolute axis left at zero.",
+      "engine_ledger_calls": 0,
+      "engine_ledger_seconds": 0
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "claude-fable-5-1-thinking-max",
+    "order_id": "001-assemble",
+    "thread_id": "b4d4b677-b95b-4ed2-a826-c8aec4aec983",
+    "exit_code": 0,
+    "seconds": 195,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "/Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/work/assembly.yaml"
+      ],
+      "incomplete": false,
+      "notes": "Revolute Rev3: body two at identity; body one translated by [-85, -10.706, -35] with identity rotation so K1' = [20, -1, 60] on body two's hole axis at offset -1.0. assembly-check PASS on the first run (angle 0, line distance 0, offset -1.0, parallel, interference 0, gap 0). Rotation about the revolute axis left at zero.",
+      "engine_ledger_calls": 0,
+      "engine_ledger_seconds": 0
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": false,
+  "offset_truth_mm": -1.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 2.109974928660138e-06,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": -0.9999548894976558,
+      "expected": -1.0000000000000009,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 90.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 3.164244951037176e-05,
+      "truth_interference": 0.0,
+      "max": 1.0,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.0,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "36938_ae684b66_0002_2": {
+        "origin": [
+          -85.0,
+          -10.706,
+          -35.0
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          1,
+          0
+        ],
+        "z_axis": [
+          0,
+          0,
+          1
+        ]
+      },
+      "36938_ae684b66_0001_2": {
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "x_axis": [
+          1,
+          0,
+          0
+        ],
+        "y_axis": [
+          0,
+          1,
+          0
+        ],
+        "z_axis": [
+          0,
+          0,
+          1
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/handoff/assembly.html",
+    "motion": "revolute"
+  }
+}

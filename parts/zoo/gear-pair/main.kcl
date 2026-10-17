@@ -1,0 +1,596 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Contract literals: the pipeline edits one constant at a time.
+gearModule = 2mm
+pressureAngle = 20deg
+profileShift = 0
+pinionTeeth = 20
+wheelTeeth = 40
+pinionBoreDiameter = 6mm
+wheelBoreDiameter = 8mm
+centerDistance = 60mm
+gearFaceWidth = 8mm
+addendumFactor = 1
+dedendumFactor = 1.25
+totalBacklash = 0.1mm
+pinionPhase = 0deg
+pinionAxisX = 0mm
+pinionAxisY = 0mm
+wheelAxisY = 0mm
+gearBaseZ = 0mm
+carrierLength = 110mm
+carrierWidth = 50mm
+carrierThickness = 5mm
+carrierMinX = -25mm
+carrierMinY = -25mm
+wheelPhase = 4.5deg
+
+// Finite practical CAD domain; comparisons also reject nonfinite inputs.
+finiteParameters = map(
+  [
+    gearModule: number(_),
+    pressureAngle: number(_),
+    profileShift: number(_),
+    pinionTeeth: number(_),
+    wheelTeeth: number(_),
+    pinionBoreDiameter: number(_),
+    wheelBoreDiameter: number(_),
+    centerDistance: number(_),
+    gearFaceWidth: number(_),
+    addendumFactor: number(_),
+    dedendumFactor: number(_),
+    totalBacklash: number(_),
+    pinionPhase: number(_),
+    pinionAxisX: number(_),
+    pinionAxisY: number(_),
+    wheelAxisY: number(_),
+    gearBaseZ: number(_),
+    carrierLength: number(_),
+    carrierWidth: number(_),
+    carrierThickness: number(_),
+    carrierMinX: number(_),
+    carrierMinY: number(_),
+    wheelPhase: number(_)
+  ],
+  f = fn(@v) {
+    assert(abs(v), isLessThan = 1000000000, error = "Parameter must be finite and within the practical CAD domain")
+    return v
+  },
+)
+positiveParameters = map(
+  [
+    gearModule: number(_),
+    pinionBoreDiameter: number(_),
+    wheelBoreDiameter: number(_),
+    centerDistance: number(_),
+    gearFaceWidth: number(_),
+    addendumFactor: number(_),
+    dedendumFactor: number(_),
+    carrierLength: number(_),
+    carrierWidth: number(_),
+    carrierThickness: number(_)
+  ],
+  f = fn(@v) {
+    assert(v, isGreaterThan = 0, error = "Dimensions, module and tooth height factors must be positive")
+    return v
+  },
+)
+assert(pressureAngle, isGreaterThan = 0deg, error = "Pressure angle must be positive")
+assert(pressureAngle, isLessThan = 90deg, error = "Pressure angle must be below 90 degrees")
+assert(totalBacklash, isGreaterThanOrEqual = 0mm, error = "Backlash must be nonnegative")
+assert(pinionTeeth, isGreaterThanOrEqual = 3, error = "At least three pinion teeth are required")
+assert(wheelTeeth, isGreaterThanOrEqual = 3, error = "At least three wheel teeth are required")
+assert(abs(pinionTeeth - floor(pinionTeeth)), isLessThan = 0.00000001, error = "Pinion tooth count must be an integer")
+assert(abs(wheelTeeth - floor(wheelTeeth)), isLessThan = 0.00000001, error = "Wheel tooth count must be an integer")
+assert(addendumFactor + profileShift, isGreaterThan = 0, error = "Effective addendum must be positive")
+assert(dedendumFactor - profileShift, isGreaterThan = 0, error = "Effective dedendum must be positive")
+
+wheelAxisX = pinionAxisX + centerDistance
+fitTolerance = 0.001mm
+alpha = units::toRadians(pressureAngle): number(_)
+toothThickness = (PI * gearModule / 2 + 2 * gearModule * profileShift * tan(pressureAngle) - (totalBacklash / 2)): mm
+
+// Numeric radians in the involute equations, explicit angle units at trig calls.
+fn gearData(@n, bore) {
+  pitch = gearModule * n / 2
+  base = pitch * cos(pressureAngle)
+  tip = pitch + gearModule * (addendumFactor + profileShift)
+  root = pitch - (gearModule * (dedendumFactor - profileShift))
+  assert(root, isGreaterThan = bore / 2, error = "Bore must leave a positive root web")
+  assert(root, isLessThan = pitch, error = "Root must be inside pitch circle")
+  assert(pitch, isLessThan = tip, error = "Tip must be outside pitch circle")
+  assert(base, isGreaterThan = 0mm, error = "Base radius must be positive")
+  h0 = (toothThickness / (2 * pitch) + tan(pressureAngle) - alpha): number(_)
+  tRoot = sqrt(max([0, (root / base) ^ 2 - 1])): number(_)
+  tPitch = tan(pressureAngle): number(_)
+  tTip = sqrt((tip / base) ^ 2 - 1): number(_)
+  hRoot = h0 - tRoot + atan(tRoot): number(_)
+  hTip = h0 - tTip + atan(tTip): number(_)
+  assert(hTip, isGreaterThan = 0, error = "Backlash or shift erased the tooth tip")
+  assert(hRoot, isLessThan = PI / n, error = "Tooth root closes the adjacent tooth space")
+  assert(tPitch - tRoot, isGreaterThan = 0.00000001, error = "Root-to-pitch fitting interval is degenerate")
+  assert(tTip - tPitch, isGreaterThan = 0.00000001, error = "Pitch-to-tip fitting interval is degenerate")
+  return {
+    n = n,
+    pitch = pitch,
+    base = base,
+    tip = tip,
+    root = root,
+    h0 = h0,
+    tRoot = tRoot,
+    tPitch = tPitch,
+    tTip = tTip
+  }
+}
+pinionData = gearData(pinionTeeth, bore = pinionBoreDiameter)
+wheelData = gearData(wheelTeeth, bore = wheelBoreDiameter)
+
+// Carrier holes must stay separated and strictly inside all four edges.
+shaftCenters = [
+  [
+    pinionAxisX,
+    pinionAxisY,
+    pinionBoreDiameter / 2
+  ],
+  [
+    wheelAxisX,
+    wheelAxisY,
+    wheelBoreDiameter / 2
+  ]
+]
+carrierWallChecks = map(
+  shaftCenters,
+  f = fn(@p) {
+    assert(p[0] - p[2], isGreaterThan = carrierMinX, error = "Hole breaks carrier left wall")
+    assert(p[0] + p[2], isLessThan = carrierMinX + carrierLength, error = "Hole breaks carrier right wall")
+    assert(p[1] - p[2], isGreaterThan = carrierMinY, error = "Hole breaks carrier front wall")
+    assert(p[1] + p[2], isLessThan = carrierMinY + carrierWidth, error = "Hole breaks carrier back wall")
+    return p
+  },
+)
+shaftSpacing = sqrt(centerDistance ^ 2 + (wheelAxisY - pinionAxisY) ^ 2): mm
+assert(shaftSpacing, isGreaterThan = (pinionBoreDiameter + wheelBoreDiameter) / 2, error = "Carrier holes overlap")
+assert(gearBaseZ - carrierThickness, isLessThan = gearBaseZ, error = "Carrier axial interval is empty")
+assert(gearBaseZ + gearFaceWidth, isGreaterThan = gearBaseZ, error = "Gear axial interval is empty")
+assert(shaftSpacing - pinionData.tip - wheelData.root, isGreaterThan = 2 * fitTolerance, error = "Pinion tip collides with wheel root")
+assert(shaftSpacing - wheelData.tip - pinionData.root, isGreaterThan = 2 * fitTolerance, error = "Wheel tip collides with pinion root")
+assert(shaftSpacing, isGreaterThan = pinionData.base + wheelData.base, error = "No real working pressure angle")
+workingAngle = acos((pinionData.base + wheelData.base) / shaftSpacing)
+pathOfContact = (sqrt(pinionData.tip ^ 2 - (pinionData.base ^ 2)) + sqrt(wheelData.tip ^ 2 - (wheelData.base ^ 2)) - (shaftSpacing * sin(workingAngle))): mm
+contactRatio = pathOfContact / (PI * gearModule * cos(pressureAngle))
+assert(contactRatio, isGreaterThan = 1, error = "Contact ratio must exceed one")
+workingInv = tan(workingAngle) - workingAngle: number(_)
+workingPinionRadius = shaftSpacing * pinionTeeth / (pinionTeeth + wheelTeeth)
+workingWheelRadius = shaftSpacing * wheelTeeth / (pinionTeeth + wheelTeeth)
+workingBacklash = (2 * PI * workingPinionRadius / pinionTeeth - (2 * workingPinionRadius * (pinionData.h0 - workingInv)) - (2 * workingWheelRadius * (wheelData.h0 - workingInv))): mm
+lineOfCenters = atan2(y = wheelAxisY - pinionAxisY, x = centerDistance): number(_)
+rawMeshPhase = pinionTeeth * (units::toRadians(pinionPhase): number(_) - lineOfCenters) + wheelTeeth * (units::toRadians(wheelPhase): number(_) - lineOfCenters - PI) - PI
+wrappedMeshPhase = rawMeshPhase - (2 * PI * round(rawMeshPhase / (2 * PI)))
+meshPhaseDistance = (abs(wrappedMeshPhase) * shaftSpacing / (pinionTeeth + wheelTeeth)): mm
+assert(meshPhaseDistance + 2 * fitTolerance, isLessThan = workingBacklash / 2, error = "Gear phases exceed available working backlash including arc fitting allowance")
+
+// Bore circles are internal loops of each extruded profile: exact cylinders,
+// no ghost cutter extents in engine analysis. This replaces overlong bore tools.
+// Datum A is the carrier top and both gear bottoms; all bodies remain separate.
+seatingPlane = offsetPlane(XY, offset = gearBaseZ)
+carrierSketch = sketch(on = seatingPlane) {
+  pinionHole = circle(
+    center = [pinionAxisX, pinionAxisY],
+    start = [
+      pinionAxisX + pinionBoreDiameter / 2,
+      pinionAxisY
+    ],
+  )
+  wheelHole = circle(
+    center = [wheelAxisX, wheelAxisY],
+    start = [
+      wheelAxisX + wheelBoreDiameter / 2,
+      wheelAxisY
+    ],
+  )
+  front = line(
+    start = [carrierMinX, carrierMinY],
+    end = [
+      carrierMinX + carrierLength,
+      carrierMinY
+    ],
+  )
+  right = line(
+    start = [
+      carrierMinX + carrierLength,
+      carrierMinY
+    ],
+    end = [
+      carrierMinX + carrierLength,
+      carrierMinY + carrierWidth
+    ],
+  )
+  back = line(
+    start = [
+      carrierMinX + carrierLength,
+      carrierMinY + carrierWidth
+    ],
+    end = [
+      carrierMinX,
+      carrierMinY + carrierWidth
+    ],
+  )
+  left = line(
+    start = [
+      carrierMinX,
+      carrierMinY + carrierWidth
+    ],
+    end = [carrierMinX, carrierMinY],
+  )
+}
+carrierRegion = region(segments = [
+  carrierSketch.front,
+  carrierSketch.right
+])
+carrierRawBlank = extrude(carrierRegion, length = -carrierThickness, method = NEW)
+carrier = clone(carrierRawBlank)
+hide(carrierRegion)
+
+// Analytic involute, split exactly at the pitch point: six arcs below, six above.
+// Each circumcircle interpolates its live start/mid/end; no frozen coordinates.
+fn polarPoint(@radius, theta, axis) {
+  return [
+    axis[0] + radius * cos(theta: rad),
+    axis[1] + radius * sin(theta: rad)
+  ]
+}
+fn involutePoint(@t, g, phase, axis, side) {
+  h = g.h0 - t + atan(t): number(_)
+  theta = phase + if side > 0 {
+  h
+} else {
+  2 * PI / g.n - h
+}
+  return polarPoint(g.base * sqrt(1 + t ^ 2), theta = theta, axis = axis)
+}
+fn fitArc(@a, middle, end) {
+  // Translate before forming the determinant to avoid global-coordinate cancellation.
+  ux = (middle[0] - a[0]): number(_)
+  uy = (middle[1] - a[1]): number(_)
+  vx = (end[0] - a[0]): number(_)
+  vy = (end[1] - a[1]): number(_)
+  denominator = 2 * (ux * vy - (uy * vx))
+  assert(abs(denominator), isGreaterThan = 0.000000000001, error = "Degenerate involute arc fit")
+  uu = ux ^ 2 + uy ^ 2
+  vv = vx ^ 2 + vy ^ 2
+  cx = a[0] + ((uu * vy - (vv * uy)) / denominator): mm
+  cy = a[1] + ((ux * vv - (vx * uu)) / denominator): mm
+  return {
+    center = [cx, cy],
+    direction = if denominator > 0 {
+      CCW
+    } else {
+      CW
+    }
+  }
+}
+
+// Zoo rejects the 3D fitted-involute tooth-space subtraction, including a
+// single cutter independently validated by OpenCascade. Trace its exact
+// complement instead: identical live arcs, radial roots and circular tips.
+fn gearOutline(@g, axis, phaseAngle, boreDiameter) {
+  phase = units::toRadians(phaseAngle): number(_)
+  angularPitch = 2 * PI / g.n
+  ts = map(
+    [0..12],
+    f = fn(@i) {
+      return if i <= 6 {
+        g.tRoot + (g.tPitch - g.tRoot) * i / 6
+      } else {
+        g.tPitch + (g.tTip - g.tPitch) * (i - 6) / 6
+      }
+    },
+  )
+  toothData = map(
+    [0 ..< g.n],
+    f = fn(@toothIndex) {
+      angle = phase + toothIndex * angularPitch
+      lower = map(
+        ts,
+        f = fn(@t) {
+          return involutePoint(
+            t,
+            g = g,
+            phase = angle - angularPitch,
+            axis = axis,
+            side = -1,
+          )
+        },
+      )
+      upper = map(
+        ts,
+        f = fn(@t) {
+          return involutePoint(
+            t,
+            g = g,
+            phase = angle,
+            axis = axis,
+            side = 1,
+          )
+        },
+      )
+      lowerFits = map(
+        [0..<12],
+        f = fn(@i) {
+          mid = involutePoint(
+            (ts[i] + ts[i + 1]) / 2,
+            g = g,
+            phase = angle - angularPitch,
+            axis = axis,
+            side = -1,
+          )
+          return fitArc(lower[i], middle = mid, end = lower[i + 1])
+        },
+      )
+      upperFits = map(
+        [0..<12],
+        f = fn(@i) {
+          mid = involutePoint(
+            (ts[i] + ts[i + 1]) / 2,
+            g = g,
+            phase = angle,
+            axis = axis,
+            side = 1,
+          )
+          return fitArc(upper[i + 1], middle = mid, end = upper[i])
+        },
+      )
+      hRoot = g.h0 - g.tRoot + atan(g.tRoot): number(_)
+      lowerRoot = if g.root < g.base {
+        polarPoint(g.root, theta = angle - hRoot, axis = axis)
+      } else {
+        lower[0]
+      }
+      upperRoot = if g.root < g.base {
+        polarPoint(g.root, theta = angle + hRoot, axis = axis)
+      } else {
+        upper[0]
+      }
+      return {
+        lower = lower,
+        upper = upper,
+        lowerFits = lowerFits,
+        upperFits = upperFits,
+        lowerRoot = lowerRoot,
+        upperRoot = upperRoot
+      }
+    },
+  )
+  // Two exact semicircles retain these seam vertices through export. A full
+  // circle canonicalizes its start point, causing coincident gear/carrier
+  // bore rims to weld into four-face STL edges. This split changes topology
+  // and tessellation only; the circular bore, shaft axis and seating stay exact.
+  boreStart = [
+    axis[0] + boreDiameter / 2 * cos(7deg),
+    axis[1] + boreDiameter / 2 * sin(7deg)
+  ]
+  boreOpposite = [
+    axis[0] - (boreDiameter / 2 * cos(7deg)),
+    axis[1] - (boreDiameter / 2 * sin(7deg))
+  ]
+  gearPlane = offsetPlane(XY, offset = gearBaseZ)
+  outline = sketch(on = gearPlane) {
+    boreFirst = arc(
+      start = boreStart,
+      end = boreOpposite,
+      center = axis,
+      direction = CCW,
+    )
+    boreSecond = arc(
+      start = boreOpposite,
+      end = boreStart,
+      center = axis,
+      direction = CCW,
+    )
+    teeth = map(
+      [0 ..< g.n],
+      f = fn(@i) {
+        d = toothData[i]
+        next = toothData[(i + 1) % g.n]
+        rootOut = if g.root < g.base {
+          [
+            line(start = d.lowerRoot, end = d.lower[0])
+          ]
+        } else {
+          []
+        }
+        lowerArcs = map(
+          [0..<12],
+          f = fn(@j) {
+            return arc(
+              start = d.lower[j],
+              end = d.lower[j + 1],
+              center = d.lowerFits[j].center,
+              direction = d.lowerFits[j].direction,
+            )
+          },
+        )
+        tipArc = arc(
+          start = d.lower[12],
+          end = d.upper[12],
+          center = axis,
+          direction = CCW,
+        )
+        upperArcs = map(
+          [0..<12],
+          f = fn(@j) {
+            k = 11 - j
+            return arc(
+              start = d.upper[k + 1],
+              end = d.upper[k],
+              center = d.upperFits[k].center,
+              direction = d.upperFits[k].direction,
+            )
+          },
+        )
+        rootIn = if g.root < g.base {
+          [
+            line(start = d.upper[0], end = d.upperRoot)
+          ]
+        } else {
+          []
+        }
+        rootArc = arc(
+          start = d.upperRoot,
+          end = next.lowerRoot,
+          center = axis,
+          direction = CCW,
+        )
+        return {
+          lowerArcs = lowerArcs,
+          upperArcs = upperArcs,
+          rootOut = rootOut,
+          rootIn = rootIn,
+          rootArc = rootArc,
+          tipArc = tipArc
+        }
+      },
+    )
+  }
+  outlineRegion = region(segments = [
+    outline.teeth[0].lowerArcs[0],
+    outline.teeth[0].lowerArcs[1]
+  ])
+  return {
+    profile = outlineRegion,
+    plane = gearPlane
+  }
+}
+
+pinionOutline = gearOutline(
+  pinionData,
+  axis = [pinionAxisX, pinionAxisY],
+  phaseAngle = pinionPhase,
+  boreDiameter = pinionBoreDiameter,
+)
+pinionRawBody = extrude(pinionOutline.profile, length = gearFaceWidth, method = NEW)
+pinion = clone(pinionRawBody)
+hide(pinionOutline.profile)
+hide(pinionOutline.plane)
+
+wheelOutline = gearOutline(
+  wheelData,
+  axis = [wheelAxisX, wheelAxisY],
+  phaseAngle = wheelPhase,
+  boreDiameter = wheelBoreDiameter,
+)
+wheelRawBody = extrude(wheelOutline.profile, length = gearFaceWidth, method = NEW)
+wheel = clone(wheelRawBody)
+hide(wheelOutline.profile)
+hide(wheelOutline.plane)
+
+// Acceptance declarations mirror the immutable contract; the external inspector
+// evaluates STEP solids, cylinders, teeth and motion, not KCL variable names.
+acceptance = {
+  solids = [
+    {
+      name = "pinion",
+      containsPoint = [0mm, 10mm, 4mm]
+    },
+    {
+      name = "wheel",
+      containsPoint = [60mm, 10mm, 4mm]
+    },
+    {
+      name = "carrier",
+      containsPoint = [30mm, 0mm, -2.5mm]
+    }
+  ],
+  cylinders = [
+    {
+      name = "pinionBore",
+      kind = "hole",
+      r = pinionBoreDiameter / 2,
+      point = [
+        pinionAxisX,
+        pinionAxisY,
+        gearBaseZ + gearFaceWidth / 2
+      ],
+      direction = [0, 0, 1],
+      length = gearFaceWidth
+    },
+    {
+      name = "wheelBore",
+      kind = "hole",
+      r = wheelBoreDiameter / 2,
+      point = [
+        wheelAxisX,
+        wheelAxisY,
+        gearBaseZ + gearFaceWidth / 2
+      ],
+      direction = [0, 0, 1],
+      length = gearFaceWidth
+    },
+    {
+      name = "carrierPinionHole",
+      kind = "hole",
+      r = pinionBoreDiameter / 2,
+      point = [
+        pinionAxisX,
+        pinionAxisY,
+        gearBaseZ - (carrierThickness / 2)
+      ],
+      direction = [0, 0, 1],
+      length = carrierThickness
+    },
+    {
+      name = "carrierWheelHole",
+      kind = "hole",
+      r = wheelBoreDiameter / 2,
+      point = [
+        wheelAxisX,
+        wheelAxisY,
+        gearBaseZ - (carrierThickness / 2)
+      ],
+      direction = [0, 0, 1],
+      length = carrierThickness
+    }
+  ],
+  gears = [
+    {
+      name = "pinionTeeth",
+      solid = "pinion",
+      teeth = pinionTeeth,
+      module = gearModule,
+      point = [pinionAxisX, pinionAxisY, gearBaseZ],
+      direction = [0, 0, 1],
+      at = gearFaceWidth / 2
+    },
+    {
+      name = "wheelTeeth",
+      solid = "wheel",
+      teeth = wheelTeeth,
+      module = gearModule,
+      point = [wheelAxisX, wheelAxisY, gearBaseZ],
+      direction = [0, 0, 1],
+      at = gearFaceWidth / 2
+    }
+  ],
+  meshes = [
+    {
+      name = "fullPitchMesh",
+      a = "pinion",
+      b = "wheel",
+      axisA = [
+        [pinionAxisX, pinionAxisY, gearBaseZ],
+        [0, 0, 1]
+      ],
+      axisB = [
+        [wheelAxisX, wheelAxisY, gearBaseZ],
+        [0, 0, 1]
+      ],
+      ratio = pinionTeeth / wheelTeeth,
+      pitchDeg = 360deg / pinionTeeth,
+      steps = 72,
+      backlashMax = 0.15mm,
+      interferenceToleranceMm3 = 0.001
+    }
+  ]
+}
+
+hide(seatingPlane)

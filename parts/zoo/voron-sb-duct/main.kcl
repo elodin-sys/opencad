@@ -1,0 +1,18 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Voron Stealthburner front housing (Rapido V2 variant): the datum prism composed with the
+// feature-group modules in dependency order. Contract parameters live in params.kcl.
+import datum from "datum.kcl"
+import hotendCavity from "hotendCavity.kcl"
+import leftDuct from "leftDuct.kcl"
+import rearInterface from "rearInterface.kcl"
+import rightDuct from "rightDuct.kcl"
+import topFasteners from "topFasteners.kcl"
+
+housing = datum
+  |> hotendCavity()
+  |> leftDuct()
+  |> rearInterface()
+  |> rightDuct()
+  |> topFasteners()
+housing

@@ -1,0 +1,44 @@
+{
+  "ok": true,
+  "codex": {
+    "thread_id": "01a0ad64-ae40-7d71-9b5f-341662ee4e68",
+    "exit_code": 0,
+    "seconds": 3019,
+    "commands": 96,
+    "usage": {
+      "input": 11298381,
+      "cached": 11024512,
+      "output": 87514,
+      "reasoning": 47031
+    },
+    "run_dir": "/Users/danieldriscoll/dual/opencad/results/benchy/model-work/codex",
+    "failure": ""
+  },
+  "thread_id": "01a0ad64-ae40-7d71-9b5f-341662ee4e68",
+  "codex_report": {
+    "Result": "Created the KCL model, but **acceptance remains incomplete and the raw STL is not ready to print**. The three permitted corrections are exhausted.",
+    "Files changed": "- [main.kcl](/Users/danieldriscoll/dual/opencad/parts/benchy/main.kcl)\n- [Verification report and detailed measurements](/Users/danieldriscoll/dual/opencad/results/benchy/model-work/verification-report.md)\n- [STEP export](/Users/danieldriscoll/dual/opencad/results/benchy/model-work/final-step/output.step)\n\nAll scratch artifacts are under `model-work`.",
+    "Verification": "Ran formatting, lint, analysis in mm/mm\u00b2/mm\u00b3, deterministic STEP/STL exports, and `four-ways`/`iso` snapshots. Inspected both snapshots and nine STEP sections. All 48 constants pass source checks.\n\n| Measurement | STEP result | Expected |\n|---|---:|---:|\n| Bbox minimum, mm | [\u22120.004240, \u221215.504669, \u22480] | [0, \u221215.5, 0] \u00b10.05 |\n| Bbox maximum, mm | [60.000279, 15.504669, 48] | [60, 15.5, 48] \u00b10.05 |\n| Volume, mm\u00b3 | 17,038.015 | 13,995\u201317,105 |\n| Surface area, mm\u00b2 | 10,174.012 | Unspecified |\n| Centre of mass, mm | [27.045715, \u22480, 12.024810] | y=0; x/z unspecified |\n| Solid count | One valid, closed solid | One |\n\nEngine measurements: volume **16,941.150 mm\u00b3**, area **10,165.357 mm\u00b2**, COM **[27.086218, 0.000150, 11.947327] mm**.\n\nAll 22 modeled stated calipers pass. Verified aperture areas match expectations: chimney annulus **31.415927 mm\u00b2**, cargo **56**, front window **99.75**, rear window **63.617251**. Both flange projections measure **0.300000 mm**. Bow tangent is **39.998640\u00b0** versus 40\u00b0; roof slope is **5.500000\u00b0**. Datum faces and full-solid mirror comparisons pass.\n\n| Edit | Measured \u0394volume | Expected |\n|---|---:|---:|\n| Length +3 mm | +575.845 mm\u00b3 | +550 \u00b155 |\n| Height +2 mm | +272.000 mm\u00b3 | +270, approximately |\n| Cargo depth +1 mm | \u221256.000 mm\u00b3 | \u221256 |\n\nAll edit bounding-box changes pass.",
+    "Open questions": "- Lofted-well subtraction repeatedly failed. The extruded fallback produces bow-wall samples up to **2.734 mm**, exceeding the inferred **2.1 mm** maximum.\n- Native STL omits chimney-floor triangles, leaving **32 unpaired edges**. STEP contains a closed, nearly flat conical floor with approximately **0.00013 mm** sag.\n- Engine/STEP volume disagreement is **0.5685%**, exceeding the contract\u2019s **0.2%** limit.\n- `holeAt` required a \u2212Z normal instead of the planned +Z normal. Cosmetics remain deferred; exact control-print fidelity remains unverified."
+  },
+  "kcl": "/Users/danieldriscoll/dual/opencad/parts/benchy/main.kcl",
+  "files": [
+    "main.kcl"
+  ],
+  "changed": [
+    "main.kcl"
+  ],
+  "engine_calls": [],
+  "stage": "model",
+  "provenance": {
+    "generated_at": "2026-09-17T04:14:30Z",
+    "opencad_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "6cf6ead495d8b52a3ed042f76be0c051dabb301b",
+      "dirty": true
+    },
+    "contract": "/Users/danieldriscoll/dual/opencad/designs/benchy/contract.yaml"
+  }
+}

@@ -1,0 +1,60 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import mountXLow, mountXHigh, mountYLow, mountYHigh, roofBottom, roofThickness, mountHoleDiameter, roofSpacerDiameter from "params.kcl"
+
+// Contract literals and their individual feasibility guards live in params.kcl.
+// The explicit stack axes drive the four bores; the named pitch parameters are
+// nominal references, so independently editable axes are not equality-locked.
+boreRadius = mountHoleDiameter / 2
+toolOverrun = 0.02mm
+boreExit = roofBottom - toolOverrun
+boreCutLength = roofThickness + toolOverrun
+
+assert(
+  mountHoleDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = roofSpacerDiameter,
+  error = "Roof bores must leave an annular spacer bearing land.",
+)
+assert(mountXHigh - mountXLow, isGreaterThan = mountHoleDiameter, error = "The two x bore axes must remain separate.")
+assert(mountYHigh - mountYLow, isGreaterThan = mountHoleDiameter, error = "The two y bore axes must remain separate.")
+assert(mountXLow - boreRadius, isGreaterThan = -1mm, error = "Left bore must remain inside the roofMounts region.")
+assert(mountXHigh + boreRadius, isLessThan = 89mm, error = "Right bore must remain inside the roofMounts region.")
+assert(mountYLow - boreRadius, isGreaterThan = -1mm, error = "Front bore must remain inside the roofMounts region.")
+assert(mountYHigh + boreRadius, isLessThan = 53.5mm, error = "Rear bore must remain inside the roofMounts region.")
+assert(roofThickness, isGreaterThan = 0mm, error = "Roof bore length requires positive roof stock.")
+assert(boreExit, isGreaterThan = 0.1mm, error = "Roof cuts must stay clear of the lower cover.")
+assert(roofBottom + roofThickness, isLessThan = 31mm, error = "Roof bore material must stay inside the roofMounts region.")
+
+export fn roofMounts(@body) {
+  // Independent cylinder tools keep the cap usable by downstream booleans.
+  // Start flush with the live deck and exit 0.02 mm into the existing cavity.
+  roofFace = offsetPlane(XY, offset = roofBottom + roofThickness)
+  boreProfile = sketch(on = roofFace) {
+    frontLeft = circle(center = [mountXLow, mountYLow], start = [mountXLow + boreRadius, mountYLow])
+    frontRight = circle(center = [mountXHigh, mountYLow], start = [mountXHigh + boreRadius, mountYLow])
+    rearRight = circle(center = [mountXHigh, mountYHigh], start = [mountXHigh + boreRadius, mountYHigh])
+    rearLeft = circle(center = [mountXLow, mountYHigh], start = [mountXLow + boreRadius, mountYHigh])
+  }
+  frontLeftRegion = region(segments = [boreProfile.frontLeft])
+  frontRightRegion = region(segments = [boreProfile.frontRight])
+  rearRightRegion = region(segments = [boreProfile.rearRight])
+  rearLeftRegion = region(segments = [boreProfile.rearLeft])
+
+  // Four exact circular tools leave the spacer lands and lower cover intact.
+  boreTools = extrude(
+    [
+      frontLeftRegion,
+      frontRightRegion,
+      rearRightRegion,
+      rearLeftRegion
+    ],
+    length = -boreCutLength,
+    method = NEW,
+  )
+  boredUpper = subtract(body[0], tools = boreTools)
+  hide(boreProfile.meta.sketch)
+  hide(roofFace)
+  hide(boreTools)
+  return [boredUpper, body[1]]
+}

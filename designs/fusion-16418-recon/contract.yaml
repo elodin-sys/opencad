@@ -1,0 +1,1321 @@
+schema_version: 1
+name: fusion-16418-recon
+intent: 'Reconstruct the mechanical part shown in the attached renders, sections and dimension sheet as editable, parameterized
+  KCL in the part''s own frame (bbox min [-10.242, 0.0, -10.242], size [20.483, 4.0, 20.483] mm). Declare every hole, boss
+  and shaft as an acceptance cylinder and every planar face level as a named face; one solid; export STEP and STL. Held-out:
+  the pipeline is frozen, the reference CAD is evaluator-only.'
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+frame:
+  origin: Intersection of the gear / hex / bore axis with the circular face at y = 0. This is [0,0,0] in the dimension sheet's
+    native frame (bbox centred in x and z, sitting on y = 0).
+  axes:
+    x: '+x is the sheet +x: from the axis toward the +x envelope (tooth tip at x = +10.242). In front.png, +x is to the right.
+      A hex flat is perpendicular to +x at x = +3.463 (pocket) and x = +4.332 (boss).'
+    y: +y is the sheet +y, from the circular face toward the hexagonal boss. Disc occupies y = 0..3; boss cap is y = 4. In
+      top.png, +y is up.
+    z: +z is the sheet +z, completing a right-handed frame (x cross y = z). In front.png, +z is up. The hex is pointy-top
+      in this view (vertices on ±z).
+  datums:
+  - name: A
+    description: Circular face at y = 0, outward normal −y. Primary seating face opposite the hex boss.
+  - name: B
+    description: 'Common axis of the Ø3.1 bore, the hex socket and the tooth pattern: x = z = 0, directed +y.'
+  - name: C
+    description: 'Hex clocking: pointy-top hex with flats parallel to the YZ plane (across-flats along x). Tooth 0 has its
+      tip-fillet axis on +x.'
+envelope:
+  min: [-10.242, 0.0, -10.242]
+  max: [10.242, 4.0, 10.242]
+  tolerance: 0.05
+parameters:
+- name: envelopeMinX
+  value: -10.242
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/dimension-sheet.md — Envelope and mass properties: bbox min [-10.242, 0.0, -10.242]'
+  description: Minimum x of the axis-aligned envelope; a tooth tip fillet reaches this station.
+- name: envelopeMinY
+  value: 0.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/dimension-sheet.md — Envelope and mass properties: bbox min y = 0.0; axis-aligned face y = 0'
+  description: Circular face opposite the hex boss (datum A).
+- name: envelopeMinZ
+  value: -10.242
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/dimension-sheet.md — Envelope and mass properties: bbox min [-10.242, 0.0, -10.242]'
+  description: Minimum z of the axis-aligned envelope.
+- name: envelopeSizeX
+  value: 20.483
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/dimension-sheet.md — Envelope and mass properties: size [20.483, 4.0, 20.483]'
+  description: Stated x extent. 2*10.242 = 20.484; the 0.001 mm rounding is in open_questions.
+- name: envelopeSizeY
+  value: 4.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/dimension-sheet.md — Envelope and mass properties: size y = 4.0; face y = 4'
+  description: Overall height from the circular face to the hex-boss cap. Edit grows the boss in +y.
+  edit_test:
+    delta: 1.0
+    expect:
+      volume_delta: 23.38
+      direction: increase
+      tolerance_rel: 0.02
+      bbox_delta: [0.0, 1.0, 0.0]
+    sweep:
+      values: [3.5, 4.0, 5.0]
+    infeasible_deltas: [-4.0]
+- name: envelopeSizeZ
+  value: 20.483
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/dimension-sheet.md — Envelope and mass properties: size [20.483, 4.0, 20.483]'
+  description: Stated z extent; same 0.001 mm rounding as envelopeSizeX.
+- name: discThickness
+  value: 3.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: sources/dimension-sheet.md — face +y at y = 3; pin Ø19 and Ø0.2 extent 0 .. 3
+  description: Toothed disc occupies y = envelopeMinY .. envelopeMinY+discThickness.
+- name: hexFloorY
+  value: 1.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: sources/dimension-sheet.md — axis-aligned face +y at y = 1, area 34.02
+  description: Floor of the hexagonal socket. Edit lowers this floor into the disc.
+  edit_test:
+    delta: -0.2
+    expect:
+      volume_delta: -6.804
+      direction: decrease
+      tolerance_rel: 0.02
+      bbox_delta: [0.0, 0.0, 0.0]
+    sweep:
+      values: [0.6, 1.0, 1.4]
+    infeasible_deltas: [-1.2, 3.1]
+- name: hexPocketFlat
+  value: 3.463
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: sources/dimension-sheet.md — axis-aligned faces x = ±3.463, area 12 each
+  description: Inner hex across-flats half-width (pointy-top hex, flats parallel to YZ).
+- name: hexBossFlat
+  value: 4.332
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: sources/dimension-sheet.md — axis-aligned faces x = ±4.332, area 5 each
+  description: Outer hex-boss across-flats half-width.
+- name: hexPocketVertex
+  value: 4.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  source: 'sources/dimension-sheet.md — inclined planes: points (0.003, 3, 4.0) and (-0.003, 3, -4.0)'
+  description: Inner hex vertex radius (pointy-top). Plane-table x offsets of 0.003 mm are extractor noise.
+- name: hexBossVertex
+  value: 5.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  source: 'sources/dimension-sheet.md — inclined planes: points (0.003, 3, 5.0) and (-0.003, 3, -5.0)'
+  description: Outer hex-boss vertex radius (pointy-top).
+- name: boreDiameter
+  value: 3.1
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  source: 'sources/dimension-sheet.md — cylindrical features: hole Ø3.1; counts hole Ø3.1: 1'
+  description: Through-hole in the 1 mm floor under the hex socket.
+- name: boreLength
+  value: 1.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  source: sources/dimension-sheet.md — hole Ø3.1 extent 0 .. 1 from [0,0,0], length 1
+  description: Axial length of the cylindrical bore; equals hexFloorY at the stated values.
+- name: rootDiameter
+  value: 19.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  source: 'sources/dimension-sheet.md — cylindrical features: pin Ø19, partial, length 3; counts pin Ø19.0: 1'
+  description: Dedendum cylinder of the tooth spaces, y = 0 .. 3.
+- name: tipFilletDiameter
+  value: 0.2
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  source: 'sources/dimension-sheet.md — 36 pins Ø0.2, partial, length 3; counts pin Ø0.2: 36'
+  description: Rounded tip of each tooth.
+- name: tipCircleRadius
+  value: 10.142
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  source: sources/dimension-sheet.md — Ø0.2 pin axes, e.g. [10.142, 0, 0] and [0, 0, ±10.142]
+  description: Circle through the 36 tip-fillet axes.
+- name: toothCount
+  value: 36
+  unit: ''
+  provenance: stated
+  tolerance: 1.0e-06
+  source: 'sources/dimension-sheet.md — counts pin Ø0.2: 36; front.png and section-y2.png tooth count'
+  description: Integer tooth count; one tip fillet per tooth.
+- name: toothPhase
+  value: 0.0
+  unit: deg
+  provenance: stated
+  tolerance: 0.05
+  source: sources/dimension-sheet.md — tip pin at [10.142, 1.5, 0.0]; front.png tooth on +x and +z
+  description: Tip-fillet centre angle of tooth 0, from +x toward +z about +y.
+- name: hubHeight
+  value: 1.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  formula: envelopeSizeY - discThickness
+  description: Hex-boss height above the disc top.
+- name: hexPocketDepth
+  value: 3.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  formula: envelopeSizeY - hexFloorY
+  description: Hex socket from the floor through the boss cap.
+- name: hexPocketAcross
+  value: 6.926
+  unit: mm
+  provenance: derived
+  tolerance: 0.02
+  formula: 2 * hexPocketFlat
+  description: Inner hex across-flats.
+- name: hexBossAcross
+  value: 8.664
+  unit: mm
+  provenance: derived
+  tolerance: 0.02
+  formula: 2 * hexBossFlat
+  description: Outer hex across-flats.
+- name: boreRadius
+  value: 1.55
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  formula: boreDiameter / 2
+  description: Bore radius.
+- name: rootRadius
+  value: 9.5
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  formula: rootDiameter / 2
+  description: Dedendum radius.
+- name: tipFilletRadius
+  value: 0.1
+  unit: mm
+  provenance: derived
+  tolerance: 0.01
+  formula: tipFilletDiameter / 2
+  description: Tooth-tip fillet radius.
+- name: tipOuterRadius
+  value: 10.242
+  unit: mm
+  provenance: derived
+  tolerance: 0.02
+  formula: tipCircleRadius + tipFilletRadius
+  description: Addendum radius; equals |envelope min/max| on x and z.
+- name: toothPitchDeg
+  value: 10.0
+  unit: deg
+  provenance: derived
+  tolerance: 0.01
+  formula: 360 / toothCount
+  description: Angular pitch. Sheet tip axes lie on this grid within 0.004 deg.
+- name: gearModule
+  value: 0.569
+  unit: mm
+  provenance: inferred
+  tolerance: 0.05
+  rationale: No module, pitch diameter or pressure angle is stated. 2*tipOuterRadius/toothCount = 0.569 mm is only the inspector
+    tooth-count threshold (tipRadius - 0.6*module stays on the tooth body, above the Ø19 root). It is not a claim that the
+    teeth are standard involute of this module.
+  description: Counting-aid module for acceptance.gears; tooth form remains an open question.
+features:
+- id: toothedDisc
+  kind: extrude
+  description: 36-tooth disc from y=0 to y=3, outer envelope tipOuterRadius, root cylinder Ø19.
+  parameters:
+  - discThickness
+  - envelopeMinY
+  - rootDiameter
+  - tipCircleRadius
+  - tipFilletDiameter
+  - toothCount
+  - toothPhase
+  - envelopeSizeX
+  - envelopeSizeZ
+  count: 36
+  verify:
+  - method: bbox
+  - method: solid
+    points:
+    - [6.0, 1.5, 0.0]
+  - method: section
+    section: y2
+  - method: face
+    face: discBottom
+  - method: face
+    face: discTop
+  - method: cylinder
+    cylinder: rootCylinder
+  - method: dimension
+    dimension: spanX
+  - method: dimension
+    dimension: spanZ
+- id: hexBoss
+  kind: boss
+  description: Pointy-top hexagonal boss on the disc, y=3..4, vertex radius 5, flats at x=±4.332.
+  parameters:
+  - hexBossFlat
+  - hexBossVertex
+  - hexBossAcross
+  - hubHeight
+  - discThickness
+  - envelopeSizeY
+  verify:
+  - method: face
+    face: hexBossTop
+  - method: face
+    face: hexBossLeft
+  - method: face
+    face: hexBossRight
+  - method: plane
+    plane: hexBoss60
+  - method: plane
+    plane: hexBoss120
+  - method: plane
+    plane: hexBoss240
+  - method: plane
+    plane: hexBoss300
+  - method: solid
+    points:
+    - [3.9, 3.5, 0.0]
+  - method: dimension
+    dimension: hexBossAcrossFlats
+  - method: dimension
+    dimension: overallHeight
+- id: hexPocket
+  kind: pocket
+  description: Pointy-top hexagonal socket from y=1 through y=4, vertex radius 4, flats at x=±3.463.
+  parameters:
+  - hexPocketFlat
+  - hexPocketVertex
+  - hexPocketAcross
+  - hexFloorY
+  - hexPocketDepth
+  - envelopeSizeY
+  verify:
+  - method: face
+    face: hexFloor
+  - method: face
+    face: hexPocketLeft
+  - method: face
+    face: hexPocketRight
+  - method: plane
+    plane: hexPocket60
+  - method: plane
+    plane: hexPocket120
+  - method: plane
+    plane: hexPocket240
+  - method: plane
+    plane: hexPocket300
+  - method: void
+    points:
+    - [0.0, 2.5, 0.0]
+  - method: section
+    section: y2
+  - method: count
+    section: y2
+    count: 1
+  - method: dimension
+    dimension: hexPocketAcrossFlats
+- id: centerBore
+  kind: hole
+  description: Ø3.1 hole through the 1 mm floor on the part axis, connecting the hex socket to the circular face.
+  parameters:
+  - boreDiameter
+  - boreLength
+  - boreRadius
+  - hexFloorY
+  verify:
+  - method: cylinder
+    cylinder: boreHole
+  - method: void
+    points:
+    - [0.0, 0.5, 0.0]
+  - method: section
+    section: x0
+  - method: section
+    section: z0
+- id: tipFillets
+  kind: pattern
+  count: 36
+  description: One Ø0.2 tip-fillet cylinder per tooth, axes on tipCircleRadius at k*toothPitchDeg from +x, y=0..3.
+  parameters:
+  - tipFilletDiameter
+  - tipFilletRadius
+  - tipCircleRadius
+  - toothCount
+  - toothPhase
+  - toothPitchDeg
+  - discThickness
+  verify:
+  - method: cylinder
+    cylinder: tipFillet0
+  - method: cylinder
+    cylinder: tipFillet9
+  - method: cylinder
+    cylinder: tipFillet18
+  - method: cylinder
+    cylinder: tipFillet27
+- id: toothFlanksListed
+  kind: other
+  optional: true
+  description: Four tooth-flank planes above the dimension-sheet area threshold (2.45 mm2). The other 68 flanks were omitted
+    from the sheet.
+  parameters:
+  - toothCount
+  - discThickness
+  verify:
+  - method: plane
+    plane: toothFlankA
+  - method: plane
+    plane: toothFlankB
+  - method: plane
+    plane: toothFlankC
+  - method: plane
+    plane: toothFlankD
+interfaces:
+- name: axisAndCircularSeat
+  description: Part axis and the y=0 circular face remain the reconstruction frame when hub height or hex-floor depth changes.
+  must_not_change: true
+  checks:
+  - discBottom
+  - boreHole
+  - spanX
+  - spanZ
+- name: hexDrive
+  description: Hex socket and boss across-flats and diagonal walls stay put under the two edit tests.
+  must_not_change: true
+  checks:
+  - hexPocketLeft
+  - hexPocketRight
+  - hexBossLeft
+  - hexBossRight
+  - hexPocketAcrossFlats
+  - hexBossAcrossFlats
+  - hexPocket60
+  - hexPocket120
+  - hexPocket240
+  - hexPocket300
+  - hexBoss60
+  - hexBoss120
+  - hexBoss240
+  - hexBoss300
+- name: toothPattern
+  description: 36-tooth mid-disc section topology and named root/tip cylinders survive the height and floor edits.
+  must_not_change: true
+  checks:
+  - y2
+  - teeth
+  - rootCylinder
+  - tipFillet0
+  - tipFillet9
+  - tipFillet18
+  - tipFillet27
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 827.65
+    tolerance: 2.0
+    provenance: stated
+    note: 'sources/dimension-sheet.md Envelope and mass properties: volume 827.65 mm3 (measured on the reference in its native
+      frame).'
+  surface_area:
+    expected: 963.43
+    tolerance: 5.0
+    provenance: stated
+    note: 'sources/dimension-sheet.md Envelope and mass properties: surface area 963.43 mm2; 161 faces (88 planar).'
+  center_of_mass:
+    expected: [0.0, 1.515, 0.0]
+    tolerance: 0.05
+    provenance: stated
+    note: 'sources/dimension-sheet.md Envelope and mass properties: centre of mass [0.0, 1.515, 0.0]. Geometric centroid at
+      unit density; no material is specified.'
+  solid_count: 1
+  sections:
+  - id: x0
+    plane: x
+    at: 0.0
+    expect:
+      area: 44.36
+      area_tolerance_rel: 0.02
+      loops: 2
+      holes: 0
+    description: 'Two islands (sheet: centroids (1.48, ±6.52), bbox 4 x 8.69). Cuts hex vertices and the ±z teeth.'
+  - id: y2
+    plane: y
+    at: 2.0
+    expect:
+      area: 256.75
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 1
+    description: Toothed outline minus the hex socket. Tooth count is acceptance.gears, not loop count. Image caption 256.74
+      mm2.
+  - id: z0
+    plane: z
+    at: 0.0
+    expect:
+      area: 46.23
+      area_tolerance_rel: 0.02
+      loops: 2
+      holes: 0
+    description: 'Two islands (sheet: centroids (±6.38, 1.49), bbox 8.69 x 4). Cuts hex flats and the ±x teeth.'
+  faces:
+  - name: hexBossLeft
+    plane: x
+    at: -4.332
+    normal: '-'
+    area: 5.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    center: [3.5, 0.0]
+    mode: one
+  - name: hexPocketLeft
+    plane: x
+    at: -3.463
+    normal: +
+    area: 12.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    center: [2.5, 0.0]
+    mode: one
+  - name: hexPocketRight
+    plane: x
+    at: 3.463
+    normal: '-'
+    area: 12.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    center: [2.5, 0.0]
+    mode: one
+  - name: hexBossRight
+    plane: x
+    at: 4.332
+    normal: +
+    area: 5.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    center: [3.5, 0.0]
+    mode: one
+  - name: discBottom
+    plane: y
+    at: 0.0
+    normal: '-'
+    area: 290.77
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center: [0.0, 0.0]
+    mode: one
+  - name: hexFloor
+    plane: y
+    at: 1.0
+    normal: +
+    area: 34.02
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center: [0.0, 0.0]
+    mode: one
+  - name: discTop
+    plane: y
+    at: 3.0
+    normal: +
+    area: 233.37
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center: [0.0, 0.0]
+    mode: one
+  - name: hexBossTop
+    plane: y
+    at: 4.0
+    normal: +
+    area: 23.38
+    area_tolerance_rel: 0.01
+    tolerance: 0.02
+    center: [0.0, 0.0]
+    mode: one
+  cylinders:
+  - name: boreHole
+    point: [0.0, 0.5, 0.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: hole
+    diameter: 3.1
+    radius_tolerance: 0.02
+    axis_tolerance: 0.02
+    length: 1.0
+    length_tolerance: 0.02
+    t_range: [-0.5, 0.5]
+    description: Ø3.1 floor bore; extent y=0..1 from [0,0,0].
+  - name: rootCylinder
+    point: [0.0, 1.5, 0.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 19.0
+    radius_tolerance: 0.02
+    axis_tolerance: 0.02
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Partial Ø19 dedendum cylinder, y=0..3.
+  - name: tipFillet0
+    point: [10.142, 1.5, 0.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 0 at 0 deg (from +x toward +z). Sheet axis at [10.142, 1.5, 0.0].
+  - name: tipFillet1
+    point: [9.988, 1.5, 1.761]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 1 at 10 deg (from +x toward +z). Sheet axis at [9.988, 1.5, 1.761].
+  - name: tipFillet2
+    point: [9.53, 1.5, 3.469]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 2 at 20 deg (from +x toward +z). Sheet axis at [9.53, 1.5, 3.469].
+  - name: tipFillet3
+    point: [8.783, 1.5, 5.071]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 3 at 30 deg (from +x toward +z). Sheet axis at [8.783, 1.5, 5.071].
+  - name: tipFillet4
+    point: [7.769, 1.5, 6.519]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 4 at 40 deg (from +x toward +z). Sheet axis at [7.769, 1.5, 6.519].
+  - name: tipFillet5
+    point: [6.519, 1.5, 7.769]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 5 at 50 deg (from +x toward +z). Sheet axis at [6.519, 1.5, 7.769].
+  - name: tipFillet6
+    point: [5.071, 1.5, 8.783]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 6 at 60 deg (from +x toward +z). Sheet axis at [5.071, 1.5, 8.783].
+  - name: tipFillet7
+    point: [3.468, 1.5, 9.53]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 7 at 70 deg (from +x toward +z). Sheet axis at [3.468, 1.5, 9.53].
+  - name: tipFillet8
+    point: [1.761, 1.5, 9.988]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 8 at 80 deg (from +x toward +z). Sheet axis at [1.761, 1.5, 9.988].
+  - name: tipFillet9
+    point: [-0.0, 1.5, 10.142]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 9 at 90 deg (from +x toward +z). Sheet axis at [-0.0, 1.5, 10.142].
+  - name: tipFillet10
+    point: [-1.761, 1.5, 9.988]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 10 at 100 deg (from +x toward +z). Sheet axis at [-1.761, 1.5, 9.988].
+  - name: tipFillet11
+    point: [-3.469, 1.5, 9.53]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 11 at 110 deg (from +x toward +z). Sheet axis at [-3.469, 1.5, 9.53].
+  - name: tipFillet12
+    point: [-5.071, 1.5, 8.783]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 12 at 120 deg (from +x toward +z). Sheet axis at [-5.071, 1.5, 8.783].
+  - name: tipFillet13
+    point: [-6.519, 1.5, 7.769]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 13 at 130 deg (from +x toward +z). Sheet axis at [-6.519, 1.5, 7.769].
+  - name: tipFillet14
+    point: [-7.769, 1.5, 6.519]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 14 at 140 deg (from +x toward +z). Sheet axis at [-7.769, 1.5, 6.519].
+  - name: tipFillet15
+    point: [-8.783, 1.5, 5.071]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 15 at 150 deg (from +x toward +z). Sheet axis at [-8.783, 1.5, 5.071].
+  - name: tipFillet16
+    point: [-9.53, 1.5, 3.468]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 16 at 160 deg (from +x toward +z). Sheet axis at [-9.53, 1.5, 3.468].
+  - name: tipFillet17
+    point: [-9.988, 1.5, 1.761]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 17 at 170 deg (from +x toward +z). Sheet axis at [-9.988, 1.5, 1.761].
+  - name: tipFillet18
+    point: [-10.142, 1.5, -0.0]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 18 at 180 deg (from +x toward +z). Sheet axis at [-10.142, 1.5, -0.0].
+  - name: tipFillet19
+    point: [-9.988, 1.5, -1.761]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 19 at 190 deg (from +x toward +z). Sheet axis at [-9.988, 1.5, -1.761].
+  - name: tipFillet20
+    point: [-9.53, 1.5, -3.469]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 20 at 200 deg (from +x toward +z). Sheet axis at [-9.53, 1.5, -3.469].
+  - name: tipFillet21
+    point: [-8.783, 1.5, -5.071]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 21 at 210 deg (from +x toward +z). Sheet axis at [-8.783, 1.5, -5.071].
+  - name: tipFillet22
+    point: [-7.769, 1.5, -6.519]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 22 at 220 deg (from +x toward +z). Sheet axis at [-7.769, 1.5, -6.519].
+  - name: tipFillet23
+    point: [-6.519, 1.5, -7.769]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 23 at 230 deg (from +x toward +z). Sheet axis at [-6.519, 1.5, -7.769].
+  - name: tipFillet24
+    point: [-5.071, 1.5, -8.783]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 24 at 240 deg (from +x toward +z). Sheet axis at [-5.071, 1.5, -8.783].
+  - name: tipFillet25
+    point: [-3.468, 1.5, -9.53]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 25 at 250 deg (from +x toward +z). Sheet axis at [-3.468, 1.5, -9.53].
+  - name: tipFillet26
+    point: [-1.761, 1.5, -9.988]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 26 at 260 deg (from +x toward +z). Sheet axis at [-1.761, 1.5, -9.988].
+  - name: tipFillet27
+    point: [0.0, 1.5, -10.142]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 27 at 270 deg (from +x toward +z). Sheet axis at [0.0, 1.5, -10.142].
+  - name: tipFillet28
+    point: [1.761, 1.5, -9.988]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 28 at 280 deg (from +x toward +z). Sheet axis at [1.761, 1.5, -9.988].
+  - name: tipFillet29
+    point: [3.469, 1.5, -9.53]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 29 at 290 deg (from +x toward +z). Sheet axis at [3.469, 1.5, -9.53].
+  - name: tipFillet30
+    point: [5.071, 1.5, -8.783]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 30 at 300 deg (from +x toward +z). Sheet axis at [5.071, 1.5, -8.783].
+  - name: tipFillet31
+    point: [6.519, 1.5, -7.769]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 31 at 310 deg (from +x toward +z). Sheet axis at [6.519, 1.5, -7.769].
+  - name: tipFillet32
+    point: [7.769, 1.5, -6.519]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 32 at 320 deg (from +x toward +z). Sheet axis at [7.769, 1.5, -6.519].
+  - name: tipFillet33
+    point: [8.783, 1.5, -5.071]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 33 at 330 deg (from +x toward +z). Sheet axis at [8.783, 1.5, -5.071].
+  - name: tipFillet34
+    point: [9.53, 1.5, -3.468]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 34 at 340 deg (from +x toward +z). Sheet axis at [9.53, 1.5, -3.468].
+  - name: tipFillet35
+    point: [9.988, 1.5, -1.761]
+    direction: [0.0, 1.0, 0.0]
+    kind: pin
+    diameter: 0.2
+    radius_tolerance: 0.02
+    axis_tolerance: 0.05
+    length: 3.0
+    length_tolerance: 0.02
+    t_range: [-1.5, 1.5]
+    description: Tooth-tip fillet 35 at 350 deg (from +x toward +z). Sheet axis at [9.988, 1.5, -1.761].
+  planes:
+  - name: hexPocket60
+    point: [3.466, 3.0, 1.997]
+    normal: [-0.5006, 0.0, -0.8657]
+    area: 12.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    angle_tolerance_deg: 0.5
+    description: Inner hex flat (~60 deg). Outward from solid into the socket.
+  - name: hexPocket120
+    point: [0.003, 3.0, 4.0]
+    normal: [0.4994, 0.0, -0.8664]
+    area: 12.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    angle_tolerance_deg: 0.5
+    description: Inner hex flat (~120 deg). Outward from solid into the socket.
+  - name: hexPocket240
+    point: [-3.466, 3.0, -1.997]
+    normal: [0.5006, 0.0, 0.8657]
+    area: 12.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    angle_tolerance_deg: 0.5
+    description: Inner hex flat (~240 deg). Outward from solid into the socket.
+  - name: hexPocket300
+    point: [-0.003, 3.0, -4.0]
+    normal: [-0.4994, 0.0, 0.8664]
+    area: 12.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    angle_tolerance_deg: 0.5
+    description: Inner hex flat (~300 deg). Outward from solid into the socket.
+  - name: hexBoss60
+    point: [0.003, 3.0, 5.0]
+    normal: [0.5005, 0.0, 0.8657]
+    area: 5.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    angle_tolerance_deg: 0.5
+    description: Outer hex-boss flat (~60 deg). Outward from solid.
+  - name: hexBoss120
+    point: [-4.329, 3.0, 2.503]
+    normal: [-0.4995, 0.0, 0.8663]
+    area: 5.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    angle_tolerance_deg: 0.5
+    description: Outer hex-boss flat (~120 deg). Outward from solid.
+  - name: hexBoss240
+    point: [-0.003, 3.0, -5.0]
+    normal: [-0.5005, 0.0, -0.8657]
+    area: 5.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    angle_tolerance_deg: 0.5
+    description: Outer hex-boss flat (~240 deg). Outward from solid.
+  - name: hexBoss300
+    point: [4.329, 3.0, -2.503]
+    normal: [0.4995, 0.0, -0.8663]
+    area: 5.0
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    angle_tolerance_deg: 0.5
+    description: Outer hex-boss flat (~300 deg). Outward from solid.
+  - name: toothFlankA
+    point: [10.192, 0.0, -0.086]
+    normal: [0.5061, 0.0, -0.8625]
+    area: 2.45
+    area_tolerance_rel: 0.05
+    tolerance: 0.05
+    angle_tolerance_deg: 1.0
+    description: Tooth flank above the sheet area threshold, near +x.
+  - name: toothFlankB
+    point: [-10.192, 0.0, 0.086]
+    normal: [-0.5061, 0.0, 0.8625]
+    area: 2.45
+    area_tolerance_rel: 0.05
+    tolerance: 0.05
+    angle_tolerance_deg: 1.0
+    description: Tooth flank above the sheet area threshold, near -x.
+  - name: toothFlankC
+    point: [0.086, 0.0, 10.192]
+    normal: [0.8625, 0.0, 0.5061]
+    area: 2.45
+    area_tolerance_rel: 0.05
+    tolerance: 0.05
+    angle_tolerance_deg: 1.0
+    description: Tooth flank above the sheet area threshold, near +z.
+  - name: toothFlankD
+    point: [-10.023, 0.0, 1.855]
+    normal: [-0.3487, 0.0, 0.9372]
+    area: 2.45
+    area_tolerance_rel: 0.05
+    tolerance: 0.05
+    angle_tolerance_deg: 1.0
+    description: Tooth flank above the sheet area threshold, near -x/+z; angle differs from the first three.
+  dimensions:
+  - name: spanX
+    axis: x
+    expected: 20.483
+    tolerance: 0.05
+    description: Bbox extent along x (stated size).
+  - name: spanY
+    axis: y
+    expected: 4.0
+    tolerance: 0.05
+    description: Bbox extent along y.
+    between:
+    - discBottom
+    - hexBossTop
+  - name: spanZ
+    axis: z
+    expected: 20.483
+    tolerance: 0.05
+    description: Bbox extent along z (stated size).
+  - name: discHeight
+    axis: y
+    expected: 3.0
+    tolerance: 0.02
+    description: Disc thickness.
+    between:
+    - discBottom
+    - discTop
+  - name: overallHeight
+    axis: y
+    expected: 4.0
+    tolerance: 0.02
+    description: Circular face to hex-boss cap.
+    between:
+    - discBottom
+    - hexBossTop
+  - name: hexPocketAcrossFlats
+    axis: x
+    expected: 6.926
+    tolerance: 0.02
+    description: Inner hex across-flats.
+    between:
+    - hexPocketLeft
+    - hexPocketRight
+  - name: hexBossAcrossFlats
+    axis: x
+    expected: 8.664
+    tolerance: 0.02
+    description: Outer hex across-flats.
+    between:
+    - hexBossLeft
+    - hexBossRight
+  solids:
+  - name: gear
+    contains_point: [6.0, 1.5, 0.0]
+    volume:
+      expected: 827.65
+      tolerance: 2.0
+      provenance: stated
+      note: Single body; same value as acceptance.volume.
+    description: 'The one solid: toothed disc, hex boss, hex socket and floor bore.'
+  hardware: []
+  clearances: []
+  passages: []
+  thickness: []
+  probes:
+  - name: discMaterial
+    state: solid
+    points:
+    - [6.0, 1.5, 0.0]
+    description: Inside the disc rim, r=6, between hex vertex 4 and root 9.5.
+  - name: hubMaterial
+    state: solid
+    points:
+    - [3.9, 3.5, 0.0]
+    description: Inside the hex-boss wall, between flats 3.463 and 4.332 at y=3.5.
+  - name: boreVoid
+    state: void
+    points:
+    - [0.0, 0.5, 0.0]
+    description: On the bore axis, mid-floor.
+  - name: hexVoid
+    state: void
+    points:
+    - [0.0, 2.5, 0.0]
+    description: On the axis inside the hex socket, above the floor.
+  - name: outsideVoid
+    state: void
+    points:
+    - [12.0, 1.5, 0.0]
+    description: Outside the tip circle on +x.
+  cylinder_counts:
+  - name: boreCount
+    diameter: 3.1
+    radius_tolerance: 0.02
+    kind: hole
+    direction: [0.0, 1.0, 0.0]
+    expected: 1
+    description: Single Ø3.1 floor bore.
+  - name: rootCount
+    diameter: 19.0
+    radius_tolerance: 0.02
+    kind: pin
+    direction: [0.0, 1.0, 0.0]
+    expected: 1
+    description: Single partial Ø19 dedendum cylinder.
+  - name: tipFilletCount
+    diameter: 0.2
+    radius_tolerance: 0.02
+    kind: pin
+    direction: [0.0, 1.0, 0.0]
+    expected: 36
+    description: One tip fillet per tooth.
+  gears:
+  - name: teeth
+    solid: gear
+    point: [0.0, 0.0, 0.0]
+    direction: [0.0, 1.0, 0.0]
+    at: 2.0
+    module: 0.569
+    teeth: 36
+    description: 'Mid-disc tooth count. Module is the inferred counting aid, not a stated involute module. Phase: tip on +x.'
+  meshes: []
+  deviation: null
+  blockout:
+    volume_min: 969.221
+    volume_max: 1137.781
+  export_volume_tolerance_rel: 0.002
+references:
+- path: sources/part-brief.md
+  kind: text
+  role: authoritative
+  sha256: 539d004699f714a06e332307d4492898bea539d8b99fece78c43e6232ce55adc
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Held-out reconstruction brief; names the native frame and one-solid STEP/STL deliverable.
+- path: sources/dimension-sheet.md
+  kind: text
+  role: authoritative
+  sha256: 7d3413c8a07dd7a0739e4f0c2262587aed84b8baf2d2bdacf31f37bf758555f8
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Envelope, mass properties, face levels, inclined planes, cylinders, sections. Values measured on the reference in
+    its native frame.
+- path: sources/render-notes.md
+  kind: text
+  role: illustrative
+  sha256: 5f9477cd2b1c1233b9eeae3aaac0558ca44c95df2c5321cfeed8111beb887114
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Render list and mesh triangle count; not a dimension source.
+- path: sources/front.png
+  kind: image
+  role: illustrative
+  sha256: 035beba138156d44c9f5edb73da5a823e0aa5f2a7fecac2aec2932b47ce5b374
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Orthographic XZ, mm grid. 36 teeth counted; hole at the origin; teeth on the cardinal axes.
+- path: sources/top.png
+  kind: image
+  role: illustrative
+  sha256: 8d47253523dcf7475880132e6a4e7632f6acf6f23351989d73de92f974d21cb7
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Orthographic XY. Disc y=0..3; hex boss y=3..4 at |x|≲4.3.
+- path: sources/right.png
+  kind: image
+  role: illustrative
+  sha256: 6197f27313adbba08e45760699a7ce0ec8c87a61ab2f1a8504048b9c9a6d1dfe
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Orthographic ZY. Same y steps as top.png.
+- path: sources/iso.png
+  kind: image
+  role: illustrative
+  sha256: f2be75464db1b2631d4ea1135d2dbeb626f582b0c93f052be4ae8906bf53dca6
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Circular y=0 face with the central hole.
+- path: sources/iso2.png
+  kind: image
+  role: illustrative
+  sha256: 00701f6472fc7264c630b2507ca5b6d20cfb1c6d661d753be9f2109ab6c8874e
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Pointy-top hex boss on +y.
+- path: sources/iso-below.png
+  kind: image
+  role: illustrative
+  sha256: a47b41a08f125b259bf42f963273dc770acc596b9bb373ba3f98d5195447ce74
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Underside of the circular face and hole.
+- path: sources/section-x0.png
+  kind: image
+  role: illustrative
+  sha256: 787d1eb358fec02f11e3daeb045448041992f560a54951e7bc8c873654497280
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Two islands; hex step and 1 mm floor.
+- path: sources/section-y2.png
+  kind: image
+  role: illustrative
+  sha256: 3c1ea5cb54a63bc61e197893d9f2c839a95644c1ec81bcecfae227485e947c19
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: 36-tooth outline and inner hex; caption 256.74 mm2 vs sheet 256.75.
+- path: sources/section-z0.png
+  kind: image
+  role: illustrative
+  sha256: 2f796c1eeffdb9a891e789f839f84c3e894943642a3495a7e110e2f5a0d60761
+  units: mm
+  revision: Unversioned source; revision identified by SHA-256.
+  note: Two islands; floor y=1, boss y=4, caption 46.23 mm2.
+open_questions:
+- What tooth form is intended (involute spur, trapezoidal/sprocket, or another construction)? section-y2.png shows straight-looking
+  flanks and rounded tips; no pressure angle, pitch diameter, addendum/dedendum factors or cutter is stated. gearModule 0.569
+  mm is only a tooth-count threshold.
+- What are the 68 tooth-flank planes omitted from the dimension sheet as below the area threshold (4 listed at 2.45 mm2)?
+  The 36 tip fillets and the y=2 section constrain the envelope, but individual omitted flanks are not named.
+- The stated bbox size [20.483, 4.0, 20.483] is 0.001 mm short of max-min = [20.484, 4.0, 20.484] from the stated min/max
+  ±10.242. Envelope uses the stated min/max; tipOuterRadius = 10.242 matches those bounds. Which rounding is authoritative?
+- Is the Ø19 partial cylinder the true root/dedendum face, or a construction/envelope cylinder interrupted by the teeth? The
+  sheet lists it as pin Ø19, length 3, full 360 = no.
+- Does the Ø3.1 hole remain a 1 mm cylinder in the floor only, or should a modeller treat the hex socket plus bore as one
+  through passage of mixed section? The sheet lists only the cylindrical 1 mm portion.
+- What material, density and manufacturing process are intended? Unspecified; material, density_kg_m3 and process remain null.
+  Volume and centre of mass are geometric (unit density), not a mass claim.
+- How should evaluator-only surface deviation against the held-out reference CAD be reported? No reference mesh is in this
+  bundle; acceptance.deviation is null.

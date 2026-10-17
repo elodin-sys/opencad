@@ -1,0 +1,2605 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/prusa-mini-extruder-front/contract.yaml: 124 parameters {'stated': 112, 'derived': 7, 'measured': 5}; sources unresolved {}; unanchored 0",
+        "open questions: 8 (blocking []); interfaces 9, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 112,
+          "derived": 7,
+          "measured": 5
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "Q1 \u2014 Keyhole conflict: prose places \u00d826 at z=0 and \u00d814 at z=16.4 and implies a lower \u00d816 cylinder; the dimension table and sections reverse those counterbores and show a lower taper. Which is intended? Draft checks provisionally follow the table and sections; intent is preserved verbatim.",
+          "Q2 \u2014 View naming: front.png shows the y=0 hex-pocket/marking side, although the frame calls y=14 the front. Are these camera labels only? This draft uses numerical coordinates and the requested datum definitions.",
+          "Q3 \u2014 Topology: the table gives three outer loops at x=-18.5, while the section drawing says two regions. Which is authoritative? Draft acceptance uses the table's 662.84 mm2 and three loops; the drawing says 662.94 mm2 and two regions.",
+          "Q4 \u2014 Construction: exact angular trims and connecting blends of the partial clamp surfaces are not tabulated. Can further drawings resolve them? All 40 cylinders and functional planes are specified; surrounding blends remain underdetermined, and the pivot-mouth \u00d83.9 is only raster measured.",
+          "Q5 \u2014 Diagnostics: quoted volume 29833.56 mm3, area 11557.87 mm2 and centroid [-0.703,6.989,-2.703] mm lack a complete analytic exterior. Should they ever become mandatory gates? They remain nonbinding; schema 1 cannot label these acceptance quantities diagnostic-only, so their fields are null.",
+          "Q6 \u2014 Cosmetics: exact fan-lobe outline, lug fillet radius and R1/arrow outlines are unspecified; embossed versus recessed is also unclear. May they remain omitted or approximate? Shared envelope and functional checks still apply.",
+          "Q7 \u2014 Manufacturing: material, density, print settings and physical fit tolerances are unspecified; trap hardware is called both nut and heat-set hardware. Which material and fasteners/inserts are intended? Only documented geometry and digital tolerances are specified.",
+          "Q8 \u2014 Thickness: the table bbox reaches y=14.001 but the face and renders give 14.000. Is the extra 0.001 intentional? This draft retains the requested y=14 datum with a 0.03 mm envelope tolerance."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "backDatum",
+          "matingFaceSeparation",
+          "frontDatum",
+          "bottomDatum",
+          "overallHeight",
+          "leftDatum",
+          "overallWidth",
+          "leftFootOffset",
+          "rightSideFrontPanel",
+          "rightSideBackPanel",
+          "clampLowerSideFace",
+          "clampUpperSideFace",
+          "sideScallopBore",
+          "lowerClampSlotHeight",
+          "upperClampSlotHeight",
+          "keyUpperFrontCounterbore",
+          "keyLowerBackRecess",
+          "keyUpperMiddleBore",
+          "keyLowerFrontCounterbore",
+          "keyUpperBackRecess",
+          "keyUpperBackShoulder",
+          "keyUpperFrontShoulder",
+          "keyNeckLeft",
+          "keyNeckRight",
+          "upperRecessDepth",
+          "upperBoreLength",
+          "upperCounterboreDepth",
+          "midPlate",
+          "leftPivotCounterbore",
+          "upperLeftCounterbore",
+          "lowerLeftCounterbore",
+          "rightPivotCounterbore",
+          "upperRightCounterbore",
+          "upperLeftPilot",
+          "lowerLeftPilot",
+          "leftPivotPilot",
+          "leftNutPilot",
+          "lugNutPilot",
+          "lowerNutPilot",
+          "rightPivotPilot",
+          "upperRightPilot",
+          "upperLeftBoss",
+          "lugBoss",
+          "nutTrapWidth",
+          "pivotCounterboreDepth",
+          "leftScrewDepthSection",
+          "filamentTransverseBore",
+          "filamentAngledBore",
+          "clampCornerOuterCut",
+          "clampAxialOuterCut",
+          "clampTiltOuterCut",
+          "clampUpperRelief",
+          "clampNearOffsetCut",
+          "clampFarOffsetCut",
+          "clampCornerNearCut",
+          "clampCornerFarCut",
+          "clampTiltNearCut",
+          "clampTiltFarCut",
+          "clampUpperNearCut",
+          "clampUpperFarCut",
+          "clampCornerLip",
+          "clampAxialLip",
+          "clampFarLip",
+          "clampCornerNearLip",
+          "clampCornerFarLip",
+          "clampTiltWall",
+          "clampCornerUpperWall",
+          "clampCornerLowerWall",
+          "upperBoreDepthSection",
+          "lowerScrewClampSection"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/zoo/prusa-mini-extruder-front/inspect.json bbox.max_error = 0.0008 (tol 0.03)",
+        "results/zoo/prusa-mini-extruder-front/verify.json engine bbox.max_error = 39.5199 (engine bbox differs: engine analyze can include cut-tool extents; disclosed, not gating)"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -26.5,
+            0.0,
+            -30.0
+          ],
+          "expected_max": [
+            26.5,
+            14.0,
+            33.72
+          ],
+          "measured_min": [
+            -26.5,
+            -0.0,
+            -30.0
+          ],
+          "measured_max": [
+            26.5008,
+            14.0,
+            33.72
+          ],
+          "max_error": 0.0008,
+          "tolerance": 0.03,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -26.5,
+            0.0,
+            -30.0
+          ],
+          "expected_max": [
+            26.5,
+            14.0,
+            33.72
+          ],
+          "measured_min": [
+            -27.8676,
+            -31.02,
+            -32.6724
+          ],
+          "measured_max": [
+            66.0199,
+            35.72,
+            34.1289
+          ],
+          "max_error": 39.5199,
+          "tolerance": 0.03,
+          "ok": false
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/zoo/prusa-mini-extruder-front/inspect.json volume = None vs None",
+        "results/zoo/prusa-mini-extruder-front/inspect.json surface_area = None vs None",
+        "results/zoo/prusa-mini-extruder-front/inspect.json center_of_mass = None vs None"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": false,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": false,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": false,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/zoo/prusa-mini-extruder-front/inspect.json features: 52/52 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared",
+        "results/zoo/prusa-mini-extruder-front/verify.json snapshots.reference_silhouette (IoU vs input renders, evidence) = {'back': 0.996, 'bottom': 0.982, 'front': 0.994, 'iso-below': 0.993, 'iso': 0.972, 'iso2': 0.962, 'left': 0.998, 'right-side': 0.992, 'top': 0.976}; sheet snapshots/view-compare.png"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "keyUpperFrontCounterbore": {
+            "found": true,
+            "axis_offset": 3.552713678800501e-15,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.009999999999999787,
+            "ok": true
+          },
+          "keyLowerBackRecess": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "keyUpperMiddleBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "keyLowerFrontCounterbore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "clampCornerOuterCut": {
+            "found": true,
+            "axis_offset": 6.705600017716362e-15,
+            "axis_tolerance": 0.03,
+            "radius_error": -5.329070518200751e-15,
+            "ok": true
+          },
+          "clampAxialOuterCut": {
+            "found": true,
+            "axis_offset": 7.32410687763558e-15,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "keyUpperBackRecess": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "clampTiltOuterCut": {
+            "found": true,
+            "axis_offset": 7.330527807168027e-14,
+            "axis_tolerance": 0.03,
+            "radius_error": -3.552713678800501e-15,
+            "ok": true
+          },
+          "clampUpperRelief": {
+            "found": true,
+            "axis_offset": 0.019999999999999574,
+            "axis_tolerance": 0.03,
+            "radius_error": -3.552713678800501e-15,
+            "ok": true
+          },
+          "clampNearOffsetCut": {
+            "found": true,
+            "axis_offset": 0.00018657034865649205,
+            "axis_tolerance": 0.03,
+            "radius_error": 6.572520305780927e-14,
+            "ok": true
+          },
+          "clampFarOffsetCut": {
+            "found": true,
+            "axis_offset": 0.00018657034897918753,
+            "axis_tolerance": 0.03,
+            "radius_error": 2.575717417130363e-13,
+            "ok": true
+          },
+          "clampCornerNearCut": {
+            "found": true,
+            "axis_offset": 0.0003193861925245123,
+            "axis_tolerance": 0.03,
+            "radius_error": -5.1514348342607263e-14,
+            "ok": true
+          },
+          "clampCornerFarCut": {
+            "found": true,
+            "axis_offset": 0.00031938619259551984,
+            "axis_tolerance": 0.03,
+            "radius_error": -1.0036416142611415e-13,
+            "ok": true
+          },
+          "clampTiltNearCut": {
+            "found": true,
+            "axis_offset": 0.0005243254196513635,
+            "axis_tolerance": 0.03,
+            "radius_error": 4.787281682183675e-13,
+            "ok": true
+          },
+          "clampTiltFarCut": {
+            "found": true,
+            "axis_offset": 0.0005243254194645447,
+            "axis_tolerance": 0.03,
+            "radius_error": -8.393286066166183e-14,
+            "ok": true
+          },
+          "clampUpperNearCut": {
+            "found": true,
+            "axis_offset": 0.019897894689200436,
+            "axis_tolerance": 0.03,
+            "radius_error": 3.0109248427834245e-13,
+            "ok": true
+          },
+          "clampUpperFarCut": {
+            "found": true,
+            "axis_offset": 0.0198978946889282,
+            "axis_tolerance": 0.03,
+            "radius_error": -3.2862601528904634e-13,
+            "ok": true
+          },
+          "leftPivotCounterbore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": -8.881784197001252e-16,
+            "ok": true
+          },
+          "upperLeftCounterbore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerLeftCounterbore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rightPivotCounterbore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "upperRightCounterbore": {
+            "found": true,
+            "axis_offset": 3.552713678800501e-15,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "sideScallopBore": {
+            "found": true,
+            "axis_offset": 5.0242958677880805e-15,
+            "axis_tolerance": 0.03,
+            "radius_error": 3.552713678800501e-15,
+            "ok": true
+          },
+          "filamentTransverseBore": {
+            "found": true,
+            "axis_offset": 3.552713678800501e-15,
+            "axis_tolerance": 0.03,
+            "radius_error": 1.7763568394002505e-15,
+            "ok": true
+          },
+          "filamentAngledBore": {
+            "found": true,
+            "axis_offset": 3.6664485859904455e-14,
+            "axis_tolerance": 0.03,
+            "radius_error": 3.552713678800501e-15,
+            "ok": true
+          },
+          "upperLeftPilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "lowerLeftPilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "leftPivotPilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": -6.661338147750939e-16,
+            "ok": true
+          },
+          "leftNutPilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 4.440892098500626e-16,
+            "ok": true
+          },
+          "lugNutPilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 4.440892098500626e-16,
+            "ok": true
+          },
+          "lowerNutPilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": 4.440892098500626e-16,
+            "ok": true
+          },
+          "rightPivotPilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": -6.661338147750939e-16,
+            "ok": true
+          },
+          "upperRightPilot": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": -6.661338147750939e-16,
+            "ok": true
+          },
+          "upperLeftBoss": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.03,
+            "radius_error": -1.7763568394002505e-15,
+            "ok": true
+          },
+          "lugBoss": {
+            "found": true,
+            "axis_offset": 3.994182002357171e-05,
+            "axis_tolerance": 0.03,
+            "radius_error": -5.970571811886316e-05,
+            "ok": true
+          },
+          "clampCornerLip": {
+            "found": true,
+            "axis_offset": 2.6645352591003757e-15,
+            "axis_tolerance": 0.03,
+            "radius_error": 2.6645352591003757e-15,
+            "ok": true
+          },
+          "clampAxialLip": {
+            "found": true,
+            "axis_offset": 3.552713678800501e-15,
+            "axis_tolerance": 0.03,
+            "radius_error": 0.004999999999996341,
+            "ok": true
+          },
+          "clampFarLip": {
+            "found": true,
+            "axis_offset": 0.004813429651106198,
+            "axis_tolerance": 0.03,
+            "radius_error": -4.1300296516055823e-14,
+            "ok": true
+          },
+          "clampCornerNearLip": {
+            "found": true,
+            "axis_offset": 0.0003193861927338123,
+            "axis_tolerance": 0.03,
+            "radius_error": -3.774758283725532e-14,
+            "ok": true
+          },
+          "clampCornerFarLip": {
+            "found": true,
+            "axis_offset": 0.0003193861928288576,
+            "axis_tolerance": 0.03,
+            "radius_error": 5.861977570020827e-14,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "backDatum": {
+            "ok": true,
+            "kind": "face"
+          },
+          "matingFaceSeparation": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "frontDatum": {
+            "ok": true,
+            "kind": "face"
+          },
+          "bottomDatum": {
+            "ok": true,
+            "kind": "face"
+          },
+          "overallHeight": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "leftDatum": {
+            "ok": true,
+            "kind": "face"
+          },
+          "overallWidth": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "leftFootOffset": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "rightSideFrontPanel": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rightSideBackPanel": {
+            "ok": true,
+            "kind": "face"
+          },
+          "clampLowerSideFace": {
+            "ok": true,
+            "kind": "face"
+          },
+          "clampUpperSideFace": {
+            "ok": true,
+            "kind": "face"
+          },
+          "sideScallopBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerClampSlotHeight": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "upperClampSlotHeight": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "keyUpperFrontCounterbore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "keyLowerBackRecess": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "keyUpperMiddleBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "keyLowerFrontCounterbore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "keyUpperBackRecess": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "keyUpperBackShoulder": {
+            "ok": true,
+            "kind": "face"
+          },
+          "keyUpperFrontShoulder": {
+            "ok": true,
+            "kind": "face"
+          },
+          "keyNeckLeft": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "keyNeckRight": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "upperRecessDepth": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "upperBoreLength": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "upperCounterboreDepth": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "midPlate": {
+            "ok": true,
+            "kind": "section"
+          },
+          "leftPivotCounterbore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "upperLeftCounterbore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerLeftCounterbore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rightPivotCounterbore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "upperRightCounterbore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "upperLeftPilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerLeftPilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "leftPivotPilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "leftNutPilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lugNutPilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lowerNutPilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rightPivotPilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "upperRightPilot": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "upperLeftBoss": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "lugBoss": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "nutTrapWidth": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "pivotCounterboreDepth": {
+            "ok": true,
+            "kind": "dimension"
+          },
+          "leftScrewDepthSection": {
+            "ok": true,
+            "kind": "section"
+          },
+          "filamentTransverseBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "filamentAngledBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampCornerOuterCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampAxialOuterCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampTiltOuterCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampUpperRelief": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampNearOffsetCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampFarOffsetCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampCornerNearCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampCornerFarCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampTiltNearCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampTiltFarCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampUpperNearCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampUpperFarCut": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampCornerLip": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampAxialLip": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampFarLip": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampCornerNearLip": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampCornerFarLip": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "clampTiltWall": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "clampCornerUpperWall": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "clampCornerLowerWall": {
+            "ok": true,
+            "kind": "plane"
+          },
+          "upperBoreDepthSection": {
+            "ok": true,
+            "kind": "section"
+          },
+          "lowerScrewClampSection": {
+            "ok": true,
+            "kind": "section"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/zoo/prusa-mini-extruder-front/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/zoo/prusa-mini-extruder-front/inspect.json agreement engine=29917.9638364413 step=29908.180042039865 stl=29917.965060084312 (rel tol 0.002; independent=True)",
+        "results/zoo/prusa-mini-extruder-front/inspect.json agreement.manifold = 29917.965033978966 (Manifold kernel witness, rel vs STEP 0.0003271677489351385; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 29917.9638364413,
+        "kcl": 29917.9638364413,
+        "step": 29908.180042039865,
+        "stl": 29917.965060084312,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": true,
+        "manifold": 29917.965033978966,
+        "manifold_vs_step_rel": 0.0003271677489351385,
+        "engine_vs_step_rel": 0.00032712770846246873,
+        "kcl_vs_step_rel": 0.00032712770846246873,
+        "stl_vs_step_rel": 0.0003271686217848553,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/zoo/prusa-mini-extruder-front/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 6/6 values; infeasible refused 2/2; interfaces pinned 70"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "upperLeftPilotDiameter",
+            "delta": 0.04,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -0.8625556789696165,
+                "measured": -0.8820024809865572,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 69,
+                "driven": [
+                  "upperLeftPilot"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 3.48,
+                  "volume": 29908.60962949465,
+                  "bbox_size": [
+                    53.000816784765604,
+                    14.000000238899283,
+                    63.72004202230171
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 0.4295874547860876,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 3.5,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 3.52,
+                  "volume": 29907.740585864038,
+                  "bbox_size": [
+                    53.000816784765604,
+                    14.000000238899283,
+                    63.72004202230171
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -0.4394561758272175,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -4.0,
+                  "value": -0.5,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: zoo kcl export step failed (1): | KCL execution failed: type: assert failed: Expected -0.5 to be greater than 0 but it wasn't: upperLeftPilotDiameter: outside geometric bounds"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "lowerLeftPilotDiameter",
+            "delta": 0.04,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -0.8625556789696165,
+                "measured": -0.878644125223218,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 69,
+                "driven": [
+                  "lowerLeftPilot"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 3.48,
+                  "volume": 29908.608022427426,
+                  "bbox_size": [
+                    53.000816784765604,
+                    14.000000238899283,
+                    63.72004202230171
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 0.4279803875615471,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 3.5,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 3.52,
+                  "volume": 29907.743944256126,
+                  "bbox_size": [
+                    53.000816784765604,
+                    14.000000238899283,
+                    63.72004202230171
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -0.4360977837386599,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": -4.0,
+                  "value": -0.5,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: zoo kcl export step failed (1): | KCL execution failed: type: assert failed: Expected -0.5 to be greater than 0 but it wasn't: lowerLeftPilotDiameter: outside geometric bounds"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "c7c8f3df28ee85e2ad97355d661bb09563607383ce1ea360986f23e2b4a4242f",
+          "re_export_sha256": "c7c8f3df28ee85e2ad97355d661bb09563607383ce1ea360986f23e2b4a4242f",
+          "ok": true
+        },
+        "sweep": {
+          "values": 6,
+          "passed": 6
+        },
+        "infeasible": {
+          "declared": 2,
+          "refused": 2
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/zoo/prusa-mini-extruder-front/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=250",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [
+            "\nimport plateWidth, plateThickness, bottomZ, bodyTopZ, halfWidth, clampCornerOuterDiameter, clampCornerAxisX, clampCenterY, clampCornerAxisZ, clampCornerStart, clampCornerEnd, clampOuterDiameter, clampAxisX, clampStartZ, clampEndZ, clampReliefDiameter, clampTiltAxisX, clampTiltAxisZ, clampTiltDirX, clampTiltDirZ, clampTiltStart, clampTiltEnd, clampUpperReliefX, clampUpperReliefEnd, clampOffsetDiameter, clampOffsetX, clampNearY, clampFarY, clampCornerOffsetDiameter, clampCornerOffsetX, clampCornerNearY, clampCornerOffsetZ, clampCornerFarY, clampInnerDiameter, clampTiltInnerX, clampTiltInnerZ, clampTiltNearStart, clampTiltNearEnd, clampTiltFarStart, clampTiltFarEnd, clampUpperInnerX, clampUpperNearEnd, clampUpperFarEnd, counterboreDiameter, rightPivotX, upperRightScrewX, upperRightScrewZ, sideScallopDiameter, sideScallopX, sideScallopZ, sideScallopEnd, clampCornerLipDiameter, clampAxialLipDiameter, clampFarLipDiameter, clampFarLipStart, clampCornerOffsetLipDiameter from \"params.kcl\"",
+            "\nimport plateWidth, plateThickness, bottomZ, lugMaxZ, bodyTopZ, lugNutX, lugBossDiameter, lugWebPeakX, keyBackDepth from \"params.kcl\"",
+            "\nimport plateWidth, plateThickness, bottomZ, lugMaxZ, bodyTopZ, leftTopChamferZ, rightTopChamferX, leftFootX, leftShoulderZ, leftDiagonalAnchorX, leftDiagonalAnchorZ, rightBottomChamferZ, lugWebPeakX, keyMiddleEnd, upperLeftScrewX, upperLeftScrewZ, lugNutX, lugNutZ, upperLeftBossDiameter, lugBossDiameter, keyAxisX, keyUpperZ, keyUpperCounterboreDiameter, filamentTransverseX, filamentZ, filamentDiameter, filamentEntryAxisX, filamentEntryAxisY, filamentDirX, filamentDirY from \"params.kcl\"",
+            "\nimport plateWidth, plateThickness, bottomZ, lugMaxZ, halfWidth, counterboreDiameter, leftPivotX, pivotCounterboreStart, upperLeftScrewX, upperLeftScrewZ, longCounterboreEnd, lowerLeftScrewX, lowerLeftScrewZ, rightPivotX, upperRightScrewX, upperRightScrewZ, rightCounterboreEnd, upperLeftPilotDiameter, longPilotStart, lowerLeftPilotDiameter, screwDiameter, pivotPilotEnd, leftNutX, leftNutZ, nutPilotStart, lugNutX, lugNutZ, lowerNutX, lowerNutZ, rightPilotStart, upperLeftBossDiameter, lugBossDiameter, nutLeftFlatX, nutRightFlatX, nutFullDepth, nutRectEnd, longCounterboreFullDepth, rightCounterboreFullDepth, nutAcrossFlats, nutCornerRadius, bridgeLayerHeight, longPilotLength, pivotMouthDiameter from \"params.kcl\"",
+            "\nimport plateThickness, lugMaxZ, bodyTopZ, lugWebPeakX, filamentDiameter, filamentTransverseX, filamentZ, filamentTransverseEnd, filamentEntryAxisX, filamentEntryAxisY, filamentDirX, filamentDirY, filamentEntryStart, filamentEntryEnd, lugNutX, lugNutZ, lugBossDiameter from \"params.kcl\"",
+            "\nimport plateWidth, plateThickness, bottomZ, lugMaxZ, halfWidth, keyUpperCounterboreDiameter, keyAxisX, keyUpperZ, keyMiddleEnd, keyLowerRecessDiameter, keyBackDepth, keyUpperBoreDiameter, keyLowerExitDiameter, keyLowerExitStart, keyUpperRecessDiameter, lowerTransitionLength from \"params.kcl\"",
+            "\nimport datum from \"datum.kcl\"",
+            "import exterior from \"exterior.kcl\"",
+            "import clamp from \"clamp.kcl\"",
+            "import filament from \"filament.kcl\"",
+            "import keyhole from \"keyhole.kcl\"",
+            "import fasteners from \"fasteners.kcl\""
+          ],
+          "forbidden_imports": [],
+          "asserts": 250,
+          "sketch_blocks": 29,
+          "feature_ops": 50,
+          "parameters": {
+            "plateWidth": {
+              "found": true,
+              "value": 53.0,
+              "unit": "mm",
+              "expected": 53.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "plateThickness": {
+              "found": true,
+              "value": 14.0,
+              "unit": "mm",
+              "expected": 14.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "bottomZ": {
+              "found": true,
+              "value": -30.0,
+              "unit": "mm",
+              "expected": -30.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lugMaxZ": {
+              "found": true,
+              "value": 33.72,
+              "unit": "mm",
+              "expected": 33.72,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "bodyTopZ": {
+              "found": true,
+              "value": 28.0,
+              "unit": "mm",
+              "expected": 28.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftTopChamferZ": {
+              "found": true,
+              "value": 24.0,
+              "unit": "mm",
+              "expected": 24.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "rightTopChamferX": {
+              "found": true,
+              "value": 22.5,
+              "unit": "mm",
+              "expected": 22.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftFootX": {
+              "found": true,
+              "value": -21.95,
+              "unit": "mm",
+              "expected": -21.95,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftShoulderZ": {
+              "found": true,
+              "value": -21.925,
+              "unit": "mm",
+              "expected": -21.925,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftDiagonalAnchorX": {
+              "found": true,
+              "value": -22.946,
+              "unit": "mm",
+              "expected": -22.946,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftDiagonalAnchorZ": {
+              "found": true,
+              "value": -23.45,
+              "unit": "mm",
+              "expected": -23.45,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "rightBottomChamferZ": {
+              "found": true,
+              "value": -22.75,
+              "unit": "mm",
+              "expected": -22.75,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "halfWidth": {
+              "found": true,
+              "value": 26.5,
+              "unit": "mm",
+              "expected": 26.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "overallHeight": {
+              "found": true,
+              "value": 63.72,
+              "unit": "mm",
+              "expected": 63.72,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftKneeX": {
+              "found": true,
+              "value": -24.15,
+              "unit": "mm",
+              "expected": -24.15,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftKneeZ": {
+              "found": true,
+              "value": -22.13,
+              "unit": "mm",
+              "expected": -22.13,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftFootTopZ": {
+              "found": true,
+              "value": -24.55,
+              "unit": "mm",
+              "expected": -24.55,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lugWebPeakX": {
+              "found": true,
+              "value": 16.75,
+              "unit": "mm",
+              "expected": 16.75,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "keyUpperCounterboreDiameter": {
+              "found": true,
+              "value": 26.0,
+              "unit": "mm",
+              "expected": 26.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "keyAxisX": {
+              "found": true,
+              "value": -2.0,
+              "unit": "mm",
+              "expected": -2.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "keyUpperZ": {
+              "found": true,
+              "value": 16.4,
+              "unit": "mm",
+              "expected": 16.4,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "keyMiddleEnd": {
+              "found": true,
+              "value": 8.0,
+              "unit": "mm",
+              "expected": 8.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "keyLowerRecessDiameter": {
+              "found": true,
+              "value": 22.5,
+              "unit": "mm",
+              "expected": 22.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "keyBackDepth": {
+              "found": true,
+              "value": 3.0,
+              "unit": "mm",
+              "expected": 3.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "keyUpperBoreDiameter": {
+              "found": true,
+              "value": 16.0,
+              "unit": "mm",
+              "expected": 16.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "keyLowerExitDiameter": {
+              "found": true,
+              "value": 14.0,
+              "unit": "mm",
+              "expected": 14.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "keyLowerExitStart": {
+              "found": true,
+              "value": 10.361,
+              "unit": "mm",
+              "expected": 10.361,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerOuterDiameter": {
+              "found": true,
+              "value": 12.684,
+              "unit": "mm",
+              "expected": 12.684,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerAxisX": {
+              "found": true,
+              "value": 22.922,
+              "unit": "mm",
+              "expected": 22.922,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCenterY": {
+              "found": true,
+              "value": 7.0,
+              "unit": "mm",
+              "expected": 7.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerAxisZ": {
+              "found": true,
+              "value": -22.922,
+              "unit": "mm",
+              "expected": -22.922,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerStart": {
+              "found": true,
+              "value": -3.975,
+              "unit": "mm",
+              "expected": -3.975,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerEnd": {
+              "found": true,
+              "value": -0.975,
+              "unit": "mm",
+              "expected": -0.975,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampOuterDiameter": {
+              "found": true,
+              "value": 12.63,
+              "unit": "mm",
+              "expected": 12.63,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampAxisX": {
+              "found": true,
+              "value": 25.618,
+              "unit": "mm",
+              "expected": 25.618,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampStartZ": {
+              "found": true,
+              "value": -9.0,
+              "unit": "mm",
+              "expected": -9.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampEndZ": {
+              "found": true,
+              "value": 24.0,
+              "unit": "mm",
+              "expected": 24.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "keyUpperRecessDiameter": {
+              "found": true,
+              "value": 12.0,
+              "unit": "mm",
+              "expected": 12.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampReliefDiameter": {
+              "found": true,
+              "value": 11.5,
+              "unit": "mm",
+              "expected": 11.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltAxisX": {
+              "found": true,
+              "value": 28.665,
+              "unit": "mm",
+              "expected": 28.665,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltAxisZ": {
+              "found": true,
+              "value": -5.054,
+              "unit": "mm",
+              "expected": -5.054,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltDirX": {
+              "found": true,
+              "value": 0.1736,
+              "unit": "_",
+              "expected": 0.1736,
+              "expected_unit": "",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltDirZ": {
+              "found": true,
+              "value": 0.9848,
+              "unit": "_",
+              "expected": 0.9848,
+              "expected_unit": "",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltStart": {
+              "found": true,
+              "value": -26.345,
+              "unit": "mm",
+              "expected": -26.345,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltEnd": {
+              "found": true,
+              "value": -4.081,
+              "unit": "mm",
+              "expected": -4.081,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampUpperReliefX": {
+              "found": true,
+              "value": 28.75,
+              "unit": "mm",
+              "expected": 28.75,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampUpperReliefEnd": {
+              "found": true,
+              "value": 27.506,
+              "unit": "mm",
+              "expected": 27.506,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampOffsetDiameter": {
+              "found": true,
+              "value": 9.5,
+              "unit": "mm",
+              "expected": 9.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampOffsetX": {
+              "found": true,
+              "value": 25.171,
+              "unit": "mm",
+              "expected": 25.171,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampNearY": {
+              "found": true,
+              "value": 5.5,
+              "unit": "mm",
+              "expected": 5.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampFarY": {
+              "found": true,
+              "value": 8.5,
+              "unit": "mm",
+              "expected": 8.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerOffsetDiameter": {
+              "found": true,
+              "value": 8.787,
+              "unit": "mm",
+              "expected": 8.787,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerOffsetX": {
+              "found": true,
+              "value": 22.504,
+              "unit": "mm",
+              "expected": 22.504,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerNearY": {
+              "found": true,
+              "value": 5.143,
+              "unit": "mm",
+              "expected": 5.143,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerOffsetZ": {
+              "found": true,
+              "value": -22.504,
+              "unit": "mm",
+              "expected": -22.504,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerFarY": {
+              "found": true,
+              "value": 8.857,
+              "unit": "mm",
+              "expected": 8.857,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampInnerDiameter": {
+              "found": true,
+              "value": 8.0,
+              "unit": "mm",
+              "expected": 8.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltInnerX": {
+              "found": true,
+              "value": 27.777,
+              "unit": "mm",
+              "expected": 27.777,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltInnerZ": {
+              "found": true,
+              "value": -4.898,
+              "unit": "mm",
+              "expected": -4.898,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltNearStart": {
+              "found": true,
+              "value": -19.018,
+              "unit": "mm",
+              "expected": -19.018,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltNearEnd": {
+              "found": true,
+              "value": -16.249,
+              "unit": "mm",
+              "expected": -16.249,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltFarStart": {
+              "found": true,
+              "value": -23.376,
+              "unit": "mm",
+              "expected": -23.376,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampTiltFarEnd": {
+              "found": true,
+              "value": -4.407,
+              "unit": "mm",
+              "expected": -4.407,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampUpperInnerX": {
+              "found": true,
+              "value": 27.849,
+              "unit": "mm",
+              "expected": 27.849,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampUpperNearEnd": {
+              "found": true,
+              "value": 19.625,
+              "unit": "mm",
+              "expected": 19.625,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampUpperFarEnd": {
+              "found": true,
+              "value": 24.712,
+              "unit": "mm",
+              "expected": 24.712,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "counterboreDiameter": {
+              "found": true,
+              "value": 6.5,
+              "unit": "mm",
+              "expected": 6.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftPivotX": {
+              "found": true,
+              "value": -23.92,
+              "unit": "mm",
+              "expected": -23.92,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "pivotCounterboreStart": {
+              "found": true,
+              "value": 8.5,
+              "unit": "mm",
+              "expected": 8.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperLeftScrewX": {
+              "found": true,
+              "value": -18.5,
+              "unit": "mm",
+              "expected": -18.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperLeftScrewZ": {
+              "found": true,
+              "value": 22.0,
+              "unit": "mm",
+              "expected": 22.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "longCounterboreEnd": {
+              "found": true,
+              "value": 9.8,
+              "unit": "mm",
+              "expected": 9.8,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lowerLeftScrewX": {
+              "found": true,
+              "value": -17.0,
+              "unit": "mm",
+              "expected": -17.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lowerLeftScrewZ": {
+              "found": true,
+              "value": -20.0,
+              "unit": "mm",
+              "expected": -20.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "rightPivotX": {
+              "found": true,
+              "value": 19.92,
+              "unit": "mm",
+              "expected": 19.92,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperRightScrewX": {
+              "found": true,
+              "value": 20.0,
+              "unit": "mm",
+              "expected": 20.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperRightScrewZ": {
+              "found": true,
+              "value": 17.0,
+              "unit": "mm",
+              "expected": 17.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "rightCounterboreEnd": {
+              "found": true,
+              "value": 7.8,
+              "unit": "mm",
+              "expected": 7.8,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "sideScallopDiameter": {
+              "found": true,
+              "value": 5.5,
+              "unit": "mm",
+              "expected": 5.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "sideScallopX": {
+              "found": true,
+              "value": 22.088,
+              "unit": "mm",
+              "expected": 22.088,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "sideScallopZ": {
+              "found": true,
+              "value": -15.0,
+              "unit": "mm",
+              "expected": -15.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "sideScallopEnd": {
+              "found": true,
+              "value": 4.649,
+              "unit": "mm",
+              "expected": 4.649,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "filamentDiameter": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "filamentTransverseX": {
+              "found": true,
+              "value": 14.708,
+              "unit": "mm",
+              "expected": 14.708,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "filamentZ": {
+              "found": true,
+              "value": 30.0,
+              "unit": "mm",
+              "expected": 30.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "filamentTransverseEnd": {
+              "found": true,
+              "value": 9.242,
+              "unit": "mm",
+              "expected": 9.242,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "filamentEntryAxisX": {
+              "found": true,
+              "value": -1.248,
+              "unit": "mm",
+              "expected": -1.248,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "filamentEntryAxisY": {
+              "found": true,
+              "value": 3.964,
+              "unit": "mm",
+              "expected": 3.964,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "filamentDirX": {
+              "found": true,
+              "value": 0.9538,
+              "unit": "_",
+              "expected": 0.9538,
+              "expected_unit": "",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "filamentDirY": {
+              "found": true,
+              "value": 0.3003,
+              "unit": "_",
+              "expected": 0.3003,
+              "expected_unit": "",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "filamentEntryStart": {
+              "found": true,
+              "value": 20.136,
+              "unit": "mm",
+              "expected": 20.136,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "filamentEntryEnd": {
+              "found": true,
+              "value": 24.991,
+              "unit": "mm",
+              "expected": 24.991,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperLeftPilotDiameter": {
+              "found": true,
+              "value": 3.5,
+              "unit": "mm",
+              "expected": 3.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "longPilotStart": {
+              "found": true,
+              "value": 10.1,
+              "unit": "mm",
+              "expected": 10.1,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lowerLeftPilotDiameter": {
+              "found": true,
+              "value": 3.5,
+              "unit": "mm",
+              "expected": 3.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "screwDiameter": {
+              "found": true,
+              "value": 3.4,
+              "unit": "mm",
+              "expected": 3.4,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "pivotPilotEnd": {
+              "found": true,
+              "value": 7.813,
+              "unit": "mm",
+              "expected": 7.813,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftNutX": {
+              "found": true,
+              "value": -22.0,
+              "unit": "mm",
+              "expected": -22.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "leftNutZ": {
+              "found": true,
+              "value": 15.0,
+              "unit": "mm",
+              "expected": 15.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "nutPilotStart": {
+              "found": true,
+              "value": 4.6,
+              "unit": "mm",
+              "expected": 4.6,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lugNutX": {
+              "found": true,
+              "value": 8.0,
+              "unit": "mm",
+              "expected": 8.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lugNutZ": {
+              "found": true,
+              "value": 28.0,
+              "unit": "mm",
+              "expected": 28.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lowerNutX": {
+              "found": true,
+              "value": 12.0,
+              "unit": "mm",
+              "expected": 12.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lowerNutZ": {
+              "found": true,
+              "value": -17.0,
+              "unit": "mm",
+              "expected": -17.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "rightPilotStart": {
+              "found": true,
+              "value": 8.1,
+              "unit": "mm",
+              "expected": 8.1,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "upperLeftBossDiameter": {
+              "found": true,
+              "value": 11.0,
+              "unit": "mm",
+              "expected": 11.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lugBossDiameter": {
+              "found": true,
+              "value": 10.0,
+              "unit": "mm",
+              "expected": 10.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerLipDiameter": {
+              "found": true,
+              "value": 9.184,
+              "unit": "mm",
+              "expected": 9.184,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampAxialLipDiameter": {
+              "found": true,
+              "value": 9.13,
+              "unit": "mm",
+              "expected": 9.13,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampFarLipDiameter": {
+              "found": true,
+              "value": 6.0,
+              "unit": "mm",
+              "expected": 6.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampFarLipStart": {
+              "found": true,
+              "value": -8.242,
+              "unit": "mm",
+              "expected": -8.242,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "clampCornerOffsetLipDiameter": {
+              "found": true,
+              "value": 5.287,
+              "unit": "mm",
+              "expected": 5.287,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "nutLeftFlatX": {
+              "found": true,
+              "value": -24.8,
+              "unit": "mm",
+              "expected": -24.8,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "nutRightFlatX": {
+              "found": true,
+              "value": -19.2,
+              "unit": "mm",
+              "expected": -19.2,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "nutFullDepth": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "nutRectEnd": {
+              "found": true,
+              "value": 4.3,
+              "unit": "mm",
+              "expected": 4.3,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "longCounterboreFullDepth": {
+              "found": true,
+              "value": 9.5,
+              "unit": "mm",
+              "expected": 9.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "rightCounterboreFullDepth": {
+              "found": true,
+              "value": 7.5,
+              "unit": "mm",
+              "expected": 7.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "nutAcrossFlats": {
+              "found": true,
+              "value": 5.6,
+              "unit": "mm",
+              "expected": 5.6,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "nutCornerRadius": {
+              "found": true,
+              "value": 3.2331615074619044,
+              "unit": "mm",
+              "expected": 3.2331615074619044,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "bridgeLayerHeight": {
+              "found": true,
+              "value": 0.3,
+              "unit": "mm",
+              "expected": 0.3,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "lowerTransitionLength": {
+              "found": true,
+              "value": 7.361,
+              "unit": "mm",
+              "expected": 7.361,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "longPilotLength": {
+              "found": true,
+              "value": 3.9,
+              "unit": "mm",
+              "expected": 3.9,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            },
+            "pivotMouthDiameter": {
+              "found": true,
+              "value": 3.9,
+              "unit": "mm",
+              "expected": 3.9,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "params.kcl"
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 2830,
+          "ok": true,
+          "dialect_ok": true,
+          "unit_ok": true,
+          "legacy": [],
+          "construction_ops": {
+            "sketch_blocks": 29,
+            "feature_ops": 50
+          }
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/zoo/prusa-mini-extruder-front/export.json step.deterministic = True sha256 c7c8f3df28ee; stl=present; glb=present",
+        "results/zoo/prusa-mini-extruder-front/inspect.json valid = True solids = 1 (expected 1)",
+        "results/zoo/prusa-mini-extruder-front/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = True; manifold witness = 29917.965033978966"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/zoo/prusa-mini-extruder-front/export/prusa-mini-extruder-front.step",
+            "sha256": "c7c8f3df28ee85e2ad97355d661bb09563607383ce1ea360986f23e2b4a4242f",
+            "bytes": 1296448,
+            "deterministic": true,
+            "second_sha256": "c7c8f3df28ee85e2ad97355d661bb09563607383ce1ea360986f23e2b4a4242f",
+            "determinism_source": "edit restore re-export"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/zoo/prusa-mini-extruder-front/export/prusa-mini-extruder-front.stl",
+            "sha256": "9000562f1b041cda93e1fc5a9df175bd78649c6a4edc4c7add78ed483641c55f",
+            "bytes": 2121171
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/zoo/prusa-mini-extruder-front/export/prusa-mini-extruder-front.glb",
+            "sha256": "8e751ad6ad5d7c54cef0ee4fced17f19ef1053635a6b59fe828bdd21ea22eb7a",
+            "bytes": 1728132
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 29917.965033978966,
+          "faces": 11038,
+          "vertices": 5495,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 29917.965060084312,
+          "surface_area": 11514.964004131738,
+          "bbox_min": [
+            -26.5,
+            -1.1565985e-15,
+            -30.000042
+          ],
+          "bbox_max": [
+            26.500818,
+            14.0,
+            33.72
+          ],
+          "center_of_mass": [
+            -0.6915793595977766,
+            6.9793832266959726,
+            -2.72419719901511
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a14171-0c9b-7202-b3d3-4d0c40a2392b; engine versions ['zoo 0.2.204 (105efcaaacd061157ad86e5aee54394f575bd650)']; engine calls 19; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 19,
+        "allow_errors": false,
+        "engine_versions": [
+          "zoo 0.2.204 (105efcaaacd061157ad86e5aee54394f575bd650)"
+        ],
+        "zoo_versions": [
+          "zoo 0.2.204 (105efcaaacd061157ad86e5aee54394f575bd650)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/zoo/prusa-mini-extruder-front/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present, no traced geometry",
+      "ok": true,
+      "evidence": [
+        "results/zoo/prusa-mini-extruder-front/verify.json hygiene.forbidden_imports = [] construction_ops = {'sketch_blocks': 29, 'feature_ops': 50} lines = 2830"
+      ],
+      "failure_means": "the deliverable is a re-export or a trace of the reference, not a design",
+      "knob": "rebuild from construction with dimensions as parameters; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "\nimport plateWidth, plateThickness, bottomZ, bodyTopZ, halfWidth, clampCornerOuterDiameter, clampCornerAxisX, clampCenterY, clampCornerAxisZ, clampCornerStart, clampCornerEnd, clampOuterDiameter, clampAxisX, clampStartZ, clampEndZ, clampReliefDiameter, clampTiltAxisX, clampTiltAxisZ, clampTiltDirX, clampTiltDirZ, clampTiltStart, clampTiltEnd, clampUpperReliefX, clampUpperReliefEnd, clampOffsetDiameter, clampOffsetX, clampNearY, clampFarY, clampCornerOffsetDiameter, clampCornerOffsetX, clampCornerNearY, clampCornerOffsetZ, clampCornerFarY, clampInnerDiameter, clampTiltInnerX, clampTiltInnerZ, clampTiltNearStart, clampTiltNearEnd, clampTiltFarStart, clampTiltFarEnd, clampUpperInnerX, clampUpperNearEnd, clampUpperFarEnd, counterboreDiameter, rightPivotX, upperRightScrewX, upperRightScrewZ, sideScallopDiameter, sideScallopX, sideScallopZ, sideScallopEnd, clampCornerLipDiameter, clampAxialLipDiameter, clampFarLipDiameter, clampFarLipStart, clampCornerOffsetLipDiameter from \"params.kcl\"",
+          "\nimport plateWidth, plateThickness, bottomZ, lugMaxZ, bodyTopZ, lugNutX, lugBossDiameter, lugWebPeakX, keyBackDepth from \"params.kcl\"",
+          "\nimport plateWidth, plateThickness, bottomZ, lugMaxZ, bodyTopZ, leftTopChamferZ, rightTopChamferX, leftFootX, leftShoulderZ, leftDiagonalAnchorX, leftDiagonalAnchorZ, rightBottomChamferZ, lugWebPeakX, keyMiddleEnd, upperLeftScrewX, upperLeftScrewZ, lugNutX, lugNutZ, upperLeftBossDiameter, lugBossDiameter, keyAxisX, keyUpperZ, keyUpperCounterboreDiameter, filamentTransverseX, filamentZ, filamentDiameter, filamentEntryAxisX, filamentEntryAxisY, filamentDirX, filamentDirY from \"params.kcl\"",
+          "\nimport plateWidth, plateThickness, bottomZ, lugMaxZ, halfWidth, counterboreDiameter, leftPivotX, pivotCounterboreStart, upperLeftScrewX, upperLeftScrewZ, longCounterboreEnd, lowerLeftScrewX, lowerLeftScrewZ, rightPivotX, upperRightScrewX, upperRightScrewZ, rightCounterboreEnd, upperLeftPilotDiameter, longPilotStart, lowerLeftPilotDiameter, screwDiameter, pivotPilotEnd, leftNutX, leftNutZ, nutPilotStart, lugNutX, lugNutZ, lowerNutX, lowerNutZ, rightPilotStart, upperLeftBossDiameter, lugBossDiameter, nutLeftFlatX, nutRightFlatX, nutFullDepth, nutRectEnd, longCounterboreFullDepth, rightCounterboreFullDepth, nutAcrossFlats, nutCornerRadius, bridgeLayerHeight, longPilotLength, pivotMouthDiameter from \"params.kcl\"",
+          "\nimport plateThickness, lugMaxZ, bodyTopZ, lugWebPeakX, filamentDiameter, filamentTransverseX, filamentZ, filamentTransverseEnd, filamentEntryAxisX, filamentEntryAxisY, filamentDirX, filamentDirY, filamentEntryStart, filamentEntryEnd, lugNutX, lugNutZ, lugBossDiameter from \"params.kcl\"",
+          "\nimport plateWidth, plateThickness, bottomZ, lugMaxZ, halfWidth, keyUpperCounterboreDiameter, keyAxisX, keyUpperZ, keyMiddleEnd, keyLowerRecessDiameter, keyBackDepth, keyUpperBoreDiameter, keyLowerExitDiameter, keyLowerExitStart, keyUpperRecessDiameter, lowerTransitionLength from \"params.kcl\"",
+          "\nimport datum from \"datum.kcl\"",
+          "import exterior from \"exterior.kcl\"",
+          "import clamp from \"clamp.kcl\"",
+          "import filament from \"filament.kcl\"",
+          "import keyhole from \"keyhole.kcl\"",
+          "import fasteners from \"fasteners.kcl\""
+        ],
+        "construction_ops": {
+          "sketch_blocks": 29,
+          "feature_ops": 50
+        },
+        "sketch_blocks": 29,
+        "feature_ops": 50,
+        "source_size": null
+      }
+    }
+  ],
+  "retry": {
+    "attempted": true,
+    "corrections": 1,
+    "reason": [
+      "export_integrity"
+    ],
+    "gates_before": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": true,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": true,
+      "source_hygiene": true,
+      "export_integrity": false,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "gates_after": {
+      "contract_provenance": true,
+      "envelope": true,
+      "mass_properties": true,
+      "features": true,
+      "reference_fidelity": null,
+      "export_agreement": true,
+      "edit_robustness": true,
+      "source_hygiene": true,
+      "export_integrity": true,
+      "traceability": true,
+      "evidence_separation": true,
+      "independence": true
+    },
+    "history": [
+      {
+        "key": "correction-1",
+        "role": "correction",
+        "failed_after": [],
+        "retryable_after": [],
+        "signature": "|ok|-",
+        "kcl_changed": true,
+        "incomplete": false,
+        "failing_count": 0,
+        "failing_items": [],
+        "reverted_to_checkpoint": false,
+        "budget_s": 900.0,
+        "contract_changed": false
+      }
+    ],
+    "stopped": "gates pass",
+    "stuck_class": null
+  }
+}

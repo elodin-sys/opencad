@@ -1,0 +1,376 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Iterating with map and reduce - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/map_reduce.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="iterating-with-map-and-reduce"><a class="header" href="#iterating-with-map-and-reduce">Iterating with map and reduce</a></h1>
+<ul>
+<li><a href="#transforming-arrays-with-map">Transforming arrays with map</a>
+<ul>
+<li><a href="#anonymous-functions">Anonymous functions</a></li>
+</ul>
+</li>
+<li><a href="#consuming-arrays-with-reduce">Consuming arrays with reduce</a></li>
+</ul>
+<p>Every programming language has a way to do <em>iteration</em>: to repeat the same task many times. Traditional programming languages like Python, JavaScript or C use loops. KCL doesn't have any loops, but we have something very similar: arrays, and two helper functions called <a href="https://zoo.dev/docs/kcl-std/functions/std-array-map"><code>map</code></a> and <a href="https://zoo.dev/docs/kcl-std/functions/std-array-reduce"><code>reduce</code></a>. Let's see how they can solve problems.</p>
+<h2 id="transforming-arrays-with-map"><a class="header" href="#transforming-arrays-with-map">Transforming arrays with map</a></h2>
+<p>The <a href="https://zoo.dev/docs/kcl-std/functions/std-array-map"><code>map</code></a> function lets you transform an array by calling a function on every element. For example:</p>
+<pre><code class="language-kcl">inputArray = [1, 2, 3, 4]
+fn squareNumber(@x) { return x * x }
+outputArray = map(inputArray, f = squareNumber)
+</code></pre>
+<p>The <a href="https://zoo.dev/docs/kcl-std/functions/std-array-map"><code>map</code></a> function takes an input array as its first argument, then a function (its label is abbreviated to just <code>f</code>). It calls the function on every element of the input array, and returns it. If you open the Variables pane, you'll see that outputArray is <code>[1, 4, 9, 16]</code>, just as we expected.</p>
+<p>You can use <code>map</code> to create geometry too! For example, let's make 3 cubes, next to each other.</p>
+<pre><code class="language-kcl=three_map_cubes">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+fn cube(@offset) {
+  sideLen = 10
+  sketch001 = sketch(on = XY) {
+    line1 = line(start = [var 0mm, var 0mm], end = [var 3.08mm, var 0mm])
+    line2 = line(start = [var 3.08mm, var 0mm], end = [var 3.08mm, var -3.01mm])
+    line3 = line(start = [var 3.08mm, var -3.01mm], end = [var 0mm, var -3.01mm])
+    line4 = line(start = [var 0mm, var -3.01mm], end = [var 0mm, var 0mm])
+    coincident([line1.end, line2.start])
+    coincident([line2.end, line3.start])
+    coincident([line3.end, line4.start])
+    coincident([line4.end, line1.start])
+    parallel([line2, line4])
+    parallel([line3, line1])
+    perpendicular([line1, line2])
+    horizontal(line3)
+    coincident([line1.start, ORIGIN])
+    equalLength([line1, line2, line3, line4])
+    fixed([line1.start, ORIGIN])
+    distance([line1.start, line1.end]) == sideLen
+  }
+  hide(sketch001)
+  return region(segments = [sketch001.line1, sketch001.line2])
+    |&gt; extrude(length = sideLen)
+    |&gt; translate(x = offset)
+}
+
+offsets = [0, 25, 50]
+cubes = map(offsets, f = cube)
+</code></pre>
+<p><model-viewer
+            alt="Three mapped cubes"
+            src="gltf/three_map_cubes/output.gltf"
+            poster="images/dynamic/three_map_cubes.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+We created an array of offsets, then called the <code>cube</code> function on each offset in the array. The final result is an array of cubes. Calling the <code>cube</code> function drew the three cubes, each at their own offset.</p>
+<p>So far so good. But this is basically just a 3D pattern. We can make this more interesting by making each cube a different color. Instead of an array of offsets, we'll store an array of offsets <em>and colors</em>. To do this, we'll make a KCL <em>object</em>. An object has multiple properties, each with its own label and value. For example:</p>
+<pre><code class="language-kcl">myObject = {
+  offset = 25,
+  color = "#00ff00",
+}
+</code></pre>
+<p>This object has two fields, <code>offset</code> and <code>color</code>. You could access them by calling <code>myObject.offset</code> and <code>myObject.color</code>. Let's see how we can use this with <code>map</code>:</p>
+<pre><code class="language-kcl=three_map_cubes_color">@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+fn cube(@params) {
+  offset = params.x
+  color = params.color
+  sideLen = 10
+  sketch001 = sketch(on = XY) {
+    line1 = line(start = [var 0mm, var 0mm], end = [var 3.08mm, var 0mm])
+    line2 = line(start = [var 3.08mm, var 0mm], end = [var 3.08mm, var -3.01mm])
+    line3 = line(start = [var 3.08mm, var -3.01mm], end = [var 0mm, var -3.01mm])
+    line4 = line(start = [var 0mm, var -3.01mm], end = [var 0mm, var 0mm])
+    coincident([line1.end, line2.start])
+    coincident([line2.end, line3.start])
+    coincident([line3.end, line4.start])
+    coincident([line4.end, line1.start])
+    parallel([line2, line4])
+    parallel([line3, line1])
+    perpendicular([line1, line2])
+    horizontal(line3)
+    coincident([line1.start, ORIGIN])
+    equalLength([line1, line2, line3, line4])
+    fixed([line1.start, ORIGIN])
+    distance([line1.start, line1.end]) == sideLen
+  }
+  hide(sketch001)
+  return region(segments = [sketch001.line1, sketch001.line2])
+    |&gt; extrude(length = sideLen)
+    |&gt; translate(x = offset)
+    |&gt; appearance(color = color)
+}
+
+offsets = [
+  { x = 0, color = "#99ff99" },
+  { x = 25, color = "#00ff00" },
+  { x = 50, color = "#002200" }
+]
+
+threeCubes = map(offsets, f = cube)
+</code></pre>
+<p><model-viewer
+            alt="Three mapped cubes of different colors"
+            src="gltf/three_map_cubes_color/output.gltf"
+            poster="images/dynamic/three_map_cubes_color.png"
+            ar
+            environment-image="images/whipple_creek.jpg"
+            shadow-intensity="1"
+            auto-rotate
+            camera-controls touch-action="pan-y">
+</model-viewer>
+Remember, <code>map</code> takes in an array, and outputs an array. The arrays always have the same length. Item <code>x</code> in the input array will be <code>f(x)</code> in the output array, where <code>f</code> is whichever function you pass in.</p>
+<h3 id="anonymous-functions"><a class="header" href="#anonymous-functions">Anonymous functions</a></h3>
+<p>It can get annoying defining a new function every time you want to use <code>map</code>. For instance, in the earlier example where we defined a <code>fn squareNumber</code> to use in a <code>map</code> -- is that really necessary? If you have a lot of <code>map</code> calls, you'll slowly find your code becoming littered with tiny functions that you only use in a <code>map</code>.</p>
+<p>KCL supports a nice little feature that can simplify this: <em>anonymous functions</em>. They're functions that don't have a name. You declare them where you need them, they're passed into <code>map</code>and they aren't available after. Let's have a look:</p>
+<pre><code class="language-kcl">inputArray = [1, 2, 3, 4]
+outputArray = map(inputArray, f = fn (@x) { return x * x })
+</code></pre>
+<p>In this variation, we're passing in an <em>anonymous function</em> as the argument <code>f</code> of <code>map</code>. Just like before, it takes a single input argument <code>x</code>, squares it, and returns it. It should produce the exact same output as the earlier example with a function named <code>squareNumber</code>.</p>
+<p>You can choose to use either named or anonymous functions with <code>map</code>. Neither is better or worse, you can use whichever you prefer. Generally, if a function is only a single line long, and you're only going to call it once (in a <code>map</code> or something similar), then you should consider making it anonymous and passing it as an argument directly.</p>
+<h2 id="consuming-arrays-with-reduce"><a class="header" href="#consuming-arrays-with-reduce">Consuming arrays with reduce</a></h2>
+<p>The <code>map</code> function lets you iterate over an array, producing another array with the same length. But what if you don't want to get an array out? For example, what if you want to sum an array, or find the average?</p>
+<p>The answer is: use the <a href="https://zoo.dev/docs/kcl-std/functions/std-array-reduce"><code>reduce</code></a> function. This function, like <code>map</code>, takes an array and a function, then it calls the function on every element in the array. The difference is:</p>
+<ul>
+<li>In <code>map</code>, the function argument <code>f</code> takes a single arg: the array's item being processed, often called <code>i</code>.</li>
+<li>In <code>reduce</code>, the function argument <code>f</code> takes <em>two</em> args: the array's item being processed <code>i</code> as well as a second value that <em>accumulates</em> across the array. It's called <code>accum</code>, short for reduce.</li>
+</ul>
+<p>Let's see an example:</p>
+<pre><code class="language-kcl">inputArray = [1, 2, 3, 4]
+sum = reduce(inputArray, initial = 0, f = fn(@i, accum) { return i + accum }) 
+</code></pre>
+<p>If you open <code>sum</code> in the Variables pane, you'll see it's 10, as we expect. How does this work? Let's break it down and see what happens in each step of the <code>reduce</code>.</p>
+<ul>
+<li>The <code>reduce</code> starts. It sets <code>accum</code> to its initial value, which is the <code>initial = 0</code> arg. So, <code>accum</code> starts at 0.</li>
+<li>Reduce starts iterating over the array.</li>
+<li>The first item is <code>1</code>. Reduce calls <code>f</code>, passing <code>i=1</code> and <code>accum=0</code>. Then <code>f</code> returns <code>1+0</code>, or 1. This becomes the new value of <code>accum</code>.</li>
+<li>The next item is <code>2</code>. Reduce calls <code>f</code>, passing <code>i=2</code> and <code>accum=1</code>. Then <code>f</code> returns <code>2+1</code>, or 3. This becomes the new value of <code>accum</code>.</li>
+<li>The next item is <code>3</code>. Reduce calls <code>f</code>, passing <code>i=3</code> and <code>accum=3</code>. Then <code>f</code> returns <code>3+3</code>, or 6. This becomes the new value of <code>accum</code>.</li>
+<li>The next item is <code>4</code>. Reduce calls <code>f</code>, passing <code>i=4</code> and <code>accum=6</code>. Then <code>f</code> returns <code>4+6</code>, or 10. This becomes the new value of <code>accum</code>.</li>
+<li>There's no more array items to handle, so reduce returns the last accumulated value, 10.</li>
+</ul>
+<p>That's how reduce can take a long list of items and <em>reduce</em> it to a single item, <em>accumulating</em> the answer as it goes through the array.</p>
+<p>What are some other things we can do with <code>reduce</code>? We could calculate the product of an array:</p>
+<pre><code class="language-kcl">reduce(inputArray, initial = 1, f = fn(@i, accum) { return i * accum})
+</code></pre>
+<p>You'll find <code>map</code> and <code>reduce</code> useful when building geometry procedurally. They're useful programming primitives for building complex programs. It's important to check your work when you're writing code like this, that manipulates values like numbers and arrays, which can't be visualized like KCL sketches or solid geometry. In the next chapter, we'll learn how to check your work and write basic tests in KCL.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="declaring_functions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="checking.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="declaring_functions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="checking.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

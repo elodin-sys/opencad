@@ -1,0 +1,458 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import plateWidth, plateThickness, bottomZ, lugMaxZ, bodyTopZ, leftTopChamferZ, rightTopChamferX, leftFootX, leftShoulderZ, leftDiagonalAnchorX, leftDiagonalAnchorZ, rightBottomChamferZ, lugWebPeakX, keyMiddleEnd, upperLeftScrewX, upperLeftScrewZ, lugNutX, lugNutZ, upperLeftBossDiameter, lugBossDiameter, keyAxisX, keyUpperZ, keyUpperCounterboreDiameter, filamentTransverseX, filamentZ, filamentDiameter, filamentEntryAxisX, filamentEntryAxisY, filamentDirX, filamentDirY from "params.kcl"
+
+// Contract literals and their broad edit guards live in the shared params.kcl.
+// These intersections use the stated plane normals, not the raster knees.
+edgeOverrun = 0.02mm
+booleanTolerance = 0.001mm
+outerHalfWidth = plateWidth / 2
+shallowSlope = 0.0872_ / 0.9962_
+diagonalSlope = 0.7373_ / 0.6756_
+shallowIntercept = leftShoulderZ - (shallowSlope * outerHalfWidth)
+diagonalIntercept = leftDiagonalAnchorZ + diagonalSlope * leftDiagonalAnchorX
+planeKneeX = (diagonalIntercept - shallowIntercept) / (diagonalSlope - shallowSlope)
+planeKneeZ = shallowIntercept - (shallowSlope * planeKneeX)
+planeFootTopZ = diagonalIntercept - (diagonalSlope * leftFootX)
+leftTopX = -outerHalfWidth + bodyTopZ - leftTopChamferZ
+rightTopPlaneSum = rightTopChamferX + bodyTopZ
+rightBottomPlaneDifference = outerHalfWidth - rightBottomChamferZ
+lugRadius = lugBossDiameter / 2
+bossRadius = upperLeftBossDiameter / 2
+
+// Stated upper-left bevel: normal [0.766,0,0.6428], point [-16.5,14,28].
+// Its anchor is 2 mm right of the upper-left screw axis.
+bossNormalLength = sqrt(0.766_ ^ 2 + 0.6428_ ^ 2)
+bossNx = 0.766_ / bossNormalLength
+bossNz = 0.6428_ / bossNormalLength
+bossAnchorX = upperLeftScrewX + 2mm
+bossSignedDistance = bossNx * (upperLeftScrewX - bossAnchorX) + bossNz * (upperLeftScrewZ - bodyTopZ)
+assert(bossRadius, isGreaterThan = abs(bossSignedDistance), error = "Upper-left boss must intersect the bevel before solving its chord")
+assert(bossRadius, isGreaterThan = abs(leftTopChamferZ - upperLeftScrewZ), error = "Upper-left boss must intersect its ledge before solving its chord")
+bossChord = legLen(hypotenuse = bossRadius, leg = abs(bossSignedDistance))
+bossPlaneX = upperLeftScrewX - (bossSignedDistance * bossNx) - (bossChord * bossNz)
+bossPlaneZ = upperLeftScrewZ - (bossSignedDistance * bossNz) + bossChord * bossNx
+bossLedgeX = upperLeftScrewX - legLen(hypotenuse = bossRadius, leg = leftTopChamferZ - upperLeftScrewZ)
+
+// Stop the exterior bevel at its future upper-counterbore intersection.
+// The horizontal continuation lies wholly in that future opening; it is an
+// exterior top relief, not a drilled keyhole. The keyhole module owns the bore.
+keySignedDistance = bossNx * (keyAxisX - bossAnchorX) + bossNz * (keyUpperZ - bodyTopZ)
+assert(keyUpperCounterboreDiameter / 2, isGreaterThan = abs(keySignedDistance), error = "The upper opening must meet the exterior bevel")
+keyChord = legLen(hypotenuse = keyUpperCounterboreDiameter / 2, leg = abs(keySignedDistance))
+bossReliefEndX = keyAxisX - (keySignedDistance * bossNx) - (keyChord * bossNz) + 0.05mm
+bossReliefEndZ = keyUpperZ - (keySignedDistance * bossNz) + keyChord * bossNx - (0.05mm * bossNx / bossNz)
+lugLeftX = lugNutX - lugRadius
+// The exact inclined plane overrides the raster peak x (16.75 +/- 0.25).
+webPeakX = rightTopPlaneSum - lugMaxZ
+// Bury the ruled roof inside the lug crown to avoid a tangent sliver.
+webJoinInset = lugRadius / 5
+webRoofInset = lugRadius / 10
+webLeftX = lugNutX - webJoinInset
+webRootY = keyMiddleEnd
+webRearY = plateThickness
+webRearZ = lugMaxZ
+
+assert(
+  planeKneeX,
+  isGreaterThan = -outerHalfWidth,
+  isLessThan = leftFootX,
+  error = "Lower bevels must meet between the locating side and foot",
+)
+assert(
+  planeFootTopZ,
+  isGreaterThan = bottomZ,
+  isLessThan = planeKneeZ,
+  error = "Foot needs a positive vertical locating face",
+)
+assert(
+  bossRadius,
+  isGreaterThan = abs(bossSignedDistance),
+  isLessThan = outerHalfWidth + upperLeftScrewX,
+  error = "Upper-left boss must intersect its bevel and fit the plate",
+)
+assert(
+  leftTopChamferZ - upperLeftScrewZ,
+  isGreaterThan = 0mm,
+  isLessThan = bossRadius,
+  error = "Boss ledge must intersect the upper semicircle",
+)
+assert(
+  bossReliefEndX,
+  isGreaterThan = bossPlaneX,
+  isLessThan = lugLeftX,
+  error = "The boss bevel must end before the top lug",
+)
+assert(
+  bossReliefEndZ,
+  isGreaterThan = keyUpperZ,
+  isLessThan = bossPlaneZ,
+  error = "The top relief must stay above the upper bore centre",
+)
+assert(
+  lugRadius,
+  isGreaterThan = 0mm,
+  isLessThan = lugMaxZ - lugNutZ,
+  error = "Lug must fit below the web peak",
+)
+assert(
+  lugNutZ - lugRadius,
+  isGreaterThan = bottomZ,
+  isLessThan = bodyTopZ,
+  error = "Lug must overlap the main plate",
+)
+assert(
+  webPeakX,
+  isGreaterThan = lugNutX + lugRadius,
+  isLessThan = rightTopChamferX,
+  error = "Rear web must extend beyond the lug and fit the top bevel",
+)
+assert(
+  webRootY,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness,
+  error = "Rear web must have positive run",
+)
+
+// Build tools in XY and use exact 90-degree rotations for robust booleans.
+// All construction regions are hidden after cloning the finished solid.
+fn xzExtrusion(@profile, fromY, toY) {
+  raw = extrude(profile, length = toY - fromY, method = NEW)
+  turned = rotate(raw, roll = 90deg, global = true)
+  positioned = translate(turned, y = toY, global = true)
+  return positioned
+}
+
+fn webAirSection(@xAt) {
+  rootY = (filamentEntryAxisY + (xAt - filamentEntryAxisX) * filamentDirY / filamentDirX): mm
+  profile = sketch(on = {
+    origin = { x = xAt, y = 0mm, z = 0mm },
+    xAxis = { x = 0_, y = 1_, z = 0_ },
+    yAxis = { x = 0_, y = 0_, z = 1_ }
+  }) {
+    a = line(start = [-edgeOverrun, bodyTopZ - 0.02mm], end = [rootY, bodyTopZ - 0.02mm])
+    b = line(
+      start = [rootY, bodyTopZ - 0.02mm],
+      end = [
+        (rootY + plateThickness) / 2,
+        (bodyTopZ + lugMaxZ) / 2 - 0.6mm
+      ],
+    )
+    bend = line(
+      start = [
+        (rootY + plateThickness) / 2,
+        (bodyTopZ + lugMaxZ) / 2 - 0.6mm
+      ],
+      end = [
+        plateThickness + edgeOverrun,
+        lugMaxZ + 0.04mm
+      ],
+    )
+    c = line(
+      start = [
+        plateThickness + edgeOverrun,
+        lugMaxZ + 0.04mm
+      ],
+      end = [
+        plateThickness + edgeOverrun,
+        lugMaxZ + 2mm
+      ],
+    )
+    d = line(
+      start = [
+        plateThickness + edgeOverrun,
+        lugMaxZ + 2mm
+      ],
+      end = [-edgeOverrun, lugMaxZ + 2mm],
+    )
+    e = line(start = [-edgeOverrun, lugMaxZ + 2mm], end = [-edgeOverrun, bodyTopZ - 0.02mm])
+  }
+  r = region(segments = [profile.a, profile.b])
+  hide(r)
+  return r
+}
+
+export fn exterior(@body) {
+  // An oversized intersecting mask retains the four datum planes of body.
+  // Its inclined edges are exact intersections of the documented planes.
+  leftAirX = -outerHalfWidth - edgeOverrun
+  rightAirX = outerHalfWidth + edgeOverrun
+  bottomAirZ = bottomZ - edgeOverrun
+  perimeter = sketch(on = XY) {
+    a = line(
+      start = [
+        leftAirX,
+        shallowIntercept - (shallowSlope * leftAirX)
+      ],
+      end = [
+        leftAirX,
+        leftTopChamferZ - edgeOverrun
+      ],
+    )
+    b = line(
+      start = [
+        leftAirX,
+        leftTopChamferZ - edgeOverrun
+      ],
+      end = [leftTopX, bodyTopZ],
+    )
+    c = line(start = [leftTopX, bodyTopZ], end = [rightTopChamferX, bodyTopZ])
+    d = line(
+      start = [rightTopChamferX, bodyTopZ],
+      end = [
+        rightAirX,
+        rightTopPlaneSum - rightAirX
+      ],
+    )
+    e = line(
+      start = [
+        rightAirX,
+        rightTopPlaneSum - rightAirX
+      ],
+      end = [
+        rightAirX,
+        rightAirX - rightBottomPlaneDifference
+      ],
+    )
+    f = line(
+      start = [
+        rightAirX,
+        rightAirX - rightBottomPlaneDifference
+      ],
+      end = [
+        bottomAirZ + rightBottomPlaneDifference,
+        bottomAirZ
+      ],
+    )
+    g = line(
+      start = [
+        bottomAirZ + rightBottomPlaneDifference,
+        bottomAirZ
+      ],
+      end = [leftFootX, bottomAirZ],
+    )
+    h = line(start = [leftFootX, bottomAirZ], end = [leftFootX, planeFootTopZ])
+    i = line(start = [leftFootX, planeFootTopZ], end = [planeKneeX, planeKneeZ])
+    j = line(
+      start = [planeKneeX, planeKneeZ],
+      end = [
+        leftAirX,
+        shallowIntercept - (shallowSlope * leftAirX)
+      ],
+    )
+  }
+  perimeterRegion = region(segments = [perimeter.a, perimeter.b])
+  perimeterMask = xzExtrusion(perimeterRegion, fromY = -edgeOverrun, toY = plateThickness + edgeOverrun)
+  surround = sketch(on = XY) {
+    a = line(start = [leftAirX - 1mm, bottomAirZ - 1mm], end = [rightAirX + 1mm, bottomAirZ - 1mm])
+    b = line(start = [rightAirX + 1mm, bottomAirZ - 1mm], end = [rightAirX + 1mm, lugMaxZ + 1mm])
+    c = line(start = [rightAirX + 1mm, lugMaxZ + 1mm], end = [leftAirX - 1mm, lugMaxZ + 1mm])
+    d = line(start = [leftAirX - 1mm, lugMaxZ + 1mm], end = [leftAirX - 1mm, bottomAirZ - 1mm])
+  }
+  surroundRegion = region(segments = [surround.a, surround.b])
+  surroundingTool = xzExtrusion(surroundRegion, fromY = -edgeOverrun / 2, toY = plateThickness + edgeOverrun / 2)
+  perimeterTool = subtract(surroundingTool, tools = [perimeterMask], tolerance = booleanTolerance)
+
+  frontRelief = sketch(on = XY) {
+    a = line(start = [leftAirX - edgeOverrun, bossReliefEndZ], end = [lugLeftX - 0.1mm, bossReliefEndZ])
+    b = line(
+      start = [lugLeftX - 0.1mm, bossReliefEndZ],
+      end = [
+        lugLeftX - 0.1mm,
+        lugMaxZ + edgeOverrun
+      ],
+    )
+    c = line(
+      start = [
+        lugLeftX - 0.1mm,
+        lugMaxZ + edgeOverrun
+      ],
+      end = [
+        leftAirX - edgeOverrun,
+        lugMaxZ + edgeOverrun
+      ],
+    )
+    d = line(
+      start = [
+        leftAirX - edgeOverrun,
+        lugMaxZ + edgeOverrun
+      ],
+      end = [leftAirX - edgeOverrun, bossReliefEndZ],
+    )
+  }
+  frontRegion = region(segments = [frontRelief.a, frontRelief.b])
+  frontTool = xzExtrusion(frontRegion, fromY = keyMiddleEnd, toY = plateThickness + edgeOverrun)
+  perimeterPlate = subtract(body, tools = [perimeterTool], tolerance = booleanTolerance)
+  relievedPlate = subtract(perimeterPlate, tools = [frontTool], tolerance = booleanTolerance)
+
+  // Restore the exact boss crown after the simple planar stock trim. This
+  // avoids a concave circular cutter crossing the datum web's old side seam.
+  crown = sketch(on = XY) {
+    a = line(start = [-outerHalfWidth, leftTopChamferZ], end = [bossLedgeX, leftTopChamferZ])
+    b = arc(
+      start = [bossLedgeX, leftTopChamferZ],
+      end = [bossPlaneX, bossPlaneZ],
+      center = [upperLeftScrewX, upperLeftScrewZ],
+      direction = CW,
+    )
+    c = line(start = [bossPlaneX, bossPlaneZ], end = [bossReliefEndX, bossReliefEndZ])
+    d = line(
+      start = [bossReliefEndX, bossReliefEndZ],
+      end = [
+        bossReliefEndX,
+        bossReliefEndZ - edgeOverrun
+      ],
+    )
+    e = line(
+      start = [
+        bossReliefEndX,
+        bossReliefEndZ - edgeOverrun
+      ],
+      end = [
+        -outerHalfWidth,
+        bossReliefEndZ - edgeOverrun
+      ],
+    )
+    f = line(
+      start = [
+        -outerHalfWidth,
+        bossReliefEndZ - edgeOverrun
+      ],
+      end = [-outerHalfWidth, leftTopChamferZ],
+    )
+  }
+  crownRegion = region(segments = [crown.a, crown.b])
+  crownBody = xzExtrusion(crownRegion, fromY = keyMiddleEnd, toY = plateThickness)
+  bossPlate = union([relievedPlate, crownBody], tolerance = booleanTolerance)
+
+  // One profile makes the convex lug and concave filament transition stock
+  // continuous; the filament module owns the final R2 cylindrical cut.
+  joinRatio = lugRadius / (lugRadius + filamentDiameter / 2)
+  joinX = lugNutX + (filamentTransverseX - lugNutX) * joinRatio
+  joinZ = lugNutZ + (filamentZ - lugNutZ) * joinRatio
+  lugSketch = sketch(on = XY) {
+    a = arc(
+      start = [lugNutX - lugRadius, lugNutZ],
+      end = [joinX, joinZ],
+      center = [lugNutX, lugNutZ],
+      direction = CW,
+    )
+    b = line(
+      start = [joinX, joinZ],
+      end = [
+        filamentTransverseX,
+        bodyTopZ + edgeOverrun
+      ],
+    )
+    c = line(
+      start = [
+        filamentTransverseX,
+        bodyTopZ + edgeOverrun
+      ],
+      end = [filamentTransverseX, bodyTopZ - 1mm],
+    )
+    d = line(start = [filamentTransverseX, bodyTopZ - 1mm], end = [lugNutX - lugRadius, bodyTopZ - 1mm])
+    e = line(start = [lugNutX - lugRadius, bodyTopZ - 1mm], end = [lugNutX - lugRadius, lugNutZ])
+  }
+  lugRegion = region(segments = [lugSketch.a, lugSketch.b])
+  lugRaw = extrude(lugRegion, length = plateThickness, method = NEW)
+  lug = rotate(lugRaw, roll = 90deg, global = true)
+    |> translate(y = plateThickness, global = true)
+
+  // Unfilleted rear web: a ruled ramp rooted on the front-relief shoulder,
+  // bounded above by the measured peak and the stated right-upper plane.
+  // The cosmetic lug/web blend is deliberately omitted under Q6.
+  webRamp = sketch(on = XY) {
+    a = line(start = [webRootY, bodyTopZ - (lugRadius / 2)], end = [webRearY, bodyTopZ - (lugRadius / 2)])
+    b = line(start = [webRearY, bodyTopZ - (lugRadius / 2)], end = [webRearY, webRearZ])
+    c = line(start = [webRearY, webRearZ], end = [webRootY, bodyTopZ])
+    d = line(start = [webRootY, bodyTopZ], end = [webRootY, bodyTopZ - (lugRadius / 2)])
+  }
+  webRampRegion = region(segments = [webRamp.a, webRamp.b])
+  rampRaw = extrude(webRampRegion, length = rightTopChamferX - webLeftX, method = NEW)
+  rampTurned = rotate(rampRaw, roll = 90deg, global = true)
+    |> rotate(yaw = 90deg, global = true)
+    |> translate(x = webLeftX, global = true)
+  hide(webRampRegion)
+
+  roof = sketch(on = XY) {
+    a = line(
+      start = [
+        webLeftX - edgeOverrun,
+        lugNutZ + lugRadius - webRoofInset
+      ],
+      end = [webPeakX, lugMaxZ],
+    )
+    b = line(
+      start = [webPeakX, lugMaxZ],
+      end = [
+        rightTopChamferX + edgeOverrun,
+        bodyTopZ - edgeOverrun
+      ],
+    )
+    c = line(
+      start = [
+        rightTopChamferX + edgeOverrun,
+        bodyTopZ - edgeOverrun
+      ],
+      end = [
+        rightTopChamferX + edgeOverrun,
+        lugMaxZ + 1mm
+      ],
+    )
+    d = line(
+      start = [
+        rightTopChamferX + edgeOverrun,
+        lugMaxZ + 1mm
+      ],
+      end = [webLeftX - edgeOverrun, lugMaxZ + 1mm],
+    )
+    e = line(
+      start = [webLeftX - edgeOverrun, lugMaxZ + 1mm],
+      end = [
+        webLeftX - edgeOverrun,
+        lugNutZ + lugRadius - webRoofInset
+      ],
+    )
+  }
+  roofRegion = region(segments = [roof.a, roof.b])
+  roofTool = xzExtrusion(roofRegion, fromY = -edgeOverrun, toY = plateThickness + 3 * edgeOverrun)
+  withLug = union([bossPlate, lug], tolerance = booleanTolerance)
+  web = subtract(rampTurned, tools = [roofTool], tolerance = booleanTolerance)
+  roofFinished = union([withLug, web], tolerance = booleanTolerance)
+  webAirLeft = webAirSection(filamentTransverseX - edgeOverrun)
+  webAirRight = webAirSection(outerHalfWidth + edgeOverrun)
+  webAir = loft([webAirLeft, webAirRight], vDegree = 1)
+  trimmedWeb = subtract(roofFinished, tools = [webAir], tolerance = booleanTolerance)
+  finished = clone(trimmedWeb)
+  hide([webAirLeft, webAirRight])
+  hide([webAir, trimmedWeb])
+  hide([
+    perimeterRegion,
+    surroundRegion,
+    frontRegion,
+    crownRegion,
+    lugRegion,
+    webRampRegion,
+    roofRegion
+  ])
+  hide([
+    body,
+    perimeterMask,
+    surroundingTool,
+    perimeterTool,
+    frontTool,
+    perimeterPlate,
+    relievedPlate,
+    crownBody,
+    bossPlate,
+    lugRaw,
+    lug,
+    rampTurned,
+    roofTool,
+    withLug,
+    web,
+    roofFinished
+  ])
+  return finished
+}

@@ -1,0 +1,39 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/data-management/version-control
+Title: Version Control
+
+# Version Control
+
+Revision and collaboration workflows in Zoo Design Studio.
+
+Version Control in Zoo Design Studio currently works well with Git because project files are
+code-based, and KCL is human-readable text. That makes it practical to track revisions, compare
+design states, review changes, and collaborate on models using standard Git workflows today.
+
+Native version control in Zoo Design Studio is planned to ship later in 2026.
+
+[Cloud Sync](/docs/zoo-design-studio/features/data-management/cloud-sync) is separate from Git-style
+version control. Cloud sync keeps project copies available through your Zoo account, while Git
+records intentional revision history and reviewable changes.
+
+## Git and Project Libraries
+
+Use a Directory library when you want a project to remain in a normal folder whose location you
+control. This is the most direct fit for a Git working tree and other filesystem-based development
+tools.
+
+Personal Cloud uses a managed working-copy folder on desktop. Cloud Sync uploads project files but
+excludes version-control metadata directories such as `.git`, `.hg`, `.svn`, and `.jj`. Those
+directories can still exist in the local working copy, but they are not stored in your Zoo account
+or restored on another device. Operations that replace or remove the managed working copy can also
+remove excluded local files. See
+[Which Files Sync?](/docs/zoo-design-studio/features/data-management/cloud-sync#which-files-sync).
+
+## Publish a Version-Controlled Project
+
+Publishing a Directory project to Aquarium moves the entire project folder into Personal Cloud
+after a successful submission. Local version-control metadata moves with the folder, but it is not
+uploaded or protected by Cloud Sync.
+
+Before publishing, commit and push your work or make another backup outside the Personal Cloud
+folder. If you need a stable Git checkout in a path you control, keep a separate clone outside the
+managed Personal Cloud folder.

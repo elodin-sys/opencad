@@ -1,0 +1,69 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/arc
+Title: Arc
+
+# Arc
+
+Create arc sketch geometry in Zoo Design Studio.
+
+Use Arc for partial circles, tangent transitions, and rounded sketch shapes that need more control
+than a full circle.
+
+## Center Arc
+
+Center Arc places an arc from a center point and radius reference. Use it when the arc needs to stay
+organized around a known center.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/arc/arc-center.gif"
+  alt="Creating a center arc in Zoo Design Studio"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Center Arc creates an arc from a known center point
+</div>
+
+## 3-Point Arc
+
+3-Point Arc defines the curve through three picked points. It is useful when the arc should pass
+through existing sketch locations rather than be driven from an explicit center.
+
+Place the arc in this order:
+
+1. Select `3-Point Arc` from the sketch toolbar.
+2. Pick the first endpoint.
+3. Pick a point the arc must pass through.
+4. Pick the final endpoint.
+
+Each pick can snap to nearby sketch references such as the origin, axes, existing points and
+midpoints, lines, arcs, and circles. Hover until the snap preview appears, then click to use it. The
+first and final picks are the arc endpoints; their snaps are saved as constraints so the completed
+arc stays attached to the selected references. The middle pick controls the path of the arc but is
+not retained as a separate sketch point.
+
+Hold `Shift` while placing a point when you want to bypass snapping for that pick.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/arc/arc-3-points.gif"
+  alt="Creating a three-point arc in Zoo Design Studio"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Three-Point Arc passes through three picked sketch locations
+</div>
+
+## Tangent Arc
+
+Tangent Arc continues from existing sketch geometry while preserving a tangent transition at the
+connection point.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/sketch-geometry/arc/arc-tangent.gif"
+  alt="Creating a tangent arc in Zoo Design Studio"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Tangent Arc continues smoothly from existing geometry
+</div>

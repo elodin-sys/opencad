@@ -1,0 +1,1046 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<title>Pump Geometry</title>
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Batang;
+	panose-1:2 3 6 0 0 1 1 1 1 1;}
+@font-face
+	{font-family:Batang;
+	panose-1:2 3 6 0 0 1 1 1 1 1;}
+@font-face
+	{font-family:Cambria;
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:"\@Batang";
+	panose-1:2 3 6 0 0 1 1 1 1 1;}
+@font-face
+	{font-family:"Times New \(W1\)";}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-right:0in;
+	margin-left:0in;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";}
+h2
+	{mso-style-link:"Heading 2 Char";
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:6.0pt;
+	margin-left:0in;
+	page-break-after:avoid;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";
+	font-style:italic;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-link:"Balloon Text Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	line-height:200%;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Cambria","serif";
+	color:#365F91;
+	font-weight:bold;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-link:"Heading 2";
+	font-family:"Cambria","serif";
+	color:#4F81BD;
+	font-weight:bold;}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	mso-style-link:"Balloon Text";
+	font-family:"Tahoma","sans-serif";}
+p.msolistparagraphcxspfirst, li.msolistparagraphcxspfirst, div.msolistparagraphcxspfirst
+	{mso-style-name:msolistparagraphcxspfirst;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";}
+p.msolistparagraphcxspmiddle, li.msolistparagraphcxspmiddle, div.msolistparagraphcxspmiddle
+	{mso-style-name:msolistparagraphcxspmiddle;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";}
+p.msolistparagraphcxsplast, li.msolistparagraphcxsplast, div.msolistparagraphcxsplast
+	{mso-style-name:msolistparagraphcxsplast;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Arial","sans-serif";}
+p.msochpdefault, li.msochpdefault, div.msochpdefault
+	{mso-style-name:msochpdefault;
+	margin-right:0in;
+	margin-left:0in;
+	font-size:10.0pt;
+	font-family:"Times New Roman","serif";}
+span.heading1char0
+	{mso-style-name:heading1char;
+	font-family:"Batang","serif";
+	font-weight:bold;}
+span.heading1char00
+	{mso-style-name:heading1char0;
+	font-family:"Arial","sans-serif";
+	font-weight:bold;}
+.MsoChpDefault
+	{font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=WordSection1>
+
+<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse'>
+ <tr style='height:45.0pt'>
+  <td width=282 style='width:140.8pt;background:aqua;padding:0in 0in 0in 0in;
+  height:45.0pt'>
+  <p class=MsoNormal><a href="Home.htm"><span style='font-family:"Times New \(W1\)";
+  color:yellow;text-decoration:none'><img border=0 width=257 height=86
+  src="Home_files/image001.gif"></span></a></p>
+  </td>
+  <td width=1055 style='width:527.4pt;background:aqua;padding:0in 0in 0in 0in;
+  height:45.0pt'>
+  <p class=MsoNormal><span style='font-family:"Times New \(W1\)";color:yellow'><img
+  border=0 width=607 height=86 src="Home_files/image002.gif"></span></p>
+  </td>
+ </tr>
+ <tr style='height:784.6pt'>
+  <td width=282 valign=top style='width:140.8pt;padding:2.9pt 0in 0in 0in;
+  height:784.6pt'>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=279
+   style='width:139.3pt;border-collapse:collapse'>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border:solid blue 1.5pt;border-right:
+    none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=2 style='width:116.75pt;border:solid blue 1.5pt;
+    border-left:none;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Home.htm">CPI – CFD Home</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=2 style='width:116.75pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Background.htm">Background</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=2 style='width:116.75pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Committee.htm">Technical Steering Committee</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=2 style='width:116.75pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Participants.htm">Participant Appreciation Page</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=2 style='width:116.75pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="SignUp.htm">Sign Up For Interlaboratory Study
+    2: Blood Pump</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid;height:20.8pt'>
+    <td width=45 style='width:22.55pt;border:none;border-left:solid blue 1.5pt;
+    background:#B4FFFF;padding:2.9pt 5.75pt 2.9pt 5.75pt;height:20.8pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=2 style='width:116.75pt;border:none;border-right:
+    solid blue 1.5pt;background:#B4FFFF;padding:2.9pt 5.75pt 2.9pt 0in;
+    height:20.8pt'>
+    <p class=MsoNormal><a href="Pump_Info.htm">Interlaboratory Study 2: Blood
+    Pump Model Information</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.95pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 valign=top style='width:103.8pt;border:none;border-right:
+    solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a href="Pump_Info.htm">General
+    Information</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border:none;border-left:solid blue 1.5pt;
+    background:#B4FFFF;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.95pt;background:#B4FFFF;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 valign=top style='width:103.8pt;border:none;border-right:
+    solid blue 1.5pt;background:#B4FFFF;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Geometry.htm">Pump Geometry</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.95pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 valign=top style='width:103.8pt;border:none;border-right:
+    solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_CAD.htm">CAD Files</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.95pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 valign=top style='width:103.8pt;border:none;border-right:
+    solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Experimental.htm">Experimental Setup</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.95pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 valign=top style='width:103.8pt;border:none;border-right:
+    solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Conditions.htm">Simulation Conditions</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.95pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 valign=top style='width:103.8pt;border:none;border-right:
+    solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Blood_Damage.htm">Estimate of Blood Damage</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.95pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 valign=top style='width:103.8pt;border:none;border-right:
+    solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Metrics.htm">Comparison Metrics</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'>&nbsp;</p>
+    </td>
+    <td width=26 style='width:12.95pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 valign=top style='width:103.8pt;border:none;border-right:
+    solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal><span style='font-size:10.0pt'><a
+    href="Pump_Info_Cross_Sections.htm">Cross-Sections and Surfaces</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border:none;border-left:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    lang=FR>&nbsp;</span></p>
+    </td>
+    <td width=26 style='width:12.95pt;padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 valign=top style='width:103.8pt;border:none;border-right:
+    solid blue 1.5pt;padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal style='margin-bottom:3.0pt'><span style='font-size:10.0pt'><a
+    href="Pump_Info_Data_1.htm">Data Files</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    lang=FR>&nbsp;</span></p>
+    </td>
+    <td width=26 style='width:12.95pt;border:none;border-bottom:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal align=center style='margin-top:0in;margin-right:-3.05pt;
+    margin-bottom:0in;margin-left:3.35pt;margin-bottom:.0001pt;text-align:center;
+    text-indent:-3.35pt'>•</p>
+    </td>
+    <td width=208 valign=top style='width:103.8pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 0in 2.9pt 0in'>
+    <p class=MsoNormal style='margin-bottom:3.0pt'><span style='font-size:10.0pt'><a
+    href="Pump_Data_Analysis.htm">Planned Data Analysis</a></span></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=2 style='width:116.75pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Submit.htm">Submit Data for Interlaboratory
+    Study 2: Blood Pump</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=2 style='width:116.75pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="FAQ.htm">Frequently Asked Questions</a></p>
+    </td>
+   </tr>
+   <tr style='page-break-inside:avoid'>
+    <td width=45 style='width:22.55pt;border-top:none;border-left:solid blue 1.5pt;
+    border-bottom:solid blue 1.5pt;border-right:none;padding:2.9pt 5.75pt 2.9pt 5.75pt'>
+    <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in'><span
+    style='color:blue'>&#9658;</span></p>
+    </td>
+    <td width=234 colspan=2 style='width:116.75pt;border-top:none;border-left:
+    none;border-bottom:solid blue 1.5pt;border-right:solid blue 1.5pt;
+    padding:2.9pt 5.75pt 2.9pt 0in'>
+    <p class=MsoNormal><a href="Questions.htm">Questions/Comments</a></p>
+    </td>
+   </tr>
+  </table>
+  </td>
+  <td width=1055 valign=top style='width:527.4pt;padding:2.9pt 5.75pt 2.9pt 5.75pt;
+  height:784.6pt'>
+  <h1><a name="_Model_Information_Interlaboratory"></a><span style='color:maroon'>Pump
+  Geometry for Interlaboratory Study 2: Blood Pump</span></h1>
+  <p class=MsoNormal><a href="#_Pump_Rotor">Pump Rotor</a>&nbsp; <a
+  href="#_Pump_Housing">Pump Housing</a> &nbsp;<a
+  href="#_Housing/Rotor_Clearance">Housing/Rotor Clearances</a>&nbsp; <a
+  href="#_Inlet_and_Outlet_1">Inlet</a>&nbsp; <a href="#_Outlet">Outlet</a></p>
+  <h2><a name="_Introduction"></a>Introduction</h2>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The test object is a
+       simplified version of a centrifugal blood pump.</li>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>CAD files of the pump
+       housing chamber and the rotor are available <a href="Pump_Info_CAD.htm">here</a>.&nbsp;
+       <b><span style='color:#CC0000'>We recommend you use the CAD files.&nbsp;
+       </span></b><a href="Questions.htm">Let us know</a> if you have problems
+       loading them.</li>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>All units in this document
+       conform to the SI (N, kg, m, second) system.</li>
+   <li class=MsoNormal>Use the following coordinate system in interpreting the
+       drawings that follow:</li>
+  </ul>
+  <p class=MsoNormal>&nbsp;</p>
+  <p class=MsoNormal align=center style='margin-left:.25in;text-align:center;
+  line-height:150%'><img border=0 width=576 height=536
+  src="Pump_Info_Geometry_files/coordinate_system.png"></p>
+  <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in;line-height:
+  200%'><a name="_Pump_Rotor"></a><a href="#_Model_Information_Interlaboratory">Back
+  to Top</a>&nbsp;</p>
+  <h2>Pump Rotor</h2>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The pump rotor has a complex
+       geometry, in part due to polishing.</li>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The pump rotor has an outside
+       diameter of 0.052 m.&nbsp; It has four blades situated at 90° angles.
+       The rotor blades are each 0.003 m by 0.003 m by 0.0185 m long.&nbsp;
+       Including the blades, the rotor is 0.007 m thick.</li>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The rotor shaft diameter is
+       0.0032 m.</li>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>Below is an image of the CAD
+       model, and a drawing showing dimensions.&nbsp; Click on a figure to see
+       it larger.</li>
+  </ul>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+   style='border-collapse:collapse'>
+   <tr>
+    <td width=478 valign=top style='width:239.05pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><a
+    href="Pump_Info_Geometry_files/rotor_fillets_overall.png"><span
+    style='color:windowtext;text-decoration:none'><img border=0 width=360
+    height=270 src="Pump_Info_Geometry_files/rotor_fillets_overall.png"></span></a></p>
+    </td>
+    <td width=478 valign=top style='width:239.05pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><a
+    href="Pump_Info_Geometry_files/rotor.png"><span style='text-decoration:
+    none'><img border=0 width=360 height=270
+    src="Pump_Info_Geometry_files/rotor.png"></span></a></p>
+    </td>
+   </tr>
+  </table>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>After machining, the
+       experimental acrylic rotors were hand-polished to specifications.&nbsp;
+       The rotor edges are filleted, with radii as shown below.&nbsp;
+       Measurements of the rotor fillet radii using microphotography and
+       metrology compound were made (note: some of the edges were not measured
+       due to difficulties in visualization, but were estimated).</li>
+   <li class=MsoNormal style='margin-top:6.0pt;margin-bottom:6.0pt'>The <a
+       href="Pump_Info_CAD.htm">CAD files</a> we supply include these fillets
+       (but how finely you mesh the fillets is up to you).</li>
+  </ul>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=1029
+   style='width:514.4pt;border-collapse:collapse'>
+   <tr>
+    <td width=62 style='width:31.0pt;border:solid windowtext 1.5pt;border-right:
+    solid windowtext 1.0pt;background:#D9D9D9;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Key</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:solid windowtext 1.5pt;
+    border-left:none;border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.0pt;
+    background:#D9D9D9;padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Rotor Edge</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:solid windowtext 1.5pt;
+    border-left:none;border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.0pt;
+    background:#D9D9D9;padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Measured Fillet Radius</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>mean ± S.D. (&#956;m)</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border:solid windowtext 1.5pt;
+    border-left:none;background:#D9D9D9;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>CAD File Nominal</span></p>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Fillet Radius (m)</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=62 style='width:31.0pt;border-top:none;border-left:solid windowtext 1.5pt;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>a</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Disk top edge</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>550 ± 170 (n = 6)</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.5pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>0.00055</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=62 style='width:31.0pt;border-top:none;border-left:solid windowtext 1.5pt;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>b</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Disk bottom edge</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>510 ± 160 (n = 16)</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.5pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>0.00055</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=62 style='width:31.0pt;border-top:none;border-left:solid windowtext 1.5pt;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>c</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Blade long edges</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>603 ± 40 (n = 16)</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.5pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>0.0006</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=62 style='width:31.0pt;border-top:none;border-left:solid windowtext 1.5pt;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>d</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Blade top edge (near rim)</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>170 ± 59 (n = 16)</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.5pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>0.00017</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=62 style='width:31.0pt;border-top:none;border-left:solid windowtext 1.5pt;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>e</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Blade vertical edges (near rim)</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Transition</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.5pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>0.00017 to 0.00005</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=62 style='width:31.0pt;border-top:none;border-left:solid windowtext 1.5pt;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>f</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Blade/disk corner (near rim)</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Estimated</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.5pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>0.00005</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=62 style='width:31.0pt;border-top:none;border-left:solid windowtext 1.5pt;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>g</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Disk top edge transition</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Transition</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.5pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>0.00005 to 0.00055</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=62 style='width:31.0pt;border-top:none;border-left:solid windowtext 1.5pt;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>h</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Blade top edge (near hub)</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>530 ± 80 (n = 16)</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.5pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>0.0006</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=62 style='width:31.0pt;border-top:none;border-left:solid windowtext 1.5pt;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>i</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Blade vertical edges (near hub)</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Estimated</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.5pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>0.00017</span></p>
+    </td>
+   </tr>
+   <tr>
+    <td width=62 style='width:31.0pt;border-top:none;border-left:solid windowtext 1.5pt;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.0pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>j</span></p>
+    </td>
+    <td width=333 style='width:166.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Blade bottom edge (near hub)</span></p>
+    </td>
+    <td width=261 style='width:130.5pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.0pt;
+    padding:2.15pt 5.75pt 2.15pt 5.75pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>Estimated</span></p>
+    </td>
+    <td width=373 style='width:186.4pt;border-top:none;border-left:none;
+    border-bottom:solid windowtext 1.5pt;border-right:solid windowtext 1.5pt;
+    padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><span
+    style='font-size:10.0pt'>0.0006</span></p>
+    </td>
+   </tr>
+  </table>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-top:12.0pt;margin-bottom:6.0pt'>Below are images
+       showing the rotor fillets, keyed to the table above.&nbsp; Click on a
+       figure to see it larger.</li>
+  </ul>
+  <div align=center>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+   style='border-collapse:collapse'>
+   <tr style='height:1.0pt'>
+    <td width=956 colspan=2 style='width:478.1pt;padding:0in 0in 0in 0in;
+    height:1.0pt'>
+    <p class=MsoNormal align=center style='text-align:center'><a
+    href="Pump_Info_Geometry_files/blade_ends_overall_for_circles.png"><span
+    style='text-decoration:none'><img border=0 width=480 height=360
+    src="Pump_Info_Geometry_files/blade_ends_overall_for_circles.png"></span></a></p>
+    </td>
+   </tr>
+   <tr style='height:2.65in'>
+    <td width=478 valign=top style='width:239.05pt;padding:0in 5.75pt 0in 0in;
+    height:2.65in'>
+    <p class=MsoNormal align=center style='margin-top:12.0pt;text-align:center'>Blade
+    Outer Edges,</p>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'>Near
+    Rim</p>
+    <p class=MsoNormal align=center style='margin-top:12.0pt;margin-right:0in;
+    margin-bottom:6.0pt;margin-left:0in;text-align:center'><a
+    href="Pump_Info_Geometry_files/rotor_fillets_rim_end.png"><span
+    style='color:windowtext;text-decoration:none'><img border=0 width=397
+    height=298 src="Pump_Info_Geometry_files/rotor_fillets_rim_end.png"></span></a></p>
+    </td>
+    <td width=478 valign=top style='width:239.05pt;padding:0in 0in 0in 5.75pt;
+    height:2.65in'>
+    <p class=MsoNormal align=center style='margin-top:12.0pt;text-align:center'>Blade
+    Inner Edges,</p>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'>Near
+    Hub (Hub Not Shown)</p>
+    <p class=MsoNormal align=center style='margin-top:12.0pt;margin-right:0in;
+    margin-bottom:6.0pt;margin-left:0in;text-align:center'><a
+    href="Pump_Info_Geometry_files/rotor_fillets_hub_end.png"><span
+    style='color:windowtext;text-decoration:none'><img border=0 width=397
+    height=298 src="Pump_Info_Geometry_files/rotor_fillets_hub_end.png"></span></a></p>
+    </td>
+   </tr>
+  </table>
+  </div>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-top:12.0pt;margin-bottom:6.0pt'>The rim of
+       the rotor has a slight curve in the z direction, due to polishing: </li>
+  </ul>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+   style='border-collapse:collapse'>
+   <tr>
+    <td width=532 style='width:266.05pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><a
+    href="Pump_Info_Geometry_files/housing_rotor_clearance_for_rim_curve.png"><span
+    style='text-decoration:none'><img border=0 width=490 height=318
+    src="Pump_Info_Geometry_files/housing_rotor_clearance_for_rim_curve.png"></span></a></p>
+    </td>
+    <td width=532 style='width:266.1pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='text-align:center'><a
+    href="Pump_Info_Geometry_files/rotor_edge_curve.png"><span
+    style='text-decoration:none'><img border=0 width=433 height=365
+    src="Pump_Info_Geometry_files/rotor_edge_curve.png"></span></a></p>
+    </td>
+   </tr>
+  </table>
+  <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+  <p class=MsoNormal align=center style='text-align:center'>&nbsp;</p>
+  <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in;line-height:
+  200%'><a href="#_Model_Information_Interlaboratory">Back to Top</a>&nbsp;</p>
+  <h2><a name="_Pump_Housing"></a>Pump Housing</h2>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The inner diameter of the pump
+       housing chamber is 0.06 m.&nbsp; The inner width of the housing chamber
+       is 0.009 m.</li>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The drawings below show the
+       inside surfaces of the pump housing and tubing only.&nbsp; The outer
+       surfaces of the pump housing and tubing are not shown.&nbsp; The
+       drawings with dimensions are <b>not to scale.</b>&nbsp; Click on a
+       figure to see it larger.</li>
+  </ul>
+  <div align=center>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+   style='margin-left:.25in;border-collapse:collapse'>
+   <tr>
+    <td width=319 style='width:159.35pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:12.0pt;margin-right:0in;margin-bottom:
+    6.0pt;margin-left:0in'><a href="Pump_Info_Geometry_files/housing.png"><span
+    style='color:windowtext;text-decoration:none'><img border=0 width=252
+    height=252 src="Pump_Info_Geometry_files/housing.png"></span></a></p>
+    </td>
+    <td width=319 valign=top style='width:159.35pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:12.0pt;margin-right:0in;margin-bottom:
+    6.0pt;margin-left:0in'><a
+    href="Pump_Info_Geometry_files/front_view_with_dimensions.png"><span
+    style='text-decoration:none'><img border=0 width=325 height=413
+    src="Pump_Info_Geometry_files/front_view_with_dimensions.png"></span></a></p>
+    </td>
+    <td width=319 valign=top style='width:159.4pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal style='margin-top:12.0pt;margin-right:0in;margin-bottom:
+    6.0pt;margin-left:0in'><a
+    href="Pump_Info_Geometry_files/side_view_with_dimensions.png"><span
+    style='text-decoration:none'><img border=0 width=388 height=413
+    src="Pump_Info_Geometry_files/side_view_with_dimensions.png"></span></a></p>
+    </td>
+   </tr>
+  </table>
+  </div>
+  <p class=MsoNormal style='margin-bottom:6.0pt'>&nbsp;</p>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The cutwater is identified
+       in yellow in the image below, and shown magnified in the circle.&nbsp;
+       The acrylic model used for experiments has a <b>minimum</b> measured
+       fillet radius of 0.00004 m (40 &#956;m) along the cutwater.&nbsp; The <a
+       href="Pump_Info_CAD.htm">CAD files</a> we supply include this fillet
+       (meshing it, however, is up to you).&nbsp; The drawing with dimensions on
+       the right is <b>not to scale.</b>&nbsp; Click on a figure to see it
+       larger.</li>
+  </ul>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+   style='border-collapse:collapse'>
+   <tr>
+    <td width=621 style='width:310.35pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><a
+    href="Pump_Info_Geometry_files/outlet_fillet.png"><span style='color:windowtext;
+    text-decoration:none'><img border=0 width=432 height=325
+    src="Pump_Info_Geometry_files/outlet_fillet.png"></span></a></p>
+    </td>
+    <td width=621 style='width:310.4pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><a
+    href="Pump_Info_Geometry_files/outlet_tube_detail.png"><span
+    style='text-decoration:none'><img border=0 width=432 height=535
+    src="Pump_Info_Geometry_files/outlet_tube_detail.png"></span></a></p>
+    </td>
+   </tr>
+  </table>
+  <p class=MsoNormal style='margin-bottom:6.0pt'><a
+  name="_Housing/Rotor_Clearance"></a><a
+  href="#_Model_Information_Interlaboratory">Back to Top</a></p>
+  <h2>Housing/Rotor Clearances</h2>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The clearances between the
+       housing and the front and back rotor faces are equal to 0.001 m.&nbsp;
+       The clearance between the housing and the rotor rim is 0.004 m.&nbsp;The
+       drawing with dimensions on the right below is <b>not to scale.</b>&nbsp;
+       Click on a figure to see it larger.</li>
+  </ul>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+   style='border-collapse:collapse'>
+   <tr>
+    <td width=621 style='width:310.35pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><a
+    href="Pump_Info_Geometry_files/housing_rotor_clearance.png"><span
+    style='text-decoration:none'><img border=0 width=359 height=554
+    src="Pump_Info_Geometry_files/housing_rotor_clearance.png"></span></a></p>
+    </td>
+    <td width=621 style='width:310.4pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><a
+    href="Pump_Info_Geometry_files/side_view_housing_rotor_clearance.png"><span
+    style='text-decoration:none'><img border=0 width=433 height=541
+    src="Pump_Info_Geometry_files/side_view_housing_rotor_clearance.png"></span></a></p>
+    </td>
+   </tr>
+  </table>
+  <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in;line-height:
+  200%'><a href="#_Model_Information_Interlaboratory">Back to Top</a></p>
+  <h2><a name="_Inlet_and_Outlet_1"></a>Inlet</h2>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The inlet tube has an inner
+       diameter of 0.012 m.</li>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The inlet tube is curved
+       with a 0.09 m radius to accommodate the flow visualization experiments,
+       and leads into a straight inlet tube that extends 0.204 m from the end of
+       the curved tube to the <b><span style='color:#CC0000'>opposite side </span></b>of
+       the housing chamber.&nbsp; There is a 0.005 m fillet where the inlet
+       tube meets the pump chamber.&nbsp; Due to secondary flows in the curved
+       inlet tube, the entrance velocity profile to the pump may be skewed. 
+       The drawing on the right is not to scale.</li>
+  </ul>
+  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0
+   style='border-collapse:collapse'>
+   <tr>
+    <td width=621 style='width:310.35pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><a
+    href="Pump_Info_Geometry_files/pump_and_rotor_iso.png"><span
+    style='text-decoration:none'><img border=0 width=431 height=355
+    src="Pump_Info_Geometry_files/pump_and_rotor_iso.png"></span></a></p>
+    </td>
+    <td width=621 style='width:310.4pt;padding:0in 5.4pt 0in 5.4pt'>
+    <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><a
+    href="Pump_Info_Geometry_files/side_view_with_dimensions.png"><span
+    style='text-decoration:none'><img border=0 width=325 height=369
+    src="Pump_Info_Geometry_files/side_view_with_dimensions.png"></span></a></p>
+    </td>
+   </tr>
+  </table>
+  <p class=MsoNormal style='margin-bottom:6.0pt'>&nbsp;</p>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>Representative velocity
+       profiles measured along one diameter at the entrance to the curved tube (see
+       figure below) are provided <a
+       href="Pump_Info_Conditions.htm#velocity_profiles">here</a> for
+       reference, in case you want to use similar profiles for your inlet
+       boundary conditions.  The drawing below is not to scale.</li>
+  </ul>
+  <p class=MsoNormal align=center style='text-align:center'><img border=0
+  width=400 height=323
+  src="Pump_Info_Geometry_files/inlet_velcocity_profile_location.png"></p>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The configuration of any
+       extension to the inlet is left to your discretion.</li>
+  </ul>
+  <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in;line-height:
+  200%'><a name="_Outlet"></a><a href="#_Model_Information_Interlaboratory">Back
+  to Top</a></p>
+  <h2>Outlet</h2>
+  <ul style='margin-top:0in' type=disc>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The outlet throat is 0.02 m
+       long, with a 0.00439 m inner diameter.</li>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The throat widens via a
+       0.02154 m long diffuser, to the 0.012 m inner diameter outlet tube.</li>
+   <li class=MsoNormal style='margin-bottom:6.0pt'>The configuration of any
+       extension to the outlet is left to your discretion.</li>
+  </ul>
+  <p class=MsoNormal style='margin-bottom:6.0pt'>&nbsp;</p>
+  <p class=MsoNormal style='margin-left:.25in;text-indent:-.25in;line-height:
+  200%'><a href="#_Model_Information_Interlaboratory">Back to Top</a></p>
+  <p class=MsoNormal align=center style='margin-bottom:6.0pt;text-align:center'><a
+  href="Pump_Info.htm">Back To Interlaboratory Study 2: Blood Pump Information
+  Page</a></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal><a name="_Inlet_and_Outlet"></a>&nbsp;</p>
+
+</div>
+
+</body>
+
+</html>

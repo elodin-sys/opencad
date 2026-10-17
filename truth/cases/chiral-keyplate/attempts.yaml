@@ -1,0 +1,155 @@
+attempts:
+- started: '2026-09-16T08:46:13Z'
+  arm: text-only
+  backend: zoo
+  design: chiral-keyplate
+  stage_reached: scored
+  force: false
+  resume_from: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/chiral-keyplate-1789548374
+  draft:
+    ok: true
+    rounds: 1
+    thread_id: 01a0a965-3023-7f51-a1e1-709c540bdaa4
+    problems: []
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0a974-d63a-7770-9310-28d52f497da4
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 2568
+  finished: '2026-09-16T09:29:02Z'
+- started: '2026-09-20T05:44:02Z'
+  arm: text-only
+  backend: build123d
+  design: chiral-keyplate
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/chiral-keyplate
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 2e2224f7-241b-4428-846c-82303967a26d
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/chiral-keyplate/manifest.yaml'''
+  seconds: 419
+  finished: '2026-09-20T05:51:03Z'
+- started: '2026-09-20T05:44:02Z'
+  arm: text-only
+  backend: freecad
+  design: chiral-keyplate
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/chiral-keyplate
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 5918c9bf-d3ee-4539-af45-bd660bbae065
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/chiral-keyplate/manifest.yaml'''
+  seconds: 450
+  finished: '2026-09-20T05:51:32Z'
+- started: '2026-09-20T05:44:02Z'
+  arm: text-only
+  backend: cadquery
+  design: chiral-keyplate
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/chiral-keyplate
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 3c4cd84d-4467-4a57-808b-4fdf749f8efb
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 506
+  finished: '2026-09-20T05:52:30Z'
+- started: '2026-09-20T05:52:39Z'
+  finished: '2026-09-20T05:52:41Z'
+  arm: text-only
+  design: chiral-keyplate
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 7e8c29620ec51794b8a45b70dc82692b8fb3f28ebe21670e9f065df19f958128
+  seconds: 3
+  backend: build123d
+- started: '2026-09-20T05:52:43Z'
+  finished: '2026-09-20T05:52:43Z'
+  arm: text-only
+  design: chiral-keyplate
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 14
+      required_total: 14
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: aeb2849a6c82141505bea89c8e10a050b3631ec7965fb1441fcb8d1ed7ce27b9
+  seconds: 1
+  backend: freecad

@@ -1,0 +1,518 @@
+Source URL: https://zoo.dev/docs/kcl-std/functions/std-sketch-sweep
+Title: sweep
+
+# sweep
+
+Create a 3D surface or solid by sweeping a sketch along a path.
+
+Create a 3D surface or solid by sweeping a sketch along a path.
+
+```kcl
+sweep(
+  @sketches: [Sketch | Face | TaggedFace | Segment; 1+],
+  path: Sketch | Helix | [Segment; 1+],
+  sectional?: bool,
+  tolerance?: number(Length),
+  relativeTo?: string,
+  translateProfileToPath?: bool,
+  orientProfilePerpendicular?: bool,
+  tagStart?: TagDecl,
+  tagEnd?: TagDecl,
+  bodyType?: string,
+  version?: number(_),
+): [Solid; 1+]
+```
+
+This, like extrude, is able to create a 3-dimensional surface or solid from a
+2-dimensional sketch. However, unlike extrude, this creates a body
+by using the extent of the sketch as its path. This is useful for
+creating more complex shapes that can't be created with a simple
+extrusion.
+
+You can provide more than one sketch to sweep, and they will all be
+swept along the same path.
+
+### Arguments
+
+| Name | Type | Description | Required |
+|----------|------|-------------|----------|
+| `sketches` | [[`Sketch`](/docs/kcl-std/types/std-types-Sketch) or [`Face`](/docs/kcl-std/types/std-types-Face) or [`TaggedFace`](/docs/kcl-std/types/std-types-TaggedFace) or [`Segment`](/docs/kcl-std/types/std-types-Segment); 1+] | The sketch or set of sketches that should be swept in space. | Yes |
+| `path` | [`Sketch`](/docs/kcl-std/types/std-types-Sketch) or [`Helix`](/docs/kcl-std/types/std-types-Helix) or [[`Segment`](/docs/kcl-std/types/std-types-Segment); 1+] | The path to sweep the sketch along. | Yes |
+| `sectional` | [`bool`](/docs/kcl-std/types/std-types-bool) | If true, the sweep will be broken up into sub-sweeps (extrusions, revolves, sweeps) based on the trajectory path components. | No |
+| `tolerance` | [`number(Length)`](/docs/kcl-std/types/std-types-number) | Defines the smallest distance below which two entities are considered coincident, intersecting, coplanar, or similar. For most use cases, it should not be changed from its default value of 10^-7 millimeters. | No |
+| `relativeTo` | [`string`](/docs/kcl-std/types/std-types-string) | **Deprecated.** **Removed in KCL 3.0.** Use 'translateProfileToPath' and 'orientProfilePerpendicular' instead. What is the sweep relative to? Can be either 'sketchPlane' or 'trajectoryCurve'. | No |
+| `translateProfileToPath` | [`bool`](/docs/kcl-std/types/std-types-bool) | If true, the profile being swept will be moved to the path being swept along, before the sweep starts. If false, the profile stays where it is, and the sweep starts from there. Defaults to false. | No |
+| `orientProfilePerpendicular` | [`bool`](/docs/kcl-std/types/std-types-bool) | If true, before the sweep starts, the profile will be re-oriented so that it is perpendicular to the path being swept along. If false, the profile is left in its current orientation. On KCL 2.0 and earlier, defaults to false. On KCL 3.0 and later, defaults to the value of `translateProfileToPath`, so a profile that is moved to the path is also oriented perpendicular to it unless you say otherwise. | No |
+| `tagStart` | [`TagDecl`](/docs/kcl-std/types/std-types-TagDecl) | A named tag for the face at the start of the sweep, i.e. the original sketch. | No |
+| `tagEnd` | [`TagDecl`](/docs/kcl-std/types/std-types-TagDecl) | A named tag for the face at the end of the sweep. | No |
+| `bodyType` | [`string`](/docs/kcl-std/types/std-types-string) | What type of body to produce (solid or surface). Defaults to "solid". | No |
+| `version` | [`number(_)`](/docs/kcl-std/types/std-types-number) | **Removed in KCL 3.0.** What version of the sweeping algorithm to use. 0 means "let the Zoo engine choose whichever version is best", 1 is the original Zoo sweep algorithm, 2 is the newer algorithm. On KCL 2.0 and earlier, the default is 0. KCL 3.0 and later always use the newest algorithm. | No |
+
+### Returns
+
+[[`Solid`](/docs/kcl-std/types/std-types-Solid); 1+]
+
+
+### Examples
+
+```kcl
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+sweepPath = sketch(on = XZ) {
+  line1 = line(start = [var 0.05mm, var 0.05mm], end = [var 0.05mm, var 7.05mm])
+  arc2 = arc(start = [var 0.05mm, var 7.05mm], end = [var -4.95mm, var 12.05mm], center = [var -4.95mm, var 7.05mm])
+  coincident([line1.end, arc2.start])
+  line3 = line(start = [var -4.95mm, var 12.05mm], end = [var -7.95mm, var 12.05mm])
+  coincident([arc2.end, line3.start])
+  arc4 = arc(start = [var -12.95mm, var 17.05mm], end = [var -7.95mm, var 12.05mm], center = [var -7.95mm, var 17.05mm])
+  coincident([line3.end, arc4.end])
+  line5 = line(start = [var -12.95mm, var 17.05mm], end = [var -12.95mm, var 24.05mm])
+  coincident([arc4.start, line5.start])
+}
+
+pipeProfile = sketch(on = XY) {
+  outerCircle = circle(start = [var 2mm, var 0mm], center = [var 0mm, var 0mm])
+  innerCircle = circle(start = [var 1.5mm, var 0mm], center = [var 0mm, var 0mm])
+}
+pipeRegion = region(segments = [pipeProfile.outerCircle])
+sweepSketch = sweep(pipeRegion, path = sweepPath)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep0_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep0.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+// Create a spring by sweeping around a helix path.
+
+// Create a helix around the Z axis.
+helixPath = helix(
+  angleStart = 0,
+  ccw = true,
+  revolutions = 4,
+  length = 10,
+  radius = 5,
+  axis = Z,
+)
+
+// Create a spring by sweeping around the helix path.
+springSketch = startSketchOn(XZ)
+  |> circle(center = [5, 0], radius = 1)
+  |> sweep(path = helixPath)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep1_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep1.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+// Sweep two sketches along the same path.
+
+sketch001 = startSketchOn(XY)
+rectangleSketch = startProfile(sketch001, at = [-200, 23.86])
+  |> angledLine(angle = 0, length = 73.47, tag = $rectangleSegmentA001)
+  |> angledLine(angle = segAng(rectangleSegmentA001) - 90deg, length = 50.61)
+  |> angledLine(angle = segAng(rectangleSegmentA001), length = -segLen(rectangleSegmentA001))
+  |> line(endAbsolute = [profileStartX(%), profileStartY(%)])
+  |> close()
+
+circleSketch = circle(sketch001, center = [200, -30.29], radius = 32.63)
+
+sketch002 = startSketchOn(YZ)
+sweepPath = startProfile(sketch002, at = [0, 0])
+  |> yLine(length = 231.81)
+  |> tangentialArc(radius = 80, angle = -90deg)
+  |> xLine(length = 384.93)
+
+sweep([rectangleSketch, circleSketch], path = sweepPath)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep2_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep2.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+// Sectionally sweep one sketch along the path
+
+sketch001 = startSketchOn(XY)
+circleSketch = circle(sketch001, center = [200, -30.29], radius = 32.63)
+
+sketch002 = startSketchOn(YZ)
+sweepPath = startProfile(sketch002, at = [0, 0])
+  |> yLine(length = 231.81)
+  |> tangentialArc(radius = 80, angle = -90deg)
+  |> xLine(length = 384.93)
+
+sweep(circleSketch, path = sweepPath, sectional = true)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep3_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep3.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+// Sweep a square edge along a path
+square = startSketchOn(XY)
+  |> startProfile(at = [-100, 200])
+  |> line(end = [200, 0])
+  |> line(end = [0, -200])
+  |> line(end = [-200, 0])
+  |> close()
+
+path = startSketchOn(XY)
+  |> startProfile(at = [0, 0])
+  |> line(end = [100, 0])
+  |> tangentialArc(end = [107, -48])
+
+sweep(square, path, bodyType = SURFACE)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep4_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep4.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+// Sweep a segment along a path
+segment = startSketchOn(YZ)
+  |> startProfile(at = [-100, 200])
+  |> line(end = [100, 0])
+
+path = startSketchOn(XY)
+  |> startProfile(at = [0, 0])
+  |> line(end = [100, 0])
+  |> tangentialArc(end = [117, 34.5])
+
+sweep(segment, path, bodyType = SURFACE)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep5_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep5.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+// Sweep a segment along a path
+segment = startSketchOn(YZ)
+  |> startProfile(at = [-100, 200])
+  |> line(end = [100, 0])
+
+path = startSketchOn(XY)
+  |> startProfile(at = [0, 0])
+  |> line(end = [100, 0])
+  |> tangentialArc(end = [117, 34.5])
+
+sweep(
+  segment,
+  path,
+  bodyType = SURFACE,
+  version = 2,
+)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep6_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep6.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+profile = sketch(on = YZ) {
+  edge1 = line(start = [var 0mm, var 0mm], end = [var 2mm, var 0mm])
+  edge2 = line(start = [var 2mm, var 0mm], end = [var 2mm, var 2mm])
+  edge3 = line(start = [var 2mm, var 2mm], end = [var 0mm, var 2mm])
+  edge4 = line(start = [var 0mm, var 2mm], end = [var 0mm, var 0mm])
+  coincident([edge1.end, edge2.start])
+  coincident([edge2.end, edge3.start])
+  coincident([edge3.end, edge4.start])
+  coincident([edge4.end, edge1.start])
+}
+
+profileRegion = region(segments = [profile.edge1, profile.edge2])
+
+path = startSketchOn(XY)
+  |> startProfile(at = [0mm, 0mm])
+  |> line(end = [8mm, 0mm])
+  |> tangentialArc(end = [4mm, 4mm])
+
+swept = sweep(profileRegion, path)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep7_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep7.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+// Demonstrates using sweeps with segments from sketch blocks.
+
+// Sketch a square
+sketch001 = sketch(on = XZ) {
+  line1 = line(start = [var -3.34mm, var -1.89mm], end = [var -1.62mm, var -1.89mm])
+  line2 = line(start = [var -1.62mm, var -1.89mm], end = [var -1.62mm, var 0.56mm])
+  line3 = line(start = [var -1.62mm, var 0.56mm], end = [var -3.34mm, var 0.56mm])
+  line4 = line(start = [var -3.34mm, var 0.56mm], end = [var -3.34mm, var -1.89mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+}
+
+// Sketch a path
+sketch002 = sketch(on = offsetPlane(YZ, offset = -2)) {
+  line1 = line(start = [var 00mm, var 0mm], end = [var -3mm, var 0mm])
+  line2 = line(start = [var 00mm, var 0mm], end = [var 2mm, var 1mm])
+}
+
+mySquare = region(segments = [sketch001.line1, sketch001.line2])
+
+// Sweep the square along the path.
+sweep(mySquare, path = sketch002.line1)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep8_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep8.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+// Demonstrates sweeping along a multi-segment path from a sketch block.
+
+sketch001 = sketch(on = XY) {
+  line1 = line(start = [var 2mm, var 2mm], end = [var 2mm, var 0mm])
+  line2 = line(start = [var 2mm, var 0mm], end = [var 0mm, var 0mm])
+  line3 = line(start = [var 0mm, var 0mm], end = [var 0mm, var 2mm])
+  line4 = line(start = [var 0mm, var 2mm], end = [var 2mm, var 2mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+}
+mySquare = region(segments = [sketch001.line1, sketch001.line2])
+
+// Sketch a path
+sketch002 = sketch(on = offsetPlane(YZ, offset = -2)) {
+  line1 = line(start = [var -0.01mm, var -0.01mm], end = [var -0.12mm, var 2.4mm])
+  arc1 = arc(start = [var 0.6mm, var 4.55mm], end = [var -0.12mm, var 2.4mm], center = [var 3.03mm, var 2.54mm])
+  coincident([line1.end, arc1.end])
+  tangent([line1, arc1])
+}
+
+// Sweep the square along the path.
+path = [sketch002.line1, sketch002.arc1]
+sweep(mySquare, path)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep9_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep9.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+// Demonstrates surface sweeps of open profiles.
+
+// Sketch a square
+sketch001 = sketch(on = XY) {
+  line1 = line(start = [var -3.34mm, var -1.89mm], end = [var -1.62mm, var -1.89mm])
+  line2 = line(start = [var -1.62mm, var -1.89mm], end = [var -1.62mm, var 0.56mm])
+  line3 = line(start = [var -1.62mm, var 0.56mm], end = [var -3.34mm, var 0.56mm])
+  line4 = line(start = [var -3.34mm, var 0.56mm], end = [var -3.34mm, var -1.89mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+}
+
+mySquare = region(segments = [sketch001.line1, sketch001.line2])
+
+sketch002 = sketch(on = XZ) {
+  line1 = line(start = [var -1.17mm, var -0.79mm], end = [var -15.37mm, var -0.7mm])
+  arc1 = arc(start = [var -15.37mm, var 21.18mm], end = [var -15.37mm, var -0.7mm], center = [var -15.3mm, var 10.24mm])
+  coincident([line1.end, arc1.end])
+  tangent([line1, arc1])
+}
+
+// Sweep the square along the path.
+path = [sketch002.line1, sketch002.arc1]
+sweep(sketch001.line2, path, bodyType = SURFACE)
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep10_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep10.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>
+
+```kcl
+// Demonstrates a sweep from a face
+sketch001 = sketch(on = XY) {
+  line1 = line(start = [var -5mm, var 3mm], end = [var 5mm, var 3mm])
+  line2 = line(start = [var 5mm, var 3mm], end = [var 5mm, var 0mm])
+  line3 = line(start = [var 5mm, var 0mm], end = [var -5mm, var 0mm])
+  line4 = line(start = [var -5mm, var 0mm], end = [var -5mm, var 3mm])
+  coincident([line1.end, line2.start])
+  coincident([line2.end, line3.start])
+  coincident([line3.end, line4.start])
+  coincident([line4.end, line1.start])
+  parallel([line2, line4])
+  parallel([line3, line1])
+  perpendicular([line1, line2])
+  horizontal(line3)
+}
+hidden001 = hide(sketch001)
+region001 = region(segments = [sketch001.line1, sketch001.line2])
+extrude001 = extrude(region001, length = 5, tagEnd = $capFace)
+sketch002 = sketch(on = XZ) {
+  line1 = line(start = [var 0mm, var 4mm], end = [var 0mm, var 12mm])
+  vertical([line1.start, ORIGIN])
+  vertical([line1.end, ORIGIN])
+  arc1 = arc(start = [var 10mm, var 20mm], end = [var 0mm, var 12mm], center = [var 7mm, var 12mm])
+  coincident([line1.end, arc1.end])
+  tangent([line1, arc1])
+  arc2 = arc(start = [var 10mm, var 20mm], end = [var 10mm, var 34mm], center = [var 13mm, var 27mm])
+  coincident([arc1.start, arc2.start])
+  tangent([arc1, arc2])
+}
+
+// sweep the tagged face
+sweep(capFace, path = sketch002)
+  |> appearance(color = "#ff00aa")
+
+```
+
+
+<model-viewer
+  class="kcl-example"
+  alt="Example showing a rendered KCL program that uses the sweep function"
+  src="/kcl-test-outputs/models/serial_test_example_fn_std-sketch-sweep11_output.gltf"
+  ar
+  environment-image="/moon_1k.hdr"
+  poster="/kcl-test-outputs/serial_test_example_fn_std-sketch-sweep11.png"
+  shadow-intensity="1"
+  camera-controls
+  touch-action="pan-y"
+>
+</model-viewer>

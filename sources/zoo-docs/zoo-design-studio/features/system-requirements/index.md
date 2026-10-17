@@ -1,0 +1,34 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/system-requirements
+Title: System Requirements
+
+# System Requirements
+
+Supported platforms and Zoo Design Studio Stream behavior in Zoo Design Studio.
+
+Zoo Design Studio is available as a native desktop application on Windows, macOS, and Linux. A web
+version is also available for browser-based use.
+
+Both versions provide the core modeling workspace. Some workflows differ where the desktop app can
+access operating-system folders and applications.
+
+## Supported Platforms
+
+- Windows
+- macOS
+- Linux
+- Web browser
+
+## Zoo Design Studio Stream
+
+[Zoo Design Studio Stream](/docs/zoo-design-studio/features/system-requirements/zoo-stream) runs the
+interactive CAD engine session on our cloud compute infrastructure and streams the rendered viewport
+back to your computer. This means Zoo Design Studio is not limited by the CAD hardware inside your
+local machine, though a stable network connection is still important for responsive modeling.
+
+## Platform Differences
+
+- Both versions support multiple project files and projects.
+- On desktop, Directory libraries can point to normal folders on disk. The web version only works with projects from Personal
+  Cloud.
+- Operating-system integrations such as `Reveal in file explorer`, `New Window`, and
+  `Export to Slicer` are desktop workflows.

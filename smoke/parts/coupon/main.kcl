@@ -1,0 +1,28 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Training coupon (primer section 10): 60 x 40 x 4 mm, expected volume 9600 mm3, centre of mass [30, 20, 2].
+width = 60mm
+height = 40mm
+thickness = 4mm
+
+outline = sketch(on = XY) {
+  bottomEdge = line(start = [var 0mm, var 0mm], end = [var 60mm, var 0mm])
+  rightEdge = line(start = [var 60mm, var 0mm], end = [var 60mm, var 40mm])
+  topEdge = line(start = [var 60mm, var 40mm], end = [var 0mm, var 40mm])
+  leftEdge = line(start = [var 0mm, var 40mm], end = [var 0mm, var 0mm])
+
+  coincident([bottomEdge.end, rightEdge.start])
+  coincident([rightEdge.end, topEdge.start])
+  coincident([topEdge.end, leftEdge.start])
+  coincident([leftEdge.end, bottomEdge.start])
+  horizontal(bottomEdge)
+  horizontal(topEdge)
+  vertical(rightEdge)
+  vertical(leftEdge)
+  coincident([bottomEdge.start, ORIGIN])
+  horizontalDistance([bottomEdge.start, bottomEdge.end]) == width
+  verticalDistance([bottomEdge.start, leftEdge.start]) == height
+}
+
+couponRegion = region(segments = [outline.bottomEdge, outline.rightEdge])
+coupon = extrude(couponRegion, length = thickness)

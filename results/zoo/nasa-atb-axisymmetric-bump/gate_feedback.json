@@ -1,0 +1,548 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; every value carries provenance and a tolerance",
+      "ok": true,
+      "evidence": [
+        "designs/nasa-atb-axisymmetric-bump/contract.yaml: 6 parameters {'stated': 3, 'inferred': 1, 'measured (reference model)': 2}",
+        "open questions: 3"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources",
+      "details": {
+        "provenance": {
+          "stated": 3,
+          "inferred": 1,
+          "measured (reference model)": 2
+        },
+        "soft_values": 1,
+        "open_questions": [
+          "Which historical leading-edge radius is correct: 18.30 cm (183.0 mm) or the documented alternate 20.32 cm (203.2 mm)? This contract fixes the instructed inferred nominal at 183.0 mm; 203.2 mm is an unbuilt alternate.",
+          "What accounts for the approximate coordinate table's trailing-edge smoothing and small leading-blend differences from the specified analytic profile? The active contract uses its axial limits but retains the explicitly required sharp trailing join; it does not interpolate the rounded samples.",
+          "What chordal and angular tessellation tolerances does the downstream CFD workflow require for STL? No values were supplied; the retained 0.2 percent cross-format volume check alone does not establish local surface accuracy."
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/nasa-atb-axisymmetric-bump/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/nasa-atb-axisymmetric-bump/verify.json engine bbox.max_error = 15.6601 (engine bbox differs: zoo kcl analyze can include cut-tool extents; disclosed, not gating)"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -650.0073203536,
+            -95.25,
+            -95.25
+          ],
+          "expected_max": [
+            900.0029136304,
+            95.25,
+            95.25
+          ],
+          "measured_min": [
+            -650.0073,
+            -95.25,
+            -95.25
+          ],
+          "measured_max": [
+            900.0029,
+            95.25,
+            95.25
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -650.0073203536,
+            -95.25,
+            -95.25
+          ],
+          "expected_max": [
+            900.0029136304,
+            95.25,
+            95.25
+          ],
+          "measured_min": [
+            -650.0073,
+            -110.9101,
+            -110.9101
+          ],
+          "measured_max": [
+            900.0029,
+            110.9101,
+            110.9101
+          ],
+          "max_error": 15.6601,
+          "tolerance": 0.05,
+          "ok": false
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/nasa-atb-axisymmetric-bump/inspect.json volume = 29664258.0866 vs 29664257.630154",
+        "results/nasa-atb-axisymmetric-bump/inspect.json surface_area = 797417.554 vs 797417.539677",
+        "results/nasa-atb-axisymmetric-bump/inspect.json center_of_mass = [123.8291, -0.0, 0.0] vs [123.829056217831, 0.0, 0.0]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 29664257.630154,
+          "measured": 29664258.0866,
+          "error": 0.4564,
+          "band": 29664.2576,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 797417.539677,
+          "measured": 797417.554,
+          "error": 0.0143,
+          "band": 797.4175,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            123.829056217831,
+            0.0,
+            0.0
+          ],
+          "measured": [
+            123.8291,
+            -0.0,
+            0.0
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section and named face verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/nasa-atb-axisymmetric-bump/inspect.json features: 6/6 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": []
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/nasa-atb-axisymmetric-bump/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/nasa-atb-axisymmetric-bump/inspect.json agreement kcl=29612763.095428817 step=29664258.086577885 stl=29612762.54172923 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 29612763.095428817,
+        "step": 29664258.086577885,
+        "stl": 29612762.54172923,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "kcl_vs_step_rel": 0.0017359271551230097,
+        "stl_vs_step_rel": 0.0017359458206694367,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/nasa-atb-axisymmetric-bump/edit.json 2/2 edit tests ok; restore.ok = True"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, or the deliverable changed",
+      "knob": "make features derive from the named constants",
+      "details": {
+        "tests": [
+          {
+            "parameter": "cylinderDiameter",
+            "delta": 2.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 763576.894948,
+                "measured": 763576.9042129442,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  2.0,
+                  2.0
+                ],
+                "measured": [
+                  0.0,
+                  1.9999999999999716,
+                  1.9999999999999716
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          },
+          {
+            "parameter": "bumpHeight",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 82804.040776,
+                "measured": 82803.76479121298,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  2.0,
+                  2.0
+                ],
+                "measured": [
+                  0.0,
+                  1.9999923666202903,
+                  1.9999923666202903
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "4e9a8107d2974bdfb03389e3c27bb24a6f6836a96fdcf556f4f30bd547494f13",
+          "re_export_sha256": "4e9a8107d2974bdfb03389e3c27bb24a6f6836a96fdcf556f4f30bd547494f13",
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/nasa-atb-axisymmetric-bump/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=15",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 15,
+          "sketch_blocks": 2,
+          "feature_ops": 1,
+          "parameters": {
+            "cylinderDiameter": {
+              "found": true,
+              "value": 152.4,
+              "unit": "mm",
+              "expected": 152.4,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "bumpChord": {
+              "found": true,
+              "value": 203.2,
+              "unit": "mm",
+              "expected": 203.2,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "bumpHeight": {
+              "found": true,
+              "value": 19.05,
+              "unit": "mm",
+              "expected": 19.05,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "filletRadius": {
+              "found": true,
+              "value": 183.0,
+              "unit": "mm",
+              "expected": 183.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "upstreamX": {
+              "found": true,
+              "value": -650.0073203536,
+              "unit": "mm",
+              "expected": -650.0073203536,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "downstreamX": {
+              "found": true,
+              "value": 900.0029136304,
+              "unit": "mm",
+              "expected": 900.0029136304,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 98,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/nasa-atb-axisymmetric-bump/export.json step.deterministic = True sha256 4e9a8107d297; stl=present; glb=present",
+        "results/nasa-atb-axisymmetric-bump/inspect.json valid = True solids = 1 (expected 1)",
+        "results/nasa-atb-axisymmetric-bump/inspect.json mesh watertight = True components = 1 void_shells = 0"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nasa-atb-axisymmetric-bump/export/nasa-atb-axisymmetric-bump.step",
+            "sha256": "4e9a8107d2974bdfb03389e3c27bb24a6f6836a96fdcf556f4f30bd547494f13",
+            "bytes": 9393,
+            "deterministic": true,
+            "second_sha256": "4e9a8107d2974bdfb03389e3c27bb24a6f6836a96fdcf556f4f30bd547494f13"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nasa-atb-axisymmetric-bump/export/nasa-atb-axisymmetric-bump.stl",
+            "sha256": "7b233ffea7c195e3e74ea005fbe70a3b4fa59d66a18126cfe8c1af451676db50",
+            "bytes": 592807
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nasa-atb-axisymmetric-bump/export/nasa-atb-axisymmetric-bump.glb",
+            "sha256": "401b293496311c7cb0efb19f13a3833f2e6ab7bd3195d59e2cb4a1de50859a89",
+            "bytes": 210276
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 2768,
+          "vertices": 1386,
+          "watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 29612762.54172923,
+          "surface_area": 797025.8029119726,
+          "bbox_min": [
+            -650.0073,
+            -95.25,
+            -95.17285
+          ],
+          "bbox_max": [
+            900.00287,
+            95.25,
+            95.18737
+          ],
+          "center_of_mass": [
+            123.8232519018379,
+            0.0006035865984496283,
+            0.0004986208509632937
+          ]
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0a9b2-0e40-7032-a9fe-a82fbef37cc2; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 13; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 13,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/nasa-atb-axisymmetric-bump/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/nasa-atb-axisymmetric-bump/verify.json hygiene.forbidden_imports = [] sketch_blocks = 2 feature_ops = 1 lines = 98"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "sketch_blocks": 2,
+        "feature_ops": 1
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

@@ -1,0 +1,109 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import "inputs/base.step" as base
+import "inputs/motor.step" as motor
+import "inputs/motorGear.step" as motorGear
+import "inputs/stackedGear.step" as stackedGear
+import "inputs/outputGear.step" as outputGear
+import "inputs/upperCase.step" as upperCase
+import "inputs/stator.step" as stator
+import "inputs/lid.step" as lid
+import "inputs/clamp.step" as clamp
+import "inputs/rotor.step" as rotor
+import "inputs/roller1.step" as roller1
+import "inputs/roller2.step" as roller2
+import "inputs/roller3.step" as roller3
+import "inputs/peristaltic-pump-tube.step" as tube
+
+// Rigid placements composed from the AssemblyContract joint frames.
+// Global rotations are applied in listed order, followed by global translation.
+
+
+base
+  |> translate(xyz = [0, 0, 0], global = true)
+
+motor
+  |> rotate(axis = [1, 0, 0], angle = -90deg, global = true)
+  |> translate(xyz = [-20.5, 0, -20.5], global = true)
+
+motorGear
+  |> rotate(axis = [1, 0, 0], angle = -90deg, global = true)
+  |> translate(xyz = [-20.5, 12, -20.5], global = true)
+
+stackedGear
+  |> rotate(axis = [1, 0, 0], angle = -90deg, global = true)
+  |> rotate(axis = [0, 1, 0], angle = 7.5deg, global = true)
+  |> translate(xyz = [-20.5, 12, -50.5], global = true)
+
+outputGear
+  |> rotate(axis = [1, 0, 0], angle = -90deg, global = true)
+  |> rotate(axis = [0, 1, 0], angle = 3.75deg, global = true)
+  |> translate(xyz = [-20.5, 23, -20.5], global = true)
+
+upperCase
+  |> rotate(axis = [0, 1, 0], angle = -90deg, global = true)
+  |> translate(xyz = [-51, 12, -5], global = true)
+
+stator
+  |> rotate(axis = [0, 1, 0], angle = -90deg, global = true)
+  |> translate(xyz = [-41, 38, 0], global = true)
+
+lid
+  |> rotate(axis = [0, 1, 0], angle = -180deg, global = true)
+  |> translate(xyz = [-41, 60.8, -41], global = true)
+
+clamp
+  |> rotate(axis = [0, 1, 0], angle = -180deg, global = true)
+  |> translate(xyz = [-37, 68, -51], global = true)
+
+rotor
+  |> rotate(axis = [0, 1, 0], angle = 3.75deg, global = true)
+  |> translate(
+       xyz = [
+         -17.2921656424594,
+         67.125,
+         -15.6995242178944
+       ],
+       global = true,
+     )
+
+roller1
+  |> rotate(axis = [1, 0, 0], angle = -90deg, global = true)
+  |> rotate(axis = [0, 1, 0], angle = 3.75deg, global = true)
+  |> translate(
+       xyz = [
+         -17.2921656424594,
+         67.8,
+         -15.6995242178944
+       ],
+       global = true,
+     )
+
+roller2
+  |> rotate(axis = [1, 0, 0], angle = -90deg, global = true)
+  |> rotate(axis = [0, 1, 0], angle = 3.75deg, global = true)
+  |> translate(
+       xyz = [
+         -26.2606395638565,
+         67.8,
+         -20.1224277349544
+       ],
+       global = true,
+     )
+
+roller3
+  |> rotate(axis = [1, 0, 0], angle = -90deg, global = true)
+  |> rotate(axis = [0, 1, 0], angle = 3.75deg, global = true)
+  |> translate(
+       xyz = [
+         -17.9461969347609,
+         67.8,
+         -25.6781134502804
+       ],
+       global = true,
+     )
+
+tube
+  |> rotate(axis = [1, 0, 0], angle = -90deg, global = true)
+  |> rotate(axis = [0, 1, 0], angle = -90deg, global = true)
+  |> translate(xyz = [-20.5, 67.8, -20.5], global = true)

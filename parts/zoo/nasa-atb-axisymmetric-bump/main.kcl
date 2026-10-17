@@ -1,0 +1,97 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+cylinderDiameter = 152.4mm
+bumpChord = 203.2mm
+bumpHeight = 19.05mm
+filletRadius = 183.0mm
+upstreamX = -650.0073203536mm
+downstreamX = 900.0029136304mm
+
+// Bachalo-Johnson axisymmetric transonic bump; x is downstream, y is radius.
+// The source table fixes only the signed axial limits, already converted to mm.
+// Retain the instructed 183 mm leading blend and the sharp trailing join.
+r = cylinderDiameter / 2
+c = bumpChord
+t = bumpHeight
+f = filletRadius
+u = upstreamX
+v = downstreamX
+assert(r, isGreaterThan = 0mm, error = "Cylinder radius must be positive")
+assert(c, isGreaterThan = 0mm, error = "Bump chord must be positive")
+assert(t, isGreaterThan = 0mm, error = "Bump height must be positive")
+assert(f, isGreaterThan = 0mm, error = "Leading blend radius must be positive")
+
+// Exact main-circle center (h, b) and radius mainRadius = (t^2 + h^2) / (2*t).
+h = c / 2
+assert(t, isLessThan = h, error = "Use the shallow upper circular-arc branch")
+mainRadius = ((t ^ 2 + h ^ 2) / (2 * t)): mm
+assert(mainRadius, isGreaterThan = t, error = "Main-circle center must lie below the cylinder")
+b = r + t - mainRadius
+
+// The blend circle at (a, r+f) is externally tangent to the main circle.
+// Derive both the upstream start a and the shared tangent point (j, q).
+blendRadicand = 2 * (mainRadius + f) * t - (t ^ 2)
+assert(blendRadicand, isGreaterThan = 0, error = "Blend tangency must have a real solution")
+d = sqrt(blendRadicand): mm
+a = h - d
+j = a + (f * d / (mainRadius + f)): mm
+q = r + (f * t / (mainRadius + f)): mm
+
+assert(u, isLessThan = a, error = "Keep a positive upstream cylinder span")
+assert(a, isLessThan = 0mm, error = "Leading blend must begin upstream of the origin")
+assert(j, isGreaterThan = 0mm, error = "Tangency must lie downstream of the nominal leading edge")
+assert(j, isLessThan = h, error = "Tangency must precede the bump crown")
+assert(h, isLessThan = c, error = "Crown must precede the trailing chord plane")
+assert(c, isLessThan = v, error = "Keep a positive downstream cylinder span")
+assert(j - a, isGreaterThan = 0mm, error = "Leading arc must have positive axial span")
+assert(j - a, isLessThan = f, error = "Leading arc must stay on its short lower branch")
+
+datumSketch = sketch(on = XY) {
+  axis = line(start = [u, 0mm], end = [v, 0mm], construction = true)
+}
+axis = datumSketch.axis
+leadingChordPlane = YZ
+trailingChordPlane = offsetPlane(YZ, offset = c)
+upstreamCapPlane = offsetPlane(YZ, offset = u)
+downstreamCapPlane = offsetPlane(YZ, offset = v)
+
+meridian = sketch(on = XY) {
+  upstreamCap = line(start = [u, 0mm], end = [u, r])
+  upstreamCylinder = line(start = [u, r], end = [a, r])
+  leadingBlend = arc(
+    start = [a, r],
+    end = [j, q],
+    center = [a, r + f],
+    direction = CCW,
+  )
+  circularArcBump = arc(
+    start = [j, q],
+    end = [c, r],
+    center = [h, b],
+    direction = CW,
+  )
+  // No trailing fillet: the convex arc ends directly at this cylinder.
+  downstreamCylinder = line(start = [c, r], end = [v, r])
+  downstreamCap = line(start = [v, r], end = [v, 0mm])
+  axisClosure = line(start = [v, 0mm], end = [u, 0mm])
+}
+meridianRegion = region(
+  segments = [
+    meridian.upstreamCap,
+    meridian.upstreamCylinder
+  ],
+  direction = CW,
+)
+body = revolve(meridianRegion, axis = X, angle = 360deg)
+// These axial disks come from meridian segments, not angular start/end tags.
+upstreamCap = faceOf(body, face = meridianRegion.tags.upstreamCap)
+downstreamCap = faceOf(body, face = meridianRegion.tags.downstreamCap)
+// Construction-only datumSketch has no renderable region to hide.
+hide(meridian)
+hide([
+  leadingChordPlane,
+  trailingChordPlane,
+  upstreamCapPlane,
+  downstreamCapPlane
+])
+body

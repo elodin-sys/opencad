@@ -1,0 +1,425 @@
+{
+  "case": "crank-slider",
+  "arm": "spec-only",
+  "design": "crank-slider",
+  "kind": "machine",
+  "mode": "reconstruction",
+  "backend": "build123d",
+  "truth_class": "C",
+  "scored_at": "2026-09-27T16:53:16Z",
+  "verdict": "PASS",
+  "error": null,
+  "accuracy_score": 100.0,
+  "summary": {
+    "required_pass": 9,
+    "required_total": 9,
+    "optional_pass": 0,
+    "optional_total": 0,
+    "performance_pass": 2,
+    "performance_scored": 2,
+    "performance_unresolved": 0,
+    "performance_total": 2,
+    "performance_by_split": {
+      "development": {
+        "required": 2,
+        "pass": 2,
+        "fail": 0,
+        "unresolved": 0,
+        "missing": 0
+      },
+      "held_out": {
+        "required": 0,
+        "pass": 0,
+        "fail": 0,
+        "unresolved": 0,
+        "missing": 0
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "the ground plate (-40..160, -30..40) bounds every part at rest; layers z -5..10",
+      "expected": [
+        200.0,
+        70.0,
+        15.0
+      ],
+      "measured": [
+        200.0,
+        70.0,
+        15.0
+      ],
+      "error": 0.0,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 4,
+      "measured": 4,
+      "ok": true
+    },
+    {
+      "id": "ground",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 69858.62833058844,
+        "bbox_min": [
+          -40.0,
+          -30.0,
+          -5.0
+        ],
+        "bbox_max": [
+          160.0,
+          40.0,
+          0.0
+        ],
+        "center_of_mass": [
+          60.121420937790994,
+          5.010118411482584,
+          -2.5
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 69858.63,
+        "measured": 69858.62833058844,
+        "band": 349.29315,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "crank",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 3122.5663106202464,
+        "bbox_min": [
+          -8.0,
+          -8.0,
+          0.0
+        ],
+        "bbox_max": [
+          38.0,
+          8.0,
+          5.0
+        ],
+        "center_of_mass": [
+          14.999999741676435,
+          2.1933171404328102e-13,
+          2.5000000000000004
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 3122.57,
+        "measured": 3122.5663106202464,
+        "band": 15.612850000000002,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "rod",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 8722.563840805076,
+        "bbox_min": [
+          22.0,
+          -8.0,
+          5.0
+        ],
+        "bbox_max": [
+          137.49874371070845,
+          17.99999999953785,
+          10.0
+        ],
+        "center_of_mass": [
+          79.74937147319281,
+          4.999999961534958,
+          7.5
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 8722.57,
+        "measured": 8722.563840805076,
+        "band": 43.61285,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "slider",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 2258.628330588459,
+        "bbox_min": [
+          114.498743711,
+          2.0,
+          0.0
+        ],
+        "bbox_max": [
+          144.498743711,
+          18.0,
+          5.0
+        ],
+        "center_of_mass": [
+          129.498743711,
+          10.0,
+          2.5000000000000004
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 2258.63,
+        "measured": 2258.628330588459,
+        "band": 11.29315,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "crank_pin_hole",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          30.0,
+          0.0,
+          2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          30.0,
+          0.0,
+          2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "rod_wrist_hole",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          129.498744,
+          10.0,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          129.49874371070845,
+          9.999999999537849,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 2.89291903876868e-07,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 2.89291903876868e-07,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "slider_hole",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          129.498744,
+          10.0,
+          2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          129.498743711,
+          10.0,
+          2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 2.8899998483211675e-07,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 2.8899998483211675e-07,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "performance": [
+    {
+      "id": "sliderTravel",
+      "kind": "performance",
+      "quantity": "joint_value",
+      "unit": "mm",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "points": 37,
+      "max_error": 7.997993378694446e-10,
+      "tolerance": 0.05,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    },
+    {
+      "id": "stroke",
+      "kind": "performance",
+      "quantity": "joint_range",
+      "unit": "mm",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "prediction": 60.33162468533421,
+      "reference": 60.332781665402095,
+      "error": -0.0011569800678827846,
+      "tolerance": 0.05,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": "10 pass, 0 fail, 4 n/a",
+    "failed": []
+  },
+  "simulations": {},
+  "hash_binding": {
+    "manifest_sha256": "5b7308052bde98d569e96c3222ab5cb044cdbdfe6fa9cd90f8a8b17379870e20",
+    "truth_files": {
+      "truth/crank-slider-truth.yaml": "ffd908b15809c83eaaa822f6a82a06df2c8441932c7f2fb869bc696ef591f07d",
+      "truth/slider-travel.csv": "5cfd13b57a17ca65f5b69190e83605072ff940177aa01d56f20f9b3b850e0bc7"
+    },
+    "input_files": {
+      "inputs/crank-slider-spec.md": "cd01ebc4dc4d7289a786bef3bca834eb565dd9f6109941bbcc2ec04b879c0d1c"
+    },
+    "step_sha256": "7695c9dac255861050296860abdb48d2fc721a6dfcfb63eccc0e8025e6eb128e",
+    "assembly_source": {
+      "checkpoint.py": "fef07ccffa67cd842780bcb1e4c58b2d37b5305ea68560aaae9674b95c442d43",
+      "main.py": "fef07ccffa67cd842780bcb1e4c58b2d37b5305ea68560aaae9674b95c442d43"
+    },
+    "design_bundle": {
+      "assembly.yaml": "9b70a3e8d4685b149e1e756ea97a421b3de82a4352046b309b0ace4a2500208f",
+      "brief.md": "1dadd3bda9c56ee3a8cb3683f9bc71d2d3059f4805558fa58451aa91437aa082",
+      "sources/crank-slider-spec.md": "cd01ebc4dc4d7289a786bef3bca834eb565dd9f6109941bbcc2ec04b879c0d1c"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-27T16:53:16Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "f067337b8ab648471ad40a647b21672f74d56978",
+      "dirty": true
+    }
+  }
+}

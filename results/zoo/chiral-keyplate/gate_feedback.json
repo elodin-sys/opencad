@@ -1,0 +1,554 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; every value carries provenance and a tolerance",
+      "ok": true,
+      "evidence": [
+        "designs/chiral-keyplate/contract.yaml: 8 parameters {'stated': 8}",
+        "open questions: 2"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources",
+      "details": {
+        "provenance": {
+          "stated": 8
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "What material and density, if any, should be assigned for physical mass reporting? Neither is specified; both remain null and no mass is claimed.",
+          "What manufacturing process and physical production tolerances, if any, apply? They are not specified; process remains null and digital comparison tolerances are not manufacturing tolerances."
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/chiral-keyplate/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/chiral-keyplate/verify.json engine bbox.max_error = 0.4 (engine bbox differs: zoo kcl analyze can include cut-tool extents; disclosed, not gating)"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -40.0,
+            -40.0,
+            0.0
+          ],
+          "expected_max": [
+            40.0,
+            40.0,
+            8.0
+          ],
+          "measured_min": [
+            -40.0,
+            -40.0,
+            0.0
+          ],
+          "measured_max": [
+            40.0,
+            40.0,
+            8.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -40.0,
+            -40.0,
+            0.0
+          ],
+          "expected_max": [
+            40.0,
+            40.0,
+            8.0
+          ],
+          "measured_min": [
+            -40.0,
+            -40.0,
+            0.0
+          ],
+          "measured_max": [
+            40.0,
+            40.0,
+            8.4
+          ],
+          "max_error": 0.4,
+          "tolerance": 0.05,
+          "ok": false
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/chiral-keyplate/inspect.json volume = 49664.0 vs 49664.0",
+        "results/chiral-keyplate/inspect.json surface_area = 16064.0 vs 16064.0",
+        "results/chiral-keyplate/inspect.json center_of_mass = [-0.0, -0.0, 3.9381] vs [0.0, 0.0, 3.9381443298969074]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 49664.0,
+          "measured": 49664.0,
+          "error": 0.0,
+          "band": 99.328,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 16064.0,
+          "measured": 16064.0,
+          "error": 0.0,
+          "band": 32.128,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            0.0,
+            0.0,
+            3.9381443298969074
+          ],
+          "measured": [
+            -0.0,
+            -0.0,
+            3.9381
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section and named face verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/chiral-keyplate/inspect.json features: 6/6 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": []
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/chiral-keyplate/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/chiral-keyplate/inspect.json agreement kcl=49664.00150389442 step=49664.00000000001 stl=49664.0 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 49664.00150389442,
+        "step": 49664.00000000001,
+        "stl": 49664.0,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "kcl_vs_step_rel": 3.028137909036418e-08,
+        "stl_vs_step_rel": 1.465036568577526e-16,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/chiral-keyplate/edit.json 2/2 edit tests ok; restore.ok = True"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, or the deliverable changed",
+      "knob": "make features derive from the named constants",
+      "details": {
+        "tests": [
+          {
+            "parameter": "plateThickness",
+            "delta": 2.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 12800.0,
+                "measured": 12799.999999999978,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  2.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  2.0
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          },
+          {
+            "parameter": "slotLength",
+            "delta": 2.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -192.0,
+                "measured": -192.00000000000728,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "82d9bdc009ce077b0a4512c6965c2cdc2d178e8ef4d68a176fdae746d1304f44",
+          "re_export_sha256": "82d9bdc009ce077b0a4512c6965c2cdc2d178e8ef4d68a176fdae746d1304f44",
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/chiral-keyplate/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=12",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 12,
+          "sketch_blocks": 5,
+          "feature_ops": 6,
+          "parameters": {
+            "plateWidth": {
+              "found": true,
+              "value": 80.0,
+              "unit": "mm",
+              "expected": 80.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "plateHeight": {
+              "found": true,
+              "value": 80.0,
+              "unit": "mm",
+              "expected": 80.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "plateThickness": {
+              "found": true,
+              "value": 8.0,
+              "unit": "mm",
+              "expected": 8.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "slotLength": {
+              "found": true,
+              "value": 16.0,
+              "unit": "mm",
+              "expected": 16.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "slotWidth": {
+              "found": true,
+              "value": 6.0,
+              "unit": "mm",
+              "expected": 6.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "slotDepth": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "slotCentreX": {
+              "found": true,
+              "value": 20.0,
+              "unit": "mm",
+              "expected": 20.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "slotCentreY": {
+              "found": true,
+              "value": 8.0,
+              "unit": "mm",
+              "expected": 8.0,
+              "expected_unit": "mm",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "lines": 237,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/chiral-keyplate/export.json step.deterministic = True sha256 82d9bdc009ce; stl=present; glb=present",
+        "results/chiral-keyplate/inspect.json valid = True solids = 1 (expected 1)",
+        "results/chiral-keyplate/inspect.json mesh watertight = True components = 1 void_shells = 0"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/chiral-keyplate/export/chiral-keyplate.step",
+            "sha256": "82d9bdc009ce077b0a4512c6965c2cdc2d178e8ef4d68a176fdae746d1304f44",
+            "bytes": 29290,
+            "deterministic": true,
+            "second_sha256": "82d9bdc009ce077b0a4512c6965c2cdc2d178e8ef4d68a176fdae746d1304f44"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/chiral-keyplate/export/chiral-keyplate.stl",
+            "sha256": "58fd901a7d0f29226cda5fa28677cd9776d8cd0a9e27bdec2e96d22b0d26e9d4",
+            "bytes": 10644
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/chiral-keyplate/export/chiral-keyplate.glb",
+            "sha256": "660f06ed2b1e4eea4686517524186cc2b4c5965450e630227385b48e5084db99",
+            "bytes": 31136
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 84,
+          "vertices": 44,
+          "watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 49664.0,
+          "surface_area": 16064.0,
+          "bbox_min": [
+            -40.0,
+            -40.0,
+            0.0
+          ],
+          "bbox_max": [
+            40.0,
+            40.0,
+            8.0
+          ],
+          "center_of_mass": [
+            0.0,
+            0.0,
+            3.9381443298969074
+          ]
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0a97b-d54b-7953-928b-9db82a3eafc5; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 13; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 13,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/chiral-keyplate/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/chiral-keyplate/verify.json hygiene.forbidden_imports = [] sketch_blocks = 5 feature_ops = 6 lines = 237"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "sketch_blocks": 5,
+        "feature_ops": 6
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

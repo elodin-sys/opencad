@@ -1,0 +1,1373 @@
+schema_version: 1
+name: gear-pair
+intent: 'Design the spur-gear pair and carrier plate exactly as specified in the attached specification: module
+  2, pressure angle 20 deg, zero profile shift, 20-tooth pinion (bore Ø6) at the origin and 40-tooth wheel (bore
+  Ø8) at (60, 0), face width 8 (z 0..8), 0.10 mm total circular backlash, pinion tooth centred on +x and the wheel
+  phased half a pitch so the pair meshes; carrier 110 x 50 x 5 under the gears with clearance holes on the axes.
+  Three separate solids in one KCL file; the pair must turn through a full pitch without interference. Declare
+  the three solids by contained points, the bores as cylinders, and the gears'' tooth counts and mesh as acceptance
+  items.'
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+frame:
+  origin: 'Intersection of the pinion axis and the common carrier-top / gear-bottom plane: (0,0,0).'
+  axes:
+    x: +x follows the line of centers from the pinion axis (0,0) toward the wheel axis (60,0).
+    y: +y is perpendicular to +x in the carrier top plane, chosen so x cross y = +z; viewed from +z with +x to
+      the right, +y is up.
+    z: +z is upward along both gear axes, from the carrier into the gears; carrier occupies z=-5..0 and gears
+      z=0..8.
+  datums:
+  - name: A
+    description: Carrier top at z=0, coincident with both separate gear bottom faces; establishes axial seating.
+  - name: B
+    description: Pinion bore and its coaxial carrier-hole axis x=y=0, directed along +z; establishes the origin
+      on A.
+  - name: C
+    description: Plane y=0 through both gear axes, with +x directed from datum B to the wheel; sets clocking.
+      Pinion tooth center is +x, wheel tooth centers begin at +4.5 deg.
+envelope:
+  min:
+  - -25
+  - -41.921745526
+  - -5
+  max:
+  - 101.921745526
+  - 41.921745526
+  - 8
+  tolerance: 0.05
+parameters:
+- name: gearModule
+  value: 2
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Module: "2 mm"'
+  description: Common transverse module of both spur gears.
+- name: pressureAngle
+  value: 20
+  unit: deg
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Pressure angle: "20 deg"'
+  description: Common involute pressure angle at the pitch circles.
+- name: profileShift
+  value: 0
+  unit: ''
+  provenance: stated
+  tolerance: 1.0e-06
+  source: 'sources/gear-pair-spec.md — table Profile shift: "0 (both gears)"'
+  description: Common dimensionless profile-shift coefficient.
+- name: pinionTeeth
+  value: 20
+  unit: ''
+  provenance: stated
+  tolerance: 1.0e-06
+  source: 'sources/gear-pair-spec.md — table Pinion: "20 teeth, bore Ø6, axis at (0, 0) parallel to z"'
+  description: Integer pinion tooth count.
+- name: wheelTeeth
+  value: 40
+  unit: ''
+  provenance: stated
+  tolerance: 1.0e-06
+  source: 'sources/gear-pair-spec.md — table Wheel: "40 teeth, bore Ø8, axis at (60, 0) parallel to z"'
+  description: Integer wheel tooth count.
+- name: pinionBoreDiameter
+  value: 6
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Pinion: "bore Ø6"; Carrier plate: "with Ø6 and Ø8 clearance holes
+    on the two gear axes"'
+  description: Shared diameter of pinion bore and its carrier hole; no extra fit allowance.
+- name: wheelBoreDiameter
+  value: 8
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Wheel: "bore Ø8"; Carrier plate: "with Ø6 and Ø8 clearance holes
+    on the two gear axes"'
+  description: Shared diameter of wheel bore and its carrier hole; no extra fit allowance.
+- name: centerDistance
+  value: 60
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Centre distance: "60 mm (= (20 + 40) x 2 / 2)"'
+  description: Wheel x coordinate is pinionAxisX + centerDistance; nominal pitch radii sum to 60.
+- name: gearFaceWidth
+  value: 8
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Face width: "8 mm, both gears from z = 0 to z = 8"'
+  description: Both gears extrude upward from gearBaseZ; keep lower datum and carrier fixed.
+  edit_test:
+    delta: 2
+    expect:
+      volume_delta: 12233.933119816
+      direction: increase
+      tolerance_rel: 0.02
+      bbox_delta:
+      - 0
+      - 0
+      - 2
+    sweep:
+      values:
+      - 6
+      - 8
+      - 10
+    infeasible_deltas:
+    - -8
+- name: addendumFactor
+  value: 1
+  unit: ''
+  provenance: stated
+  tolerance: 1.0e-06
+  source: 'sources/gear-pair-spec.md — table Addendum / dedendum: "1.0 m / 1.25 m"'
+  description: Tip radius is pitch radius + gearModule*(addendumFactor + profileShift).
+- name: dedendumFactor
+  value: 1.25
+  unit: ''
+  provenance: stated
+  tolerance: 1.0e-06
+  source: 'sources/gear-pair-spec.md — table Addendum / dedendum: "1.0 m / 1.25 m"'
+  description: Root radius is pitch radius - gearModule*(dedendumFactor - profileShift).
+- name: totalBacklash
+  value: 0.1
+  unit: mm
+  provenance: stated
+  tolerance: 0.001
+  source: 'sources/gear-pair-spec.md — table Circular backlash: "0.10 mm total: thin each tooth by 0.05 mm at
+    its pitch circle"'
+  description: 'Split equally: each gear tooth loses totalBacklash/2 of circular pitch thickness.'
+  edit_test:
+    delta: 0.05
+    expect:
+      volume_delta: -53.55
+      direction: decrease
+      tolerance_rel: 0.02
+      bbox_delta:
+      - -0.00080288
+      - -0.00160576
+      - 0
+    sweep:
+      values:
+      - 0.08
+      - 0.1
+      - 0.15
+    infeasible_deltas:
+    - 6.5
+- name: pinionPhase
+  value: 0
+  unit: deg
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Tooth phase: "pinion has a tooth centred on +x"'
+  description: Tooth-center angle measured counterclockwise from +x, viewed from +z.
+- name: pinionAxisX
+  value: 0
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Pinion: "axis at (0, 0) parallel to z"'
+  description: Pinion shaft axis x position in the stated source frame.
+- name: pinionAxisY
+  value: 0
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Pinion: "axis at (0, 0) parallel to z"'
+  description: Pinion shaft axis y position in the stated source frame.
+- name: wheelAxisY
+  value: 0
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Wheel: "axis at (60, 0) parallel to z"'
+  description: Wheel shaft axis y position in the stated source frame.
+- name: gearBaseZ
+  value: 0
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Face width: "from z = 0 to z = 8"; Frame: "gear bottoms at z = 0,
+    carrier top at z = 0"'
+  description: Shared carrier-top / gear-bottom datum; carrier extends downward.
+- name: carrierLength
+  value: 110
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Carrier plate: "110 x 50 x 5 mm"'
+  description: Plate extent along +x from carrierMinX.
+- name: carrierWidth
+  value: 50
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Carrier plate: "110 x 50 x 5 mm"'
+  description: Plate extent along +y from carrierMinY.
+- name: carrierThickness
+  value: 5
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Carrier plate: "110 x 50 x 5 mm"'
+  description: Plate thickness below gearBaseZ.
+- name: carrierMinX
+  value: -25
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Carrier plate: "corner at (-25, -25, -5) to (85, 25, 0)"'
+  description: Plate minimum x; wheel intentionally overhangs the plate.
+- name: carrierMinY
+  value: -25
+  unit: mm
+  provenance: stated
+  tolerance: 0.01
+  source: 'sources/gear-pair-spec.md — table Carrier plate: "corner at (-25, -25, -5) to (85, 25, 0)"'
+  description: Plate minimum y.
+- name: wheelPhase
+  value: 4.5
+  unit: deg
+  provenance: derived
+  tolerance: 0.01
+  formula: 180 / wheelTeeth
+  description: Half a wheel pitch from a tooth center on +x; 180/wheelTeeth deg equals pi/wheelTeeth rad. With
+    40 teeth, a tooth space is centered on -x toward the pinion.
+features:
+- id: carrierPlate
+  kind: extrude
+  description: Rectangular carrier from (-25,-25,-5) to (85,25,0), with axis holes handled as separate features.
+  parameters:
+  - carrierLength
+  - carrierWidth
+  - carrierThickness
+  - carrierMinX
+  - carrierMinY
+  - gearBaseZ
+  - pinionBoreDiameter
+  - wheelBoreDiameter
+  verify:
+  - method: solid
+    points:
+    - - 30
+      - 0
+      - -2.5
+  - method: section
+    section: carrierMidsection
+  - method: count
+    section: carrierMidsection
+    count: 1
+  - method: face
+    face: carrierTop
+  - method: face
+    face: carrierBottom
+  - method: face
+    face: carrierLeft
+  - method: face
+    face: carrierRight
+  - method: face
+    face: carrierFront
+  - method: face
+    face: carrierBack
+  - method: dimension
+    dimension: carrierLength
+  - method: dimension
+    dimension: carrierWidth
+  - method: dimension
+    dimension: carrierThickness
+- id: pinionGear
+  kind: pattern
+  count: 20
+  description: 20-tooth involute spur pinion; exact source phase, pressure angle, profile shift, root/tip radii,
+    and equally split circular backlash. Tooth count and motion use acceptance.gears/meshes; feature count probes
+    only count section regions.
+  parameters:
+  - gearModule
+  - pressureAngle
+  - profileShift
+  - gearFaceWidth
+  - gearBaseZ
+  - addendumFactor
+  - dedendumFactor
+  - totalBacklash
+  - pinionAxisX
+  - pinionAxisY
+  - pinionPhase
+  - pinionTeeth
+  - pinionBoreDiameter
+  verify:
+  - method: section
+    section: gearMidsection
+  - method: face
+    face: pinionBottom
+  - method: face
+    face: pinionTop
+  - method: dimension
+    dimension: pinionFaceWidth
+  - method: solid
+    points:
+    - - 21.5
+      - 0
+      - 4
+  - method: void
+    points:
+    - - -21.235299323
+      - -3.363340998
+      - 4
+- id: wheelGear
+  kind: pattern
+  count: 40
+  description: 40-tooth involute spur wheel; exact source phase, pressure angle, profile shift, root/tip radii,
+    and equally split circular backlash. Tooth count and motion use acceptance.gears/meshes; feature count probes
+    only count section regions.
+  parameters:
+  - gearModule
+  - pressureAngle
+  - profileShift
+  - gearFaceWidth
+  - gearBaseZ
+  - addendumFactor
+  - dedendumFactor
+  - totalBacklash
+  - pinionAxisX
+  - centerDistance
+  - wheelAxisY
+  - wheelPhase
+  - wheelTeeth
+  - wheelBoreDiameter
+  verify:
+  - method: section
+    section: gearMidsection
+  - method: face
+    face: wheelBottom
+  - method: face
+    face: wheelTop
+  - method: dimension
+    dimension: wheelFaceWidth
+  - method: solid
+    points:
+    - - 101.37206935
+      - 3.256052473
+      - 4
+  - method: void
+    points:
+    - - 101.5
+      - 0
+      - 4
+- id: pinionBore
+  kind: hole
+  description: Through hole in pinion; the axis point is strictly within this body's axial extent, distinguishing
+    touching coaxial holes.
+  parameters:
+  - pinionBoreDiameter
+  - pinionAxisX
+  - pinionAxisY
+  - gearBaseZ
+  - gearFaceWidth
+  verify:
+  - method: cylinder
+    cylinder: pinionBore
+  - method: void
+    points:
+    - - 0
+      - 0
+      - 4
+  - method: section
+    section: gearMidsection
+- id: wheelBore
+  kind: hole
+  description: Through hole in wheel; the axis point is strictly within this body's axial extent, distinguishing
+    touching coaxial holes.
+  parameters:
+  - wheelBoreDiameter
+  - pinionAxisX
+  - wheelAxisY
+  - gearBaseZ
+  - gearFaceWidth
+  - centerDistance
+  verify:
+  - method: cylinder
+    cylinder: wheelBore
+  - method: void
+    points:
+    - - 60
+      - 0
+      - 4
+  - method: section
+    section: gearMidsection
+- id: carrierPinionHole
+  kind: hole
+  description: Through hole in carrier; the axis point is strictly within this body's axial extent, distinguishing
+    touching coaxial holes.
+  parameters:
+  - pinionBoreDiameter
+  - pinionAxisX
+  - pinionAxisY
+  - gearBaseZ
+  - carrierThickness
+  verify:
+  - method: cylinder
+    cylinder: carrierPinionHole
+  - method: void
+    points:
+    - - 0
+      - 0
+      - -2.5
+  - method: section
+    section: carrierMidsection
+- id: carrierWheelHole
+  kind: hole
+  description: Through hole in carrier; the axis point is strictly within this body's axial extent, distinguishing
+    touching coaxial holes.
+  parameters:
+  - wheelBoreDiameter
+  - pinionAxisX
+  - wheelAxisY
+  - gearBaseZ
+  - carrierThickness
+  - centerDistance
+  verify:
+  - method: cylinder
+    cylinder: carrierWheelHole
+  - method: void
+    points:
+    - - 60
+      - 0
+      - -2.5
+  - method: section
+    section: carrierMidsection
+- id: assemblyAndMesh
+  kind: other
+  description: Exactly three separate solids in one KCL file; gear bottoms contact carrier top at z=0, 60 mm shaft
+    spacing, no fusion. Tooth counts, ratio, full-pitch motion, and flank-gap band are acceptance.gears, acceptance.meshes,
+    acceptance.solids, and acceptance.clearances.
+  parameters:
+  - centerDistance
+  - gearFaceWidth
+  - gearBaseZ
+  - carrierThickness
+  - pinionPhase
+  - wheelPhase
+  - totalBacklash
+  verify:
+  - method: bbox
+  - method: solid
+    points:
+    - - 0
+      - 10
+      - 4
+    - - 60
+      - 10
+      - 4
+    - - 30
+      - 0
+      - -2.5
+  - method: dimension
+    dimension: pinionSeat
+  - method: dimension
+    dimension: wheelSeat
+  - method: dimension
+    dimension: assemblySpanX
+  - method: dimension
+    dimension: assemblySpanY
+  - method: dimension
+    dimension: assemblySpanZ
+- id: analyticToothWitnesses
+  kind: profile
+  description: Analytically derived witnesses for addendum, dedendum, tooth phase, pressure-angle flanks, zero
+    shift and circular-backlash thinning. Sparse point checks do not replace the source whole-profile deviation
+    requirement.
+  parameters:
+  - gearModule
+  - pressureAngle
+  - profileShift
+  - addendumFactor
+  - dedendumFactor
+  - pinionTeeth
+  - wheelTeeth
+  - totalBacklash
+  - pinionPhase
+  - wheelPhase
+  verify:
+  - method: solid
+    points:
+    - - -17.037623875
+      - -2.698494522
+      - 4
+    - - 97.25
+      - 0
+      - 4
+    note: Material 0.25 mm inside the stated root circles, along tooth-space centerlines.
+  - method: void
+    points:
+    - - -17.531468046
+      - -2.776711754
+      - 4
+    - - 97.75
+      - 0
+      - 4
+    note: Void 0.25 mm outside the stated root circles, along tooth-space centerlines; probes avoid the unspecified
+      root-transition corners.
+  - method: solid
+    points:
+    - - 21.75
+      - 0
+      - 4
+    - - 101.621298683
+      - 3.275667247
+      - 4
+    note: Material 0.25 mm inside each stated tip radius on a tooth centerline.
+  - method: void
+    points:
+    - - -22.25
+      - 0
+      - 4
+    - - 102.11975735
+      - 3.314896795
+      - 4
+    note: Void 0.25 mm beyond each stated tip circle, away from the other body.
+  - method: solid
+    points:
+    - - -19.94144516
+      - 1.529302109
+      - 4
+    - - -19.94144516
+      - -1.529302109
+      - 4
+    - - 58.389639
+      - 39.967571073
+      - 4
+    - - 55.338229184
+      - 39.727419912
+      - 4
+    note: Both flanks of a remote tooth on each gear, at the pitch radius, bracketed by +/-0.015 mm tangential
+      offsets from the analytic flank. Tooth thickness is pi*gearModule/2 - totalBacklash/2 = 3.091592654 mm.
+      Pinion tooth center 180 deg; wheel tooth center 94.5 deg. These reject an unthinned standard tooth; they
+      do not directly measure circular backlash to 0.001 mm.
+  - method: solid
+    points:
+    - - -19.22913108
+      - 1.579005686
+      - 4
+    - - -19.22913108
+      - -1.579005686
+      - 4
+    - - -21.68822364
+      - 0.714811393
+      - 4
+    - - -21.68822364
+      - -0.714811393
+      - 4
+    - - 58.873566574
+      - 38.071044208
+      - 4
+    - - 55.156941727
+      - 37.778539489
+      - 4
+    - - 57.481917782
+      - 41.623902531
+      - 4
+    - - 55.975667522
+      - 41.505358065
+      - 4
+    note: Both flanks at r=baseRadius+0.5 and r=tipRadius-0.3, bracketed by +/-0.12 mm tangential offsets. Derived
+      from the 20 deg involute with zero profile shift. These sparse witnesses supplement, but cannot replace,
+      the evaluator-only whole-profile p95 <= 0.10 mm comparison.
+  - method: void
+    points:
+    - - -19.939128773
+      - 1.559212545
+      - 4
+    - - -19.939128773
+      - -1.559212545
+      - 4
+    - - 58.419615128
+      - 39.968767602
+      - 4
+    - - 55.308434933
+      - 39.723912411
+      - 4
+    note: Both flanks of a remote tooth on each gear, at the pitch radius, bracketed by +/-0.015 mm tangential
+      offsets from the analytic flank. Tooth thickness is pi*gearModule/2 - totalBacklash/2 = 3.091592654 mm.
+      Pinion tooth center 180 deg; wheel tooth center 94.5 deg. These reject an unthinned standard tooth; they
+      do not directly measure circular backlash to 0.001 mm.
+  - method: void
+    points:
+    - - -19.208002349
+      - 1.818072275
+      - 4
+    - - -19.208002349
+      - -1.818072275
+      - 4
+    - - -21.678991598
+      - 0.95463254
+      - 4
+    - - -21.678991598
+      - -0.95463254
+      - 4
+    - - 59.113482367
+      - 38.077386279
+      - 4
+    - - 54.918987578
+      - 37.747272379
+      - 4
+    - - 57.721520193
+      - 41.637705626
+      - 4
+    - - 55.736855734
+      - 41.481509145
+      - 4
+    note: Both flanks at r=baseRadius+0.5 and r=tipRadius-0.3, bracketed by +/-0.12 mm tangential offsets. Derived
+      from the 20 deg involute with zero profile shift. These sparse witnesses supplement, but cannot replace,
+      the evaluator-only whole-profile p95 <= 0.10 mm comparison.
+interfaces:
+- name: carrierSeatingDatum
+  description: Carrier seating plane and plan dimensions remain fixed when gear face width or backlash changes.
+  must_not_change: true
+  checks:
+  - carrierTop
+  - carrierLength
+  - carrierWidth
+- name: pinionAxisAndSeat
+  description: Pinion alignment is pinned by the Ø6 carrier cylinder axis and pinion bottom-face centroid at (0,0);
+    axial gear length may follow gearFaceWidth.
+  must_not_change: true
+  checks:
+  - carrierPinionHole
+  - pinionBottom
+- name: wheelAxisAndSeat
+  description: Wheel alignment is pinned by the Ø8 carrier cylinder axis and wheel bottom-face centroid at (60,0);
+    axial gear length may follow gearFaceWidth.
+  must_not_change: true
+  checks:
+  - carrierWheelHole
+  - wheelBottom
+- name: gearSectionTopology
+  description: At z=4 the assembly retains two gear regions and two bores through the declared face-width and
+    backlash sweeps; small analytic area changes remain inside the section band.
+  must_not_change: true
+  checks:
+  - gearMidsection
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 76043.033397564
+    tolerance_rel: 0.01
+    provenance: derived
+    note: Analytic radial-root construction estimate, not a reference-model measurement. For each gear, Rp=m*N/2,
+      Rb=Rp*cos(alpha), Ra=Rp+m, Rf=Rp-1.25*m, h0=(pi*m/2-totalBacklash/2)/(2*Rp)+tan(alpha)-alpha, T=sqrt((Ra/Rb)^2-1),
+      F(T)=T^3/3-((1+T^2)*atan(T)-T)/2, A=pi*Rf^2+N*(h0*(Ra^2-Rf^2)-2*Rb^2*F(T))-pi*D^2/4. Angles in these formulas
+      are radians. Sharp radial root-to-base extensions and circular tip/root arcs provide the provisional estimate;
+      the unspecified root transition is recorded in open_questions. Total V=gearFaceWidth*(A_pinion+A_wheel)+carrierThickness*(carrierLength*carrierWidth-pi*(pinionBoreDiameter^2+wheelBoreDiameter^2)/4).
+  surface_area:
+    expected: 31468.596211209
+    tolerance_rel: 0.03
+    provenance: derived
+    note: Analytic radial-root construction estimate, not a reference-model measurement. For each gear, Rp=m*N/2,
+      Rb=Rp*cos(alpha), Ra=Rp+m, Rf=Rp-1.25*m, h0=(pi*m/2-totalBacklash/2)/(2*Rp)+tan(alpha)-alpha, T=sqrt((Ra/Rb)^2-1),
+      F(T)=T^3/3-((1+T^2)*atan(T)-T)/2, A=pi*Rf^2+N*(h0*(Ra^2-Rf^2)-2*Rb^2*F(T))-pi*D^2/4. Angles in these formulas
+      are radians. Sharp radial root-to-base extensions and circular tip/root arcs provide the provisional estimate;
+      the unspecified root transition is recorded in open_questions. Gear outer perimeter P=N*(2*(Rb-Rf)+Rb*T^2+2*Ra*(h0-T+atan(T))+Rf*(2*pi/N-2*h0)).
+      Gear surface=2*A+gearFaceWidth*(P+pi*D). Carrier surface=2*A_carrier+carrierThickness*(2*(carrierLength+carrierWidth)+pi*(pinionBoreDiameter+wheelBoreDiameter)).
+      Sum all three bodies; touching faces are counted once per body, not removed as if fused.
+  center_of_mass:
+    expected:
+    - 41.729506395
+    - 0
+    - 1.682924417
+    tolerance: 0.15
+    provenance: derived
+    note: Geometric centroid with uniform unit density, not a material/mass claim. Vp=9547.100925818, Vw=39388.631553445,
+      Vc=27107.300918301 mm3 using the radial-root estimate above. Carrier xc=(110*50*30-pi*3^2*0-pi*4^2*60)/(110*50-pi*(3^2+4^2))=29.878310559
+      mm. COM=((Vp*0+Vw*60+Vc*xc)/(Vp+Vw+Vc),0,((Vp+Vw)*4+Vc*(-2.5))/(Vp+Vw+Vc)).
+  solid_count: 3
+  sections:
+  - id: gearMidsection
+    plane: z
+    at: 4
+    expect:
+      area: 6116.966559908
+      area_tolerance_rel: 0.02
+      loops: 2
+      holes: 2
+    description: Two disjoint annular toothed regions; each has one central bore. Area uses the analytic radial-root
+      estimate. Tooth counts are checked separately in acceptance.gears; loops do not count teeth.
+  - id: carrierMidsection
+    plane: z
+    at: -2.5
+    expect:
+      area: 5421.46018366
+      area_tolerance_rel: 0.002
+      loops: 1
+      holes: 2
+    description: One rectangular plate region with two through-hole loops; area=110*50-pi*(3^2+4^2).
+  faces:
+  - name: carrierTop
+    plane: z
+    at: 0
+    normal: +
+    area: 5421.46018366
+    area_tolerance_rel: 0.002
+    tolerance: 0.02
+    center:
+    - 29.878310559
+    - 0
+    mode: one
+  - name: carrierBottom
+    plane: z
+    at: -5
+    normal: '-'
+    area: 5421.46018366
+    area_tolerance_rel: 0.002
+    tolerance: 0.02
+    center:
+    - 29.878310559
+    - 0
+    mode: one
+  - name: carrierLeft
+    plane: x
+    at: -25
+    normal: '-'
+    area: 250
+    area_tolerance_rel: 0.002
+    tolerance: 0.02
+    center:
+    - 0
+    - -2.5
+    mode: one
+  - name: carrierRight
+    plane: x
+    at: 85
+    normal: +
+    area: 250
+    area_tolerance_rel: 0.002
+    tolerance: 0.02
+    center:
+    - 0
+    - -2.5
+    mode: one
+  - name: carrierFront
+    plane: y
+    at: -25
+    normal: '-'
+    area: 550
+    area_tolerance_rel: 0.002
+    tolerance: 0.02
+    center:
+    - 30
+    - -2.5
+    mode: one
+  - name: carrierBack
+    plane: y
+    at: 25
+    normal: +
+    area: 550
+    area_tolerance_rel: 0.002
+    tolerance: 0.02
+    center:
+    - 30
+    - -2.5
+    mode: one
+  - name: pinionBottom
+    plane: z
+    at: 0
+    normal: '-'
+    area: 1193.387615727
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    center:
+    - 0
+    - 0
+    mode: one
+  - name: pinionTop
+    plane: z
+    at: 8
+    normal: +
+    area: 1193.387615727
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    center:
+    - 0
+    - 0
+    mode: one
+  - name: wheelBottom
+    plane: z
+    at: 0
+    normal: '-'
+    area: 4923.578944181
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    center:
+    - 60
+    - 0
+    mode: one
+  - name: wheelTop
+    plane: z
+    at: 8
+    normal: +
+    area: 4923.578944181
+    area_tolerance_rel: 0.02
+    tolerance: 0.02
+    center:
+    - 60
+    - 0
+    mode: one
+  cylinders:
+  - name: pinionBore
+    point:
+    - 0
+    - 0
+    - 4
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 6
+    radius_tolerance: 0.005
+    axis_tolerance: 0.01
+    length: 8
+    length_tolerance: 0.02
+    t_range:
+    - -4.0
+    - 4.0
+    description: Through hole in pinion; the axis point is strictly within this body's axial extent, distinguishing
+      touching coaxial holes.
+  - name: wheelBore
+    point:
+    - 60
+    - 0
+    - 4
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 8
+    radius_tolerance: 0.005
+    axis_tolerance: 0.01
+    length: 8
+    length_tolerance: 0.02
+    t_range:
+    - -4.0
+    - 4.0
+    description: Through hole in wheel; the axis point is strictly within this body's axial extent, distinguishing
+      touching coaxial holes.
+  - name: carrierPinionHole
+    point:
+    - 0
+    - 0
+    - -2.5
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 6
+    radius_tolerance: 0.005
+    axis_tolerance: 0.01
+    length: 5
+    length_tolerance: 0.02
+    t_range:
+    - -2.5
+    - 2.5
+    description: Through hole in carrier; the axis point is strictly within this body's axial extent, distinguishing
+      touching coaxial holes.
+  - name: carrierWheelHole
+    point:
+    - 60
+    - 0
+    - -2.5
+    direction:
+    - 0
+    - 0
+    - 1
+    kind: hole
+    diameter: 8
+    radius_tolerance: 0.005
+    axis_tolerance: 0.01
+    length: 5
+    length_tolerance: 0.02
+    t_range:
+    - -2.5
+    - 2.5
+    description: Through hole in carrier; the axis point is strictly within this body's axial extent, distinguishing
+      touching coaxial holes.
+  planes: []
+  dimensions:
+  - name: carrierLength
+    axis: x
+    expected: 110
+    tolerance: 0.02
+    description: ''
+    between:
+    - carrierLeft
+    - carrierRight
+  - name: carrierWidth
+    axis: y
+    expected: 50
+    tolerance: 0.02
+    description: ''
+    between:
+    - carrierFront
+    - carrierBack
+  - name: carrierThickness
+    axis: z
+    expected: 5
+    tolerance: 0.02
+    description: ''
+    between:
+    - carrierBottom
+    - carrierTop
+  - name: pinionFaceWidth
+    axis: z
+    expected: 8
+    tolerance: 0.02
+    description: ''
+    between:
+    - pinionBottom
+    - pinionTop
+  - name: wheelFaceWidth
+    axis: z
+    expected: 8
+    tolerance: 0.02
+    description: ''
+    between:
+    - wheelBottom
+    - wheelTop
+  - name: pinionSeat
+    axis: z
+    expected: 0
+    tolerance: 0.01
+    description: Coincident seating planes; carrier and gear remain separate solids.
+    between:
+    - carrierTop
+    - pinionBottom
+  - name: wheelSeat
+    axis: z
+    expected: 0
+    tolerance: 0.01
+    description: Coincident seating planes; carrier and gear remain separate solids.
+    between:
+    - carrierTop
+    - wheelBottom
+  - name: assemblySpanX
+    axis: x
+    expected: 126.921745526
+    tolerance: 0.05
+    description: Full assembly envelope at the specified initial tooth phase; includes wheel overhang.
+  - name: assemblySpanY
+    axis: y
+    expected: 83.843491052
+    tolerance: 0.05
+    description: Full assembly envelope at the specified initial tooth phase; includes wheel overhang.
+  - name: assemblySpanZ
+    axis: z
+    expected: 13
+    tolerance: 0.05
+    description: Full assembly envelope at the specified initial tooth phase; includes wheel overhang.
+  solids:
+  - name: pinion
+    contains_point:
+    - 0
+    - 10
+    - 4
+    volume:
+      expected: 9547.100925818
+      tolerance_rel: 0.02
+      provenance: derived
+      note: gearFaceWidth*A_pinion; analytic radial-root estimate defined in acceptance.volume.note.
+    description: 20-tooth gear only, z=0..8, with its own Ø6 through bore.
+  - name: wheel
+    contains_point:
+    - 60
+    - 10
+    - 4
+    volume:
+      expected: 39388.631553445
+      tolerance_rel: 0.02
+      provenance: derived
+      note: gearFaceWidth*A_wheel; analytic radial-root estimate defined in acceptance.volume.note.
+    description: 40-tooth gear only, z=0..8, with its own Ø8 through bore.
+  - name: carrier
+    contains_point:
+    - 30
+    - 0
+    - -2.5
+    volume:
+      expected: 27107.300918301
+      tolerance_rel: 0.002
+      provenance: derived
+      note: carrierThickness*(carrierLength*carrierWidth-pi*(pinionBoreDiameter^2+wheelBoreDiameter^2)/4).
+    description: 110 x 50 x 5 plate with two axis holes; z=-5..0, touching both gears without fusion.
+  hardware: []
+  clearances:
+  - name: pinionCarrierContact
+    a: pinion
+    b: carrier
+    min_gap: 0
+    max_gap: 0
+    interference_tolerance: 0.001
+    description: Touching at z=0, separate material bodies; zero nominal overlap volume. The 0.001 mm3 threshold
+      is only numerical Boolean tolerance.
+  - name: wheelCarrierContact
+    a: wheel
+    b: carrier
+    min_gap: 0
+    max_gap: 0
+    interference_tolerance: 0.001
+    description: Touching at z=0, separate material bodies; zero nominal overlap volume. The wheel overhang is
+      intentional.
+  - name: initialGearClearance
+    a: pinion
+    b: wheel
+    min_gap: 0
+    max_gap: 0.15
+    interference_tolerance: 0.001
+    description: Initial-pose no-interference and maximum flank-gap check; full-pitch motion is separately required
+      below.
+  passages: []
+  thickness: []
+  probes:
+  - name: bodyMaterial
+    state: solid
+    points:
+    - - 0
+      - 10
+      - 4
+    - - 60
+      - 10
+      - 4
+    - - 30
+      - 0
+      - -2.5
+    description: Interior witnesses for the three material bodies, away from holes, teeth, and contact faces.
+  - name: boresThroughGears
+    state: void
+    points:
+    - - 0
+      - 0
+      - 0.5
+    - - 0
+      - 0
+      - 4
+    - - 0
+      - 0
+      - 7.5
+    - - 60
+      - 0
+      - 0.5
+    - - 60
+      - 0
+      - 4
+    - - 60
+      - 0
+      - 7.5
+    description: The two axes must remain void through the gear thickness.
+  - name: boresThroughCarrier
+    state: void
+    points:
+    - - 0
+      - 0
+      - -4.5
+    - - 0
+      - 0
+      - -2.5
+    - - 0
+      - 0
+      - -0.5
+    - - 60
+      - 0
+      - -4.5
+    - - 60
+      - 0
+      - -2.5
+    - - 60
+      - 0
+      - -0.5
+    description: The two coaxial carrier holes must remain void through the plate.
+  - name: pinionToothPhase
+    state: solid
+    points:
+    - - 21.5
+      - 0
+      - 4
+    description: A pinion tooth is centered on +x; radius 21.5 is inside its addendum.
+  - name: pinionSpacePhase
+    state: void
+    points:
+    - - -21.235299323
+      - -3.363340998
+      - 4
+    description: A pinion tooth space is centered at 189 deg, safely away from the other gear.
+  - name: wheelToothPhase
+    state: solid
+    points:
+    - - 101.37206935
+      - 3.256052473
+      - 4
+    description: A wheel tooth is centered at +4.5 deg.
+  - name: wheelSpacePhase
+    state: void
+    points:
+    - - 101.5
+      - 0
+      - 4
+    description: A wheel tooth space is centered on +x; the even 40-tooth pattern also places a space on -x toward
+      the pinion. A void probe on -x would be occupied by the pinion and is intentionally avoided.
+  - name: rootMaterial
+    state: solid
+    points:
+    - - -17.037623875
+      - -2.698494522
+      - 4
+    - - 97.25
+      - 0
+      - 4
+    description: Material 0.25 mm inside the stated root circles, along tooth-space centerlines.
+  - name: rootSpaces
+    state: void
+    points:
+    - - -17.531468046
+      - -2.776711754
+      - 4
+    - - 97.75
+      - 0
+      - 4
+    description: Void 0.25 mm outside the stated root circles, along tooth-space centerlines; probes avoid the
+      unspecified root-transition corners.
+  - name: tipMaterial
+    state: solid
+    points:
+    - - 21.75
+      - 0
+      - 4
+    - - 101.621298683
+      - 3.275667247
+      - 4
+    description: Material 0.25 mm inside each stated tip radius on a tooth centerline.
+  - name: beyondTips
+    state: void
+    points:
+    - - -22.25
+      - 0
+      - 4
+    - - 102.11975735
+      - 3.314896795
+      - 4
+    description: Void 0.25 mm beyond each stated tip circle, away from the other body.
+  - name: pitchThicknessSolid
+    state: solid
+    points:
+    - - -19.94144516
+      - 1.529302109
+      - 4
+    - - -19.94144516
+      - -1.529302109
+      - 4
+    - - 58.389639
+      - 39.967571073
+      - 4
+    - - 55.338229184
+      - 39.727419912
+      - 4
+    description: Both flanks of a remote tooth on each gear, at the pitch radius, bracketed by +/-0.015 mm tangential
+      offsets from the analytic flank. Tooth thickness is pi*gearModule/2 - totalBacklash/2 = 3.091592654 mm.
+      Pinion tooth center 180 deg; wheel tooth center 94.5 deg. These reject an unthinned standard tooth; they
+      do not directly measure circular backlash to 0.001 mm.
+  - name: involuteFlankSolid
+    state: solid
+    points:
+    - - -19.22913108
+      - 1.579005686
+      - 4
+    - - -19.22913108
+      - -1.579005686
+      - 4
+    - - -21.68822364
+      - 0.714811393
+      - 4
+    - - -21.68822364
+      - -0.714811393
+      - 4
+    - - 58.873566574
+      - 38.071044208
+      - 4
+    - - 55.156941727
+      - 37.778539489
+      - 4
+    - - 57.481917782
+      - 41.623902531
+      - 4
+    - - 55.975667522
+      - 41.505358065
+      - 4
+    description: Both flanks at r=baseRadius+0.5 and r=tipRadius-0.3, bracketed by +/-0.12 mm tangential offsets.
+      Derived from the 20 deg involute with zero profile shift. These sparse witnesses supplement, but cannot
+      replace, the evaluator-only whole-profile p95 <= 0.10 mm comparison.
+  - name: pitchThicknessVoid
+    state: void
+    points:
+    - - -19.939128773
+      - 1.559212545
+      - 4
+    - - -19.939128773
+      - -1.559212545
+      - 4
+    - - 58.419615128
+      - 39.968767602
+      - 4
+    - - 55.308434933
+      - 39.723912411
+      - 4
+    description: Both flanks of a remote tooth on each gear, at the pitch radius, bracketed by +/-0.015 mm tangential
+      offsets from the analytic flank. Tooth thickness is pi*gearModule/2 - totalBacklash/2 = 3.091592654 mm.
+      Pinion tooth center 180 deg; wheel tooth center 94.5 deg. These reject an unthinned standard tooth; they
+      do not directly measure circular backlash to 0.001 mm.
+  - name: involuteFlankVoid
+    state: void
+    points:
+    - - -19.208002349
+      - 1.818072275
+      - 4
+    - - -19.208002349
+      - -1.818072275
+      - 4
+    - - -21.678991598
+      - 0.95463254
+      - 4
+    - - -21.678991598
+      - -0.95463254
+      - 4
+    - - 59.113482367
+      - 38.077386279
+      - 4
+    - - 54.918987578
+      - 37.747272379
+      - 4
+    - - 57.721520193
+      - 41.637705626
+      - 4
+    - - 55.736855734
+      - 41.481509145
+      - 4
+    description: Both flanks at r=baseRadius+0.5 and r=tipRadius-0.3, bracketed by +/-0.12 mm tangential offsets.
+      Derived from the 20 deg involute with zero profile shift. These sparse witnesses supplement, but cannot
+      replace, the evaluator-only whole-profile p95 <= 0.10 mm comparison.
+  cylinder_counts:
+  - name: sixMillimeterHoles
+    diameter: 6
+    radius_tolerance: 0.005
+    kind: hole
+    direction:
+    - 0
+    - 0
+    - 1
+    expected: 2
+    description: Pinion bore plus the separate carrier hole on the same axis.
+  - name: eightMillimeterHoles
+    diameter: 8
+    radius_tolerance: 0.005
+    kind: hole
+    direction:
+    - 0
+    - 0
+    - 1
+    expected: 2
+    description: Wheel bore plus the separate carrier hole on the same axis.
+  gears:
+  - name: pinionTeeth
+    solid: pinion
+    point:
+    - 0
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    at: 4
+    module: 2
+    teeth: 20
+    description: 'Mid-thickness tooth count. Source profile: pressure angle 20 deg, zero shift, pitch/base/tip/root
+      radii 20/18.793852416/22/17.5 mm; tooth center at 0 deg. Analytic probes check the profile and 0.05 mm tooth
+      thinning. Whole-profile p95 <= 0.10 mm remains an evaluator-only check.'
+  - name: wheelTeeth
+    solid: wheel
+    point:
+    - 60
+    - 0
+    - 0
+    direction:
+    - 0
+    - 0
+    - 1
+    at: 4
+    module: 2
+    teeth: 40
+    description: 'Mid-thickness tooth count. Source profile: pressure angle 20 deg, zero shift, pitch/base/tip/root
+      radii 40/37.587704831/42/37.5 mm; tooth pattern rotated +4.5 deg. Analytic probes check the profile and
+      0.05 mm tooth thinning. Whole-profile p95 <= 0.10 mm remains an evaluator-only check.'
+  meshes:
+  - name: fullPitchMesh
+    a: pinion
+    b: wheel
+    axis_a:
+    - - 0
+      - 0
+      - 0
+    - - 0
+      - 0
+      - 1
+    axis_b:
+    - - 60
+      - 0
+      - 0
+    - - 0
+      - 0
+      - 1
+    ratio: 0.5
+    pitch_deg: 18
+    steps: 72
+    backlash_max: 0.15
+    description: Turn pinion theta=0..18 deg and wheel -theta/2=0..-9 deg from the specified initial phase. Axes
+      60 mm apart. Zero interference throughout and flank gap <=0.15 mm. Initial circular backlash is 0.10 mm
+      total, achieved by thinning each tooth 0.05 mm at its own pitch circle; this is distinct from the maximum
+      closest-flank gap. The inspector samples 73 poses at 0.25 deg plus local refinement and uses its fixed 0.001
+      mm3 Boolean interference tolerance. Sampling is evidence, not a proof of the continuous sweep.
+  deviation: null
+  blockout:
+    volume_min: 79362.75412533
+    volume_max: 87716.728243786
+  export_volume_tolerance_rel: 0.002
+references:
+- path: sources/gear-pair-spec.md
+  kind: text
+  role: authoritative
+  sha256: 0acea6d35513df93499f95e7242721b64488c45819f6e58ebd09ed627fb09d87
+  units: mm and deg
+  revision: Unversioned supplied specification; revision identified by SHA-256.
+  note: Only supplied source. No images, coordinate tables, reference mesh, or ingested reference model; evaluator-only
+    involutes are not part of this bundle.
+open_questions:
+- 'Which below-base-circle root transition is intended: radial extension, generated trochoid, or a specified fillet?
+  The root radii are stated, but the transition is not; gear volume, area, and surface estimates provisionally
+  use sharp radial extensions, with no invented fillet radius.'
+- What material, density, manufacturing process, and production fit tolerances are intended? These are unspecified;
+  material, density_kg_m3, and process remain null, and the stated Ø6/Ø8 carrier holes receive no added clearance
+  allowance.
+- How will the evaluator-only involute p95 <= 0.10 mm requirement be reported? No reference geometry is supplied
+  and PartContract has no reference-free per-gear profile-deviation field; analytic probes cannot establish that
+  percentile, so acceptance.deviation remains null.
+- What evidence will certify zero interference between the sampled sweep poses? The required continuous full-pitch
+  motion is retained, but the available inspector uses discrete poses with local refinement and a fixed 0.001
+  mm3 Boolean tolerance.

@@ -1,0 +1,168 @@
+schema_version: 1
+kind: assembly
+name: compound-train
+intent: >-
+  Compound spur-gear train from sources/compound-train-spec.md (authoritative, text only): a 195 x 100 x 5 base plate
+  carrying, on revolute joints about +z at (0, 0), (60, 0) and (120, 0), a motor-driven 20-tooth input pinion, a compound
+  idler (40 teeth over z 0..8 and 15 teeth over z 8..16 on one solid) and a 45-tooth output gear (z 8.5..16.5); module 2,
+  20 deg pressure angle, zero shift, 0.10 mm circular backlash per mesh. The gears are phased at rest (pinion 0 deg, idler
+  4.5 deg, output 6.5 deg) so both meshes engage; the idler follows the pinion at -1/2 and the output follows the idler at
+  -1/3 through meshed gear transmissions. A motion sweep turns the pinion through two pitches; the evaluator measures the
+  train ratio and the output angle after one pinion revolution from the placed geometry. Kinematics only: the spec states
+  no operating case, load or material.
+units: {length: mm, angle: deg}
+frame:
+  origin: pinion axis on the base plate top face (the base plate's own frame)
+  axes:
+    x: from the pinion axis toward the idler axis (60, 0) and the output axis (120, 0)
+    y: completes a right-handed frame
+    z: "up, parallel to every gear axis; plate top face z = 0"
+  datums:
+    - {name: A, description: "base plate top face z = 0, on which the pinion and the idler stand"}
+    - {name: B, description: "pinion axis x = y = 0"}
+    - {name: C, description: "plane y = 0 through the three gear axes"}
+envelope: {min: [-25.0, -50.0, -5.0], max: [170.0, 50.0, 16.5], tolerance: 0.1}
+datum_part: base
+parts:
+  - name: base
+    kind: modelled
+    design: compound-train-base
+    intent: >-
+      Base plate in its own frame, which is the assembly frame (origin on the pinion axis at the plate top face, +x toward
+      the idler and output axes, +z up): a rectangular plate 195 (x) x 100 (y) x 5 (z) mm from corner (-25, -50, -5) to
+      (170, 50, 0); the top face z = 0 is the seat on which the pinion and the idler stand. Three clearance holes through
+      the full thickness (z = -5..0), axes along +z: D6 at (0, 0) on the pinion axis, D8 at (60, 0) on the idler axis and
+      D8 at (120, 0) on the output axis. No other features.
+    description: datum body; the three hole axes are the gear joint axes
+  - name: pinion
+    kind: modelled
+    design: compound-train-pinion
+    intent: >-
+      Input spur pinion in its own frame: axis +z through the origin, bottom face z = 0, top face z = 8 (face width 8).
+      20 teeth, module 2, pressure angle 20 deg, zero profile shift, addendum 1.0 m and dedendum 1.25 m: pitch radius 20,
+      tip radius 22, root radius 17.5, base radius 20 cos 20 deg = 18.794. Involute flanks from the involute equations,
+      12-16 points per flank from the base circle to the tip, a radial flank from the base circle down to the root circle.
+      Every tooth thinned by 0.05 mm at the pitch circle (circular tooth thickness pi m / 2 - 0.05 = 3.0916 mm) for 0.10 mm
+      circular backlash per mesh. A tooth centred on +x. D6 bore through along the axis (z = 0..8). Interfaces: the bottom
+      face stands on the base plate top over its D6 hole; the teeth mesh with the idler's 40-tooth gear at 60 mm centre
+      distance.
+    description: motor-driven input gear
+  - name: idler
+    kind: modelled
+    design: compound-train-idler
+    intent: >-
+      Compound idler, one solid, in its own frame: axis +z through the origin, bottom face z = 0, top face z = 16. A
+      40-tooth spur gear over z = 0..8 (pitch radius 40, tip radius 42, root radius 37.5, base radius 37.588) and a
+      15-tooth spur gear over z = 8..16 (pitch radius 15, tip radius 17, root radius 12.5, base radius 14.095), both module
+      2, pressure angle 20 deg, zero profile shift, addendum 1.0 m and dedendum 1.25 m. Involute flanks from the involute
+      equations, 12-16 points per flank from the base circle to the tip, a radial flank from the base circle down to the
+      root circle; every tooth of both gears thinned by 0.05 mm at its pitch circle (circular tooth thickness 3.0916 mm).
+      Both tooth patterns have a tooth centred on +x. D8 bore through along the axis (z = 0..16). Interfaces: the bottom
+      face stands on the base plate top over its D8 hole at (60, 0); the 40-tooth gear meshes with the pinion and the
+      15-tooth gear with the output gear, each at 60 mm centre distance.
+    description: compound idler, 40 + 15 teeth on one body
+  - name: output
+    kind: modelled
+    design: compound-train-output
+    intent: >-
+      Output spur gear in its own frame: axis +z through the origin, bottom face z = 0, top face z = 8 (face width 8).
+      45 teeth, module 2, pressure angle 20 deg, zero profile shift, addendum 1.0 m and dedendum 1.25 m: pitch radius 45,
+      tip radius 47, root radius 42.5, base radius 42.286 (inside the root circle, so the involute runs from the root
+      circle to the tip, 12-16 points per flank). Every tooth thinned by 0.05 mm at the pitch circle (circular tooth
+      thickness 3.0916 mm). A tooth centred on +x. D8 bore through along the axis (z = 0..8). Interfaces: in the assembly
+      it turns on the axis of the plate's D8 hole at (120, 0) with its bottom face at z = 8.5, 0.5 mm above the idler's
+      40-tooth gear, and meshes with the idler's 15-tooth gear at 60 mm centre distance.
+    description: output gear, held at z = 8.5 on its joint (no shaft in the spec)
+parameters:
+  - {name: gearModule, value: 2.0, unit: mm, provenance: stated, tolerance: 0.001, source: "sources/compound-train-spec.md, Module", description: module of both stages}
+  - {name: pressureAngle, value: 20.0, unit: deg, provenance: stated, tolerance: 0.01, source: "sources/compound-train-spec.md, Pressure angle"}
+  - {name: circularBacklash, value: 0.1, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/compound-train-spec.md, Circular backlash", description: per mesh; every tooth thinned 0.05 mm at its pitch circle}
+  - {name: pinionIdlerCentre, value: 60.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/compound-train-spec.md, Centre distances", formula: "gearModule * (20 + 40) / 2", description: "pinion axis (0, 0) to idler axis (60, 0)"}
+  - {name: idlerOutputCentre, value: 60.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/compound-train-spec.md, Centre distances", formula: "gearModule * (15 + 45) / 2", description: "idler axis (60, 0) to output axis (120, 0)"}
+  - {name: outputOffset, value: 8.5, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/compound-train-spec.md, Output gear and Frame", description: output gear bottom face above the plate top}
+  - {name: axialClearance, value: 0.5, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/compound-train-spec.md, Frame", formula: "outputOffset - 8.0", description: "output bottom face above the top of the idler's 40-tooth gear (z = 8)"}
+  - {name: idlerPhase, value: 4.5, unit: deg, provenance: stated, tolerance: 0.01, source: "sources/compound-train-spec.md, Tooth phase at rest", formula: "360 / 40 / 2", description: idler rest angle about +z; a 40-tooth space toward the pinion}
+  - {name: outputPhase, value: 6.5, unit: deg, provenance: stated, tolerance: 0.01, source: "sources/compound-train-spec.md, Tooth phase at rest", description: "output rest angle about +z; its 45-tooth space at 178.5 deg meets the idler's 15-tooth gear (tooth at 4.5 deg)"}
+  - {name: stage1Ratio, value: -0.5, unit: "", provenance: derived, tolerance: 1.0e-6, formula: "-20 / 40", description: idler angle over pinion angle}
+  - {name: stage2Ratio, value: -0.3333333333333333, unit: "", provenance: derived, tolerance: 1.0e-6, formula: "-15 / 45", description: output angle over idler angle}
+  - {name: overallRatio, value: 0.16666666666666666, unit: "", provenance: derived, tolerance: 1.0e-6, formula: "stage1Ratio * stage2Ratio", description: output angle over pinion angle}
+joints:
+  - name: pinionSpin
+    kind: revolute
+    parent: base
+    child: pinion
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 0.0
+    angle: 0.0
+    drive: {kind: motor, speed: 6.0, description: "motor-driven input; defaulted 6 rpm (the spec states no speed): the output turns at 1 rpm and the 36 deg sweep takes 1 s; both predictions are speed-independent"}
+    description: "pinion on the plate's D6 hole axis, bottom face on the plate top; rest 0 deg puts a tooth on +x toward the idler"
+  - name: idlerSpin
+    kind: revolute
+    parent: base
+    child: idler
+    parent_frame: {origin: [60.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 0.0
+    angle: 4.5
+    drive: {kind: free, description: driven by the pinion through pinionIdler}
+    description: "idler on the plate's D8 hole axis at (60, 0), bottom face on the plate top; rest 4.5 deg puts a 40-tooth space at 180 deg"
+  - name: outputSpin
+    kind: revolute
+    parent: base
+    child: output
+    parent_frame: {origin: [120.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    offset: 8.5
+    angle: 6.5
+    drive: {kind: free, description: driven by the idler through idlerOutput}
+    description: "output on the axis of the plate's D8 hole at (120, 0), bottom face at z = 8.5; rest 6.5 deg puts a 45-tooth space at 178.5 deg"
+transmissions:
+  - name: pinionIdler
+    kind: gear
+    driver: pinionSpin
+    driven: idlerSpin
+    ratio: -0.5
+    mesh: {pitch_deg: 18.0, steps: 12, backlash_max: 0.15}
+    description: "20-tooth pinion -> the idler's 40-tooth gear (z = 0..8), opposite sense; mesh sweep through one pinion pitch (360 / 20)"
+  - name: idlerOutput
+    kind: gear
+    driver: idlerSpin
+    driven: outputSpin
+    ratio: -0.3333333333333333
+    mesh: {pitch_deg: 24.0, steps: 12, backlash_max: 0.15}
+    description: "the idler's 15-tooth gear (z = 8..16) -> 45-tooth output (z = 8.5..16.5), opposite sense; mesh sweep through one 15-tooth pitch (360 / 15)"
+observables:
+  - id: trainRatio
+    quantity: transmission_ratio
+    unit: ""
+    expected: {expected: 0.16666666666666666, tolerance: 1.0e-5, provenance: derived, note: "(-20/40) x (-15/45) = +1/6; the spec: the output turns in the pinion's sense at one sixth of its speed"}
+    description: whole train, output angle over pinion angle
+  - id: outputAt360
+    quantity: joint_value
+    unit: deg
+    joint: outputSpin
+    at: 360.0
+    expected: {expected: 60.0, tolerance: 1.0e-3, provenance: derived, note: "360 deg x (+1/6)"}
+    description: output gear angle from rest after the pinion has turned one revolution
+acceptance:
+  solid_count: 4
+  clearances:
+    - {name: pinionIdlerMesh, a: pinion, b: idler, min_gap: 0.0, max_gap: 0.15, description: "first mesh: no interference, flank gap at most 0.15 mm"}
+    - {name: idlerOutputMesh, a: idler, b: output, min_gap: 0.0, max_gap: 0.15, description: "second mesh (15 -> 45 teeth): no interference, flank gap at most 0.15 mm; the output also clears the idler's 40-tooth gear by 0.5 mm axially"}
+    - {name: pinionOutputApart, a: pinion, b: output, min_gap: 0.5, description: "never touch: 0.5 mm apart axially and about 51 mm apart along x"}
+    - {name: pinionSeat, a: pinion, b: base, min_gap: 0.0, max_gap: 0.01, description: pinion bottom face stands on the plate top z = 0}
+    - {name: idlerSeat, a: idler, b: base, min_gap: 0.0, max_gap: 0.01, description: idler bottom face stands on the plate top z = 0}
+    - {name: outputAbovePlate, a: output, b: base, min_gap: 8.4, max_gap: 8.6, description: output bottom face 8.5 mm above the plate top}
+  motions:
+    - {name: pinionTurn, drive: pinionSpin, range: [0.0, 36.0], steps: 24, description: "two pinion pitches (2 x 18 deg); the idler follows through pinionIdler (-18 deg), the output through idlerOutput (+6 deg)"}
+references:
+  - {path: sources/compound-train-spec.md, kind: text, role: authoritative, sha256: e2734c43ae1d2aa36320d0b7680e21616422e902b471b3eb98295e3292296af5}
+open_questions:
+  - "The spec states no motor speed and no operating case: the pinion's motor drive carries a defaulted 6 rpm (animation timing only) and the contract has no operating_cases; both predictions (train ratio, output angle at one pinion revolution) are speed-independent."
+  - "The spec gives no material or density for any part: no mass or centre of mass is predicted."
+  - "The spec gives no shafts, bearings or fasteners: each gear turns on a revolute joint about its plate-hole axis, and the output gear is held at z = 8.5 by its joint alone (nothing supports it physically)."
+  - "The spec does not define the tooth root below the base circle: the drafts use a radial flank from the base circle to the root circle (the 45-tooth base circle, r 42.286, lies inside its root circle, r 42.5, so its involute starts at the root)."
+  - "The 15 -> 45 mesh sits at the involute-interference limit (minimum pinion teeth 14.98 for a 3:1 ratio at 20 deg, full depth): the output's tip reaches 5.124 mm along the line of action against the 15-tooth interference point at 5.130 mm, so only the mesh sweep can confirm zero interference."
+  - "'Zero interference' is checked at the evaluator's default interference tolerance (numerical noise), not a literal 0 mm3."
+  - "The motion sweep turns the pinion 36 deg (two pitches), which turns the idler 18 deg, 0.75 of its 15-tooth pitch; the second mesh's full-pitch coverage comes from the idlerOutput mesh sweep (24 deg of idler rotation)."

@@ -1,0 +1,490 @@
+schema_version: 1
+name: bearing-housing
+intent: >-
+  Cast oval flanged bearing housing (the housing alone, no bearing or screws), one connected solid in
+  millimetres. Flange = convex hull of a D57 circle at the origin and two D22 lobes at (+-38.25, 0),
+  11 thick; D57 boss to z = 26; every side face drafted inward 4 deg about the neutral plane z = 0;
+  every edge of the drafted body rounded r = 1 before any hole is cut; D47 x 14 counterbore from the
+  boss top over a D14 through bore; two D10 through mounting holes at (+-38.25, 0). The authoritative
+  source is sources/bearing-housing-spec.md (parameters, construction and reference measurements); the
+  three renders are illustrative.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: "casting (drafted 4 deg, r = 1 edge rounds), machined bores"
+release_status: reconstruction
+
+frame:
+  origin: "centre of the flat flange bottom face, on the bore axis: (0, 0) in plan at z = 0"
+  axes:
+    x: "along the flange length through both mounting holes (holes at x = +-38.25, y = 0)"
+    y: "across the flange, perpendicular to the mounting-hole line in the bottom plane"
+    z: "up the bore axis, out of the bore, from the flange bottom (z = 0) to the boss top (z = 26)"
+  datums:
+    - name: A
+      description: "flat bottom face of the flange, plane z = 0 (the part sits on it; all material at z >= 0)"
+    - name: B
+      description: "bore axis: the z axis through the origin"
+    - name: C
+      description: "mirror planes x = 0 and y = 0 (mounting holes symmetric on the x axis)"
+
+envelope:
+  min: [-49.1775, -28.4275, 0]
+  max: [49.1775, 28.4275, 26]
+  tolerance: 0.05
+
+parameters:
+  - name: overallHeight
+    value: 26
+    unit: mm
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, A"
+    tolerance: 0.01
+    description: "flange bottom to boss top"
+  - name: flangeThickness
+    value: 11
+    unit: mm
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, A1"
+    tolerance: 0.01
+    description: "flange extrusion height z 0 .. 11"
+  - name: bossDiameter
+    value: 57
+    unit: mm
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, Db2"
+    tolerance: 0.01
+    description: "boss and flange-centre circle diameter at z = 0 (true size at the neutral plane)"
+  - name: flangeLength
+    value: 98.5
+    unit: mm
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, H"
+    tolerance: 0.01
+    description: "flange length over the lobes at z = 0, before the edge round"
+  - name: holeSpacing
+    value: 76.5
+    unit: mm
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, J"
+    tolerance: 0.01
+    description: "mounting-hole (and lobe-centre) spacing; holes at x = +-holeSpacing/2, y = 0"
+  - name: lobeDiameter
+    value: 22
+    unit: mm
+    provenance: derived
+    formula: "flangeLength - holeSpacing"
+    tolerance: 0.01
+    description: "lobe diameter at z = 0; lobe centres = hole centres"
+  - name: draftAngle
+    value: 4
+    unit: deg
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, draft angle; Construction step 3"
+    tolerance: 0.01
+    description: "inward taper of every side face going up, about the neutral plane z = 0"
+  - name: edgeRadius
+    value: 1
+    unit: mm
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, edge round radius; Construction step 4"
+    tolerance: 0.01
+    description: "round on every edge of the drafted body, applied before any hole is cut"
+  - name: counterboreDiameter
+    value: 47
+    unit: mm
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, counterbore diameter"
+    tolerance: 0.01
+    description: "bearing seat diameter"
+  - name: counterboreDepth
+    value: 14
+    unit: mm
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, counterbore depth (floor at z = 12)"
+    tolerance: 0.01
+    description: "counterbore depth from the boss top"
+  - name: boreDiameter
+    value: 14
+    unit: mm
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, through-bore diameter"
+    tolerance: 0.01
+    description: "through bore from the counterbore floor (z = 12) to the bottom face"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: -273.32
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+  - name: mountingHoleDiameter
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "bearing-housing-spec.md, Parameters, mounting-hole diameter"
+    tolerance: 0.01
+    description: "two through holes in the flange at (+-holeSpacing/2, 0)"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: -362.85
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+
+features:
+  - id: flange
+    kind: extrude
+    description: "convex hull of the D57 centre circle and two D22 lobes at (+-38.25, 0), tangent lines between them, extruded z 0 .. 11"
+    parameters: [bossDiameter, flangeLength, holeSpacing, lobeDiameter, flangeThickness]
+    verify:
+      - method: bbox
+      - method: section
+        section: section_flange_z5p5
+      - method: face
+        face: bottom_face
+      - method: face
+        face: flange_top_left
+      - method: face
+        face: flange_top_right
+      - method: solid
+        points: [[46, 0, 5.5], [-46, 0, 5.5]]
+  - id: boss
+    kind: boss
+    description: "D57 circle at z = 0 extruded to z = 26, united with the flange"
+    parameters: [bossDiameter, overallHeight]
+    verify:
+      - method: section
+        section: section_boss_z15
+      - method: face
+        face: boss_top
+      - method: solid
+        points: [[0, 25.3, 20], [0, -25.3, 20]]
+      - method: void
+        points: [[36, 0, 13], [-36, 0, 13]]
+        note: "air above the flange top beside the boss"
+  - id: draft
+    kind: other
+    description: "every side face of the flange + boss union tapers inward 4 deg going up about z = 0 (lobes D20.46 and boss D55.46 at z = 11, boss D53.36 at z = 26); horizontal faces stay horizontal"
+    parameters: [draftAngle]
+    verify:
+      - method: plane
+        plane: draft_flat_pp
+      - method: plane
+        plane: draft_flat_mp
+      - method: plane
+        plane: draft_flat_mm
+      - method: plane
+        plane: draft_flat_pm
+      - method: section
+        section: section_boss_z24
+        note: "boss annulus shrinks from z = 15 to z = 24 by the draft"
+  - id: edgeRounds
+    kind: fillet
+    description: "r = 1 round on every edge of the drafted body (outer bottom edge, flange-top outer edge, concave flange-to-boss edge, boss-top outer edge), before any hole is cut"
+    parameters: [edgeRadius]
+    verify:
+      - method: bbox
+        note: "the bottom round pulls the extremes in from 98.5 x 57 to 98.355 x 56.855"
+      - method: face
+        face: bottom_face
+  - id: counterbore
+    kind: pocket
+    description: "D47 x 14 counterbore from the boss top, floor at z = 12, sharp edges"
+    parameters: [counterboreDiameter, counterboreDepth, overallHeight]
+    verify:
+      - method: cylinder
+        cylinder: counterbore
+      - method: face
+        face: counterbore_floor
+      - method: void
+        points: [[0, 0, 19], [15, 0, 19]]
+      - method: solid
+        points: [[15, 0, 6], [0, -15, 6]]
+        note: "material under the counterbore floor"
+  - id: throughBore
+    kind: hole
+    description: "D14 bore from the counterbore floor (z = 12) through to the bottom face"
+    parameters: [boreDiameter]
+    verify:
+      - method: cylinder
+        cylinder: through_bore
+      - method: void
+        points: [[0, 0, 6]]
+  - id: mountingHoles
+    kind: hole
+    description: "two D10 through holes in the flange at (+-38.25, 0), z 0 .. 11, sharp edges"
+    parameters: [mountingHoleDiameter, holeSpacing]
+    count: 2
+    verify:
+      - method: cylinder
+        cylinder: mounting_hole_left
+      - method: cylinder
+        cylinder: mounting_hole_right
+      - method: void
+        points: [[38.25, 0, 5.5], [-38.25, 0, 5.5]]
+      - method: count
+        section: section_y0
+        count: 4
+
+interfaces:
+  - name: bearingSeat
+    description: "the D47 x 14 counterbore and the boss top that seat the bearing; neither hole edit moves them"
+    must_not_change: true
+    checks: [counterbore, boss_top, section_boss_z15, section_boss_z24]
+  - name: castOutline
+    description: "the drafted outline and overall envelope; fixed in this case (no outline edits), unmoved by the hole edits"
+    must_not_change: true
+    checks: [draft_flat_pp, draft_flat_mp, draft_flat_mm, draft_flat_pm, spanX, spanY, spanZ, mirrorX, mirrorY]
+
+acceptance:
+  bbox_tolerance: 0.05
+  solid_count: 1
+  volume:
+    expected: 46881.3
+    tolerance_rel: 0.005
+    provenance: measured (reference model)
+    note: "spec reference measurement; cross-check: drafted hull + boss without rounds 74850 minus counterbore pi*23.5^2*14, bore pi*7^2*12 and two holes 2*pi*5^2*11 = 46986; the r = 1 rounds remove the remaining ~105"
+  sections:
+    - id: section_flange_z5p5
+      plane: z
+      at: 5.5
+      expect:
+        area: 3321.8
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 3
+      description: "flange mid-thickness: one outline with the bore and both mounting holes"
+    - id: section_boss_z15
+      plane: z
+      at: 15
+      expect:
+        area: 632.4
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "boss annulus between the drafted boss and the counterbore"
+    - id: section_boss_z24
+      plane: z
+      at: 24
+      expect:
+        area: 525.1
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "boss annulus near the top, smaller than at z = 15 by the draft"
+    - id: section_y0
+      plane: y
+      at: 0
+      expect:
+        area: 844.4
+        area_tolerance_rel: 0.01
+        loops: 4
+        holes: 0
+      description: "section through the hole line: two lobe ends and the two halves either side of the bore"
+  faces:
+    - name: bottom_face
+      plane: z
+      at: 0
+      normal: "-"
+      area: 3161.0
+      area_tolerance_rel: 0.02
+      center: [0, 0]
+      mode: one
+    - name: counterbore_floor
+      plane: z
+      at: 12
+      normal: "+"
+      area: 1581.0
+      area_tolerance_rel: 0.001
+      tolerance: 0.01
+      center: [0, 0]
+      mode: one
+    - name: flange_top_left
+      plane: z
+      at: 11
+      normal: "+"
+      area: 369.2
+      area_tolerance_rel: 0.02
+      center: [-34.38, 0]
+      mode: one
+    - name: flange_top_right
+      plane: z
+      at: 11
+      normal: "+"
+      area: 369.2
+      area_tolerance_rel: 0.02
+      center: [34.38, 0]
+      mode: one
+    - name: boss_top
+      plane: z
+      at: 26
+      normal: "+"
+      area: 348.0
+      area_tolerance_rel: 0.02
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: counterbore
+      point: [0, 0, 12]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 47
+      radius_tolerance: 0.02
+      length: 14
+      length_tolerance: 0.05
+      t_range: [0, 14]
+      description: "D47 counterbore, z 12 .. 26"
+    - name: through_bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 14
+      radius_tolerance: 0.02
+      length: 12
+      length_tolerance: 0.05
+      t_range: [0, 12]
+      description: "D14 through bore, z 0 .. 12"
+    - name: mounting_hole_left
+      point: [-38.25, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 10
+      radius_tolerance: 0.02
+      length: 11
+      length_tolerance: 0.05
+      t_range: [0, 11]
+      description: "D10 mounting hole at x = -38.25, z 0 .. 11"
+    - name: mounting_hole_right
+      point: [38.25, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 10
+      radius_tolerance: 0.02
+      length: 11
+      length_tolerance: 0.05
+      t_range: [0, 11]
+      description: "D10 mounting hole at x = +38.25, z 0 .. 11"
+  planes:
+    - name: draft_flat_pp
+      point: [27.79, 17.31, 5.64]
+      normal: [0.4564, 0.8870, 0.0698]
+      area: 311.4
+      area_tolerance_rel: 0.03
+      angle_tolerance_deg: 0.5
+      description: "drafted tangent flat, +x +y quadrant"
+    - name: draft_flat_mp
+      point: [-27.79, 17.31, 5.64]
+      normal: [-0.4564, 0.8870, 0.0698]
+      area: 311.4
+      area_tolerance_rel: 0.03
+      angle_tolerance_deg: 0.5
+      description: "drafted tangent flat, -x +y quadrant"
+    - name: draft_flat_mm
+      point: [-27.79, -17.31, 5.64]
+      normal: [-0.4564, -0.8870, 0.0698]
+      area: 311.4
+      area_tolerance_rel: 0.03
+      angle_tolerance_deg: 0.5
+      description: "drafted tangent flat, -x -y quadrant"
+    - name: draft_flat_pm
+      point: [27.79, -17.31, 5.64]
+      normal: [0.4564, -0.8870, 0.0698]
+      area: 311.4
+      area_tolerance_rel: 0.03
+      angle_tolerance_deg: 0.5
+      description: "drafted tangent flat, +x -y quadrant"
+  dimensions:
+    - name: spanX
+      axis: x
+      expected: 98.355
+      tolerance: 0.05
+      description: "bbox length over the rounded lobes"
+    - name: spanY
+      axis: y
+      expected: 56.855
+      tolerance: 0.05
+      description: "bbox width over the rounded boss/flange centre"
+    - name: spanZ
+      axis: z
+      expected: 26
+      tolerance: 0.05
+      description: "overall height, flange bottom to boss top"
+  probes:
+    - name: flangeMaterial
+      state: solid
+      points: [[46, 0, 5.5], [-46, 0, 5.5]]
+      description: "lobe material outboard of the mounting holes"
+    - name: bossWall
+      state: solid
+      points: [[0, 25.3, 20], [0, -25.3, 20]]
+      description: "boss wall between the counterbore (r 23.5) and the drafted outside (r ~27.1)"
+    - name: underFloor
+      state: solid
+      points: [[15, 0, 6], [0, -15, 6]]
+      description: "material under the counterbore floor, outside the bore"
+    - name: inCounterbore
+      state: void
+      points: [[0, 0, 19], [15, 0, 19]]
+    - name: inBore
+      state: void
+      points: [[0, 0, 6]]
+    - name: inMountingHoles
+      state: void
+      points: [[38.25, 0, 5.5], [-38.25, 0, 5.5]]
+    - name: airBesideBoss
+      state: void
+      points: [[36, 0, 13], [-36, 0, 13]]
+      description: "air above the flange tops beside the boss"
+  cylinder_counts:
+    - name: mountingHoles
+      diameter: 10
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 2
+  symmetry:
+    - name: mirrorX
+      plane: x
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+    - name: mirrorY
+      plane: y
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 72000
+    volume_max: 80000
+
+references:
+  - path: sources/bearing-housing-spec.md
+    kind: text
+    role: authoritative
+    sha256: d286e12f68d057825869c8474013ffee848b9d5b49efbfd8f86c3b16d65b6d35
+    units: mm
+    note: "parameters, construction order and reference measurements"
+  - path: sources/bearing-housing-iso.png
+    kind: image
+    role: illustrative
+    sha256: 993e43deea9ec33e0f0ef390d84558e2f93a65aaec1f2ad424b6f8e1bd52a01e
+    note: "isometric render of the reference: oval flange, drafted boss, counterbore, bore, two holes"
+  - path: sources/bearing-housing-top.png
+    kind: image
+    role: illustrative
+    sha256: c47574c5ab70ca03bd936d2a8b9baa37d16ab4634b9972c8823ec3240b08bb38
+    note: "top view, +x right, +y up: tangent-hull outline, symmetric about x = 0 and y = 0"
+  - path: sources/bearing-housing-section.png
+    kind: image
+    role: illustrative
+    units: mm
+    note: "section y = 0 (x-z plane) with mm axes: four loops, drafted lobe ends and boss walls, floor at z = 12"
+    sha256: fe4ce0ff2989143e3e8525bed3692981ed55f7555f57a5d4c4543b669dd36740
+
+open_questions:
+  - "Surface area and centre of mass are not given by the spec and are not declared (centre of mass is x = y = 0 by symmetry; its z is not computed)."
+  - "Only the hole diameters are edit-tested; the outline parameters (overallHeight, flangeThickness, bossDiameter, flangeLength, holeSpacing, draftAngle, edgeRadius) stay fixed because the drafted, fully rounded tangent hull rebuilds in OpenCascade only at the nominal outline (spec robustness note)."

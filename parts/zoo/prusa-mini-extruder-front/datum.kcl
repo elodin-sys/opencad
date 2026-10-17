@@ -1,0 +1,57 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import plateWidth, plateThickness, bottomZ, lugMaxZ, bodyTopZ, lugNutX, lugBossDiameter, lugWebPeakX, keyBackDepth from "params.kcl"
+
+// Rebuilt directly from the passed blockout; stock only, before feature modules.
+// Envelope stock: the full plate includes the lower-foot stock; the raised
+// primary lug/web block reaches the exact maximum height. All sketches are
+// horizontal so construction bounds stay within the finished envelope.
+envelopeHalfWidth = plateWidth / 2
+lugStockLeftX = lugNutX - (lugBossDiameter / 2)
+webInset = keyBackDepth / 2
+assert(
+  lugStockLeftX,
+  isGreaterThan = -envelopeHalfWidth,
+  isLessThan = lugWebPeakX,
+  error = "Top stock must fit inside the plate",
+)
+assert(
+  webInset,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness / 2,
+  error = "Web must have positive thickness",
+)
+plateProfile = sketch(on = offsetPlane(XY, offset = bottomZ)) {
+  a = line(start = [-envelopeHalfWidth, 0mm], end = [envelopeHalfWidth, 0mm])
+  b = line(start = [envelopeHalfWidth, 0mm], end = [envelopeHalfWidth, plateThickness])
+  c = line(start = [envelopeHalfWidth, plateThickness], end = [-envelopeHalfWidth, plateThickness])
+  d = line(start = [-envelopeHalfWidth, plateThickness], end = [-envelopeHalfWidth, 0mm])
+}
+plateRegion = region(segments = [plateProfile.a, plateProfile.b])
+plateStock = extrude(plateRegion, length = bodyTopZ - bottomZ, method = NEW)
+webProfile = sketch(on = offsetPlane(XY, offset = bodyTopZ - webInset)) {
+  a = line(start = [lugStockLeftX, webInset], end = [lugWebPeakX, webInset])
+  b = line(start = [lugWebPeakX, webInset], end = [lugWebPeakX, plateThickness - webInset])
+  c = line(
+    start = [lugWebPeakX, plateThickness - webInset],
+    end = [
+      lugStockLeftX,
+      plateThickness - webInset
+    ],
+  )
+  d = line(
+    start = [
+      lugStockLeftX,
+      plateThickness - webInset
+    ],
+    end = [lugStockLeftX, webInset],
+  )
+}
+webRegion = region(segments = [webProfile.a, webProfile.b])
+webStock = extrude(webRegion, length = lugMaxZ - bodyTopZ + webInset, method = NEW)
+stockUnion = union([plateStock, webStock], tolerance = 0.001mm)
+export datum = clone(stockUnion)
+hide([plateRegion, webRegion])
+hide(stockUnion)
+// A: y=0; B: y=plateThickness; C: z=bottomZ; D: x=-plateWidth/2.
+datum

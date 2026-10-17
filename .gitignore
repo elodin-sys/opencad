@@ -1,0 +1,76 @@
+scratch
+smoke/out
+_site/
+.venv
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# results/: commit each design's handoff/ (the pipeline's product: print files, viewer, sidecars) and its gate verdict, plus
+# the bake-off log and regression baselines. Everything else is local stage evidence. Ignores go by depth, never re-including
+# every directory, so git and prompt status engines skip worker scratch (downloaded app bundles full of directory symlinks).
+results/*
+!results/*/
+results/*/*
+!results/*/*/
+results/*/*/*
+!results/*/*/handoff/
+!results/*/*/gate_feedback.json
+!results/*/*/parts/
+results/*/*/parts/*/*
+!results/*/*/parts/*/handoff/
+!results/*/*/parts/*/gate_feedback.json
+!results/_bakeoff/published.yaml
+!results/_regress/baseline*.json
+!results/_regress/baselines/*
+/results/_spikes/
+/results/*/sprite-drone/
+/results/*/sprite-aleph/
+
+# designs/: the live bundles are committed; retired versions, ECR source copies and in-flight drafts are local.
+designs/**/.amended/
+designs/.amended-*
+designs/**/ecr/*/sources/
+designs/**/ecr/*/reference/
+designs/.staging-*/
+designs/.codex-draft-*/
+
+# parts/: only the language source and placements.json are the deliverable; worker scratch beside them stays local.
+parts/**
+!parts/**/
+!parts/**/*.py
+!parts/**/*.kcl
+!parts/**/placements.json
+# Zoo assembly KCL imports inputs/*.step, and the Zoo CLI skips gitignored files.
+!parts/zoo/*/inputs/*.step
+parts/**/checkpoint.*
+parts/**/*probe*.py
+parts/**/check-*.py
+parts/**/_check-export/
+parts/**/*verification/
+parts/**/*-check/
+
+# Retired designs kept local in every tree; Sprite (sprite-aleph-v2) carries its own copies of what it borrowed from them.
+/designs/sprite-drone/
+/designs/sprite-aleph/
+/parts/*/sprite-drone/
+/parts/*/sprite-aleph/
+
+# Bulky bundles kept local; the site still reads each one's top-level spec (title, parts list, intent), so that file is committed.
+/designs/sprite-aleph-v2/**
+!/designs/sprite-aleph-v2/assembly.yaml
+/designs/aleph-stack/**
+!/designs/aleph-stack/assembly.yaml
+/designs/aleph-stack-case/**
+!/designs/aleph-stack-case/contract.yaml
+
+# Large external truth downloads live in the cache; pinned subsets are committed.
+truth/cache/
+# Timestamped scorecards are run history; *-latest.json and attempts.yaml stay tracked.
+truth/cases/*/scorecards/*-20*.json
+.DS_Store
+
+# Private design: kept local in every tree (designs/, parts/, results/, logs, zips). Last so no re-include above can override it.
+aleph-radar-devkit*

@@ -1,0 +1,21 @@
+# Stated GPU-3 values used to qualify reduced models (no CAD case exists yet).
+engine:  # NASA TM-79044 Table 1 (dimensions) and Table 2 (dead volumes), cm and cm3
+  cylinder_bore_cm: 6.99
+  displacer_rod_diameter_cm: 0.952
+  crank_radius_cm: 1.38
+  connecting_rod_length_cm: 4.60
+  eccentricity_cm: 2.08
+  displacer_stroke_cm: 3.12
+  expansion_clearance_cm3: 12.5
+  heater_dead_cm3: 80.8
+  regenerator_dead_cm3: 65.5
+  cooler_dead_cm3: 13.13
+  compression_clearance_cm3: 21.18
+  measured_min_working_space_cm3: 233.5
+points:  # NASA TM-79038 Figure 6 labels: helium, heater gas 1200 degF, 3000 rpm, water inlet 56 degF
+  - {gas: helium, mean_pressure_psi: 400, speed_rpm: 3000, heater_gas_F: 1200, water_inlet_F: 56, brake_hp: 1.4}
+  - {gas: helium, mean_pressure_psi: 1000, speed_rpm: 3000, heater_gas_F: 1200, water_inlet_F: 56, brake_hp: 5.2}
+stated_text:  # TM-79038 results text
+  max_helium_output_hp: 5.25
+  min_bsfc_lb_per_bhp_hr: 0.99
+  brake_thermal_efficiency_at_min_bsfc: 0.139

@@ -1,0 +1,58 @@
+# Deliberately wrong parts the scorer must reject (python -m opencad.truth mutate nist-am-test-artifact).
+mutants:
+- id: scaled_2pct
+  op: scale
+  factor: 1.02
+  expect_caught_by:
+  - bbox_size
+  note: whole-part scale error
+- id: hole_shifted_0p7
+  op: shift_hole
+  near:
+  - 60
+  - 0
+  - -5
+  radius: 2.0
+  offset:
+  - 0.7
+  - 0
+  - 0
+  expect_caught_by:
+  - hole_d4_60_0
+  note: 'the +x datum hole 0.7 mm off its axis: the campaign''s canonical evaluator message'
+- id: fine_pin_missing
+  op: cut_box
+  min:
+  - 42.2
+  - 6.85
+  - 0.0
+  max:
+  - 42.66
+  - 7.3
+  - 2.5
+  expect_caught_by:
+  - pin_d0p25_42p43_7p07
+  - count_fine_pins
+  note: "the \xD80.25 pin removed: a visually convincing part missing its smallest feature"
+- id: step_missing
+  op: fill_box
+  min:
+  - -42
+  - 12
+  - 3
+  max:
+  - -32
+  - 22
+  - 7
+  note: the z = 3 tread raised to z = 7 (staircase flattened)
+- id: ramp_flat
+  op: fill_box
+  min:
+  - 9
+  - -46
+  - 1
+  max:
+  - 46
+  - -9
+  - 2
+  note: ramp filled to its top landing level (no slope)

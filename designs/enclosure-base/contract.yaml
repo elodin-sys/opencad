@@ -1,0 +1,595 @@
+schema_version: 1
+name: enclosure-base
+intent: >-
+  Lower body of a two-part box enclosure: one connected solid in millimetres, 100 x 150 x 47,
+  with r = 10 vertical outer corners, an r = 2 bottom edge round and a flat sharp rim at z = 47
+  (the parting plane with the lid). A 94 x 144 cavity with r = 7 corners runs from the 3 mm floor
+  (z = 3) through the open top; four free-standing Ø10 screw posts at (±38, ±63) stand on the
+  floor up to z = 47, each with a Ø4 blind bore that stops at the floor top. The specification
+  sources/enclosure-base-spec.md is authoritative; the three renders are illustrative.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of the 100 x 150 footprint on the flat bottom face (z = 0)"
+  axes:
+    x: "along the 100 mm outer width; mirror plane x = 0"
+    y: "along the 150 mm outer length; mirror plane y = 0"
+    z: "up from the bottom face to the rim at z = 47; all material at z >= 0"
+  datums:
+    - name: A
+      description: "flat bottom face, z = 0, facing -z"
+    - name: B
+      description: "mid-plane x = 0 (symmetry plane across the width)"
+    - name: C
+      description: "mid-plane y = 0 (symmetry plane across the length)"
+    - name: D
+      description: "rim / parting plane z = 47, facing +z, flat with sharp edges"
+
+envelope:
+  min: [-50, -75, 0]
+  max: [50, 75, 47]
+  tolerance: 0.05
+
+parameters:
+  - name: outerWidth
+    value: 100
+    unit: mm
+    provenance: stated
+    source: "enclosure-base-spec.md, Parameters: Outer width (x)"
+    tolerance: 0.01
+    description: "outer footprint extent along x"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 7122.83
+        direction: increase
+        bbox_delta: [10, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [90, 100, 110]
+      infeasible_deltas: [-70]
+  - name: outerLength
+    value: 150
+    unit: mm
+    provenance: stated
+    source: "enclosure-base-spec.md, Parameters: Outer length (y)"
+    tolerance: 0.01
+    description: "outer footprint extent along y"
+  - name: baseHeight
+    value: 47
+    unit: mm
+    provenance: stated
+    source: "enclosure-base-spec.md, Parameters: Height of the base, bottom face to rim"
+    tolerance: 0.01
+    description: "bottom face to rim; lower part of a 50 mm box split 4 mm below its top"
+  - name: wallThickness
+    value: 3
+    unit: mm
+    provenance: stated
+    source: "enclosure-base-spec.md, Parameters: Wall thickness (side walls and floor)"
+    tolerance: 0.01
+    description: "side wall and floor thickness; the floor top is at z = wallThickness"
+  - name: outerCornerRadius
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "enclosure-base-spec.md, Parameters: Outer vertical corner radius"
+    tolerance: 0.01
+    description: "radius of the four vertical outer corners"
+  - name: bottomEdgeRadius
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "enclosure-base-spec.md, Parameters: Outer bottom edge round"
+    tolerance: 0.01
+    description: "round on the bottom perimeter edge; the rim edges stay sharp"
+  - name: innerCornerRadius
+    value: 7
+    unit: mm
+    provenance: derived
+    formula: "outerCornerRadius - wallThickness"
+    source: "enclosure-base-spec.md, Parameters: Inner (cavity) vertical corner radius 7 (= 10 - 3)"
+    tolerance: 0.01
+    description: "radius of the four vertical cavity corners"
+  - name: cavityWidth
+    value: 94
+    unit: mm
+    provenance: derived
+    formula: "outerWidth - 2 * wallThickness"
+    source: "enclosure-base-spec.md, Construction 2"
+    tolerance: 0.01
+    description: "cavity extent along x"
+  - name: cavityLength
+    value: 144
+    unit: mm
+    provenance: derived
+    formula: "outerLength - 2 * wallThickness"
+    source: "enclosure-base-spec.md, Construction 2"
+    tolerance: 0.01
+    description: "cavity extent along y"
+  - name: postInset
+    value: 12
+    unit: mm
+    provenance: stated
+    source: "enclosure-base-spec.md, Parameters: Screw-post inset from the outer faces"
+    tolerance: 0.01
+    description: "distance from each outer face to the post axes; preserved when outerWidth changes"
+  - name: postX
+    value: 38
+    unit: mm
+    provenance: derived
+    formula: "outerWidth / 2 - postInset"
+    source: "enclosure-base-spec.md, Parameters: post axes at x = ±38"
+    tolerance: 0.01
+    description: "|x| of the post axes"
+  - name: postY
+    value: 63
+    unit: mm
+    provenance: derived
+    formula: "outerLength / 2 - postInset"
+    source: "enclosure-base-spec.md, Parameters: post axes at y = ±63"
+    tolerance: 0.01
+    description: "|y| of the post axes"
+  - name: postOuterDiameter
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "enclosure-base-spec.md, Parameters: Screw-post outer diameter"
+    tolerance: 0.01
+    description: "outer diameter of the four screw posts"
+  - name: postBoreDiameter
+    value: 4
+    unit: mm
+    provenance: stated
+    source: "enclosure-base-spec.md, Parameters: Screw-post bore diameter"
+    tolerance: 0.01
+    description: "diameter of the blind bore in each post, from the post top down to z = wallThickness"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: -1244.07
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [3, 4, 5]
+      infeasible_deltas: [6]
+
+features:
+  - id: outerBody
+    kind: extrude
+    description: >-
+      outerWidth x outerLength footprint with outerCornerRadius vertical corners, extruded from
+      z = 0 to baseHeight; flat rim at z = 47 with sharp edges
+    parameters: [outerWidth, outerLength, baseHeight, outerCornerRadius]
+    verify:
+      - method: bbox
+      - method: face
+        face: rim
+      - method: dimension
+        dimension: widthX
+      - method: dimension
+        dimension: lengthY
+      - method: dimension
+        dimension: heightZ
+      - method: solid
+        points: [[0, 73.5, 25], [0, -73.5, 25], [48.5, 0, 25], [-48.5, 0, 25]]
+  - id: bottomRound
+    kind: fillet
+    description: "bottomEdgeRadius round on the bottom perimeter edge"
+    parameters: [bottomEdgeRadius]
+    verify:
+      - method: face
+        face: bottom_face
+      - method: section
+        section: section_floor_z1p5
+  - id: cavity
+    kind: pocket
+    description: >-
+      cavityWidth x cavityLength pocket with innerCornerRadius corners from the floor top
+      z = wallThickness up through the open top; sharp cavity floor edges
+    parameters: [cavityWidth, cavityLength, innerCornerRadius, wallThickness]
+    verify:
+      - method: face
+        face: cavity_floor
+      - method: section
+        section: section_mid_z25
+      - method: count
+        section: section_mid_z25
+        count: 5
+      - method: void
+        points: [[0, 0, 25], [0, 0, 4.5], [20, 30, 45]]
+      - method: solid
+        points: [[0, 0, 1.5], [20, -30, 1.5]]
+  - id: posts
+    kind: boss
+    description: >-
+      four free-standing Ø postOuterDiameter screw posts at (±postX, ±postY) from the floor top
+      z = wallThickness to baseHeight, joined to the floor
+    parameters: [postX, postY, postInset, postOuterDiameter, baseHeight, wallThickness]
+    count: 4
+    verify:
+      - method: cylinder
+        cylinder: post_pp
+      - method: cylinder
+        cylinder: post_mp
+      - method: cylinder
+        cylinder: post_mm
+      - method: cylinder
+        cylinder: post_pm
+      - method: section
+        section: section_posts_x38
+      - method: solid
+        points: [[41.5, 63, 25], [-41.5, 63, 25], [-41.5, -63, 25], [41.5, -63, 25]]
+  - id: bores
+    kind: hole
+    description: >-
+      Ø postBoreDiameter blind bore in each post from its top down to the floor top
+      z = wallThickness; solid floor remains under each bore
+    parameters: [postBoreDiameter, postX, postY, wallThickness]
+    count: 4
+    verify:
+      - method: cylinder
+        cylinder: bore_pp
+      - method: cylinder
+        cylinder: bore_mp
+      - method: cylinder
+        cylinder: bore_mm
+      - method: cylinder
+        cylinder: bore_pm
+      - method: face
+        face: bore_floor_pp
+      - method: face
+        face: bore_floor_mp
+      - method: face
+        face: bore_floor_mm
+      - method: face
+        face: bore_floor_pm
+      - method: void
+        points: [[38, 63, 25], [-38, 63, 25], [-38, -63, 25], [38, -63, 25]]
+      - method: solid
+        points: [[38, 63, 1.5], [-38, 63, 1.5], [-38, -63, 1.5], [38, -63, 1.5]]
+
+interfaces:
+  - name: partingPlane
+    description: >-
+      the rim height and the two mirror planes that locate the lid; neither edit test moves the
+      rim plane or breaks the symmetry
+    must_not_change: true
+    checks: [heightZ, symX, symY]
+
+acceptance:
+  volume:
+    expected: 118431.5
+    tolerance_rel: 0.002
+    provenance: measured (reference model)
+    note: >-
+      spec reference measurement; analytic check: outer rounded prism 14914.16 x 47 minus the
+      bottom-round spandrel ring 412.06 (Pappus) minus cavity 13493.94 x 44 plus four post
+      annuli 65.97 x 44 x 4 = 118431.48
+  surface_area:
+    expected: 80261.3
+    tolerance_rel: 0.005
+    provenance: derived
+    note: >-
+      bottom 13961.06 + bottom round 1319.47 + 183.07 + outer walls 482.83 x 45 + rim 1420.22 +
+      cavity walls 463.98 x 44 + cavity floor 13179.78 + post sides 4 x pi x 10 x 44 + post tops
+      4 x 65.97 + bore walls 4 x pi x 4 x 44 + bore floors 4 x 12.57
+  center_of_mass:
+    expected: [0, 0, 16.21]
+    tolerance: 0.1
+    provenance: derived
+    note: >-
+      x, y = 0 by symmetry; z = sum(V_i z_i) / V with the prism at 23.5, the spandrel ring at
+      0.447, the cavity and the posts at 25: 16.207
+  solid_count: 1
+  sections:
+    - id: section_mid_z25
+      plane: z
+      at: 25
+      expect:
+        area: 1684.1
+        area_tolerance_rel: 0.005
+        loops: 5
+        holes: 5
+      description: "wall ring (cavity hole) plus four post annuli (bore holes)"
+    - id: section_floor_z1p5
+      plane: z
+      at: 1.5
+      expect:
+        area: 14883.5
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "solid floor, no bore breaks through"
+    - id: section_posts_x38
+      plane: x
+      at: 38
+      expect:
+        area: 1240.28
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: >-
+        y-z section through the posts at y = ±63: floor strip 150 x 3 less two r = 2 corners
+        (448.28) + two end walls 3 x 44 (264) + four post-wall strips 3 x 44 (528); the bores
+        open at the top so no hole loops
+  faces:
+    - name: bottom_face
+      plane: z
+      at: 0
+      normal: "-"
+      area: 13961.1
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: cavity_floor
+      plane: z
+      at: 3
+      normal: "+"
+      area: 13179.8
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: bore_floor_pp
+      plane: z
+      at: 3
+      normal: "+"
+      area: 12.57
+      area_tolerance_rel: 0.01
+      center: [38, 63]
+      mode: one
+    - name: bore_floor_mp
+      plane: z
+      at: 3
+      normal: "+"
+      area: 12.57
+      area_tolerance_rel: 0.01
+      center: [-38, 63]
+      mode: one
+    - name: bore_floor_mm
+      plane: z
+      at: 3
+      normal: "+"
+      area: 12.57
+      area_tolerance_rel: 0.01
+      center: [-38, -63]
+      mode: one
+    - name: bore_floor_pm
+      plane: z
+      at: 3
+      normal: "+"
+      area: 12.57
+      area_tolerance_rel: 0.01
+      center: [38, -63]
+      mode: one
+    - name: rim
+      plane: z
+      at: 47
+      normal: "+"
+      area: 1420.2
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: post_top_pp
+      plane: z
+      at: 47
+      normal: "+"
+      area: 65.97
+      area_tolerance_rel: 0.01
+      center: [38, 63]
+      mode: one
+    - name: post_top_mp
+      plane: z
+      at: 47
+      normal: "+"
+      area: 65.97
+      area_tolerance_rel: 0.01
+      center: [-38, 63]
+      mode: one
+    - name: post_top_mm
+      plane: z
+      at: 47
+      normal: "+"
+      area: 65.97
+      area_tolerance_rel: 0.01
+      center: [-38, -63]
+      mode: one
+    - name: post_top_pm
+      plane: z
+      at: 47
+      normal: "+"
+      area: 65.97
+      area_tolerance_rel: 0.01
+      center: [38, -63]
+      mode: one
+  cylinders:
+    - name: bore_pp
+      point: [38, 63, 3]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4
+      radius_tolerance: 0.02
+      length: 44
+      length_tolerance: 0.1
+      t_range: [0, 44]
+      description: "blind bore, z 3 .. 47"
+    - name: bore_mp
+      point: [-38, 63, 3]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4
+      radius_tolerance: 0.02
+      length: 44
+      length_tolerance: 0.1
+      t_range: [0, 44]
+      description: "blind bore, z 3 .. 47"
+    - name: bore_mm
+      point: [-38, -63, 3]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4
+      radius_tolerance: 0.02
+      length: 44
+      length_tolerance: 0.1
+      t_range: [0, 44]
+      description: "blind bore, z 3 .. 47"
+    - name: bore_pm
+      point: [38, -63, 3]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4
+      radius_tolerance: 0.02
+      length: 44
+      length_tolerance: 0.1
+      t_range: [0, 44]
+      description: "blind bore, z 3 .. 47"
+    - name: post_pp
+      point: [38, 63, 3]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 10
+      radius_tolerance: 0.02
+      length: 44
+      length_tolerance: 0.1
+      t_range: [0, 44]
+      description: "free-standing screw post, z 3 .. 47"
+    - name: post_mp
+      point: [-38, 63, 3]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 10
+      radius_tolerance: 0.02
+      length: 44
+      length_tolerance: 0.1
+      t_range: [0, 44]
+      description: "free-standing screw post, z 3 .. 47"
+    - name: post_mm
+      point: [-38, -63, 3]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 10
+      radius_tolerance: 0.02
+      length: 44
+      length_tolerance: 0.1
+      t_range: [0, 44]
+      description: "free-standing screw post, z 3 .. 47"
+    - name: post_pm
+      point: [38, -63, 3]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 10
+      radius_tolerance: 0.02
+      length: 44
+      length_tolerance: 0.1
+      t_range: [0, 44]
+      description: "free-standing screw post, z 3 .. 47"
+  dimensions:
+    - name: widthX
+      axis: x
+      expected: 100
+      tolerance: 0.05
+      description: "bbox extent along x"
+    - name: lengthY
+      axis: y
+      expected: 150
+      tolerance: 0.05
+      description: "bbox extent along y"
+    - name: heightZ
+      axis: z
+      expected: 47
+      tolerance: 0.05
+      description: "bbox extent along z (bottom face to rim)"
+  solids:
+    - name: body
+      contains_point: [0, 0, 1.5]
+      description: "the single connected solid"
+  thickness:
+    - name: min_wall
+      min: 2.9
+      stat: p05
+      description: "p05 of the inward thickness; walls, floor and post walls are all 3"
+  probes:
+    - name: cavityVoid
+      state: void
+      points: [[0, 0, 25], [0, 0, 4.5], [20, 30, 45], [-20, -30, 10]]
+      description: "open cavity above the floor"
+    - name: boreVoid
+      state: void
+      points: [[38, 63, 25], [-38, 63, 25], [-38, -63, 25], [38, -63, 25]]
+      description: "bore axes at mid-height"
+    - name: floorSolid
+      state: solid
+      points: [[0, 0, 1.5], [20, -30, 1.5], [38, 63, 1.5], [-38, 63, 1.5], [-38, -63, 1.5], [38, -63, 1.5]]
+      description: "floor mid-thickness, including under each bore"
+    - name: wallSolid
+      state: solid
+      points: [[0, 73.5, 25], [0, -73.5, 25], [48.5, 0, 25], [-48.5, 0, 25]]
+      description: "side wall mid-thickness"
+    - name: postWallSolid
+      state: solid
+      points: [[41.5, 63, 25], [-41.5, 63, 25], [-41.5, -63, 25], [41.5, -63, 25]]
+      description: "post wall mid-thickness (radius 3.5 from the axis)"
+  cylinder_counts:
+    - name: boreCount
+      diameter: 4
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 4
+    - name: postCount
+      diameter: 10
+      radius_tolerance: 0.02
+      kind: pin
+      direction: [0, 0, 1]
+      expected: 4
+  symmetry:
+    - name: symX
+      plane: x
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+    - name: symY
+      plane: y
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 690000
+    volume_max: 706000
+
+references:
+  - path: sources/enclosure-base-spec.md
+    kind: text
+    role: authoritative
+    sha256: 5fea818692cbc29954c48cebb5413d22ad2b7f42ae80416c72d6d387ef1b2002
+    units: mm
+    note: "specification: parameters, construction and reference measurements"
+  - path: sources/enclosure-base-iso.png
+    kind: image
+    role: illustrative
+    sha256: 2a8fd145c1e633fdafe492ced42153af2857af9dcff05c33c6323383ed0f1382
+    units: mm
+    note: "isometric render of the reference: four posts, open top, bottom round"
+  - path: sources/enclosure-base-top.png
+    kind: image
+    role: illustrative
+    sha256: d2082d6515363d4843797322498e9f62ae0f9a60f9b725bbc8b916171e7deb7b
+    units: mm
+    note: "top view, +x right, +y up: wall ring and four posts with bores"
+  - path: sources/enclosure-base-section.png
+    kind: drawing
+    role: illustrative
+    sha256: d15e879f8de5dee0e38f58a63a70206e7099478c43379d0b2ed5f1ba6728a3d8
+    units: mm
+    note: "section x = 38 (y-z plane) through two posts, mm axes"
+
+open_questions:
+  - "Material, density and process are not stated; no mass claim is made."
+  - "The blockout band (690000 .. 706000) assumes the envelope-only blockout is the solid outer body (rounded prism 700553 to sharp box 705000), not the hollowed shell."

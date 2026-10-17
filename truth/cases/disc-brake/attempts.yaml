@@ -1,0 +1,64 @@
+attempts:
+- started: '2026-09-25T08:18:35Z'
+  arm: construction-steps
+  design: disc-brake
+  backend: build123d
+  kind: machine
+  mode: reconstruction
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/disc-brake
+  stage_reached: scored
+  pipeline:
+    code: 1
+    gates:
+      pass: 12
+      fail: 1
+    failed:
+    - refinement
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 11
+      required_total: 11
+      optional_pass: 0
+      optional_total: 0
+      performance_pass: 4
+      performance_scored: 6
+      performance_total: 6
+    accuracy_score: 99.99
+    failed:
+    - lineMaxTemperature
+    - dissipatedHeat
+  seconds: 2206
+  finished: '2026-09-25T08:55:21Z'
+- started: '2026-09-25T11:13:05Z'
+  arm: construction-steps
+  design: disc-brake
+  backend: build123d
+  kind: machine
+  mode: reconstruction
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/disc-brake
+  amended: false
+  stage_reached: scored
+  pipeline:
+    code: 0
+    gates:
+      pass: 13
+      fail: 0
+    failed: []
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 11
+      required_total: 11
+      optional_pass: 0
+      optional_total: 0
+      performance_pass: 3
+      performance_scored: 6
+      performance_total: 6
+    accuracy_score: 99.99
+    failed:
+    - lineMaxTemperature
+    - dissipatedHeat
+    - hotspotRadius
+  seconds: 1486
+  finished: '2026-09-25T11:37:50Z'

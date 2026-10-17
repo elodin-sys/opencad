@@ -1,0 +1,334 @@
+schema_version: 1
+name: compound-train-base
+intent: >-
+  Base plate of the compound spur-gear train (assembly compound-train), modelled in its own frame, which is the
+  assembly frame (origin on the pinion axis at the plate top face, +x toward the idler and output axes, +z up): a
+  rectangular plate 195 (x) x 100 (y) x 5 (z) mm from corner (-25, -50, -5) to (170, 50, 0); the top face z = 0 is
+  the seat on which the pinion and the idler stand. Three clearance holes through the full thickness (z = -5..0),
+  axes along +z: D6 at (0, 0) on the pinion axis, D8 at (60, 0) on the idler axis and D8 at (120, 0) on the output
+  axis. No other features. Authoritative source: sources/compound-train-spec.md (Base plate row and Frame paragraph).
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "on the pinion axis (centre of the D6 hole) in the plate top face z = 0; this is the compound-train assembly frame"
+  axes:
+    x: "along the 195 mm length, from the pinion axis toward the idler axis (x = 60) and the output axis (x = 120)"
+    y: "along the 100 mm width; the plate spans y = -50..50 and every hole axis lies on y = 0"
+    z: "up, parallel to every gear axis; the plate occupies z = -5..0 and the gears stand on z = 0"
+  datums:
+    - name: A
+      description: "plate top face, z = 0: the seat on which the pinion and the idler stand"
+    - name: B
+      description: "pinion joint axis (pinionSpin): the D6 hole axis through (0, 0), direction +z"
+    - name: C
+      description: "idler joint axis (idlerSpin) through (60, 0) and output joint axis (outputSpin) through (120, 0), direction +z"
+
+envelope:
+  min: [-25, -50, -5]
+  max: [170, 50, 0]
+  tolerance: 0.05
+
+parameters:
+  - name: plateLength
+    value: 195
+    unit: mm
+    provenance: stated
+    source: "intent; compound-train-spec.md parameter table, Base plate row (195 x 100 x 5 mm)"
+    tolerance: 0.01
+    description: "plate length along x, from x = plateXMin to x = plateXMin + plateLength (170)"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 5000
+        direction: increase
+        bbox_delta: [10, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [185, 195, 205]
+      infeasible_deltas: [-50]
+  - name: plateWidth
+    value: 100
+    unit: mm
+    provenance: stated
+    source: "intent; compound-train-spec.md parameter table, Base plate row (195 x 100 x 5 mm)"
+    tolerance: 0.01
+    description: "plate width along y, centred on y = 0 (corners at y = -50 and y = 50)"
+  - name: plateThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "intent; compound-train-spec.md parameter table, Base plate row (195 x 100 x 5 mm)"
+    tolerance: 0.01
+    description: "plate thickness along z, below the top seat face: the plate spans z = -plateThickness..0"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 19371.19
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.02
+      sweep:
+        values: [4, 5, 6]
+      infeasible_deltas: [-5]
+  - name: plateXMin
+    value: -25
+    unit: mm
+    provenance: stated
+    source: "intent; compound-train-spec.md Base plate row, corner (-25, -50, -5)"
+    tolerance: 0.01
+    description: "x of the plate's -x end face"
+  - name: pinionHoleDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "intent; compound-train-spec.md Base plate row, clearance hole D6 at (0, 0)"
+    tolerance: 0.01
+    description: "clearance hole on the pinion axis (0, 0), through z = -5..0"
+  - name: idlerHoleDiameter
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "intent; compound-train-spec.md Base plate row, clearance hole D8 at (60, 0)"
+    tolerance: 0.01
+    description: "clearance hole on the idler axis (idlerX, 0), through z = -5..0"
+  - name: outputHoleDiameter
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "intent; compound-train-spec.md Base plate row, clearance hole D8 at (120, 0)"
+    tolerance: 0.01
+    description: "clearance hole on the output axis (outputX, 0), through z = -5..0"
+  - name: idlerX
+    value: 60
+    unit: mm
+    provenance: stated
+    source: "intent; compound-train-spec.md, idler axis at (60, 0), centre distance 60 mm"
+    tolerance: 0.01
+    description: "x of the idler joint axis (idlerSpin)"
+  - name: outputX
+    value: 120
+    unit: mm
+    provenance: stated
+    source: "intent; compound-train-spec.md, output axis at (120, 0), second centre distance 60 mm"
+    tolerance: 0.01
+    description: "x of the output joint axis (outputSpin)"
+
+features:
+  - id: plate
+    kind: extrude
+    description: "rectangular plate 195 x 100 x 5 mm from (-25, -50, -5) to (170, 50, 0); top face z = 0 is the seat (datum A)"
+    parameters: [plateLength, plateWidth, plateThickness, plateXMin]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[-15, -40, -2.5], [30, 25, -2.5], [90, 0, -2.5], [160, 40, -2.5]]
+      - method: face
+        face: top
+      - method: face
+        face: bottom
+      - method: dimension
+        dimension: thicknessZ
+      - method: section
+        section: midZ
+  - id: pinionHole
+    kind: hole
+    description: "D6 clearance hole through the full thickness on the pinion axis (0, 0), axis +z"
+    parameters: [pinionHoleDiameter]
+    verify:
+      - method: cylinder
+        cylinder: pinionHole
+      - method: void
+        points: [[0, 0, -2.5]]
+      - method: section
+        section: pinionAxisX
+  - id: idlerHole
+    kind: hole
+    description: "D8 clearance hole through the full thickness on the idler axis (60, 0), axis +z"
+    parameters: [idlerHoleDiameter, idlerX]
+    verify:
+      - method: cylinder
+        cylinder: idlerHole
+      - method: void
+        points: [[60, 0, -2.5]]
+      - method: section
+        section: idlerAxisX
+  - id: outputHole
+    kind: hole
+    description: "D8 clearance hole through the full thickness on the output axis (120, 0), axis +z"
+    parameters: [outputHoleDiameter, outputX]
+    verify:
+      - method: cylinder
+        cylinder: outputHole
+      - method: void
+        points: [[120, 0, -2.5]]
+      - method: section
+        section: outputAxisX
+
+interfaces:
+  - name: seat
+    description: "top face z = 0 (datum A) on which the pinion and the idler stand; the thickness edit grows the plate downward and the length edit extends the +x end, so neither moves it"
+    must_not_change: true
+    checks: [top]
+  - name: jointAxes
+    description: "the three hole axes that carry the assembly's revolute joints pinionSpin (0, 0), idlerSpin (60, 0) and outputSpin (120, 0), all along +z; no edit test moves or resizes them"
+    must_not_change: true
+    checks: [pinionHole, idlerHole, outputHole]
+
+acceptance:
+  volume:
+    expected: 96855.97
+    tolerance: 10
+    provenance: derived
+    note: "plateLength * plateWidth * plateThickness - pi/4 * (6^2 + 8^2 + 8^2) * plateThickness = 97500 - 205*pi = 96855.97"
+  surface_area:
+    expected: 42037.96
+    tolerance: 10
+    provenance: derived
+    note: "2 * (195*100 - 41*pi) + 2 * (195 + 100) * 5 + pi * (6 + 8 + 8) * 5 = 38742.39 + 2950 + 345.58 = 42037.96"
+  center_of_mass:
+    expected: [72.515, 0, -2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "x = (97500*72.5 - 5*pi*(9*0 + 16*60 + 16*120)) / 96855.97 = 72.515; y = 0 and z = -2.5 by symmetry of plate and holes"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: -2.5
+      expect:
+        area: 19371.19
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 3
+      description: "mid-thickness plan section: 195 x 100 minus the D6 and two D8 holes (19500 - 41*pi)"
+    - id: pinionAxisX
+      plane: x
+      at: 0
+      expect:
+        area: 470
+        area_tolerance_rel: 0.002
+        loops: 2
+        holes: 0
+      description: "section through the pinion axis: (100 - 6) * 5; the through hole splits it into two strips"
+    - id: idlerAxisX
+      plane: x
+      at: 60
+      expect:
+        area: 460
+        area_tolerance_rel: 0.002
+        loops: 2
+        holes: 0
+      description: "section through the idler axis: (100 - 8) * 5; the through hole splits it into two strips"
+    - id: outputAxisX
+      plane: x
+      at: 120
+      expect:
+        area: 460
+        area_tolerance_rel: 0.002
+        loops: 2
+        holes: 0
+      description: "section through the output axis: (100 - 8) * 5; the through hole splits it into two strips"
+  faces:
+    - name: top
+      plane: z
+      at: 0
+      normal: "+"
+      mode: one
+    - name: bottom
+      plane: z
+      at: -5
+      normal: "-"
+      area: 19371.19
+      area_tolerance_rel: 0.002
+      mode: one
+  cylinders:
+    - name: pinionHole
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      radius_tolerance: 0.02
+      description: "D6 clearance hole on the pinion joint axis pinionSpin"
+    - name: idlerHole
+      point: [60, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 8
+      radius_tolerance: 0.02
+      description: "D8 clearance hole on the idler joint axis idlerSpin"
+    - name: outputHole
+      point: [120, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 8
+      radius_tolerance: 0.02
+      description: "D8 clearance hole on the output joint axis outputSpin"
+  dimensions:
+    - name: lengthX
+      axis: x
+      expected: 195
+      tolerance: 0.05
+      description: "plate length, bbox extent along x"
+    - name: widthY
+      axis: y
+      expected: 100
+      tolerance: 0.05
+      description: "plate width, bbox extent along y"
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "plate thickness between the bottom face and the top seat"
+  solids:
+    - name: plate
+      contains_point: [30, 25, -2.5]
+      description: "the single plate solid"
+  probes:
+    - name: holeVoids
+      state: void
+      points: [[0, 0, -2.5], [60, 0, -2.5], [120, 0, -2.5]]
+      description: "mid-thickness points on the three hole axes"
+    - name: plateMaterial
+      state: solid
+      points: [[-15, -40, -2.5], [30, 25, -2.5], [90, 0, -2.5], [160, 40, -2.5]]
+      description: "mid-thickness points in the plate material, away from the holes and edges"
+  cylinder_counts:
+    - name: holesD6
+      diameter: 6
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+      description: "one D6 hole (pinion axis)"
+    - name: holesD8
+      diameter: 8
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 2
+      description: "two D8 holes (idler and output axes)"
+  blockout:
+    volume_min: 94500
+    volume_max: 97600
+
+references:
+  - path: sources/compound-train-spec.md
+    kind: text
+    role: authoritative
+    sha256: e2734c43ae1d2aa36320d0b7680e21616422e902b471b3eb98295e3292296af5
+    units: mm
+    revision: "unversioned"
+    note: "Base plate row of the parameter table and the Frame paragraph fix every dimension of this part"
+
+open_questions:
+  - "Material, density and process are not stated in the sources; no mass property is claimed."
+  - "The sources give no fit or tolerance class for the D6 and D8 clearance holes; they are modelled at nominal diameter."
+  - "The shafts or pins that would ride in the plate holes are not described by the sources and are not part of this design."
+  - "No edge breaks, chamfers, fillets or mounting holes are specified for the plate (No other features); edges stay sharp."

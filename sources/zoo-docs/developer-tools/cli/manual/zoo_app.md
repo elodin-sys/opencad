@@ -1,0 +1,35 @@
+Source URL: https://zoo.dev/docs/developer-tools/cli/manual/zoo_app
+Title: zoo app
+
+# zoo app
+
+Open a directory or file in the Zoo Design Studio on your desktop.
+
+Open a directory or file in the Zoo Design Studio on your desktop.
+
+### Options
+
+<dl class="flags">
+   <dt><code>path</code></dt>
+   <dd>The path to the file or directory to open in the app</dd>
+
+   <dt><code>-d/--debug</code></dt>
+   <dd>Print debug info<br/>Default value: <code>false</code></dd>
+
+   <dt><code>--host</code></dt>
+   <dd>Zoo API host to use for all commands (e.g., "api.zoo.dev" or "http://localhost:8888"). Overrides the configured default host</dd>
+
+   <dt><code>-h/--help</code></dt>
+   <dd>Print help (see a summary with '-h')</dd>
+</dl>
+
+
+### About
+
+If you do not have the app installed, you will be prompted to download it.
+
+    $ zoo app .
+    
+    $ zoo app main.kcl
+    
+    $ zoo app ../main.kcl

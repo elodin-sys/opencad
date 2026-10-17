@@ -1,0 +1,57 @@
+{
+  "ok": true,
+  "files": {
+    "step": {
+      "path": "/Users/danieldriscoll/dual/opencad/results/coupon/export/coupon.step",
+      "sha256": "9bb7eb93d1283453f165f137df4b6f83acd67b9ae5d24501378dd3cce85f2d5a",
+      "bytes": 7060,
+      "deterministic": true,
+      "second_sha256": "9bb7eb93d1283453f165f137df4b6f83acd67b9ae5d24501378dd3cce85f2d5a"
+    },
+    "stl": {
+      "path": "/Users/danieldriscoll/dual/opencad/results/coupon/export/coupon.stl",
+      "sha256": "88692a18f2683137c56899271da14a1bd4c1aef5ca371dd69d9889d6b4d22a72",
+      "bytes": 1512
+    },
+    "glb": {
+      "path": "/Users/danieldriscoll/dual/opencad/results/coupon/export/coupon.glb",
+      "sha256": "62cfd6d7efcf31c1dc3183ede8c186c47ee73f583cf1a62c7ebdc47ee17c732b",
+      "bytes": 6348
+    }
+  },
+  "errors": {},
+  "engine_calls": [
+    {
+      "cmd": "zoo kcl export --output-format step --deterministic /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl /Users/danieldriscoll/dual/opencad/results/coupon/export/step-a",
+      "ok": true,
+      "seconds": 1.79
+    },
+    {
+      "cmd": "zoo kcl export --output-format step --deterministic /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl /Users/danieldriscoll/dual/opencad/results/coupon/export/step-b",
+      "ok": true,
+      "seconds": 1.6
+    },
+    {
+      "cmd": "zoo kcl export --output-format stl --deterministic /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl /Users/danieldriscoll/dual/opencad/results/coupon/export/stl-out",
+      "ok": true,
+      "seconds": 2.77
+    },
+    {
+      "cmd": "zoo kcl export --output-format glb --deterministic /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl /Users/danieldriscoll/dual/opencad/results/coupon/export/glb-out",
+      "ok": true,
+      "seconds": 2.99
+    }
+  ],
+  "stage": "export",
+  "provenance": {
+    "generated_at": "2026-09-15T06:54:07Z",
+    "opencad_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "10eb5fc1e12ffec35713a7a7113183467bd4b676",
+      "dirty": true
+    },
+    "contract": "/Users/danieldriscoll/dual/opencad/designs/coupon/contract.yaml"
+  }
+}

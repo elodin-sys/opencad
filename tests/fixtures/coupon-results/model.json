@@ -1,0 +1,44 @@
+{
+  "ok": true,
+  "codex": {
+    "thread_id": "01a0a3d2-89f7-7a91-8565-ac4a7b673425",
+    "exit_code": 0,
+    "seconds": 346,
+    "commands": 33,
+    "usage": {
+      "input": 863274,
+      "cached": 724096,
+      "output": 9247,
+      "reasoning": 3100
+    },
+    "run_dir": "/Users/danieldriscoll/dual/opencad/results/coupon/model-work/codex",
+    "failure": ""
+  },
+  "thread_id": "01a0a3d2-89f7-7a91-8565-ac4a7b673425",
+  "codex_report": {
+    "Result": "Created the 60 \u00d7 40 \u00d7 4 mm training coupon following the approved plan. First attempt passed; no corrections required.",
+    "Files changed": "- [main.kcl](/Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl): parameters, guards, constrained XY sketch, and extrusion with named caps.\n- [Scratch artifacts](/Users/danieldriscoll/dual/opencad/results/coupon/model-work): deterministic STEP, analysis JSON, verification script/report, and both snapshots.",
+    "Verification": "Commands passed on `main.kcl`:\n\n```text\nzoo kcl format --write\nzoo kcl lint\nzoo kcl analyze --format json --volume-output-unit mm3 --center-of-mass-output-unit mm --surface-area-output-unit mm2\nzoo kcl export --output-format step --deterministic\nzoo kcl snapshot --angle four-ways --camera-style ortho\nzoo kcl snapshot --angle iso --camera-style ortho\n```\n\nIndependent OpenCascade checks passed using `python -B verify_coupon.py`.\n\n| Check | Measured | Expected |\n|---|---|---|\n| Bbox minimum, mm | `[0,0,0]` | `[0,0,0]` |\n| Bbox maximum, mm | `[60,40,4]` | `[60,40,4]` |\n| Volume, mm\u00b3 | Zoo: 9600.00034; STEP: 9600 | 9600 |\n| Surface area, mm\u00b2 | Zoo: 5599.99980; STEP: 5600 | 5600 |\n| Centre of mass, mm | `[30,20,2]` | `[30,20,2]` |\n| Solids | 1 valid solid | 1 |\n| `mid_z`, z=2 | 2400 mm\u00b2; 1 loop; 0 holes | Same |\n| `mid_x`, x=30 | 160 mm\u00b2; 1 loop; 0 holes | Same |\n| Bottom | z=0; normal `[0,0,-1]`; 2400 mm\u00b2 | Same |\n| Top | z=4; normal `[0,0,1]`; 2400 mm\u00b2 | Same |\n| Datum B | x=0; normal `[-1,0,0]`; 160 mm\u00b2 | Same |\n\nInspected both snapshots: the top footprint, front/right thickness profiles, and isometric plate match the required orientation and proportions.",
+    "Open questions": "None. All requested nominal checks passed; no construction-plan deviations."
+  },
+  "kcl": "/Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl",
+  "files": [
+    "main.kcl"
+  ],
+  "changed": [
+    "main.kcl"
+  ],
+  "engine_calls": [],
+  "stage": "model",
+  "provenance": {
+    "generated_at": "2026-09-15T06:53:45Z",
+    "opencad_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "10eb5fc1e12ffec35713a7a7113183467bd4b676",
+      "dirty": true
+    },
+    "contract": "/Users/danieldriscoll/dual/opencad/designs/coupon/contract.yaml"
+  }
+}

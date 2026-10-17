@@ -1,0 +1,464 @@
+id: rpi5-enclosure
+title: Raspberry Pi 5 two-piece enclosure designed to functional requirements (board fit, standoff datums,
+  plug access, lid closure, wall minimum)
+truth_class: C
+role: validation
+source:
+  citation: Raspberry Pi Ltd, Raspberry Pi 5 mechanical drawing RP-008347-DS-1 (pip.raspberrypi.com);
+    requirements authored for this benchmark
+  urls:
+  - https://pip-assets.raspberrypi.com/categories/892-raspberry-pi-5/documents/RP-008347-DS-1-raspberry-pi-5-mechanical-drawing.pdf
+  - https://pip.raspberrypi.com/categories/892-raspberry-pi-5
+  accessed: '2026-09-17'
+  revision: drawing updated 6 Oct 2025 per the product information portal
+  license: 'Raspberry Pi drawing: reference use; requirements: this repository'
+intent: Design a two-piece FFF-printed enclosure (base and removable lid, two separate solids in one STEP)
+  for a Raspberry Pi 5 to the attached requirements document, in the board frame it defines (x along 85,
+  y along 56, PCB bottom at z = 0). The board must fit with 0.5 mm edge clearance and 20 mm headroom above
+  the PCB; four standoffs meet the PCB bottom at the Ø2.7 mounting holes (3.5,3.5) (61.5,3.5) (3.5,52.5)
+  (61.5,52.5) with Ø2.5 x 5 pilot holes; every listed cable-plug envelope (USB-C, 2x micro-HDMI on y =
+  0; 2x USB-A stacks and RJ45 on x = 85; micro-SD under x = 0) passes through its wall opening; the lid
+  closes on the base rim with zero interference and is held by four Ø3 through holes into Ø2.5 corner-post
+  pilots; walls and floor >= 2 mm (5th percentile of inward ray casts; the Ø6.2 standoff bosses' 1.85
+  mm annuli are the accepted exception). Declare the base and lid as acceptance solids by a contained
+  point, the keep-outs and plug envelopes as acceptance hardware with no-interference clearances, the
+  standoff faces and pilot holes as faces and cylinders pinned by interfaces, and the wall minimum as
+  a p05 thickness check. Headroom, wall thickness and standoff height are top-level parameters; the headroom
+  parameter gets a 10-value regeneration sweep (15..35, every value must build) and one infeasible negative
+  value guarded by an assert.
+inputs:
+- path: inputs/rpi5-enclosure-requirements.md
+  kind: text
+  sha256: 72e326f321f0ffa4158fc6d56004c15d300f2feaf60b46eae2e5a0fe399fa9fe
+  note: the requirements contract
+- path: inputs/rpi5-drawing-01.png
+  kind: drawing
+  sha256: 09a70271b05c4422065de1e566a25ea231fbc835438e1f59d5b5e036148cc7e3
+  units: mm
+  note: official mechanical drawing
+truth:
+- path: truth/requirements.yaml
+  kind: yaml
+  sha256: 048856664d66209c4cc538241ff2776cc3966ab58b94182ce6dbb5b7f2095bb8
+  note: machine-readable requirement values (evaluator-side)
+- path: truth/rpi5-step-LICENSE.txt
+  kind: text
+  sha256: 4ca2d350552b24137e55587e13fb09a249b757c6af49652ff02ea524d154c7fc
+  note: license of the Raspberry Pi STEP package (board model available to the evaluator)
+hardware:
+- name: pcb_slab
+  kind: box
+  min:
+  - 0
+  - 0
+  - 0
+  max:
+  - 85.0
+  - 56.0
+  - 1.6
+- name: pcb_edge_band
+  kind: box
+  min:
+  - -0.5
+  - -0.5
+  - 0.2
+  max:
+  - 85.5
+  - 56.5
+  - 1.6
+  description: 0.5 mm clearance band around the board edges at board height (standoffs touch the board
+    bottom below z = 0.2, which this band excludes)
+- name: top_envelope
+  kind: box
+  min:
+  - 0
+  - 0
+  - 1.6
+  max:
+  - 85.0
+  - 56.0
+  - 21.6
+- name: bottom_keepout
+  kind: box
+  min:
+  - 0
+  - 0
+  - -3.0
+  max:
+  - 85.0
+  - 56.0
+  - 0.0
+  exclude_cylinders:
+  - point:
+    - 3.5
+    - 3.5
+    - -4.0
+    direction:
+    - 0
+    - 0
+    - 1
+    radius: 3.1
+    length: 5.0
+  - point:
+    - 61.5
+    - 3.5
+    - -4.0
+    direction:
+    - 0
+    - 0
+    - 1
+    radius: 3.1
+    length: 5.0
+  - point:
+    - 3.5
+    - 52.5
+    - -4.0
+    direction:
+    - 0
+    - 0
+    - 1
+    radius: 3.1
+    length: 5.0
+  - point:
+    - 61.5
+    - 52.5
+    - -4.0
+    direction:
+    - 0
+    - 0
+    - 1
+    radius: 3.1
+    length: 5.0
+- name: usb_c_plug
+  kind: box
+  min:
+  - 4.699999999999999
+  - -25.0
+  - 1.6
+  max:
+  - 17.7
+  - 0.0
+  - 8.6
+- name: hdmi0_plug
+  kind: box
+  min:
+  - 19.8
+  - -25.0
+  - 1.6
+  max:
+  - 31.8
+  - 0.0
+  - 8.1
+- name: hdmi1_plug
+  kind: box
+  min:
+  - 33.2
+  - -25.0
+  - 1.6
+  max:
+  - 45.2
+  - 0.0
+  - 8.1
+- name: usb_a_upper_plug
+  kind: box
+  min:
+  - 85.0
+  - 39.5
+  - 1.6
+  max:
+  - 110.0
+  - 54.5
+  - 18.6
+- name: usb_a_lower_plug
+  kind: box
+  min:
+  - 85.0
+  - 21.6
+  - 1.6
+  max:
+  - 110.0
+  - 36.6
+  - 18.6
+- name: rj45_plug
+  kind: box
+  min:
+  - 85.0
+  - 1.6999999999999993
+  - 1.6
+  max:
+  - 110.0
+  - 18.7
+  - 16.6
+- name: sd_card_slot
+  kind: box
+  min:
+  - -25.0
+  - 22.0
+  - -3.0
+  max:
+  - 0.0
+  - 34.0
+  - 0.0
+arms:
+- id: requirements
+  design: rpi5-enclosure
+  inputs:
+  - inputs/rpi5-enclosure-requirements.md
+  - inputs/rpi5-drawing-01.png
+  images:
+  - inputs/rpi5-drawing-01.png
+  notes: Design to requirements. Many shapes pass; the scorer checks fit, datums, plug access, closure,
+    walls and separability.
+observables:
+- id: two_solids
+  kind: solid_count
+  expected: 2
+- id: base_solid
+  kind: solid
+  point:
+  - 42.5
+  - 28.0
+  - -6.0
+  note: the base contains this point
+- id: lid_solid
+  kind: solid
+  point:
+  - 42.5
+  - 28.0
+  - 24.6
+  note: the lid contains this point
+- id: clear_pcb_slab
+  kind: clearance
+  a: all
+  b: pcb_slab
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_pcb_edge_band
+  kind: clearance
+  a: all
+  b: pcb_edge_band
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_top_envelope
+  kind: clearance
+  a: all
+  b: top_envelope
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_bottom_keepout
+  kind: clearance
+  a: all
+  b: bottom_keepout
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_usb_c_plug
+  kind: clearance
+  a: all
+  b: usb_c_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_hdmi0_plug
+  kind: clearance
+  a: all
+  b: hdmi0_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_hdmi1_plug
+  kind: clearance
+  a: all
+  b: hdmi1_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_usb_a_upper_plug
+  kind: clearance
+  a: all
+  b: usb_a_upper_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_usb_a_lower_plug
+  kind: clearance
+  a: all
+  b: usb_a_lower_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_rj45_plug
+  kind: clearance
+  a: all
+  b: rj45_plug
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: clear_sd_card_slot
+  kind: clearance
+  a: all
+  b: sd_card_slot
+  min_gap: 0.0
+  note: no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)
+- id: lid_on_base
+  kind: clearance
+  a: lid_solid
+  b: base_solid
+  min_gap: 0.0
+  max_gap: 0.1
+  note: lid rests on the base rim without interference
+- id: standoff_1_top
+  kind: face
+  plane: z
+  at: 0.0
+  normal: +
+  center:
+  - 3.5
+  - 3.5
+  tolerance: 0.3
+  note: standoff top meets the PCB bottom at the hole datum
+- id: standoff_1_pilot
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 3.5
+  - 3.5
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 1.25
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  length: 6.0
+  length_tolerance: 3.0
+  note: Ø2.5 pilot >= 5 deep (checked as 3..9)
+- id: standoff_2_top
+  kind: face
+  plane: z
+  at: 0.0
+  normal: +
+  center:
+  - 61.5
+  - 3.5
+  tolerance: 0.3
+  note: standoff top meets the PCB bottom at the hole datum
+- id: standoff_2_pilot
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 61.5
+  - 3.5
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 1.25
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  length: 6.0
+  length_tolerance: 3.0
+  note: Ø2.5 pilot >= 5 deep (checked as 3..9)
+- id: standoff_3_top
+  kind: face
+  plane: z
+  at: 0.0
+  normal: +
+  center:
+  - 3.5
+  - 52.5
+  tolerance: 0.3
+  note: standoff top meets the PCB bottom at the hole datum
+- id: standoff_3_pilot
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 3.5
+  - 52.5
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 1.25
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  length: 6.0
+  length_tolerance: 3.0
+  note: Ø2.5 pilot >= 5 deep (checked as 3..9)
+- id: standoff_4_top
+  kind: face
+  plane: z
+  at: 0.0
+  normal: +
+  center:
+  - 61.5
+  - 52.5
+  tolerance: 0.3
+  note: standoff top meets the PCB bottom at the hole datum
+- id: standoff_4_pilot
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 61.5
+  - 52.5
+  - -2.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 1.25
+  radius_tolerance: 0.1
+  tolerance: 0.2
+  length: 6.0
+  length_tolerance: 3.0
+  note: Ø2.5 pilot >= 5 deep (checked as 3..9)
+- id: lid_screw_clearance_holes
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.6
+  radius_tolerance: 0.15
+  expected_min: 4
+  direction:
+  - 0
+  - 0
+  - 1
+  note: Ø3.0..3.4 through the lid
+- id: pilot_holes_total
+  kind: cylinder_count
+  cyl_kind: hole
+  radius: 1.25
+  radius_tolerance: 0.1
+  expected_min: 8
+  direction:
+  - 0
+  - 0
+  - 1
+  note: 4 standoff + 4 corner-post pilots
+- id: wall_min
+  kind: thickness
+  min: 2.0
+  samples: 6000
+  max_thickness: 12.0
+  note: minimum wall/floor thickness by inward ray casting
+- id: headroom_probe
+  kind: probe
+  state: void
+  points:
+  - - 20
+    - 20
+    - 21.1
+  - - 65
+    - 40
+    - 21.1
+  - - 42.5
+    - 28
+    - 6.6
+  note: air above the board
+- id: floor_probe
+  kind: probe
+  state: solid
+  points:
+  - - 42.5
+    - 28
+    - -6.0
+  note: 'there is a floor under the component keep-out (requirement 1: the base contains (42.5, 28, -6))'
+notes:
+- 'Class C requirements case: truth is a set of functional checks, not a mesh.'
+- Change requests (results/<design>/ecr/*) are scored against the same observables with the request's
+  revisions applied.

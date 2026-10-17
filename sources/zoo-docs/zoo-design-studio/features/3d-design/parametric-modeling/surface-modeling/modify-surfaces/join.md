@@ -1,0 +1,95 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/modify-surfaces/join
+Title: Join
+
+# Join
+
+Join surface bodies in Zoo Design Studio.
+
+Use Join to combine separate surface bodies into one body when their boundaries meet cleanly. Join
+is useful when surfaces were created in pieces, such as mirrored halves or surfaces split apart
+during construction, and should move forward as a single surface body.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/modify-surfaces/join/join-surfaces.gif"
+  alt="Joining compatible surface bodies in Zoo Design Studio"
+  aspect="1512 / 948"
+  maxWidthPx="800"
+/>
+
+## Surface Join In The Aquarium
+
+For a real model that uses Surface Join, open [this car bumper in the
+Aquarium](https://zoo.dev/aquarium/b0a8d539-ca56-43e4-8eb5-150dbffbdb49), our public model
+gallery.
+
+<a href="https://zoo.dev/aquarium/b0a8d539-ca56-43e4-8eb5-150dbffbdb49">
+  <FramedImage
+    src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/sweep/bumper.webp"
+    alt="Car bumper model using Surface Join in the Aquarium"
+    aspect="1778 / 968"
+    maxWidthPx="800"
+  />
+</a>
+
+## Are you interested in code?
+
+Zoo Design Studio writes KCL behind the scenes. Surface Join is the `joinSurfaces` function applied
+to compatible surface bodies.
+
+```kcl
+@settings(kclVersion = 2.0)
+
+bumperSection = sketch(on = YZ) {
+  arc1 = arc(start = [var -20mm, var -5mm], end = [var -25.62mm, var -14.38mm], center = [var -15.63mm, var -13.99mm])
+  arc2 = arc(start = [var 0mm, var 0mm], end = [var -20mm, var -5mm], center = [var 1.87mm, var -49.97mm])
+  coincident([arc2.start, ORIGIN])
+  coincident([arc2.end, arc1.start])
+  arc3 = arc(start = [var -25.62mm, var -14.38mm], end = [var -15mm, var -40mm], center = [var 14.35mm, var -12.82mm])
+  coincident([arc3.start, arc1.end])
+  tangent([arc3, arc1])
+  tangent([arc1, arc2])
+  radius(arc3) == 40
+  radius(arc1) == 10
+  horizontalDistance([arc2.end, arc2.start]) == 20
+  verticalDistance([arc2.end, arc2.start]) == 5
+  radius(arc2) == 50
+  horizontalDistance([arc3.end, arc2.start]) == 15
+  verticalDistance([arc3.end, arc2.start]) == 40
+}
+
+bumperSweepGuide = sketch(on = XY) {
+  arc1 = arc(start = [var 0mm, var 0mm], end = [var 50mm, var 8.58mm], center = [var 0mm, var 150mm])
+  vertical([arc1.center, ORIGIN])
+  coincident([arc1.start, ORIGIN])
+  radius(arc1) == 150
+  horizontalDistance([arc1.start, arc1.end]) == 50
+  arc2 = arc(start = [var 50mm, var 8.58mm], end = [var 56.21mm, var 15.01mm], center = [var 46.67mm, var 18.01mm])
+  coincident([arc2.start, arc1.end])
+  arc3 = arc(start = [var 56.21mm, var 15.01mm], end = [var 56.53mm, var 31.13mm], center = [var 28.83mm, var 23.61mm])
+  coincident([arc3.start, arc2.end])
+  radius(arc2) == 10
+  tangent([arc1, arc2])
+  tangent([arc2, arc3])
+}
+
+sweep001 = sweep(
+  [
+    bumperSection.arc2,
+    bumperSection.arc1,
+    bumperSection.arc3
+  ],
+  path = [
+    bumperSweepGuide.arc1,
+    bumperSweepGuide.arc2,
+    bumperSweepGuide.arc3
+  ],
+  bodyType = SURFACE,
+)
+solid001 = mirror3d(sweep001, across = YZ)
+appearance(sweep001, color = "#ff0000", roughness = 10)
+appearance(solid001, color = "#ffffff", roughness = 10)
+surface001 = joinSurfaces([solid001, sweep001])
+```
+
+Want to find out more about the `joinSurfaces` function? [Check it out](/docs/kcl-std/functions/std-solid-joinSurfaces)
+in our KCL docs.

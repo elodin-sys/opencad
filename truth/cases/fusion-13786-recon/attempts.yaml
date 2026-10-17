@@ -1,0 +1,151 @@
+attempts:
+- started: '2026-09-19T05:50:38Z'
+  arm: renders-and-sheet
+  backend: zoo
+  design: fusion-13786-recon
+  stage_reached: scored
+  force: false
+  resume_from: null
+  decompose: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-13786-recon-1789797039
+  draft:
+    ok: true
+    rounds: 1
+    thread_id: f77dff80-61bc-49b2-9433-2f169ecb3e5f
+    problems: []
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: cb505589-857e-40ef-82ff-59e86b102ee9
+  pipeline:
+    exit: 1
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    retry: true
+    corrections: 1
+    stopped: 'same failure after correction-1: edit_robustness,features|ok'
+  stuck_class: kernel
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 3636
+  finished: '2026-09-19T06:51:15Z'
+- started: '2026-09-20T10:47:04Z'
+  arm: renders-and-sheet
+  backend: freecad
+  design: fusion-13786-recon
+  stage_reached: pipeline
+  force: false
+  resume_from: retry
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-13786-recon
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/fusion-13786-recon/manifest.yaml'''
+  seconds: 25
+  finished: '2026-09-20T10:47:30Z'
+- started: '2026-09-20T10:47:04Z'
+  arm: renders-and-sheet
+  backend: build123d
+  design: fusion-13786-recon
+  stage_reached: pipeline
+  force: false
+  resume_from: retry
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-13786-recon
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/fusion-13786-recon/manifest.yaml'''
+  seconds: 47
+  finished: '2026-09-20T10:47:54Z'
+- started: '2026-09-20T10:47:03Z'
+  arm: renders-and-sheet
+  backend: cadquery
+  design: fusion-13786-recon
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-13786-recon
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 1
+    stopped: gates pass
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 193
+  finished: '2026-09-20T10:50:18Z'
+- started: '2026-09-20T10:50:29Z'
+  finished: '2026-09-20T10:50:31Z'
+  arm: renders-and-sheet
+  design: fusion-13786-recon
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: a8c4f298b13e049f89c147327a755bd169dd7ec109f64397f7e57dbfa66c33e3
+  seconds: 7
+  backend: build123d
+- started: '2026-09-20T10:50:38Z'
+  finished: '2026-09-20T10:50:38Z'
+  arm: renders-and-sheet
+  design: fusion-13786-recon
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 15
+      required_total: 15
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 642047d1ec42953c733a11714f84e5081f98b778e19e685182b14bece1b8edff
+  seconds: 6
+  backend: freecad

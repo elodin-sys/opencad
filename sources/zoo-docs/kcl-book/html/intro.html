@@ -1,0 +1,237 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Introduction - Modeling with KCL</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Modeling with KCL</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/KittyCAD/kcl-book/edit/main/guide/src/intro.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <script type="module" src="scripts/model-viewer.min.js"></script>
+<h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>Engineering is about solving problems, given some constraints. My name is Adam, and I'm a software engineer. I write code. Many of my colleagues at Zoo are hardware engineers. They design and build real-world objects. Some people see software and hardware engineering as two different disciplines. After all, software can't be touched or seen. It can't keep the two ends of a bridge together. And hardware -- everything from bridges to buildings to clamps to rockets -- can. Physical and software systems seem very separate. But that's not how I see it. Both coders and Formula 1 car designers are fundamentally <em>engineers</em>. We're both trying to solve difficult problems, with limited resources and various constraints. We're both trying to satisfy some requirement (like function) while minimizing some measurements (like cost or size) and still making the final result comprehensible (to our colleagues, to our users, or to our future self who revisits this project in two years).</p>
+<p>Zoo started when Jess, a software engineer, called Jordan, an aerospace engineer, about her struggles with a really complicated CAD model. The two realized they had a lot more in common than they thought. They realized that if software and hardware engineers take the best parts of each other's practices and tools, we could get our jobs done quicker and with less stress. Every day at Zoo, we put bright engineers from all disciplines together and let them learn from each other.</p>
+<p>These days, hardware engineers need to use software. The days of hand-drawing all your designs on a drafting table are over. But hardware engineers often find their software frustrating. Software engineers understand -- ranting about how much you hate software is a time-honored tradition among software engineers. The difference is, when software engineers don't like their tools, they know how to take them apart and make new ones. We can find the source code for our software, fork it, and add new features. Or we could even write our own version from scratch, that works exactly how we'd like it to. Unfortunately, when <em>hardware</em> engineers don't like their software, they're stuck. They don't usually know enough programming to edit their engineering software. So they're at the mercy of some software engineer at a different company, who doesn't understand the problem well enough. Our goal at Zoo is to put the software and hardware engineers in the same room, so that when hardware engineers complain about their tool, the software people are listening and can quickly improve it. Experimenting with ideas from both worlds will be the key to modern, 21st century engineering.</p>
+<p>KCL is one of the first successes from this hardware-software-engineer collaboration. We hope it will make CAD both easier to understand and more powerful. KCL, or the KittyCAD Language, is a programming language for CAD.</p>
+<h2 id="why-a-programming-language"><a class="header" href="#why-a-programming-language">Why a programming language?</a></h2>
+<p>Zoo's programmers -- experts in programming languages -- listened to Zoo's aerospace engineers, and concluded that what they needed was... a programming language! Surprise surprise. No, wait, don't run away aerospace engineers! It's not that bad, I promise!</p>
+<p>Hardware engineers often shudder when I tell them we're building a programming language for CAD. I understand why! CAD is complicated. Programming is complicated. Simplifying CAD with programming is like solving your rampaging boar problem by introducing rampaging lions to control them. But we really believe in this approach. We've seen first-hand the benefits of code-driven CAD. We know other software has tried to combine them, but we think they started with three fundamental flaws:</p>
+<ol>
+<li>The code has to be fundamental. You can't build a non-code CAD suite and then slap code on afterwards. Otherwise, there'll be gaps between these two halves -- things you can do in code but not in the "normal software", and vice-versa.</li>
+<li>Not everyone will want to code -- and that's OK. If you don't want to learn KCL, you don't have to! You can still use a traditional mouse-based, point-and-click workflow if you're more comfortable there. Every time you click a button, Zoo Design Studio is actually generating KCL under the hood. You've been writing KCL without knowing it! Or more accurately, telling the computer to write the KCL for you. If you decide to learn KCL later, you can open up your existing models and view the KCL.</li>
+<li>Reusing existing languages. JavaScript, C, Python etc are all great languages. But they were designed for software engineering, and the problems that software engineers solve. KCL is designed for engineering real world objects, not software. So it makes different choices. Existing languages require you to learn a bunch of little details that matter a lot to programmers, but aren't really important to mechanical engineers. KCL doesn't have any of those. Instead, it has built-in features that match how mechanical engineers think.</li>
+</ol>
+<p>Learning to code takes work. Why bother learning KCL if you can just use the point-and-click UI instead? There's a few reasons.</p>
+<p>Firstly, KCL lets you read the fundamental model underlying your designs. In normal CAD software, if you want to understand your model, you have to spin it around in the UI, look at different parts, maybe hide or show various faces that would block your view of its internals. This is because you never really access the model <em>directly</em>. Instead, you view a <em>rendering</em> of the model. Feature trees help, but they only show a subset of the information connecting your model. KCL lets you directly read the exact same code that our CAD suite is executing. If you want to know why a hole has a certain diameter, you can just go to the line of code which defines that hole, and see where it gets its length. Is it a direct measurement, handwritten like <code>length = 2mm</code>? Is it a parameter from a parametric design? Is it the result of a calculation, like <code>length = totalHeight * 0.3</code>? Code makes it easy to see exactly where your measurements come from.</p>
+<p>Secondly, KCL is the interface between human and computer. Programming languages aren't really built for computers. Computers use binary instructions like 1101010101010100000011. The first computers had to be programmed in binary, and coders would look up each instruction carefully in a huge reference manual to find which 0s and 1s each instruction needed. This was obviously very tedious, so programming languages were invented instead. Both humans and machines can read code like <code>let x = y + 3</code>. The human knows what it means, and the computer knows how to execute it.</p>
+<p>Lastly, KCL is the interface between humans and other humans. Let's say you're collaborating on a CAD model with a coworker. They send you the latest revision of some part, and you open it up. What's changed? Impossible to tell. You'd have to open up the old revision and glance back-and-forth between the two to find the difference. This is <em>much</em> easier when your model is stored as code! You can easily see the exact lines of code that changed -- green for new lines added, red for old lines removed, yellow for changes. And your coworker can leave comments in the code, so that anyone reading it understands exactly what has changed. As a bonus, this works even for solo engineers. If you want to see how your model has changed since last year, you can open up last year's file and run the same line-by-line visual comparison.</p>
+<p>By learning KCL, you're developing a skill that can open up massive improvements to your design and engineering skills. It's a new skill, and like all new skills it takes time and practice to develop. But it's worth it. Code-driven CAD can become your superpower and let you simplify your designs <em>and</em> design quicker. I'm excited to guide you on this journey. Let's get started.</p>
+<script type="module">
+const modelViewer = document.querySelectorAll("model-viewer").forEach((modelViewer) => {
+  modelViewer.addEventListener("load", () => {
+    const material = modelViewer.model.materials[0];
+    material.pbrMetallicRoughness.setMetallicFactor(0.8);
+    material.pbrMetallicRoughness.setRoughnessFactor(0.2);
+  });
+});
+</script>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+                            <a rel="next prefetch" href="installation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+                    <a rel="next prefetch" href="installation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

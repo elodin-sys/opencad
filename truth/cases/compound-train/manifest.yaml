@@ -1,0 +1,230 @@
+id: compound-train
+title: 'Compound spur-gear train as an assembly: pinion, compound idler and output gear on a base plate,
+  two meshes, ratio +1/6'
+kind: machine
+truth_class: C
+role: validation
+source:
+  citation: Analytic mechanism reference (scripts/derive_mechanism_truth.py); tooth counts, module and
+    phases from the specification
+  urls: []
+  accessed: '2026-09-25'
+  revision: spec v1
+  license: this repository
+intent: 'Build the compound spur-gear train of the attached specification as a machine of four separately
+  designed parts: a base plate, a 20-tooth input pinion, a compound idler carrying a 40-tooth and a 15-tooth
+  gear on one body, and a 45-tooth output gear, each drafted and modelled in its own frame as the specification
+  states. Place the gears on revolute joints on the plate at the three specified axes, phased exactly
+  as specified so both meshes engage; the pinion is the motor-driven joint, the idler follows the pinion
+  and the output follows the idler through gear transmissions with mesh checks. Declare a motion sweep
+  of the pinion through two pitches. Predict the train ratio and the output angle from the geometry.'
+inputs:
+- path: inputs/compound-train-spec.md
+  kind: text
+  sha256: e2734c43ae1d2aa36320d0b7680e21616422e902b471b3eb98295e3292296af5
+  note: the complete design specification
+truth:
+- path: truth/compound-train-truth.yaml
+  kind: yaml
+  sha256: fe9bfd8953cd9707492db2fc68e4a4bbca4c3ab9b31caa78ea90d7b79e914511
+  note: analytic ratio, rest phases and centre distances (scripts/derive_mechanism_truth.py)
+arms:
+- id: spec-only
+  design: compound-train
+  inputs:
+  - inputs/compound-train-spec.md
+  images: []
+  notes: Text specification only.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 195.0
+  - 100.0
+  - 21.5
+  tolerance: 0.15
+  note: the plate (-25..170, -50..50, -5..0) bounds every gear (output tips reach x 167, y +-47; gears
+    up to z 16.5)
+- id: solid_count
+  kind: solid_count
+  expected: 4
+- id: plate
+  kind: solid
+  point:
+  - 60.0
+  - 40.0
+  - -2.5
+  expected: 96855.97
+  tolerance_rel: 0.005
+  note: 195 x 100 x 5 minus Ø6 and two Ø8 holes
+- id: pinion
+  kind: solid
+  point:
+  - 12.0
+  - 0.0
+  - 4.0
+- id: idler
+  kind: solid
+  point:
+  - 85.0
+  - 0.0
+  - 4.0
+- id: output
+  kind: solid
+  point:
+  - 145.0
+  - 0.0
+  - 12.5
+- id: pinion_teeth
+  kind: teeth
+  solid: pinion
+  point:
+  - 0
+  - 0
+  - 0
+  direction:
+  - 0
+  - 0
+  - 1
+  at: 4.0
+  module: 2.0
+  expected: 20
+- id: idler_large_teeth
+  kind: teeth
+  solid: idler
+  point:
+  - 60.0
+  - 0
+  - 0
+  direction:
+  - 0
+  - 0
+  - 1
+  at: 4.0
+  module: 2.0
+  expected: 40
+- id: idler_small_teeth
+  kind: teeth
+  solid: idler
+  point:
+  - 60.0
+  - 0
+  - 0
+  direction:
+  - 0
+  - 0
+  - 1
+  at: 12.0
+  module: 2.0
+  expected: 15
+- id: output_teeth
+  kind: teeth
+  solid: output
+  point:
+  - 120.0
+  - 0
+  - 0
+  direction:
+  - 0
+  - 0
+  - 1
+  at: 12.5
+  module: 2.0
+  expected: 45
+- id: idler_bore
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 60.0
+  - 0
+  - 8.0
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 4.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 16.0
+  length_tolerance: 0.1
+- id: output_bore
+  kind: cylinder
+  cyl_kind: hole
+  point:
+  - 120.0
+  - 0
+  - 12.5
+  direction:
+  - 0
+  - 0
+  - 1
+  radius: 4.0
+  radius_tolerance: 0.02
+  tolerance: 0.05
+  length: 8.0
+  length_tolerance: 0.1
+- id: first_mesh
+  kind: gear_mesh
+  a: pinion
+  b: idler
+  axis_a:
+  - - 0
+    - 0
+    - 0
+  - - 0
+    - 0
+    - 1
+  axis_b:
+  - - 60.0
+    - 0
+    - 0
+  - - 0
+    - 0
+    - 1
+  ratio: 0.5
+  pitch_deg: 18.0
+  steps: 6
+  backlash_max: 0.15
+- id: second_mesh
+  kind: gear_mesh
+  a: idler
+  b: output
+  axis_a:
+  - - 60.0
+    - 0
+    - 0
+  - - 0
+    - 0
+    - 1
+  axis_b:
+  - - 120.0
+    - 0
+    - 0
+  - - 0
+    - 0
+    - 1
+  ratio: 0.3333333333333333
+  pitch_deg: 24.0
+  steps: 6
+  backlash_max: 0.15
+performance:
+- id: trainRatio
+  quantity: transmission_ratio
+  unit: ''
+  evidence: C
+  value: 0.16666666666666666
+  tolerance: 1.0e-09
+  source: (-20/40)(-15/45) = +1/6
+  where: the whole train, output angle over pinion angle (declare it without `body`)
+  note: exact analytic ratio; the prediction is the product of the tooth-count ratios measured on the
+    placed gears
+- id: outputAt360
+  quantity: joint_value
+  unit: deg
+  evidence: C
+  value: 60.0
+  tolerance: 1.0e-06
+  source: 360 deg x 1/6
+  where: 'the output gear''s joint (`joint`), with the pinion turned one revolution (`at: 360`)'
+notes:
+- The plate volume is 195 x 100 x 5 - pi (3^2 + 2 x 4^2) x 5.

@@ -1,0 +1,438 @@
+schema_version: 1
+name: nasa-atb-axisymmetric-bump
+intent: >-
+  Reconstruct the Bachalo-Johnson axisymmetric transonic bump as ONE solid of revolution
+  for a CFD outer-mould line. The attached spec is inch-native (cylinder diameter 6 in,
+  bump chord 8 in, bump height 3/4 in); convert to millimetres. Frame: +x along the
+  cylinder axis with the bump chord occupying x = 0 to x = c, origin on the axis.
+  Revolve the meridian a full 360 degrees. The bump is a circular arc of radius
+  R1 = 0.5 (t^2 + 0.25 c^2) / t; blend it to the upstream cylinder with a leading-edge
+  fillet R2. The references list R2 as 18.30 cm (use 183.0 mm) with 20.32 cm as a
+  documented alternate (open question, inferred). No trailing-edge fillet. Axial
+  extent is the x-range of the attached surface-point file (nondimensional by the
+  8 in chord; multiply by 8 inches to get millimetres). Name the two planar end caps.
+  Expose cylinderDiameter, bumpChord, bumpHeight and filletRadius. One solid; export
+  STEP and STL.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: CFD outer-mould-line reconstruction; no manufacturing process specified
+release_status: reconstruction
+
+frame:
+  origin: >-
+    On the cylinder axis at the nominal unfilleted leading-edge plane x = 0.
+    The circular-arc chord runs from this plane to x = bumpChord; the actual
+    leading blend starts upstream of the origin. Preserve the surface table's
+    x coordinate without translating either end cap to zero.
+  axes:
+    x: Along the cylinder axis, positive downstream, matching the table's X column.
+    y: >-
+      Radially outward in the chosen meridian plane z = 0, matching the table's
+      positive Y radius after scaling. It is a radius, not a full diameter.
+    z: >-
+      Perpendicular to x and y with +z = +x cross +y, completing a right-handed
+      frame. The part is axisymmetric; no physical azimuth is specified.
+  datums:
+    - name: axis
+      description: Line y = z = 0; axis of the full 360 deg revolution.
+    - name: leadingChordPlane
+      description: Plane x = 0, containing the origin and nominal unfilleted leading edge.
+    - name: trailingChordPlane
+      description: Plane x = bumpChord = 203.2 mm; sharp arc-to-cylinder join.
+    - name: upstreamCap
+      description: Planar disk at x = upstreamX = -650.0073203536 mm; outward normal -x.
+    - name: downstreamCap
+      description: Planar disk at x = downstreamX = 900.0029136304 mm; outward normal +x.
+
+envelope:
+  min: [-650.0073203536, -95.25, -95.25]
+  max: [900.0029136304, 95.25, 95.25]
+  tolerance: 0.05
+
+parameters:
+  - name: cylinderDiameter
+    value: 152.4
+    unit: mm
+    provenance: stated
+    source: 'sources/nasa-atb-bump-spec.md, Geometry (as built): "Cylinder diameter d = 6 inches."'
+    tolerance: 0.01
+    description: >-
+      Cylinder diameter, 6 * 25.4 mm. Changing it offsets the entire meridian
+      radially by half the diameter change; bumpHeight remains measured above
+      the cylinder and the two axial extents remain fixed.
+    edit_test:
+      delta: 2.0
+      expect:
+        volume_delta: 763576.894948
+        direction: increase
+        tolerance_rel: 0.002
+        bbox_delta: [0, 2, 2]
+  - name: bumpChord
+    value: 203.2
+    unit: mm
+    provenance: stated
+    source: 'sources/nasa-atb-bump-spec.md, Geometry (as built): "Bump chord c = 8 inches (axial length of the circular-arc bump)."'
+    tolerance: 0.01
+    description: >-
+      Nominal circular-arc chord, 8 * 25.4 mm, occupying x = 0 to x = bumpChord.
+      This is not the 1550.010233984 mm endpoint span called chord by the generic
+      profile ingest. Axial extent constants are already converted to mm.
+  - name: bumpHeight
+    value: 19.05
+    unit: mm
+    provenance: stated
+    source: 'sources/nasa-atb-bump-spec.md, Geometry (as built): "Bump height t = 3/4 inch above the cylinder radius."'
+    tolerance: 0.01
+    description: >-
+      Maximum radial rise, 0.75 * 25.4 mm, at x = bumpChord / 2. Recompute the main
+      circle radius and leading-blend tangencies when edited; keep cylinderDiameter,
+      bumpChord, filletRadius, upstreamX and downstreamX fixed.
+    edit_test:
+      delta: 1.0
+      expect:
+        volume_delta: 82804.040776
+        direction: increase
+        tolerance_rel: 0.002
+        bbox_delta: [0, 2, 2]
+  - name: filletRadius
+    value: 183.0
+    unit: mm
+    provenance: inferred
+    source: sources/nasa-atb-bump-spec.md, Geometry (as built), competing R2 values
+    tolerance: 1.0
+    rationale: >-
+      Use the explicitly directed 18.30 cm interpretation, converted to 183.0 mm.
+      Classification is inferred because the supplied historical references also
+      list 20.32 cm = 203.2 mm. The 1 mm digital radius tolerance is deliberately
+      wider than the 0.01 mm stated-dimension tolerances; the discrete alternate
+      remains an open question, not permission to change the nominal geometry.
+    description: >-
+      Radius of the upstream concave circular blend, tangent to the cylinder and
+      externally tangent to the main bump circle. No downstream fillet is allowed.
+  - name: upstreamX
+    value: -650.0073203536
+    unit: mm
+    provenance: measured (reference model)
+    source: reference/profile.json, measurements.bbox_min[0] and points_mm[0][0]
+    tolerance: 0.01
+    description: >-
+      Signed upstream end-cap coordinate. Source X/c = -3.198854923 multiplied by
+      the fixed source normalization 203.2 mm. Do not scale profile.json again.
+  - name: downstreamX
+    value: 900.0029136304
+    unit: mm
+    provenance: measured (reference model)
+    source: reference/profile.json, measurements.bbox_max[0] and points_mm[-1][0]
+    tolerance: 0.01
+    description: >-
+      Signed downstream end-cap coordinate. Source X/c = 4.429148197 multiplied by
+      the fixed source normalization 203.2 mm. Do not scale profile.json again.
+
+features:
+  - id: fullRevolution
+    kind: revolve
+    count: 1
+    parameters: [cylinderDiameter, bumpChord, bumpHeight, filletRadius, upstreamX, downstreamX]
+    description: >-
+      Close a meridian from the outer radius to the axis at each axial limit and
+      revolve 360 deg about +x into one filled, connected solid. The axial baseline
+      has radius cylinderDiameter / 2, with continuous upstream and downstream
+      cylindrical portions. No bore, shell, cavity, sector gap or internal end
+      partition is present. STEP and STL must describe this same body.
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[-400, 0, 0], [0, 0, 0], [400, 0, 0]]
+        note: Axis points confirm a filled body rather than a tube.
+      - method: section
+        section: upstreamCylinder
+      - method: section
+        section: downstreamCylinder
+      - method: section
+        section: axialMeridian
+      - method: count
+        section: axialMeridian
+        count: 1
+        note: One connected outer section loop with no inner loops.
+  - id: circularArcBump
+    kind: profile
+    parameters: [cylinderDiameter, bumpChord, bumpHeight, filletRadius]
+    description: >-
+      Main convex arc has R1 = (bumpHeight^2 + bumpChord^2 / 4) / (2 * bumpHeight)
+      = 280.458333333333 mm and center (bumpChord / 2, cylinderDiameter / 2 +
+      bumpHeight - R1) in the x-radius meridian. Retain its upper branch from
+      the leading-blend tangent to x = bumpChord. Its maximum radius is 95.25 mm
+      at x = 101.6 mm. R1 and all tangencies must be computed from the exposed
+      parameters, not frozen as additional literal contract parameters.
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[101.6, 90, 0], [101.6, 0, 90], [101.6, -90, 0], [101.6, 0, -90]]
+        note: Four radial directions within the bump, each 5.25 mm below its crown.
+      - method: section
+        section: forwardArc
+      - method: section
+        section: bumpCrown
+  - id: leadingBlend
+    kind: fillet
+    parameters: [cylinderDiameter, bumpChord, bumpHeight, filletRadius]
+    description: >-
+      Circular meridian blend, not an arbitrary three-dimensional edge fillet.
+      With r = cylinderDiameter / 2, c = bumpChord, t = bumpHeight, f = filletRadius,
+      R = (t^2 + c^2 / 4) / (2*t), d = sqrt(2*(R+f)*t-t^2), a = c/2-d and
+      j = a+f*d/(R+f), use radius r+f-sqrt(f^2-(x-a)^2) for a <= x <= j.
+      The blend center is (a,r+f), start is (-29.909923579934,76.2), and end is
+      (22.017756395169,83.722035422098) mm. It is tangent at both ends and replaces
+      the nominal leading part of the bump circle.
+    verify:
+      - method: solid
+        points: [[10, 78, 0]]
+        note: >-
+          This point lies above the bare cylinder and inside the leading blend;
+          its distance to the inferred blend wall is 2.543100 mm, exceeding the
+          1 mm filletRadius tolerance.
+      - method: section
+        section: leadingBlendUpstream
+      - method: section
+        section: leadingChord
+  - id: sharpTrailingJoin
+    kind: profile
+    parameters: [cylinderDiameter, bumpChord, bumpHeight]
+    description: >-
+      At x = bumpChord the main arc meets the radius-76.2 mm cylinder without a
+      trailing-edge fillet. The nominal meridian slope changes from
+      -(bumpChord/2)/(R1-bumpHeight) = -0.388663967611 to 0. Preserve this circular
+      sharp edge. The approximate table's rounded trailing region is not the
+      authoritative construction here.
+    verify:
+      - method: section
+        section: beforeTrailingJoin
+      - method: section
+        section: afterTrailingJoin
+      - method: solid
+        points: [[202, 70, 0], [204, 70, 0]]
+  - id: upstreamEndCap
+    kind: other
+    parameters: [upstreamX, cylinderDiameter]
+    description: Planar circular end disk named upstreamCap, outward normal -x, centered on the axis.
+    verify:
+      - method: face
+        face: upstreamCap
+      - method: solid
+        points: [[-640, 0, 0]]
+  - id: downstreamEndCap
+    kind: other
+    parameters: [downstreamX, cylinderDiameter]
+    description: Planar circular end disk named downstreamCap, outward normal +x, centered on the axis.
+    verify:
+      - method: face
+        face: downstreamCap
+      - method: solid
+        points: [[890, 0, 0]]
+
+interfaces: []
+
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 29664257.630154
+    tolerance_rel: 0.001
+    provenance: derived
+    note: >-
+      Define r=cylinderDiameter/2, c=bumpChord, t=bumpHeight, f=filletRadius,
+      u=upstreamX, v=downstreamX, R=(t^2+c^2/4)/(2*t), h=c/2,
+      b=r+t-R, d=sqrt(2*(R+f)*t-t^2), a=h-d, j=a+f*d/(R+f).
+      The radius rho(x) is r on [u,a], r+f-sqrt(f^2-(x-a)^2) on [a,j],
+      b+sqrt(R^2-(x-h)^2) on [j,c], and r on [c,v].
+      V = pi * integral(u,v,rho(x)^2 dx), evaluated analytically on all four
+      intervals and independently checked by numerical quadrature. This is a
+      filled solid; the profile ingest's area is not its volume or section area.
+  surface_area:
+    expected: 797417.539677
+    tolerance_rel: 0.001
+    provenance: derived
+    note: >-
+      With rho(x) defined in volume.note, S = 2*pi*integral(u,v,
+      rho(x)*sqrt(1+rho'(x)^2) dx) + 2*pi*r^2. Integrate each smooth interval
+      separately. Includes both planar end disks; the sharp join has zero area.
+  center_of_mass:
+    expected: [123.829056217831, 0, 0]
+    tolerance: 0.05
+    provenance: derived
+    note: >-
+      Uniform geometric centroid, independent of any selected density:
+      xbar = pi*integral(u,v,x*rho(x)^2 dx)/V with rho and V from volume.note;
+      ybar = zbar = 0 by the full rotational symmetry.
+  solid_count: 1
+  sections:
+    - id: upstreamCylinder
+      plane: x
+      at: -400
+      expect:
+        area: 18241.469247510
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 0
+      description: Filled disk on the upstream cylinder; area = pi*(cylinderDiameter/2)^2.
+    - id: leadingBlendUpstream
+      plane: x
+      at: -10
+      expect:
+        area: 18765.272872550
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 0
+      description: Leading blend upstream of nominal chord; area = pi*rho(-10)^2, rho = 77.286298088788 mm.
+    - id: leadingChord
+      plane: x
+      at: 0
+      expect:
+        area: 19438.680527848
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 0
+      description: Blend at the origin plane; area = pi*rho(0)^2, rho = 78.660817351350 mm.
+    - id: forwardArc
+      plane: x
+      at: 50
+      expect:
+        area: 25709.015640963
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 0
+      description: Main circular arc forward of crown; area = pi*rho(50)^2, rho = 90.462333833326 mm.
+    - id: bumpCrown
+      plane: x
+      at: 101.6
+      expect:
+        area: 28502.295699234
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 0
+      description: Maximum-radius disk at bumpChord/2; area = pi*(cylinderDiameter/2+bumpHeight)^2.
+    - id: beforeTrailingJoin
+      plane: x
+      at: 202
+      expect:
+        area: 18463.929012381
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 0
+      description: Arc 1.2 mm before the sharp join; area = pi*rho(202)^2, rho = 76.663232011419 mm.
+    - id: afterTrailingJoin
+      plane: x
+      at: 204
+      expect:
+        area: 18241.469247510
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 0
+      description: Cylinder 0.8 mm after the sharp join; area = pi*(cylinderDiameter/2)^2; excludes the table's trailing smoothing.
+    - id: downstreamCylinder
+      plane: x
+      at: 400
+      expect:
+        area: 18241.469247510
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 0
+      description: Filled disk well downstream; area = pi*(cylinderDiameter/2)^2.
+    - id: axialMeridian
+      plane: z
+      at: 0
+      expect:
+        area: 241504.064289478
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 0
+      description: >-
+        Entire material section through the axis, containing both positive and
+        negative radial sides; area = 2*integral(upstreamX,downstreamX,rho(x) dx).
+  faces:
+    - name: upstreamCap
+      plane: x
+      at: -650.0073203536
+      normal: '-'
+      area: 18241.469247510
+      area_tolerance_rel: 0.001
+      tolerance: 0.01
+      center: [0, 0]
+      mode: one
+    - name: downstreamCap
+      plane: x
+      at: 900.0029136304
+      normal: '+'
+      area: 18241.469247510
+      area_tolerance_rel: 0.001
+      tolerance: 0.01
+      center: [0, 0]
+      mode: one
+  deviation: null
+  blockout:
+    volume_min: 30605031.757600
+    volume_max: 30727697.215547
+  export_volume_tolerance_rel: 0.002
+
+references:
+  - path: sources/nasa-atb-bump-spec.md
+    kind: text
+    role: authoritative
+    sha256: f773288693cfbcd96bc113422d051fd3f47b86791ad0c254f7c704e99ce86165
+    units: in for cylinder and bump dimensions; cm for the competing fillet radii
+    revision: Unversioned supplied specification; exact snapshot identified by SHA-256
+    note: >-
+      Governs the inch-native dimensions, analytic arc, selected leading fillet,
+      sharp trailing join, frame, solid count and cap requirement. NASA links
+      inside the supplied text are citations, not separately ingested files.
+  - path: sources/bumpgrd.surfpts_orig.dat
+    kind: table
+    role: authoritative
+    sha256: 46f028810ad0e6e68e20520452edb44c2dfe77b42ceefa59229733d92bb15b1f
+    units: dimensionless x/c and r/c; fixed source chord c = 203.2 mm
+    revision: Supplied surfpts_orig snapshot; header calls the coordinates approximate
+    note: >-
+      181 open meridian samples. Authoritative for axial endpoints and source
+      normalization; intermediate samples are contextual checks, subordinate
+      to the explicit analytic geometry and no-trailing-fillet requirement.
+  - path: reference/profile.json
+    kind: reference-model
+    role: authoritative
+    sha256: 32b04d48e80559b1e61f02b364213768d9fdee0f03423e0b29ee5bb8ca900b1c
+    units: mm in points_mm and measurements; already scaled by 203.2
+    revision: 'Generated 2026-09-16T09:36:55Z'
+    note: >-
+      Deterministic coordinate ingest, used for the measured axial limits.
+      source.declared_units says mm but the raw table is dimensionless;
+      source.scale_to_mm = 203.2 is already applied in points_mm.
+      measurements.chord is the full endpoint span, not bumpChord. The closed
+      polygon area, centroid, perimeter and binned max_thickness are generic
+      ingest summaries, not solid properties or governing bump dimensions.
+      This file contains no reference mesh or suggested tolerance band.
+  - path: reference/profile.png
+    kind: image
+    role: illustrative
+    sha256: 4a9d293999dd4fa5f207270b279a6237aa144e62610cd43bee6d6b48e9a67f91
+    units: pixels; plot of the already scaled mm meridian
+    revision: Companion plot to profile.json generated 2026-09-16T09:36:55Z
+    note: >-
+      900 by 70 pixel plot, inspected for one raised meridian bump and the two
+      long cylinder runs. No dimension annotations or independently calibrated
+      scale; no parameter is inferred from its pixels.
+
+open_questions:
+  - >-
+    Which historical leading-edge radius is correct: 18.30 cm (183.0 mm) or the
+    documented alternate 20.32 cm (203.2 mm)? This contract fixes the instructed
+    inferred nominal at 183.0 mm; 203.2 mm is an unbuilt alternate.
+  - >-
+    What accounts for the approximate coordinate table's trailing-edge smoothing
+    and small leading-blend differences from the specified analytic profile?
+    The active contract uses its axial limits but retains the explicitly
+    required sharp trailing join; it does not interpolate the rounded samples.
+  - >-
+    What chordal and angular tessellation tolerances does the downstream CFD
+    workflow require for STL? No values were supplied; the retained 0.2 percent
+    cross-format volume check alone does not establish local surface accuracy.

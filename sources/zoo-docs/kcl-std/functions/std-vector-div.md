@@ -1,0 +1,41 @@
+Source URL: https://zoo.dev/docs/kcl-std/functions/std-vector-div
+Title: vector::div
+
+# vector::div
+
+Divides every element of u by its corresponding element in v. Both vectors must have the same number of elements. Returns a new vector with the same number of elements. In other words, component-wise division.
+
+Divides every element of u by its corresponding element in v. Both vectors must have the same number of elements. Returns a new vector with the same number of elements. In other words, component-wise division.
+
+```kcl
+vector::div(
+  @u: [number],
+  v: [number],
+): [number]
+```
+
+
+
+### Arguments
+
+| Name | Type | Description | Required |
+|----------|------|-------------|----------|
+| `u` | [[`number`](/docs/kcl-std/types/std-types-number)] |  | Yes |
+| `v` | [[`number`](/docs/kcl-std/types/std-types-number)] |  | Yes |
+
+### Returns
+
+[[`number`](/docs/kcl-std/types/std-types-number)]
+
+
+### Examples
+
+```kcl
+u = [10, 10, 10]
+v = [1, 2, 3]
+v2 = vector::div(u, v)
+assert(v2[0], isEqualTo = 10)
+assert(v2[1], isEqualTo = 5)
+assert(v2[2], isEqualTo = 3.333, tolerance = 0.01)
+
+```

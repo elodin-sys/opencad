@@ -1,0 +1,291 @@
+schema_version: 1
+name: rack-pinion-base
+intent: >-
+  Base plate of the rack-pinion assembly, modelled in the assembly frame (origin on the pinion axis at the
+  plate top, x along the rack's travel, y from the rack toward the pinion, z up): a 240 x 80 x 5 box from
+  corner (-120, -50, -5) to (120, 30, 0) with a D6 clearance hole through its thickness on the pinion axis
+  at (0, 0). Interfaces: the flat top face z = 0, on which the pinion stands (its bottom face centred on the
+  origin) and the rack slides (its footprint y = -32 to -18); the D6 hole is coaxial with the pinion's D6
+  bore. Authoritative source: sources/rack-pinion-spec.md.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "on the pinion axis at the plate's top face: the centre of the D6 hole at z = 0 (the rack-pinion assembly frame)"
+  axes:
+    x: "along the rack's travel; the plate spans x = -120 .. 120 and is mirror-symmetric about x = 0"
+    y: "from the rack toward the pinion; the plate spans y = -50 (rack side) .. 30; the rack's pitch line is y = -20"
+    z: "up, parallel to the pinion axis; top face (deck) z = 0, bottom face z = -5"
+  datums:
+    - name: A
+      description: "deck: the flat top face z = 0 on which the pinion stands and the rack slides"
+    - name: B
+      description: "pinion axis: the D6 hole axis through (0, 0), parallel to z"
+    - name: C
+      description: "mirror plane x = 0"
+
+envelope:
+  min: [-120, -50, -5]
+  max: [120, 30, 0]
+  tolerance: 0.05
+
+parameters:
+  - name: plateLength
+    value: 240
+    unit: mm
+    provenance: stated
+    source: "sources/rack-pinion-spec.md, table row 'Base plate' (240 x 80 x 5 mm, corner (-120, -50, -5) to (120, 30, 0))"
+    tolerance: 0.01
+    description: "plate extent along x, centred on the pinion axis x = 0"
+    edit_test:
+      delta: 20
+      expect:
+        volume_delta: 8000
+        direction: increase
+        bbox_delta: [20, 0, 0]
+        tolerance_rel: 0.01
+      sweep:
+        values: [200, 240, 280]
+      infeasible_deltas: [-236]
+  - name: plateWidth
+    value: 80
+    unit: mm
+    provenance: stated
+    source: "sources/rack-pinion-spec.md, table row 'Base plate'"
+    tolerance: 0.01
+    description: "plate extent along y, from plateYMin to plateYMax"
+  - name: plateThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "sources/rack-pinion-spec.md, table row 'Base plate'; plate top at z = 0"
+    tolerance: 0.01
+    description: "plate thickness below the deck; the bottom face is z = -plateThickness, the deck stays at z = 0"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 19171.73
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.01
+      sweep:
+        values: [3, 5, 8]
+      infeasible_deltas: [-5]
+  - name: plateYMin
+    value: -50
+    unit: mm
+    provenance: stated
+    source: "sources/rack-pinion-spec.md, table row 'Base plate', corner (-120, -50, -5)"
+    tolerance: 0.01
+    description: "y of the rack-side (front) edge"
+  - name: plateYMax
+    value: 30
+    unit: mm
+    provenance: derived
+    formula: "plateYMin + plateWidth"
+    source: "confirmed by the stated corner (120, 30, 0)"
+    tolerance: 0.01
+    description: "y of the back edge"
+  - name: holeDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "sources/rack-pinion-spec.md, table row 'Base plate', clearance hole D6 at (0, 0)"
+    tolerance: 0.01
+    description: "clearance hole through the plate on the pinion axis"
+
+features:
+  - id: plate
+    kind: extrude
+    description: "rectangle x -120..120, y -50..30 in the plane z = 0, extruded 5 mm downward to z = -5"
+    parameters: [plateLength, plateWidth, plateThickness, plateYMin, plateYMax]
+    verify:
+      - method: bbox
+      - method: face
+        face: top
+      - method: face
+        face: bottom
+      - method: dimension
+        dimension: thicknessZ
+      - method: dimension
+        dimension: lengthX
+      - method: dimension
+        dimension: widthY
+      - method: section
+        section: midZ
+      - method: solid
+        points: [[60, -10, -2.5], [-60, -10, -2.5], [0, -25, -2.5]]
+  - id: pivotHole
+    kind: hole
+    description: "D6 clearance hole through the full thickness on the pinion axis (0, 0), axis parallel to z"
+    parameters: [holeDiameter, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: hole
+      - method: section
+        section: axisX
+      - method: void
+        points: [[0, 0, -1.5], [0, 0, -3.5]]
+
+interfaces:
+  - name: deck
+    description: "top face z = 0: the pinion's bottom face stands on it centred on the origin (joint pinionSpin), the rack slides on it along x with its footprint y = -32 .. -18 (joint rackSlide at [0, -20, 0], axis +x); no edit test moves it"
+    must_not_change: true
+    checks: [top]
+  - name: pivot
+    description: "D6 hole on the pinion axis (0, 0), axis +z, coaxial with the pinion's D6 bore (joint pinionSpin at [0, 0, 0], axis [0, 0, 1]); it lies on the plate's mirror plane x = 0"
+    must_not_change: true
+    checks: [hole, mirrorX]
+
+acceptance:
+  volume:
+    expected: 95858.63
+    tolerance_rel: 0.0005
+    provenance: derived
+    note: "plateLength * plateWidth * plateThickness - pi * (holeDiameter / 2)^2 * plateThickness = 96000 - 141.37"
+  surface_area:
+    expected: 41637.70
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "2 (L W + L T + W T) - 2 pi r^2 + 2 pi r T = 41600 - 56.55 + 94.25 (L 240, W 80, T 5, r 3)"
+  center_of_mass:
+    expected: [0, -10.015, -2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "box centroid (0, -10, -2.5) less the hole volume at (0, 0, -2.5): y = -10 * 96000 / 95858.63"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: -2.5
+      expect:
+        area: 19171.73
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 1
+      description: "mid-thickness section: 240 x 80 rectangle less the D6 hole (19200 - 28.27)"
+    - id: axisX
+      plane: x
+      at: 0
+      expect:
+        area: 370
+        area_tolerance_rel: 0.002
+        loops: 2
+        holes: 0
+      description: "section through the hole axis: y -50..-3 and 3..30 over z -5..0 (400 - 6 x 5)"
+  faces:
+    - name: top
+      plane: z
+      at: 0
+      normal: "+"
+      mode: one
+    - name: bottom
+      plane: z
+      at: -5
+      normal: "-"
+      area: 19171.73
+      area_tolerance_rel: 0.001
+      mode: one
+    - name: front
+      plane: y
+      at: -50
+      normal: "-"
+      area: 1200
+      area_tolerance_rel: 0.001
+      mode: one
+    - name: back
+      plane: y
+      at: 30
+      normal: "+"
+      area: 1200
+      area_tolerance_rel: 0.001
+      mode: one
+    - name: left
+      plane: x
+      at: -120
+      normal: "-"
+      area: 400
+      area_tolerance_rel: 0.001
+      mode: one
+    - name: right
+      plane: x
+      at: 120
+      normal: "+"
+      area: 400
+      area_tolerance_rel: 0.001
+      mode: one
+  cylinders:
+    - name: hole
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      radius_tolerance: 0.02
+      description: "D6 clearance hole on the pinion axis; length follows plateThickness, so it is checked by the sections and probes"
+  dimensions:
+    - name: lengthX
+      axis: x
+      expected: 240
+      tolerance: 0.05
+      description: "plate length along the rack's travel (bbox extent)"
+    - name: widthY
+      axis: y
+      expected: 80
+      tolerance: 0.05
+      description: "plate width (bbox extent)"
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "plate thickness between bottom and deck"
+  solids:
+    - name: plate
+      contains_point: [60, -10, -2.5]
+      description: "the single solid"
+  probes:
+    - name: underRack
+      state: solid
+      points: [[-100, -32, -2.5], [100, -18, -2.5], [0, -25, -2.5]]
+      description: "material under the rack's footprint y -32 .. -18"
+    - name: underPinion
+      state: solid
+      points: [[15, 0, -2.5], [-15, 0, -2.5], [0, 15, -2.5], [0, -15, -2.5]]
+      description: "material under the pinion's tip circle, outside the hole"
+    - name: inHole
+      state: void
+      points: [[0, 0, -1.5], [0, 0, -3.5]]
+      description: "inside the D6 hole near the top and the bottom"
+  cylinder_counts:
+    - name: d6Holes
+      diameter: 6
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+  symmetry:
+    - name: mirrorX
+      plane: x
+      at: 0
+  blockout:
+    volume_min: 92000
+    volume_max: 96100
+
+references:
+  - path: sources/rack-pinion-spec.md
+    kind: text
+    role: authoritative
+    sha256: 87f6a8bbc15c559e23899017105cd36ee8b503a6238b00213d3b99103d903561
+    units: mm
+    revision: "as supplied"
+    note: "rack and pinion design specification; the 'Base plate' row and the frame paragraph fix this part"
+
+open_questions:
+  - "Material, density and process are not stated; no mass claim is made (density left null)."
+  - "Edge treatment (chamfers or fillets on the plate edges and the hole mouths) is not stated; the contract assumes sharp edges."
+  - "The hole is stated only as a D6 clearance hole; no fit class, chamfer or counterbore is given, and the part that passes through it is not described."
+  - "Over one pinion revolution the rack travels 2 pi x 20 = 125.66 mm, so its 200 mm body overhangs the plate ends x = +/-120 (by up to 42.8 mm for a -180..180 deg sweep); the stated plate length is kept."

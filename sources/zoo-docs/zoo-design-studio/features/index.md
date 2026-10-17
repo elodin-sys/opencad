@@ -1,0 +1,72 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features
+Title: Features
+
+# Features
+
+Product-area documentation for Zoo Design Studio features.
+
+This section is the main reference map for Zoo Design Studio. Use it to find product areas,
+workspace surfaces, modeling tools, project workflows, and support information without having to
+guess which part of the docs tree holds a specific topic.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/overview.webp"
+  alt="Zoo Design Studio features overview"
+  aspect="3182 / 1604"
+  maxHeightPx={460}
+/>
+
+## How to Use This Section
+
+- If you are new to Zoo Design Studio, start with [Getting Started](/docs/zoo-design-studio/getting-started) first, then come back here as a reference index.
+- If you are looking for modeling operations and CAD workflows, start with [3D Design](/docs/zoo-design-studio/features/3d-design).
+- If you are looking for interface surfaces, panes, and controls inside the app, go to [Workspace](/docs/zoo-design-studio/features/workspace).
+- If you are looking for project, import, export, or version-control workflows, go to [Data Management](/docs/zoo-design-studio/features/data-management).
+- If you are looking for AI-assisted workflows, start with [ML / AI](/docs/zoo-design-studio/features/ml-ai), then continue into [Zookeeper](/docs/zoo-design-studio/zookeeper).
+- If you are looking for downstream analysis workflows, go to [Simulation](/docs/zoo-design-studio/features/simulation).
+
+## Product Areas
+
+### 3D Design
+
+[3D Design](/docs/zoo-design-studio/features/3d-design) covers the core CAD workflow in Zoo Design
+Studio, including sketching, parametric modeling, assemblies, solid modeling, surface modeling,
+transforms, and construction geometry.
+
+### ML / AI
+
+[ML / AI](/docs/zoo-design-studio/features/ml-ai) covers how AI-assisted work fits into the product.
+From there, continue into [Zookeeper](/docs/zoo-design-studio/zookeeper) for the full agent guide.
+
+### Documentation
+
+[Documentation](/docs/zoo-design-studio/features/documentation) covers model-based definition topics
+that live with the 3D model, including GD&T annotations currently supported in the app.
+
+### Simulation
+
+[Simulation](/docs/zoo-design-studio/features/simulation) covers workflows that move Zoo Design
+Studio models into downstream analysis tools while preserving parametric source geometry.
+
+### Data Management
+
+[Data Management](/docs/zoo-design-studio/features/data-management) covers project storage, project
+libraries, cloud sync, import and export workflows, default project folders, and code-based
+version-control workflows.
+
+### Technical Support
+
+[Technical Support](/docs/zoo-design-studio/features/technical-support) points to the main support
+channels for Design Studio users, including community and direct support paths.
+
+### System Requirements
+
+[System Requirements](/docs/zoo-design-studio/features/system-requirements) covers supported
+platforms, including Windows, macOS, Linux, and the browser version, along with current platform
+differences.
+
+### Workspace
+
+[Workspace](/docs/zoo-design-studio/features/workspace) documents the main surfaces inside the app,
+including the Scene, Toolbar, Feature Tree, Code Editor, File Explorer, AI Chat, Top Bar, Status
+Bar, and Settings.

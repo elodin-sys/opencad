@@ -1,0 +1,1098 @@
+{
+  "step": "/Users/danieldriscoll/dual/opencad/results/benchy/export/benchy.step",
+  "stl": "/Users/danieldriscoll/dual/opencad/results/benchy/export/benchy.stl",
+  "brep": {
+    "solids": 1,
+    "valid": true,
+    "faces": 70,
+    "planar_faces": 40,
+    "bbox_min": [
+      -0.00423951762228175,
+      -15.504668684597394,
+      -1e-07
+    ],
+    "bbox_max": [
+      60.000279053947104,
+      15.504668684597391,
+      48.0
+    ],
+    "bbox_size": [
+      60.004518571569385,
+      31.009337369194785,
+      48.0000001
+    ],
+    "volume": 17038.015161717463,
+    "surface_area": 10174.011784215994,
+    "center_of_mass": [
+      27.045714663454202,
+      4.580195763778216e-08,
+      12.02480987074426
+    ],
+    "inertia_about_com": [
+      [
+        2922886.5954296,
+        0.011776993023142246,
+        -602832.9462777236
+      ],
+      [
+        0.011776993023142246,
+        4956268.350664083,
+        0.002254953502638761
+      ],
+      [
+        -602832.9462777236,
+        0.002254953502638761,
+        3885454.153547883
+      ]
+    ]
+  },
+  "bbox": {
+    "expected_min": [
+      0.0,
+      -15.5,
+      0.0
+    ],
+    "expected_max": [
+      60.0,
+      15.5,
+      48.0
+    ],
+    "measured_min": [
+      -0.0042,
+      -15.5047,
+      -0.0
+    ],
+    "measured_max": [
+      60.0003,
+      15.5047,
+      48.0
+    ],
+    "max_error": 0.0047,
+    "tolerance": 0.05,
+    "ok": true
+  },
+  "volume": {
+    "declared": true,
+    "expected": 15550.0,
+    "measured": 17038.0152,
+    "error": 1488.0152,
+    "band": 1555.0,
+    "ok": true
+  },
+  "surface_area": {
+    "declared": false,
+    "ok": true
+  },
+  "center_of_mass": {
+    "declared": false,
+    "ok": true
+  },
+  "solid_count": {
+    "expected": 1,
+    "measured": 1,
+    "ok": true
+  },
+  "valid": true,
+  "sections": {
+    "chimneyCollar": {
+      "plane": "z",
+      "at": 47.0,
+      "measured": {
+        "area": 31.415926535897942,
+        "loops": 1,
+        "holes": 1
+      },
+      "regions": [
+        {
+          "area": 31.415926535897942,
+          "holes": 1,
+          "bbox_min": [
+            21.5,
+            -3.5,
+            47.0
+          ],
+          "bbox_max": [
+            28.5,
+            3.5,
+            47.0
+          ],
+          "centroid": [
+            25.0,
+            -2.40308575932799e-16,
+            47.0
+          ]
+        }
+      ],
+      "checks": {
+        "area": {
+          "expected": 31.4159265359,
+          "measured": 31.415926535897942,
+          "ok": true,
+          "tolerance_rel": 0.02
+        },
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    "chimneyAxial": {
+      "plane": "x",
+      "at": 25.0,
+      "measured": {
+        "area": 474.0886039179015,
+        "loops": 1,
+        "holes": 1
+      },
+      "regions": [
+        {
+          "area": 474.0886039179015,
+          "holes": 1,
+          "bbox_min": [
+            24.9999999,
+            -15.504667098981328,
+            -1.0000000071605636e-07
+          ],
+          "bbox_max": [
+            25.0000001,
+            15.504667098981328,
+            48.0000001
+          ],
+          "centroid": [
+            25.0,
+            -4.154426962038343e-15,
+            14.799695259595605
+          ]
+        }
+      ],
+      "checks": {
+        "islands_min": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    "cargoCavity": {
+      "plane": "z",
+      "at": 9.0,
+      "measured": {
+        "area": 1281.8143080134778,
+        "loops": 1,
+        "holes": 1
+      },
+      "regions": [
+        {
+          "area": 1281.8143080134778,
+          "holes": 1,
+          "bbox_min": [
+            0.027644203540267146,
+            -15.4695959627222,
+            8.9999999
+          ],
+          "bbox_max": [
+            54.4116867437463,
+            15.4695959627222,
+            9.0000001
+          ],
+          "centroid": [
+            24.692727172804943,
+            4.1273771421806055e-08,
+            9.0
+          ]
+        }
+      ],
+      "checks": {
+        "loops": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "holes": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    "hawsepipeStation": {
+      "plane": "x",
+      "at": 52.0,
+      "measured": {
+        "area": 89.26330846939143,
+        "loops": 3,
+        "holes": 0
+      },
+      "regions": [
+        {
+          "area": 13.189089023699136,
+          "holes": 0,
+          "bbox_min": [
+            51.9999999,
+            -7.235466832385263,
+            19.9999999
+          ],
+          "bbox_max": [
+            52.0000001,
+            -1.4171874440273933,
+            22.333333621396058
+          ],
+          "centroid": [
+            52.0,
+            -4.244466935928627,
+            21.157272145795783
+          ]
+        },
+        {
+          "area": 62.885127032376,
+          "holes": 0,
+          "bbox_min": [
+            51.9999999,
+            -6.467017677730383,
+            6.037322529388295
+          ],
+          "bbox_max": [
+            52.0000001,
+            6.467022866565109,
+            16.000001594419953
+          ],
+          "centroid": [
+            52.0,
+            3.622073918951858e-06,
+            12.043301010881667
+          ]
+        },
+        {
+          "area": 13.189092413316297,
+          "holes": 0,
+          "bbox_min": [
+            51.9999999,
+            1.4171856516906394,
+            19.999999884108103
+          ],
+          "bbox_max": [
+            52.0000001,
+            7.235466832385263,
+            22.333336117485175
+          ],
+          "centroid": [
+            52.00000000000001,
+            4.244464914929459,
+            21.15727231423219
+          ]
+        }
+      ],
+      "checks": {
+        "islands_min": {
+          "expected": 1,
+          "measured": 3,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    "frontWindow": {
+      "plane": "x",
+      "at": 40.0,
+      "measured": {
+        "area": 675.0300569144707,
+        "loops": 1,
+        "holes": 1
+      },
+      "regions": [
+        {
+          "area": 675.0300569144707,
+          "holes": 1,
+          "bbox_min": [
+            39.9999999,
+            -13.021398514846714,
+            -1e-07
+          ],
+          "bbox_max": [
+            40.0000001,
+            13.021398329091875,
+            39.44433748623073
+          ],
+          "centroid": [
+            40.0,
+            -1.453938465214198e-06,
+            18.299356749937125
+          ]
+        }
+      ],
+      "checks": {
+        "holes": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "islands_min": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    "rearWindow": {
+      "plane": "x",
+      "at": 22.0,
+      "measured": {
+        "area": 741.2484873709542,
+        "loops": 2,
+        "holes": 1
+      },
+      "regions": [
+        {
+          "area": 734.0373848200262,
+          "holes": 1,
+          "bbox_min": [
+            21.9999999,
+            -15.44187784391899,
+            -1e-07
+          ],
+          "bbox_max": [
+            22.0000001,
+            15.441877843918988,
+            37.711134667091976
+          ],
+          "centroid": [
+            22.0,
+            3.1697467080548695e-06,
+            16.457038236675775
+          ]
+        },
+        {
+          "area": 7.211102550927979,
+          "holes": 0,
+          "bbox_min": [
+            22.0,
+            -1.8027756377319946,
+            46.0
+          ],
+          "bbox_max": [
+            22.0,
+            1.8027756377319952,
+            48.0
+          ],
+          "centroid": [
+            22.0,
+            2.775557561562891e-16,
+            47.0
+          ]
+        }
+      ],
+      "checks": {
+        "holes": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "islands_min": {
+          "expected": 1,
+          "measured": 2,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    "portSide": {
+      "plane": "y",
+      "at": 8.0,
+      "measured": {
+        "area": 858.5641028081347,
+        "loops": 1,
+        "holes": 1
+      },
+      "regions": [
+        {
+          "area": 858.5641028081347,
+          "holes": 1,
+          "bbox_min": [
+            -0.0042395191899929794,
+            7.9999999,
+            -1e-07
+          ],
+          "bbox_max": [
+            50.86225992146985,
+            8.0000001,
+            39.6850601
+          ],
+          "centroid": [
+            27.893933455506318,
+            8.0,
+            15.613920122870399
+          ]
+        }
+      ],
+      "checks": {
+        "islands_min": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    "starboardSide": {
+      "plane": "y",
+      "at": -8.0,
+      "measured": {
+        "area": 858.5643135254388,
+        "loops": 1,
+        "holes": 1
+      },
+      "regions": [
+        {
+          "area": 858.5643135254388,
+          "holes": 1,
+          "bbox_min": [
+            -0.004239541580538376,
+            -8.0000001,
+            -1e-07
+          ],
+          "bbox_max": [
+            50.86225992146985,
+            -7.9999999,
+            39.6850601
+          ],
+          "centroid": [
+            27.893939053151612,
+            -8.0,
+            15.613918114407245
+          ]
+        }
+      ],
+      "checks": {
+        "islands_min": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    "centreline": {
+      "plane": "y",
+      "at": 0.0,
+      "measured": {
+        "area": 708.4184596193443,
+        "loops": 2,
+        "holes": 0
+      },
+      "regions": [
+        {
+          "area": 100.76075271278087,
+          "holes": 0,
+          "bbox_min": [
+            19.4999999,
+            -1.0000000036739404e-07,
+            31.4999999
+          ],
+          "bbox_max": [
+            42.500000670200365,
+            1e-07,
+            48.0000001
+          ],
+          "centroid": [
+            29.718990208839557,
+            -3.0814879110195774e-33,
+            38.394784780378686
+          ]
+        },
+        {
+          "area": 607.6577069065634,
+          "holes": 0,
+          "bbox_min": [
+            -0.004239519229839552,
+            -1e-07,
+            -1.0000000005551115e-07
+          ],
+          "bbox_max": [
+            60.000279053947104,
+            1e-07,
+            24.0000001
+          ],
+          "centroid": [
+            29.815732496710787,
+            1.5407439555097887e-33,
+            7.674690254446682
+          ]
+        }
+      ],
+      "checks": {
+        "islands_min": {
+          "expected": 1,
+          "measured": 2,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  },
+  "faces": {
+    "keelBottom": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 641.1751305319185,
+      "ok": true,
+      "centroid_uv": [
+        23.039901253127443,
+        -1.7731011748272503e-16
+      ]
+    },
+    "cargoBoxTop": {
+      "plane": "z",
+      "at": 15.5,
+      "normal": "+",
+      "found": 1,
+      "area": 73.72000000000003,
+      "ok": true,
+      "centroid_uv": [
+        15.0,
+        6.023999048427326e-17
+      ]
+    },
+    "chimneyTop": {
+      "plane": "z",
+      "at": 48.0,
+      "normal": "+",
+      "found": 1,
+      "area": 31.415926535897928,
+      "ok": true,
+      "centroid_uv": [
+        25.0,
+        2.120369787642345e-16
+      ]
+    }
+  },
+  "features": {
+    "hull": {
+      "kind": "loft",
+      "optional": false,
+      "checks": [
+        {
+          "method": "bbox",
+          "ok": true
+        },
+        {
+          "method": "face",
+          "face": "keelBottom",
+          "ok": true,
+          "found": 1
+        },
+        {
+          "method": "solid",
+          "points": [
+            [
+              31.0,
+              0.0,
+              3.0
+            ]
+          ],
+          "states": [
+            "in"
+          ],
+          "ok": true,
+          "note": "Deep central hull, clear of pocket and uncertain keel perimeter."
+        },
+        {
+          "method": "section",
+          "section": "centreline",
+          "ok": true,
+          "measured": {
+            "area": 708.4184596193443,
+            "loops": 2,
+            "holes": 0
+          }
+        }
+      ],
+      "ok": true,
+      "verified": true
+    },
+    "deck": {
+      "kind": "extrude",
+      "optional": false,
+      "checks": [
+        {
+          "method": "solid",
+          "points": [
+            [
+              31.0,
+              0.0,
+              8.0
+            ]
+          ],
+          "states": [
+            "in"
+          ],
+          "ok": true,
+          "note": "2 mm below nominal deck exceeds its 1 mm uncertainty."
+        },
+        {
+          "method": "section",
+          "section": "cargoCavity",
+          "ok": true,
+          "measured": {
+            "area": 1281.8143080134778,
+            "loops": 1,
+            "holes": 1
+          }
+        }
+      ],
+      "ok": true,
+      "verified": true
+    },
+    "gunwale": {
+      "kind": "shell",
+      "optional": false,
+      "checks": [
+        {
+          "method": "section",
+          "section": "hawsepipeStation",
+          "ok": true,
+          "measured": {
+            "area": 89.26330846939143,
+            "loops": 3,
+            "holes": 0
+          }
+        },
+        {
+          "method": "section",
+          "section": "centreline",
+          "ok": true,
+          "measured": {
+            "area": 708.4184596193443,
+            "loops": 2,
+            "holes": 0
+          }
+        }
+      ],
+      "ok": true,
+      "verified": true
+    },
+    "cabin": {
+      "kind": "shell",
+      "optional": false,
+      "checks": [
+        {
+          "method": "void",
+          "points": [
+            [
+              31.0,
+              0.0,
+              20.0
+            ]
+          ],
+          "states": [
+            "out"
+          ],
+          "ok": true,
+          "note": "At least 7 mm nominal wall clearance exceeds placement/thickness tolerances."
+        },
+        {
+          "method": "section",
+          "section": "frontWindow",
+          "ok": true,
+          "measured": {
+            "area": 675.0300569144707,
+            "loops": 1,
+            "holes": 1
+          }
+        },
+        {
+          "method": "section",
+          "section": "rearWindow",
+          "ok": true,
+          "measured": {
+            "area": 741.2484873709542,
+            "loops": 2,
+            "holes": 1
+          }
+        }
+      ],
+      "ok": true,
+      "verified": true
+    },
+    "roof": {
+      "kind": "extrude",
+      "optional": false,
+      "checks": [
+        {
+          "method": "section",
+          "section": "centreline",
+          "ok": true,
+          "measured": {
+            "area": 708.4184596193443,
+            "loops": 2,
+            "holes": 0
+          }
+        }
+      ],
+      "ok": true,
+      "verified": true
+    },
+    "chimney": {
+      "kind": "hole",
+      "optional": false,
+      "checks": [
+        {
+          "method": "face",
+          "face": "chimneyTop",
+          "ok": true,
+          "found": 1
+        },
+        {
+          "method": "section",
+          "section": "chimneyCollar",
+          "ok": true,
+          "measured": {
+            "area": 31.415926535897942,
+            "loops": 1,
+            "holes": 1
+          }
+        },
+        {
+          "method": "count",
+          "section": "chimneyCollar",
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        {
+          "method": "section",
+          "section": "chimneyAxial",
+          "ok": true,
+          "measured": {
+            "area": 474.0886039179015,
+            "loops": 1,
+            "holes": 1
+          }
+        },
+        {
+          "method": "void",
+          "points": [
+            [
+              25.0,
+              0.0,
+              43.0
+            ]
+          ],
+          "states": [
+            "out"
+          ],
+          "ok": true,
+          "note": "Bore radius 1.5 exceeds axis tolerance 1; floor clearance 6 mm."
+        }
+      ],
+      "ok": true,
+      "verified": true
+    },
+    "cargoBox": {
+      "kind": "pocket",
+      "optional": false,
+      "checks": [
+        {
+          "method": "face",
+          "face": "cargoBoxTop",
+          "ok": true,
+          "found": 1
+        },
+        {
+          "method": "section",
+          "section": "cargoCavity",
+          "ok": true,
+          "measured": {
+            "area": 1281.8143080134778,
+            "loops": 1,
+            "holes": 1
+          }
+        },
+        {
+          "method": "void",
+          "points": [
+            [
+              15.0,
+              0.0,
+              11.0
+            ]
+          ],
+          "states": [
+            "out"
+          ],
+          "ok": true,
+          "note": "3.5 mm side and 4.5 mm floor/rim clearances exceed station tolerance 1."
+        },
+        {
+          "method": "solid",
+          "points": [
+            [
+              15.0,
+              0.0,
+              5.0
+            ]
+          ],
+          "states": [
+            "in"
+          ],
+          "ok": true,
+          "note": "1.5 mm below stated-derived pocket floor, well inside provisional keel."
+        }
+      ],
+      "ok": true,
+      "verified": true
+    },
+    "hawsepipe": {
+      "kind": "hole",
+      "optional": false,
+      "checks": [
+        {
+          "method": "section",
+          "section": "hawsepipeStation",
+          "ok": true,
+          "measured": {
+            "area": 89.26330846939143,
+            "loops": 3,
+            "holes": 0
+          }
+        },
+        {
+          "method": "void",
+          "points": [
+            [
+              52.0,
+              -12.0,
+              18.0
+            ],
+            [
+              52.0,
+              -8.0,
+              18.0
+            ],
+            [
+              52.0,
+              8.0,
+              18.0
+            ],
+            [
+              52.0,
+              12.0,
+              18.0
+            ]
+          ],
+          "states": [
+            "out",
+            "out",
+            "out",
+            "out"
+          ],
+          "ok": true,
+          "note": "Axis clearance 2 mm exceeds combined station uncertainty sqrt(1^2+1^2). Section must establish actual wall penetration."
+        }
+      ],
+      "ok": true,
+      "verified": true
+    },
+    "frontWindow": {
+      "kind": "cut",
+      "optional": false,
+      "checks": [
+        {
+          "method": "section",
+          "section": "frontWindow",
+          "ok": true,
+          "measured": {
+            "area": 675.0300569144707,
+            "loops": 1,
+            "holes": 1
+          }
+        },
+        {
+          "method": "void",
+          "points": [
+            [
+              40.0,
+              0.0,
+              27.0
+            ]
+          ],
+          "states": [
+            "out"
+          ],
+          "ok": true,
+          "note": "Aperture-edge clearance at least 4.75 mm exceeds inferred placement/wall tolerances."
+        }
+      ],
+      "ok": true,
+      "verified": true
+    },
+    "rearWindow": {
+      "kind": "hole",
+      "optional": false,
+      "checks": [
+        {
+          "method": "section",
+          "section": "rearWindow",
+          "ok": true,
+          "measured": {
+            "area": 741.2484873709542,
+            "loops": 2,
+            "holes": 1
+          }
+        },
+        {
+          "method": "void",
+          "points": [
+            [
+              22.0,
+              0.0,
+              27.0
+            ]
+          ],
+          "states": [
+            "out"
+          ],
+          "ok": true,
+          "note": "4.5 mm aperture clearance exceeds inferred station/wall/elevation tolerances."
+        }
+      ],
+      "ok": true,
+      "verified": true
+    },
+    "sideOpenings": {
+      "kind": "cut",
+      "optional": false,
+      "checks": [
+        {
+          "method": "void",
+          "points": [
+            [
+              31.0,
+              -8.0,
+              20.0
+            ],
+            [
+              31.0,
+              8.0,
+              20.0
+            ]
+          ],
+          "states": [
+            "out",
+            "out"
+          ],
+          "ok": true,
+          "note": "4.5 mm jamb and 10 mm deck clearance exceed inferred opening/cabin tolerances."
+        },
+        {
+          "method": "section",
+          "section": "portSide",
+          "ok": true,
+          "measured": {
+            "area": 858.5641028081347,
+            "loops": 1,
+            "holes": 1
+          }
+        },
+        {
+          "method": "section",
+          "section": "starboardSide",
+          "ok": true,
+          "measured": {
+            "area": 858.5643135254388,
+            "loops": 1,
+            "holes": 1
+          }
+        }
+      ],
+      "ok": true,
+      "verified": true
+    }
+  },
+  "mesh": {
+    "faces": 6970,
+    "vertices": 3492,
+    "watertight": false,
+    "winding_consistent": true,
+    "components": 1,
+    "void_shells": 0,
+    "solid_shells": 1,
+    "degenerate_faces": 0,
+    "volume": 17027.769959174304,
+    "surface_area": 10165.357347072451,
+    "bbox_min": [
+      -0.0041466686,
+      -15.504372,
+      0.0
+    ],
+    "bbox_max": [
+      60.0,
+      15.504372,
+      48.0
+    ],
+    "center_of_mass": [
+      28.88334278171657,
+      9.08622667100789e-05,
+      17.371793839136462
+    ],
+    "open_edges": {
+      "count": 32,
+      "bbox_min": [
+        23.5,
+        -1.5,
+        37.0
+      ],
+      "bbox_max": [
+        26.5,
+        1.5,
+        37.0
+      ],
+      "centroid": [
+        25.0,
+        0.0,
+        37.0
+      ]
+    }
+  },
+  "agreement": {
+    "kcl": 16941.149845504126,
+    "step": 17038.015161717463,
+    "stl": 17027.769959174304,
+    "tolerance_rel": 0.002,
+    "engine_missing": false,
+    "engine_class": "ok",
+    "kcl_vs_step_rel": 0.005685246508700347,
+    "stl_vs_step_rel": 0.0006013143224675155,
+    "ok": false
+  },
+  "deviation": {
+    "reference": null,
+    "declared": false,
+    "ok": null
+  },
+  "ok": false,
+  "engine_calls": [],
+  "stage": "inspect",
+  "provenance": {
+    "generated_at": "2026-09-17T04:15:37Z",
+    "opencad_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "6cf6ead495d8b52a3ed042f76be0c051dabb301b",
+      "dirty": true
+    },
+    "contract": "/Users/danieldriscoll/dual/opencad/designs/benchy/contract.yaml"
+  }
+}

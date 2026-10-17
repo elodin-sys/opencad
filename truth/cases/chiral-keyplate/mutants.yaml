@@ -1,0 +1,22 @@
+# Deliberately wrong parts the scorer must reject (python -m opencad.truth mutate chiral-keyplate).
+# Coordinates are the case frame: plate x,y in [-40, 40], z in [0, 8]; pocket floors at z = 4.
+mutants:
+  - id: mirrored
+    op: mirror
+    axis: y
+    note: same bbox, volume and section areas; opposite handedness. Must be caught by the centred floors or not_matching.
+    expect_caught_by: [not_matching_mirror, floor_ne, floor_nw, floor_sw, floor_se]
+  - id: scaled_2pct
+    op: scale
+    factor: 1.02
+    note: whole-part scale error; proves absolute (unnormalised) comparison.
+    expect_caught_by: [bbox_size]
+  - id: shifted_half_mm
+    op: translate
+    offset: [0.5, 0, 0]
+    note: datum error with identical bbox size and volume.
+  - id: pocket_filled
+    op: fill_box
+    min: [10, 2, 4]
+    max: [30, 14, 8]
+    note: one of the four pockets missing.

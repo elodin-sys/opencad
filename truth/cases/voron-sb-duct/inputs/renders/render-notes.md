@@ -1,0 +1,21 @@
+Renders of the reference (sb-printhead-front.step): 76507 triangles, extents 71.068 x 27.400 x 59.133 mm, bbox min [-35.534, -27.4, 2.367] max [35.534, 0.0, 61.5]. Orthographic views with a mm grid; sections show the material outline.
+- front.png
+- back.png
+- top.png
+- bottom.png
+- left.png
+- right.png
+- iso.png
+- iso2.png
+- iso-below.png
+- section-y-5.png
+- section-y-12.png
+- section-y-20.png
+- section-z10.png
+- section-z20.png
+- section-z30.png
+- section-z45.png
+- section-z55.png
+- section-x0.png
+- section-x-22.png
+- section-x22.png

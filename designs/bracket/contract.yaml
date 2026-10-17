@@ -1,0 +1,171 @@
+schema_version: 1
+name: bracket
+intent: >-
+  80 x 50 x 6 mm aluminium mounting plate with four 4.5 mm clearance holes inset 10 mm from
+  each edge and R5 fillets on the four vertical corner edges (smoke-test bracket). Training
+  part with an analytic answer, used to prove that features, sections, probes and edit tests
+  are verified independently.
+units:
+  length: mm
+  angle: deg
+material: "aluminium 6061"
+density_kg_m3: 2700
+process: "CNC milling (nominal; no manufacturing release)"
+release_status: training-only
+
+frame:
+  origin: "minimum corner of the plate blank before filleting: x = y = z = 0"
+  axes:
+    x: "along the 80 mm length"
+    y: "along the 50 mm width"
+    z: "through the 6 mm thickness, positive out of the top face"
+  datums:
+    - name: A
+      description: "bottom face, z = 0"
+    - name: B
+      description: "left end face of the blank, x = 0"
+    - name: C
+      description: "front face of the blank, y = 0"
+
+envelope:
+  min: [0, 0, 0]
+  max: [80, 50, 6]
+  tolerance: 0.02
+
+parameters:
+  - name: plateWidth
+    value: 80
+    unit: mm
+    provenance: stated
+    source: "smoke/README.md bracket definition"
+    tolerance: 0.01
+    description: "blank length along x"
+  - name: plateHeight
+    value: 50
+    unit: mm
+    provenance: stated
+    source: "smoke/README.md bracket definition"
+    tolerance: 0.01
+    description: "blank width along y"
+  - name: plateThickness
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "smoke/README.md bracket definition"
+    tolerance: 0.01
+    description: "thickness along z"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 3914.923
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.005
+  - name: holeDiameter
+    value: 4.5
+    unit: mm
+    provenance: stated
+    source: "smoke/README.md bracket definition (M4 clearance)"
+    tolerance: 0.01
+    description: "through-hole diameter"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: -188.496
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.01
+  - name: holeInset
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "smoke/README.md bracket definition"
+    tolerance: 0.01
+    description: "hole centre distance from each edge"
+  - name: cornerRadius
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "smoke/README.md bracket definition"
+    tolerance: 0.01
+    description: "fillet radius on the four vertical corner edges"
+
+features:
+  - id: plate
+    kind: extrude
+    description: "80 x 50 x 6 rectangular blank"
+    parameters: [plateWidth, plateHeight, plateThickness]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[40, 25, 3], [40, 2, 3], [78, 25, 3]]
+  - id: corner_fillets
+    kind: fillet
+    description: "R5 fillets on the four vertical corner edges of the blank"
+    parameters: [cornerRadius]
+    verify:
+      - method: void
+        points: [[0.5, 0.5, 3], [79.5, 0.5, 3], [79.5, 49.5, 3], [0.5, 49.5, 3]]
+        note: "outside the R5 arc: distance to the arc centre is 6.36 > 5"
+      - method: solid
+        points: [[1.6, 5, 3], [78.4, 45, 3]]
+        note: "inside the arc region near the tangent point"
+      - method: face
+        face: top
+  - id: mounting_holes
+    kind: hole
+    count: 4
+    description: "four 4.5 mm through holes at (10,10), (70,10), (70,40), (10,40)"
+    parameters: [holeDiameter, holeInset]
+    verify:
+      - method: void
+        points: [[10, 10, 3], [70, 10, 3], [70, 40, 3], [10, 40, 3], [10, 10, 0.1], [70, 40, 5.9]]
+      - method: solid
+        points: [[10, 14, 3], [13, 10, 3]]
+        note: "1.75 mm outside the hole wall is still plate"
+      - method: section
+        section: mid_z
+      - method: count
+        section: through_holes_x10
+        count: 3
+
+interfaces:
+  - name: hole_pattern
+    description: "60 x 30 mm rectangular hole pattern (centres at x = 10, 70 and y = 10, 40) centred on the plate; mates to the fixture"
+    must_not_change: true
+
+acceptance:
+  volume:
+    expected: 23489.535
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "80*50*6 - 4*(25 - pi*25/4)*6 - 4*pi*2.25^2*6"
+  surface_area:
+    expected: 9677.63
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "2*3914.92 + (220 + 10*pi)*6 + 4*pi*4.5*6"
+  center_of_mass:
+    expected: [40, 25, 3]
+    tolerance: 0.02
+  solid_count: 1
+  sections:
+    - id: mid_z
+      plane: z
+      at: 3
+      expect: {area: 3914.923, loops: 1, holes: 4, area_tolerance_rel: 0.002}
+      description: "filleted outline with four holes"
+    - id: through_holes_x10
+      plane: x
+      at: 10
+      expect: {area: 246, loops: 3, holes: 0, area_tolerance_rel: 0.002}
+      description: "plane through two hole centres splits the 50 x 6 section into three rectangles"
+  faces:
+    - {name: bottom, plane: z, at: 0, normal: "-", area: 3914.923, area_tolerance_rel: 0.002}
+    - {name: top, plane: z, at: 6, normal: "+", area: 3914.923, area_tolerance_rel: 0.002}
+  blockout:
+    volume_min: 23400
+    volume_max: 24000.1
+
+references: []
+open_questions: []

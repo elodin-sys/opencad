@@ -1,0 +1,31 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/workspace/status-bar
+Title: Status Bar
+
+# Status Bar
+
+The status bar at the bottom of Zoo Design Studio shows global and local context.
+
+The Status Bar is the always-visible bar at the bottom of Zoo Design Studio while you are working
+in a project. It gives you live context about where you are, what you are doing, and what the app
+is doing around you.
+
+## Left and Right Sides
+
+The left side is used for global information and actions, such as network or connection state and
+the camera button for
+[capturing a screenshot](/docs/zoo-design-studio/features/data-management/export/capture-screenshot).
+
+The right side is used for local, context-specific information, such as the current selection in the
+workspace.
+
+## Why It Matters
+
+- It keeps global app state visible without interrupting modeling work
+- It shows context-specific details without forcing you into another panel
+- It helps you understand what the current workspace focus or selection is doing
+- It provides quick access to viewport actions such as Capture Screenshot
+
+## Related Areas
+
+- Use [Top Bar](/docs/zoo-design-studio/features/workspace/top-bar) for navigation, sharing, and account controls
+- Use [Workspace](/docs/zoo-design-studio/features/workspace) for the broader interface structure

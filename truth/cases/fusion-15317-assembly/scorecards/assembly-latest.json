@@ -1,0 +1,271 @@
+{
+  "case": "fusion-15317-assembly",
+  "scored_at": "2026-09-21T01:37:47Z",
+  "worker": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "eb13db2f-c4a8-420d-ba49-109d9c00b14b",
+    "exit_code": 0,
+    "seconds": 116,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-15317-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/cadquery/fusion-15317-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "CadQuery local export via assembly-check (1 ledger row); no hosted engine.",
+      "commands_list": [
+        "ruff format --check parts/cadquery/fusion-15317-assembly/main.py",
+        "ruff check parts/cadquery/fusion-15317-assembly/main.py",
+        ".venv/bin/python -m skillkat.truth assembly-check ... --entry parts/cadquery/fusion-15317-assembly/main.py --backend cadquery --ledger worker/001-assemble/engine-ledger.jsonl"
+      ],
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 5.97,
+      "visual_check": "Visual: flange of body one seated on the flat diametral face of body two at the shared key point, axes colinear (concentric circles in front; coaxial disc-in-half-cylinder in iso), bodies in contact (gap 0), small interpenetration 0.1867 mm\u00b3 at the mating faces not visible as a gross clash."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "codex": {
+    "backend": "cursor",
+    "role": "assemble",
+    "model": "inherit",
+    "order_id": "001-assemble",
+    "thread_id": "eb13db2f-c4a8-420d-ba49-109d9c00b14b",
+    "exit_code": 0,
+    "seconds": 116,
+    "commands": 3,
+    "usage": {},
+    "run_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-15317-assembly/worker/001-assemble",
+    "failure": "",
+    "fallback_from": null,
+    "metrics": {
+      "commands": 3,
+      "self_corrections": 0,
+      "engine_calls": 0,
+      "files_changed": [
+        "parts/cadquery/fusion-15317-assembly/main.py"
+      ],
+      "incomplete": false,
+      "notes": "CadQuery local export via assembly-check (1 ledger row); no hosted engine.",
+      "commands_list": [
+        "ruff format --check parts/cadquery/fusion-15317-assembly/main.py",
+        "ruff check parts/cadquery/fusion-15317-assembly/main.py",
+        ".venv/bin/python -m skillkat.truth assembly-check ... --entry parts/cadquery/fusion-15317-assembly/main.py --backend cadquery --ledger worker/001-assemble/engine-ledger.jsonl"
+      ],
+      "engine_ledger_calls": 1,
+      "engine_ledger_seconds": 5.97,
+      "visual_check": "Visual: flange of body one seated on the flat diametral face of body two at the shared key point, axes colinear (concentric circles in front; coaxial disc-in-half-cylinder in iso), bodies in contact (gap 0), small interpenetration 0.1867 mm\u00b3 at the mating faces not visible as a gross clash."
+    },
+    "network_stalls": 0,
+    "network_wait_seconds": 0,
+    "network_recovered": false,
+    "timeline": {}
+  },
+  "mode": "modelled",
+  "program_executes": true,
+  "solid_count": {
+    "measured": 2,
+    "expected": 2,
+    "ok": true
+  },
+  "export_agreement": {
+    "ok": true,
+    "bodies": {
+      "22337_e2f65ed2_0003_1": {
+        "ok": true,
+        "volume_expected": 93854.24814066986,
+        "volume_measured": 93854.24584264326,
+        "volume_rel": 2.448505691676724e-08,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 1.363144867407955e-06,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 8.928802886896073e-07
+      },
+      "22337_e2f65ed2_0003_2": {
+        "ok": true,
+        "volume_expected": 133281.51433165694,
+        "volume_measured": 133281.5143316556,
+        "volume_rel": 1.0044725314857599e-14,
+        "volume_rel_max": 0.0001,
+        "hausdorff_mm": 2.0765703673243557e-07,
+        "hausdorff_max_mm": 0.05,
+        "com_error_mm": 7.698812659924359e-12
+      }
+    }
+  },
+  "export_integrity": {
+    "ok": true,
+    "valid": true,
+    "solids": 2,
+    "expected_solids": 2,
+    "watertight": false,
+    "deterministic": true
+  },
+  "hygiene": {
+    "ok": true,
+    "has_result": true,
+    "has_placements": true,
+    "cad_refs": [],
+    "truth_refs": [],
+    "files": [
+      "/Users/danieldriscoll/dual/skillkat/parts/cadquery/fusion-15317-assembly/main.py"
+    ]
+  },
+  "joint_type": "RevoluteJointType",
+  "flipped_truth": true,
+  "offset_truth_mm": 0.0,
+  "checks": {
+    "axis_angle_deg": {
+      "measured": 0.0,
+      "max": 2.0,
+      "ok": true
+    },
+    "axis_line_distance": {
+      "measured": 3.659522043770007e-14,
+      "max": 0.5,
+      "ok": true
+    },
+    "axial_offset": {
+      "measured": 4.466007177938991e-05,
+      "expected": 0.0,
+      "max_error": 0.5,
+      "ok": true
+    },
+    "residual_rotation_deg": {
+      "measured": 0.0,
+      "note": "rotation about a revolute axis is free; any value passes if the axis checks pass"
+    },
+    "no_interference": {
+      "interference_volume": 0.18669187589923572,
+      "truth_interference": 0.0,
+      "max": 1.0,
+      "ok": true
+    },
+    "contact_or_near": {
+      "gap": 0.0,
+      "max": 1.0,
+      "ok": true,
+      "note": "the mated bodies touch or nearly touch"
+    }
+  },
+  "ok": true,
+  "manifest": {
+    "bodies": {
+      "22337_e2f65ed2_0003_1": {
+        "origin": [
+          0.0,
+          -14.7258,
+          0.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            -14.7258
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "22337_e2f65ed2_0003_2": {
+        "origin": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "x_axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "y_axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "z_axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    }
+  },
+  "verdict": "PASS",
+  "viz": {
+    "glb": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-15317-assembly/handoff/assembly.glb",
+    "html": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-15317-assembly/handoff/assembly.html",
+    "motion": "revolute",
+    "native_glb": "/Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-15317-assembly/handoff/assembly-native.glb"
+  }
+}

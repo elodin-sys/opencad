@@ -1,0 +1,19 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/simulation
+Title: Simulation
+
+# Simulation
+
+Simulation and downstream analysis workflows for Zoo Design Studio models.
+
+Simulation covers workflows that move Zoo Design Studio geometry into analysis tools while keeping
+the model parametric and editable.
+
+## Synera
+
+Use the
+[Zoo KCL add-in for Synera](https://portal.synera.io/marketplace/add-ins/29199030-bd69-4f1e-9d74-a7f6e0ef7799)
+to bring evaluated KCL geometry into Synera workflows. The add-in runs the KCL project, exports the
+resulting CAD geometry, and hands it to Synera for downstream simulation setup.
+
+Keep project files, body names, and face names clear before sending geometry downstream. That makes
+the Synera workflow easier to inspect and update when the KCL model changes.

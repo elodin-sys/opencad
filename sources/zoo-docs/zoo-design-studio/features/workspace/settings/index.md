@@ -1,0 +1,34 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/workspace/settings
+Title: Settings
+
+# Settings
+
+Interface and display settings in Zoo Design Studio.
+
+Settings covers workspace-level preferences and display controls used while modeling in Zoo Design
+Studio. This section is for interface options that affect how geometry is shown or how the workspace
+behaves, rather than for geometry-editing features themselves.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/workspace/settings/settings.webp"
+  alt="Zoo Design Studio settings"
+  aspect="1594 / 1498"
+  maxHeightPx={460}
+/>
+
+ZDS organizes settings into four main groups:
+
+- [User Settings](/docs/zoo-design-studio/features/workspace/settings/user-settings), which apply
+  globally to your account and are stored in `user.toml`
+- [This Project](/docs/zoo-design-studio/features/workspace/settings/this-project), which apply only
+  to the current project and are stored in `project.toml`
+- [Keybindings](/docs/zoo-design-studio/features/workspace/settings/keybindings), which show
+  keyboard shortcuts grouped by workflow
+- `Plugins`, which lets you turn optional bundled features, such as
+  [Export to Slicer](/docs/zoo-design-studio/features/data-management/export/export-to-slicer), on
+  or off
+
+In the app, you switch between these groups using the tabs at the top of the Settings dialog:
+`User`, `This project`, `Keybindings`, and `Plugins`.
+
+Some settings only appear at the user or project level, depending on their purpose.

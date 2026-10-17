@@ -1,0 +1,268 @@
+schema_version: 1
+name: four-bar-coupler
+intent: >-
+  Coupler link of the planar crank-rocker four-bar linkage (assembly four-bar), drafted in its own
+  frame: hole A (pin A, joint to the crank) at the origin, hole B (pin B, joint to the rocker, the
+  loop's closing joint) at (100, 0, 0), bottom face z = 0, top face z = 5, hole axes along +z. The
+  body is the same stadium plate as the crank: the tangent hull of two R8 circles centred on (0, 0)
+  and (100, 0), 16 wide (y -8..8), extruded z = 0..5, overall x -8..108, with two Ø6 through holes
+  along z at (0, 0) and (100, 0). The bottom face around hole A seats on the crank's top face; the
+  top face around hole B is the seat for the rocker's second hole. The coupler point P at (50, 30)
+  in this frame's xy lies outside the plate and adds no material. No other features; one solid.
+  Authoritative source: sources/four-bar-spec.md (coupler row, part-frame rule, coupler point).
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of hole A (the first hole, pin A) on the bottom face: x = y = z = 0"
+  axes:
+    x: "along the link from hole A toward hole B; hole B centre at (100, 0, 0)"
+    y: "across the 16 mm width (y -8..8), toward the coupler point P (to the left of A->B)"
+    z: "up along both hole axes, from the bottom face z = 0 (seats on the crank) to the top face z = 5 (carries the rocker)"
+  datums:
+    - name: bottomFace
+      description: "bottom face z = 0; around hole A it seats on the crank's top face (joint pinA)"
+    - name: topFace
+      description: "top face z = 5; around hole B it is the seat for the rocker's second hole (joint pinB)"
+    - name: axisA
+      description: "hole A axis: x = 0, y = 0, along +z; revolute joint pinA attaches the coupler at (0, 0, 0)"
+    - name: axisB
+      description: "hole B axis: x = 100, y = 0, along +z; revolute joint pinB mounts the rocker at (100, 0, 5)"
+    - name: pointP
+      description: "coupler point P at (50, 30) in this frame's xy (50 along A->B, 30 toward +y); outside the plate, a reference point only, no material"
+
+envelope:
+  min: [-8, -8, 0]
+  max: [108, 8, 5]
+  tolerance: 0.05
+
+parameters:
+  - name: linkLength
+    value: 100
+    unit: mm
+    provenance: stated
+    source: "four-bar-spec.md table (Coupler: A to B 100) and intent (hole B at (100, 0, 0))"
+    tolerance: 0.01
+    description: "hole-centre distance A to B along +x; also the centre distance of the two R8 end circles"
+  - name: endRadius
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "intent (tangent hull of two R8 circles, 16 wide y -8..8) and four-bar-spec.md (semicircular ends of radius 8, 16 wide)"
+    tolerance: 0.01
+    description: "radius of the two stadium end circles centred on the holes; the link width is 2 * endRadius = 16"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 1267.04
+        direction: increase
+        bbox_delta: [2, 2, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [5, 8, 12]
+      infeasible_deltas: [-6]
+  - name: plateThickness
+    value: 5
+    unit: mm
+    provenance: stated
+    source: "intent (bottom face z = 0, top face z = 5) and four-bar-spec.md (stadium plate 5 thick)"
+    tolerance: 0.01
+    description: "plate thickness along z; the top face (pinB seat) sits at z = plateThickness"
+  - name: holeDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "intent (two Ø6 through holes) and four-bar-spec.md (Ø6 holes)"
+    tolerance: 0.01
+    description: "diameter of both pin holes A and B"
+
+features:
+  - id: stadium
+    kind: extrude
+    description: "stadium plate: tangent hull of two R8 circles centred on (0, 0) and (linkLength, 0), 16 wide (y -8..8), extruded z = 0..5; overall x -8..108"
+    parameters: [linkLength, endRadius, plateThickness]
+    verify:
+      - method: bbox
+      - method: section
+        section: midZ
+      - method: face
+        face: bottom
+      - method: face
+        face: top
+      - method: dimension
+        dimension: lengthX
+      - method: dimension
+        dimension: widthY
+      - method: dimension
+        dimension: thicknessZ
+      - method: cylinder
+        cylinder: endA
+      - method: cylinder
+        cylinder: endB
+      - method: solid
+        points: [[50, 0, 2.5], [-5.5, 0, 2.5], [105.5, 0, 2.5], [50, 6, 2.5], [50, -6, 2.5]]
+      - method: void
+        points: [[-6.5, 6.5, 2.5], [-6.5, -6.5, 2.5], [106.5, 6.5, 2.5], [106.5, -6.5, 2.5]]
+        note: "outside the rounded ends, inside the bounding box: the ends are R8 arcs, not square corners"
+  - id: holeA
+    kind: hole
+    description: "Ø6 through hole A along z at (0, 0), z 0..5; pin A, the joint to the crank"
+    parameters: [holeDiameter, plateThickness]
+    verify:
+      - method: cylinder
+        cylinder: holeA
+      - method: void
+        points: [[0, 0, 2.5]]
+  - id: holeB
+    kind: hole
+    description: "Ø6 through hole B along z at (linkLength, 0), z 0..5; pin B, the joint to the rocker"
+    parameters: [holeDiameter, plateThickness, linkLength]
+    verify:
+      - method: cylinder
+        cylinder: holeB
+      - method: void
+        points: [[100, 0, 2.5]]
+
+interfaces:
+  - name: pinA
+    description: "revolute joint pinA, axis +z through (0, 0, 0): hole A and the bottom face around it seat on the crank's top face; the assembly places the coupler by this frame. The endRadius edit moves neither."
+    must_not_change: true
+    checks: [holeA, bottom]
+  - name: pinB
+    description: "revolute joint pinB, axis +z through (100, 0, 5): hole B and the top face around it are the seat for the rocker's second hole (the loop's closing joint). The endRadius edit moves neither."
+    must_not_change: true
+    checks: [holeB, top]
+
+acceptance:
+  volume:
+    expected: 8722.566
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "plateThickness * (2 * endRadius * linkLength + pi * endRadius^2 - 2 * pi * (holeDiameter / 2)^2) = 5 * (1600 + 201.062 - 56.549) = 5 * 1744.513"
+  surface_area:
+    expected: 4928.849
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "2 * 1744.513 (top + bottom) + 5 * (2 * 100 + 2 * pi * 8) (outer wall 1251.327) + 2 * pi * 6 * 5 (two hole walls 188.496)"
+  center_of_mass:
+    expected: [50, 0, 2.5]
+    tolerance: 0.05
+    provenance: derived
+    note: "the plate and both holes are symmetric about x = linkLength / 2 and y = 0; z = plateThickness / 2"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 2.5
+      expect:
+        area: 1744.513
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 2
+      description: "mid-thickness section: stadium 1801.062 minus two Ø6 holes 56.549"
+  faces:
+    - name: bottom
+      plane: z
+      at: 0
+      normal: "-"
+      center: [50, 0]
+      mode: one
+    - name: top
+      plane: z
+      at: 5
+      normal: "+"
+      center: [50, 0]
+      mode: one
+  cylinders:
+    - name: holeA
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      length: 5
+      t_range: [0, 5]
+      description: "Ø6 through hole A, pin A (joint to the crank)"
+    - name: holeB
+      point: [100, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 6
+      length: 5
+      t_range: [0, 5]
+      description: "Ø6 through hole B, pin B (joint to the rocker, closing joint)"
+    - name: endA
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 8
+      length: 5
+      t_range: [0, 5]
+      description: "R8 rounded end concentric with hole A (convex half cylinder, x -8..0)"
+    - name: endB
+      point: [100, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 8
+      length: 5
+      t_range: [0, 5]
+      description: "R8 rounded end concentric with hole B (convex half cylinder, x 100..108)"
+  dimensions:
+    - name: lengthX
+      axis: x
+      expected: 116
+      tolerance: 0.05
+      description: "overall length x -8..108 = linkLength + 2 * endRadius"
+    - name: widthY
+      axis: y
+      expected: 16
+      tolerance: 0.05
+      description: "width y -8..8 = 2 * endRadius"
+    - name: thicknessZ
+      axis: z
+      expected: 5
+      tolerance: 0.05
+      between: [bottom, top]
+      description: "plate thickness between the bottom and top faces"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[50, 0, 2.5], [-5.5, 0, 2.5], [105.5, 0, 2.5]]
+      description: "mid-plate and the webs between each hole and its rounded end"
+    - name: inHoles
+      state: void
+      points: [[0, 0, 2.5], [100, 0, 2.5]]
+      description: "on both hole axes at mid-thickness"
+    - name: outsideRoundedEnds
+      state: void
+      points: [[-6.5, 6.5, 2.5], [-6.5, -6.5, 2.5], [106.5, 6.5, 2.5], [106.5, -6.5, 2.5]]
+      description: "bounding-box corners cut away by the R8 ends (1.19 mm outside the arcs)"
+  cylinder_counts:
+    - name: pinHoles
+      diameter: 6
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 2
+      description: "exactly two Ø6 holes along z"
+  deviation: null
+  blockout:
+    volume_min: 8700
+    volume_max: 9300
+
+references:
+  - path: sources/four-bar-spec.md
+    kind: text
+    role: authoritative
+    sha256: aececd85a2ba8a2e020775f05a44f1bd1c3a505c8c8c5ed634606d975490bf17
+    units: mm
+    revision: "unrevisioned (file dated 2026-09-25)"
+    note: "the only source: coupler row (A to B 100, stadium plate as the crank), part-frame rule, coupler point P"
+
+open_questions:
+  - "Material, density and process are not stated; density stays null and no mass claim is made."
+  - "The pin fit is not stated: Ø6 is the nominal bore for both holes; the pin diameter and fit class are open."
+  - "Edge breaks (chamfers or fillets on the plate edges and hole mouths) are not stated; none are modelled."

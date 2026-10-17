@@ -1,0 +1,223 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import ductCount, outletsPerDuct, ductWidth, ductDepth, ductWall, wallMinimum, ductMidCenterX, ductMidCenterY, rightInletCenterX, rightInletWidth, inletDepth, inletCenterY, nozzleEndZ, topZ, backY, frontY, halfWidth from "params.kcl"
+
+assert(ductCount, isGreaterThanOrEqual = 1, error = "Need at least one duct route.")
+assert(outletsPerDuct, isGreaterThanOrEqual = 2, error = "Right duct must fork into two outlets.")
+assert(ductWidth, isGreaterThan = 0mm, error = "Duct width must be positive.")
+assert(ductDepth, isGreaterThan = 0mm, error = "Duct depth must be positive.")
+assert(
+  ductWall,
+  isGreaterThan = 0mm,
+  isLessThan = ductWidth / 2,
+  error = "Wall must be positive and thinner than half the channel.",
+)
+assert(
+  wallMinimum,
+  isGreaterThan = 0mm,
+  isLessThanOrEqual = ductWall,
+  error = "Minimum wall cannot exceed the nominal wall.",
+)
+assert(rightInletWidth, isGreaterThan = 0mm, error = "Right inlet width must be positive.")
+assert(inletDepth, isGreaterThan = 0mm, error = "Inlet depth must be positive.")
+assert(topZ, isGreaterThan = nozzleEndZ, error = "Top must stay above the nozzle end.")
+assert(backY, isGreaterThan = frontY, error = "Back datum must stay behind the front face.")
+assert(halfWidth, isGreaterThan = rightInletCenterX + rightInletWidth / 2, error = "Right inlet must fit inside the envelope.")
+assert(rightInletCenterX, isGreaterThan = rightInletWidth / 2, error = "Right inlet must stay on the positive-x side.")
+assert(ductMidCenterX, isGreaterThan = ductWidth / 2 + ductWall, error = "Trunk must leave an inner wall.")
+
+overrun = 0.04mm
+frontWallY = frontY + ductWall
+
+fn boxTool(@x0, x1, y0, y1, z0, z1) {
+  assert(x1, isGreaterThan = x0, error = "boxTool x1 must exceed x0.")
+  assert(y1, isGreaterThan = y0, error = "boxTool y1 must exceed y0.")
+  assert(z1, isGreaterThan = z0, error = "boxTool z1 must exceed z0.")
+  sk = sketch(on = offsetPlane(XY, offset = z0)) {
+    front = line(start = [x0, y0], end = [x1, y0])
+    right = line(start = [x1, y0], end = [x1, y1])
+    back = line(start = [x1, y1], end = [x0, y1])
+    left = line(start = [x0, y1], end = [x0, y0])
+  }
+  body = extrude(region(segments = [sk.front, sk.right]), length = z1 - z0, method = NEW)
+  hide(sk)
+  return body
+}
+
+fn cylXTool(@x0, x1, yC, zC, r) {
+  assert(x1, isGreaterThan = x0, error = "cylXTool x1 must exceed x0.")
+  assert(r, isGreaterThan = 0mm, error = "cylXTool radius must be positive.")
+  sk = sketch(on = offsetPlane(YZ, offset = x0)) {
+    rim = circle(center = [yC, zC], start = [yC + r, zC])
+  }
+  body = extrude(region(segments = [sk.rim]), length = x1 - x0, method = NEW)
+  hide(sk)
+  return body
+}
+
+fn planeTool(@origin, xAxis, yAxis, u0, u1, v0, v1, length) {
+  assert(u1, isGreaterThan = u0, error = "planeTool u1 must exceed u0.")
+  assert(v1, isGreaterThan = v0, error = "planeTool v1 must exceed v0.")
+  assert(length, isGreaterThan = 0mm, error = "planeTool length must be positive.")
+  pln = {
+    origin = origin,
+    xAxis = xAxis,
+    yAxis = yAxis
+  }
+  sk = sketch(on = pln) {
+    a = line(start = [u0, v0], end = [u1, v0])
+    b = line(start = [u1, v0], end = [u1, v1])
+    c = line(start = [u1, v1], end = [u0, v1])
+    d = line(start = [u0, v1], end = [u0, v0])
+  }
+  body = extrude(region(segments = [sk.a, sk.b]), length = length, method = NEW)
+  hide(sk)
+  return body
+}
+
+fn outsideCylX(@x0, x1, y0, y1, z0, z1, yC, zC, r) {
+  box = boxTool(
+    x0,
+    x1 = x1,
+    y0 = y0,
+    y1 = y1,
+    z0 = z0,
+    z1 = z1,
+  )
+  cyl = cylXTool(
+    x0 - overrun,
+    x1 = x1 + overrun,
+    yC = yC,
+    zC = zC,
+    r = r,
+  )
+  return subtract(box, tools = [cyl])
+}
+
+export fn rightDuct(@body) {
+  inletX0 = rightInletCenterX - (rightInletWidth / 2)
+  inletX1 = rightInletCenterX + rightInletWidth / 2
+  inletY0 = inletCenterY - (inletDepth / 2)
+  inletY1 = inletCenterY + inletDepth / 2
+  midY0 = frontWallY
+  midY1 = ductMidCenterY + ductDepth / 2 + 0.5mm
+
+  inlet = boxTool(
+    inletX0,
+    x1 = inletX1,
+    y0 = inletY0,
+    y1 = inletY1,
+    z0 = topZ - inletDepth - 0.3mm,
+    z1 = topZ + overrun,
+  )
+  mouthConnect = boxTool(
+    8mm,
+    x1 = 22mm,
+    y0 = -23mm,
+    y1 = -14mm,
+    z0 = 53mm,
+    z1 = topZ - 0.2mm,
+  )
+  upperTrunk = boxTool(
+    19.5mm,
+    x1 = 27.5mm,
+    y0 = midY0,
+    y1 = midY1,
+    z0 = 26mm,
+    z1 = 55.5mm,
+  )
+  lowerTrunk = boxTool(
+    21mm,
+    x1 = 32mm,
+    y0 = -23mm,
+    y1 = -7mm,
+    z0 = 15.5mm,
+    z1 = 28mm,
+  )
+  rearBranch = boxTool(
+    19.5mm,
+    x1 = 24.5mm,
+    y0 = -14mm,
+    y1 = -7mm,
+    z0 = 5.2mm,
+    z1 = 16.5mm,
+  )
+  frontBranch = boxTool(
+    19.5mm,
+    x1 = 24.5mm,
+    y0 = midY0,
+    y1 = -16mm,
+    z0 = 5.2mm,
+    z1 = 16.5mm,
+  )
+  s1 = subtract(body, tools = [inlet])
+  s2 = subtract(s1, tools = [mouthConnect])
+  s3 = subtract(s2, tools = [upperTrunk])
+  s4 = subtract(s3, tools = [lowerTrunk])
+  s5 = subtract(s4, tools = [rearBranch])
+  s6 = subtract(s5, tools = [frontBranch])
+
+  lip = planeTool(
+    { x = 15.756, y = 0, z = 4.61 },
+    xAxis = { x = 0, y = -1, z = 0 },
+    yAxis = { x = -0.239099, y = 0, z = 0.970995 },
+    u0 = -1mm,
+    u1 = 30mm,
+    v0 = -8mm,
+    v1 = 12mm,
+    length = 18mm,
+  )
+  nozzleBottom = planeTool(
+    { x = 27.948, y = -27.5, z = 4.853 },
+    xAxis = { x = 0, y = 1, z = 0 },
+    yAxis = { x = 0.970377, y = 0, z = 0.241594 },
+    u0 = -1mm,
+    u1 = 32mm,
+    v0 = 0mm,
+    v1 = 14mm,
+    length = 15mm,
+  )
+  outletReturn = planeTool(
+    { x = 14.635, y = -27.433, z = 9.123 },
+    xAxis = { x = -0.092337, y = -0.995728, z = 0 },
+    yAxis = {
+      x = 0.651883,
+      y = -0.060451,
+      z = 0.755906
+    },
+    u0 = -0.2mm,
+    u1 = 8mm,
+    v0 = -3mm,
+    v1 = 10mm,
+    length = 6mm,
+  )
+  s7 = subtract(s6, tools = [lip])
+  s8 = subtract(s7, tools = [nozzleBottom])
+  s9 = subtract(s8, tools = [outletReturn])
+
+  belly = outsideCylX(
+    17.422mm,
+    x1 = 28.126mm,
+    y0 = -12mm,
+    y1 = -3.6mm,
+    z0 = 32mm,
+    z1 = 46mm,
+    yC = -33.8mm,
+    zC = 36.775mm,
+    r = 30mm,
+  )
+  inletTurn = outsideCylX(
+    10.564mm,
+    x1 = 19.621mm,
+    y0 = -13mm,
+    y1 = -3.85mm,
+    z0 = 56.5mm,
+    z1 = topZ + overrun,
+    yC = -8.519mm,
+    zC = 59.745mm,
+    r = 5mm,
+  )
+  s10 = subtract(s9, tools = [belly])
+  s11 = subtract(s10, tools = [inletTurn])
+  return s11
+}

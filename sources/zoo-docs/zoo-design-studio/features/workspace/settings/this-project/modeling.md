@@ -1,0 +1,36 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/workspace/settings/this-project/modeling
+Title: Modeling
+
+# Modeling
+
+Configure project-level modeling defaults in Zoo Design Studio.
+
+The `Modeling` section contains project-level overrides for modeling behavior and viewport grid
+settings.
+
+## Included Settings
+
+### Default Unit
+
+Set the default length unit setting value to give any new files.
+
+### Fixed Size Grid
+
+When enabled, the grid will use a fixed size based on your selected units rather than automatically
+scaling with zoom level.
+
+### Major Grid Spacing
+
+The space between major grid lines, specified in the current unit.
+
+### Minor Grids Per Major
+
+Number of minor grid lines per major grid line.
+
+### Snap to Grid
+
+Snap the cursor to the unit grid when drawing lines, arcs, and other segment-based tools.
+
+### Snaps Per Minor
+
+Number of snaps between minor grid lines. `1` means snapping to every minor grid line.

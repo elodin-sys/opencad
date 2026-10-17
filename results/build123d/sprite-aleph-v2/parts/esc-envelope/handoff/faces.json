@@ -1,0 +1,357 @@
+{
+  "named_faces": {
+    "pcbSeat": {
+      "plane": "z",
+      "at": -19.0,
+      "normal": "+",
+      "found": 1,
+      "area": 997.3950229575312,
+      "mode": "sum",
+      "ok": true,
+      "position": -19.0
+    },
+    "pcbUnderside": {
+      "plane": "z",
+      "at": -20.6,
+      "normal": "-",
+      "found": 1,
+      "area": 1007.2124999999996,
+      "mode": "sum",
+      "ok": true,
+      "position": -20.599999999999998
+    },
+    "pcbLeft": {
+      "plane": "x",
+      "at": -22.75,
+      "normal": "-",
+      "found": 1,
+      "area": 101.04000000000009,
+      "ok": true,
+      "position": -22.75,
+      "area_expected": 101.04,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        -19.8
+      ],
+      "center_error": 3.3306690738754746e-16,
+      "centroid_uv": [
+        3.3306690738754746e-16,
+        -19.8
+      ]
+    },
+    "pcbRight": {
+      "plane": "x",
+      "at": 19.5,
+      "normal": "+",
+      "found": 1,
+      "area": 307.80000000000007,
+      "mode": "sum",
+      "ok": true,
+      "position": 19.5,
+      "area_expected": 307.8,
+      "area_ok": true
+    },
+    "pcbEndPositive": {
+      "plane": "y",
+      "at": 31.575,
+      "normal": "+",
+      "found": 2,
+      "area": 15.600000000000014,
+      "mode": "sum",
+      "ok": true,
+      "position": 31.575,
+      "area_expected": 15.6,
+      "area_ok": true
+    },
+    "pcbEndNegative": {
+      "plane": "y",
+      "at": -31.575,
+      "normal": "-",
+      "found": 2,
+      "area": 15.600000000000014,
+      "mode": "sum",
+      "ok": true,
+      "position": -31.575,
+      "area_expected": 15.6,
+      "area_ok": true
+    },
+    "componentsTop": {
+      "plane": "z",
+      "at": -14.4,
+      "normal": "+",
+      "found": 3,
+      "area": 1620.4528791246316,
+      "mode": "sum",
+      "ok": true,
+      "position": -14.4,
+      "area_expected": 1620.452879125,
+      "area_ok": true
+    },
+    "componentsBottom": {
+      "plane": "z",
+      "at": -25.5,
+      "normal": "-",
+      "found": 5,
+      "area": 2585.6354020821636,
+      "mode": "sum",
+      "ok": true,
+      "position": -25.5,
+      "area_expected": 2585.635402082,
+      "area_ok": true
+    },
+    "plugNegativeLeft": {
+      "plane": "y",
+      "at": -46.5,
+      "normal": "-",
+      "found": 1,
+      "area": 117.29999999999998,
+      "ok": true,
+      "position": -46.5,
+      "area_expected": 117.30000000000001,
+      "area_ok": true,
+      "center_expected": [
+        -12.5,
+        -22.05
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        -12.5,
+        -22.05
+      ]
+    },
+    "plugNegativeRight": {
+      "plane": "y",
+      "at": -46.5,
+      "normal": "-",
+      "found": 1,
+      "area": 106.94999999999997,
+      "ok": true,
+      "position": -46.49999999999999,
+      "area_expected": 106.95,
+      "area_ok": true,
+      "center_expected": [
+        11.75,
+        -22.05
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        11.75,
+        -22.05
+      ]
+    },
+    "plugPositiveLeft": {
+      "plane": "y",
+      "at": 46.5,
+      "normal": "+",
+      "found": 1,
+      "area": 117.29999999999998,
+      "ok": true,
+      "position": 46.5,
+      "area_expected": 117.30000000000001,
+      "area_ok": true,
+      "center_expected": [
+        -12.5,
+        -22.05
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        -12.5,
+        -22.05
+      ]
+    },
+    "plugPositiveRight": {
+      "plane": "y",
+      "at": 46.5,
+      "normal": "+",
+      "found": 1,
+      "area": 106.94999999999997,
+      "ok": true,
+      "position": 46.49999999999999,
+      "area_expected": 106.95,
+      "area_ok": true,
+      "center_expected": [
+        11.75,
+        -22.05
+      ],
+      "center_error": 0.0,
+      "centroid_uv": [
+        11.75,
+        -22.05
+      ]
+    },
+    "connectorsTop": {
+      "plane": "z",
+      "at": -18.6,
+      "normal": "+",
+      "found": 4,
+      "area": 975.0,
+      "mode": "sum",
+      "ok": true,
+      "position": -18.6,
+      "area_expected": 975.0,
+      "area_ok": true
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "pcbSeat",
+      "plane": "z",
+      "at": -19.0,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.02,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "pcbUnderside",
+      "plane": "z",
+      "at": -20.6,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.02,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "pcbLeft",
+      "plane": "x",
+      "at": -22.75,
+      "normal": "-",
+      "area": 101.04,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": [
+        0.0,
+        -19.8
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "pcbRight",
+      "plane": "x",
+      "at": 19.5,
+      "normal": "+",
+      "area": 307.8,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "pcbEndPositive",
+      "plane": "y",
+      "at": 31.575,
+      "normal": "+",
+      "area": 15.6,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "pcbEndNegative",
+      "plane": "y",
+      "at": -31.575,
+      "normal": "-",
+      "area": 15.6,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "componentsTop",
+      "plane": "z",
+      "at": -14.4,
+      "normal": "+",
+      "area": 1620.452879125,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "componentsBottom",
+      "plane": "z",
+      "at": -25.5,
+      "normal": "-",
+      "area": 2585.635402082,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "plugNegativeLeft",
+      "plane": "y",
+      "at": -46.5,
+      "normal": "-",
+      "area": 117.30000000000001,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": [
+        -12.5,
+        -22.05
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "plugNegativeRight",
+      "plane": "y",
+      "at": -46.5,
+      "normal": "-",
+      "area": 106.95,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": [
+        11.75,
+        -22.05
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "plugPositiveLeft",
+      "plane": "y",
+      "at": 46.5,
+      "normal": "+",
+      "area": 117.30000000000001,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": [
+        -12.5,
+        -22.05
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "plugPositiveRight",
+      "plane": "y",
+      "at": 46.5,
+      "normal": "+",
+      "area": 106.95,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": [
+        11.75,
+        -22.05
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "connectorsTop",
+      "plane": "z",
+      "at": -18.6,
+      "normal": "+",
+      "area": 975.0,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.02,
+      "center": null,
+      "mode": "sum"
+    }
+  ],
+  "planar_faces_total": 46
+}

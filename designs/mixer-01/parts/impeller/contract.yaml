@@ -1,0 +1,443 @@
+schema_version: 1
+name: mixer-01-impeller
+intent: >-
+  Four-blade paddle impeller of the sealed magnetic-drive mixer mixer-01, one acetal solid in its own
+  frame: a D12.0 x 10.0 hub with a D8.0 through bore that rides on the housing's fixed D6.0 pin with
+  1.0 radial clearance, and four flat radial blades (2.0 thick, centred on their radius lines at 0, 90,
+  180 and 270 deg) running from the hub (roots merged at radius 6.0) to arc tips on radius 20.0 over
+  z 1..9. The bore and the bottom face run on the pin; the whole outer surface is the rotating wetted
+  wall of the water domain. Authoritative source: sources/mixer-01-spec.md (Dimensions table, Frame,
+  Placement); no fillets or chamfers are stated.
+units:
+  length: mm
+  angle: deg
+material: "acetal (POM)"
+density_kg_m3: 1410
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of the hub's bottom face, on the rotation axis (the joint impellerSpin attaches here)"
+  axes:
+    x: "along blade 1's radius line: blade 1 is centred on y = 0 with its tip arc at x = 20"
+    y: "right-handed with x and z: blade 2 lies along +y, 90 deg counter-clockwise from +x seen from +z"
+    z: "along the rotation axis, from the hub's bottom face (z = 0) to its top face (z = 10); positive rotation is counter-clockwise seen from +z"
+  datums:
+    - name: A
+      description: "hub bottom face, z = 0 (runs 1.0 above the housing floor when placed)"
+    - name: B
+      description: "rotation axis = bore axis, x = y = 0, direction +z (joint impellerSpin axis)"
+    - name: C
+      description: "blade 1 mid-plane y = 0 (angular datum: blade 1 along +x)"
+
+envelope:
+  min: [-20, -20, 0]
+  max: [20, 20, 10]
+  tolerance: 0.05
+
+parameters:
+  - name: hubOuterDiameter
+    value: 12.0
+    unit: mm
+    provenance: stated
+    source: "sources/mixer-01-spec.md, Dimensions table, Impeller hub row (outer diameter 12.0)"
+    tolerance: 0.01
+    description: "hub outer diameter; the blade roots merge into this cylinder at radius 6.0"
+  - name: hubHeight
+    value: 10.0
+    unit: mm
+    provenance: stated
+    source: "sources/mixer-01-spec.md, Dimensions table, Impeller hub row (height 10.0, z 0..10)"
+    tolerance: 0.01
+    description: "hub height along z from the bottom face (z = 0) to the top face"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 62.832
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.02
+  - name: boreDiameter
+    value: 8.0
+    unit: mm
+    provenance: stated
+    source: "sources/mixer-01-spec.md, Dimensions table, Impeller hub row (through bore diameter 8.0)"
+    tolerance: 0.01
+    description: "through bore on the axis; 1.0 radial clearance on the housing's D6.0 pin"
+  - name: bladeCount
+    value: 4
+    unit: ""
+    provenance: stated
+    source: "sources/mixer-01-spec.md, Dimensions table, Impeller blades row (four blades at 0, 90, 180, 270 deg)"
+    tolerance: 0.1
+    description: "number of blades, equally spaced at 360 / bladeCount about +z, blade 1 on +x"
+  - name: bladeThickness
+    value: 2.0
+    unit: mm
+    provenance: stated
+    source: "sources/mixer-01-spec.md, Dimensions table, Impeller blades row (2.0 thick tangentially, centred on its radius line)"
+    tolerance: 0.01
+    description: "tangential blade thickness, centred on the radius line (|y| <= bladeThickness / 2 for blade 1)"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 451.00
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [1.5, 2.0, 3.0]
+      infeasible_deltas: [-2]
+  - name: bladeTipRadius
+    value: 20.0
+    unit: mm
+    provenance: stated
+    source: "sources/mixer-01-spec.md, Dimensions table, Impeller blades row (from radius 6.0 to radius 20.0)"
+    tolerance: 0.01
+    description: "radius of the blade tip arcs about the axis"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 64.03
+        direction: increase
+        bbox_delta: [2, 2, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [14, 20, 24]
+      infeasible_deltas: [-15]
+  - name: bladeBottomZ
+    value: 1.0
+    unit: mm
+    provenance: stated
+    source: "sources/mixer-01-spec.md, Dimensions table, Impeller blades row (over z 1..9 in the impeller's frame)"
+    tolerance: 0.01
+    description: "z of the blade bottom faces, 1.0 above the hub's bottom face"
+  - name: bladeHeight
+    value: 8.0
+    unit: mm
+    provenance: stated
+    source: "sources/mixer-01-spec.md, Dimensions table, Impeller blades row (8.0 tall)"
+    tolerance: 0.01
+    description: "blade height along z, from bladeBottomZ to bladeBottomZ + bladeHeight (z 1..9)"
+
+features:
+  - id: hub
+    kind: extrude
+    description: "D12.0 hub cylinder on the axis, z 0..hubHeight"
+    parameters: [hubOuterDiameter, hubHeight]
+    verify:
+      - method: cylinder
+        cylinder: hubOuter
+      - method: face
+        face: hubBottom
+      - method: face
+        face: hubTop
+      - method: dimension
+        dimension: hubSpanZ
+      - method: section
+        section: lowZ
+      - method: solid
+        points: [[3.5355, 3.5355, 5.0], [-3.5355, -3.5355, 5.0]]
+  - id: bore
+    kind: hole
+    description: "D8.0 through bore on the axis, z 0..hubHeight"
+    parameters: [boreDiameter, hubHeight]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: void
+        points: [[0, 0, 5]]
+      - method: section
+        section: highZ
+      - method: count
+        section: axialY
+        count: 2
+  - id: blade
+    kind: extrude
+    description: "blade 1: flat radial slab |y| <= 1.0 over z 1..9, root merged into the hub, tip an arc on radius 20.0"
+    parameters: [bladeThickness, bladeTipRadius, bladeBottomZ, bladeHeight]
+    verify:
+      - method: face
+        face: bladeTopPx
+      - method: face
+        face: bladeBottomPx
+      - method: dimension
+        dimension: bladeSpanZ
+      - method: cylinder
+        cylinder: bladeTips
+      - method: section
+        section: bladeCutX
+      - method: solid
+        points: [[13, 0, 5], [19, 0, 5]]
+  - id: bladePattern
+    kind: pattern
+    description: "blade 1 repeated at 0, 90, 180 and 270 deg about +z"
+    parameters: [bladeCount]
+    count: 4
+    verify:
+      - method: bbox
+      - method: section
+        section: midZ
+      - method: face
+        face: bladeTops
+      - method: face
+        face: bladeBottoms
+      - method: dimension
+        dimension: tipSpanX
+      - method: dimension
+        dimension: tipSpanY
+      - method: solid
+        points: [[0, 13, 5], [-13, 0, 5], [0, -13, 5]]
+      - method: void
+        points: [[9.1924, 9.1924, 5], [-9.1924, 9.1924, 5], [-9.1924, -9.1924, 5], [9.1924, -9.1924, 5], [5.3033, 5.3033, 5]]
+
+interfaces:
+  - name: pinBearing
+    description: >-
+      The D8.0 through bore (datum B) and the hub's bottom face (datum A, z = 0) that run on the
+      housing's D6.0 pin: 1.0 radial clearance on the pin and 1.0 above the housing floor when placed.
+      The assembly joint impellerSpin (revolute) attaches at own-frame point [0, 0, 0], axis [0, 0, 1].
+    must_not_change: true
+    checks: [bore, hubBottom]
+  - name: wettedWall
+    description: >-
+      The whole outer surface is the rotating wetted wall of the water domain; every edit keeps it one
+      closed solid balanced about the axis (mirror symmetric in x = 0 and y = 0).
+    must_not_change: false
+    checks: [mirrorX, mirrorY]
+
+acceptance:
+  volume:
+    expected: 1525.57
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "hub pi*(6^2-4^2)*10 = 628.32 + 4 blades * 8*[A(20)-A(6)] = 4*224.31; A(R) = sqrt(R^2-1) + R^2*asin(1/R)"
+  surface_area:
+    expected: 1877.79
+    tolerance_rel: 0.01
+    provenance: derived
+    note: "hub outer 120*pi - 4*96*asin(1/6) = 312.69, bore 80*pi = 251.33, hub annuli 40*pi = 125.66, blades 4*(2*28.039 + 16*(sqrt(399)-sqrt(35)) + 320*asin(0.05)) = 1188.11"
+  center_of_mass:
+    expected: [0, 0, 5]
+    tolerance: 0.05
+    provenance: derived
+    note: "four-fold symmetric about the axis; hub (z 0..10) and blades (z 1..9) both centred at z = 5"
+  solid_count: 1
+  sections:
+    - id: midZ
+      plane: z
+      at: 5
+      expect:
+        area: 174.988
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "hub annulus 20*pi = 62.832 plus four blade sections 4*28.039; the bore is the one hole"
+    - id: lowZ
+      plane: z
+      at: 0.5
+      expect:
+        area: 62.832
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "below the blades: hub annulus only"
+    - id: highZ
+      plane: z
+      at: 9.5
+      expect:
+        area: 62.832
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "above the blades: hub annulus only"
+    - id: bladeCutX
+      plane: x
+      at: 13
+      expect:
+        area: 16.0
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 0
+      description: "across blade 1: bladeThickness * bladeHeight = 2.0 * 8.0"
+    - id: axialY
+      plane: y
+      at: 0.5
+      expect:
+        area: 264.444
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 0
+      description: "axial cut beside the axis: the through bore splits it into two hub-wall-plus-blade islands, 2 * (10*(sqrt(35.75)-sqrt(15.75)) + 8*(sqrt(399.75)-sqrt(35.75)))"
+  faces:
+    - name: hubBottom
+      plane: z
+      at: 0
+      normal: "-"
+      area: 62.832
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: hubTop
+      plane: z
+      at: 10
+      normal: "+"
+      area: 62.832
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: bladeTopPx
+      plane: z
+      at: 9
+      normal: "+"
+      area: 28.039
+      area_tolerance_rel: 0.01
+      center: [12.982, 0]
+      mode: one
+    - name: bladeBottomPx
+      plane: z
+      at: 1
+      normal: "-"
+      area: 28.039
+      area_tolerance_rel: 0.01
+      center: [12.982, 0]
+      mode: one
+    - name: bladeTops
+      plane: z
+      at: 9
+      normal: "+"
+      area: 112.156
+      area_tolerance_rel: 0.01
+      mode: sum
+    - name: bladeBottoms
+      plane: z
+      at: 1
+      normal: "-"
+      area: 112.156
+      area_tolerance_rel: 0.01
+      mode: sum
+  cylinders:
+    - name: bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 8.0
+      description: "D8.0 through bore on the axis (runs on the D6.0 pin)"
+    - name: hubOuter
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 12.0
+      length: 10.0
+      t_range: [0, 10]
+      description: "hub outer cylinder, interrupted by the four blade roots over z 1..9"
+    - name: bladeTips
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 20.0
+      length: 8.0
+      t_range: [1, 9]
+      description: "blade tip arcs on radius 20.0 (four coaxial patches)"
+  dimensions:
+    - name: tipSpanX
+      axis: x
+      expected: 40.0
+      tolerance: 0.05
+      description: "bbox extent along x: tip circle diameter 2 * bladeTipRadius"
+    - name: tipSpanY
+      axis: y
+      expected: 40.0
+      tolerance: 0.05
+      description: "bbox extent along y: tip circle diameter 2 * bladeTipRadius"
+    - name: hubSpanZ
+      axis: z
+      expected: 10.0
+      tolerance: 0.05
+      between: [hubBottom, hubTop]
+      description: "hub height"
+    - name: bladeSpanZ
+      axis: z
+      expected: 8.0
+      tolerance: 0.05
+      between: [bladeBottomPx, bladeTopPx]
+      description: "blade height"
+  solids:
+    - name: impeller
+      contains_point: [13, 0, 5]
+      description: "the single impeller solid"
+  hardware:
+    - name: pin
+      kind: cylinder
+      point: [0, 0, -1]
+      direction: [0, 0, 1]
+      radius: 3.0
+      length: 12.0
+      description: "housing's fixed D6.0 pin in the impeller frame (assembly z 0..12 = impeller z -1..11)"
+    - name: floor
+      kind: box
+      min: [-25, -25, -4]
+      max: [25, 25, -1]
+      description: "housing floor in the impeller frame (assembly z -3..0 = impeller z -4..-1)"
+  clearances:
+    - name: pinClearance
+      a: impeller
+      b: pin
+      min_gap: 0.9
+      max_gap: 1.1
+      description: "1.0 radial clearance between the D8.0 bore and the D6.0 pin"
+    - name: floorGap
+      a: impeller
+      b: floor
+      min_gap: 0.9
+      max_gap: 1.1
+      description: "hub bottom face 1.0 above the housing floor when placed"
+  thickness:
+    - name: wall
+      min: 1.9
+      stat: p05
+      description: "blades 2.0 thick and hub wall (12.0 - 8.0) / 2 = 2.0; 5th percentile"
+  probes:
+    - name: inHub
+      state: solid
+      points: [[3.5355, 3.5355, 5.0], [-3.5355, -3.5355, 5.0]]
+    - name: inBlades
+      state: solid
+      points: [[13, 0, 5], [0, 13, 5], [-13, 0, 5], [0, -13, 5], [19, 0, 5]]
+    - name: inBore
+      state: void
+      points: [[0, 0, 5]]
+    - name: betweenBlades
+      state: void
+      points: [[9.1924, 9.1924, 5], [-9.1924, 9.1924, 5], [-9.1924, -9.1924, 5], [9.1924, -9.1924, 5], [5.3033, 5.3033, 5]]
+  cylinder_counts:
+    - name: bores
+      diameter: 8.0
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+  symmetry:
+    - name: mirrorX
+      plane: x
+      at: 0
+    - name: mirrorY
+      plane: y
+      at: 0
+  blockout:
+    volume_min: 1480
+    volume_max: 2100
+
+references:
+  - path: sources/mixer-01-spec.md
+    kind: text
+    role: authoritative
+    sha256: 7c08f09900a1078122226978351d2ff7878b3adda1dc49b70bada1a4dcf2a8a1
+    units: mm
+    revision: "unversioned (supplied with the mixer-01 assembly)"
+    note: "Dimensions table (impeller hub and blades rows), Frame, Placement and Motion sections"
+
+open_questions:
+  - "Blade tip shape: the text puts the tips 'on radius 20.0' and the per-blade volume 224.3 matches an arc tip on R20 (a flat tip at x = 20 gives 224.4), so the contract encodes arc tips."
+  - "No fillets, chamfers or edge breaks are stated (blade roots, tips, hub edges); all edges are modelled sharp."
+  - "Manufacturing process for the acetal impeller is not stated (machined or moulded); no draft is applied."
+  - "Under a hub-height edit the blades stay at z 1..9 (bladeBottomZ and bladeHeight held); the sources do not say whether the blades should stay centred on the hub."

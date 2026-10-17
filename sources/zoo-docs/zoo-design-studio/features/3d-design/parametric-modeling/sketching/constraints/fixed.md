@@ -1,0 +1,19 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/fixed
+Title: Fixed
+
+# Fixed
+
+Lock sketch geometry in place with the Fixed constraint in Zoo Design Studio.
+
+The Fixed constraint holds selected sketch geometry at its current solved location. Use it for
+intentional anchors or reference points that should not move while surrounding geometry changes.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/constraints/fixed/fixed.gif"
+  alt="Applying a fixed constraint to sketch geometry"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Fix sketch geometry when it should hold its solved position
+</div>

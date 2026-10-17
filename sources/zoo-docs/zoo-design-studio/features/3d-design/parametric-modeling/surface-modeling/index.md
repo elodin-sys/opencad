@@ -1,0 +1,33 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling
+Title: Surface Modeling
+
+# Surface Modeling
+
+Surface modeling tools in Zoo Design Studio.
+
+Surface modeling tools help with thin geometry, open forms, and workflows where you need face-level
+control before closing or thickening the result.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/surface-modeling.webp"
+  alt="Open surface geometry shown in Zoo Design Studio"
+  aspect="2000 / 1620"
+  maxHeightPx={640}
+/>
+
+Start with [Create Surfaces](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces)
+for surface-generation features such as
+[Extrude](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/extrude),
+[Revolve](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/revolve),
+[Loft](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/loft),
+[Sweep](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/sweep),
+and [Blend](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/create-surfaces/blend).
+Use [Modify Surfaces](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/modify-surfaces)
+for face-level editing such as
+[Split](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/modify-surfaces/split),
+[Flip Surface](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/modify-surfaces/flip-surface),
+[Join](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/modify-surfaces/join),
+and [Delete Face](/docs/zoo-design-studio/features/3d-design/parametric-modeling/surface-modeling/modify-surfaces/delete-face).
+For surface-orientation display settings, see
+[Back-Face Color for Surfaces](/docs/zoo-design-studio/features/workspace/settings/user-settings/modeling/back-face-color-for-surfaces)
+in [Workspace Settings](/docs/zoo-design-studio/features/workspace/settings).

@@ -1,0 +1,620 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/bracket/contract.yaml: 6 parameters {'stated': 6}; sources unresolved {}; unanchored 0",
+        "open questions: 0 (blocking []); interfaces 1, unenforced ['hole_pattern'] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 6
+        },
+        "soft_values": 0,
+        "open_questions": [],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [
+          "hole_pattern"
+        ],
+        "interface_checks": []
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/zoo/bracket/inspect.json bbox.max_error = 0.0 (tol 0.02)",
+        "results/zoo/bracket/verify.json engine bbox.max_error = 0.001"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            80.0,
+            50.0,
+            6.0
+          ],
+          "measured_min": [
+            -0.0,
+            -0.0,
+            -0.0
+          ],
+          "measured_max": [
+            80.0,
+            50.0,
+            6.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.02,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            80.0,
+            50.0,
+            6.0
+          ],
+          "measured_min": [
+            0.0,
+            -0.0,
+            -0.001
+          ],
+          "measured_max": [
+            80.0,
+            50.0,
+            6.0
+          ],
+          "max_error": 0.001,
+          "tolerance": 0.02,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/zoo/bracket/inspect.json volume = 23489.5354 vs 23489.535",
+        "results/zoo/bracket/inspect.json surface_area = 9677.6327 vs 9677.63",
+        "results/zoo/bracket/inspect.json center_of_mass = [40.0, 25.0, 3.0] vs [40.0, 25.0, 3.0]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 23489.535,
+          "measured": 23489.5354,
+          "error": 0.0004,
+          "band": 23.4895,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 9677.63,
+          "measured": 9677.6327,
+          "error": 0.0027,
+          "band": 9.6776,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            40.0,
+            25.0,
+            3.0
+          ],
+          "measured": [
+            40.0,
+            25.0,
+            3.0
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.02,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/zoo/bracket/inspect.json features: 3/3 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {},
+        "interfaces": {}
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/zoo/bracket/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/zoo/bracket/inspect.json agreement engine=23491.25861636087 step=23489.53539074342 stl=23491.257476148327 (rel tol 0.002; independent=True)",
+        "results/zoo/bracket/inspect.json agreement.manifold = 23491.257545258406 (Manifold kernel witness, rel vs STEP 7.331581856942272e-05; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 23491.25861636087,
+        "kcl": 23491.25861636087,
+        "step": 23489.53539074342,
+        "stl": 23491.257476148327,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": true,
+        "manifold": 23491.257545258406,
+        "manifold_vs_step_rel": 7.331581856942272e-05,
+        "engine_vs_step_rel": 7.336141770302113e-05,
+        "kcl_vs_step_rel": 7.336141770302113e-05,
+        "stl_vs_step_rel": 7.331287640482285e-05,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/zoo/bracket/edit.json 2/2 edit tests ok; restore.ok = True",
+        "sweep 0/0 values; infeasible refused 0/0; interfaces pinned 0"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "plateThickness",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 3914.923,
+                "measured": 3914.922565089939,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "holeDiameter",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": -188.496,
+                "measured": -188.49555618626619,
+                "ok": true
+              },
+              "direction": {
+                "expected": "decrease",
+                "measured": "decrease",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "08c4c1a6e581005a17414c2d9a2b8cdb81e5ff2f687784a2ff204127a3307703",
+          "re_export_sha256": "08c4c1a6e581005a17414c2d9a2b8cdb81e5ff2f687784a2ff204127a3307703",
+          "ok": true
+        },
+        "sweep": {
+          "values": 0,
+          "passed": 0
+        },
+        "infeasible": {
+          "declared": 0,
+          "refused": 0
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/zoo/bracket/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=7",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 7,
+          "sketch_blocks": 2,
+          "feature_ops": 3,
+          "parameters": {
+            "plateWidth": {
+              "found": true,
+              "value": 80.0,
+              "unit": "mm",
+              "expected": 80.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "plateHeight": {
+              "found": true,
+              "value": 50.0,
+              "unit": "mm",
+              "expected": 50.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "plateThickness": {
+              "found": true,
+              "value": 6.0,
+              "unit": "mm",
+              "expected": 6.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "holeDiameter": {
+              "found": true,
+              "value": 4.5,
+              "unit": "mm",
+              "expected": 4.5,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "holeInset": {
+              "found": true,
+              "value": 10.0,
+              "unit": "mm",
+              "expected": 10.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            },
+            "cornerRadius": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true,
+              "file": "main.kcl"
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 121,
+          "ok": true,
+          "dialect_ok": true,
+          "unit_ok": true,
+          "legacy": [],
+          "construction_ops": {
+            "sketch_blocks": 2,
+            "feature_ops": 3
+          }
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/zoo/bracket/export.json step.deterministic = True sha256 08c4c1a6e581; stl=present; glb=present",
+        "results/zoo/bracket/inspect.json valid = True solids = 1 (expected 1)",
+        "results/zoo/bracket/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = True; manifold witness = 23491.257545258406"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/zoo/bracket/export/bracket.step",
+            "sha256": "08c4c1a6e581005a17414c2d9a2b8cdb81e5ff2f687784a2ff204127a3307703",
+            "bytes": 22463,
+            "deterministic": true,
+            "second_sha256": "08c4c1a6e581005a17414c2d9a2b8cdb81e5ff2f687784a2ff204127a3307703",
+            "determinism_source": "edit restore re-export"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/zoo/bracket/export/bracket.stl",
+            "sha256": "91e024436ac89a10d4602afcb1e6731865f3c1339d2b902fa45a91767197d747",
+            "bytes": 159721
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/zoo/bracket/export/bracket.glb",
+            "sha256": "74910036ef688ed0979b1cd888f211bb184df90b341ac3f35b60f690d768b799",
+            "bytes": 80340
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 23491.257545258406,
+          "faces": 796,
+          "vertices": 392,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 23491.257476148327,
+          "surface_area": 9677.577949475652,
+          "bbox_min": [
+            0.0,
+            -7.1054274e-15,
+            -0.001
+          ],
+          "bbox_max": [
+            80.0,
+            50.0,
+            6.0
+          ],
+          "center_of_mass": [
+            39.99999376077661,
+            25.000002604224616,
+            2.9999960779024772
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a13ce4-bc40-7c91-9346-b3309188bf77; engine versions ['zoo 0.2.204 (105efcaaacd061157ad86e5aee54394f575bd650)']; engine calls 7; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 7,
+        "allow_errors": false,
+        "engine_versions": [
+          "zoo 0.2.204 (105efcaaacd061157ad86e5aee54394f575bd650)"
+        ],
+        "zoo_versions": [
+          "zoo 0.2.204 (105efcaaacd061157ad86e5aee54394f575bd650)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/zoo/bracket/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = training-only; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "training-only",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present, no traced geometry",
+      "ok": true,
+      "evidence": [
+        "results/zoo/bracket/verify.json hygiene.forbidden_imports = [] construction_ops = {'sketch_blocks': 2, 'feature_ops': 3} lines = 121"
+      ],
+      "failure_means": "the deliverable is a re-export or a trace of the reference, not a design",
+      "knob": "rebuild from construction with dimensions as parameters; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "construction_ops": {
+          "sketch_blocks": 2,
+          "feature_ops": 3
+        },
+        "sketch_blocks": 2,
+        "feature_ops": 3,
+        "source_size": null
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

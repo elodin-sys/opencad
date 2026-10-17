@@ -1,0 +1,169 @@
+id: nasa-backstep-driver-seegmiller
+title: 'Driver-Seegmiller backward-facing step: flow-passage (air volume) solid, parallel-roof case, NASA
+  WIND computational domain'
+truth_class: C
+role: validation
+source:
+  citation: 'NASA Glenn Research Center, WIND-US validation archive, Backstep Study #1 (D. A. Yoder);
+    Driver & Seegmiller, AIAA Journal 23(2), 1985, 163-171'
+  urls:
+  - https://www.grc.nasa.gov/WWW/wind/valid/backstep/backstep01/backstep01.html
+  accessed: '2026-09-15'
+  revision: page last updated 2021-02-10
+  license: US Government work (NASA)
+intent: 'Model the air volume (flow passage) of the Driver-Seegmiller backward-facing-step channel for
+  the parallel-roof (0 degree divergence) case described in the attached NASA validation page, as ONE
+  solid suitable for CFD meshing. Use the documented ratios and the step height H = 0.5 in = 12.7 mm:
+  step height to tunnel exit (downstream) height 1:9, step height to tunnel width 1:12, so the upstream
+  channel height is the downstream height minus H. Cover exactly the documented computational domain x/H
+  = -105 to +50. Frame: +x streamwise with x = 0 at the step face (upstream is negative x), +y spanwise
+  across the tunnel width with y = 0 at one side wall, +z vertical with z = 0 at the downstream floor
+  (the upstream floor therefore sits at z = H). Expose H, the width, the two channel heights, the roof
+  angle, and the upstream/downstream domain lengths as named parameters, and name the flow-boundary faces
+  (inlet, outlet, roof, upstream floor, step face, downstream floor, side walls) in the contract so the
+  mesher can find them. The measured reattachment location is a downstream validation target, not a geometry
+  input; do not tune anything to it.'
+inputs:
+- path: inputs/nasa-backstep-study01.md
+  kind: text
+  sha256: 2aca80462b8cd0fd2554c59a156e6a1149921d26b51fbe763e393f3a065e05b2
+  note: NASA page text (figures omitted)
+truth:
+- path: truth/dimensions.yaml
+  kind: yaml
+  sha256: 6a9e8093934445a1d18247454ae9c7899627dc8e274c6f007209a5762f58d07c
+  units: mm
+  note: derived arithmetic; the only truth for this class-C case
+arms:
+- id: text-only
+  design: nasa-backstep-driver-seegmiller
+  inputs:
+  - inputs/nasa-backstep-study01.md
+  notes: No images. Every dimension is stated or derived from the NASA text.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 1968.5
+  - 152.4
+  - 114.3
+  tolerance: 0.05
+- id: volume
+  kind: volume
+  expected: 31708968.84
+  tolerance_rel: 0.0005
+- id: solid_count
+  kind: solid_count
+  expected: 1
+- id: center_of_mass
+  kind: center_of_mass
+  expected:
+  - -323.407
+  - 76.2
+  - 61.2849
+  tolerance: 0.1
+- id: upstream_section
+  kind: section
+  plane: x
+  at: -500
+  expected:
+    area: 15483.84
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.0005
+- id: downstream_section
+  kind: section
+  plane: x
+  at: 300
+  expected:
+    area: 17419.32
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.0005
+- id: below_step_top_section
+  kind: section
+  plane: z
+  at: 6.35
+  expected:
+    area: 96774.0
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.0005
+  note: only the downstream channel exists below z = H
+- id: inlet
+  kind: face
+  plane: x
+  at: -1333.5
+  normal: '-'
+  expected: 15483.84
+  tolerance: 0.05
+  area_tolerance_rel: 0.0005
+- id: outlet
+  kind: face
+  plane: x
+  at: 635.0
+  normal: +
+  expected: 17419.32
+  tolerance: 0.05
+  area_tolerance_rel: 0.0005
+- id: step_face
+  kind: face
+  plane: x
+  at: 0.0
+  normal: '-'
+  expected: 1935.48
+  tolerance: 0.05
+  area_tolerance_rel: 0.0005
+  note: 'the air volume''s boundary at the step: outward normal points upstream into the step material'
+- id: roof
+  kind: face
+  plane: z
+  at: 114.3
+  normal: +
+  expected: 299999.4
+  tolerance: 0.05
+  area_tolerance_rel: 0.0005
+- id: upstream_floor
+  kind: face
+  plane: z
+  at: 12.7
+  normal: '-'
+  expected: 203225.4
+  tolerance: 0.05
+  area_tolerance_rel: 0.0005
+- id: downstream_floor
+  kind: face
+  plane: z
+  at: 0.0
+  normal: '-'
+  expected: 96774.0
+  tolerance: 0.05
+  area_tolerance_rel: 0.0005
+- id: side_wall_y0
+  kind: face
+  plane: y
+  at: 0.0
+  normal: '-'
+  expected: 208064.1
+  tolerance: 0.05
+  area_tolerance_rel: 0.0005
+- id: side_wall_y_max
+  kind: face
+  plane: y
+  at: 152.4
+  normal: +
+  expected: 208064.1
+  tolerance: 0.05
+  area_tolerance_rel: 0.0005
+downstream_targets:
+- name: reattachment_x_r_over_H
+  value: 6.26
+  uncertainty: 0.1
+  units: H
+  note: Driver-Seegmiller experiment, 0 deg roof; x_r = 79.5 +/- 1.3 mm at H = 12.7 mm; requires CFD with
+    the documented inlet conditions
+notes:
+- The 9:1 ratio is downstream height to step height; the upstream height is 8H by construction of a step
+  in a channel whose exit height is 9H.
+- Domain lengths are the NASA computational choice (x/H = -105 to +50), not the physical tunnel; the contract
+  must state them as explicit parameters.

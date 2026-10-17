@@ -1,0 +1,213 @@
+attempts:
+- started: '2026-09-18T06:11:48Z'
+  arm: requirements
+  backend: zoo
+  design: rpi5-enclosure
+  stage_reached: scored
+  force: false
+  resume_from: pipeline
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-1789711909
+  blockout:
+    ok: true
+    iterations: 0
+    thread_id: null
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 27
+      required_total: 28
+      optional_pass: 0
+      optional_total: 0
+    failed:
+    - floor_probe
+  seconds: 2192
+  finished: '2026-09-18T06:48:22Z'
+- started: '2026-09-18T06:49:43Z'
+  finished: '2026-09-18T06:49:43Z'
+  arm: requirements
+  backend: zoo
+  design: rpi5-enclosure
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 28
+      required_total: 28
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 175041e24060ec0f95787a54e8e6fb54e8c9d55f5babb554fe602880419362f9
+  seconds: 1
+- started: '2026-09-18T09:17:45Z'
+  arm: requirements
+  backend: zoo
+  design: rpi5-enclosure
+  ecr:
+    ok: true
+    outcome: refused
+    refused: true
+    kcl_modified: false
+    verdict_note: explicit refusal of an infeasible request
+    codex:
+      thread_id: 01a0b32e-5a0f-7ab2-bd74-3e6f0c5c10e2
+      exit_code: 0
+      seconds: 88
+      commands: 1
+      usage:
+        input: 29190894
+        cached: 28421504
+        output: 224333
+        reasoning: 146717
+      run_dir: /Users/danieldriscoll/dual/skillkat/results/rpi5-enclosure/ecr/ecr4/codex
+      failure: ''
+      network_stalls: 0
+      network_wait_seconds: 0
+      network_recovered: false
+      timeline:
+        wall_seconds: 87
+        tool_seconds: 0
+        model_seconds: 87
+        commands: 1
+        longest_commands_s:
+        - 0.0
+    result: 'INFEASIBLE. The requested ceiling would be at **z = 1.6 + 12 = 13.6 mm**,
+      but the preserved 20 mm headroom and top keep-out require **z ≥ 21.6 mm**.
+
+
+      The ceiling would be **8 mm too low**, intruding into the protected component
+      envelope. The model was not modified.'
+  expect_infeasible: true
+  request: truth/cases/rpi5-enclosure/inputs/ecr/ecr-4-infeasible.md
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure-1789723065
+  base_kcl_restored: true
+  stage_reached: judged
+  seconds: 90
+  finished: '2026-09-18T09:19:15Z'
+- started: '2026-09-20T07:47:11Z'
+  arm: requirements
+  backend: cadquery
+  design: rpi5-enclosure
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: be5bb562-5dc3-4767-b6b4-83523f9725b8
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure/manifest.yaml'''
+  seconds: 588
+  finished: '2026-09-20T07:57:02Z'
+- started: '2026-09-20T07:47:12Z'
+  arm: requirements
+  backend: build123d
+  design: rpi5-enclosure
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 687d2b42-69dc-4d38-8ad2-400acd91e3ea
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/rpi5-enclosure/manifest.yaml'''
+  seconds: 674
+  finished: '2026-09-20T07:58:28Z'
+- started: '2026-09-20T07:47:12Z'
+  arm: requirements
+  backend: freecad
+  design: rpi5-enclosure
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/rpi5-enclosure
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: c8c3a1e5-20ff-4cea-9c9d-9b8b51d47b54
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: false
+    corrections: null
+    stopped: null
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 28
+      required_total: 28
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  seconds: 745
+  finished: '2026-09-20T07:59:37Z'
+- started: '2026-09-20T07:59:56Z'
+  finished: '2026-09-20T07:59:58Z'
+  arm: requirements
+  design: rpi5-enclosure
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 28
+      required_total: 28
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: 8c00992511e86ca784c35dd4f04d39380bba8f5df01ab67bcca9e0e1d554d717
+  seconds: 3
+  backend: cadquery
+- started: '2026-09-20T08:00:00Z'
+  finished: '2026-09-20T08:00:02Z'
+  arm: requirements
+  design: rpi5-enclosure
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 28
+      required_total: 28
+      optional_pass: 0
+      optional_total: 0
+    failed: []
+  step_sha256: b674a3df644adc4822c7b3ef53b6ae5f5813447a74ce24933a1b945ed82a59e0
+  seconds: 3
+  backend: build123d

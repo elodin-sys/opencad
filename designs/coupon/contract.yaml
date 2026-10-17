@@ -1,0 +1,118 @@
+schema_version: 1
+name: coupon
+intent: >-
+  60 x 40 x 4 mm rectangular training coupon (agentic CAD primer section 10): one extruded
+  plate used to prove the toolchain end to end. Training-only; not an engineering release.
+units:
+  length: mm
+  angle: deg
+material: "aluminium 6061 (assumed for mass reporting only)"
+density_kg_m3: 2700
+process: "none (digital training coupon)"
+release_status: training-only
+
+frame:
+  origin: "minimum corner of the plate: x = y = z = 0 at the bottom-left-front corner"
+  axes:
+    x: "along the 60 mm length"
+    y: "along the 40 mm width"
+    z: "through the 4 mm thickness, positive out of the top face"
+  datums:
+    - name: A
+      description: "bottom face, z = 0"
+    - name: B
+      description: "left end face, x = 0"
+
+envelope:
+  min: [0, 0, 0]
+  max: [60, 40, 4]
+  tolerance: 0.02
+
+parameters:
+  - name: width
+    value: 60
+    unit: mm
+    provenance: stated
+    source: "scratch/zoo_kittycad_agentic_cad_primer.md section 10 (training coupon)"
+    tolerance: 0.01
+    description: "plate length along x"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 1600
+        direction: increase
+        bbox_delta: [10, 0, 0]
+  - name: height
+    value: 40
+    unit: mm
+    provenance: stated
+    source: "primer section 10"
+    tolerance: 0.01
+    description: "plate width along y"
+  - name: thickness
+    value: 4
+    unit: mm
+    provenance: stated
+    source: "primer section 10"
+    tolerance: 0.01
+    description: "plate thickness along z"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 2400
+        direction: increase
+        bbox_delta: [0, 0, 1]
+
+features:
+  - id: blank
+    kind: extrude
+    description: "rectangular plate extruded from a constrained XY sketch"
+    parameters: [width, height, thickness]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[30, 20, 2], [1, 1, 0.5], [59, 39, 3.5]]
+      - method: section
+        section: mid_z
+      - method: face
+        face: bottom
+      - method: face
+        face: top
+
+interfaces: []
+
+acceptance:
+  volume:
+    expected: 9600
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "width * height * thickness"
+  surface_area:
+    expected: 5600
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "2(wh + wt + ht)"
+  center_of_mass:
+    expected: [30, 20, 2]
+    tolerance: 0.02
+  solid_count: 1
+  sections:
+    - id: mid_z
+      plane: z
+      at: 2
+      expect: {area: 2400, loops: 1, holes: 0}
+      description: "mid-thickness section: the full 60 x 40 rectangle"
+    - id: mid_x
+      plane: x
+      at: 30
+      expect: {area: 160, loops: 1, holes: 0}
+      description: "40 x 4 cross-section"
+  faces:
+    - {name: bottom, plane: z, at: 0, normal: "-", area: 2400}
+    - {name: top, plane: z, at: 4, normal: "+", area: 2400}
+  blockout:
+    volume_min: 9590
+    volume_max: 9610
+
+references: []
+open_questions: []

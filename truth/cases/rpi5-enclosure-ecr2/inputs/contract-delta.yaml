@@ -1,0 +1,258 @@
+parameters:
+- name: wallThickness
+  value: 3.0
+- name: headroom
+  edit_test:
+    delta: 5
+    expect:
+      volume_delta: 4130.0
+      direction: increase
+      tolerance_rel: 0.02
+      bbox_delta:
+      - 0
+      - 0
+      - 5
+    sweep:
+      min: 15
+      max: 35
+      steps: 10
+    infeasible_deltas:
+    - -21
+- name: standoffHeight
+  edit_test:
+    delta: 1
+    expect:
+      volume_delta: 1234.763
+      direction: increase
+      tolerance_rel: 0.02
+      bbox_delta:
+      - 0
+      - 0
+      - 1
+envelope:
+  min:
+  - -8.5
+  - -8.5
+  - -8.0
+  max:
+  - 93.5
+  - 64.5
+  - 25.6
+  tolerance: 0.1
+acceptance:
+  volume:
+    expected: 65385.467
+    tolerance_rel: 0.005
+    provenance: measured (reference model)
+    note: 'ECR-2 reference: the passing STEP with its walls grown outward and floor grown downward to 3 mm, openings extended
+      (scripts/rpi5_ecr_deltas.py).'
+  center_of_mass:
+    expected:
+    - 41.7019
+    - 29.017
+    - 9.2827
+    tolerance: 0.2
+    provenance: measured (reference model)
+    note: ECR-2 reference geometry centroid (scripts/rpi5_ecr_deltas.py).
+  blockout:
+    volume_min: 235000
+    volume_max: 275000
+  thickness:
+  - name: shell_wall_floor_lid_p05
+    min: 3.0
+    stat: p05
+    samples: 6000
+    description: 'Verbatim requirement 7: minimum wall/floor thickness 2.0 mm using the fifth percentile of inward STL ray
+      casts. Include shell, floor, lid and opening edges; do not substitute a global minimum. The four 6.2/2.5 standoff annuli
+      are the accepted 1.85 mm exception.'
+  faces:
+  - name: floor_exterior
+    at: -8.0
+    area: 6016.0
+  - name: base_rim
+    area: 806.365
+  - name: usb_c_plug_sill
+    area: 39.0
+    center:
+    - 11.2
+    - -2.0
+  - name: usb_c_plug_jamb_low
+    area: 59.85
+    center:
+    - -2.0
+    - 11.575
+  - name: usb_c_plug_jamb_high
+    area: 59.85
+    center:
+    - -2.0
+    - 11.575
+  - name: hdmi0_plug_sill
+    area: 36.0
+    center:
+    - 25.8
+    - -2.0
+  - name: hdmi0_plug_jamb_low
+    area: 59.85
+    center:
+    - -2.0
+    - 11.575
+  - name: hdmi0_plug_jamb_high
+    area: 59.85
+    center:
+    - -2.0
+    - 11.575
+  - name: hdmi1_plug_sill
+    area: 36.0
+    center:
+    - 39.2
+    - -2.0
+  - name: hdmi1_plug_jamb_low
+    area: 59.85
+    center:
+    - -2.0
+    - 11.575
+  - name: hdmi1_plug_jamb_high
+    area: 59.85
+    center:
+    - -2.0
+    - 11.575
+  - name: usb_a_upper_plug_sill
+    area: 45.0
+    center:
+    - 87.0
+    - 47.0
+  - name: usb_a_upper_plug_jamb_low
+    area: 59.85
+    center:
+    - 87.0
+    - 11.575
+  - name: usb_a_upper_plug_jamb_high
+    area: 59.85
+    center:
+    - 87.0
+    - 11.575
+  - name: usb_a_lower_plug_sill
+    area: 45.0
+    center:
+    - 87.0
+    - 29.1
+  - name: usb_a_lower_plug_jamb_low
+    area: 59.85
+    center:
+    - 87.0
+    - 11.575
+  - name: usb_a_lower_plug_jamb_high
+    area: 59.85
+    center:
+    - 87.0
+    - 11.575
+  - name: rj45_plug_sill
+    area: 51.0
+    center:
+    - 87.0
+    - 10.2
+  - name: rj45_plug_jamb_low
+    area: 59.85
+    center:
+    - 87.0
+    - 11.575
+  - name: rj45_plug_jamb_high
+    area: 59.85
+    center:
+    - 87.0
+    - 11.575
+  - name: sd_card_slot_sill
+    area: 36.0
+    center:
+    - -2.0
+    - 28.0
+  - name: sd_card_slot_jamb_low
+    area: 73.65
+    center:
+    - -2.0
+    - 9.275
+  - name: sd_card_slot_jamb_high
+    area: 73.65
+    center:
+    - -2.0
+    - 9.275
+  surface_area:
+    expected: 42140.465
+    tolerance_rel: 0.01
+    provenance: measured (reference model)
+    note: ECR-2 reference geometry surface area (scripts/rpi5_ecr_deltas.py).
+  dimensions:
+  - name: overall_x
+    expected: 102.0
+  - name: overall_y
+    expected: 73.0
+  - name: overall_z
+    expected: 33.6
+  - name: floor_thickness
+    expected: 3.0
+  sections:
+  - id: floor_section
+    at: -6.2
+    expect:
+      area: 6016.0
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 0
+  - id: standoff_section
+    at: -2.5
+    expect:
+      area: 1179.128
+      area_tolerance_rel: 0.01
+      loops: 5
+      holes: 4
+  - id: pcb_level_section
+    at: 0.8
+    expect:
+      area: 1078.0
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 0
+  - id: all_ports_section
+    at: 5
+    expect:
+      area: 826.0
+      area_tolerance_rel: 0.01
+      loops: 7
+      holes: 0
+  - id: rim_pilots_section
+    at: 19
+    expect:
+      area: 806.365
+      area_tolerance_rel: 0.01
+      loops: 7
+      holes: 4
+  - id: lid_section
+    at: 23.6
+    expect:
+      area: 5816.126
+      area_tolerance_rel: 0.01
+      loops: 1
+      holes: 4
+  solids:
+  - name: base
+    contains_point:
+    - 42.5
+    - 28
+    - -6
+    volume:
+      expected: 42120.965
+      tolerance_rel: 0.005
+      provenance: measured (reference model)
+      note: ECR-2 reference geometry
+    description: Exact source-contained point; connected shell, floor, standoffs and square corner posts.
+  - name: lid
+    contains_point:
+    - 42.5
+    - 28
+    - 24.6
+    volume:
+      expected: 23264.503
+      tolerance_rel: 0.005
+      provenance: measured (reference model)
+      note: ECR-2 reference geometry
+    description: Exact source-contained point; separate flat cover with four through holes.

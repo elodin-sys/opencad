@@ -1,0 +1,172 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import plateWidth, plateThickness, bottomZ, lugMaxZ, halfWidth, keyUpperCounterboreDiameter, keyAxisX, keyUpperZ, keyMiddleEnd, keyLowerRecessDiameter, keyBackDepth, keyUpperBoreDiameter, keyLowerExitDiameter, keyLowerExitStart, keyUpperRecessDiameter, lowerTransitionLength from "params.kcl"
+
+// All contract literals, including their independent edit guards, are exported
+// by the shared params.kcl. Q1: the table and sections govern this provisional
+// reconstruction; the lower opening is conical, never a separate D16 bore.
+keyOverrun = 0.02mm
+keyBooleanTolerance = 0.001mm
+lowerRearRadius = keyLowerRecessDiameter / 2
+lowerFrontRadius = keyLowerExitDiameter / 2
+upperRearRadius = keyUpperRecessDiameter / 2
+upperMiddleRadius = keyUpperBoreDiameter / 2
+// The 0.01 mm radial tool overrun clears the crown termination without
+// a dropped STL sliver; radius error stays below the 0.025 mm contract bound.
+upperFrontRadius = keyUpperCounterboreDiameter / 2 + keyOverrun / 2
+// Extend the front tool 0.01 mm behind the exterior relief shoulder to avoid
+// coplanar tool/stock faces at y=keyMiddleEnd. This is inside the 0.04 mm
+// functional-depth tolerance and leaves every exterior datum untouched.
+frontShoulderY = keyMiddleEnd - (keyOverrun / 2)
+
+// The two tabulated normals give these straight neck walls. Their anchors
+// follow the opening axes when those axes are edited. The nominal left/right
+// plane anchors are [-8.566,0,5.18] and [2.594,0,12.54] respectively.
+neckSlope = 0.2588_ / 0.9659_
+neckLeftBase = keyAxisX - 6.566mm - (neckSlope * 5.18mm)
+neckRightBase = keyAxisX + 4.594mm + neckSlope * (keyUpperZ - 3.86mm)
+neckLeftTop = neckLeftBase + neckSlope * keyUpperZ
+neckRightTop = neckRightBase - (neckSlope * keyUpperZ)
+
+assert(plateWidth, isGreaterThan = keyUpperCounterboreDiameter, error = "The plate must surround the keyhole")
+assert(halfWidth, isGreaterThan = abs(keyAxisX) + upperFrontRadius, error = "Keyhole must stay inside the plate sides")
+assert(bottomZ, isLessThan = -lowerRearRadius, error = "Lower recess must stay above the bottom datum")
+assert(lugMaxZ, isGreaterThan = keyUpperZ + upperFrontRadius, error = "Upper opening must stay below the lug maximum")
+assert(
+  keyBackDepth,
+  isGreaterThan = 0mm,
+  isLessThan = keyMiddleEnd,
+  error = "Rear recess must leave a middle bore",
+)
+assert(keyMiddleEnd, isLessThan = keyLowerExitStart, error = "The neck must end before the lower taper exits")
+assert(
+  keyLowerExitStart,
+  isGreaterThan = keyBackDepth,
+  isLessThan = plateThickness,
+  error = "Lower taper must leave a front cylindrical exit",
+)
+assert(
+  lowerTransitionLength,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness - keyBackDepth,
+  error = "Lower transition must fit through the plate",
+)
+assert(lowerRearRadius, isGreaterThan = lowerFrontRadius, error = "Lower opening must narrow toward the front")
+assert(lowerFrontRadius, isGreaterThan = 0mm, error = "Lower exit radius must be positive")
+assert(
+  upperRearRadius,
+  isGreaterThan = 0mm,
+  isLessThan = upperMiddleRadius,
+  error = "Upper rear recess must leave a positive shoulder",
+)
+assert(upperMiddleRadius, isLessThan = upperFrontRadius, error = "Upper middle bore must leave a front shoulder")
+assert(neckLeftTop, isLessThan = neckRightTop, error = "Inclined neck walls must not cross")
+assert(neckLeftTop, isGreaterThan = keyAxisX - upperRearRadius, error = "Left neck cap must lie inside the rear upper bore")
+assert(neckRightTop, isLessThan = keyAxisX + upperRearRadius, error = "Right neck cap must lie inside the rear upper bore")
+// lowerTransitionLength is the contract's derived span, nominally
+// keyLowerExitStart - keyBackDepth. Use the two physical datum stations below
+// without asserting equality between independently editable parameters.
+neckBaseRadius = lowerRearRadius - ((lowerRearRadius - lowerFrontRadius) * (keyMiddleEnd - keyBackDepth) / (keyLowerExitStart - keyBackDepth))
+assert(neckBaseRadius, isGreaterThan = keyAxisX - neckLeftBase, error = "The taper must enclose the left neck base")
+assert(neckBaseRadius, isGreaterThan = neckRightBase - keyAxisX, error = "The taper must enclose the right neck base")
+
+export fn keyhole(@body) {
+  // Each stepped tool is a single revolved profile. Its internal shoulders
+  // remain exact, while the two exterior end caps overrun into air.
+  lowerProfile = sketch(on = XY) {
+    a = line(start = [0mm, -keyOverrun], end = [lowerRearRadius, -keyOverrun])
+    b = line(start = [lowerRearRadius, -keyOverrun], end = [lowerRearRadius, keyBackDepth])
+    c = line(start = [lowerRearRadius, keyBackDepth], end = [lowerFrontRadius, keyLowerExitStart])
+    d = line(
+      start = [lowerFrontRadius, keyLowerExitStart],
+      end = [
+        lowerFrontRadius,
+        plateThickness + keyOverrun
+      ],
+    )
+    e = line(
+      start = [
+        lowerFrontRadius,
+        plateThickness + keyOverrun
+      ],
+      end = [0mm, plateThickness + keyOverrun],
+    )
+    f = line(start = [0mm, plateThickness + keyOverrun], end = [0mm, -keyOverrun])
+  }
+  lowerRegion = region(segments = [lowerProfile.a, lowerProfile.b])
+  lowerRaw = revolve(lowerRegion, axis = Y, angle = 360deg)
+  lowerTool = translate(lowerRaw, x = keyAxisX, global = true)
+
+  upperProfile = sketch(on = XY) {
+    a = line(start = [0mm, -2 * keyOverrun], end = [upperRearRadius, -2 * keyOverrun])
+    b = line(start = [upperRearRadius, -2 * keyOverrun], end = [upperRearRadius, keyBackDepth])
+    c = line(start = [upperRearRadius, keyBackDepth], end = [upperMiddleRadius, keyBackDepth])
+    d = line(
+      start = [upperMiddleRadius, keyBackDepth],
+      end = [
+        upperMiddleRadius,
+        plateThickness + 2 * keyOverrun
+      ],
+    )
+    e = line(
+      start = [
+        upperMiddleRadius,
+        plateThickness + 2 * keyOverrun
+      ],
+      end = [0mm, plateThickness + 2 * keyOverrun],
+    )
+    f = line(start = [0mm, plateThickness + 2 * keyOverrun], end = [0mm, -2 * keyOverrun])
+  }
+  upperRegion = region(segments = [upperProfile.a, upperProfile.b])
+  upperRaw = revolve(upperRegion, axis = Y, angle = 360deg)
+  upperTool = translate(
+    upperRaw,
+    x = keyAxisX,
+    z = keyUpperZ,
+    global = true,
+  )
+
+  // The inclined neck is present only behind the y=8 shoulder. Its ends are
+  // buried in the round tools; the front D26/D14 openings intersect directly.
+  // Extending these planes all the way to y=14 would overcut the lower exit.
+  neckProfile = sketch(on = XY) {
+    a = line(start = [neckLeftBase, 0mm], end = [neckRightBase, 0mm])
+    b = line(start = [neckRightBase, 0mm], end = [neckRightTop, keyUpperZ])
+    c = line(start = [neckRightTop, keyUpperZ], end = [neckLeftTop, keyUpperZ])
+    d = line(start = [neckLeftTop, keyUpperZ], end = [neckLeftBase, 0mm])
+  }
+  neckRegion = region(segments = [neckProfile.a, neckProfile.b])
+  neckRaw = extrude(neckRegion, length = keyMiddleEnd + 1.5 * keyOverrun, method = NEW)
+  neckTurned = rotate(neckRaw, roll = 90deg, global = true)
+  neckTool = translate(neckTurned, y = keyMiddleEnd, global = true)
+
+  lowerAndNeck = union([lowerTool, neckTool], tolerance = keyBooleanTolerance)
+  completeTool = union([lowerAndNeck, upperTool], tolerance = keyBooleanTolerance)
+  cutBody = subtract(body, tools = [completeTool], tolerance = keyBooleanTolerance)
+  frontSketch = sketch(on = XY) {
+    c = circle(center = [keyAxisX, keyUpperZ], start = [keyAxisX + upperFrontRadius, keyUpperZ])
+  }
+  frontRegion = region(segments = [frontSketch.c])
+  frontRaw = extrude(frontRegion, length = plateThickness + keyOverrun - frontShoulderY, method = NEW)
+  frontTool = rotate(frontRaw, roll = 90deg, global = true)
+    |> translate(y = plateThickness + keyOverrun, global = true)
+  counterbored = subtract(cutBody, tools = [frontTool], tolerance = keyBooleanTolerance)
+  finished = clone(counterbored)
+  hide(frontRegion)
+  hide([frontRaw, frontTool, counterbored])
+  hide([lowerRegion, upperRegion, neckRegion])
+  hide([
+    body,
+    lowerRaw,
+    lowerTool,
+    upperRaw,
+    upperTool,
+    neckRaw,
+    neckTurned,
+    neckTool,
+    lowerAndNeck,
+    completeTool,
+    cutBody
+  ])
+  return finished
+}

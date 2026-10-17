@@ -1,0 +1,28 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/workspace/settings/this-project/about-design-studio
+Title: About Design Studio
+
+# About Design Studio
+
+View app release information from the project settings dialog.
+
+The `About Design Studio` section provides release and support links from within the settings
+dialog.
+
+## Included Information and Actions
+
+### App Version
+
+Shows the current app version.
+
+### View Release on GitHub
+
+Open the current release on GitHub.
+
+### Check for Updates
+
+Check whether a newer version of Zoo Design Studio is available.
+
+### Roadmap and Feedback
+
+If the feature you want is not available yet, check the roadmap and start a discussion so the team
+can prioritize it.

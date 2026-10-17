@@ -1,0 +1,877 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 12,
+    "fail": 0,
+    "not_applicable": 0
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "reference_fidelity",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/nist-amb2022-01-bridge-mesh/contract.yaml: 36 parameters {'stated': 12, 'derived': 11, 'measured': 11, 'inferred': 2}; sources unresolved {}; unanchored 0",
+        "open questions: 3 (blocking []); interfaces 4, unenforced ['buildPlateContacts', 'sideAndEndDatums', 'sealedL10Pockets'] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 12,
+          "derived": 11,
+          "measured": 11,
+          "inferred": 2
+        },
+        "soft_values": 2,
+        "open_questions": [
+          "OQ1: What are the physical single-track and double-track wall widths? Pending a dimensional or melt-track source, use singleTrackWidth=0.10 \u00b10.08 mm and doubleTrackWidth=0.20 \u00b10.15 mm. The inspection mesh encodes about 0.11/0.22 mm, but does not establish as-built track widths.",
+          "OQ2: What is the exact mapping from Figure 4 scan centerlines to the physical y-side datum? Use wall centers [1.25, 2.00, 2.85, 3.60] mm with \u00b10.20 mm image-measurement tolerance; the inspection mesh places them about 0.17 mm higher. The nominal mapping centers the shown hatch range within the 5 mm width.",
+          "OQ3: Which alloy and density apply to this individual specimen? The supplied excerpts identify a metal-alloy LPBF bridge without selecting an alloy or density; both material and density remain unspecified."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [],
+        "blocking_questions": [],
+        "unenforced_interfaces": [
+          "buildPlateContacts",
+          "sideAndEndDatums",
+          "sealedL10Pockets"
+        ],
+        "interface_checks": []
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge-mesh/inspect.json bbox.max_error = 0.0 (tol 0.1)",
+        "results/nist-amb2022-01-bridge-mesh/verify.json engine bbox.max_error = 1.2 (engine bbox differs: zoo kcl analyze can include cut-tool extents; disclosed, not gating)"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            75.0,
+            5.0,
+            12.5
+          ],
+          "measured_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "measured_max": [
+            75.0,
+            5.0,
+            12.5
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.1,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "expected_max": [
+            75.0,
+            5.0,
+            12.5
+          ],
+          "measured_min": [
+            -0.25,
+            -0.25,
+            -1.2
+          ],
+          "measured_max": [
+            75.0,
+            5.25,
+            13.2
+          ],
+          "max_error": 1.2,
+          "tolerance": 0.1,
+          "ok": false
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge-mesh/inspect.json volume = 3678.1 vs 3678.1",
+        "results/nist-amb2022-01-bridge-mesh/inspect.json surface_area = 3384.4584 vs 3384.458441227157",
+        "results/nist-amb2022-01-bridge-mesh/inspect.json center_of_mass = [36.9198, 2.5001, 6.6729] vs [36.919754765, 2.500130502, 6.672922161]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 3678.1,
+          "measured": 3678.1,
+          "error": 0.0,
+          "band": 7.3562,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 3384.458441227157,
+          "measured": 3384.4584,
+          "error": 0.0,
+          "band": 6.7689,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            36.919754765,
+            2.500130502,
+            6.672922161
+          ],
+          "measured": [
+            36.9198,
+            2.5001,
+            6.6729
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.25,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane and dimension verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge-mesh/inspect.json features: 11/11 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "cylinders": {},
+        "interfaces": {}
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge-mesh/inspect.json deviation.p95 = 4.858777842463917e-13 hausdorff = 0.17910023198852532 silhouette_iou_min = 1.0",
+        "declared band: {'p95_max': 0.2, 'hausdorff_max': 0.5, 'silhouette_iou_min': 0.98}"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "samples": 20000,
+          "candidate_to_reference": {
+            "p50": 4.440892098500626e-16,
+            "p95": 4.853855857225189e-13,
+            "p99": 0.15910005569458008,
+            "max": 0.16909999847412127,
+            "mean": 0.003855211341825949
+          },
+          "reference_to_candidate": {
+            "p50": 4.440892098500626e-16,
+            "p95": 4.858777842463917e-13,
+            "p99": 0.17909998893737789,
+            "max": 0.17910023198852532,
+            "mean": 0.004209954801313758
+          },
+          "p95": 4.858777842463917e-13,
+          "hausdorff_estimate": 0.17910023198852532,
+          "silhouette_iou": {
+            "top": 1.0,
+            "front": 1.0,
+            "right": 1.0
+          },
+          "silhouette_iou_min": 1.0,
+          "silhouette_px_long": 2400,
+          "volume_ratio": 0.9997390624562781,
+          "bbox_delta": [
+            3.5796188333370865e-15,
+            0.0,
+            0.0
+          ],
+          "checks": {
+            "p95": {
+              "max": 0.2,
+              "measured": 4.858777842463917e-13,
+              "ok": true
+            },
+            "hausdorff": {
+              "max": 0.5,
+              "measured": 0.17910023198852532,
+              "ok": true
+            },
+            "silhouette_iou": {
+              "min": 0.98,
+              "measured": 1.0,
+              "ok": true
+            }
+          },
+          "declared": true,
+          "ok": true
+        },
+        "not_applicable": false
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge-mesh/inspect.json agreement kcl=3678.101663795452 step=3678.099999999999 stl=3678.0999983999995 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 3678.101663795452,
+        "step": 3678.099999999999,
+        "stl": 3678.0999983999995,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": null,
+        "kcl_vs_step_rel": 4.5235188090831127e-07,
+        "stl_vs_step_rel": 4.3500705534476163e-10,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge-mesh/edit.json 3/3 edit tests ok; restore.ok = True"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, or the deliverable changed",
+      "knob": "make features derive from the named constants",
+      "details": {
+        "tests": [
+          {
+            "parameter": "bodyHeight",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 368.75,
+                "measured": 368.75000000000136,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          },
+          {
+            "parameter": "tabHeight",
+            "delta": 0.25,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 13.75,
+                "measured": 13.749999999998636,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.25
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.25
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          },
+          {
+            "parameter": "singleTrackWidth",
+            "delta": 0.05,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 1.6,
+                "measured": 1.6000000000003638,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2",
+          "re_export_sha256": "4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2",
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge-mesh/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=21",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 21,
+          "sketch_blocks": 8,
+          "feature_ops": 15,
+          "parameters": {
+            "overallLength": {
+              "found": true,
+              "value": 75.0,
+              "unit": "mm",
+              "expected": 75.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "overallWidth": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "bodyHeight": {
+              "found": true,
+              "value": 12.0,
+              "unit": "mm",
+              "expected": 12.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "noseAngle": {
+              "found": true,
+              "value": 45.0,
+              "unit": "deg",
+              "expected": 45.0,
+              "expected_unit": "deg",
+              "ok": true
+            },
+            "noseLength": {
+              "found": true,
+              "value": 2.5,
+              "unit": "mm",
+              "expected": 2.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "legCount": {
+              "found": true,
+              "value": 12.0,
+              "unit": "",
+              "expected": 12.0,
+              "expected_unit": "",
+              "ok": true
+            },
+            "largeLegWidth": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "mediumLegWidth": {
+              "found": true,
+              "value": 2.5,
+              "unit": "mm",
+              "expected": 2.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "smallLegWidth": {
+              "found": true,
+              "value": 0.5,
+              "unit": "mm",
+              "expected": 0.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "gapWidth": {
+              "found": true,
+              "value": 2.0,
+              "unit": "mm",
+              "expected": 2.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "overhangAngle": {
+              "found": true,
+              "value": 45.0,
+              "unit": "deg",
+              "expected": 45.0,
+              "expected_unit": "deg",
+              "ok": true
+            },
+            "legMergeHeight": {
+              "found": true,
+              "value": 7.0,
+              "unit": "mm",
+              "expected": 7.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "gapLowHeight": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "legGroupCount": {
+              "found": true,
+              "value": 4.0,
+              "unit": "",
+              "expected": 4.0,
+              "expected_unit": "",
+              "ok": true
+            },
+            "legGroupPitch": {
+              "found": true,
+              "value": 14.0,
+              "unit": "mm",
+              "expected": 14.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "endBlockLength": {
+              "found": true,
+              "value": 19.0,
+              "unit": "mm",
+              "expected": 19.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "tabCount": {
+              "found": true,
+              "value": 11.0,
+              "unit": "",
+              "expected": 11.0,
+              "expected_unit": "",
+              "ok": true
+            },
+            "tabWidth": {
+              "found": true,
+              "value": 1.0,
+              "unit": "mm",
+              "expected": 1.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "tabPitch": {
+              "found": true,
+              "value": 7.0,
+              "unit": "mm",
+              "expected": 7.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "tabHeight": {
+              "found": true,
+              "value": 0.5,
+              "unit": "mm",
+              "expected": 0.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "firstTabX": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "l10StartX": {
+              "found": true,
+              "value": 28.0,
+              "unit": "mm",
+              "expected": 28.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "l10OuterWallThickness": {
+              "found": true,
+              "value": 0.5,
+              "unit": "mm",
+              "expected": 0.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "l10BaseThickness": {
+              "found": true,
+              "value": 1.0,
+              "unit": "mm",
+              "expected": 1.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "thinWallHeight": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "l10CavityLength": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "l10CavityWidth": {
+              "found": true,
+              "value": 4.0,
+              "unit": "mm",
+              "expected": 4.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "l10CavityStartX": {
+              "found": true,
+              "value": 28.5,
+              "unit": "mm",
+              "expected": 28.5,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "l10CeilingZ": {
+              "found": true,
+              "value": 5.0,
+              "unit": "mm",
+              "expected": 5.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "thinWallCount": {
+              "found": true,
+              "value": 4.0,
+              "unit": "",
+              "expected": 4.0,
+              "expected_unit": "",
+              "ok": true
+            },
+            "singleTrackWidth": {
+              "found": true,
+              "value": 0.1,
+              "unit": "mm",
+              "expected": 0.1,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "doubleTrackWidth": {
+              "found": true,
+              "value": 0.2,
+              "unit": "mm",
+              "expected": 0.2,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "wall1CenterY": {
+              "found": true,
+              "value": 1.25,
+              "unit": "mm",
+              "expected": 1.25,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "wall2CenterY": {
+              "found": true,
+              "value": 2.0,
+              "unit": "mm",
+              "expected": 2.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "wall3CenterY": {
+              "found": true,
+              "value": 2.85,
+              "unit": "mm",
+              "expected": 2.85,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "wall4CenterY": {
+              "found": true,
+              "value": 3.6,
+              "unit": "mm",
+              "expected": 3.6,
+              "expected_unit": "mm",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "lines": 835,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge-mesh/export.json step.deterministic = True sha256 4ead85d32de1; stl=present; glb=optional/missing",
+        "results/nist-amb2022-01-bridge-mesh/inspect.json valid = True solids = 1 (expected 1)",
+        "results/nist-amb2022-01-bridge-mesh/inspect.json mesh watertight = True components = 6 void_shells = 5"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nist-amb2022-01-bridge-mesh/export/nist-amb2022-01-bridge-mesh.step",
+            "sha256": "4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2",
+            "bytes": 160488,
+            "deterministic": true,
+            "second_sha256": "4ead85d32de1329a0a6bb918e8e79e9d34ed1b5b6bb7b86fa6023dc98d580ae2"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/nist-amb2022-01-bridge-mesh/export/nist-amb2022-01-bridge-mesh.stl",
+            "sha256": "fd0d6427e5de0489aa77b95b9d7bbb5e951dc350c45645b6fe8217c561e1df09",
+            "bytes": 74356
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 572,
+          "vertices": 298,
+          "watertight": true,
+          "winding_consistent": true,
+          "components": 6,
+          "void_shells": 5,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 3678.0999983999995,
+          "surface_area": 3384.4584428271573,
+          "bbox_min": [
+            0.0,
+            -0.0,
+            0.0
+          ],
+          "bbox_max": [
+            75.0,
+            5.0,
+            12.5
+          ],
+          "center_of_mass": [
+            36.91975476748093,
+            2.500130501987496,
+            6.672922162496038
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0a618-a943-73f0-bc2e-565305daf6ea; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 10; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 10,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge-mesh/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = /Users/danieldriscoll/dual/skillkat/designs/nist-amb2022-01-bridge-mesh/reference/reference.ply)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/nist-amb2022-01-bridge-mesh/verify.json hygiene.forbidden_imports = [] sketch_blocks = 8 feature_ops = 15 lines = 835"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "sketch_blocks": 8,
+        "feature_ops": 15
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/distance/absolute-distance
+Title: Absolute Distance
+
+# Absolute Distance
+
+Define direct point-to-point spacing in a sketch in Zoo Design Studio.
+
+Absolute Distance measures the direct distance between selected sketch references. Use it when the
+design intent depends on true separation rather than only horizontal or vertical offset.
+
+Select a line to dimension its direct length, or select two points or references to dimension the true
+distance between them. Double-click an existing absolute distance label to edit its value.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/dimensions/distance/distance.gif"
+  alt="Adding and editing an absolute distance dimension"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Absolute Distance controls the direct separation between references
+</div>

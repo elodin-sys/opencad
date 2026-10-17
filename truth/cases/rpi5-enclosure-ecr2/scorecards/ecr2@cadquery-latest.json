@@ -1,0 +1,769 @@
+{
+  "case": "rpi5-enclosure-ecr2",
+  "arm": "ecr2",
+  "design": "rpi5-enclosure",
+  "ecr": "ecr2",
+  "results_dir": "/Users/danieldriscoll/dual/skillkat/results/cadquery/rpi5-enclosure/ecr/ecr2",
+  "truth_class": "C",
+  "role": "validation",
+  "scored_at": "2026-09-20T08:46:10Z",
+  "verdict": "PASS",
+  "summary": {
+    "required_pass": 28,
+    "required_total": 28,
+    "optional_pass": 0,
+    "optional_total": 0
+  },
+  "checks": [
+    {
+      "id": "two_solids",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 2,
+      "measured": 2,
+      "ok": true
+    },
+    {
+      "id": "base_solid",
+      "kind": "solid",
+      "required": true,
+      "note": "the base contains this point",
+      "measured": {
+        "volume": 42120.964567170595,
+        "bbox_min": [
+          -8.5,
+          -8.5,
+          -8.0
+        ],
+        "bbox_max": [
+          93.5,
+          64.5,
+          21.55
+        ],
+        "center_of_mass": [
+          41.26103019215688,
+          29.57877046936927,
+          1.3748845824047962
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "lid_solid",
+      "kind": "solid",
+      "required": true,
+      "note": "the lid contains this point",
+      "measured": {
+        "volume": 23264.50266447077,
+        "bbox_min": [
+          -8.5,
+          -8.5,
+          21.6
+        ],
+        "bbox_max": [
+          93.5,
+          64.5,
+          25.6
+        ],
+        "center_of_mass": [
+          42.499999999999986,
+          28.000000000000007,
+          23.59999999999999
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "clear_pcb_slab",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "clear_pcb_edge_band",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "clear_top_envelope",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "clear_bottom_keepout",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "clear_usb_c_plug",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "clear_hdmi0_plug",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "clear_hdmi1_plug",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "clear_usb_a_upper_plug",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "clear_usb_a_lower_plug",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "clear_rj45_plug",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "clear_sd_card_slot",
+      "kind": "clearance",
+      "required": true,
+      "note": "no enclosure material inside this envelope (contact allowed, e.g. standoffs on the PCB bottom)",
+      "measured": {
+        "gap": 0.0,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": null
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "lid_on_base",
+      "kind": "clearance",
+      "required": true,
+      "note": "lid rests on the base rim without interference",
+      "measured": {
+        "gap": 0.05000000000000071,
+        "interference_volume": 0.0
+      },
+      "expected": {
+        "min_gap": 0.0,
+        "max_gap": 0.1
+      },
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "standoff_1_top",
+      "kind": "face",
+      "required": true,
+      "note": "standoff top meets the PCB bottom at the hole datum",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "found": 1,
+      "area": 25.281966879763853,
+      "expected_area": null,
+      "mode": "one",
+      "center": [
+        3.5,
+        3.5
+      ],
+      "centroid_uv": [
+        3.5,
+        3.5
+      ],
+      "ok": true
+    },
+    {
+      "id": "standoff_1_pilot",
+      "kind": "cylinder",
+      "required": true,
+      "note": "\u00d82.5 pilot >= 5 deep (checked as 3..9)",
+      "expected": {
+        "point": [
+          3.5,
+          3.5,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          3.5,
+          3.5,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.25,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 6.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "standoff_2_top",
+      "kind": "face",
+      "required": true,
+      "note": "standoff top meets the PCB bottom at the hole datum",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "found": 1,
+      "area": 25.281966879763747,
+      "expected_area": null,
+      "mode": "one",
+      "center": [
+        61.5,
+        3.5
+      ],
+      "centroid_uv": [
+        61.49999999999999,
+        3.5000000000000004
+      ],
+      "ok": true
+    },
+    {
+      "id": "standoff_2_pilot",
+      "kind": "cylinder",
+      "required": true,
+      "note": "\u00d82.5 pilot >= 5 deep (checked as 3..9)",
+      "expected": {
+        "point": [
+          61.5,
+          3.5,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          61.5,
+          3.5,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.25,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 6.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "standoff_3_top",
+      "kind": "face",
+      "required": true,
+      "note": "standoff top meets the PCB bottom at the hole datum",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "found": 1,
+      "area": 25.281966879763853,
+      "expected_area": null,
+      "mode": "one",
+      "center": [
+        3.5,
+        52.5
+      ],
+      "centroid_uv": [
+        3.5,
+        52.50000000000001
+      ],
+      "ok": true
+    },
+    {
+      "id": "standoff_3_pilot",
+      "kind": "cylinder",
+      "required": true,
+      "note": "\u00d82.5 pilot >= 5 deep (checked as 3..9)",
+      "expected": {
+        "point": [
+          3.5,
+          52.5,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          3.5,
+          52.5,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.25,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 6.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "standoff_4_top",
+      "kind": "face",
+      "required": true,
+      "note": "standoff top meets the PCB bottom at the hole datum",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "found": 1,
+      "area": 25.281966879763747,
+      "expected_area": null,
+      "mode": "one",
+      "center": [
+        61.5,
+        52.5
+      ],
+      "centroid_uv": [
+        61.49999999999999,
+        52.5
+      ],
+      "ok": true
+    },
+    {
+      "id": "standoff_4_pilot",
+      "kind": "cylinder",
+      "required": true,
+      "note": "\u00d82.5 pilot >= 5 deep (checked as 3..9)",
+      "expected": {
+        "point": [
+          61.5,
+          52.5,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.25,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          61.5,
+          52.5,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 1.25,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.2,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 6.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "lid_screw_clearance_holes",
+      "kind": "cylinder_count",
+      "required": true,
+      "note": "\u00d83.0..3.4 through the lid",
+      "expected": null,
+      "expected_min": 4,
+      "measured": 4,
+      "centers": [
+        [
+          -4.5,
+          -4.5,
+          23.59999999999999
+        ],
+        [
+          -4.5,
+          60.5,
+          23.59999999999999
+        ],
+        [
+          89.5,
+          -4.5,
+          23.59999999999999
+        ],
+        [
+          89.5,
+          60.5,
+          23.59999999999999
+        ]
+      ],
+      "region": null,
+      "ok": true
+    },
+    {
+      "id": "pilot_holes_total",
+      "kind": "cylinder_count",
+      "required": true,
+      "note": "4 standoff + 4 corner-post pilots",
+      "expected": null,
+      "expected_min": 8,
+      "measured": 8,
+      "centers": [
+        [
+          -4.5,
+          -4.5,
+          19.05
+        ],
+        [
+          -4.5,
+          60.5,
+          19.05
+        ],
+        [
+          3.5,
+          3.5,
+          -2.5
+        ],
+        [
+          3.5,
+          52.5,
+          -2.5
+        ],
+        [
+          61.5,
+          3.5,
+          -2.5
+        ],
+        [
+          61.5,
+          52.5,
+          -2.5
+        ],
+        [
+          89.5,
+          -4.5,
+          19.05
+        ],
+        [
+          89.5,
+          60.5,
+          19.05
+        ]
+      ],
+      "region": null,
+      "ok": true
+    },
+    {
+      "id": "wall_min",
+      "kind": "thickness",
+      "required": true,
+      "note": "minimum wall/floor thickness by inward ray casting",
+      "measured": {
+        "min": 1.4000015258789076,
+        "p01": 1.8552250438646551,
+        "p05": 2.9999999999999942,
+        "p50": 3.0000000000000013
+      },
+      "stat": "p05",
+      "expected": {
+        "min": 3.0
+      },
+      "thinnest_points": [
+        [
+          33.2,
+          -2.682,
+          9.005
+        ],
+        [
+          33.2,
+          -2.593,
+          6.623
+        ],
+        [
+          33.2,
+          -2.96,
+          6.112
+        ],
+        [
+          31.8,
+          -2.882,
+          2.811
+        ],
+        [
+          33.2,
+          -3.248,
+          9.0
+        ]
+      ],
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "headroom_probe",
+      "kind": "probe",
+      "required": true,
+      "note": "air above the board",
+      "measured": [
+        "out",
+        "out",
+        "out"
+      ],
+      "expected": "void",
+      "ok": true
+    },
+    {
+      "id": "floor_probe",
+      "kind": "probe",
+      "required": true,
+      "note": "there is a floor under the component keep-out (requirement 1: the base contains (42.5, 28, -6))",
+      "measured": [
+        "in"
+      ],
+      "expected": "solid",
+      "ok": true
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": {
+      "pass": 11,
+      "fail": 0,
+      "not_applicable": 1
+    },
+    "failed": []
+  },
+  "downstream_targets": [],
+  "hash_binding": {
+    "manifest_sha256": "99a11f1462a95051cd7da92aa5edef47b374ebc3a6b3cf07bf908ba7e44782b5",
+    "truth_files": {
+      "truth/requirements.yaml": "c53607a0ec88516b10453325abd27553ea2bdfd48ffb8fc2029926bc8303c3b9"
+    },
+    "input_files": {
+      "inputs/ecr-2-walls.md": "0e7667a335fa5c64757d77eca2a71f65e26a5665dbfad47b15645225e1b7fb36"
+    },
+    "source": {
+      "main.py": "c21081038358d005c781c7f2aa383a80abaabccc077eef02d450fdf027869761"
+    },
+    "kcl": {},
+    "step_sha256": "ea1378b048ecdf4351ea85e7864a4f91504228aeb3bbdcc37defb8ca4f3594e8",
+    "design_bundle": {
+      "brief.md": "2c2c7fd491212d0a04d70059bdbddc7d4c1c21386003f53e121b04355f899dd4",
+      "contract.yaml": "c84bc71400b69e7afbe2fb1d8afcbead3d1a7e237d875de1f873d7eceb485635",
+      "delta.yaml": "f625b6d0e273766893c6b3ce7e0faeb35e26e6ef7adfd7083ce03234959107b1",
+      "request.md": "0e7667a335fa5c64757d77eca2a71f65e26a5665dbfad47b15645225e1b7fb36",
+      "sources/rpi5-drawing-01.png": "09a70271b05c4422065de1e566a25ea231fbc835438e1f59d5b5e036148cc7e3",
+      "sources/rpi5-enclosure-requirements.md": "72e326f321f0ffa4158fc6d56004c15d300f2feaf60b46eae2e5a0fe399fa9fe"
+    },
+    "metrics": {
+      "silhouette_px_long": 2400,
+      "deviation_samples": 20000,
+      "seed": 0,
+      "scorer_version": "4",
+      "skillkat_version": "0.1.0"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-20T08:46:12Z",
+    "skillkat_version": "0.1.0",
+    "backend": "cadquery",
+    "engine_version": "2.8.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "2750651461ce329095e189d2b6e635ac797b95cd",
+      "dirty": true
+    }
+  },
+  "backend": "cadquery"
+}

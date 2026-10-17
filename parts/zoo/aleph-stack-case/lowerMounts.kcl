@@ -1,0 +1,119 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import mountXLow, mountXHigh, mountYLow, mountYHigh, wallThickness, floorThickness, mountHoleDiameter, basePadDiameter, innerXMin, innerXMax, innerYMin, innerYMax, floorTop, floorBottom from "params.kcl"
+
+// Contract literals and their primary bounds live in shared params.kcl.
+// The floor underside follows floorTop - floorThickness, as in datum.kcl;
+// floorBottom is the nominal derived reference, never an equality lock.
+baseSeatZ = 0mm
+booleanOverlap = 0.02mm
+padRadius = basePadDiameter / 2
+liveFloorBottom = floorTop - floorThickness
+padToolBottom = floorTop - booleanOverlap
+boreToolBottom = liveFloorBottom - booleanOverlap
+boreToolTop = baseSeatZ + booleanOverlap
+
+assert(wallThickness, isGreaterThan = 0mm, error = "The cover footprint needs positive wall stock.")
+assert(floorThickness, isGreaterThan = booleanOverlap, error = "The pad overlap must remain inside the cover slab.")
+assert(floorTop, isLessThan = baseSeatZ, error = "Lower support pads need positive height below the base seat.")
+assert(floorBottom, isLessThan = floorTop, error = "The nominal floor underside must lie below the deck.")
+assert(liveFloorBottom, isGreaterThanOrEqual = -7mm, error = "Lower closure cuts must remain inside this module's z region.")
+assert(
+  mountHoleDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = basePadDiameter,
+  error = "Every pad needs a positive bore and an annular bearing land.",
+)
+assert(
+  basePadDiameter,
+  isGreaterThan = mountHoleDiameter,
+  isLessThan = mountXHigh - mountXLow,
+  error = "The pads must have positive radial ligaments and remain separated in x.",
+)
+assert(basePadDiameter, isLessThan = mountYHigh - mountYLow, error = "The pads must remain separated in y.")
+assert(mountXLow, isGreaterThan = innerXMin + padRadius + 0.1mm, error = "The left pads must stay clear of the cap's inner wall.")
+assert(mountXHigh, isLessThan = innerXMax - padRadius - 0.1mm, error = "The right pads must stay clear of the cap's inner wall.")
+assert(mountYLow, isGreaterThan = innerYMin + padRadius + 0.1mm, error = "The front pads must stay clear of the cap's inner wall.")
+assert(mountYHigh, isLessThan = innerYMax - padRadius - 0.1mm, error = "The rear pads must stay clear of the cap's inner wall.")
+
+// One exact cylinder and three translated copies share the mounting axes.
+// Sketch and plane handles are hidden; the returned solids remain visible
+// until consumed by the cover booleans.
+fn lowerMountTools(@toolDiameter, startZ, endZ) {
+  toolPlane = offsetPlane(XY, offset = startZ)
+  toolSketch = sketch(on = toolPlane) {
+    rim = circle(
+      start = [
+        mountXLow + toolDiameter / 2,
+        mountYLow
+      ],
+      center = [mountXLow, mountYLow],
+    )
+  }
+  toolRegion = region(segments = [toolSketch.rim])
+  first = extrude(toolRegion, length = endZ - startZ, method = NEW)
+  second = clone(first)
+    |> translate(x = mountXHigh - mountXLow)
+  third = clone(first)
+    |> translate(x = mountXHigh - mountXLow, y = mountYHigh - mountYLow)
+  fourth = clone(first)
+    |> translate(y = mountYHigh - mountYLow)
+  hide(toolRegion)
+  hide(toolSketch.meta.sketch)
+  hide(toolPlane)
+  hide([first, second, third, fourth])
+  return [first, second, third, fourth]
+}
+
+// The D3 cylindrical wall spans exactly the finished through-bore. Short
+// conical overruns lie entirely in empty air, avoiding coincident tool faces
+// without extending the retained cylindrical surface's engine bounds.
+fn lowerBoreTools() {
+  boreRadius = mountHoleDiameter / 2
+  airTipRadius = boreRadius * 0.99
+  boreProfile = sketch(on = XZ) {
+    bottom = line(start = [0mm, boreToolBottom], end = [airTipRadius, boreToolBottom])
+    lowerOverrun = line(start = [airTipRadius, boreToolBottom], end = [boreRadius, liveFloorBottom])
+    wall = line(start = [boreRadius, liveFloorBottom], end = [boreRadius, baseSeatZ])
+    upperOverrun = line(start = [boreRadius, baseSeatZ], end = [airTipRadius, boreToolTop])
+    top = line(start = [airTipRadius, boreToolTop], end = [0mm, boreToolTop])
+    axisEdge = line(start = [0mm, boreToolTop], end = [0mm, boreToolBottom])
+  }
+  boreRegion = region(segments = [
+    boreProfile.bottom,
+    boreProfile.lowerOverrun
+  ])
+  first = revolve(boreRegion, axis = Y, angle = 360deg)
+    |> translate(x = mountXLow, y = mountYLow)
+  second = clone(first)
+    |> translate(x = mountXHigh - mountXLow)
+  third = clone(first)
+    |> translate(x = mountXHigh - mountXLow, y = mountYHigh - mountYLow)
+  fourth = clone(first)
+    |> translate(y = mountYHigh - mountYLow)
+  hide(boreRegion)
+  hide(boreProfile.meta.sketch)
+  hide([first, second, third, fourth])
+  hide(XZ)
+  return [first, second, third, fourth]
+}
+
+// Foundation body order: [upperShell, bottomCover]. The cap is never passed
+// to either boolean. Pad overlap lies wholly within existing cover material;
+// added material is exactly four D8 disks between floorTop and z=0.
+export fn lowerMounts(@body) {
+  pads = lowerMountTools(basePadDiameter, startZ = padToolBottom, endZ = baseSeatZ)
+  paddedCover = union([
+    body[1],
+    pads[0],
+    pads[1],
+    pads[2],
+    pads[3]
+  ])
+
+  // Through-bores span the live slab and pads; both ends overrun into air.
+  bores = lowerBoreTools()
+  boreTool = union(bores)
+  finishedCover = subtract(paddedCover, tools = boreTool)
+  return [body[0], finishedCover]
+}

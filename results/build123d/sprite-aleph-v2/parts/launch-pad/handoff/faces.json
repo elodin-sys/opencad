@@ -1,0 +1,323 @@
+{
+  "named_faces": {
+    "base": {
+      "plane": "z",
+      "at": -100.0,
+      "normal": "-",
+      "found": 1,
+      "area": 9445.058903394729,
+      "ok": true,
+      "position": -100.0,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 7.42970369919138e-14,
+      "centroid_uv": [
+        -7.421995953375702e-14,
+        3.3833877379451557e-15
+      ]
+    },
+    "flangeTop": {
+      "plane": "z",
+      "at": -95.0,
+      "normal": "+",
+      "found": 6,
+      "area": 4601.424145256434,
+      "mode": "sum",
+      "ok": true,
+      "position": -95.0,
+      "area_expected": 4600.9,
+      "area_ok": true
+    },
+    "cupFloor": {
+      "plane": "z",
+      "at": -98.8,
+      "normal": "+",
+      "found": 1,
+      "area": 3925.076899002089,
+      "ok": true,
+      "position": -98.8,
+      "area_expected": 3925.1,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.3472527018973706e-15,
+      "centroid_uv": [
+        4.792808734077933e-16,
+        2.297800054606573e-15
+      ]
+    },
+    "sideWallTopPos": {
+      "plane": "z",
+      "at": -41.46,
+      "normal": "+",
+      "found": 1,
+      "area": 32.85599999999998,
+      "ok": true,
+      "position": -41.46,
+      "area_expected": 32.86,
+      "area_ok": true,
+      "center_expected": [
+        28.29,
+        0.0
+      ],
+      "center_error": 5.551115123125786e-16,
+      "centroid_uv": [
+        28.29,
+        5.551115123125786e-16
+      ]
+    },
+    "sideWallTopNeg": {
+      "plane": "z",
+      "at": -41.46,
+      "normal": "+",
+      "found": 1,
+      "area": 32.85599999999998,
+      "ok": true,
+      "position": -41.46,
+      "area_expected": 32.86,
+      "area_ok": true,
+      "center_expected": [
+        -28.29,
+        0.0
+      ],
+      "center_error": 6.291263806209222e-16,
+      "centroid_uv": [
+        -28.29,
+        6.291263806209222e-16
+      ]
+    },
+    "capShelves": {
+      "plane": "z",
+      "at": -26.47,
+      "normal": "+",
+      "found": 4,
+      "area": 61.91590421290568,
+      "mode": "sum",
+      "ok": true,
+      "position": -26.47,
+      "area_expected": 62.0,
+      "area_ok": true
+    },
+    "armEndXPos": {
+      "plane": "x",
+      "at": 85.0,
+      "normal": "+",
+      "found": 1,
+      "area": 49.99999999999999,
+      "ok": true,
+      "position": 85.0,
+      "area_expected": 50.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        -97.5
+      ],
+      "center_error": 6.93889390390723e-18,
+      "centroid_uv": [
+        -6.93889390390723e-18,
+        -97.5
+      ]
+    },
+    "armEndXNeg": {
+      "plane": "x",
+      "at": -85.0,
+      "normal": "-",
+      "found": 1,
+      "area": 49.99999999999999,
+      "ok": true,
+      "position": -85.0,
+      "area_expected": 50.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        -97.5
+      ],
+      "center_error": 6.93889390390723e-18,
+      "centroid_uv": [
+        -6.93889390390723e-18,
+        -97.5
+      ]
+    },
+    "armEndYPos": {
+      "plane": "y",
+      "at": 75.0,
+      "normal": "+",
+      "found": 1,
+      "area": 49.99999999999999,
+      "ok": true,
+      "position": 75.0,
+      "area_expected": 50.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        -97.5
+      ],
+      "center_error": 1.5543122344752198e-16,
+      "centroid_uv": [
+        1.5543122344752198e-16,
+        -97.5
+      ]
+    },
+    "armEndYNeg": {
+      "plane": "y",
+      "at": -75.0,
+      "normal": "-",
+      "found": 1,
+      "area": 49.99999999999999,
+      "ok": true,
+      "position": -75.0,
+      "area_expected": 50.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        -97.5
+      ],
+      "center_error": 6.93889390390723e-18,
+      "centroid_uv": [
+        -6.93889390390723e-18,
+        -97.5
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "base",
+      "plane": "z",
+      "at": -100.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "flangeTop",
+      "plane": "z",
+      "at": -95.0,
+      "normal": "+",
+      "area": 4600.9,
+      "area_tolerance_rel": 0.03,
+      "tolerance": null,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "cupFloor",
+      "plane": "z",
+      "at": -98.8,
+      "normal": "+",
+      "area": 3925.1,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "sideWallTopPos",
+      "plane": "z",
+      "at": -41.46,
+      "normal": "+",
+      "area": 32.86,
+      "area_tolerance_rel": 0.05,
+      "tolerance": null,
+      "center": [
+        28.29,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "sideWallTopNeg",
+      "plane": "z",
+      "at": -41.46,
+      "normal": "+",
+      "area": 32.86,
+      "area_tolerance_rel": 0.05,
+      "tolerance": null,
+      "center": [
+        -28.29,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "capShelves",
+      "plane": "z",
+      "at": -26.47,
+      "normal": "+",
+      "area": 62.0,
+      "area_tolerance_rel": 0.15,
+      "tolerance": null,
+      "center": null,
+      "mode": "sum"
+    },
+    {
+      "name": "armEndXPos",
+      "plane": "x",
+      "at": 85.0,
+      "normal": "+",
+      "area": 50.0,
+      "area_tolerance_rel": 0.03,
+      "tolerance": null,
+      "center": [
+        0.0,
+        -97.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "armEndXNeg",
+      "plane": "x",
+      "at": -85.0,
+      "normal": "-",
+      "area": 50.0,
+      "area_tolerance_rel": 0.03,
+      "tolerance": null,
+      "center": [
+        0.0,
+        -97.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "armEndYPos",
+      "plane": "y",
+      "at": 75.0,
+      "normal": "+",
+      "area": 50.0,
+      "area_tolerance_rel": 0.03,
+      "tolerance": null,
+      "center": [
+        0.0,
+        -97.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "armEndYNeg",
+      "plane": "y",
+      "at": -75.0,
+      "normal": "-",
+      "area": 50.0,
+      "area_tolerance_rel": 0.03,
+      "tolerance": null,
+      "center": [
+        0.0,
+        -97.5
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 66
+}

@@ -1,0 +1,143 @@
+{
+  "named_faces": {
+    "contact": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 2420.365045915063,
+      "ok": true,
+      "position": 0.0,
+      "area_expected": 2420.37,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 6.287008302993312e-16,
+      "centroid_uv": [
+        -3.3306690738754696e-16,
+        -5.332271272378813e-16
+      ]
+    },
+    "recessFloor": {
+      "plane": "z",
+      "at": 14.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1164.1564276958677,
+      "ok": true,
+      "position": 14.0,
+      "area_expected": 1164.16,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 7.337597336331419e-15,
+      "centroid_uv": [
+        7.105427357601002e-15,
+        1.8311845171891264e-15
+      ]
+    },
+    "exhaustNegX": {
+      "plane": "x",
+      "at": -30.5,
+      "normal": "-",
+      "found": 1,
+      "area": 600.0,
+      "ok": true,
+      "position": -30.5,
+      "area_expected": 600.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        7.5
+      ],
+      "center_error": 2.3684757858670006e-16,
+      "centroid_uv": [
+        -2.3684757858670006e-16,
+        7.5
+      ]
+    },
+    "exhaustPosX": {
+      "plane": "x",
+      "at": 30.5,
+      "normal": "+",
+      "found": 1,
+      "area": 600.0,
+      "ok": true,
+      "position": 30.5,
+      "area_expected": 600.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        7.5
+      ],
+      "center_error": 2.3684757858670006e-16,
+      "centroid_uv": [
+        -2.3684757858670006e-16,
+        7.5
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "contact",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": 2420.37,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "recessFloor",
+      "plane": "z",
+      "at": 14.0,
+      "normal": "+",
+      "area": 1164.16,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "exhaustNegX",
+      "plane": "x",
+      "at": -30.5,
+      "normal": "-",
+      "area": 600.0,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        7.5
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "exhaustPosX",
+      "plane": "x",
+      "at": 30.5,
+      "normal": "+",
+      "area": 600.0,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        7.5
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 11
+}

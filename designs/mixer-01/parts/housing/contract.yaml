@@ -1,0 +1,567 @@
+schema_version: 1
+name: mixer-01-housing
+intent: >-
+  Housing of the mixer-01 sealed magnetic-drive paddle mixer (sources/mixer-01-spec.md, authoritative), one
+  polypropylene solid modelled in the assembly frame: a closed cylindrical chamber of inner radius 25.0 over z 0..25
+  with a 3.0 side wall (outer radius 28.0, z -3..28), a 3.0 floor (z -3..0) and a 3.0 lid (z 25..28); an axial
+  D16/D12 inlet tube z 28..48 open at z = 48 whose D12 bore continues through the lid (z 25..48); a radial D14/D10
+  outlet tube on y = 0, z = 12.5 from the side wall's outer face to its open end at x = 58 whose D10 bore continues
+  through the side wall; and a fixed D6 pin on the axis from the floor z = 0 to a flat top at z = 12. No fillets or
+  chamfers. The pin carries the impeller (D8 hub bore, hub bottom at z = 1), the floor underside z = -3 seats the
+  D30 motor face, and the open tube ends z = 48 and x = 58 are the fluid port planes. Bounding box x -28..58,
+  y -28..28, z -3..48; volume about 31076 mm3.
+units:
+  length: mm
+  angle: deg
+material: "polypropylene"
+density_kg_m3: 900
+process: "moulded housing (nominal; not stated)"
+release_status: reconstruction
+
+frame:
+  origin: "centre of the chamber floor's inside face (the assembly frame origin): on the impeller axis at z = 0"
+  axes:
+    x: "toward the outlet tube (outlet axis along +x at y = 0, z = 12.5, open end x = 58)"
+    y: "completes the right-handed frame; the part is mirror-symmetric about y = 0"
+    z: "up the impeller axis, from the floor underside z = -3 to the inlet tube's open end z = 48"
+  datums:
+    - name: A
+      description: "chamber floor inside face, z = 0 (annulus r 3..25 around the pin); joint waterFixed at [0, 0, 0]"
+    - name: B
+      description: "impeller axis: the pin and chamber axis, x = y = 0, direction +z; joint impellerSpin at [0, 0, 1]"
+    - name: C
+      description: "floor underside z = -3, the motor seat; joint motorMount at [0, 0, -3] axis +z"
+    - name: D
+      description: "mirror plane y = 0, containing the outlet axis"
+
+envelope:
+  min: [-28, -28, -3]
+  max: [58, 28, 48]
+  tolerance: 0.05
+
+parameters:
+  - name: chamberRadius
+    value: 25
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: chamber inner diameter 50.0 (radius 25.0)"
+    tolerance: 0.01
+    description: "chamber inner radius"
+  - name: chamberHeight
+    value: 25
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: chamber inner height 25.0 (z 0..25)"
+    tolerance: 0.01
+    description: "chamber inner height; the lid underside sits at z = chamberHeight"
+  - name: wallThickness
+    value: 3
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: side wall 3.0 thick"
+    tolerance: 0.01
+    description: "side wall radial thickness"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 5396.07
+        direction: increase
+        bbox_delta: [1, 2, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [2, 3, 5]
+      infeasible_deltas: [-3]
+  - name: floorThickness
+    value: 3
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: floor 3.0 thick, z -3..0"
+    tolerance: 0.01
+    description: "floor thickness below the chamber; the motor seat is at z = -floorThickness"
+  - name: lidThickness
+    value: 3
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: lid 3.0 thick, z 25..28"
+    tolerance: 0.01
+    description: "lid thickness above the chamber; the inlet tube runs from the lid top to inletTopZ"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 2261.95
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [2, 3, 5]
+      infeasible_deltas: [-3]
+  - name: outerRadius
+    value: 28
+    unit: mm
+    provenance: derived
+    formula: "chamberRadius + wallThickness"
+    source: "mixer-01-spec.md, Dimensions: outer radius 28.0"
+    tolerance: 0.01
+    description: "outer radius of the side wall, floor and lid"
+  - name: inletBoreDiameter
+    value: 12
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: inlet tube inner diameter 12.0; bore continues through the lid"
+    tolerance: 0.01
+    description: "inlet bore diameter, z 25..48"
+  - name: inletOuterDiameter
+    value: 16
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: inlet tube outer diameter 16.0"
+    tolerance: 0.01
+    description: "inlet tube outer diameter"
+  - name: inletTopZ
+    value: 48
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: inlet tube from the lid top z = 28 to z = 48, open at z = 48 (fluid inlet plane)"
+    tolerance: 0.01
+    description: "z of the inlet tube's open end, the fluid inlet port plane"
+  - name: outletBoreDiameter
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: outlet tube inner diameter 10.0; bore continues through the side wall"
+    tolerance: 0.01
+    description: "outlet bore diameter"
+  - name: outletOuterDiameter
+    value: 14
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: outlet tube outer diameter 14.0"
+    tolerance: 0.01
+    description: "outlet tube outer diameter"
+  - name: outletAxisZ
+    value: 12.5
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: outlet axis along +x at y = 0, z = 12.5"
+    tolerance: 0.01
+    description: "height of the outlet axis above the chamber floor"
+  - name: outletEndX
+    value: 58
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: outlet tube open end at x = 58 (fluid outlet plane)"
+    tolerance: 0.01
+    description: "x of the outlet tube's open end, the fluid outlet port plane"
+  - name: pinDiameter
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: pin diameter 6.0, fixed, part of the housing"
+    tolerance: 0.01
+    description: "impeller pin diameter"
+  - name: pinHeight
+    value: 12
+    unit: mm
+    provenance: stated
+    source: "mixer-01-spec.md, Dimensions: pin from the floor z = 0 to z = 12"
+    tolerance: 0.01
+    description: "pin height above the chamber floor (flat top at z = 12)"
+
+features:
+  - id: housingShell
+    kind: extrude
+    description: "outer cylinder of radius outerRadius on the axis from z = -floorThickness to z = chamberHeight + lidThickness"
+    parameters: [chamberRadius, wallThickness, outerRadius, floorThickness, chamberHeight, lidThickness]
+    verify:
+      - method: bbox
+      - method: cylinder
+        cylinder: outerWall
+      - method: face
+        face: floorUnderside
+      - method: face
+        face: lidTop
+      - method: solid
+        points: [[-26.5, 0, 12.5], [10, 0, -1.5], [-15, 0, 26.5]]
+      - method: section
+        section: floorSeal
+      - method: section
+        section: lidLevel
+  - id: chamber
+    kind: cavity
+    description: "closed cylindrical chamber, radius chamberRadius over z 0..chamberHeight; the floor below it has no through hole (sealed magnetic drive)"
+    parameters: [chamberRadius, chamberHeight]
+    verify:
+      - method: cylinder
+        cylinder: chamberBore
+      - method: face
+        face: chamberFloor
+      - method: face
+        face: lidUnderside
+      - method: dimension
+        dimension: chamberHeightDim
+      - method: void
+        points: [[-15, 0, 12.5], [19, 0, 6], [0, 5, 1.5], [-19.5, 0, 10.5], [0, 0, 18]]
+      - method: section
+        section: pinLevel
+      - method: section
+        section: midY
+  - id: inletTube
+    kind: boss
+    description: "D16 tube on the axis from the lid top z = chamberHeight + lidThickness up to its open end z = inletTopZ"
+    parameters: [inletOuterDiameter, inletTopZ, chamberHeight, lidThickness]
+    verify:
+      - method: cylinder
+        cylinder: inletOuter
+      - method: face
+        face: inletEnd
+      - method: solid
+        points: [[7, 0, 38], [-7, 0, 38]]
+      - method: section
+        section: inletTube
+  - id: inletBore
+    kind: hole
+    description: "D12 bore on the axis from the chamber through the lid and the inlet tube, z chamberHeight..inletTopZ"
+    parameters: [inletBoreDiameter, chamberHeight, inletTopZ]
+    verify:
+      - method: cylinder
+        cylinder: inletBore
+      - method: void
+        points: [[0, 0, 26.5], [0, 0, 40]]
+  - id: outletTube
+    kind: boss
+    description: "D14 tube on the axis y = 0, z = outletAxisZ along +x from the side wall's outer face to its open end x = outletEndX"
+    parameters: [outletOuterDiameter, outletAxisZ, outletEndX, outerRadius]
+    verify:
+      - method: cylinder
+        cylinder: outletOuter
+      - method: face
+        face: outletEnd
+      - method: solid
+        points: [[45, 0, 18.5], [45, 0, 6.5]]
+      - method: section
+        section: outletTube
+  - id: outletBore
+    kind: hole
+    description: "D10 bore on the outlet axis from the chamber through the side wall and the tube to x = outletEndX; it must not cut the pin"
+    parameters: [outletBoreDiameter, outletAxisZ, outletEndX, chamberRadius]
+    verify:
+      - method: cylinder
+        cylinder: outletBore
+      - method: void
+        points: [[26.5, 0, 12.5], [45, 0, 12.5]]
+      - method: section
+        section: outletWall
+  - id: pin
+    kind: boss
+    description: "fixed D6 pin on the axis from the chamber floor z = 0 to a flat top z = pinHeight, fused into the housing solid"
+    parameters: [pinDiameter, pinHeight]
+    verify:
+      - method: cylinder
+        cylinder: pin
+      - method: face
+        face: pinTop
+      - method: dimension
+        dimension: pinHeightDim
+
+interfaces:
+  - name: impellerPin
+    description: "revolute joint impellerSpin at [0, 0, 1] axis +z: the D6 pin (z 0..12, flat top z = 12) carries the impeller's D8 hub bore with 1.0 radial clearance; the chamber floor z = 0 sits 1.0 below the hub's bottom face"
+    must_not_change: true
+    checks: [pin, pinTop, chamberFloor, pinHeightDim]
+  - name: motorSeat
+    description: "rigid joint motorMount at [0, 0, -3] axis +z: the floor underside z = -3, centred on the axis, seats the D30 motor face"
+    must_not_change: true
+    checks: [floorUnderside]
+  - name: waterFrame
+    description: "rigid joint waterFixed at the origin: the chamber floor inside face z = 0, the chamber wall r 25 and the lid underside z = 25 bound the water region"
+    must_not_change: true
+    checks: [chamberFloor, chamberBore, lidUnderside, chamberHeightDim]
+  - name: inletPort
+    description: "fluid inlet plane at the inlet tube's open end z = 48 (outward normal +z) and its D12 bore"
+    must_not_change: true
+    checks: [inletEnd, inletBore]
+  - name: outletPort
+    description: "fluid outlet plane at the outlet tube's open end x = 58 (outward normal +x) and its D10 bore on y = 0, z = 12.5 in the mirror plane"
+    must_not_change: true
+    checks: [outletEnd, outletBore, mirrorY]
+
+acceptance:
+  volume:
+    expected: 31075.58
+    tolerance_rel: 0.002
+    provenance: derived
+    note: >-
+      pi*R^2*31 - pi*25^2*25 + pi*(8^2-6^2)*20 - pi*6^2*3 + pi*3^2*12 + [58*pi*7^2 - I(7,28)] - [58*pi*5^2 - I(5,25)],
+      R = 28, I(a,R) = integral over the tube disk of radius a of sqrt(R^2 - y^2) dA (Gauss-Legendre); matches the
+      stated ~31076
+  surface_area:
+    expected: 22331.07
+    tolerance_rel: 0.01
+    provenance: derived
+    note: "sum of the 14 faces (outer wall, floor, lid top/underside, chamber wall and floor, pin, both tubes, bores and ends) with the tube-wall intersection areas by quadrature"
+  center_of_mass:
+    expected: [2.951, 0, 13.720]
+    tolerance: 0.1
+    provenance: derived
+    note: "x from the outlet tube and bore moments, z from the inlet tube (z 38), lid bore (z 26.5) and pin (z 6) about the z = 12.5 body; y = 0 by symmetry"
+  solid_count: 1
+  sections:
+    - id: midY
+      plane: y
+      at: 0
+      expect:
+        area: 692
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 0
+      description: "mirror-plane section: floor 168 + walls 75 + 45 + lid 132 + inlet tube walls 80 + outlet tube walls 120 + pin 72; the two bores split it into two pieces"
+    - id: pinLevel
+      plane: z
+      at: 3
+      expect:
+        area: 527.79
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 1
+      description: "wall ring r 25..28 plus the D6 pin island inside the chamber: pi*(28^2 - 25^2 + 3^2)"
+    - id: floorSeal
+      plane: z
+      at: -1.5
+      expect:
+        area: 2463.01
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 0
+      description: "full floor disk r 28, no through hole (no shaft crosses the floor)"
+    - id: lidLevel
+      plane: z
+      at: 26.5
+      expect:
+        area: 2349.91
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "lid annulus r 6..28 around the D12 inlet bore"
+    - id: inletTube
+      plane: z
+      at: 38
+      expect:
+        area: 87.96
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "inlet tube annulus r 6..8"
+    - id: outletWall
+      plane: x
+      at: 26.5
+      expect:
+        area: 482.04
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "side-wall chord |y| <= sqrt(28^2 - 26.5^2), z -3..28, pierced by the D10 bore: 2*9.0416*31 - pi*25"
+    - id: outletTube
+      plane: x
+      at: 45
+      expect:
+        area: 75.40
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "outlet tube annulus r 5..7"
+  faces:
+    - name: floorUnderside
+      plane: z
+      at: -3
+      normal: "-"
+      center: [0, 0]
+      mode: one
+    - name: chamberFloor
+      plane: z
+      at: 0
+      normal: "+"
+      area: 1935.22
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: lidUnderside
+      plane: z
+      at: 25
+      normal: "-"
+      area: 1850.40
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: lidTop
+      plane: z
+      at: 28
+      normal: "+"
+      area: 2261.95
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: inletEnd
+      plane: z
+      at: 48
+      normal: "+"
+      area: 87.96
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: outletEnd
+      plane: x
+      at: 58
+      normal: "+"
+      mode: one
+    - name: pinTop
+      plane: z
+      at: 12
+      normal: "+"
+      area: 28.27
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: outerWall
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 28
+      radius_tolerance: 0.05
+      length: 31
+      t_range: [-3, 28]
+      description: "outer face of the side wall"
+    - name: chamberBore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 25
+      radius_tolerance: 0.05
+      length: 25
+      t_range: [0, 25]
+      description: "chamber wall"
+    - name: inletOuter
+      point: [0, 0, 28]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 16
+      radius_tolerance: 0.05
+      length: 20
+      t_range: [0, 20]
+      description: "inlet tube outer face, z 28..48"
+    - name: inletBore
+      point: [0, 0, 25]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 12
+      radius_tolerance: 0.05
+      length: 23
+      t_range: [0, 23]
+      description: "inlet bore through the lid and the tube, z 25..48"
+    - name: outletOuter
+      point: [0, 0, 12.5]
+      direction: [1, 0, 0]
+      kind: pin
+      diameter: 14
+      radius_tolerance: 0.05
+      length: 30.89
+      length_tolerance: 0.3
+      t_range: [27.11, 58]
+      description: "outlet tube outer face from its intersection with the r 28 wall (x 27.11..28) to x = 58"
+    - name: outletBore
+      point: [0, 0, 12.5]
+      direction: [1, 0, 0]
+      kind: hole
+      diameter: 10
+      radius_tolerance: 0.05
+      length: 33.51
+      length_tolerance: 0.3
+      t_range: [24.49, 58]
+      description: "outlet bore from its intersection with the r 25 chamber wall (x 24.49..25) to x = 58"
+    - name: pin
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 6
+      radius_tolerance: 0.05
+      length: 12
+      t_range: [0, 12]
+      description: "impeller pin, z 0..12"
+  dimensions:
+    - name: spanX
+      axis: x
+      expected: 86
+      tolerance: 0.1
+      description: "bbox x -28..58"
+    - name: spanY
+      axis: y
+      expected: 56
+      tolerance: 0.1
+      description: "bbox y -28..28"
+    - name: spanZ
+      axis: z
+      expected: 51
+      tolerance: 0.1
+      description: "bbox z -3..48"
+    - name: chamberHeightDim
+      axis: z
+      expected: 25
+      tolerance: 0.05
+      between: [chamberFloor, lidUnderside]
+      description: "chamber inner height"
+    - name: pinHeightDim
+      axis: z
+      expected: 12
+      tolerance: 0.05
+      between: [chamberFloor, pinTop]
+      description: "pin top above the chamber floor"
+  solids:
+    - name: housing
+      contains_point: [-26.5, 0, 12.5]
+      description: "the single housing solid (walls, floor, lid, tubes and pin fused)"
+  passages:
+    - name: waterPath
+      point_a: [0, 0, 40]
+      point_b: [45, 0, 12.5]
+      pitch: 1.0
+      plugs:
+        - [[-10, -10, 47], [10, 10, 50]]
+        - [[57, -9, 3], [60, 9, 22]]
+      expect_connected: true
+      volume_min: 50000
+      volume_max: 57500
+      description: "inlet bore -> chamber -> outlet bore with both open mouths plugged; enclosed void ~53951 (chamber + bores - pin) less the plugged 1 mm of each mouth"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[-26.5, 0, 12.5], [10, 0, -1.5], [-15, 0, 26.5], [7, 0, 38], [45, 0, 18.5]]
+      description: "side wall, floor, lid, inlet tube wall, outlet tube wall (the pin is checked by its cylinder and top face)"
+    - name: impellerSpace
+      state: void
+      points: [[-15, 0, 12.5], [19, 0, 6], [0, 5, 1.5], [-19.5, 0, 10.5], [0, 0, 18]]
+      description: "chamber space the impeller sweeps (r up to 20, z 1..11) and above the pin top"
+    - name: bores
+      state: void
+      points: [[0, 0, 26.5], [0, 0, 40], [26.5, 0, 12.5], [45, 0, 12.5]]
+      description: "inlet bore in the lid and tube, outlet bore in the wall and tube"
+  symmetry:
+    - name: mirrorY
+      plane: y
+      at: 0
+  blockout:
+    volume_min: 80000
+    volume_max: 89000
+
+references:
+  - path: sources/mixer-01-spec.md
+    kind: text
+    role: authoritative
+    sha256: 7c08f09900a1078122226978351d2ff7878b3adda1dc49b70bada1a4dcf2a8a1
+    units: mm
+    revision: "as staged 2026-09-26"
+    note: "mixer-01 design specification: Frame, Dimensions, Placement and Fluid sections fix every housing dimension"
+
+open_questions:
+  - "Manufacturing process and draft are not stated; the housing is modelled draft-free with sharp edges (no fillets or chamfers stated)."
+  - "The outlet tube's start is only 'from the side wall's outer face'; it is modelled as the D14 cylinder unioned with the r 28 wall, so its outer face begins on the intersection curve x 27.11..28."
+  - "Joining the one-piece housing (closed lid over a moulded chamber with a fused pin) is not specified; it is modelled as one solid as the intent states."

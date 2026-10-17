@@ -1,0 +1,23 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/regions
+Title: Regions
+
+# Regions
+
+Work with closed sketch regions in Zoo Design Studio.
+
+Regions are the closed areas enclosed by profile geometry in a sketch. Once a profile forms one or
+more closed loops, those regions can be selected as inputs for downstream features such as extrudes,
+revolves, and cuts.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching/regions/regions.gif"
+  alt="Selecting sketch regions for downstream features"
+  aspect="679 / 711"
+  maxHeightPx={460}
+/>
+<div style={{textAlign: 'center', marginBottom: '1.5em', fontStyle: 'italic'}}>
+  Closed profile loops create selectable regions
+</div>
+
+When a sketch contains multiple enclosed areas, each region can be evaluated separately so you can
+choose exactly which profile area should drive the next feature.

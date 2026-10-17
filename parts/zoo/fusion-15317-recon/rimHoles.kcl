@@ -1,0 +1,43 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+import rimHoleDia, rimHoleY, rimHoleX, rimHoleZ, rimHoleLen, flangeRadius, flangeYMin, slotY from "params.kcl"
+
+assert(rimHoleDia, isGreaterThan = 0mm, error = "rim hole diameter must be positive")
+assert(rimHoleLen, isGreaterThan = 0mm, error = "rim hole length must be positive")
+assert(rimHoleLen, isLessThan = flangeRadius, error = "rim hole must not reach the hub axis")
+assert(rimHoleY - (rimHoleDia / 2), isGreaterThan = flangeYMin, error = "rim hole must clear the flange underside")
+assert(rimHoleY + rimHoleDia / 2, isLessThan = slotY, error = "rim hole must not reach the slot floor")
+
+// Start the cutter outside the Ø88.9 skin so the boolean is not coincident with the OD.
+skinOverrun = 0.6mm
+rimHoleRadius = rimHoleDia / 2
+
+// Circle at the file top level so the solver is not inside the helper (diameter()
+// inside `fn` was coming out at 1/3 scale).
+holeSketch = sketch(on = XY) {
+  hole = circle(start = [rimHoleRadius, 0mm], center = [0mm, 0mm])
+  coincident([hole.center, ORIGIN])
+  horizontal([hole.start, hole.center])
+  diameter(hole) == rimHoleDia
+}
+hide(holeSketch)
+
+fn rimHoleTool(@clockAngle) {
+  startR = flangeRadius + skinOverrun
+  cutLen = rimHoleLen + skinOverrun
+  tool = extrude(region(segments = [holeSketch.hole]), length = cutLen, method = NEW)
+    |> translate(
+         x = 0mm,
+         y = rimHoleY,
+         z = startR - cutLen,
+         global = true,
+       )
+    |> rotate(axis = Y, angle = clockAngle, global = true)
+  return tool
+}
+
+export fn rimHoles(@body) {
+  posTool = rimHoleTool(atan2(y = rimHoleX, x = rimHoleZ))
+  negTool = rimHoleTool(atan2(y = rimHoleX, x = -rimHoleZ))
+  return subtract(body, tools = [posTool, negTool])
+}

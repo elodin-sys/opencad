@@ -1,0 +1,633 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Independent contract dimensions; inferred dimensions remain explicitly editable.
+overallLength = 60mm
+overallWidth = 31mm
+overallHeight = 48mm
+bridgeRoofLength = 23mm
+chimneyInnerDiameter = 3mm
+chimneyOuterDiameter = 7mm
+chimneyHoleDepth = 11mm
+cargoBoxTopHeight = 15.5mm
+cargoBoxOuterA = 12mm
+cargoBoxOuterB = 10.81mm
+cargoBoxInnerA = 8mm
+cargoBoxInnerB = 7mm
+cargoBoxDepth = 9mm
+hawsepipeInnerDiameter = 4mm
+hawsepipeFlangeDepth = 0.3mm
+frontWindowWidth = 10.5mm
+frontWindowHeight = 9.5mm
+rearWindowInnerDiameter = 9mm
+rearWindowOuterDiameter = 12mm
+rearWindowFlangeDepth = 0.3mm
+bowOverhangAngle = 40deg
+bridgeRoofAngle = 5.5deg
+nameplateThickness = 0.1mm
+hullKeelLength = 40mm
+hullKeelWidth = 20mm
+hullKeelCenterX = 25mm
+hullSternWidth = 22mm
+deckHeight = 10mm
+sternGunwaleHeight = 11.5mm
+bowGunwaleHeight = 24mm
+hullWallThickness = 1.6mm
+cabinCenterX = 31mm
+cabinLength = 20mm
+cabinWidth = 18mm
+cabinWallThickness = 2mm
+bridgeRoofWidth = 20mm
+bridgeRoofThickness = 2.5mm
+chimneyCenterX = 25mm
+chimneyHeightAboveRoof = 10mm
+chimneyStemDiameter = 5.5mm
+chimneyCollarHeight = 2mm
+cargoBoxCenterX = 15mm
+hawsepipeCenterX = 52mm
+hawsepipeCenterZ = 18mm
+hawsepipeOuterDiameter = 6mm
+windowCenterHeight = 27mm
+sideOpeningWidth = 9mm
+sideOpeningHeight = 22mm
+
+// All sizes must be positive; further guards below express geometric containment.
+assert(overallLength, isGreaterThan = 0mm, error = "overallLength must be positive")
+assert(overallWidth, isGreaterThan = 0mm, error = "overallWidth must be positive")
+assert(overallHeight, isGreaterThan = 0mm, error = "overallHeight must be positive")
+assert(bridgeRoofLength, isGreaterThan = 0mm, error = "bridgeRoofLength must be positive")
+assert(chimneyInnerDiameter, isGreaterThan = 0mm, error = "chimneyInnerDiameter must be positive")
+assert(chimneyOuterDiameter, isGreaterThan = 0mm, error = "chimneyOuterDiameter must be positive")
+assert(chimneyHoleDepth, isGreaterThan = 0mm, error = "chimneyHoleDepth must be positive")
+assert(cargoBoxTopHeight, isGreaterThan = 0mm, error = "cargoBoxTopHeight must be positive")
+assert(cargoBoxOuterA, isGreaterThan = 0mm, error = "cargoBoxOuterA must be positive")
+assert(cargoBoxOuterB, isGreaterThan = 0mm, error = "cargoBoxOuterB must be positive")
+assert(cargoBoxInnerA, isGreaterThan = 0mm, error = "cargoBoxInnerA must be positive")
+assert(cargoBoxInnerB, isGreaterThan = 0mm, error = "cargoBoxInnerB must be positive")
+assert(cargoBoxDepth, isGreaterThan = 0mm, error = "cargoBoxDepth must be positive")
+assert(hawsepipeInnerDiameter, isGreaterThan = 0mm, error = "hawsepipeInnerDiameter must be positive")
+assert(hawsepipeFlangeDepth, isGreaterThan = 0mm, error = "hawsepipeFlangeDepth must be positive")
+assert(frontWindowWidth, isGreaterThan = 0mm, error = "frontWindowWidth must be positive")
+assert(frontWindowHeight, isGreaterThan = 0mm, error = "frontWindowHeight must be positive")
+assert(rearWindowInnerDiameter, isGreaterThan = 0mm, error = "rearWindowInnerDiameter must be positive")
+assert(rearWindowOuterDiameter, isGreaterThan = 0mm, error = "rearWindowOuterDiameter must be positive")
+assert(rearWindowFlangeDepth, isGreaterThan = 0mm, error = "rearWindowFlangeDepth must be positive")
+assert(bowOverhangAngle, isGreaterThan = 0deg, error = "bowOverhangAngle must be positive")
+assert(bridgeRoofAngle, isGreaterThan = 0deg, error = "bridgeRoofAngle must be positive")
+assert(nameplateThickness, isGreaterThan = 0mm, error = "nameplateThickness must be positive")
+assert(hullKeelLength, isGreaterThan = 0mm, error = "hullKeelLength must be positive")
+assert(hullKeelWidth, isGreaterThan = 0mm, error = "hullKeelWidth must be positive")
+assert(hullKeelCenterX, isGreaterThan = 0mm, error = "hullKeelCenterX must be positive")
+assert(hullSternWidth, isGreaterThan = 0mm, error = "hullSternWidth must be positive")
+assert(deckHeight, isGreaterThan = 0mm, error = "deckHeight must be positive")
+assert(sternGunwaleHeight, isGreaterThan = 0mm, error = "sternGunwaleHeight must be positive")
+assert(bowGunwaleHeight, isGreaterThan = 0mm, error = "bowGunwaleHeight must be positive")
+assert(hullWallThickness, isGreaterThan = 0mm, error = "hullWallThickness must be positive")
+assert(cabinCenterX, isGreaterThan = 0mm, error = "cabinCenterX must be positive")
+assert(cabinLength, isGreaterThan = 0mm, error = "cabinLength must be positive")
+assert(cabinWidth, isGreaterThan = 0mm, error = "cabinWidth must be positive")
+assert(cabinWallThickness, isGreaterThan = 0mm, error = "cabinWallThickness must be positive")
+assert(bridgeRoofWidth, isGreaterThan = 0mm, error = "bridgeRoofWidth must be positive")
+assert(bridgeRoofThickness, isGreaterThan = 0mm, error = "bridgeRoofThickness must be positive")
+assert(chimneyCenterX, isGreaterThan = 0mm, error = "chimneyCenterX must be positive")
+assert(chimneyHeightAboveRoof, isGreaterThan = 0mm, error = "chimneyHeightAboveRoof must be positive")
+assert(chimneyStemDiameter, isGreaterThan = 0mm, error = "chimneyStemDiameter must be positive")
+assert(chimneyCollarHeight, isGreaterThan = 0mm, error = "chimneyCollarHeight must be positive")
+assert(cargoBoxCenterX, isGreaterThan = 0mm, error = "cargoBoxCenterX must be positive")
+assert(hawsepipeCenterX, isGreaterThan = 0mm, error = "hawsepipeCenterX must be positive")
+assert(hawsepipeCenterZ, isGreaterThan = 0mm, error = "hawsepipeCenterZ must be positive")
+assert(hawsepipeOuterDiameter, isGreaterThan = 0mm, error = "hawsepipeOuterDiameter must be positive")
+assert(windowCenterHeight, isGreaterThan = 0mm, error = "windowCenterHeight must be positive")
+assert(sideOpeningWidth, isGreaterThan = 0mm, error = "sideOpeningWidth must be positive")
+assert(sideOpeningHeight, isGreaterThan = 0mm, error = "sideOpeningHeight must be positive")
+
+assert(bowOverhangAngle, isLessThan = 80deg, error = "Bow tangent must remain below vertical")
+assert(bridgeRoofAngle, isLessThan = 20deg, error = "Roof pitch exceeds available cabin height")
+assert(hullKeelWidth, isLessThan = overallWidth, error = "Keel must be narrower than beam")
+assert(hullSternWidth, isLessThan = overallWidth, error = "Transom must be narrower than beam")
+assert(hullKeelLength / 2, isLessThan = hullKeelCenterX, error = "Keel must stay forward of stern")
+assert(hullKeelCenterX + hullKeelLength / 2, isLessThan = overallLength, error = "Keel must end behind bow")
+assert(deckHeight, isLessThan = sternGunwaleHeight, error = "Aft bulwark must rise above deck")
+assert(sternGunwaleHeight, isLessThan = bowGunwaleHeight, error = "Bow sheer must rise")
+assert(hullWallThickness * 2, isLessThan = hullKeelWidth, error = "Hull inset must remain open")
+assert(cabinWallThickness * 2, isLessThan = cabinWidth, error = "Cabin interior needs positive beam")
+assert(cabinWallThickness * 2, isLessThan = cabinLength, error = "Cabin interior needs positive length")
+assert(cabinWidth, isLessThan = bridgeRoofWidth, error = "Roof must cover cabin beam")
+assert(cabinLength, isLessThan = bridgeRoofLength, error = "Roof must overhang cabin length")
+assert(cabinCenterX - (bridgeRoofLength / 2), isGreaterThan = 0mm, error = "Roof crosses stern")
+assert(cabinCenterX + bridgeRoofLength / 2, isLessThan = overallLength, error = "Roof crosses bow")
+assert(bridgeRoofWidth, isLessThan = overallWidth, error = "Roof exceeds boat beam")
+assert(chimneyInnerDiameter, isLessThan = chimneyStemDiameter, error = "Chimney bore must fit stem")
+assert(chimneyStemDiameter, isLessThan = chimneyOuterDiameter, error = "Collar must exceed stem")
+assert(chimneyCollarHeight, isLessThan = chimneyHeightAboveRoof, error = "Collar consumes chimney")
+assert(chimneyHoleDepth, isLessThan = chimneyHeightAboveRoof + bridgeRoofThickness - 0.5mm, error = "Chimney bore must remain blind in roof")
+assert(chimneyHoleDepth, isGreaterThan = chimneyCollarHeight, error = "Bore must pass collar")
+assert(chimneyCenterX - (chimneyOuterDiameter / 2), isGreaterThan = cabinCenterX - (bridgeRoofLength / 2), error = "Chimney outside roof")
+assert(chimneyCenterX + chimneyOuterDiameter / 2, isLessThan = cabinCenterX + bridgeRoofLength / 2, error = "Chimney outside roof")
+assert(cargoBoxInnerA, isLessThan = cargoBoxOuterA, error = "Cargo side walls must remain")
+assert(cargoBoxInnerB, isLessThan = cargoBoxOuterB, error = "Cargo end walls must remain")
+assert(cargoBoxDepth, isLessThan = cargoBoxTopHeight, error = "Cargo floor must remain above keel")
+assert(cargoBoxTopHeight, isGreaterThan = deckHeight, error = "Cargo rim must stand above deck")
+assert(cargoBoxTopHeight - cargoBoxDepth, isLessThan = deckHeight, error = "Cargo pocket must penetrate deck")
+assert(cargoBoxCenterX - (cargoBoxOuterB / 2), isGreaterThan = hullKeelCenterX - (hullKeelLength / 2), error = "Cargo crosses aft hull")
+assert(cargoBoxCenterX + cargoBoxOuterB / 2, isLessThan = cabinCenterX - (cabinLength / 2), error = "Cargo box intersects cabin")
+assert(cargoBoxOuterA, isLessThan = hullKeelWidth, error = "Cargo box exceeds supporting hull")
+assert(hawsepipeInnerDiameter, isLessThan = hawsepipeOuterDiameter, error = "Hawse flange needs an annulus")
+assert(hawsepipeFlangeDepth, isLessThan = hullWallThickness, error = "Hawse flange projection excessive")
+assert(hawsepipeCenterX - (hawsepipeOuterDiameter / 2), isGreaterThan = cabinCenterX + cabinLength / 2, error = "Hawsepipe must be forward of cabin")
+assert(hawsepipeCenterX + hawsepipeOuterDiameter / 2, isLessThan = overallLength, error = "Hawsepipe crosses bow")
+assert(hawsepipeCenterZ - (hawsepipeOuterDiameter / 2), isGreaterThan = deckHeight, error = "Hawsepipe must stay above deck")
+assert(hawsepipeCenterZ + hawsepipeOuterDiameter / 2, isLessThan = bowGunwaleHeight, error = "Hawsepipe exceeds bow sheer")
+assert(frontWindowWidth, isLessThan = cabinWidth - (2 * cabinWallThickness), error = "Front window reaches side walls")
+assert(rearWindowOuterDiameter, isLessThan = cabinWidth, error = "Rear flange exceeds cabin beam")
+assert(rearWindowInnerDiameter, isLessThan = rearWindowOuterDiameter, error = "Rear flange annulus required")
+assert(rearWindowFlangeDepth, isLessThan = cabinWallThickness, error = "Rear flange projection excessive")
+assert(windowCenterHeight - (frontWindowHeight / 2), isGreaterThan = deckHeight, error = "Front window crosses deck")
+assert(windowCenterHeight - (rearWindowOuterDiameter / 2), isGreaterThan = deckHeight, error = "Rear flange crosses deck")
+assert(sideOpeningWidth, isLessThan = cabinLength - (2 * cabinWallThickness), error = "Side arch crosses cabin corners")
+assert(sideOpeningHeight, isGreaterThan = sideOpeningWidth / 2, error = "Arch requires straight jambs")
+assert(nameplateThickness, isLessThan = hullWallThickness, error = "Reserved nameplate thickness exceeds wall")
+
+// Vertical sketch coordinates stay inside the finished envelope even in engine
+// scene bounds, which include local solver coordinates of hidden regions.
+fn crossPlane(@y: mm, station: mm) {
+  return {
+    origin = { x = station, y = y, z = 0mm },
+    xAxis = { x = 0, y = 0, z = 1 },
+    yAxis = { x = -1, y = 0, z = 0 }
+  }
+}
+fn sidePoint(@x: mm, z: mm) {
+  return [z, cabinCenterX - x]
+}
+fn endPlane(@x: mm) {
+  return {
+    origin = { x = x, y = 0mm, z = 0mm },
+    xAxis = { x = 0, y = 0, z = 1 },
+    yAxis = { x = 0, y = -1, z = 0 }
+  }
+}
+fn rectangleRegion(@plane, x0: mm, x1: mm, y0: mm, y1: mm) {
+  s = sketch(on = plane) {
+    a = line(start = [x0, y0], end = [x1, y0])
+    b = line(start = [x1, y0], end = [x1, y1])
+    c = line(start = [x1, y1], end = [x0, y1])
+    d = line(start = [x0, y1], end = [x0, y0])
+  }
+  r = region(segments = [s.a, s.b, s.c, s.d])
+  hide(r)
+  return r
+}
+fn circleRegion(@plane, u: mm, v: mm, boreRadius: mm) {
+  s = sketch(on = plane) {
+    c = circle(center = [u, v], start = [u + boreRadius, v])
+  }
+  r = region(segments = [s.c])
+  hide(r)
+  return r
+}
+fn prism(@r, length: mm) {
+  body = extrude(r, length = length)
+  hide(r)
+  return body
+}
+fn hullLoft(@profiles) {
+  body = loft(profiles, vDegree = 1)
+  hide(profiles)
+  return body
+}
+// Two tangent circular arcs per side, exact beam and a finite transom.
+fn hullProfile(@height: mm, aft: mm, bow: mm, beam: mm, stern: mm) {
+  widest = aft + (bow - aft) * 0.50
+  halfBeam = beam / 2
+  halfStern = stern / 2
+  aftCenter = ((halfBeam * halfBeam - (halfStern * halfStern) - ((widest - aft) * (widest - aft))) / (2 * (halfBeam - halfStern))): mm
+  foreCenter = ((halfBeam * halfBeam - ((bow - widest) * (bow - widest))) / (2 * halfBeam)): mm
+  s = sketch(on = offsetPlane(XY, offset = height)) {
+    transom = line(start = [aft, -halfStern], end = [aft, halfStern])
+    aftPort = arc(
+      start = [aft, halfStern],
+      end = [widest, halfBeam],
+      center = [widest, aftCenter],
+      direction = CW,
+    )
+    bowPort = arc(
+      start = [widest, halfBeam],
+      end = [bow, 0mm],
+      center = [widest, foreCenter],
+      direction = CW,
+    )
+    bowStarboard = arc(
+      start = [bow, 0mm],
+      end = [widest, -halfBeam],
+      center = [widest, -foreCenter],
+      direction = CW,
+    )
+    aftStarboard = arc(
+      start = [widest, -halfBeam],
+      end = [aft, -halfStern],
+      center = [widest, -aftCenter],
+      direction = CW,
+    )
+  }
+  r = region(segments = [
+    s.transom,
+    s.aftPort,
+    s.bowPort,
+    s.bowStarboard,
+    s.aftStarboard
+  ])
+  hide(r)
+  return r
+}
+// Build the sheer directly into the loft, without trimming the outer hull.
+// The plane basis expresses z = aftHeight + x * rise; local x/y retain the plan outline.
+fn rakedProfile(@aftHeight: mm, bowHeight: mm, aft: mm, bow: mm, beam: mm, stern: mm) {
+  widest = aft + (bow - aft) * 0.50
+  halfBeam = beam / 2
+  halfStern = stern / 2
+  aftCenter = ((halfBeam * halfBeam - (halfStern * halfStern) - ((widest - aft) * (widest - aft))) / (2 * (halfBeam - halfStern))): mm
+  foreCenter = ((halfBeam * halfBeam - ((bow - widest) * (bow - widest))) / (2 * halfBeam)): mm
+  s = sketch(on = {
+    origin = { x = 0mm, y = 0mm, z = aftHeight },
+    xAxis = {
+      x = 1,
+      y = 0,
+      z = ((bowHeight - aftHeight) / overallLength): number(_)
+    },
+    yAxis = { x = 0, y = 1, z = 0 }
+  }) {
+    transom = line(start = [aft, -halfStern], end = [aft, halfStern])
+    aftPort = arc(
+      start = [aft, halfStern],
+      end = [widest, halfBeam],
+      center = [widest, aftCenter],
+      direction = CW,
+    )
+    bowPort = arc(
+      start = [widest, halfBeam],
+      end = [bow, 0mm],
+      center = [widest, foreCenter],
+      direction = CW,
+    )
+    bowStarboard = arc(
+      start = [bow, 0mm],
+      end = [widest, -halfBeam],
+      center = [widest, -foreCenter],
+      direction = CW,
+    )
+    aftStarboard = arc(
+      start = [widest, -halfBeam],
+      end = [aft, -halfStern],
+      center = [widest, -aftCenter],
+      direction = CW,
+    )
+  }
+  r = region(segments = [
+    s.transom,
+    s.aftPort,
+    s.bowPort,
+    s.bowStarboard,
+    s.aftStarboard
+  ])
+  hide(r)
+  return r
+}
+keelAft = hullKeelCenterX - (hullKeelLength / 2)
+keelBow = hullKeelCenterX + hullKeelLength / 2
+keelSternBeam = (hullSternWidth * hullKeelWidth / overallWidth): mm
+// Preserve a short 40-degree keel tangent independently of the finished length.
+// The inferred reference bow run is three eighths of the keel length.
+nominalBowRun = hullKeelLength * 3 / 8
+flareHeight = nominalBowRun * tan(bowOverhangAngle)
+lengthExtension = overallLength - keelBow - nominalBowRun
+bowTangentHeight = deckHeight / 20
+extensionHeight = deckHeight / 5
+assert(overallLength - keelBow, isGreaterThan = nominalBowRun / 2, error = "Bow extension would fold the lower hull")
+assert(flareHeight, isGreaterThan = deckHeight, error = "Lower bow rise must exceed deck")
+assert(flareHeight, isLessThan = bowGunwaleHeight, error = "Lower bow exceeds sheer")
+hullBlank = hullLoft([
+  hullProfile(
+    0mm,
+    aft = keelAft,
+    bow = keelBow,
+    beam = hullKeelWidth,
+    stern = keelSternBeam,
+  ),
+  hullProfile(
+    bowTangentHeight,
+    aft = keelAft * (1 - (bowTangentHeight / deckHeight): number(_)),
+    bow = keelBow + bowTangentHeight / tan(bowOverhangAngle),
+    beam = hullKeelWidth + (overallWidth - hullKeelWidth) * (bowTangentHeight / flareHeight): number(_),
+    stern = keelSternBeam + (hullSternWidth - keelSternBeam) * (bowTangentHeight / deckHeight): number(_),
+  ),
+  hullProfile(
+    extensionHeight,
+    aft = keelAft * (1 - (extensionHeight / deckHeight): number(_)),
+    bow = keelBow + extensionHeight / tan(bowOverhangAngle) + lengthExtension,
+    beam = hullKeelWidth + (overallWidth - hullKeelWidth) * (extensionHeight / flareHeight): number(_),
+    stern = keelSternBeam + (hullSternWidth - keelSternBeam) * (extensionHeight / deckHeight): number(_),
+  ),
+  hullProfile(
+    deckHeight,
+    aft = 0mm,
+    bow = keelBow + deckHeight / tan(bowOverhangAngle) + lengthExtension,
+    beam = hullKeelWidth + (overallWidth - hullKeelWidth) * (deckHeight / flareHeight): number(_),
+    stern = hullSternWidth,
+  ),
+  rakedProfile(
+    sternGunwaleHeight - 0.5mm,
+    bowHeight = flareHeight,
+    aft = 0mm,
+    bow = overallLength / cos(atan(((flareHeight - sternGunwaleHeight + 0.5mm) / overallLength): number(_))),
+    beam = overallWidth,
+    stern = hullSternWidth,
+  ),
+  rakedProfile(
+    sternGunwaleHeight,
+    bowHeight = bowGunwaleHeight,
+    aft = 0mm,
+    bow = overallLength,
+    beam = overallWidth,
+    stern = hullSternWidth,
+  )
+])
+assert(sternGunwaleHeight - 0.5mm, isGreaterThan = deckHeight, error = "Sheer transition must stay above deck")
+hull = clone(hullBlank)
+flangeOuterSource = clone(hull)
+flangeInnerSource = clone(hull)
+// Hollow above the horizontal deck with inset outlines, retaining a filled keel.
+deckFraction = (deckHeight / flareHeight): number(_)
+innerDeckAft = hullWallThickness
+innerDeckBow = keelBow + nominalBowRun * deckFraction + lengthExtension - hullWallThickness
+innerDeckBeam = hullKeelWidth + (overallWidth - hullKeelWidth) * deckFraction - (2 * hullWallThickness)
+innerDeckStern = keelSternBeam + (hullSternWidth - keelSternBeam) * deckFraction - (2 * hullWallThickness)
+innerWell = hullLoft([
+  hullProfile(
+    deckHeight,
+    aft = innerDeckAft,
+    bow = innerDeckBow,
+    beam = innerDeckBeam,
+    stern = innerDeckStern,
+  ),
+  hullProfile(
+    flareHeight,
+    aft = hullWallThickness,
+    bow = overallLength - hullWallThickness,
+    beam = overallWidth - (2 * hullWallThickness),
+    stern = hullSternWidth - (2 * hullWallThickness),
+  ),
+  hullProfile(
+    bowGunwaleHeight + 1mm,
+    aft = hullWallThickness,
+    bow = overallLength - hullWallThickness,
+    beam = overallWidth - (2 * hullWallThickness),
+    stern = hullSternWidth - (2 * hullWallThickness),
+  )
+])
+deckHull = subtract(hull, tools = [innerWell])
+
+roofTopAtAxis = overallHeight - chimneyHeightAboveRoof
+roofSlope = tan(bridgeRoofAngle)
+fn roofTop(@x: mm) {
+  return roofTopAtAxis + (x - chimneyCenterX) * roofSlope
+}
+assert(deckHeight + sideOpeningHeight, isLessThan = roofTop(cabinCenterX - (sideOpeningWidth / 2)) - bridgeRoofThickness, error = "Side opening crosses roof underside")
+assert(windowCenterHeight + frontWindowHeight / 2, isLessThan = roofTop(cabinCenterX + cabinLength / 2) - bridgeRoofThickness, error = "Front opening crosses roof")
+assert(windowCenterHeight + rearWindowOuterDiameter / 2, isLessThan = roofTop(cabinCenterX - (cabinLength / 2)) - bridgeRoofThickness, error = "Rear flange crosses roof")
+fn cabinPrism(@x0: mm, x1: mm, width: mm, floor: mm, topOffset: mm) {
+  z0 = roofTop(x0) + topOffset
+  z1 = roofTop(x1) + topOffset
+  s = sketch(on = crossPlane(width / 2, station = cabinCenterX)) {
+    a = line(start = sidePoint(x0, z = floor), end = sidePoint(x1, z = floor))
+    b = line(start = sidePoint(x1, z = floor), end = sidePoint(x1, z = z1))
+    c = line(start = sidePoint(x1, z = z1), end = sidePoint(x0, z = z0))
+    d = line(start = sidePoint(x0, z = z0), end = sidePoint(x0, z = floor))
+  }
+  r = region(segments = [s.a, s.b, s.c, s.d])
+  hide(r)
+  return prism(r, length = width)
+}
+cabinRear = cabinCenterX - (cabinLength / 2)
+cabinFront = cabinCenterX + cabinLength / 2
+cabinOuter = cabinPrism(
+  cabinRear,
+  x1 = cabinFront,
+  width = cabinWidth,
+  floor = deckHeight - 0.25mm,
+  topOffset = -bridgeRoofThickness + 0.02mm,
+)
+cabinInner = cabinPrism(
+  cabinRear + cabinWallThickness,
+  x1 = cabinFront - cabinWallThickness,
+  width = cabinWidth - (2 * cabinWallThickness),
+  floor = deckHeight - 0.27mm,
+  topOffset = -bridgeRoofThickness + 0.04mm,
+)
+cabinShell = subtract(cabinOuter, tools = [cabinInner])
+roofRear = cabinCenterX - (bridgeRoofLength / 2)
+roofFront = cabinCenterX + bridgeRoofLength / 2
+roofSketch = sketch(on = crossPlane(bridgeRoofWidth / 2, station = cabinCenterX)) {
+  a = line(start = sidePoint(roofRear, z = roofTop(roofRear) - bridgeRoofThickness), end = sidePoint(roofFront, z = roofTop(roofFront) - bridgeRoofThickness))
+  b = line(start = sidePoint(roofFront, z = roofTop(roofFront) - bridgeRoofThickness), end = sidePoint(roofFront, z = roofTop(roofFront)))
+  c = line(start = sidePoint(roofFront, z = roofTop(roofFront)), end = sidePoint(roofRear, z = roofTop(roofRear)))
+  d = line(start = sidePoint(roofRear, z = roofTop(roofRear)), end = sidePoint(roofRear, z = roofTop(roofRear) - bridgeRoofThickness))
+}
+roofRegion = region(segments = [
+  roofSketch.a,
+  roofSketch.b,
+  roofSketch.c,
+  roofSketch.d
+])
+hide(roofRegion)
+roof = prism(roofRegion, length = bridgeRoofWidth)
+cabinRoof = union([cabinShell, roof])
+withCabin = union([deckHull, cabinRoof], tolerance = 0.001mm)
+
+cargoOuter = prism(
+  rectangleRegion(
+    offsetPlane(XY, offset = deckHeight - 0.02mm),
+    x0 = cargoBoxCenterX - (cargoBoxOuterB / 2),
+    x1 = cargoBoxCenterX + cargoBoxOuterB / 2,
+    y0 = -cargoBoxOuterA / 2,
+    y1 = cargoBoxOuterA / 2,
+  ),
+  length = cargoBoxTopHeight - deckHeight + 0.02mm,
+)
+withCargoBlank = union([withCabin, cargoOuter])
+cargoTool = prism(
+  rectangleRegion(
+    offsetPlane(XY, offset = cargoBoxTopHeight - cargoBoxDepth),
+    x0 = cargoBoxCenterX - (cargoBoxInnerB / 2),
+    x1 = cargoBoxCenterX + cargoBoxInnerB / 2,
+    y0 = -cargoBoxInnerA / 2,
+    y1 = cargoBoxInnerA / 2,
+  ),
+  length = cargoBoxDepth + 0.02mm,
+)
+withCargo = subtract(withCargoBlank, tools = [cargoTool])
+
+stemBase = roofTopAtAxis - bridgeRoofThickness + 0.5mm
+stem = prism(
+  circleRegion(
+    offsetPlane(XY, offset = stemBase),
+    u = chimneyCenterX,
+    v = 0mm,
+    boreRadius = chimneyStemDiameter / 2,
+  ),
+  length = overallHeight - chimneyCollarHeight + 0.02mm - stemBase,
+)
+collar = prism(
+  circleRegion(
+    offsetPlane(XY, offset = overallHeight - chimneyCollarHeight),
+    u = chimneyCenterX,
+    v = 0mm,
+    boreRadius = chimneyOuterDiameter / 2,
+  ),
+  length = chimneyCollarHeight,
+)
+chimneyBlank = union([stem, collar])
+withChimneyBlank = union([withCargo, chimneyBlank])
+chimneyTool = prism(
+  circleRegion(
+    offsetPlane(XY, offset = overallHeight - chimneyHoleDepth),
+    u = chimneyCenterX,
+    v = 0mm,
+    boreRadius = chimneyInnerDiameter / 2,
+  ),
+  length = chimneyHoleDepth + 0.02mm,
+)
+withChimney = subtract(withChimneyBlank, tools = [chimneyTool])
+// Regions are hidden after their operations, so tool frames do not enter scene bounds.
+hide(roofRegion)
+
+// Rear flange overlaps the rear wall by 0.02 mm; the aperture cuts both.
+rearFlange = prism(
+  circleRegion(
+    endPlane(cabinRear - rearWindowFlangeDepth),
+    u = windowCenterHeight,
+    v = 0mm,
+    boreRadius = rearWindowOuterDiameter / 2,
+  ),
+  length = rearWindowFlangeDepth + 0.02mm,
+)
+withRearFlange = union([withChimney, rearFlange])
+frontTool = prism(
+  rectangleRegion(
+    endPlane(cabinFront - cabinWallThickness - 0.02mm),
+    x0 = windowCenterHeight - (frontWindowHeight / 2),
+    x1 = windowCenterHeight + frontWindowHeight / 2,
+    y0 = -frontWindowWidth / 2,
+    y1 = frontWindowWidth / 2,
+  ),
+  length = cabinWallThickness + 0.04mm,
+)
+rearTool = prism(
+  circleRegion(
+    endPlane(cabinRear - rearWindowFlangeDepth - 0.02mm),
+    u = windowCenterHeight,
+    v = 0mm,
+    boreRadius = rearWindowInnerDiameter / 2,
+  ),
+  length = rearWindowFlangeDepth + cabinWallThickness + 0.04mm,
+)
+withEndWindows = subtract(withRearFlange, tools = [frontTool, rearTool])
+archRadius = sideOpeningWidth / 2
+archSpring = deckHeight + sideOpeningHeight - archRadius
+archSketch = sketch(on = crossPlane(cabinWidth / 2 + 0.02mm, station = cabinCenterX)) {
+  a = line(start = sidePoint(cabinCenterX - archRadius, z = deckHeight - 0.02mm), end = sidePoint(cabinCenterX + archRadius, z = deckHeight - 0.02mm))
+  b = line(start = sidePoint(cabinCenterX + archRadius, z = deckHeight - 0.02mm), end = sidePoint(cabinCenterX + archRadius, z = archSpring))
+  c = arc(start = sidePoint(cabinCenterX + archRadius, z = archSpring), end = sidePoint(cabinCenterX - archRadius, z = archSpring), center = sidePoint(cabinCenterX, z = archSpring))
+  d = line(start = sidePoint(cabinCenterX - archRadius, z = archSpring), end = sidePoint(cabinCenterX - archRadius, z = deckHeight - 0.02mm))
+}
+archRegion = region(segments = [
+  archSketch.a,
+  archSketch.b,
+  archSketch.c,
+  archSketch.d
+])
+archTool = prism(archRegion, length = cabinWidth + 0.04mm)
+withWindows = subtract(withEndWindows, tools = [archTool])
+hide(archRegion)
+
+// An offset copy of the vertical bow mould line defines a conformal flange:
+// outer skin is precisely 0.30 mm farther along the transverse bore axis.
+// Copies of the actual hull retain the 0.30 mm axial flange projection
+// after edits to the sheer or length.
+flangeOuterBlank = translate(flangeOuterSource, y = hawsepipeFlangeDepth, global = true)
+flangeInnerBlank = translate(flangeInnerSource, y = -0.20mm, global = true)
+flangeCircleTool = prism(
+  circleRegion(
+    crossPlane(overallWidth / 2, station = hawsepipeCenterX),
+    u = hawsepipeCenterZ,
+    v = 0mm,
+    boreRadius = hawsepipeOuterDiameter / 2,
+  ),
+  length = overallWidth / 2,
+)
+flangeSkin = intersect([flangeOuterBlank, flangeCircleTool], tolerance = 0.001mm)
+portFlange = subtract(flangeSkin, tools = [flangeInnerBlank], tolerance = 0.001mm)
+flangeCopy = clone(portFlange)
+starboardFlange = mirror3d(flangeCopy, across = XZ)
+hide(flangeCopy)
+withHawseFlanges = union(
+  [
+    withWindows,
+    portFlange,
+    starboardFlange
+  ],
+  tolerance = 0.001mm,
+)
+hawseBore = prism(
+  circleRegion(
+    crossPlane(overallWidth / 2 + 0.02mm, station = hawsepipeCenterX),
+    u = hawsepipeCenterZ,
+    v = 0mm,
+    boreRadius = hawsepipeInnerDiameter / 2,
+  ),
+  length = overallWidth + 0.04mm,
+)
+benchy = subtract(withHawseFlanges, tools = [hawseBore], tolerance = 0.001mm)
+
+// Keep only a fresh final body visible; consumed solids may retain scene bounds.
+finished = clone(benchy)
+hide([
+  hullBlank,
+  hull,
+  innerWell,
+  deckHull,
+  cabinOuter,
+  cabinInner,
+  cabinShell,
+  roof,
+  cabinRoof,
+  withCabin,
+  cargoOuter,
+  withCargoBlank,
+  cargoTool,
+  withCargo,
+  stem,
+  collar,
+  chimneyBlank,
+  withChimneyBlank,
+  chimneyTool,
+  withChimney,
+  rearFlange,
+  withRearFlange,
+  frontTool,
+  rearTool,
+  withEndWindows,
+  archTool,
+  withWindows,
+  flangeOuterSource,
+  flangeInnerSource,
+  flangeOuterBlank,
+  flangeInnerBlank,
+  flangeSkin,
+  flangeCircleTool,
+  portFlange,
+  starboardFlange,
+  withHawseFlanges,
+  hawseBore,
+  benchy
+])
+finished

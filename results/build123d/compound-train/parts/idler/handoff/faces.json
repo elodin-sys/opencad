@@ -1,0 +1,109 @@
+{
+  "named_faces": {
+    "floor": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 4923.008151145275,
+      "ok": true,
+      "position": 0.0,
+      "area_expected": 4923.58,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.9549677518296343e-12,
+      "centroid_uv": [
+        1.8981365958181673e-12,
+        -4.67949115085854e-13
+      ]
+    },
+    "shoulder40": {
+      "plane": "z",
+      "at": 8.0,
+      "normal": "+",
+      "found": 1,
+      "area": 4294.356624214846,
+      "ok": true,
+      "position": 8.0,
+      "area_expected": 4294.79,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.673255855625388e-12,
+      "centroid_uv": [
+        2.646882649959722e-12,
+        -3.7457857250198603e-13
+      ]
+    },
+    "top15": {
+      "plane": "z",
+      "at": 16.0,
+      "normal": "+",
+      "found": 1,
+      "area": 628.6515269301898,
+      "ok": true,
+      "position": 16.0,
+      "area_expected": 628.79,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.0365306189369658e-12,
+      "centroid_uv": [
+        1.0176928744165537e-12,
+        -1.9671537142689717e-13
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "floor",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": 4923.58,
+      "area_tolerance_rel": 0.002,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "shoulder40",
+      "plane": "z",
+      "at": 8.0,
+      "normal": "+",
+      "area": 4294.79,
+      "area_tolerance_rel": 0.002,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "top15",
+      "plane": "z",
+      "at": 16.0,
+      "normal": "+",
+      "area": 628.79,
+      "area_tolerance_rel": 0.004,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 1543
+}

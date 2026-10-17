@@ -1,0 +1,840 @@
+attempts:
+- started: '2026-09-17T13:33:25Z'
+  arm: renders-and-sheet
+  backend: zoo
+  design: prusa-mini-extruder-front
+  stage_reached: draft-failed
+  force: false
+  resume_from: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front-1789652006
+  draft:
+    ok: false
+    rounds: 3
+    thread_id: 01a0af92-81d4-7db3-b4e7-f9dc7f194226
+    problems:
+    - 'unexpected bundle entry ''main.kcl'' (allowed: [''brief.md'', ''contract.yaml'',
+      ''reference'', ''sources''])'
+  seconds: 1740
+  finished: '2026-09-17T14:02:27Z'
+- started: '2026-09-17T14:03:33Z'
+  arm: renders-and-sheet
+  backend: zoo
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: publish
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front-1789653814
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0afae-16b8-7d10-a747-8abae731a6fa
+  pipeline:
+    exit: 1
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    retry: true
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 27
+      required_total: 33
+      optional_pass: 6
+      optional_total: 20
+    failed:
+    - volume
+    - center_of_mass
+    - hole_d12p68_21p17_m24p67_y7
+    - hole_d11p5_26p02_m20p04_y7
+    - hole_d11p5_28p75_13p75_y7
+    - hole_d8p79_20p75_m24p25_y5p14
+    - hole_d8p79_20p75_m24p25_y8p86
+    - hole_d8_24p72_m22p26_y5p5
+    - hole_d8_25p36_m18p58_y8p5
+    - hole_d8_27p85_9p81_y5p5
+    - hole_d8_27p85_12p36_y8p5
+    - hole_d5p5_22p09_m15_y2p32
+    - hole_d4_20p27_30_y10p74
+    - pin_d9p18_21p17_m24p67_y7
+    - pin_d5p29_20p75_m24p25_y5p14
+    - pin_d5p29_20p75_m24p25_y8p86
+    - back_mating_face
+    - right_side_faces
+    - section_y7
+    - deviation_vs_prusa
+  seconds: 15744
+  finished: '2026-09-17T18:25:58Z'
+- started: '2026-09-17T18:26:45Z'
+  arm: renders-and-sheet
+  backend: zoo
+  design: prusa-mini-extruder-front
+  stage_reached: pipeline
+  force: false
+  resume_from: pipeline
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front-1789669606
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0afae-16b8-7d10-a747-8abae731a6fa
+  pipeline:
+    exit: 1
+    gates:
+      pass: 5
+      fail: 6
+      not_applicable: 1
+    failed:
+    - envelope
+    - mass_properties
+    - export_agreement
+    - edit_robustness
+    - export_integrity
+    - evidence_separation
+    retry: false
+  score_error: 'ScoreError: no handoff STEP at /Users/danieldriscoll/dual/skillkat/results/prusa-mini-extruder-front/handoff/prusa-mini-extruder-front.step;
+    run the pipeline first'
+  seconds: 3988
+  finished: '2026-09-17T19:33:14Z'
+- started: '2026-09-17T20:41:47Z'
+  arm: renders-and-sheet
+  backend: zoo
+  design: prusa-mini-extruder-front
+  stage_reached: pipeline
+  force: false
+  resume_from: pipeline
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front-1789677708
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0afae-16b8-7d10-a747-8abae731a6fa
+  pipeline:
+    exit: 1
+    gates:
+      pass: 1
+      fail: 1
+      not_applicable: 10
+    failed:
+    - traceability
+    retry: false
+  score_error: 'ScoreError: no handoff STEP at /Users/danieldriscoll/dual/skillkat/results/prusa-mini-extruder-front/handoff/prusa-mini-extruder-front.step;
+    run the pipeline first'
+  seconds: 819
+  finished: '2026-09-17T20:55:27Z'
+- started: '2026-09-18T04:16:06Z'
+  arm: renders-and-sheet
+  backend: zoo
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front-1789704967
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 01a0afae-16b8-7d10-a747-8abae731a6fa
+  pipeline:
+    exit: 1
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    retry: true
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 24
+      required_total: 33
+      optional_pass: 6
+      optional_total: 20
+    failed:
+    - volume
+    - hole_d14_m2_0_y12p18
+    - hole_d12p68_21p17_m24p67_y7
+    - hole_d12p63_25p62_7p5_y7
+    - hole_d9p5_25p17_7p5_y5p5
+    - hole_d9p5_25p17_7p5_y8p5
+    - hole_d8p79_20p75_m24p25_y5p14
+    - hole_d8p79_20p75_m24p25_y8p86
+    - hole_d8_27p85_9p81_y5p5
+    - hole_d5p5_22p09_m15_y2p32
+    - hole_d4_14p71_30_y4p62
+    - hole_d4_20p27_30_y10p74
+    - pin_d11_m18p5_22_y11
+    - pin_d9p18_21p17_m24p67_y7
+    - pin_d9p13_25p62_7p5_y7
+    - pin_d6_25p17_7p88_y8p5
+    - pin_d5p29_20p75_m24p25_y5p14
+    - pin_d5p29_20p75_m24p25_y8p86
+    - back_mating_face
+    - right_side_faces
+    - section_y7
+    - section_y1p5
+    - deviation_vs_prusa
+  seconds: 2357
+  finished: '2026-09-18T04:55:24Z'
+- started: '2026-09-20T14:04:43Z'
+  arm: renders-and-sheet
+  backend: freecad
+  design: prusa-mini-extruder-front
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 1932fdd2-201e-4d7d-8bad-6ceb8a1283b8
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 2
+    stopped: 'same failure after correction-2: features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/prusa-mini-extruder-front/manifest.yaml'''
+  seconds: 3150
+  finished: '2026-09-20T14:57:14Z'
+- started: '2026-09-20T14:04:43Z'
+  arm: renders-and-sheet
+  backend: cadquery
+  design: prusa-mini-extruder-front
+  stage_reached: pipeline
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 57c8ab3c-4543-44b2-b114-818c5d0c3d18
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 3
+    stopped: 'same failure after correction-3: features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/prusa-mini-extruder-front/manifest.yaml'''
+  seconds: 3980
+  finished: '2026-09-20T15:11:05Z'
+- started: '2026-09-20T14:04:43Z'
+  arm: renders-and-sheet
+  backend: build123d
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: blockout
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  blockout:
+    ok: true
+    iterations: 1
+    thread_id: 9ee5d4e3-15cc-4e30-86b2-2f9cbbd10a7d
+  pipeline:
+    exit: 1
+    gates:
+      pass: 9
+      fail: 2
+      not_applicable: 1
+    failed:
+    - features
+    - export_integrity
+    retry: true
+    corrections: 3
+    stopped: 'same failure after correction-3: export_integrity,features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 31
+      required_total: 33
+      optional_pass: 18
+      optional_total: 20
+    failed:
+    - back_mating_face
+    - bottom_face
+    - right_side_faces
+    - deviation_vs_prusa
+  seconds: 3986
+  finished: '2026-09-20T15:11:11Z'
+- started: '2026-09-20T15:11:36Z'
+  finished: '2026-09-20T15:11:38Z'
+  arm: renders-and-sheet
+  design: prusa-mini-extruder-front
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 30
+      required_total: 33
+      optional_pass: 18
+      optional_total: 20
+    failed:
+    - back_mating_face
+    - left_side_face
+    - right_side_faces
+    - section_y7
+    - deviation_vs_prusa
+  step_sha256: 7657a12f7776d9d03b6f8117c13531c8241cb826399bad1fbf813cc9db6ccbc4
+  seconds: 6
+  backend: cadquery
+- started: '2026-09-20T15:11:44Z'
+  finished: '2026-09-20T15:11:44Z'
+  arm: renders-and-sheet
+  design: prusa-mini-extruder-front
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 29
+      required_total: 33
+      optional_pass: 17
+      optional_total: 20
+    failed:
+    - hole_d11p5_28p75_13p75_y7
+    - hole_d9p5_25p17_7p5_y8p5
+    - pin_d11_m18p5_22_y11
+    - back_mating_face
+    - right_side_faces
+    - section_y7
+    - deviation_vs_prusa
+  step_sha256: 0e248aa65d58f338335dfa1883508382ceb09a7a9c610ecdc85af6db60ae853e
+  seconds: 5
+  backend: freecad
+- started: '2026-09-20T15:12:36Z'
+  arm: renders-and-sheet
+  backend: freecad
+  design: prusa-mini-extruder-front
+  stage_reached: pipeline
+  force: false
+  resume_from: pipeline
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 1
+    stopped: 'same failure after correction-1: features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/prusa-mini-extruder-front/manifest.yaml'''
+  seconds: 2831
+  finished: '2026-09-20T15:59:47Z'
+- started: '2026-09-20T15:12:36Z'
+  arm: renders-and-sheet
+  backend: build123d
+  design: prusa-mini-extruder-front
+  stage_reached: pipeline
+  force: false
+  resume_from: pipeline
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 1
+    stopped: 'same failure after correction-1: features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/prusa-mini-extruder-front/manifest.yaml'''
+  seconds: 2855
+  finished: '2026-09-20T16:00:13Z'
+- started: '2026-09-20T15:12:36Z'
+  arm: renders-and-sheet
+  backend: cadquery
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: pipeline
+  decompose: false
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 2
+    stopped: 'same failure after correction-2: features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 28
+      required_total: 33
+      optional_pass: 13
+      optional_total: 20
+    failed:
+    - hole_d11p5_28p75_13p75_y7
+    - hole_d8p79_20p75_m24p25_y5p14
+    - hole_d8_25p36_m18p58_y8p5
+    - hole_d8_27p85_9p81_y5p5
+    - hole_d8_27p85_12p36_y8p5
+    - pin_d9p18_21p17_m24p67_y7
+    - pin_d5p29_20p75_m24p25_y5p14
+    - pin_d5p29_20p75_m24p25_y8p86
+    - back_mating_face
+    - right_side_faces
+    - section_y7
+    - deviation_vs_prusa
+  seconds: 3624
+  finished: '2026-09-20T16:13:02Z'
+- started: '2026-09-20T16:13:20Z'
+  finished: '2026-09-20T16:13:22Z'
+  arm: renders-and-sheet
+  design: prusa-mini-extruder-front
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 29
+      required_total: 33
+      optional_pass: 14
+      optional_total: 20
+    failed:
+    - hole_d9p5_25p17_7p5_y5p5
+    - hole_d9p5_25p17_7p5_y8p5
+    - hole_d8_24p72_m22p26_y5p5
+    - hole_d8_25p36_m18p58_y8p5
+    - hole_d8_27p85_9p81_y5p5
+    - hole_d8_27p85_12p36_y8p5
+    - pin_d9p18_21p17_m24p67_y7
+    - pin_d6_25p17_7p88_y8p5
+    - right_side_faces
+    - deviation_vs_prusa
+  step_sha256: 9cb88c995b994e7878fa5bcd072e7a3095d00da2d1633ad25c21be5910d242c6
+  seconds: 6
+  backend: build123d
+- started: '2026-09-20T16:13:27Z'
+  finished: '2026-09-20T16:13:28Z'
+  arm: renders-and-sheet
+  design: prusa-mini-extruder-front
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 30
+      required_total: 33
+      optional_pass: 18
+      optional_total: 20
+    failed:
+    - hole_d11p5_28p75_13p75_y7
+    - back_mating_face
+    - right_side_faces
+    - section_y7
+    - deviation_vs_prusa
+  step_sha256: 09677da29e0249ed268b45946c990afb2455998be22673e6a7dae5d51f6f1b4e
+  seconds: 5
+  backend: freecad
+- started: '2026-09-20T16:40:05Z'
+  arm: renders-and-sheet
+  backend: freecad
+  design: prusa-mini-extruder-front
+  stage_reached: pipeline
+  force: false
+  resume_from: pipeline
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 1
+    stopped: 'same failure after correction-1: features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/prusa-mini-extruder-front/manifest.yaml'''
+  seconds: 9423
+  finished: '2026-09-20T19:17:08Z'
+- started: '2026-09-20T16:40:05Z'
+  arm: renders-and-sheet
+  backend: build123d
+  design: prusa-mini-extruder-front
+  stage_reached: pipeline
+  force: false
+  resume_from: pipeline
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 1
+    gates:
+      pass: 8
+      fail: 3
+      not_applicable: 1
+    failed:
+    - features
+    - edit_robustness
+    - export_integrity
+    retry: true
+    corrections: 2
+    stopped: 'same failure after correction-2: edit_robustness,export_integrity,features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  score_error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/prusa-mini-extruder-front/manifest.yaml'''
+  seconds: 10467
+  finished: '2026-09-20T19:34:34Z'
+- started: '2026-09-20T16:40:04Z'
+  arm: renders-and-sheet
+  backend: cadquery
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: pipeline
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 3
+    stopped: 'same failure after correction-3: features|ok'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 32
+      required_total: 33
+      optional_pass: 18
+      optional_total: 20
+    failed:
+    - hole_d11p5_28p75_13p75_y7
+    - right_side_faces
+    - deviation_vs_prusa
+  seconds: 12527
+  finished: '2026-09-20T20:08:53Z'
+- started: '2026-09-20T20:09:24Z'
+  finished: '2026-09-20T20:09:25Z'
+  arm: renders-and-sheet
+  design: prusa-mini-extruder-front
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 29
+      required_total: 33
+      optional_pass: 18
+      optional_total: 20
+    failed:
+    - hole_d9p5_25p17_7p5_y5p5
+    - hole_d8_27p85_12p36_y8p5
+    - back_mating_face
+    - right_side_faces
+    - section_y7
+    - deviation_vs_prusa
+  step_sha256: 12aa59364504a552dfb63cbfccdb83b446c77dadba6b53e6be1b885750cbe0ec
+  seconds: 5
+  backend: freecad
+- started: '2026-09-20T20:09:24Z'
+  finished: '2026-09-20T20:09:26Z'
+  arm: renders-and-sheet
+  design: prusa-mini-extruder-front
+  resume_from: score
+  stage_reached: scored
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 31
+      required_total: 33
+      optional_pass: 18
+      optional_total: 20
+    failed:
+    - hole_d11p5_28p75_13p75_y7
+    - back_mating_face
+    - right_side_faces
+    - deviation_vs_prusa
+  step_sha256: 85fa378057f8a8b375abf40bc96bf6d770471ac2cda8d5d4a6c4f79f38c123b2
+  seconds: 7
+  backend: build123d
+- started: '2026-09-21T14:35:51Z'
+  arm: renders-and-sheet
+  backend: cadquery
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 9
+    stopped: 'no progress before correction-10: failing items 10 -> 13'
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 33
+      required_total: 33
+      optional_pass: 18
+      optional_total: 20
+    failed:
+    - right_side_faces
+    - deviation_vs_prusa
+  seconds: 16318
+  finished: '2026-09-21T19:07:51Z'
+- started: '2026-09-21T19:10:34Z'
+  arm: renders-and-sheet
+  backend: cadquery
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 3
+    stopped: the worker changed nothing
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 33
+      required_total: 33
+      optional_pass: 18
+      optional_total: 20
+    failed:
+    - right_side_faces
+    - deviation_vs_prusa
+  seconds: 3684
+  finished: '2026-09-21T20:12:00Z'
+- started: '2026-09-21T20:12:19Z'
+  arm: renders-and-sheet
+  backend: cadquery
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 1
+    gates:
+      pass: 10
+      fail: 1
+      not_applicable: 1
+    failed:
+    - features
+    retry: true
+    corrections: 1
+    stopped: the worker changed nothing
+  stuck_class: incomplete-checkpoint
+  recommendation: 'decompose: partition the contract into feature-group modules (python
+    -m skillkat run <part> --decompose) instead of re-running plan+model'
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 33
+      required_total: 33
+      optional_pass: 18
+      optional_total: 20
+    failed:
+    - right_side_faces
+    - deviation_vs_prusa
+  seconds: 2654
+  finished: '2026-09-21T20:56:35Z'
+- started: '2026-09-21T20:57:01Z'
+  arm: renders-and-sheet
+  backend: cadquery
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 1
+    stopped: gates pass
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 33
+      required_total: 33
+      optional_pass: 19
+      optional_total: 20
+    failed:
+    - deviation_vs_prusa
+  seconds: 1428
+  finished: '2026-09-21T21:20:50Z'
+- started: '2026-09-21T23:45:58Z'
+  arm: renders-and-sheet
+  backend: build123d
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 6
+    stopped: gates pass
+  scorecard:
+    verdict: FAIL
+    summary:
+      required_pass: 32
+      required_total: 33
+      optional_pass: 19
+      optional_total: 20
+    failed:
+    - back_mating_face
+    - deviation_vs_prusa
+  seconds: 19288
+  finished: '2026-09-22T05:07:27Z'
+- started: '2026-09-22T05:11:09Z'
+  arm: renders-and-sheet
+  backend: build123d
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose: null
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 1
+    stopped: gates pass
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 33
+      required_total: 33
+      optional_pass: 19
+      optional_total: 20
+    failed:
+    - deviation_vs_prusa
+  seconds: 750
+  finished: '2026-09-22T05:23:41Z'
+- started: '2026-09-22T05:24:20Z'
+  arm: renders-and-sheet
+  backend: freecad
+  design: prusa-mini-extruder-front
+  stage_reached: scored
+  force: false
+  resume_from: retry
+  decompose_reason: 'previous attempt stuck: incomplete-checkpoint'
+  decompose: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/prusa-mini-extruder-front
+  pipeline:
+    exit: 0
+    gates:
+      pass: 11
+      fail: 0
+      not_applicable: 1
+    failed: []
+    retry: true
+    corrections: 3
+    stopped: gates pass
+  scorecard:
+    verdict: PASS
+    summary:
+      required_pass: 33
+      required_total: 33
+      optional_pass: 19
+      optional_total: 20
+    failed:
+    - deviation_vs_prusa
+  seconds: 6354
+  finished: '2026-09-22T07:10:14Z'

@@ -1,0 +1,92 @@
+# PartContract seed. /initialize-cad copies and fills this; a bundle that still carries
+# placeholders (`new-part`, `<intent>`, `REPLACE ME`) cannot be published.
+schema_version: 1
+name: new-part
+intent: "<intent>: one paragraph naming the part, its purpose, and the authoritative sources."
+units:
+  length: mm
+  angle: deg
+material: null            # e.g. "aluminium 6061"; null when unknown
+density_kg_m3: null       # required before any mass claim; analyze defaults to 1 kg/m3
+process: null             # e.g. "CNC milling", "LPBF", "flow domain (no manufacturing)"
+release_status: reconstruction   # training-only | reconstruction | prototype
+
+frame:
+  origin: "REPLACE ME: where [0,0,0] sits on the part"
+  axes:
+    x: "REPLACE ME"
+    y: "REPLACE ME"
+    z: "REPLACE ME"
+  datums:
+    - name: A
+      description: "REPLACE ME: primary datum face"
+
+envelope:                 # axis-aligned bounding box of the finished part
+  min: [0, 0, 0]
+  max: [60, 40, 4]
+  tolerance: 0.05
+
+parameters:               # every top-level KCL constant, with provenance and a digital tolerance
+  - name: width
+    value: 60
+    unit: mm
+    provenance: stated    # stated | measured | measured (reference model) | derived | inferred | defaulted
+    source: "REPLACE ME: document/figure"
+    tolerance: 0.01
+    description: "overall length along x"
+    edit_test:            # optional: /create-cad rebuilds with value+delta and checks the effect
+      delta: 10
+      expect:
+        volume_delta: 1600
+        direction: increase
+  - name: height
+    value: 40
+    unit: mm
+    provenance: stated
+    source: "REPLACE ME"
+    tolerance: 0.01
+  - name: thickness
+    value: 4
+    unit: mm
+    provenance: stated
+    source: "REPLACE ME"
+    tolerance: 0.01
+
+features:
+  - id: blank
+    kind: extrude
+    description: "rectangular plate blank"
+    parameters: [width, height, thickness]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[30, 20, 2]]
+
+interfaces: []
+
+acceptance:
+  volume:
+    expected: 9600
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "width * height * thickness"
+  center_of_mass:
+    expected: [30, 20, 2]
+    tolerance: 0.05
+  solid_count: 1
+  sections:
+    - id: mid_z
+      plane: z
+      at: 2
+      expect:
+        area: 2400
+        loops: 1
+        holes: 0
+  faces: []
+  deviation: null         # set when a reference model exists: {p95_max: 0.2, hausdorff_max: 0.5}
+  blockout:               # volume band the envelope-only blockout must land in
+    volume_min: 9000
+    volume_max: 9600.1
+
+references: []            # {path, kind, role, sha256, units, revision, note}; paths relative to the bundle
+open_questions: []

@@ -1,0 +1,556 @@
+{
+  "case": "planetary-set",
+  "arm": "spec-only",
+  "design": "planetary-set",
+  "kind": "machine",
+  "mode": "reconstruction",
+  "backend": "build123d",
+  "truth_class": "C",
+  "scored_at": "2026-09-27T17:13:48Z",
+  "verdict": "PASS",
+  "error": null,
+  "accuracy_score": 100.0,
+  "summary": {
+    "required_pass": 16,
+    "required_total": 16,
+    "optional_pass": 0,
+    "optional_total": 0,
+    "performance_pass": 2,
+    "performance_scored": 2,
+    "performance_unresolved": 0,
+    "performance_total": 2,
+    "performance_by_split": {
+      "development": {
+        "required": 2,
+        "pass": 2,
+        "fail": 0,
+        "unresolved": 0,
+        "missing": 0
+      },
+      "held_out": {
+        "required": 0,
+        "pass": 0,
+        "fail": 0,
+        "unresolved": 0,
+        "missing": 0
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "the plate bounds the set in x and y; plate z -5..0, carrier top at z 15",
+      "expected": [
+        150.0,
+        150.0,
+        20.0
+      ],
+      "measured": [
+        150.0,
+        150.0,
+        20.0
+      ],
+      "error": 0.0,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 7,
+      "measured": 7,
+      "ok": true
+    },
+    {
+      "id": "plate",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 112107.30091830126,
+        "bbox_min": [
+          -75.0,
+          -75.0,
+          -5.0
+        ],
+        "bbox_max": [
+          75.0,
+          75.0,
+          0.0
+        ],
+        "center_of_mass": [
+          5.638971474894914e-16,
+          -7.093397662600331e-16,
+          -2.5
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 112107.3,
+        "measured": 112107.30091830126,
+        "band": 560.5365,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "ring",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 32944.28418430639,
+        "bbox_min": [
+          -58.0,
+          -58.0,
+          0.0
+        ],
+        "bbox_max": [
+          58.0,
+          58.0,
+          10.0
+        ],
+        "center_of_mass": [
+          7.060659888216091e-12,
+          -3.2358927017140287e-12,
+          4.999999999999994
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "sun",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 16860.05692217019,
+        "bbox_min": [
+          -26.0,
+          -26.0,
+          0.0
+        ],
+        "bbox_max": [
+          26.0,
+          26.0,
+          10.0
+        ],
+        "center_of_mass": [
+          9.086508639633975e-13,
+          1.0069994540877512e-12,
+          4.999999999999999
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "carrier",
+      "kind": "solid",
+      "required": true,
+      "note": "disc r 44 x 5 minus the \u00d810 centre hole and three \u00d88 planet holes",
+      "measured": {
+        "volume": 29263.93556818893,
+        "bbox_min": [
+          -44.0,
+          -44.0,
+          10.0
+        ],
+        "bbox_max": [
+          44.0,
+          44.0,
+          15.0
+        ],
+        "center_of_mass": [
+          5.128039782716772e-16,
+          -2.424164260920656e-15,
+          12.5
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 29263.94,
+        "measured": 29263.93556818893,
+        "band": 146.31969999999998,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "planet0",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 3769.361293615628,
+        "bbox_min": [
+          22.34239130942548,
+          -13.657608690574522,
+          0.0
+        ],
+        "bbox_max": [
+          49.65760869057524,
+          13.65760869057524,
+          10.0
+        ],
+        "center_of_mass": [
+          35.99999999999745,
+          1.7489113100331311e-12,
+          4.999999999999996
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "planet1",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 3769.3612936156287,
+        "bbox_min": [
+          -31.65760869057452,
+          17.51930630942548,
+          0.0
+        ],
+        "bbox_max": [
+          -4.342391309424762,
+          44.83452369057524,
+          10.0
+        ],
+        "center_of_mass": [
+          -18.00000000000255,
+          31.17691500000175,
+          4.999999999999999
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "planet2",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 3769.361293615627,
+        "bbox_min": [
+          -31.65760869057452,
+          -44.83452369057452,
+          0.0
+        ],
+        "bbox_max": [
+          -4.342391309424762,
+          -17.519306309424763,
+          10.0
+        ],
+        "center_of_mass": [
+          -18.00000000000255,
+          -31.176914999998253,
+          4.999999999999998
+        ]
+      },
+      "found": true,
+      "checks": null,
+      "ok": true
+    },
+    {
+      "id": "sun_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 24,
+      "measured": 24,
+      "tip_radius": 26.000000000000455,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "planet0_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 12,
+      "measured": 12,
+      "tip_radius": 14.000000000000187,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "planet1_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 12,
+      "measured": 12,
+      "tip_radius": 14.000000000000188,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "planet2_teeth",
+      "kind": "teeth",
+      "required": true,
+      "note": "",
+      "expected": 12,
+      "measured": 12,
+      "tip_radius": 14.000000000000187,
+      "error": null,
+      "ok": true
+    },
+    {
+      "id": "ring_outside",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          0.0,
+          0.0,
+          5.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 58.0,
+        "kind": "pin"
+      },
+      "measured": {
+        "center": [
+          0.0,
+          0.0,
+          5.0
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 58.0,
+        "length": 10.0,
+        "kind": "pin"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 10.0,
+          "measured": 10.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "carrier_hole_0",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          36.0,
+          0.0,
+          12.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          36.0,
+          0.0,
+          12.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 4.0,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "sun_mesh",
+      "kind": "gear_mesh",
+      "required": true,
+      "note": "the sun and one planet about their own axes with the carrier held",
+      "measured": {
+        "max_interference": 0.0,
+        "gap_min": 0.08910204899774841,
+        "gap_max": 0.0966154911780339
+      },
+      "poses": [
+        [
+          0.0,
+          0.0,
+          0.0966,
+          true
+        ],
+        [
+          1.25,
+          0.0,
+          0.0945,
+          true
+        ],
+        [
+          2.5,
+          0.0,
+          0.0953,
+          true
+        ],
+        [
+          5.0,
+          0.0,
+          0.0946,
+          true
+        ],
+        [
+          7.5,
+          0.0,
+          0.0891,
+          true
+        ],
+        [
+          10.0,
+          0.0,
+          0.0946,
+          true
+        ],
+        [
+          12.5,
+          0.0,
+          0.0953,
+          true
+        ],
+        [
+          15.0,
+          0.0,
+          0.0966,
+          true
+        ]
+      ],
+      "expected": {
+        "interference": 0.0,
+        "backlash_max": 0.2
+      },
+      "ok": true
+    }
+  ],
+  "performance": [
+    {
+      "id": "carrierRatio",
+      "kind": "performance",
+      "quantity": "transmission_ratio",
+      "unit": "",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "prediction": 0.3333333333333333,
+      "reference": 0.3333333333333333,
+      "error": 0.0,
+      "tolerance": 1e-09,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    },
+    {
+      "id": "carrierAt360",
+      "kind": "performance",
+      "quantity": "joint_value",
+      "unit": "deg",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "prediction": 120.0,
+      "reference": 120.0,
+      "error": 0.0,
+      "tolerance": 1e-06,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": "10 pass, 0 fail, 4 n/a",
+    "failed": []
+  },
+  "simulations": {},
+  "hash_binding": {
+    "manifest_sha256": "a8689838f17f4df56b5e641c8385f7a8a0b8c1eb42be10e8700d4a61f178be16",
+    "truth_files": {
+      "truth/planetary-set-truth.yaml": "3245eebdc027c1fa4cd4dd762bf624595b07c1d341253428ee9ffe28b97884e6"
+    },
+    "input_files": {
+      "inputs/planetary-set-spec.md": "2a8bca0f4ffa01692bc1a5879aeb8b02a1d728b2cbe39448f181197d86ca14ca"
+    },
+    "step_sha256": "eb39aa94af7aa9a744f4395cc1e9f01887307d9e3769815ece7cd17d637f376c",
+    "assembly_source": {
+      "checkpoint.py": "507c0dd7fd6bf4272ad1a6f076a417e9c649c8c7f58b1a6d7d6fde89f6e4e4d5",
+      "main.py": "507c0dd7fd6bf4272ad1a6f076a417e9c649c8c7f58b1a6d7d6fde89f6e4e4d5"
+    },
+    "design_bundle": {
+      "assembly.yaml": "e9065221885fd9942ff8c863b3f0737114986c454a5709e7acfebe1fb1d9365e",
+      "brief.md": "8564635de412b291f19e20b7345ee99eb0fb69e23842835aca372ec86e45b6db",
+      "sources/planetary-set-spec.md": "2a8bca0f4ffa01692bc1a5879aeb8b02a1d728b2cbe39448f181197d86ca14ca"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-27T17:13:48Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "f067337b8ab648471ad40a647b21672f74d56978",
+      "dirty": true
+    }
+  }
+}

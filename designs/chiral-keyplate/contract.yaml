@@ -1,0 +1,595 @@
+schema_version: 1
+name: chiral-keyplate
+intent: 'Model the square key plate described in the attached text spec as one solid. Frame: origin
+  at the plate centre in XY, z = 0 on the bottom face, +z through the thickness, +x and +y along
+  the plate edges. Cut four identical rectangular slots from the top as 4 mm-deep pockets in a C4
+  pinwheel whose first slot is centred at (20, 8) mm with its long axis along x; the other three
+  are 90 degree rotations about z. The pinwheel is chiral — do not emit the mirrored arrangement,
+  a centred cross, or any pattern with a mirror plane. Name the four pocket floors. One solid; export
+  STEP and STL.'
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+frame:
+  origin: 'The intersection of the plate''s two XY centre lines, projected onto the bottom face:
+    [0, 0, 0]. This is the centre of the bottom square, not the three-dimensional centre of the
+    solid. Source: chiral-keyplate-spec.md:3-5.'
+  axes:
+    x: Along plateWidth and the long side of slot A, from the x = -40 edge toward x = +40. Slot
+      A has positive x = 20. In the top view looking from +z toward the bottom, draw +x to the right.
+    y: Along plateHeight, perpendicular to +x, from the y = -40 edge toward y = +40. Slot A has
+      positive y = 8. In the same top view draw +y upward, establishing the signed source coordinates.
+    z: 'Normal to the bottom, pointing through the material toward the top: bottom z = 0, top z
+      = plateThickness = 8. The frame is right-handed; positive rotations about +z are counter-clockwise
+      viewed from +z.'
+  datums:
+  - name: bottomDatum
+    description: The intact bottom plane z = 0, outward normal -z. It fixes the thickness origin;
+      all four nominal floors are 4 mm above it.
+  - name: xCentreDatum
+    description: The vertical midplane x = 0, halfway between the x = -40 and x = +40 edges; positive
+      x is the side containing slot A's centre.
+  - name: yCentreDatum
+    description: The vertical midplane y = 0, halfway between the y = -40 and y = +40 edges; positive
+      y is the side containing slot A's centre.
+  - name: topDatum
+    description: The remaining top face z = plateThickness = 8, outward normal +z. Pocket depth
+      is measured downward from this plane; each floor is at plateThickness - slotDepth = 4.
+envelope:
+  min:
+  - -40
+  - -40
+  - 0
+  max:
+  - 40
+  - 40
+  - 8
+  tolerance: 0.05
+parameters:
+- name: plateWidth
+  value: 80
+  unit: mm
+  provenance: stated
+  source: sources/chiral-keyplate-spec.md:22, "plateWidth (80 mm)"
+  tolerance: 0.01
+  description: Overall x span, centred about x = 0; independent of plateHeight.
+- name: plateHeight
+  value: 80
+  unit: mm
+  provenance: stated
+  source: sources/chiral-keyplate-spec.md:22, "plateHeight (80 mm)"
+  tolerance: 0.01
+  description: Overall y span, centred about y = 0; equal to plateWidth at nominal values only.
+- name: plateThickness
+  value: 8
+  unit: mm
+  provenance: stated
+  source: sources/chiral-keyplate-spec.md:22, "plateThickness (8 mm)"
+  tolerance: 0.01
+  description: Bottom-to-top z span. The bottom remains at zero during edits; pockets follow the
+    top while retaining slotDepth.
+  edit_test:
+    delta: 2
+    expect:
+      volume_delta: 12800
+      direction: increase
+      tolerance_rel: 0.002
+      bbox_delta:
+      - 0
+      - 0
+      - 2
+- name: slotLength
+  value: 16
+  unit: mm
+  provenance: stated
+  source: sources/chiral-keyplate-spec.md:23, "slotLength (16 mm)"
+  tolerance: 0.01
+  description: Long dimension of each rectangular pocket; along x for A/C and y for B/D.
+  edit_test:
+    delta: 2
+    expect:
+      volume_delta: -192
+      direction: decrease
+      tolerance_rel: 0.002
+      bbox_delta:
+      - 0
+      - 0
+      - 0
+- name: slotWidth
+  value: 6
+  unit: mm
+  provenance: stated
+  source: sources/chiral-keyplate-spec.md:23, "slotWidth (6 mm)"
+  tolerance: 0.01
+  description: Short dimension perpendicular to each slot's long axis.
+- name: slotDepth
+  value: 4
+  unit: mm
+  provenance: stated
+  source: sources/chiral-keyplate-spec.md:23, "slotDepth (4 mm)"
+  tolerance: 0.01
+  description: Pocket depth downward from the top; all floors follow plateThickness - slotDepth.
+    Lines 7-8 require blind pockets.
+- name: slotCentreX
+  value: 20
+  unit: mm
+  provenance: stated
+  source: sources/chiral-keyplate-spec.md:23, "slotCentreX (20 mm)"
+  tolerance: 0.01
+  description: Signed x coordinate of slot A; use positive quarter-turn rotations to place B/C/D.
+- name: slotCentreY
+  value: 8
+  unit: mm
+  provenance: stated
+  source: sources/chiral-keyplate-spec.md:24, "slotCentreY (8 mm, the centre of slot A)"
+  tolerance: 0.01
+  description: Signed y coordinate of slot A; preserve its positive sign and the specified chirality.
+features:
+- id: plateBlank
+  kind: extrude
+  count: 1
+  description: 'A square rectangular prism, nominally 80 by 80 by 8 mm, centred in XY with bottom
+    z = 0. Subtract the four blind pockets to leave one solid. The continuous web below their floors
+    has thickness plateThickness - slotDepth. Source: chiral-keyplate-spec.md:3-8.'
+  parameters:
+  - plateWidth
+  - plateHeight
+  - plateThickness
+  - slotDepth
+  verify:
+  - method: bbox
+  - method: solid
+    points:
+    - - 0
+      - 0
+      - 2
+    - - 0
+      - 0
+      - 6
+    - - -36
+      - -36
+      - 4
+    - - 36
+      - 36
+      - 4
+    note: Interior points check the intact centre and outer plate material.
+  - method: section
+    section: lowerWeb
+  - method: count
+    section: lowerWeb
+    count: 1
+    note: One outer solid loop beneath the pockets; holes are separately required to be zero.
+- id: slotA
+  kind: pocket
+  count: 1
+  description: 'Slot A is the 16 by 6 mm rectangle at centre (slotCentreX, slotCentreY) = (20, 8),
+    long axis x, obtained from A by a positive 0 deg rotation about +z. Nominal bounds x = [12,
+    28], y = [5, 11]; cut from top z = 8 to floor z = 4. Name its floor pocketFloorA. Source: chiral-keyplate-spec.md:7-15,25-26.'
+  parameters:
+  - plateThickness
+  - slotLength
+  - slotWidth
+  - slotDepth
+  - slotCentreX
+  - slotCentreY
+  verify:
+  - method: void
+    points:
+    - - 20
+      - 8
+      - 6
+    - - 13
+      - 8
+      - 6
+    - - 27
+      - 8
+      - 6
+    - - 20
+      - 6
+      - 6
+    - - 20
+      - 10
+      - 6
+    note: Centre and four interior probes span both rectangle dimensions; positive 0 deg rotations
+      of the slot A probes. Minimum wall clearance is 1 mm.
+  - method: solid
+    points:
+    - - 20
+      - 8
+      - 2
+    - - 11
+      - 8
+      - 6
+    - - 29
+      - 8
+      - 6
+    - - 20
+      - 4
+      - 6
+    - - 20
+      - 12
+      - 6
+    note: Material below the floor and 1 mm outside each plan wall establishes a blind, bounded
+      pocket. Positive 0 deg rotations of the slot A material probes.
+  - method: section
+    section: slotALongitudinal
+  - method: section
+    section: slotATransverse
+  - method: face
+    face: pocketFloorA
+- id: slotB
+  kind: pocket
+  count: 1
+  description: 'Slot B is the 16 by 6 mm rectangle at centre (-slotCentreY, slotCentreX) = (-8,
+    20), long axis y, obtained from A by a positive 90 deg rotation about +z. Nominal bounds x =
+    [-11, -5], y = [12, 28]; cut from top z = 8 to floor z = 4. Name its floor pocketFloorB. Source:
+    chiral-keyplate-spec.md:7-15,25-26.'
+  parameters:
+  - plateThickness
+  - slotLength
+  - slotWidth
+  - slotDepth
+  - slotCentreX
+  - slotCentreY
+  verify:
+  - method: void
+    points:
+    - - -8
+      - 20
+      - 6
+    - - -8
+      - 13
+      - 6
+    - - -8
+      - 27
+      - 6
+    - - -6
+      - 20
+      - 6
+    - - -10
+      - 20
+      - 6
+    note: Centre and four interior probes span both rectangle dimensions; positive 90 deg rotations
+      of the slot A probes. Minimum wall clearance is 1 mm.
+  - method: solid
+    points:
+    - - -8
+      - 20
+      - 2
+    - - -8
+      - 11
+      - 6
+    - - -8
+      - 29
+      - 6
+    - - -4
+      - 20
+      - 6
+    - - -12
+      - 20
+      - 6
+    note: Material below the floor and 1 mm outside each plan wall establishes a blind, bounded
+      pocket. Positive 90 deg rotations of the slot A material probes.
+  - method: section
+    section: pocketBand
+  - method: face
+    face: pocketFloorB
+- id: slotC
+  kind: pocket
+  count: 1
+  description: 'Slot C is the 16 by 6 mm rectangle at centre (-slotCentreX, -slotCentreY) = (-20,
+    -8), long axis x, obtained from A by a positive 180 deg rotation about +z. Nominal bounds x
+    = [-28, -12], y = [-11, -5]; cut from top z = 8 to floor z = 4. Name its floor pocketFloorC.
+    Source: chiral-keyplate-spec.md:7-15,25-26.'
+  parameters:
+  - plateThickness
+  - slotLength
+  - slotWidth
+  - slotDepth
+  - slotCentreX
+  - slotCentreY
+  verify:
+  - method: void
+    points:
+    - - -20
+      - -8
+      - 6
+    - - -13
+      - -8
+      - 6
+    - - -27
+      - -8
+      - 6
+    - - -20
+      - -6
+      - 6
+    - - -20
+      - -10
+      - 6
+    note: Centre and four interior probes span both rectangle dimensions; positive 180 deg rotations
+      of the slot A probes. Minimum wall clearance is 1 mm.
+  - method: solid
+    points:
+    - - -20
+      - -8
+      - 2
+    - - -11
+      - -8
+      - 6
+    - - -29
+      - -8
+      - 6
+    - - -20
+      - -4
+      - 6
+    - - -20
+      - -12
+      - 6
+    note: Material below the floor and 1 mm outside each plan wall establishes a blind, bounded
+      pocket. Positive 180 deg rotations of the slot A material probes.
+  - method: section
+    section: pocketBand
+  - method: face
+    face: pocketFloorC
+- id: slotD
+  kind: pocket
+  count: 1
+  description: 'Slot D is the 16 by 6 mm rectangle at centre (slotCentreY, -slotCentreX) = (8, -20),
+    long axis y, obtained from A by a positive 270 deg rotation about +z. Nominal bounds x = [5,
+    11], y = [-28, -12]; cut from top z = 8 to floor z = 4. Name its floor pocketFloorD. Source:
+    chiral-keyplate-spec.md:7-15,25-26.'
+  parameters:
+  - plateThickness
+  - slotLength
+  - slotWidth
+  - slotDepth
+  - slotCentreX
+  - slotCentreY
+  verify:
+  - method: void
+    points:
+    - - 8
+      - -20
+      - 6
+    - - 8
+      - -13
+      - 6
+    - - 8
+      - -27
+      - 6
+    - - 6
+      - -20
+      - 6
+    - - 10
+      - -20
+      - 6
+    note: Centre and four interior probes span both rectangle dimensions; positive 270 deg rotations
+      of the slot A probes. Minimum wall clearance is 1 mm.
+  - method: solid
+    points:
+    - - 8
+      - -20
+      - 2
+    - - 8
+      - -11
+      - 6
+    - - 8
+      - -29
+      - 6
+    - - 4
+      - -20
+      - 6
+    - - 12
+      - -20
+      - 6
+    note: Material below the floor and 1 mm outside each plan wall establishes a blind, bounded
+      pocket. Positive 270 deg rotations of the slot A material probes.
+  - method: section
+    section: pocketBand
+  - method: face
+    face: pocketFloorD
+- id: chiralPinwheel
+  kind: pattern
+  count: 4
+  description: 'Exactly the four pockets A/B/C/D above, including seed A, related by R(x, y) = (-y,
+    x) at 0, 90, 180 and 270 deg about +z. This feature describes their relationship, not four additional
+    cuts. Preserve the specified handedness; no mirrored arrangement, centred cross or pattern with
+    a mirror plane is acceptable. Source: chiral-keyplate-spec.md:7-20.'
+  parameters:
+  - plateThickness
+  - slotLength
+  - slotWidth
+  - slotDepth
+  - slotCentreX
+  - slotCentreY
+  verify:
+  - method: section
+    section: pocketBand
+    note: Exactly four inner holes in one connected outer solid loop.
+  - method: count
+    section: pocketBand
+    count: 1
+    note: This probe counts outer solid loops, not pockets; SectionExpect.holes is the four-pocket
+      count.
+  - method: solid
+    points:
+    - - -20
+      - 8
+      - 6
+    - - 8
+      - 20
+      - 6
+    - - 20
+      - -8
+      - 6
+    - - -8
+      - -20
+      - 6
+    note: Centres of the forbidden x-reflected pockets must remain material. Together with actual
+      slot-centre void probes and named floor centroids, these discriminate handedness in the fixed
+      frame.
+  - method: solid
+    points:
+    - - 20
+      - 0
+      - 6
+    - - 0
+      - 20
+      - 6
+    - - -20
+      - 0
+      - 6
+    - - 0
+      - -20
+      - 6
+    note: Axis-arm points remain material; these also reject a centred cross.
+  - method: face
+    face: pocketFloorA
+  - method: face
+    face: pocketFloorB
+  - method: face
+    face: pocketFloorC
+  - method: face
+    face: pocketFloorD
+interfaces: []
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 49664
+    tolerance_rel: 0.002
+    provenance: derived
+    note: plateWidth * plateHeight * plateThickness - 4 * slotLength * slotWidth * slotDepth = 51200
+      - 1536 = 49664 mm^3. The four pockets do not intersect or reach the outer edges.
+  surface_area:
+    expected: 16064
+    tolerance_rel: 0.002
+    provenance: derived
+    note: 2 * (plateWidth * plateHeight + plateWidth * plateThickness + plateHeight * plateThickness)
+      + 4 * 2 * (slotLength + slotWidth) * slotDepth = 15360 + 704 = 16064 mm^2. Removed top areas
+      equal the four added floor areas; only pocket sidewall area is a net addition.
+  center_of_mass:
+    expected:
+    - 0
+    - 0
+    - 3.9381443298969074
+    tolerance: 0.05
+    provenance: derived
+    note: Uniform-density geometric centroid. Let V0 = plateWidth * plateHeight * plateThickness,
+      Vr = 4 * slotLength * slotWidth * slotDepth and V = V0 - Vr. The four slot centres sum to
+      (0, 0), giving x = y = 0. z = (V0 * plateThickness / 2 - Vr * (plateThickness - slotDepth
+      / 2)) / V = 195584 / 49664 = 382 / 97 mm. Material density is not needed for this geometric
+      centroid.
+  solid_count: 1
+  sections:
+  - id: lowerWeb
+    plane: z
+    at: 2
+    expect:
+      area: 6400
+      area_tolerance_rel: 0.002
+      loops: 1
+      holes: 0
+    description: At z = (plateThickness - slotDepth) / 2 = 2, below every floor. Area = plateWidth
+      * plateHeight = 6400 mm^2; one unperforated square region.
+  - id: pocketBand
+    plane: z
+    at: 6
+    expect:
+      area: 6016
+      area_tolerance_rel: 0.002
+      loops: 1
+      holes: 4
+    description: At z = plateThickness - slotDepth / 2 = 6, through all four cavities. Solid area
+      = plateWidth * plateHeight - 4 * slotLength * slotWidth = 6016 mm^2. One outer material loop
+      and four separate rectangular inner holes.
+  - id: slotALongitudinal
+    plane: y
+    at: 8
+    expect:
+      area: 576
+      area_tolerance_rel: 0.002
+      loops: 1
+      holes: 0
+    description: The xz section at y = slotCentreY = 8 intersects only slot A along its long axis.
+      Area = plateWidth * plateThickness - slotLength * slotDepth = 576 mm^2. Its top-open notch
+      is part of the outer loop, not an inner hole.
+  - id: slotATransverse
+    plane: x
+    at: 20
+    expect:
+      area: 616
+      area_tolerance_rel: 0.002
+      loops: 1
+      holes: 0
+    description: The yz section at x = slotCentreX = 20 intersects only slot A across its short
+      axis. Area = plateHeight * plateThickness - slotWidth * slotDepth = 616 mm^2. Its top-open
+      notch is part of the outer loop, not an inner hole.
+  faces:
+  - name: pocketFloorA
+    plane: z
+    at: 4
+    normal: +
+    area: 96
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - 20
+    - 8
+    mode: one
+  - name: pocketFloorB
+    plane: z
+    at: 4
+    normal: +
+    area: 96
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -8
+    - 20
+    mode: one
+  - name: pocketFloorC
+    plane: z
+    at: 4
+    normal: +
+    area: 96
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - -20
+    - -8
+    mode: one
+  - name: pocketFloorD
+    plane: z
+    at: 4
+    normal: +
+    area: 96
+    area_tolerance_rel: 0.002
+    tolerance: 0.05
+    center:
+    - 8
+    - -20
+    mode: one
+  deviation: null
+  blockout:
+    volume_min: 51097.6
+    volume_max: 51302.4
+  export_volume_tolerance_rel: 0.002
+references:
+- path: sources/chiral-keyplate-spec.md
+  kind: text
+  role: authoritative
+  sha256: 0036c51f5df296508a684f749dc85a5e789cc0b325273221082d1a28eff95798
+  units: mm
+  revision: Unversioned supplied text; SHA-256 identifies the source revision.
+  note: Complete dimensional and handedness specification, including the eight required parameter
+    names and four separately identifiable pocket floors. Supplied short hash 0036c51f5df2 matches.
+    There are no images, drawings, reference meshes or reference-ingest outputs.
+open_questions:
+- What material and density, if any, should be assigned for physical mass reporting? Neither is
+  specified; both remain null and no mass is claimed.
+- What manufacturing process and physical production tolerances, if any, apply? They are not specified;
+  process remains null and digital comparison tolerances are not manufacturing tolerances.

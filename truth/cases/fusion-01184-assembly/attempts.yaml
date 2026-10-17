@@ -1,0 +1,613 @@
+attempts:
+- started: '2026-09-19T05:49:30Z'
+  arm: assembly
+  backend: zoo
+  design: fusion-01184-assembly
+  stage_reached: scored
+  force: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-01184-assembly-1789796970
+  worker: &id001
+    backend: cursor
+    role: assemble
+    model: claude-fable-5-1-thinking-max
+    order_id: 001-assemble
+    thread_id: a3d6f604-caf8-40dc-acd7-4a45c320c1f6
+    exit_code: 0
+    seconds: 799
+    commands: 10
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 10
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - results/fusion-01184-assembly/work/assembly.yaml
+      incomplete: false
+      notes: 'Rod (body one pin, +y, y 9.7076..88) placed coaxial with the plate hole
+        (body two, +y, y 0..3); rod tube-end key point 1.00 mm toward -y of the hole
+        near-face key point (dataset offset -1.00 along body two''s axis). Measured:
+        axis angle 0 deg, line distance 0 mm, axial offset -1.000 mm, interference
+        3.2e-5 mm^3, min distance 0 mm, tube/plate clearance 0.7076 mm. Key-point
+        pairing (tube-end <-> near face) inferred from physics; hole Middle would
+        shift truth by 1.5 mm. No hosted engine calls; OpenCascade only.'
+      engine_ledger_calls: 0
+      engine_ledger_seconds: 0
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id001
+  codex_report:
+    Result: "Deliverable written: `results/fusion-01184-assembly/work/assembly.yaml`.\n\
+      \nJoint faces identified with OpenCascade (both bodies in their local frames,\
+      \ mm):\n\n- Body one `36938_ae684b66_0002_2` (T-shaped tool: 10x10 rounded-square\
+      \ tube 50 mm long with a Ø5 bore along z, plus a Ø5 rod along y): the joint\
+      \ face is the **Ø5 rod (pin)**, axis through (105, ·, 95), direction +y, extent\
+      \ y = 9.7076 .. 88.0. Its bbox [102.5, 9.71, 92.5]..[107.5, 88.0, 97.5] is exactly\
+      \ the task's \"joint face bbox\", so those bboxes are local-frame values.\n\
+      - Body two `36938_ae684b66_0001_2` (3 mm stepped plate 50 x 165): the joint\
+      \ face is the **Ø5 through-hole**, axis through (20, ·, 60), direction +y, extent\
+      \ y = 0 .. 3.\n\nTransforms chosen (shared frame = body two's local frame):\n\
+      \n```yaml\nbodies:\n  36938_ae684b66_0002_2: {origin: [-85.0, -10.707602, -35.0],\
+      \ x_axis: [1, 0, 0], y_axis: [0, 1, 0], z_axis: [0, 0, 1]}\n  36938_ae684b66_0001_2:\
+      \ {origin: [0, 0, 0],                 x_axis: [1, 0, 0], y_axis: [0, 1, 0],\
+      \ z_axis: [0, 0, 1]}\n```\n\nBody one: pure translation (rotation about the\
+      \ revolute axis is free; identity chosen). x/z bring the rod axis onto the hole\
+      \ axis (105→20, 95→60). y places the rod's tube-end key point (local y = 9.7076)\
+      \ 1.00 mm toward −y of the hole's near-face key point (y = 0), i.e. the dataset\
+      \ offset −1.00 mm applied along body two's joint axis (+y).\n\nMeasured in the\
+      \ shared frame:\n\n- axis angle: **0.000000°** (rod axis (0,1,0) vs hole axis\
+      \ (0,1,0))\n- axis line distance: **0.000000 mm**\n- axial offset (rod key point\
+      \ − hole key point)·d2: **−1.0000 mm** (expected −1.00)\n- rod spans y = −1.00\
+      \ .. 77.29 through the plate (y = 0 .. 3); tube occupies y = −10.71 .. −0.71\
+      \ → 0.7076 mm clearance to the plate face\n- interference (`assembly.common_volume`\
+      \ on `assembly_task.apply` copies): **3.2e-5 mm³** (numerical sliver from the\
+      \ coincident Ø5 pin/hole surfaces)\n- minimum distance between the placed bodies:\
+      \ **0.0 mm** (pin touches hole; bodies in contact)"
+    Files changed: '- `results/fusion-01184-assembly/work/assembly.yaml` (new)'
+    Verification: 'Commands run (all from the repository root, `.venv/bin/python`,
+      OpenCascade only; no hosted engine calls):
+
+
+      1. `brep.read_step` + `brep.bbox` / `brep.cylinders` / `brep.planar_faces` on
+      both STEP files → body one bbox [100,0,70]..[110,88,120], pin r=2.5 dir (0,1,0)
+      through (105,·,95) t∈[9.7076, 88.0]; body two bbox [−5,0,−65]..[45,3,100], hole
+      r=2.5 dir (0,1,0) through (20,·,60) t∈[0,3]. Matches the task''s bbox sizes
+      [10,88,50] and [50,3,165] and the renders (front/top/iso).
+
+      2. Raw STEP cylinder axes (`BRepAdaptor_Surface.Cylinder().Axis()`): rod axis
+      +y (location y=49, v∈[−39.29, 39.0]), hole axis +y (location y=2.5, v∈[−2.5,
+      0.5]) → the two joint axes have the same local sense, consistent with `is_flipped:
+      false`.
+
+      3. Dataset conventions checked on unrelated, non-held-out joint sets from the
+      local copy of the public j1.0.0 dataset (never this case''s `joint_set.json`,
+      never the other four held-out sets): `axis_line.origin` is the joint key point
+      in assembled coordinates, `transform` is local→assembled, and `(o1 − o2)·d2
+      = offset` held in all 28 sampled joints (flipped and unflipped) → body one''s
+      key point = body two''s key point + offset·(body two axis).
+
+      4. Final check script: applied the manifest matrices (`assembly_task.manifest_matrix`,
+      `transform_line`, `apply`) → angle 0.000000°, line distance 0.000000 mm, axial
+      offset −1.0000 mm vs expected −1.00; `common_volume` 3.2e-5 mm³; `min_distance`
+      0.0 mm; placed bboxes body one [15,−10.708,35]..[25,77.292,85], body two [−5,0,−65]..[45,3,100].
+
+
+      Measured vs expected: angle 0° (≤ 2°), line distance 0 mm (≤ 0.5 mm), axial
+      offset −1.000 mm (expected −1.00 ± 0.5), interference 3.2e-5 mm³ (≤ 1 mm³),
+      gap 0 mm (≤ 1 mm).'
+    Open questions: '- **Key points (the only real ambiguity).** The task gives the
+      offset (−1.00 mm) but not which key point (Start/Middle/End) each cylindrical
+      face used. Under the verified convention the rod''s key point sits 1.00 mm toward
+      −y of the hole''s key point. Enumerating all nine pairings: rod tube-end ↔ hole
+      near face (y=0) gives a clean 0.71 mm tube/plate clearance with the pin through
+      the hole; rod tube-end ↔ hole middle gives 0.79 mm interpenetration; ↔ far face
+      2.29 mm; rod middle pairings leave the tube 38–40 mm from the plate with the
+      −1 mm meaningless; rod tip pairings leave the pin only 0–2 mm into (or 1 mm
+      short of) the hole. I chose the pairing that makes the −1.00 mm a clearance
+      adjustment and is interference-free. If the dataset used the hole''s Middle
+      key point instead, the truth axial position differs by 1.5 mm (beyond the 0.5
+      mm tolerance); a dataset prior over small-offset revolute cylinder↔cylinder
+      joints (n=141) is ~63 % end key point vs ~37 % middle on body two, so this is
+      a judgement call, not a certainty.
+
+      - **Side of the plate.** `is_flipped: false` was read as "same axis sense";
+      the stored primary-axis vectors in unrelated sets do not encode the flip consistently,
+      so the side was resolved by physics: only the tube on the −y side turns −1.00
+      mm into a clearance rather than a penetration.
+
+      - **Rotation about the axis.** The dataset''s 1.5708 rad rotation was not applied
+      (identity rotation); the brief and scorer accept any rotation about a revolute
+      axis. The tube is 0.71 mm clear of the plate at every rotation angle, so this
+      does not affect interference.
+
+      - Interference is 3.2e-5 mm³, not exactly zero, because the Ø5 pin and Ø5 hole
+      surfaces coincide; OpenCascade''s Common returns a numerical sliver.'
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 843
+  finished: '2026-09-19T06:03:33Z'
+- started: '2026-09-19T15:41:57Z'
+  arm: assembly
+  backend: zoo
+  design: fusion-01184-assembly
+  stage_reached: scored
+  force: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-01184-assembly-1789832517
+  worker: &id002
+    backend: cursor
+    role: assemble
+    model: claude-fable-5-1-thinking-max
+    order_id: 001-assemble
+    thread_id: b4d4b677-b95b-4ed2-a826-c8aec4aec983
+    exit_code: 0
+    seconds: 195
+    commands: 3
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 3
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - /Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/work/assembly.yaml
+      incomplete: false
+      notes: 'Revolute Rev3: body two at identity; body one translated by [-85, -10.706,
+        -35] with identity rotation so K1'' = [20, -1, 60] on body two''s hole axis
+        at offset -1.0. assembly-check PASS on the first run (angle 0, line distance
+        0, offset -1.0, parallel, interference 0, gap 0). Rotation about the revolute
+        axis left at zero.'
+      engine_ledger_calls: 0
+      engine_ledger_seconds: 0
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id002
+  codex_report:
+    Result: 'Placement for joint set `joint_set_01184`, revolute joint "Rev3": body
+      one''s r 2.5 mm pin (`36938_ae684b66_0002_2`, key point K1 = [105, 9.706, 95]
+      mm, axis d1 = [0, 1, 0]) placed into body two''s r 2.5 mm hole (`36938_ae684b66_0001_2`,
+      K2 = [20, 0, 60] mm, d2 = [0, 1, 0]).
+
+
+      Transforms written to `work/assembly.yaml` (shared frame = body two''s local
+      frame):
+
+
+      - `36938_ae684b66_0001_2` (body two): identity (`origin [0, 0, 0]`, axes = unit
+      axes).
+
+      - `36938_ae684b66_0002_2` (body one): rotation identity (`x_axis [1,0,0]`, `y_axis
+      [0,1,0]`, `z_axis [0,0,1]`), `origin [-85.0, -10.706, -35.0]`.
+
+
+      Derivation: d1 and d2 are both +Y, and `is_flipped` is false, so no rotation
+      is needed for the axes to be parallel. Colinearity plus `offset = -1.0` fixes
+      K1'' = K2 + (-1.0)·d2 = [20, -1, 60]; translation t = K1'' - K1 = [20-105, -1-9.706,
+      60-95] = [-85, -10.706, -35]. Rotation about the revolute axis is left at zero
+      (any value is accepted).
+
+
+      Critic numbers (`python -m skillkat.truth assembly-check`): axis angle 0.0 deg
+      (max 2), axis line distance 0.0 mm (max 0.5), axial offset -1.0 mm (expected
+      -1.0 +/- 0.5), flip parallel (expected parallel), interference 0.0 mm3, gap
+      0.0 mm (max 1). Key points placed: one [20, -1, 60], two [20, 0, 60]. Verdict:
+      PASS.
+
+
+      Placed geometry: the pin runs from y'' = -0.998 to 77.29 through the 3 mm plate
+      (y'' 0..3) at (x'', z'') = (20, 60); body one''s 10x10 rounded-square bar sits
+      in front of the plate at y'' in [-10.706, -0.706], so the bodies touch only
+      along the pin/hole surface (gap 0, no overlap).'
+    Files changed: '- `/Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/work/assembly.yaml`
+      (new)'
+    Verification: "Commands run (3 shell commands, 0 hosted engine calls):\n\n1. `ls\
+      \ -la` of the work, renders and order directories (inputs present: two STEP\
+      \ files, `assembly-task.md`, `joint-task.json`, six renders).\n2. OpenCascade\
+      \ measurement from the repository venv (`skillkat.geomcheck.brep.read_step`\
+      \ / `bbox` / `cylinders`) on both STEP files:\n   - body one bbox [100, 0, 70]..[110,\
+      \ 88, 120] (expected size [10, 88, 50]: ok); pin cylinder r = 2.5, axis point\
+      \ (105, ., 95), direction [0, 1, 0], t 9.7076..88.0 (expected key point [105,\
+      \ 9.706, 95], d1 [0, 1, 0]: ok). Also a r 2.5 bore along Z at (105, 5) and four\
+      \ r 4 corner faces of the bar, not joint faces.\n   - body two bbox [-5, 0,\
+      \ -65]..[45, 3, 100] (expected size [50, 3, 165]: ok); hole cylinder r = 2.5,\
+      \ axis point (20, ., 60), direction [0, 1, 0], t 0..3 (expected key point [20,\
+      \ 0, 60], d2 [0, 1, 0]: ok).\n3. `cd /Users/danieldriscoll/dual/skillkat &&\
+      \ .venv/bin/python -m skillkat.truth assembly-check /Users/danieldriscoll/dual/skillkat/results/fusion-01184-assembly/work`\
+      \ -> `assembly-check PASS (RevoluteJointType)`, exit 0:\n   - axis_angle_deg\
+      \ 0.0 (max 2.0) ok\n   - axis_line_distance 0.0 (max 0.5) ok\n   - axial_offset\
+      \ -1.0 (expected -1.0 +/- 0.5) ok\n   - flip parallel (expected parallel) ok\n\
+      \   - interference_mm3 0.0 ok\n   - gap_mm 0.0 (max 1.0) ok\n\nRenders inspected:\
+      \ body two is a stepped 3 mm plate (upper 40 x 100 with the hole at (20, 60),\
+      \ lower 50 x 65), body one a 50 mm rounded-square bar with a 5 mm bore along\
+      \ Z and a 5 mm pin along +Y from its mid-height; consistent with the measured\
+      \ cylinders."
+    Open questions: '- Rotation about the revolute axis: the dataset records a joint
+      angle of 1.5708 rad, but the joint frames'' in-plane orientation is not given,
+      so the designed rotation of body one about the pin axis cannot be reconstructed;
+      I left it at zero (body one''s bar stays parallel to the plate''s long Z direction).
+      The task states any rotation about a revolute axis is accepted, and the axis,
+      offset, interference and gap checks are unaffected by it.
+
+      - Interference is measured as exactly 0.0 mm3 with coincident r 2.5 pin and
+      hole surfaces; the evaluator''s allowance (dataset interference + 1 mm3) is
+      therefore not needed.'
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 333
+  finished: '2026-09-19T15:47:31Z'
+- started: '2026-09-21T01:18:28Z'
+  arm: assembly
+  design: fusion-01184-assembly
+  stage_reached: scored
+  force: false
+  mode: modelled
+  backend: build123d
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-01184-assembly
+  worker: &id003
+    backend: cursor
+    role: assemble
+    model: inherit
+    order_id: 001-assemble
+    thread_id: 1d3d6071-9cb0-49ca-8fbc-d551b6884f7d
+    exit_code: 0
+    seconds: 137
+    commands: 4
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/build123d/fusion-01184-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 4
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - /Users/danieldriscoll/dual/skillkat/parts/build123d/fusion-01184-assembly/main.py
+      incomplete: false
+      notes: ''
+      commands_list:
+      - .venv/bin/python -c "from pathlib import Path; from skillkat.geomcheck import
+        brep; s=brep.read_step(Path('parts/build123d/fusion-01184-assembly/inputs/36938_ae684b66_0002_2.step'));
+        print(brep.bbox(s), brep.cylinders(s)); s=brep.read_step(Path('parts/build123d/fusion-01184-assembly/inputs/36938_ae684b66_0001_2.step'));
+        print(brep.bbox(s), brep.cylinders(s))"
+      - ruff format --check parts/build123d/fusion-01184-assembly/main.py
+      - ruff check parts/build123d/fusion-01184-assembly/main.py
+      - .venv/bin/python -m skillkat.truth assembly-check /Users/danieldriscoll/dual/skillkat/results/build123d/fusion-01184-assembly/work
+        --entry /Users/danieldriscoll/dual/skillkat/parts/build123d/fusion-01184-assembly/main.py
+        --backend build123d --ledger /Users/danieldriscoll/dual/skillkat/results/build123d/fusion-01184-assembly/worker/001-assemble/engine-ledger.jsonl
+      engine_ledger_calls: 1
+      engine_ledger_seconds: 4.54
+      visual_check: null
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id003
+  codex_report:
+    Result: 'Body two (`36938_ae684b66_0001_2`) stays at the identity. Body one (`36938_ae684b66_0002_2`)
+      is translated by `(-85.0, -10.706, -35.0)` mm with identity rotation: K1 `[105.0,
+      9.706, 95.0]` maps to `[20.0, -1.0, 60.0]`, so the pin axis is colinear with
+      the plate hole (`d1` already parallel to `d2`) and `(K1'' - K2'') · d2'' = -1.00`
+      mm.
+
+
+      Critic joint numbers: axis_angle_deg 0.0 (max 2.0), axis_line_distance 0.0 mm
+      (max 0.5), axial_offset -1.0 mm (expected -1.0 ± 0.5), flip parallel (expected
+      parallel), interference 0.0 mm³, gap 0.0 mm (max 1.0). Key points placed: one
+      `[20.0, -1.0, 60.0]`, two `[20.0, 0.0, 60.0]`.
+
+
+      Agreement: `36938_ae684b66_0002_2` volume_rel=0.0 hausdorff=0.0 mm; `36938_ae684b66_0001_2`
+      volume_rel=0.0 hausdorff=0.0 mm. solid_count 2.'
+    Files changed: '- `/Users/danieldriscoll/dual/skillkat/parts/build123d/fusion-01184-assembly/main.py`'
+    Verification: '- `ruff format --check parts/build123d/fusion-01184-assembly/main.py`
+      — already formatted
+
+      - `ruff check parts/build123d/fusion-01184-assembly/main.py` — all checks passed
+
+      - `.venv/bin/python -m skillkat.truth assembly-check ... --entry .../main.py
+      --backend build123d --ledger .../engine-ledger.jsonl` — PASS (RevoluteJointType);
+      every line ok as above
+
+      - Visual: iso shows the pin through the plate hole with the large tube sitting
+      on the near face; front shows the pin concentric with the hole; top shows the
+      pin axis aligned with the hole and the tube clear of the plate. Contact at the
+      pin/hole, no visible gap or interpenetration (matches critic interference 0.0
+      mm³, gap 0.0 mm).'
+    Open questions: None. Revolute angle left at 0 (identity about the joint axis);
+      the dataset lists 1.5708 rad but any rotation about the axis is accepted.
+  scorecard:
+    verdict: FAIL
+    checks: {}
+    error: 'FileNotFoundError: [Errno 2] No such file or directory: ''/Users/danieldriscoll/dual/skillkat/truth/cases/fusion-01184-assembly/truth/joint_set.json'''
+  seconds: 163
+  finished: '2026-09-21T01:21:12Z'
+- started: '2026-09-21T01:18:29Z'
+  arm: assembly
+  design: fusion-01184-assembly
+  stage_reached: scored
+  force: false
+  mode: modelled
+  backend: freecad
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-01184-assembly
+  worker: &id004
+    backend: cursor
+    role: assemble
+    model: inherit
+    order_id: 001-assemble
+    thread_id: 234f8f9e-72c7-4922-a71b-58e9c575b43e
+    exit_code: 0
+    seconds: 179
+    commands: 3
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 3
+      self_corrections: 1
+      engine_calls: 0
+      files_changed:
+      - parts/freecad/fusion-01184-assembly/main.py
+      incomplete: false
+      notes: ''
+      commands_list:
+      - .venv/bin/python -c "from pathlib import Path; from skillkat.geomcheck import
+        brep; ..."
+      - .venv/bin/ruff format --check parts/freecad/fusion-01184-assembly/main.py
+        && .venv/bin/ruff check parts/freecad/fusion-01184-assembly/main.py
+      - .venv/bin/python -m skillkat.truth assembly-check /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/work
+        --entry /Users/danieldriscoll/dual/skillkat/parts/freecad/fusion-01184-assembly/main.py
+        --backend freecad --ledger /Users/danieldriscoll/dual/skillkat/results/freecad/fusion-01184-assembly/worker/001-assemble/engine-ledger.jsonl
+      engine_ledger_calls: 1
+      engine_ledger_seconds: 0.69
+      visual_check: 'Visual: T-pin tube sits just off the plate face with the Ø5 pin
+        through the matching hole and continuing out the far side; front/top show
+        pin and hole concentric and axes colinear; no interpenetration (critic interference
+        0.0 mm³, gap 0.0 mm).'
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id004
+  codex_report:
+    Result: 'Body two (`36938_ae684b66_0001_2`, plate) is identity. Body one (`36938_ae684b66_0002_2`,
+      T-pin) is a translation `(-85.0, -10.706, -35.0)` mm (identity rotation): K1
+      maps to `(20.0, -1.0, 60.0)` so the pin axis is colinear with the plate hole,
+      `d1''` parallel to `d2''`, and `(K1'' - K2'') · d2'' = -1.0`. Revolute angle
+      left at 0 (any angle about +Y is accepted).
+
+
+      Critic (PASS, RevoluteJointType): axis_angle_deg 0.0 (max 2.0); axis_line_distance
+      0.0 mm (max 0.5); axial_offset -1.0 mm (expected -1.0 ± 0.5); flip parallel;
+      interference 0.0 mm³; gap 0.0 mm (max 1.0). Key points placed: one `[20.0, -1.0,
+      60.0]` two `[20.0, 0.0, 60.0]`.
+
+
+      Agreement: `36938_ae684b66_0002_2` volume_rel=0.0 hausdorff=0.0 mm; `36938_ae684b66_0001_2`
+      volume_rel=0.0 hausdorff=0.0 mm; solid_count 2.'
+    Files changed: '- `parts/freecad/fusion-01184-assembly/main.py`'
+    Verification: '- `.venv/bin/python -c` OpenCascade bbox/cylinders on both `inputs/*.step`
+      (pin Ø5 along +Y from y=9.706; plate hole Ø5 at `(20, 0, 60)`).
+
+      - `ruff format --check` and `ruff check` on `main.py` (pass after isort).
+
+      - `python -m skillkat.truth assembly-check ... --entry .../main.py --backend
+      freecad --ledger .../engine-ledger.jsonl` (PASS; numbers above).
+
+      - Visual: T-pin tube sits just off the plate face with the Ø5 pin through the
+      matching hole and continuing out the far side; front/top show pin and hole concentric
+      and axes colinear; no interpenetration (critic interference 0.0 mm³, gap 0.0
+      mm).'
+    Open questions: Dataset joint angle 1.5708 rad was not applied; identity rotation
+      about the already-aligned +Y axes satisfies the critic. Assumed body two may
+      stay at the identity as the brief allows.
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 288
+  finished: '2026-09-21T01:23:17Z'
+- started: '2026-09-21T01:23:14Z'
+  arm: assembly
+  design: fusion-01184-assembly
+  stage_reached: scored
+  mode: modelled
+  backend: build123d
+  rescore: true
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-01184-assembly
+  worker: &id005
+    backend: cursor
+    role: assemble
+    model: inherit
+    order_id: 001-assemble
+    thread_id: 1d3d6071-9cb0-49ca-8fbc-d551b6884f7d
+    exit_code: 0
+    seconds: 137
+    commands: 4
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/build123d/fusion-01184-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 4
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - /Users/danieldriscoll/dual/skillkat/parts/build123d/fusion-01184-assembly/main.py
+      incomplete: false
+      notes: ''
+      commands_list:
+      - .venv/bin/python -c "from pathlib import Path; from skillkat.geomcheck import
+        brep; s=brep.read_step(Path('parts/build123d/fusion-01184-assembly/inputs/36938_ae684b66_0002_2.step'));
+        print(brep.bbox(s), brep.cylinders(s)); s=brep.read_step(Path('parts/build123d/fusion-01184-assembly/inputs/36938_ae684b66_0001_2.step'));
+        print(brep.bbox(s), brep.cylinders(s))"
+      - ruff format --check parts/build123d/fusion-01184-assembly/main.py
+      - ruff check parts/build123d/fusion-01184-assembly/main.py
+      - .venv/bin/python -m skillkat.truth assembly-check /Users/danieldriscoll/dual/skillkat/results/build123d/fusion-01184-assembly/work
+        --entry /Users/danieldriscoll/dual/skillkat/parts/build123d/fusion-01184-assembly/main.py
+        --backend build123d --ledger /Users/danieldriscoll/dual/skillkat/results/build123d/fusion-01184-assembly/worker/001-assemble/engine-ledger.jsonl
+      engine_ledger_calls: 1
+      engine_ledger_seconds: 4.54
+      visual_check: null
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id005
+  codex_report: {}
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 11
+  finished: '2026-09-21T01:23:25Z'
+- started: '2026-09-21T01:18:28Z'
+  arm: assembly
+  design: fusion-01184-assembly
+  stage_reached: scored
+  force: false
+  mode: modelled
+  backend: cadquery
+  truth_sequestered_to: /Users/danieldriscoll/.cache/skillkat-vault/fusion-01184-assembly
+  worker: &id006
+    backend: cursor
+    role: assemble
+    model: inherit
+    order_id: 001-assemble
+    thread_id: 8d8c5d94-305e-47ee-8f5b-accdbfb4c553
+    exit_code: 0
+    seconds: 284
+    commands: 5
+    usage: {}
+    run_dir: /Users/danieldriscoll/dual/skillkat/results/cadquery/fusion-01184-assembly/worker/001-assemble
+    failure: ''
+    fallback_from: null
+    metrics:
+      commands: 5
+      self_corrections: 0
+      engine_calls: 0
+      files_changed:
+      - parts/cadquery/fusion-01184-assembly/main.py
+      incomplete: false
+      notes: CadQuery local export via assembly-check (1 ledger row); no hosted engine.
+      commands_list:
+      - ls work/ parts/cadquery/fusion-01184-assembly/ worker/001-assemble/
+      - .venv/bin/python -c (brep bbox/cylinders on both STEP bodies)
+      - ruff format --check parts/cadquery/fusion-01184-assembly/main.py
+      - ruff check parts/cadquery/fusion-01184-assembly/main.py
+      - .venv/bin/python -m skillkat.truth assembly-check ... --entry parts/cadquery/fusion-01184-assembly/main.py
+        --backend cadquery --ledger worker/001-assemble/engine-ledger.jsonl
+      engine_ledger_calls: 1
+      engine_ledger_seconds: 4.67
+      visual_check: 'Visual: pin seated through the plate Ø5 hole, axes colinear in
+        front and top, bodies in contact at the hole (gap 0), no interpenetration
+        visible (iso: tube in front of the plate, rod continuing through).'
+    network_stalls: 0
+    network_wait_seconds: 0
+    network_recovered: false
+    timeline: {}
+  codex: *id006
+  codex_report:
+    Result: 'Body two (`36938_ae684b66_0001_2`, plate) stays at the identity. Body
+      one (`36938_ae684b66_0002_2`, pin/T) is translated only: both local joint axes
+      are already +Y and `is_flipped` is false, so no rotation is required.
+
+
+      - K1 = [105.0, 9.706, 95.0], d1 = [0, 1, 0]
+
+      - K2 = [20.0, 0.0, 60.0], d2 = [0, 1, 0]
+
+      - Target K1'' = K2 + offset * d2 = [20.0, -1.0, 60.0]
+
+      - T = K1'' − K1 = [−85.0, −10.706, −35.0]
+
+
+      placements:
+
+      - `36938_ae684b66_0002_2`: translation [−85.0, −10.706, −35.0], rotation identity
+
+      - `36938_ae684b66_0001_2`: identity
+
+
+      Critic (assembly-check PASS, RevoluteJointType):
+
+      - axis_angle_deg: 0.0 (max 2.0)
+
+      - axis_line_distance: 0.0 mm (max 0.5)
+
+      - axial_offset: −1.0 mm (expected −1.0 ± 0.5)
+
+      - flip: parallel (expected parallel)
+
+      - interference_mm3: 0.0
+
+      - gap_mm: 0.0 (max 1.0)
+
+      - key points placed: one [20.0, −1.0, 60.0] two [20.0, 0.0, 60.0]
+
+      - agreement 36938_ae684b66_0002_2: volume_rel=0.0 hausdorff=0.0 mm
+
+      - agreement 36938_ae684b66_0001_2: volume_rel=0.0 hausdorff=0.0 mm
+
+      - solid_count: 2 expected 2'
+    Files changed: '- `parts/cadquery/fusion-01184-assembly/main.py`'
+    Verification: '- `ruff format --check` and `ruff check` on `main.py`: pass
+
+      - `.venv/bin/python -m skillkat.truth assembly-check ... --entry .../main.py
+      --backend cadquery --ledger .../engine-ledger.jsonl`: PASS (numbers above)
+
+      - Measured STEP (OpenCascade): plate hole cylinder at [20, 0, 60] +Y r=2.5 through
+      y=0..3; pin cylinder at [105, 9.708, 95] +Y r=2.5, t=9.708..88
+
+      - Visual: pin seated through the plate Ø5 hole, axes colinear in front and top,
+      bodies in contact at the hole (gap 0), no interpenetration visible (iso: tube
+      in front of the plate, rod continuing through).'
+    Open questions: '- Dataset joint angle is 1.5708 rad; any rotation about the revolute
+      axis is accepted, so identity rotation was used.'
+  scorecard:
+    verdict: PASS
+    checks:
+      axis_angle_deg: true
+      axis_line_distance: true
+      axial_offset: true
+      residual_rotation_deg: null
+      no_interference: true
+      contact_or_near: true
+    error: null
+  seconds: 397
+  finished: '2026-09-21T01:25:05Z'

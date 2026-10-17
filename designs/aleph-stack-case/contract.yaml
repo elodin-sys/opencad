@@ -1,0 +1,2657 @@
+schema_version: 1
+name: aleph-stack-case
+intent: create a case enclosure for a full aleph stack, allowing for the heat sink to extend outside the top to
+  allow airflow, and making sure to have openings for the J4, J5, J7, UARTs, the molex power port, eth gadget USB-C,
+  and RPI debugger USB-C ports. This will be 3D printing in PETG, so make sure it has enough thickness for strength.
+  Make sure the stack secures to the case via the top standoff screw holes.
+units:
+  length: mm
+  angle: deg
+material: PETG
+process: FDM / FFF 3D printing; two fixed printed bodies in one PartContract
+release_status: prototype
+frame:
+  origin: 'Use the aleph-stack assembly origin: the intersection of the unrounded minimum-x and minimum-y base-board
+    outline edges on the base PCB bottom plane z=0. It is a virtual datum inside the case, not the printed case
+    minimum corner. Do not recenter exported case bodies.'
+  axes:
+    x: Along the 88.0 mm base edge toward x=88 and the Molex power overhang at +x.
+    y: Along the 52.5 mm base edge toward the J4/J5/J7 GH row at +y.
+    z: Normal to the boards toward the carrier, module and heatsink/fan.
+  datums:
+  - name: A
+    description: Base PCB underside z=0; the four bottom-cover pad top faces lie on this plane.
+  - name: B
+    description: Vertical common board/standoff axis at x=3,y=3; the other axes are (85,3),(85,49.5),(3,49.5).
+  - name: C
+    description: Virtual base outline planes x=0 and y=0; carrier outline coincides with them, and its lower face
+      is z=11.56.
+  - name: D
+    description: Carrier top face z=13.13; proposed 14 mm roof spacers extend from here to roof underside z=27.13.
+envelope:
+  min: [-5.2, -7.7, -6.67]
+  max: [94.51, 57.7, 30.33]
+  tolerance: 0.5
+parameters:
+- name: boardLength
+  value: 88.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.3
+  description: Both board outlines along x.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: boardWidth
+  value: 52.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.3
+  description: Both board outlines along y.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: stackMinX
+  value: 0.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.3
+  description: Minimum hardware x in the supplied assembly envelope.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: stackMinY
+  value: -2.5
+  unit: mm
+  provenance: stated
+  tolerance: 0.3
+  description: Minimum hardware y; the Hirose ix overhang is included.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: stackMinZ
+  value: -1.97
+  unit: mm
+  provenance: stated
+  tolerance: 0.3
+  description: Lowest modelled base component; unmeasured feet are excluded by the source.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: stackMaxX
+  value: 89.31
+  unit: mm
+  provenance: stated
+  tolerance: 0.3
+  description: Maximum hardware x, set by Molex 105430-1202.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: baseBoardThickness
+  value: 1.56
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Base PCB thickness, quoted from the supplied text.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: boardStackHeight
+  value: 10.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Female-female inter-board standoff length; source value still needs physical confirmation.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: carrierBoardThickness
+  value: 1.57
+  unit: mm
+  provenance: stated
+  tolerance: 0.02
+  description: Carrier PCB thickness, quoted from the supplied text.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: carrierBottom
+  value: 11.56
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Carrier lower PCB face.
+  formula: baseBoardThickness + boardStackHeight
+- name: carrierTop
+  value: 13.13
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Carrier upper PCB face and lower seats of the proposed roof spacers.
+  formula: carrierBottom + carrierBoardThickness
+- name: moduleSeatHeight
+  value: 6.56
+  unit: mm
+  provenance: stated
+  tolerance: 0.05
+  description: Carrier upper PCB face to module underside, from assembly.yaml.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: moduleBottom
+  value: 19.69
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Module underside after the documented 180 degree z rotation.
+  formula: carrierTop + moduleSeatHeight
+- name: moduleKeepoutTopLocal
+  value: 6.28
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Maximum top-side module keep-out above its local PCB bottom, including the README DRAM revision.
+  source: sources/assembly.yaml, module intent; sources/README.txt
+- name: moduleKeepoutTop
+  value: 25.97
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Conservative upper component keep-out; roof underside is 1.16 mm above it.
+  formula: moduleBottom + moduleKeepoutTopLocal
+- name: heatsinkBottom
+  value: 23.52
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Heatsink underside on the SoC lid in the assembly frame.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: heatsinkLength
+  value: 61.0
+  unit: mm
+  provenance: inferred
+  tolerance: 2.0
+  description: Nominal heatsink x extent, an estimate rather than a caliper measurement.
+  rationale: 414/460 pixels of a 69.6 mm module, with the supplied approximate 3 percent perspective correction,
+    gives 60.76 mm. Retain the source estimate and its wide uncertainty.
+  source: sources/orin-fan.jpg; sources/assembly.yaml heatsinkLength
+- name: heatsinkWidth
+  value: 40.0
+  unit: mm
+  provenance: inferred
+  tolerance: 2.0
+  description: Nominal heatsink y extent.
+  rationale: 274/302 pixels of a 45 mm module, with the same approximate perspective correction, gives 39.60 mm.
+    Retain 40 +/- 2 mm.
+  source: sources/orin-fan.jpg; sources/assembly.yaml heatsinkWidth
+- name: heatsinkHeight
+  value: 15.0
+  unit: mm
+  provenance: inferred
+  tolerance: 3.0
+  description: Heatsink height above the SoC contact face.
+  rationale: The assembly text estimates approximately 17 mm above the module PCB, less the SoC lid rise. The oblique
+    photo is not independently height-calibrated; retain the stated photo estimate and +/-3 mm.
+  source: sources/assembled.png; sources/assembly.yaml heatsinkHeight
+- name: heatsinkCenterX
+  value: 44.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Module and heatsink hole pattern center in x; confirmed by the assembly transform.
+  formula: boardLength / 2
+- name: moduleBackY
+  value: 46.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Assembly y of the module gold-finger edge after its rotation.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: heatsinkLocalCenterY
+  value: 24.81
+  unit: mm
+  provenance: stated
+  tolerance: 0.1
+  description: Module-local y of the heatsink mounting pattern center.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: heatsinkCenterY
+  value: 21.19
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Heatsink center after the module rotation; do not use board y midpoint.
+  formula: moduleBackY - heatsinkLocalCenterY
+- name: heatsinkTop
+  value: 38.52
+  unit: mm
+  provenance: derived
+  tolerance: 3.0
+  description: Nominal top of the heatsink and full reference stack.
+  formula: heatsinkBottom + heatsinkHeight
+- name: mountXLow
+  value: 3.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.05
+  description: Left top-standoff axes.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: mountXHigh
+  value: 85.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.05
+  description: Right top-standoff axes.
+  formula: boardLength - mountXLow
+- name: mountYLow
+  value: 3.0
+  unit: mm
+  provenance: stated
+  tolerance: 0.05
+  description: Front top-standoff axes.
+  source: sources/assembly.yaml; sources/connector-index.md (text extract, assembly frame)
+- name: mountYHigh
+  value: 49.5
+  unit: mm
+  provenance: derived
+  tolerance: 0.05
+  description: Rear top-standoff axes.
+  formula: boardWidth - mountYLow
+- name: mountPitchX
+  value: 82.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.05
+  description: Required x pitch of four mounting axes.
+  formula: mountXHigh - mountXLow
+- name: mountPitchY
+  value: 46.5
+  unit: mm
+  provenance: derived
+  tolerance: 0.05
+  description: Required y pitch of four mounting axes.
+  formula: mountYHigh - mountYLow
+- name: wallThickness
+  value: 3.2
+  unit: mm
+  provenance: inferred
+  tolerance: 0.6
+  description: Structural side-wall gauge; the two pieces share the resulting outer x/y footprint.
+  rationale: A 3.2 mm nominal PETG shell gives several deposited roads and material around service openings. The
+    2.4 mm acceptance minimum is a prototype gauge, not a load or temperature rating; shop settings remain open.
+  edit_test:
+    delta: 0.8
+    expect:
+      volume_delta: 8508.61408
+      direction: increase
+      bbox_delta: [1.6, 1.6, 0.0]
+      tolerance_rel: 0.3
+    sweep:
+      values: [2.8, 3.2, 4.0]
+    infeasible_deltas: [-3.2]
+- name: roofThickness
+  value: 3.2
+  unit: mm
+  provenance: inferred
+  tolerance: 0.6
+  description: Roof gauge, independent of the side-wall edit.
+  rationale: The roof carries the four mounting screw heads and spans the cavity; use the same structural nominal
+    gauge as the walls until the shop confirms it.
+- name: floorThickness
+  value: 3.2
+  unit: mm
+  provenance: inferred
+  tolerance: 0.6
+  description: Bottom-cover slab gauge.
+  rationale: The closed bottom and integral compression pads need a structural PETG floor; use 3.2 mm nominal with
+    a 2.4 mm verified minimum.
+- name: boardClearance
+  value: 2.0
+  unit: mm
+  provenance: inferred
+  tolerance: 0.5
+  description: Offset of internal side-wall planes from the full stack x/y envelope.
+  rationale: A small 2 mm allowance accommodates the source 0.3 mm envelope uncertainty and FDM fit without using
+    connector anchors as connector outlines. A gap probe would have only 1 mm nominal margin, so clearance checks
+    and planes are used instead.
+- name: floorClearance
+  value: 1.5
+  unit: mm
+  provenance: inferred
+  tolerance: 0.5
+  description: Floor-to-lowest-modelled-component gap.
+  rationale: Reserve 1.5 mm below the -1.97 mm component envelope; corner support pads are the only intentional
+    contact with the base PCB.
+- name: seamGap
+  value: 0.3
+  unit: mm
+  provenance: inferred
+  tolerance: 0.15
+  description: Vertical separation of the cap rim and bottom-cover slab.
+  rationale: Two independently fastened fixed pieces need a small non-interfering seam. They register on the same
+    stack axes; no sliding, hinge, snap-fit or kinematic joint is introduced.
+- name: roofSpacerHeight
+  value: 14.0
+  unit: mm
+  provenance: inferred
+  tolerance: 0.5
+  description: Four proposed metal compression-spacer lengths above the carrier.
+  rationale: A 14 mm spacer puts the roof underside at z 27.13, above the full z 25.97 module component keep-out,
+    while keeping the fan outside. This avoids thin plastic lugs beside the rear SO-DIMM housing. Purchased or cut-to-length
+    spacers must be confirmed.
+- name: roofSpacerDiameter
+  value: 4.5
+  unit: mm
+  provenance: inferred
+  tolerance: 0.4
+  description: Proposed metal spacer outside diameter; spacers are hardware, not printed solids.
+  rationale: A narrow 4.5 mm OD tube fits the corner axes, nominally 0.70 mm from the SO-DIMM x boundary at the
+    rear. No commercial part number or thread engagement is assumed.
+- name: mountHoleDiameter
+  value: 3.0
+  unit: mm
+  provenance: inferred
+  tolerance: 0.2
+  description: Case clearance holes for the eight M2.5 screws; top four are the required stack attachment.
+  rationale: Use a provisional printed 3.0 mm clearance hole, slightly larger than the source board D2.9 holes.
+    Verify the actual printed fit; the case does not contain printed M2.5 threads.
+- name: basePadDiameter
+  value: 8.0
+  unit: mm
+  provenance: inferred
+  tolerance: 0.75
+  description: Four integral bottom-cover compression-pad diameters.
+  rationale: An 8 mm pad around a 3 mm bore leaves a nominal 2.5 mm radial PETG ligament and transfers load to the
+    base mounting lands. Availability of this larger underside land is an explicit open question.
+- name: portMargin
+  value: 1.5
+  unit: mm
+  provenance: inferred
+  tolerance: 0.5
+  description: Tangential and vertical expansion of connector-body projections at service windows.
+  rationale: Use 1.5 mm around supplied body envelopes as a provisional mating-plug allowance. Merge adjacent windows
+    to avoid thin webs; cable overmoulds, latches and reach are not dimensioned.
+- name: heatsinkMargin
+  value: 4.0
+  unit: mm
+  provenance: inferred
+  tolerance: 1.0
+  description: Per-side roof-opening allowance around the nominal heatsink footprint.
+  rationale: A 4 mm nominal gap covers half of the +/-2 mm size uncertainty plus an inferred 0.5 mm centering allowance,
+    leaving 2.5 mm to the conservative x/y keep-out. It also leaves substantial air access around the fan shroud.
+  edit_test:
+    delta: 0.5
+    expect:
+      volume_delta: -377.6
+      direction: decrease
+      bbox_delta: [0.0, 0.0, 0.0]
+      tolerance_rel: 0.03
+    sweep:
+      values: [3.5, 4.0, 4.5]
+    infeasible_deltas: [-4.0]
+- name: innerXMin
+  value: -2.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Internal -x wall plane.
+  formula: stackMinX - boardClearance
+- name: innerXMax
+  value: 91.31
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Internal +x wall plane.
+  formula: stackMaxX + boardClearance
+- name: innerYMin
+  value: -4.5
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Internal -y wall plane.
+  formula: stackMinY - boardClearance
+- name: innerYMax
+  value: 54.5
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Internal +y wall plane.
+  formula: boardWidth + boardClearance
+- name: outerXMin
+  value: -5.2
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Case minimum x.
+  formula: innerXMin - wallThickness
+- name: outerXMax
+  value: 94.51
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Case maximum x.
+  formula: innerXMax + wallThickness
+- name: outerYMin
+  value: -7.7
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Case minimum y.
+  formula: innerYMin - wallThickness
+- name: outerYMax
+  value: 57.7
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Case maximum y.
+  formula: innerYMax + wallThickness
+- name: floorTop
+  value: -3.47
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Upper surface of the bottom-cover slab.
+  formula: stackMinZ - floorClearance
+- name: floorBottom
+  value: -6.67
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Lowest printed face.
+  formula: floorTop - floorThickness
+- name: shellBottom
+  value: -3.17
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Lower rim of the upper cap.
+  formula: floorTop + seamGap
+- name: roofBottom
+  value: 27.13
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Roof underside, seated on the four metal spacers.
+  formula: carrierTop + roofSpacerHeight
+- name: roofTop
+  value: 30.33
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Top of printed case; below the heatsink top.
+  formula: roofBottom + roofThickness
+- name: heatOpeningLength
+  value: 69.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Rectangular roof opening along x.
+  formula: heatsinkLength + 2 * heatsinkMargin
+- name: heatOpeningWidth
+  value: 48.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Rectangular roof opening along y.
+  formula: heatsinkWidth + 2 * heatsinkMargin
+- name: heatOpeningXMin
+  value: 9.5
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Left roof aperture edge.
+  formula: heatsinkCenterX - heatOpeningLength / 2
+- name: heatOpeningXMax
+  value: 78.5
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Right roof aperture edge.
+  formula: heatsinkCenterX + heatOpeningLength / 2
+- name: heatOpeningYMin
+  value: -2.81
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Front roof aperture edge.
+  formula: heatsinkCenterY - heatOpeningWidth / 2
+- name: heatOpeningYMax
+  value: 45.19
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Rear roof aperture edge.
+  formula: heatsinkCenterY + heatOpeningWidth / 2
+- name: caseLength
+  value: 99.71
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Overall printed x span.
+  formula: outerXMax - outerXMin
+- name: caseWidth
+  value: 65.4
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Overall printed y span.
+  formula: outerYMax - outerYMin
+- name: caseHeight
+  value: 37.0
+  unit: mm
+  provenance: derived
+  tolerance: 0.1
+  description: Overall printed z span.
+  formula: roofTop - floorBottom
+- name: fanExposure
+  value: 8.19
+  unit: mm
+  provenance: derived
+  tolerance: 3.0
+  description: Nominal exposed heatsink height; 5.19 mm at the -3 mm height uncertainty.
+  formula: heatsinkTop - roofTop
+features:
+- id: upperCap
+  kind: shell
+  description: One connected inverted rectangular cap. Outer box (-5.2,-7.7,-3.17)..(94.51,57.7,30.33); cavity (-2,-4.5,-3.17)..(91.31,54.5,27.13)
+    opens through the bottom. Subtract all listed apertures. Keep separate from bottomCover.
+  parameters: [wallThickness, roofThickness, innerXMin, innerXMax, innerYMin, innerYMax, outerXMin, outerXMax, outerYMin,
+    outerYMax, shellBottom, roofBottom, roofTop]
+  verify:
+  - method: bbox
+  - method: section
+    section: cavityBand
+  - method: solid
+    points:
+    - [-3.6, 25.0, 15.0]
+    - [92.91, 25.0, 15.0]
+    - [44.0, -6.1, 19.0]
+    - [44.0, 56.1, 19.0]
+  - method: face
+    face: roofDeck
+- id: bottomCover
+  kind: extrude
+  description: Separate flat cover at z -6.67..-3.47, sharing the cap outer x/y footprint. Four integral pads rise
+    to z=0. Lower screws fasten it to the lower ends of the existing stack standoffs. A 0.3 mm seam remains under
+    the cap rim.
+  parameters: [floorThickness, floorTop, floorBottom, outerXMin, outerXMax, outerYMin, outerYMax, seamGap]
+  verify:
+  - method: section
+    section: floorBand
+  - method: solid
+    points:
+    - [44.0, 25.0, -5.07]
+  - method: face
+    face: floorOutside
+- id: lowerSupportPads
+  kind: boss
+  description: Four D8 annular pads, z -3.47..0, at the board corner axes; fused only to the bottom cover. Nominal
+    radial material around each D3 bore is 2.5 mm.
+  parameters: [basePadDiameter, mountHoleDiameter, floorTop, mountXLow, mountXHigh, mountYLow, mountYHigh]
+  verify:
+  - method: cylinder
+    cylinder: lowerPad1
+  - method: cylinder
+    cylinder: lowerPad2
+  - method: cylinder
+    cylinder: lowerPad3
+  - method: cylinder
+    cylinder: lowerPad4
+  - method: section
+    section: padBand
+  count: 4
+- id: topStandoffBores
+  kind: hole
+  description: Four D3 vertical through-holes in the roof, z 27.13..30.33, at (3,3),(85,3),(85,49.5),(3,49.5). M2.5
+    screws and four proposed D4.5 x 14 metal spacers connect these roof lands to the carrier top-standoff holes.
+    Do not mount to the module heatsink holes.
+  parameters: [mountHoleDiameter, mountXLow, mountXHigh, mountYLow, mountYHigh, roofBottom, roofTop, roofSpacerHeight,
+    roofSpacerDiameter]
+  verify:
+  - method: cylinder
+    cylinder: topHole1
+  - method: cylinder
+    cylinder: topHole2
+  - method: cylinder
+    cylinder: topHole3
+  - method: cylinder
+    cylinder: topHole4
+  - method: section
+    section: roofBand
+  count: 4
+- id: bottomClosureBores
+  kind: hole
+  description: Four D3 through-bores in the lower cover and pads, z -6.67..0, on the same four axes. These retain
+    the bottom cover; the required stack attachment remains the four top screws.
+  parameters: [mountHoleDiameter, mountXLow, mountXHigh, mountYLow, mountYHigh, floorBottom]
+  verify:
+  - method: cylinder
+    cylinder: bottomHole1
+  - method: cylinder
+    cylinder: bottomHole2
+  - method: cylinder
+    cylinder: bottomHole3
+  - method: cylinder
+    cylinder: bottomHole4
+  - method: section
+    section: floorBand
+  count: 4
+- id: heatsinkAperture
+  kind: cut
+  description: 69 x 48 rectangular opening through the roof, centered (44,21.19), bounds x 9.5..78.5 and y -2.81..45.19.
+    Fan top z 38.52 is outside roof z 30.33. No grate or lip may intrude into the heatsink or fan air keep-outs.
+  parameters: [heatsinkLength, heatsinkWidth, heatsinkHeight, heatsinkBottom, heatsinkCenterX, heatsinkCenterY,
+    heatsinkMargin, heatOpeningLength, heatOpeningWidth, roofTop, fanExposure]
+  verify:
+  - method: section
+    section: roofBand
+  - method: void
+    points:
+    - [10.75, 21.19, 28.73]
+    - [77.25, 21.19, 28.73]
+    - [44.0, -1.56, 28.73]
+    - [44.0, 43.94, 28.73]
+    - [44.0, 21.19, 44.52]
+  - method: dimension
+    dimension: heatOpeningSpanX
+  - method: dimension
+    dimension: heatOpeningSpanY
+- id: rearHeaderWindow
+  kind: cut
+  description: Open the +y wall at x 6.58..74.83, z 0.06..7.48. This covers the whole source GH row, including base
+    J4 UART7, J5 UART8 and J7 UART2/I2C4; it also clears the unnamed neighboring headers. Do not turn the UART1
+    silk label into a fictitious connector.
+  parameters: [portMargin]
+  verify:
+  - method: section
+    section: rearService
+  - method: void
+    points:
+    - [21.6, 56.1, 3.77]
+    - [31.0, 56.1, 3.77]
+    - [41.696, 56.1, 3.77]
+  - method: dimension
+    dimension: rearWindowWidth
+- id: frontHeaderAndUsbWindows
+  kind: cut
+  description: 'Subtract the union of three -y wall rectangles: lower x 30.23..76.68, z 0.06..7.48 (second GH row
+    and base J11B1); upper J9 x 40.66..52.40, z 6.95..13.06; upper J8 x 60.81..72.75, z 6.69..13.06. They overlap
+    into one connected window with two raised portions; retain the 8.41 mm web between the high portions.'
+  parameters: [portMargin, carrierBottom]
+  verify:
+  - method: section
+    section: frontService
+  - method: void
+    points:
+    - [35.0, -6.1, 3.77]
+    - [70.71, -6.1, 3.25]
+    - [46.53, -6.1, 10.0]
+    - [66.78, -6.1, 9.9]
+  - method: dimension
+    dimension: frontWindowWidth
+  - method: dimension
+    dimension: carrierJ9WindowWidth
+  - method: dimension
+    dimension: carrierJ8WindowWidth
+  count: 3
+- id: powerAndCarrierUsbWindow
+  kind: cut
+  description: One +x window at y 5.15..18.21, z 0.06..17.74. It opens base J12 Molex 105430-1202 and carrier top
+    J10 USB-C, including their x overhangs. The two vertical windows are deliberately merged to avoid a 1.5 mm PETG
+    web.
+  parameters: [portMargin, carrierBottom, carrierTop]
+  verify:
+  - method: section
+    section: rightService
+  - method: void
+    points:
+    - [92.91, 11.02, 5.1]
+    - [92.91, 12.34, 14.69]
+  - method: dimension
+    dimension: powerWindowWidth
+  - method: dimension
+    dimension: powerWindowHeight
+- id: baseSideUsbWindow
+  kind: cut
+  description: Open +x wall at y 34.93..46.87, z 0.06..6.44 for base J11A1. No refdes is assigned to the unresolved
+    eth gadget or RPI debugger names.
+  parameters: [portMargin]
+  verify:
+  - method: section
+    section: rightService
+  - method: void
+    points:
+    - [92.91, 40.9, 3.25]
+  - method: dimension
+    dimension: sideUsbWindowWidth
+- id: sideExhaustWindows
+  kind: cut
+  description: Two wall openings at the x ends, y -0.31..42.69, z 23.52..27.13. The y span covers the nominal heat
+    block plus 1.5 mm per side for photo size and centering uncertainty. The windows meet the roof underside and
+    expose the lower exhaust region; the upper heatsink remains outside the case.
+  parameters: [heatsinkBottom, heatsinkCenterY, heatsinkWidth, roofBottom]
+  verify:
+  - method: section
+    section: leftExhaust
+  - method: section
+    section: rightService
+  - method: void
+    points:
+    - [-3.6, 21.19, 25.325]
+    - [92.91, 21.19, 25.325]
+  - method: dimension
+    dimension: exhaustWidth
+  - method: dimension
+    dimension: exhaustHeight
+  count: 2
+interfaces:
+- name: topStandoffMount
+  description: Four required M2.5 top-standoff axes, roof bearing plane and fixed roof gauge. Both edits leave all
+    these bore diameters, axes and extents intact.
+  must_not_change: true
+  checks: [topHole1, topHole2, topHole3, topHole4, roofUnder, roofDeck, roofGauge]
+- name: bottomClosureMount
+  description: Bottom cover fastens into the lower ends of the same four inter-board standoffs. Pad seats remain
+    on base PCB datum z=0.
+  must_not_change: true
+  checks: [bottomHole1, bottomHole2, bottomHole3, bottomHole4, baseSeat1, baseSeat2, baseSeat3, baseSeat4, floorGauge,
+    seamHeight]
+- name: hardwareCavityFrame
+  description: Internal wall plane positions and spans preserve the assembly frame while outer stock thickness changes.
+  must_not_change: true
+  checks: [cavityX, cavityY, innerLeft, innerRight, innerFront, innerRear]
+- name: serviceOpeningProjections
+  description: Pin the service opening widths and heights, which do not change when wall stock depth or heat opening
+    margin changes. Corresponding hardware corridors enforce direct access.
+  must_not_change: true
+  checks: [rearWindowWidth, rearWindowHeight, frontWindowWidth, frontLowerHeight, carrierJ9WindowWidth, carrierJ8WindowWidth,
+    carrierJ9TopHeight, carrierJ8TopHeight, powerWindowWidth, powerWindowHeight, sideUsbWindowWidth, sideUsbWindowHeight,
+    exhaustWidth, exhaustHeight]
+acceptance:
+  bbox_tolerance: 0.5
+  volume:
+    expected: 57209.489541
+    tolerance_rel: 0.04
+    provenance: derived
+    note: 'Exact sharp-edge two-body constructive formula: V=Ao*(H+tFloor)-Ai*h-Aheat*tRoof-N*pi*r^2*(tRoof+tFloor)-w*sum(Awindows)+N*pi*(R^2-r^2)*hPad;
+      symbols, disjoint cuts and signed moment table are in brief section 5.'
+  surface_area:
+    expected: 40775.410547
+    tolerance_rel: 0.04
+    provenance: derived
+    note: S_cap=2Ao+Po*H+Pi*h-2Aheat+Pheat*tRoof+N*(2*pi*r*tRoof-2*pi*r^2)+sum(-2Aj+Pj*w); S_cover=2Ao+Po*tFloor+N*(2*pi*r*tFloor-2*pi*r^2)+N*2*pi*(R+r)*hPad.
+      Internal and external surfaces of both separate bodies are counted.
+  center_of_mass:
+    expected: [43.795621, 25.833889, 8.872981]
+    tolerance: 0.5
+    provenance: derived
+    note: Uniform-material geometric centroid, C=sum(signed Vi*Ci)/sum(signed Vi), using the 15 non-overlapping/additive
+      or subtractive primitive terms in brief section 5; no density or mass claim.
+  solid_count: 2
+  sections:
+  - id: floorBand
+    plane: z
+    at: -5.07
+    expect:
+      area: 6492.759666
+      area_tolerance_rel: 0.04
+      loops: 1
+      holes: 4
+    description: Ao-4*pi*r^2; bottom slab with four bores.
+  - id: padBand
+    plane: z
+    at: -1.8
+    expect:
+      area: 1188.531596
+      area_tolerance_rel: 0.04
+      loops: 5
+      holes: 5
+    description: '(Ao-Ai)+4*pi*(R^2-r^2): cap ring plus four separate lower pad rings in this section.'
+  - id: cavityBand
+    plane: z
+    at: 19.5
+    expect:
+      area: 1015.744
+      area_tolerance_rel: 0.04
+      loops: 1
+      holes: 1
+    description: Ao-Ai, above service ports and below fin exhaust windows.
+  - id: roofBand
+    plane: z
+    at: 28.73
+    expect:
+      area: 3180.759666
+      area_tolerance_rel: 0.04
+      loops: 1
+      holes: 5
+    description: Ao-69*48-4*pi*r^2; one large heat aperture and four top mounting bores.
+  - id: rearService
+    plane: y
+    at: 56.1
+    expect:
+      area: 3152.942
+      area_tolerance_rel: 0.04
+      loops: 2
+      holes: 1
+    description: Lx*(H+tFloor)-68.25*7.42; separated cover strip and cap wall with GH window.
+  - id: frontService
+    plane: y
+    at: -6.1
+    expect:
+      area: 3182.5636
+      area_tolerance_rel: 0.04
+      loops: 2
+      holes: 1
+    description: Lx*(H+tFloor)-[46.45*7.42+(11.74+11.94)*5.58]; three overlapping cuts give one connected port.
+  - id: rightService
+    plane: x
+    at: 92.91
+    expect:
+      area: 1937.872
+      area_tolerance_rel: 0.04
+      loops: 2
+      holes: 3
+    description: Ly*(H+tFloor)-13.06*17.68-11.94*6.38-43*3.61; power/USB, side USB, and exhaust.
+  - id: leftExhaust
+    plane: x
+    at: -3.6
+    expect:
+      area: 2244.95
+      area_tolerance_rel: 0.04
+      loops: 2
+      holes: 1
+    description: Ly*(H+tFloor)-43*3.61; lower cover and cap with one exhaust window.
+  faces:
+  - name: floorOutside
+    plane: z
+    at: -6.67
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+  - name: coverDeck
+    plane: z
+    at: -3.47
+    normal: +
+    tolerance: 0.3
+    mode: one
+  - name: capRim
+    plane: z
+    at: -3.17
+    normal: '-'
+    tolerance: 0.3
+    mode: sum
+  - name: roofDeck
+    plane: z
+    at: 30.33
+    normal: +
+    tolerance: 0.3
+    mode: one
+  - name: roofUnder
+    plane: z
+    at: 27.13
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+  - name: innerLeft
+    plane: x
+    at: -2.0
+    normal: +
+    tolerance: 0.3
+    mode: sum
+  - name: innerRight
+    plane: x
+    at: 91.31
+    normal: '-'
+    tolerance: 0.3
+    mode: sum
+  - name: innerFront
+    plane: y
+    at: -4.5
+    normal: +
+    tolerance: 0.3
+    mode: sum
+  - name: innerRear
+    plane: y
+    at: 54.5
+    normal: '-'
+    tolerance: 0.3
+    mode: sum
+  - name: outerLeft
+    plane: x
+    at: -5.2
+    normal: '-'
+    tolerance: 0.3
+    mode: sum
+  - name: outerRight
+    plane: x
+    at: 94.51
+    normal: +
+    tolerance: 0.3
+    mode: sum
+  - name: outerFront
+    plane: y
+    at: -7.7
+    normal: '-'
+    tolerance: 0.3
+    mode: sum
+  - name: outerRear
+    plane: y
+    at: 57.7
+    normal: +
+    tolerance: 0.3
+    mode: sum
+  - name: heatLeft
+    plane: x
+    at: 9.5
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [21.19, 28.73]
+  - name: heatRight
+    plane: x
+    at: 78.5
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [21.19, 28.73]
+  - name: heatFront
+    plane: y
+    at: -2.81
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [44.0, 28.73]
+  - name: heatRear
+    plane: y
+    at: 45.19
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [44.0, 28.73]
+  - name: rearLeft
+    plane: x
+    at: 6.58
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [56.1, 3.77]
+  - name: rearRight
+    plane: x
+    at: 74.83
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [56.1, 3.77]
+  - name: rearFloor
+    plane: z
+    at: 0.06
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [40.705, 56.1]
+  - name: rearCeiling
+    plane: z
+    at: 7.48
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [40.705, 56.1]
+  - name: frontLeft
+    plane: x
+    at: 30.23
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [-6.1, 3.77]
+  - name: frontRight
+    plane: x
+    at: 76.68
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [-6.1, 3.77]
+  - name: frontFloor
+    plane: z
+    at: 0.06
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [53.455, -6.1]
+  - name: frontCeilingWeb
+    plane: z
+    at: 7.48
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [56.605, -6.1]
+  - name: carrierJ9Left
+    plane: x
+    at: 40.66
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [-6.1, 10.27]
+  - name: carrierJ9Right
+    plane: x
+    at: 52.4
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [-6.1, 10.27]
+  - name: carrierJ9Ceiling
+    plane: z
+    at: 13.06
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [46.53, -6.1]
+  - name: carrierJ8Left
+    plane: x
+    at: 60.81
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [-6.1, 10.27]
+  - name: carrierJ8Right
+    plane: x
+    at: 72.75
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [-6.1, 10.27]
+  - name: carrierJ8Ceiling
+    plane: z
+    at: 13.06
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [66.78, -6.1]
+  - name: powerLowY
+    plane: y
+    at: 5.15
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 8.9]
+  - name: powerHighY
+    plane: y
+    at: 18.21
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 8.9]
+  - name: powerFloor
+    plane: z
+    at: 0.06
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 11.68]
+  - name: powerCeiling
+    plane: z
+    at: 17.74
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 11.68]
+  - name: sideUsbLowY
+    plane: y
+    at: 34.93
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 3.25]
+  - name: sideUsbHighY
+    plane: y
+    at: 46.87
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 3.25]
+  - name: sideUsbFloor
+    plane: z
+    at: 0.06
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 40.9]
+  - name: sideUsbCeiling
+    plane: z
+    at: 6.44
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 40.9]
+  - name: exhaustLeftLowY
+    plane: y
+    at: -0.31
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [-3.6, 25.325]
+  - name: exhaustLeftHighY
+    plane: y
+    at: 42.69
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [-3.6, 25.325]
+  - name: exhaustRightLowY
+    plane: y
+    at: -0.31
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 25.325]
+  - name: exhaustRightHighY
+    plane: y
+    at: 42.69
+    normal: '-'
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 25.325]
+  - name: exhaustLeftFloor
+    plane: z
+    at: 23.52
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [-3.6, 21.19]
+  - name: exhaustRightFloor
+    plane: z
+    at: 23.52
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [92.91, 21.19]
+  - name: baseSeat1
+    plane: z
+    at: 0.0
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [3.0, 3.0]
+    area: 43.19689898685966
+    area_tolerance_rel: 0.05
+  - name: baseSeat2
+    plane: z
+    at: 0.0
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [85.0, 3.0]
+    area: 43.19689898685966
+    area_tolerance_rel: 0.05
+  - name: baseSeat3
+    plane: z
+    at: 0.0
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [85.0, 49.5]
+    area: 43.19689898685966
+    area_tolerance_rel: 0.05
+  - name: baseSeat4
+    plane: z
+    at: 0.0
+    normal: +
+    tolerance: 0.3
+    mode: one
+    center: [3.0, 49.5]
+    area: 43.19689898685966
+    area_tolerance_rel: 0.05
+  cylinders:
+  - name: topHole1
+    point: [3.0, 3.0, 0]
+    direction: [0, 0, 1]
+    kind: hole
+    diameter: 3.0
+    radius_tolerance: 0.1
+    axis_tolerance: 0.15
+    length: 3.2
+    length_tolerance: 0.3
+    t_range: [27.13, 30.33]
+    description: Required upper M2.5 attachment bore; through roof only, invariant during both edit tests.
+  - name: bottomHole1
+    point: [3.0, 3.0, 0]
+    direction: [0, 0, 1]
+    kind: hole
+    diameter: 3.0
+    radius_tolerance: 0.1
+    axis_tolerance: 0.15
+    length: 6.67
+    length_tolerance: 0.3
+    t_range: [-6.67, 0.0]
+    description: Bottom closure bore through the floor and integral support pad.
+  - name: lowerPad1
+    point: [3.0, 3.0, 0]
+    direction: [0, 0, 1]
+    kind: pin
+    diameter: 8.0
+    radius_tolerance: 0.375
+    axis_tolerance: 0.15
+    length: 3.47
+    length_tolerance: 0.3
+    t_range: [-3.47, 0.0]
+    description: Convex outside cylinder of the lower annular support pad.
+  - name: topHole2
+    point: [85.0, 3.0, 0]
+    direction: [0, 0, 1]
+    kind: hole
+    diameter: 3.0
+    radius_tolerance: 0.1
+    axis_tolerance: 0.15
+    length: 3.2
+    length_tolerance: 0.3
+    t_range: [27.13, 30.33]
+    description: Required upper M2.5 attachment bore; through roof only, invariant during both edit tests.
+  - name: bottomHole2
+    point: [85.0, 3.0, 0]
+    direction: [0, 0, 1]
+    kind: hole
+    diameter: 3.0
+    radius_tolerance: 0.1
+    axis_tolerance: 0.15
+    length: 6.67
+    length_tolerance: 0.3
+    t_range: [-6.67, 0.0]
+    description: Bottom closure bore through the floor and integral support pad.
+  - name: lowerPad2
+    point: [85.0, 3.0, 0]
+    direction: [0, 0, 1]
+    kind: pin
+    diameter: 8.0
+    radius_tolerance: 0.375
+    axis_tolerance: 0.15
+    length: 3.47
+    length_tolerance: 0.3
+    t_range: [-3.47, 0.0]
+    description: Convex outside cylinder of the lower annular support pad.
+  - name: topHole3
+    point: [85.0, 49.5, 0]
+    direction: [0, 0, 1]
+    kind: hole
+    diameter: 3.0
+    radius_tolerance: 0.1
+    axis_tolerance: 0.15
+    length: 3.2
+    length_tolerance: 0.3
+    t_range: [27.13, 30.33]
+    description: Required upper M2.5 attachment bore; through roof only, invariant during both edit tests.
+  - name: bottomHole3
+    point: [85.0, 49.5, 0]
+    direction: [0, 0, 1]
+    kind: hole
+    diameter: 3.0
+    radius_tolerance: 0.1
+    axis_tolerance: 0.15
+    length: 6.67
+    length_tolerance: 0.3
+    t_range: [-6.67, 0.0]
+    description: Bottom closure bore through the floor and integral support pad.
+  - name: lowerPad3
+    point: [85.0, 49.5, 0]
+    direction: [0, 0, 1]
+    kind: pin
+    diameter: 8.0
+    radius_tolerance: 0.375
+    axis_tolerance: 0.15
+    length: 3.47
+    length_tolerance: 0.3
+    t_range: [-3.47, 0.0]
+    description: Convex outside cylinder of the lower annular support pad.
+  - name: topHole4
+    point: [3.0, 49.5, 0]
+    direction: [0, 0, 1]
+    kind: hole
+    diameter: 3.0
+    radius_tolerance: 0.1
+    axis_tolerance: 0.15
+    length: 3.2
+    length_tolerance: 0.3
+    t_range: [27.13, 30.33]
+    description: Required upper M2.5 attachment bore; through roof only, invariant during both edit tests.
+  - name: bottomHole4
+    point: [3.0, 49.5, 0]
+    direction: [0, 0, 1]
+    kind: hole
+    diameter: 3.0
+    radius_tolerance: 0.1
+    axis_tolerance: 0.15
+    length: 6.67
+    length_tolerance: 0.3
+    t_range: [-6.67, 0.0]
+    description: Bottom closure bore through the floor and integral support pad.
+  - name: lowerPad4
+    point: [3.0, 49.5, 0]
+    direction: [0, 0, 1]
+    kind: pin
+    diameter: 8.0
+    radius_tolerance: 0.375
+    axis_tolerance: 0.15
+    length: 3.47
+    length_tolerance: 0.3
+    t_range: [-3.47, 0.0]
+    description: Convex outside cylinder of the lower annular support pad.
+  dimensions:
+  - name: overallX
+    axis: x
+    expected: 99.71
+    tolerance: 0.3
+    description: Printed case bbox, excluding stack, spacers and screws.
+  - name: overallY
+    axis: y
+    expected: 65.4
+    tolerance: 0.3
+    description: Printed case bbox.
+  - name: overallZ
+    axis: z
+    expected: 37.0
+    tolerance: 0.3
+    description: Printed case bbox; nominal sink top is 8.19 mm above its top.
+  - name: cavityX
+    axis: x
+    expected: 93.31
+    tolerance: 0.3
+    description: Inner planes remain fixed while the side-wall gauge changes.
+    between: [innerLeft, innerRight]
+  - name: cavityY
+    axis: y
+    expected: 59.0
+    tolerance: 0.3
+    description: Inner y span includes the ix overhang and 2 mm allowance on both sides.
+    between: [innerFront, innerRear]
+  - name: roofGauge
+    axis: z
+    expected: 3.2
+    tolerance: 0.3
+    description: Structural roof thickness; independent of wall edit.
+    between: [roofUnder, roofDeck]
+  - name: floorGauge
+    axis: z
+    expected: 3.2
+    tolerance: 0.3
+    description: Structural floor thickness.
+    between: [floorOutside, coverDeck]
+  - name: seamHeight
+    axis: z
+    expected: 0.3
+    tolerance: 0.3
+    description: Fixed separation between the two printed bodies; no hinge or sliding joint.
+    between: [coverDeck, capRim]
+  - name: heatOpeningSpanX
+    axis: x
+    expected: 69.0
+    tolerance: 0.3
+    description: Editable heat aperture; no immutable interface check pins its size.
+    between: [heatLeft, heatRight]
+  - name: heatOpeningSpanY
+    axis: y
+    expected: 48.0
+    tolerance: 0.3
+    description: Editable heat aperture.
+    between: [heatFront, heatRear]
+  - name: rearWindowWidth
+    axis: x
+    expected: 68.25
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [rearLeft, rearRight]
+  - name: rearWindowHeight
+    axis: z
+    expected: 7.42
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [rearFloor, rearCeiling]
+  - name: frontWindowWidth
+    axis: x
+    expected: 46.45
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [frontLeft, frontRight]
+  - name: frontLowerHeight
+    axis: z
+    expected: 7.42
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [frontFloor, frontCeilingWeb]
+  - name: carrierJ9WindowWidth
+    axis: x
+    expected: 11.74
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [carrierJ9Left, carrierJ9Right]
+  - name: carrierJ8WindowWidth
+    axis: x
+    expected: 11.94
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [carrierJ8Left, carrierJ8Right]
+  - name: carrierJ9TopHeight
+    axis: z
+    expected: 13.0
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [frontFloor, carrierJ9Ceiling]
+  - name: carrierJ8TopHeight
+    axis: z
+    expected: 13.0
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [frontFloor, carrierJ8Ceiling]
+  - name: powerWindowWidth
+    axis: y
+    expected: 13.06
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [powerLowY, powerHighY]
+  - name: powerWindowHeight
+    axis: z
+    expected: 17.68
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [powerFloor, powerCeiling]
+  - name: sideUsbWindowWidth
+    axis: y
+    expected: 11.94
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [sideUsbLowY, sideUsbHighY]
+  - name: sideUsbWindowHeight
+    axis: z
+    expected: 6.38
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [sideUsbFloor, sideUsbCeiling]
+  - name: exhaustWidth
+    axis: y
+    expected: 43.0
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [exhaustLeftLowY, exhaustLeftHighY]
+  - name: exhaustHeight
+    axis: z
+    expected: 3.61
+    tolerance: 0.3
+    description: Fixed aperture projection from the service-window table; side-wall stock depth may change.
+    between: [exhaustLeftFloor, roofUnder]
+  solids:
+  - name: upperShell
+    contains_point: [-3.6, 25, 15]
+    volume:
+      expected: 35833.085652
+      tolerance_rel: 0.04
+      provenance: derived
+      note: First twelve signed primitive terms in the brief.
+    description: Connected upper cap, including roof and side walls; no internal stack bodies.
+  - name: bottomCover
+    contains_point: [44, 25, -5.07]
+    volume:
+      expected: 21376.40389
+      tolerance_rel: 0.04
+      provenance: derived
+      note: Last three signed primitive terms in the brief.
+    description: Separate lower slab plus four integral support pads.
+  hardware:
+  - name: basePcb
+    kind: box
+    min: [0, 0, 0]
+    max: [88, 52.5, 1.56]
+    description: Source base PCB bounding box; corner rounding and holes omitted conservatively. Only the lower
+      pad top faces may touch z=0.
+  - name: baseB2b
+    kind: box
+    min: [6.53, 11.1, 1.56]
+    max: [11.48, 42.9, 6.5]
+    description: assembly.yaml base Samtec terminal, shortened at the documented mating plane.
+  - name: baseIx
+    kind: box
+    min: [17.6, -2.5, 1.56]
+    max: [28.4, 9.9, 7.33]
+    description: assembly.yaml Hirose ix; keep-out only, not a USB-C and not a requested opening.
+  - name: basePowerJ12
+    kind: box
+    min: [77.58, 6.65, 1.56]
+    max: [89.31, 15.39, 8.63]
+    description: Exact source Molex 105430-1202 box; 1.31 mm x overhang.
+  - name: baseUsbJ11B1
+    kind: box
+    min: [66.24, 0.02, 1.56]
+    max: [75.18, 7.73, 4.94]
+    description: Exact base -y USB-C envelope, connector-index.md identity.
+  - name: baseUsbJ11A1
+    kind: box
+    min: [80.29, 36.43, 1.56]
+    max: [88.0, 45.37, 4.94]
+    description: Exact base +x USB-C envelope, connector-index.md identity.
+  - name: baseGhFront
+    kind: box
+    min: [31.73, 0.37, 1.56]
+    max: [64.15, 5.25, 5.98]
+    description: Entire second GH row, without inventing individual connector bounds.
+  - name: baseGhRear
+    kind: box
+    min: [8.08, 47.29, 1.56]
+    max: [73.33, 52.14, 5.98]
+    description: Entire +y GH row including base J4, J5, J7 and the documented UART silks.
+  - name: baseMicroSd
+    kind: box
+    min: [49.81, 38.07, -1.35]
+    max: [63.47, 52.4, 0.0]
+    description: Exact base underside microSD envelope.
+  - name: baseLowCapacitor
+    kind: box
+    min: [15.1, 14.3, -1.97]
+    max: [16.7, 17.5, 0.0]
+    description: Exact deepest base component envelope; floor gap is nominally 1.5 mm.
+  - name: carrierPcb
+    kind: box
+    min: [0, 0, 11.56]
+    max: [88, 52.5, 13.13]
+    description: Carrier outline coincident with base, translated by carrierBottom=11.56.
+  - name: carrierSodimm
+    kind: box
+    min: [5.95, 46.0, 13.13]
+    max: [82.05, 51.0, 22.42]
+    description: Source SO-DIMM housing; all carrier local z values translated by 11.56.
+  - name: carrierLatchLeft
+    kind: box
+    min: [5.95, 25.15, 13.13]
+    max: [9.1, 46.0, 22.42]
+    description: Source left latch bounding box.
+  - name: carrierLatchRight
+    kind: box
+    min: [78.9, 25.15, 13.13]
+    max: [82.05, 46.0, 22.42]
+    description: Source right latch bounding box.
+  - name: carrierUsbJ10
+    kind: box
+    min: [77.14, 7.97, 13.13]
+    max: [88.96, 16.71, 16.24]
+    description: 'Top Wurth USB-C: assembly z=11.56+[1.57,4.68], not base J10.'
+  - name: carrierFanHeader
+    kind: box
+    min: [0.88, 6.7, 13.13]
+    max: [5.78, 17.65, 17.92]
+    description: Carrier Molex 53398-0471; different from requested base J4 GH and base J12 power.
+  - name: carrierFfc
+    kind: box
+    min: [83.2, 17.72, 13.13]
+    max: [87.45, 32.12, 14.65]
+    description: Source FFC connector; local top z3.09 translated by 11.56.
+  - name: carrierB2b
+    kind: box
+    min: [6.0, 11.1, 6.5]
+    max: [12.0, 42.9, 11.56]
+    description: Source underside Samtec socket, carrierBottom minus 5.06.
+  - name: carrierUsbJ9
+    kind: box
+    min: [42.16, -0.98, 8.45]
+    max: [50.9, 10.85, 11.56]
+    description: Underside Wurth USB-C, z=11.56-3.11..11.56.
+  - name: carrierUsbJ8
+    kind: box
+    min: [62.31, 0.27, 8.19]
+    max: [71.25, 7.98, 11.56]
+    description: Underside GCT USB-C, z=11.56-3.37..11.56.
+  - name: carrierInductor1
+    kind: box
+    min: [21.51, 5.43, 8.57]
+    max: [26.81, 10.93, 11.56]
+    description: Source first underside inductor, z=11.56-2.99.
+  - name: carrierInductor2
+    kind: box
+    min: [22.45, 24.63, 8.57]
+    max: [27.75, 30.13, 11.56]
+    description: Source second underside inductor, z=11.56-2.99.
+  - name: modulePcb
+    kind: box
+    min: [9.2, 1.0, 19.69]
+    max: [78.8, 46.0, 20.89]
+    description: Module transform (x,y,z)=(78.8-xLocal,46-yLocal,19.69+zLocal); body is a keep-out only.
+  - name: moduleTopComponents
+    kind: box
+    min: [9.2, 1.0, 20.89]
+    max: [78.8, 46.0, 25.97]
+    description: Conservative full-footprint slab to the source local z6.28 keep-out. Includes the updated DRAM
+      height; detailed component shapes are not invented.
+  - name: moduleBottomComponents
+    kind: box
+    min: [9.2, 1.0, 18.29]
+    max: [78.8, 46.0, 19.69]
+    description: Conservative full-footprint slab down to source local z=-1.4.
+  - name: moduleSoc
+    kind: box
+    min: [32.9, 11.1, 20.89]
+    max: [55.1, 31.3, 23.52]
+    description: SoC lid box transformed by the documented module rotation.
+  - name: heatsinkNominal
+    kind: box
+    min: [13.5, 1.19, 23.52]
+    max: [74.5, 41.19, 38.52]
+    description: Nominal 61 x 40 x 15 photo-estimated block centered (44,21.19), matching the supplied stack top.
+  - name: heatsinkUncertainty
+    kind: box
+    min: [12.0, -0.31, 23.52]
+    max: [76.0, 42.69, 41.52]
+    description: 'Conservative allowance: +/-1 mm per side for half of the +/-2 mm size uncertainty, plus inferred
+      +/-0.5 mm center uncertainty; +3 mm height, with the underside fixed on the SoC. Not a new measurement.'
+  - name: moduleSeat1
+    kind: cylinder
+    point: [12.2, 4.0, 13.13]
+    direction: [0, 0, 1]
+    radius: 2.55
+    length: 6.56
+    description: Source D5.1 module support spacer, translated to assembly z.
+  - name: moduleSeat2
+    kind: cylinder
+    point: [75.8, 4.0, 13.13]
+    direction: [0, 0, 1]
+    radius: 2.55
+    length: 6.56
+    description: Source D5.1 module support spacer, translated to assembly z.
+  - name: stackStandoff1
+    kind: cylinder
+    point: &id001 [3.0, 3.0, 1.56]
+    direction: [0, 0, 1]
+    radius: 2.5
+    length: 10.0
+    description: Existing M2.5 x10 standoff; source D5 photo estimate. Hardware only.
+    exclude_cylinders:
+    - point: *id001
+      direction: [0, 0, 1]
+      radius: 1.25
+      length: 10.0
+  - name: roofSpacer1
+    kind: cylinder
+    point: &id002 [3.0, 3.0, 13.13]
+    direction: [0, 0, 1]
+    radius: 2.25
+    length: 14.0
+    description: Proposed metal compression tube, OD4.5, clearance ID3.0, carrier top to roof underside. Inferred
+      procurement/fit assumption, not exported case material.
+    exclude_cylinders:
+    - point: *id002
+      direction: [0, 0, 1]
+      radius: 1.5
+      length: 14.0
+  - name: stackStandoff2
+    kind: cylinder
+    point: &id003 [85.0, 3.0, 1.56]
+    direction: [0, 0, 1]
+    radius: 2.5
+    length: 10.0
+    description: Existing M2.5 x10 standoff; source D5 photo estimate. Hardware only.
+    exclude_cylinders:
+    - point: *id003
+      direction: [0, 0, 1]
+      radius: 1.25
+      length: 10.0
+  - name: roofSpacer2
+    kind: cylinder
+    point: &id004 [85.0, 3.0, 13.13]
+    direction: [0, 0, 1]
+    radius: 2.25
+    length: 14.0
+    description: Proposed metal compression tube, OD4.5, clearance ID3.0, carrier top to roof underside. Inferred
+      procurement/fit assumption, not exported case material.
+    exclude_cylinders:
+    - point: *id004
+      direction: [0, 0, 1]
+      radius: 1.5
+      length: 14.0
+  - name: stackStandoff3
+    kind: cylinder
+    point: &id005 [85.0, 49.5, 1.56]
+    direction: [0, 0, 1]
+    radius: 2.5
+    length: 10.0
+    description: Existing M2.5 x10 standoff; source D5 photo estimate. Hardware only.
+    exclude_cylinders:
+    - point: *id005
+      direction: [0, 0, 1]
+      radius: 1.25
+      length: 10.0
+  - name: roofSpacer3
+    kind: cylinder
+    point: &id006 [85.0, 49.5, 13.13]
+    direction: [0, 0, 1]
+    radius: 2.25
+    length: 14.0
+    description: Proposed metal compression tube, OD4.5, clearance ID3.0, carrier top to roof underside. Inferred
+      procurement/fit assumption, not exported case material.
+    exclude_cylinders:
+    - point: *id006
+      direction: [0, 0, 1]
+      radius: 1.5
+      length: 14.0
+  - name: stackStandoff4
+    kind: cylinder
+    point: &id007 [3.0, 49.5, 1.56]
+    direction: [0, 0, 1]
+    radius: 2.5
+    length: 10.0
+    description: Existing M2.5 x10 standoff; source D5 photo estimate. Hardware only.
+    exclude_cylinders:
+    - point: *id007
+      direction: [0, 0, 1]
+      radius: 1.25
+      length: 10.0
+  - name: roofSpacer4
+    kind: cylinder
+    point: &id008 [3.0, 49.5, 13.13]
+    direction: [0, 0, 1]
+    radius: 2.25
+    length: 14.0
+    description: Proposed metal compression tube, OD4.5, clearance ID3.0, carrier top to roof underside. Inferred
+      procurement/fit assumption, not exported case material.
+    exclude_cylinders:
+    - point: *id008
+      direction: [0, 0, 1]
+      radius: 1.5
+      length: 14.0
+  - name: fanIntakeAir
+    kind: cylinder
+    point: [44.0, 21.19, 38.52]
+    direction: [0, 0, 1]
+    radius: 20.0
+    length: 6.0
+    description: Case-free ambient intake cylinder above nominal fan top; R20=(38.5+1.5)/2 from the source fan diameter
+      and uncertainty. This is geometric access, not a flow-rate prediction.
+  - name: rearHeaderAccess
+    kind: box
+    min: [6.58, 52.14, 0.06]
+    max: [74.83, 60.7, 7.48]
+    description: GH projection expanded 1.5 mm in x/z, continued out through +y wall. Includes J4/J5/J7 and UART7/8/2.
+  - name: frontLowerAccess
+    kind: box
+    min: [30.23, -10.7, 0.06]
+    max: [76.68, 0.37, 7.48]
+    description: Merged lower -y GH and base J11B1 opening; body projections plus 1.5 mm margin. The inside end
+      is already within the unobstructed cavity.
+  - name: carrierJ9Access
+    kind: box
+    min: [40.66, -10.7, 6.95]
+    max: [52.4, -0.98, 13.06]
+    description: Carrier J9 projection plus portMargin, extended outward from its -y face.
+  - name: carrierJ8Access
+    kind: box
+    min: [60.81, -10.7, 6.69]
+    max: [72.75, 0.27, 13.06]
+    description: Carrier J8 projection plus portMargin, extended outward from its -y face.
+  - name: powerAndJ10Access
+    kind: box
+    min: [88.96, 5.15, 0.06]
+    max: [97.51, 18.21, 17.74]
+    description: Merged Molex power and carrier J10 projection, continued outward from the nearer mouth. No thin
+      web may remain between them.
+  - name: baseJ11A1Access
+    kind: box
+    min: [88.0, 34.93, 0.06]
+    max: [97.51, 46.87, 6.44]
+    description: Base side USB-C projection plus portMargin, continued out through +x wall.
+  - name: leftExhaustAccess
+    kind: box
+    min: [-8.2, -0.31, 23.52]
+    max: [12.0, 42.69, 27.13]
+    description: Case-free corridor from the conservative heatsink -x side to ambient at the lower fin region.
+  - name: rightExhaustAccess
+    kind: box
+    min: [76.0, -0.31, 23.52]
+    max: [97.51, 42.69, 27.13]
+    description: Case-free corridor from the conservative heatsink +x side to ambient at the lower fin region.
+  clearances:
+  - name: fixedCoverSeam
+    a: upperShell
+    b: bottomCover
+    min_gap: 0.2
+    interference_tolerance: 0.01
+    description: Nominal 0.3 mm seam; the stack fasteners hold both bodies in the same fixed frame.
+    max_gap: 0.4
+  - name: capToBaseBoard
+    a: upperShell
+    b: basePcb
+    min_gap: 1.5
+    interference_tolerance: 0.01
+    description: Nominal nearest side-wall gap 2.0 mm; require at least 1.5 mm.
+  - name: capToCarrierBoard
+    a: upperShell
+    b: carrierPcb
+    min_gap: 1.5
+    interference_tolerance: 0.01
+    description: Nominal nearest side-wall gap 2.0 mm.
+  - name: baseRestsOnCover
+    a: bottomCover
+    b: basePcb
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: Intentional z=0 contact occurs only at the four annular pad seats.
+    max_gap: 0.05
+  - name: coverToCarrier
+    a: bottomCover
+    b: carrierPcb
+    min_gap: 1.0
+    interference_tolerance: 0.01
+    description: Keep the removable cover clear of the upper board.
+  - name: clearBaseB2b
+    a: all
+    b: baseB2b
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearBaseIx
+    a: all
+    b: baseIx
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearBasePowerJ12
+    a: all
+    b: basePowerJ12
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearBaseUsbJ11B1
+    a: all
+    b: baseUsbJ11B1
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearBaseUsbJ11A1
+    a: all
+    b: baseUsbJ11A1
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearBaseGhFront
+    a: all
+    b: baseGhFront
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearBaseGhRear
+    a: all
+    b: baseGhRear
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearBaseMicroSd
+    a: all
+    b: baseMicroSd
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: floorComponentGap
+    a: all
+    b: baseLowCapacitor
+    min_gap: 1.0
+    interference_tolerance: 0.01
+    description: Nominal floor gap 1.5 mm to the lowest supplied component.
+  - name: clearCarrierSodimm
+    a: all
+    b: carrierSodimm
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearCarrierLatchLeft
+    a: all
+    b: carrierLatchLeft
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearCarrierLatchRight
+    a: all
+    b: carrierLatchRight
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearCarrierUsbJ10
+    a: all
+    b: carrierUsbJ10
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearCarrierFanHeader
+    a: all
+    b: carrierFanHeader
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearCarrierFfc
+    a: all
+    b: carrierFfc
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearCarrierB2b
+    a: all
+    b: carrierB2b
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearCarrierUsbJ9
+    a: all
+    b: carrierUsbJ9
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearCarrierUsbJ8
+    a: all
+    b: carrierUsbJ8
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearCarrierInductor1
+    a: all
+    b: carrierInductor1
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearCarrierInductor2
+    a: all
+    b: carrierInductor2
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearModulePcb
+    a: all
+    b: modulePcb
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearModuleTopComponents
+    a: all
+    b: moduleTopComponents
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearModuleBottomComponents
+    a: all
+    b: moduleBottomComponents
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearModuleSoc
+    a: all
+    b: moduleSoc
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearHeatsinkNominal
+    a: all
+    b: heatsinkNominal
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearHeatsinkUncertainty
+    a: all
+    b: heatsinkUncertainty
+    min_gap: 2.0
+    interference_tolerance: 0.01
+    description: Nominal aperture gap to this conservative box is 2.5 mm; the margin sweep still leaves at least
+      2.0 mm.
+  - name: clearModuleSeat1
+    a: all
+    b: moduleSeat1
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearModuleSeat2
+    a: all
+    b: moduleSeat2
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: clearStackStandoff1
+    a: all
+    b: stackStandoff1
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: seatRoofSpacer1
+    a: upperShell
+    b: roofSpacer1
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: Spacer top is a bearing contact at z=27.13, not an interference fit.
+    max_gap: 0.05
+  - name: clearCoverRoofSpacer1
+    a: bottomCover
+    b: roofSpacer1
+    min_gap: 1.0
+    interference_tolerance: 0.01
+    description: Added upper spacer stays clear of the lower cover.
+  - name: clearStackStandoff2
+    a: all
+    b: stackStandoff2
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: seatRoofSpacer2
+    a: upperShell
+    b: roofSpacer2
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: Spacer top is a bearing contact at z=27.13, not an interference fit.
+    max_gap: 0.05
+  - name: clearCoverRoofSpacer2
+    a: bottomCover
+    b: roofSpacer2
+    min_gap: 1.0
+    interference_tolerance: 0.01
+    description: Added upper spacer stays clear of the lower cover.
+  - name: clearStackStandoff3
+    a: all
+    b: stackStandoff3
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: seatRoofSpacer3
+    a: upperShell
+    b: roofSpacer3
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: Spacer top is a bearing contact at z=27.13, not an interference fit.
+    max_gap: 0.05
+  - name: clearCoverRoofSpacer3
+    a: bottomCover
+    b: roofSpacer3
+    min_gap: 1.0
+    interference_tolerance: 0.01
+    description: Added upper spacer stays clear of the lower cover.
+  - name: clearStackStandoff4
+    a: all
+    b: stackStandoff4
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Independent no-interference check against the supplied or transformed hardware envelope; keep hardware
+      out of exported case solids.
+  - name: seatRoofSpacer4
+    a: upperShell
+    b: roofSpacer4
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: Spacer top is a bearing contact at z=27.13, not an interference fit.
+    max_gap: 0.05
+  - name: clearCoverRoofSpacer4
+    a: bottomCover
+    b: roofSpacer4
+    min_gap: 1.0
+    interference_tolerance: 0.01
+    description: Added upper spacer stays clear of the lower cover.
+  - name: clearFanIntakeAir
+    a: all
+    b: fanIntakeAir
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: The complete declared free corridor must have zero material overlap. Passage tests alone could
+      route through another window.
+  - name: clearRearHeaderAccess
+    a: all
+    b: rearHeaderAccess
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: The complete declared free corridor must have zero material overlap. Passage tests alone could
+      route through another window.
+  - name: clearFrontLowerAccess
+    a: all
+    b: frontLowerAccess
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: The complete declared free corridor must have zero material overlap. Passage tests alone could
+      route through another window.
+  - name: clearCarrierJ9Access
+    a: all
+    b: carrierJ9Access
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: The complete declared free corridor must have zero material overlap. Passage tests alone could
+      route through another window.
+  - name: clearCarrierJ8Access
+    a: all
+    b: carrierJ8Access
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: The complete declared free corridor must have zero material overlap. Passage tests alone could
+      route through another window.
+  - name: clearPowerAndJ10Access
+    a: all
+    b: powerAndJ10Access
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: The complete declared free corridor must have zero material overlap. Passage tests alone could
+      route through another window.
+  - name: clearBaseJ11A1Access
+    a: all
+    b: baseJ11A1Access
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: The complete declared free corridor must have zero material overlap. Passage tests alone could
+      route through another window.
+  - name: clearLeftExhaustAccess
+    a: all
+    b: leftExhaustAccess
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: The complete declared free corridor must have zero material overlap. Passage tests alone could
+      route through another window.
+  - name: clearRightExhaustAccess
+    a: all
+    b: rightExhaustAccess
+    min_gap: 0.0
+    interference_tolerance: 0.01
+    description: The complete declared free corridor must have zero material overlap. Passage tests alone could
+      route through another window.
+  - name: rearSpacerToSodimm3
+    a: roofSpacer3
+    b: carrierSodimm
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: OD4.5 gives 0.70 mm nominal separation at the rear corner; procurement tolerance is unresolved.
+  - name: rearSpacerToSodimm4
+    a: roofSpacer4
+    b: carrierSodimm
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: OD4.5 gives 0.70 mm nominal separation at the rear corner; procurement tolerance is unresolved.
+  - name: frontSpacerToFanHeader
+    a: roofSpacer1
+    b: carrierFanHeader
+    min_gap: 0.5
+    interference_tolerance: 0.01
+    description: Nominal y separation is 6.70-(3+2.25)=1.45 mm.
+  passages:
+  - name: j4Access
+    point_a: [21.6, 53.3, 3.77]
+    point_b: [21.6, 60.7, 3.77]
+    pitch: 0.5
+    expect_connected: true
+    description: Base J4 UART7 exterior path; the separate rearHeaderAccess keep-out enforces the actual mouth.
+      Volume lower bound = 0.8 * 506.415000 mm^2 guaranteed open projection * 7.400000 mm path length; 20 percent
+      allows voxel boundary sampling. No upper bound is inferred for a passage connected to ambient.
+    volume_min: 2997.9768
+  - name: j5Access
+    point_a: [31.0, 53.3, 3.77]
+    point_b: [31.0, 60.7, 3.77]
+    pitch: 0.5
+    expect_connected: true
+    description: Base J5 UART8 exterior path. Volume lower bound = 0.8 * 506.415000 mm^2 guaranteed open projection
+      * 7.400000 mm path length; 20 percent allows voxel boundary sampling. No upper bound is inferred for a passage
+      connected to ambient.
+    volume_min: 2997.9768
+  - name: j7Access
+    point_a: [41.696, 53.3, 3.77]
+    point_b: [41.696, 60.7, 3.77]
+    pitch: 0.5
+    expect_connected: true
+    description: Base J7 UART2/I2C4 exterior path. Volume lower bound = 0.8 * 506.415000 mm^2 guaranteed open projection
+      * 7.400000 mm path length; 20 percent allows voxel boundary sampling. No upper bound is inferred for a passage
+      connected to ambient.
+    volume_min: 2997.9768
+  - name: frontGhAccess
+    point_a: [35.0, -2.5, 3.77]
+    point_b: [35.0, -10.7, 3.77]
+    pitch: 0.5
+    expect_connected: true
+    description: Access for the second GH row. Volume lower bound = 0.8 * 344.659000 mm^2 guaranteed open projection
+      * 8.200000 mm path length; 20 percent allows voxel boundary sampling. No upper bound is inferred for a passage
+      connected to ambient.
+    volume_min: 2260.96304
+  - name: baseJ11B1Path
+    point_a: [70.71, -2.5, 3.25]
+    point_b: [70.71, -10.7, 3.25]
+    pitch: 0.5
+    expect_connected: true
+    description: Base front USB-C, without a functional name assignment. Volume lower bound = 0.8 * 76.177200 mm^2
+      guaranteed open projection * 8.200000 mm path length; 20 percent allows voxel boundary sampling. No upper
+      bound is inferred for a passage connected to ambient.
+    volume_min: 499.722432
+  - name: carrierJ9Path
+    point_a: [46.53, -2.5, 10.0]
+    point_b: [46.53, -10.7, 10.0]
+    pitch: 0.5
+    expect_connected: true
+    description: Carrier lower Wurth USB-C. Volume lower bound = 0.8 * 71.731400 mm^2 guaranteed open projection
+      * 8.200000 mm path length; 20 percent allows voxel boundary sampling. No upper bound is inferred for a passage
+      connected to ambient.
+    volume_min: 470.557984
+  - name: carrierJ8Path
+    point_a: [66.78, -2.5, 9.9]
+    point_b: [66.78, -10.7, 9.9]
+    pitch: 0.5
+    expect_connected: true
+    description: Carrier lower GCT USB-C. Volume lower bound = 0.8 * 76.057800 mm^2 guaranteed open projection *
+      8.200000 mm path length; 20 percent allows voxel boundary sampling. No upper bound is inferred for a passage
+      connected to ambient.
+    volume_min: 498.939168
+  - name: powerPath
+    point_a: [90.31, 11.02, 5.1]
+    point_b: [97.51, 11.02, 5.1]
+    pitch: 0.5
+    expect_connected: true
+    description: Molex power connector access; case-only free space test. Volume lower bound = 0.8 * 118.221800
+      mm^2 guaranteed open projection * 7.200000 mm path length; 20 percent allows voxel boundary sampling. No upper
+      bound is inferred for a passage connected to ambient.
+    volume_min: 680.957568
+  - name: carrierJ10Path
+    point_a: [90.31, 12.34, 14.69]
+    point_b: [97.51, 12.34, 14.69]
+    pitch: 0.5
+    expect_connected: true
+    description: Carrier top USB-C access; no name-to-refdes assumption. Volume lower bound = 0.8 * 71.731400 mm^2
+      guaranteed open projection * 7.200000 mm path length; 20 percent allows voxel boundary sampling. No upper
+      bound is inferred for a passage connected to ambient.
+    volume_min: 413.172864
+  - name: baseJ11A1Path
+    point_a: [89.31, 40.9, 3.25]
+    point_b: [97.51, 40.9, 3.25]
+    pitch: 0.5
+    expect_connected: true
+    description: Base side USB-C access. Volume lower bound = 0.8 * 76.177200 mm^2 guaranteed open projection *
+      8.200000 mm path length; 20 percent allows voxel boundary sampling. No upper bound is inferred for a passage
+      connected to ambient.
+    volume_min: 499.722432
+  - name: fanAmbient
+    point_a: [44.0, -1.56, 28.73]
+    point_b: [44.0, -1.56, 44.52]
+    pitch: 0.5
+    expect_connected: true
+    description: 'From the aperture gap to ambient above the maximum photo-estimated fan top. No seal: an open enclosure,
+      not a sealed duct or a uniform bore. Volume lower bound = 0.8 * 100.000000 mm^2 guaranteed open projection
+      * 15.790000 mm path length; 20 percent allows voxel boundary sampling. No upper bound is inferred for a passage
+      connected to ambient.'
+    volume_min: 1263.2
+  - name: leftExhaustPath
+    point_a: [0.0, 21.19, 25.325]
+    point_b: [-8.2, 21.19, 25.325]
+    pitch: 0.5
+    expect_connected: true
+    description: Lower exhaust-region exit through the -x wall; case geometry only. Volume lower bound = 0.8 * 155.230000
+      mm^2 guaranteed open projection * 8.200000 mm path length; 20 percent allows voxel boundary sampling. No upper
+      bound is inferred for a passage connected to ambient.
+    volume_min: 1018.3088
+  - name: rightExhaustPath
+    point_a: [89.31, 21.19, 25.325]
+    point_b: [97.51, 21.19, 25.325]
+    pitch: 0.5
+    expect_connected: true
+    description: Lower exhaust-region exit through the +x wall; case geometry only. Volume lower bound = 0.8 * 155.230000
+      mm^2 guaranteed open projection * 8.200000 mm path length; 20 percent allows voxel boundary sampling. No upper
+      bound is inferred for a passage connected to ambient.
+    volume_min: 1018.3088
+  thickness:
+  - name: floorGaugeMinimum
+    min: 2.4
+    stat: p05
+    samples: 400
+    region:
+    - [12, 10, -6.67]
+    - [76, 40, -3.47]
+    description: Prototype PETG material minimum in a named structural region; nominal skin 3.2 mm or pad radial
+      ligament 2.5 mm. Not a strength/creep certification.
+  - name: roofGaugeMinimum
+    min: 2.4
+    stat: p05
+    samples: 400
+    region:
+    - [15, 47.5, 27.13]
+    - [73, 51.5, 30.33]
+    description: Prototype PETG material minimum in a named structural region; nominal skin 3.2 mm or pad radial
+      ligament 2.5 mm. Not a strength/creep certification.
+  - name: leftWallGauge
+    min: 2.4
+    stat: p05
+    samples: 400
+    region:
+    - [-5.2, 18, 8]
+    - [-2.0, 32, 20]
+    description: Prototype PETG material minimum in a named structural region; nominal skin 3.2 mm or pad radial
+      ligament 2.5 mm. Not a strength/creep certification.
+  - name: rightWallGauge
+    min: 2.4
+    stat: p05
+    samples: 400
+    region:
+    - [91.31, 22, 8]
+    - [94.51, 30, 20]
+    description: Prototype PETG material minimum in a named structural region; nominal skin 3.2 mm or pad radial
+      ligament 2.5 mm. Not a strength/creep certification.
+  - name: frontWallGauge
+    min: 2.4
+    stat: p05
+    samples: 400
+    region:
+    - [8, -7.7, 10]
+    - [20, -4.5, 20]
+    description: Prototype PETG material minimum in a named structural region; nominal skin 3.2 mm or pad radial
+      ligament 2.5 mm. Not a strength/creep certification.
+  - name: rearWallGauge
+    min: 2.4
+    stat: p05
+    samples: 400
+    region:
+    - [20, 54.5, 10]
+    - [65, 57.7, 20]
+    description: Prototype PETG material minimum in a named structural region; nominal skin 3.2 mm or pad radial
+      ligament 2.5 mm. Not a strength/creep certification.
+  - name: lowerPadLigament
+    min: 2.0
+    stat: p05
+    samples: 400
+    region:
+    - [81, -1, -3.4]
+    - [89, 7, -0.1]
+    description: Prototype PETG material minimum in a named structural region; nominal skin 3.2 mm or pad radial
+      ligament 2.5 mm. Not a strength/creep certification.
+  probes:
+  - name: structuralMaterial
+    state: solid
+    points:
+    - [44, 25, -5.07]
+    - [-3.6, 25, 15]
+    - [92.91, 25, 15]
+    - [44, -6.1, 19]
+    - [44, 56.1, 19]
+    - [44, 50, 28.73]
+    - [3, 5.75, -1.7]
+    description: Inside nominal 3.2 mm skins, and within one 2.5 mm pad ligament; all inferred-wall margins exceed
+      the relevant digital tolerance.
+  - name: mainCavity
+    state: void
+    points:
+    - [44, 24, 10]
+    description: Interior between the boards; test the empty case, never export the stack as case material.
+  - name: requiredHeaderMouths
+    state: void
+    points:
+    - [21.6, 56.1, 3.77]
+    - [31, 56.1, 3.77]
+    - [41.696, 56.1, 3.77]
+    - [35, -6.1, 3.77]
+    description: J4/J5/J7 and second edge header row, well inside aperture boundaries.
+  - name: allFiveUsbMouths
+    state: void
+    points:
+    - [70.71, -6.1, 3.25]
+    - [92.91, 40.9, 3.25]
+    - [92.91, 12.34, 14.69]
+    - [46.53, -6.1, 10]
+    - [66.78, -6.1, 9.9]
+    description: Base J11B1, base J11A1, carrier J10, carrier J9, carrier J8 respectively; user USB names remain
+      unmapped.
+  - name: molexPowerMouth
+    state: void
+    points:
+    - [92.91, 11.02, 5.1]
+    description: Direct opening at Molex 105430-1202, including x overhang.
+  - name: heatsinkRimClear
+    state: void
+    points:
+    - [10.75, 21.19, 28.73]
+    - [77.25, 21.19, 28.73]
+    - [44, -1.56, 28.73]
+    - [44, 43.94, 28.73]
+    description: 1.25 mm from the aperture and conservative heatsink x/y boundaries; more than the 1 mm inferred
+      aperture-margin tolerance.
+  - name: fanAboveCase
+    state: void
+    points:
+    - [44, 21.19, 44.52]
+    description: Ambient above the conservative z=41.52 fan top; no grill or roof over the fan.
+  - name: sideExhaustMouths
+    state: void
+    points:
+    - [-3.6, 21.19, 25.325]
+    - [92.91, 21.19, 25.325]
+    description: Centered through each 3.61 mm tall lower exhaust window, 1.805 mm from its top/bottom.
+  - name: topBoreVoid1
+    state: void
+    points:
+    - [3.0, 3.0, 28.73]
+    description: On the D3 bore axis, 1.5 mm from the cylindrical surface and 1.6 mm from either roof face.
+  - name: bottomBoreVoid1
+    state: void
+    points:
+    - [3.0, 3.0, -5.07]
+    description: On the D3 lower bore axis, away from both floor faces.
+  - name: topBoreVoid2
+    state: void
+    points:
+    - [85.0, 3.0, 28.73]
+    description: On the D3 bore axis, 1.5 mm from the cylindrical surface and 1.6 mm from either roof face.
+  - name: bottomBoreVoid2
+    state: void
+    points:
+    - [85.0, 3.0, -5.07]
+    description: On the D3 lower bore axis, away from both floor faces.
+  - name: topBoreVoid3
+    state: void
+    points:
+    - [85.0, 49.5, 28.73]
+    description: On the D3 bore axis, 1.5 mm from the cylindrical surface and 1.6 mm from either roof face.
+  - name: bottomBoreVoid3
+    state: void
+    points:
+    - [85.0, 49.5, -5.07]
+    description: On the D3 lower bore axis, away from both floor faces.
+  - name: topBoreVoid4
+    state: void
+    points:
+    - [3.0, 49.5, 28.73]
+    description: On the D3 bore axis, 1.5 mm from the cylindrical surface and 1.6 mm from either roof face.
+  - name: bottomBoreVoid4
+    state: void
+    points:
+    - [3.0, 49.5, -5.07]
+    description: On the D3 lower bore axis, away from both floor faces.
+  cylinder_counts:
+  - name: upperBoreCount
+    diameter: 3.0
+    radius_tolerance: 0.1
+    kind: hole
+    direction: [0, 0, 1]
+    region:
+    - [-1, -1, 27.0]
+    - [89, 53.5, 31.0]
+    expected: 4
+    description: Four case bores in the roof, not four additional stack solids.
+  - name: lowerBoreCount
+    diameter: 3.0
+    radius_tolerance: 0.1
+    kind: hole
+    direction: [0, 0, 1]
+    region:
+    - [-1, -1, -7.0]
+    - [89, 53.5, 0.1]
+    expected: 4
+    description: Four distinct lower through-bores.
+  - name: lowerPadCount
+    diameter: 8.0
+    radius_tolerance: 0.375
+    kind: pin
+    direction: [0, 0, 1]
+    region:
+    - [-1, -1, -3.5]
+    - [89, 53.5, 0.1]
+    expected: 4
+    description: Four convex lower-pad outside cylinders.
+  blockout:
+    volume_min: 225000.0
+    volume_max: 255000.0
+  export_volume_tolerance_rel: 0.01
+references:
+- path: sources/README.txt
+  kind: text
+  role: authoritative
+  sha256: cee986a2965a7ae13b06508882b4537560c3e2b40b773ace0f48d36eb3b19ea6
+  units: not applicable
+  revision: supplied DRAM-height revision note
+  note: States the revised module model uses the tallest lifetime DRAM height.
+- path: sources/aleph-stack.step
+  kind: cad
+  role: illustrative
+  sha256: c73e88a8471a28457d832ab1c10b2a64276bc20ce9cbedbe8949d3ad3a1e03ad
+  units: mm
+  revision: supplied stack export
+  note: Existing stack being enclosed, not a case reference; opaque checksum only.
+- path: sources/aleph-stack.stl
+  kind: mesh
+  role: illustrative
+  sha256: 95ba8e004589861d2748010d8b71c4ed18382ebaeb0d2cf89d99e51c4d4bba19
+  units: mm
+  revision: supplied stack export
+  note: Existing stack, not a case scan; opaque checksum only.
+- path: sources/assembled.png
+  kind: image
+  role: illustrative
+  sha256: a3e377d0b30e3f399e399a2d6872dfecc8daf164b8b26437fc00b73fb34b3e6d
+  units: px
+  revision: supplied photograph
+  note: 2394 x1892 px; full stack, four corner thumbscrews, fan above module. Oblique view; no dimension lines.
+- path: sources/assembly.glb
+  kind: other
+  role: illustrative
+  sha256: 6008f2545e53788331988b6dc0ae910f88a09f80068e2a25e92e842f591c8454
+  units: not inspected
+  revision: supplied stack viewer asset
+  note: Existing stack visualization; opaque checksum only; not loaded.
+- path: sources/assembly.html
+  kind: other
+  role: illustrative
+  sha256: ba6304ea6a112f000e6f1e500bed4c59ea5328716f0dacb88cd142a58e2301e2
+  units: not applicable
+  revision: supplied stack viewer
+  note: Viewer inventory only; not opened so it cannot load the prohibited GLB.
+- path: sources/assembly.yaml
+  kind: table
+  role: authoritative
+  sha256: 56806ed098a871a6d4364240d4f25a0b9b71075cd9c81bf783461b0a6568a52c
+  units: mm
+  revision: schema 1; supplied snapshot
+  note: Primary assembly frame, component envelopes, transforms and mounting pattern. Its upstream CAD measurements
+    are quoted text here, not a new reference ingest.
+- path: sources/base.step
+  kind: cad
+  role: authoritative
+  sha256: 9534efa45978b0f78d5785622b13e56e8d8b19791f9f8c326e888c79c6fcafaa
+  units: mm
+  revision: sn0003
+  note: Underlying base source for assembly.yaml; opaque checksum only, no CAD import or geometry inspection.
+- path: sources/carrier-layout.kicad_pcb
+  kind: cad
+  role: authoritative
+  sha256: f9852b5ac43fe144772eab4ed4ef48203d0e355d91b2defb36c01d50e138eb1b
+  units: mm
+  revision: supplied layout
+  note: Underlying carrier layout; connector-index.md is the only layout extract read. Opaque checksum only.
+- path: sources/carrier.step
+  kind: cad
+  role: authoritative
+  sha256: 722359a37582ddd48f6408bcd018eca6d3010b33d1c6658e20d6371c3a48916e
+  units: mm
+  revision: sn0002
+  note: Underlying carrier source for assembly.yaml; opaque checksum only.
+- path: sources/carrier.stl
+  kind: mesh
+  role: illustrative
+  sha256: a23927b46f0072eef936f8518f95d3ce042e9c670696c0c2bb216da596aa646f
+  units: mm
+  revision: supplied carrier export
+  note: Existing board, not case geometry; opaque checksum only.
+- path: sources/connector-index.md
+  kind: table
+  role: authoritative
+  sha256: bcdfe165d5da3d774e83cd22e3764d3e6541b88ec88da6471bc5c49694cfe34a
+  units: mm
+  revision: supplied text extract
+  note: Primary connector identities, frame offsets and ambiguity of user USB names. Anchors are not connector envelopes.
+- path: sources/orin-fan-2.jpg
+  kind: image
+  role: illustrative
+  sha256: 8ea2e7804e2ced44436a1d25c80800069f3e840bde2dc6ae296bc82ffce2fc24
+  units: px
+  revision: supplied product view
+  note: 900 x650 px; one intake and visible end exhaust slots.
+- path: sources/orin-fan-brackets.png
+  kind: image
+  role: illustrative
+  sha256: ce94d4778c75e40c5b8839bbbb3ccc9fe9db9e0d9a4eccc0a75d6a527ebf0ca5
+  units: px
+  revision: supplied PNG conversion
+  note: 1080 x752 px; four bracket eyes and five visible loose fasteners. Source prose says four shoulder screws;
+    do not derive case fastener count from this photo.
+- path: sources/orin-fan-brackets.webp
+  kind: image
+  role: illustrative
+  sha256: 28ce624d58d2c497a82f0c5f50d4f8c904e63c5dada1cf06fe373a97ad1f7745
+  units: px
+  revision: supplied original
+  note: Original companion of the inspected bracket PNG; inventory only.
+- path: sources/orin-fan-profile.avif
+  kind: image
+  role: illustrative
+  sha256: 2247285bf72f81d879b33d0d5cd570c6258e74219b4c33e569cb7db5151a6b0d
+  units: px
+  revision: supplied original
+  note: Original companion of inspected PNG; inventory only.
+- path: sources/orin-fan-profile.png
+  kind: image
+  role: illustrative
+  sha256: f29b908bedca8250bb2790f1cbeac16fdd15329135b1adbf5dcb185c7d19641f
+  units: px
+  revision: supplied PNG conversion
+  note: 800 x800 px; raised shroud, side fin exit and flexible fan lead; no calibrated thickness.
+- path: sources/orin-fan.jpg
+  kind: image
+  role: illustrative
+  sha256: a8626d6bbfb0cfc80af74c42f1ce5c157d233e610eaf5075a00487d0f749c0bf
+  units: px
+  revision: supplied photograph
+  note: 800 x534 px; primary approximate module-to-shroud scale; no new authoritative dimensions.
+- path: sources/orin-nano-module.stp
+  kind: cad
+  role: authoritative
+  sha256: cfb7faafc64cfbc85fbfadcb932e971cb452b4c38573e4f0db4a2a7e0d2ff7dc
+  units: mm
+  revision: GROGU_BOARD_MEMORY; see README
+  note: Underlying module source; opaque checksum only. No reference mesh/deviation target.
+- path: sources/stm32-layout.kicad_pcb
+  kind: cad
+  role: authoritative
+  sha256: 55e1c77177d7299fecfa1cae13d4745b65ae156a566a6ec49664d00867be7984
+  units: mm
+  revision: supplied layout
+  note: Underlying base layout; connector-index.md is the only layout extract read. Opaque checksum only.
+- path: sources/stm32.stl
+  kind: mesh
+  role: illustrative
+  sha256: 34801a8e31e5521043b9da3eb08f43b2350cfd93f84d98842fb19bcab515af73
+  units: mm
+  revision: supplied base export
+  note: Existing board, not case geometry; opaque checksum only.
+open_questions: ['Which physical USB-C receptacles are called eth gadget and RPI debugger? The names are absent
+    from the supplied files; all five edge USB-C receptacles are opened without assigning either name to a refdes.',
+  'Does UARTs include any connection beyond base J4 UART7, J5 UART8, J7 UART2/I2C4 and the two edge GH rows? UART1
+    is an interior silk label, not an identified connector.', 'What PETG shop wall gauge, nozzle/layer settings,
+    print orientation, supports, service loads and operating temperature should govern release? The draft uses 3.2
+    mm structural skins with a 2.4 mm regional minimum; no load or creep rating is established.', 'Do the actual
+    mating plugs, latches, cable bends and insertion reach fit the inferred 1.5 mm port margin, 2.0 mm side allowance
+    and 1.5 mm floor gap? Only receptacle/body envelopes are supplied.', 'Can the heatsink 61 x 40 x 15 mm estimate,
+    its center, full fin outlets and fan cable route be measured? The roof uses +/-2 mm x/y size, +/-3 mm height
+    and an inferred +/-0.5 mm centering allowance; airflow performance is not verified.', 'May the unmeasured photographed
+    thumbscrews and feet be replaced for this prototype by eight M2.5 screws and four OD4.5 x14 mm metal roof spacers?
+    Confirm actual spacer bore/OD, screw heads, lengths, torque, thread depth and safe engagement from both ends
+    of the existing female-female standoffs.', 'Are D8 mm bottom-pad contact lands clear and mechanically acceptable
+    at all four base-board holes? The hole axes are known, but the larger underside bearing lands and nearby omitted
+    components were not measured.', 'Do the real spring bracket, omitted components and tallest DRAM revision remain
+    inside the supplied and conservatively expanded keep-outs? The raw CAD/PCB/mesh files were not inspected, and
+    the photograph includes unmodelled hardware.', 'Is external access also required to Hirose ix Ethernet, microSD,
+    the carrier FFC connector or the carrier fan header? Their keep-outs are protected, but separate service openings
+    were not requested and are not included.']

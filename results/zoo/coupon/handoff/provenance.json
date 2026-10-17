@@ -1,0 +1,65 @@
+{
+  "generated_at": "2026-09-16T07:40:43Z",
+  "skillkat_version": "0.1.0",
+  "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+  "host": "Daniels-MacBook-Pro.local",
+  "git": {
+    "head": "b69def70d78d68384e06aa772ba77397c10dc6c2",
+    "dirty": true
+  },
+  "part": "coupon",
+  "release_status": "training-only",
+  "verdict": "PASS",
+  "gates": {
+    "passed": [
+      "contract_provenance",
+      "envelope",
+      "mass_properties",
+      "features",
+      "export_agreement",
+      "edit_robustness",
+      "source_hygiene",
+      "export_integrity",
+      "traceability",
+      "evidence_separation",
+      "independence"
+    ],
+    "failed": [],
+    "not_applicable": [
+      "reference_fidelity"
+    ]
+  },
+  "design_bundle_sha256": {
+    "brief.md": "7f258d07502bfdb1eff9e4e92292acb5a184fa7e40b7907437702d93e313a03b",
+    "contract.yaml": "652163194e1878b265516db4094ebda685aa2548befec2977f79c77e29cf6314"
+  },
+  "kcl_sha256": {
+    "main.kcl": "34c96f0401252ecc7031b6751c799feddfa4a20f1c0114f07444a5b8e7c46409"
+  },
+  "exports": {
+    "step": {
+      "file": "coupon.step",
+      "sha256": "9bb7eb93d1283453f165f137df4b6f83acd67b9ae5d24501378dd3cce85f2d5a",
+      "bytes": 7060
+    },
+    "stl": {
+      "file": "coupon.stl",
+      "sha256": "88692a18f2683137c56899271da14a1bd4c1aef5ca371dd69d9889d6b4d22a72",
+      "bytes": 1512
+    },
+    "glb": {
+      "file": "coupon.glb",
+      "sha256": "62cfd6d7efcf31c1dc3183ede8c186c47ee73f583cf1a62c7ebdc47ee17c732b",
+      "bytes": 6348
+    }
+  },
+  "codex_threads": {
+    "plan": "01a0a3d0-2462-7083-ba8b-bcdc8a498657",
+    "model": "01a0a3d2-89f7-7a91-8565-ac4a7b673425",
+    "model_retry": null,
+    "blockout": "01a0a3cb-0e2c-7611-bac6-0ca611b8291f"
+  },
+  "engine_calls_total": 13,
+  "physical_validation": "not performed",
+  "engineering_review": "not performed"
+}

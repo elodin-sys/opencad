@@ -1,0 +1,544 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; every value carries provenance and a tolerance",
+      "ok": true,
+      "evidence": [
+        "designs/spleen-c1-blade/contract.yaml: 7 parameters {'stated': 4, 'measured (reference model)': 1, 'derived': 2}",
+        "open questions: 2"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources",
+      "details": {
+        "provenance": {
+          "stated": 4,
+          "measured (reference model)": 1,
+          "derived": 2
+        },
+        "soft_values": 0,
+        "open_questions": [
+          "What material, density and manufacturing process, if any, should be assigned? The supplied sources establish geometry only; these fields remain null and no mass claim is made.",
+          "Is a specific original interpolation law required between published points? No spline degree, knot vector or continuity convention is supplied. The reconstruction must retain every point within 0.001 mm and preserve the contour without smoothing; exact between-point authoring geometry remains unspecified."
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/spleen-c1-blade/inspect.json bbox.max_error = 0.0 (tol 0.01)",
+        "results/spleen-c1-blade/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (Codex retry) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -0.19685863578579998,
+            -21.6984059788506,
+            0.0
+          ],
+          "expected_max": [
+            47.77582706417,
+            9.51390836469706,
+            165.0
+          ],
+          "measured_min": [
+            -0.1969,
+            -21.6984,
+            0.0
+          ],
+          "measured_max": [
+            47.7758,
+            9.5139,
+            165.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.01,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -0.19685863578579998,
+            -21.6984059788506,
+            0.0
+          ],
+          "expected_max": [
+            47.77582706417,
+            9.51390836469706,
+            165.0
+          ],
+          "measured_min": [
+            -0.1969,
+            -21.6984,
+            0.0
+          ],
+          "measured_max": [
+            47.7758,
+            9.5139,
+            165.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.01,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/spleen-c1-blade/inspect.json volume = 38055.1251 vs 38055.12443399581",
+        "results/spleen-c1-blade/inspect.json surface_area = 20885.7126 vs 20885.71265168679",
+        "results/spleen-c1-blade/inspect.json center_of_mass = [20.6197, 1.0449, 82.5] vs [20.619657984838426, 1.0449253890203034, 82.5]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "Codex retry with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 38055.12443399581,
+          "measured": 38055.1251,
+          "error": 0.0007,
+          "band": 76.1102,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 20885.71265168679,
+          "measured": 20885.7126,
+          "error": 0.0,
+          "band": 41.7714,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            20.619657984838426,
+            1.0449253890203034,
+            82.5
+          ],
+          "measured": [
+            20.6197,
+            1.0449,
+            82.5
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "tolerance": 0.01,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section and named face verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/spleen-c1-blade/inspect.json features: 7/7 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []"
+      ],
+      "failure_means": "a hole, wall, cavity, channel or face is missing or in the wrong place",
+      "knob": "Codex retry naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": []
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/spleen-c1-blade/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "KCL (Zoo), STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/spleen-c1-blade/inspect.json agreement kcl=38055.07077777465 step=38055.12510178579 stl=38055.12577889845 (rel tol 0.002)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure to Zoo if persistent",
+      "details": {
+        "kcl": 38055.07077777465,
+        "step": 38055.12510178579,
+        "stl": 38055.12577889845,
+        "tolerance_rel": 0.002,
+        "kcl_vs_step_rel": 1.4275084102650194e-06,
+        "stl_vs_step_rel": 1.779294280995398e-08,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/spleen-c1-blade/edit.json 2/2 edit tests ok; restore.ok = True"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, or the deliverable changed",
+      "knob": "make features derive from the named constants",
+      "details": {
+        "tests": [
+          {
+            "parameter": "span",
+            "delta": 10.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 2306.3711778179277,
+                "measured": 2306.3712182901218,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  10.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  10.0
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          },
+          {
+            "parameter": "axialChord",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 799.2348292276137,
+                "measured": 799.2056093987121,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  1.0075237391351841,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  1.0074777155902694,
+                  2.0153052560090146e-09,
+                  0.0
+                ],
+                "ok": true
+              },
+              "still_one_body": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              }
+            },
+            "error": null
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532",
+          "re_export_sha256": "d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532",
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "KCL 2, mm, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/spleen-c1-blade/verify.json hygiene: kcl2=True mm=True legacy=[] params_ok=True asserts=15",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "Codex retry: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "defaultLengthUnit = mm, kclVersion = 2.0",
+          "kcl_version_2": true,
+          "default_unit_mm": true,
+          "legacy_v1": [],
+          "imports": [],
+          "forbidden_imports": [],
+          "asserts": 15,
+          "sketch_blocks": 2,
+          "feature_ops": 1,
+          "parameters": {
+            "span": {
+              "found": true,
+              "value": 165.0,
+              "unit": "mm",
+              "expected": 165.0,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "axialChord": {
+              "found": true,
+              "value": 47.6144470215,
+              "unit": "mm",
+              "expected": 47.6144470215,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "trailingEdgeY": {
+              "found": true,
+              "value": -21.59972305301,
+              "unit": "mm",
+              "expected": -21.59972305301,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "trailingEdgeRadius": {
+              "found": true,
+              "value": 0.435,
+              "unit": "mm",
+              "expected": 0.435,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "profilePerimeter": {
+              "found": true,
+              "value": 123.78447524923155,
+              "unit": "mm",
+              "expected": 123.78447524923155,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "trueChord": {
+              "found": true,
+              "value": 52.284640202739865,
+              "unit": "mm",
+              "expected": 52.284640202739865,
+              "expected_unit": "mm",
+              "ok": true
+            },
+            "signedStagger": {
+              "found": true,
+              "value": -24.40085023652175,
+              "unit": "deg",
+              "expected": -24.40085023652175,
+              "expected_unit": "deg",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "lines": 28109,
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": ""
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (components >= solids)",
+      "ok": true,
+      "evidence": [
+        "results/spleen-c1-blade/export.json step.deterministic = True sha256 d85180ffee3c; stl=present; glb=present",
+        "results/spleen-c1-blade/inspect.json valid = True solids = 1 (expected 1)",
+        "results/spleen-c1-blade/inspect.json mesh watertight = True components = 1"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/spleen-c1-blade/export/spleen-c1-blade.step",
+            "sha256": "d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532",
+            "bytes": 3067911,
+            "deterministic": true,
+            "second_sha256": "d85180ffee3c69c614ac8d2ef420cc9d4354ee7f282bd7cab84f178b3feaa532"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/spleen-c1-blade/export/spleen-c1-blade.stl",
+            "sha256": "81b2b92fcaba1c23a8169d307dbd4dd71a8f2313535d0fc66a43cecc6b3a54fc",
+            "bytes": 1391792
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/skillkat/results/zoo/spleen-c1-blade/export/spleen-c1-blade.glb",
+            "sha256": "d2ca098cd1c5289144b59f453197edcb26c1d918da133b1117ed309b03346a98",
+            "bytes": 3083612
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "faces": 7996,
+          "vertices": 4000,
+          "watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "degenerate_faces": 0,
+          "volume": 38055.12577889845,
+          "surface_area": 20885.71277208826,
+          "bbox_min": [
+            -0.19686,
+            -21.69841,
+            0.0
+          ],
+          "bbox_max": [
+            47.77583,
+            9.51391,
+            165.0
+          ],
+          "center_of_mass": [
+            20.619658404150552,
+            1.0449253614920428,
+            82.50000000000003
+          ]
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, Codex thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread 01a0a666-121e-7ee1-be3a-132767492e39; zoo versions ['zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)']; engine calls 13; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 13,
+        "allow_errors": false,
+        "zoo_versions": [
+          "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/spleen-c1-blade/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The KCL is editable construction: no import of reference geometry, sketch blocks and features present",
+      "ok": true,
+      "evidence": [
+        "results/spleen-c1-blade/verify.json hygiene.forbidden_imports = [] sketch_blocks = 2 feature_ops = 1 lines = 28109"
+      ],
+      "failure_means": "the deliverable is a re-export of the reference, not a design",
+      "knob": "rebuild from construction; the reference is for scoring only",
+      "details": {
+        "imports": [],
+        "sketch_blocks": 2,
+        "feature_ops": 1
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

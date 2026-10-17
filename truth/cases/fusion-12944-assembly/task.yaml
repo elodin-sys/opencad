@@ -1,0 +1,26 @@
+id: fusion-12944-assembly
+kind: assembly
+set: joint_set_12944
+bodies:
+- 22303_e9723631_0014_1
+- 22303_e9723631_0013_1
+source:
+  citation: Autodesk AI Lab, Fusion 360 Gallery Dataset, Assembly-Joint subset j1.0.0
+    (Willis et al., JoinABLe, CVPR 2022)
+  urls:
+  - https://github.com/AutodeskAILab/Fusion360GalleryDataset/blob/master/docs/assembly_joint.md
+  - https://fusion-360-gallery-dataset.s3.us-west-2.amazonaws.com/assembly/j1.0.0/j1.0.0.7z
+  accessed: '2026-09-17'
+  revision: j1.0.0
+  license: Fusion 360 Gallery Dataset License (non-commercial research); STEP bodies
+    in mm, joint JSON in cm
+inputs:
+- inputs/assembly-task.md
+- inputs/joint-task.json
+- inputs/22303_e9723631_0014_1.step
+- inputs/22303_e9723631_0013_1.step
+truth:
+- truth/joint_set.json
+deliverable: assembly.yaml
+scorer: opencad.truth.assembly_task.score
+task_text_version: 2

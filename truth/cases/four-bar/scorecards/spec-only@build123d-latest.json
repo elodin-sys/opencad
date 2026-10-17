@@ -1,0 +1,514 @@
+{
+  "case": "four-bar",
+  "arm": "spec-only",
+  "design": "four-bar",
+  "kind": "machine",
+  "mode": "reconstruction",
+  "backend": "build123d",
+  "truth_class": "C",
+  "scored_at": "2026-09-27T16:57:53Z",
+  "verdict": "PASS",
+  "error": null,
+  "accuracy_score": 100.0,
+  "summary": {
+    "required_pass": 10,
+    "required_total": 10,
+    "optional_pass": 0,
+    "optional_total": 0,
+    "performance_pass": 4,
+    "performance_scored": 4,
+    "performance_unresolved": 0,
+    "performance_total": 4,
+    "performance_by_split": {
+      "development": {
+        "required": 4,
+        "pass": 4,
+        "fail": 0,
+        "unresolved": 0,
+        "missing": 0
+      },
+      "held_out": {
+        "required": 0,
+        "pass": 0,
+        "fail": 0,
+        "unresolved": 0,
+        "missing": 0
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "bbox_size",
+      "kind": "bbox_size",
+      "required": true,
+      "note": "ground plate x -30..130 and y from -30; coupler and rocker ends reach y 88 at rest; layers z -5..15",
+      "expected": [
+        160.0,
+        118.0,
+        20.0
+      ],
+      "measured": [
+        160.0,
+        118.0,
+        20.0
+      ],
+      "error": 0.0,
+      "ok": true
+    },
+    {
+      "id": "solid_count",
+      "kind": "solid_count",
+      "required": true,
+      "note": "",
+      "expected": 4,
+      "measured": 4,
+      "ok": true
+    },
+    {
+      "id": "ground",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 47717.256661176914,
+        "bbox_min": [
+          -30.0,
+          -30.0,
+          -5.0
+        ],
+        "bbox_max": [
+          130.0,
+          30.0,
+          0.0
+        ],
+        "center_of_mass": [
+          50.0,
+          -6.234544533667653e-17,
+          -2.5000000000000004
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 47717.26,
+        "measured": 47717.256661176914,
+        "band": 238.58630000000002,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "crank",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 3922.565322047687,
+        "bbox_min": [
+          -8.0,
+          -8.0,
+          0.0
+        ],
+        "bbox_max": [
+          48.0,
+          8.0,
+          5.0
+        ],
+        "center_of_mass": [
+          19.999999638370983,
+          1.1203905349798995e-10,
+          2.4999999999999996
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 3922.57,
+        "measured": 3922.565322047687,
+        "band": 19.61285,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "coupler",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 8722.563840805078,
+        "bbox_min": [
+          32.0,
+          -8.0,
+          5.0
+        ],
+        "bbox_max": [
+          108.0,
+          88.0,
+          10.0
+        ],
+        "center_of_mass": [
+          69.99999976941942,
+          39.999999692848924,
+          7.499999999999998
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 8722.57,
+        "measured": 8722.563840805078,
+        "band": 43.61285,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "rocker",
+      "kind": "solid",
+      "required": true,
+      "note": "",
+      "measured": {
+        "volume": 7122.564334552614,
+        "bbox_min": [
+          92.0,
+          -8.0,
+          10.0
+        ],
+        "bbox_max": [
+          108.0,
+          88.0,
+          15.0
+        ],
+        "center_of_mass": [
+          99.99999999983751,
+          39.99999962045434,
+          12.5
+        ]
+      },
+      "found": true,
+      "checks": {
+        "expected": 7122.57,
+        "measured": 7122.564334552614,
+        "band": 35.61285,
+        "ok": true
+      },
+      "ok": true
+    },
+    {
+      "id": "crank_pin_hole",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          40.0,
+          0.0,
+          2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          40.0,
+          0.0,
+          2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "coupler_far_hole",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          100.0,
+          80.0,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          100.0,
+          80.0,
+          7.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "rocker_pivot_hole",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          100.0,
+          0.0,
+          12.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          100.0,
+          0.0,
+          12.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "id": "ground_rocker_hole",
+      "kind": "cylinder",
+      "required": true,
+      "note": "",
+      "expected": {
+        "point": [
+          100.0,
+          0.0,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "kind": "hole"
+      },
+      "measured": {
+        "center": [
+          100.0,
+          0.0,
+          -2.5
+        ],
+        "direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "radius": 3.0,
+        "length": 5.0,
+        "kind": "hole"
+      },
+      "axis_offset": 0.0,
+      "radius_error": 0.0,
+      "checks": {
+        "axis": {
+          "max": 0.05,
+          "measured": 0.0,
+          "ok": true
+        },
+        "length": {
+          "expected": 5.0,
+          "measured": 5.0,
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "performance": [
+    {
+      "id": "rockerAngle",
+      "kind": "performance",
+      "quantity": "joint_value",
+      "unit": "deg",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "points": 37,
+      "max_error": 4.844125101044483e-10,
+      "tolerance": 0.1,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    },
+    {
+      "id": "rockerSwing",
+      "kind": "performance",
+      "quantity": "joint_range",
+      "unit": "deg",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "prediction": 64.66699717965128,
+      "reference": 64.66706138631885,
+      "error": -6.420666757378513e-05,
+      "tolerance": 0.05,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    },
+    {
+      "id": "couplerX",
+      "kind": "performance",
+      "quantity": "point_x",
+      "unit": "mm",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "points": 37,
+      "max_error": 4.843538903287481e-10,
+      "tolerance": 0.1,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    },
+    {
+      "id": "couplerY",
+      "kind": "performance",
+      "quantity": "point_y",
+      "unit": "mm",
+      "case": null,
+      "evidence": "C",
+      "split": "development",
+      "digitized": false,
+      "required": true,
+      "simulation": null,
+      "status": "scored",
+      "points": 37,
+      "max_error": 4.922142693430942e-10,
+      "tolerance": 0.1,
+      "ok": true,
+      "solver": "evaluator",
+      "model": "measured from the placed geometry"
+    }
+  ],
+  "pipeline_gates": {
+    "ok": true,
+    "summary": "9 pass, 0 fail, 5 n/a",
+    "failed": []
+  },
+  "simulations": {},
+  "hash_binding": {
+    "manifest_sha256": "eda2343bfb8bdece6b56b8ffb3ee7717b3fbb20850d5de9e67cbca2c2dfb0912",
+    "truth_files": {
+      "truth/four-bar-truth.yaml": "f41d12ce6f78163a8bbfdffd80b5ea4885673c53f76cfebf0a8b172519841f0e",
+      "truth/rocker-angle.csv": "4704c1a6c7565c464e6312f0f99518cbf8c9981e32d79a46d9c608aae7ae7a0c",
+      "truth/coupler-point.csv": "b973e40cf58b07f5d321f2db929118bc246e8508b9e534682b208fd4d10ee09a"
+    },
+    "input_files": {
+      "inputs/four-bar-spec.md": "aececd85a2ba8a2e020775f05a44f1bd1c3a505c8c8c5ed634606d975490bf17"
+    },
+    "step_sha256": "754afbab5ee1c7c40f4c6cda68b59ea3560aebead349703cb257d34f297b666d",
+    "assembly_source": {
+      "checkpoint.py": "40898eca095d2babd318de710e113a721999fdc9ba01fe1038e023940754a53d",
+      "main.py": "40898eca095d2babd318de710e113a721999fdc9ba01fe1038e023940754a53d"
+    },
+    "design_bundle": {
+      "assembly.yaml": "af5986cb342756212d7f1451633477ebdf4e59dada0a2c886bcbe4ef237157e6",
+      "brief.md": "36c25c7ec0a62d1ad5394a571b6d90f3267da2ddfa0299450e7f4e0028a60e35",
+      "sources/four-bar-spec.md": "aececd85a2ba8a2e020775f05a44f1bd1c3a505c8c8c5ed634606d975490bf17"
+    }
+  },
+  "provenance": {
+    "generated_at": "2026-09-27T16:57:53Z",
+    "skillkat_version": "0.1.0",
+    "backend": "build123d",
+    "engine_version": "0.12.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "f067337b8ab648471ad40a647b21672f74d56978",
+      "dirty": true
+    }
+  }
+}

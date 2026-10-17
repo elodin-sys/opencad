@@ -1,0 +1,874 @@
+@settings(defaultLengthUnit = mm, kclVersion = 2.0)
+
+// Shared contract literals: keep each independently editable.
+export plateWidth = 53mm
+export plateThickness = 14mm
+export bottomZ = -30mm
+export lugMaxZ = 33.72mm
+export bodyTopZ = 28mm
+export leftTopChamferZ = 24mm
+export rightTopChamferX = 22.5mm
+export leftFootX = -21.95mm
+export leftShoulderZ = -21.925mm
+export leftDiagonalAnchorX = -22.946mm
+export leftDiagonalAnchorZ = -23.45mm
+export rightBottomChamferZ = -22.75mm
+export halfWidth = 26.5mm
+export overallHeight = 63.72mm
+export leftKneeX = -24.15mm
+export leftKneeZ = -22.13mm
+export leftFootTopZ = -24.55mm
+export lugWebPeakX = 16.75mm
+export keyUpperCounterboreDiameter = 26.0mm
+export keyAxisX = -2.0mm
+export keyUpperZ = 16.4mm
+export keyMiddleEnd = 8.0mm
+export keyLowerRecessDiameter = 22.5mm
+export keyBackDepth = 3.0mm
+export keyUpperBoreDiameter = 16.0mm
+export keyLowerExitDiameter = 14.0mm
+export keyLowerExitStart = 10.361mm
+export clampCornerOuterDiameter = 12.684mm
+export clampCornerAxisX = 22.922mm
+export clampCenterY = 7.0mm
+export clampCornerAxisZ = -22.922mm
+export clampCornerStart = -3.975mm
+export clampCornerEnd = -0.975mm
+export clampOuterDiameter = 12.63mm
+export clampAxisX = 25.618mm
+export clampStartZ = -9.0mm
+export clampEndZ = 24.0mm
+export keyUpperRecessDiameter = 12.0mm
+export clampReliefDiameter = 11.5mm
+export clampTiltAxisX = 28.665mm
+export clampTiltAxisZ = -5.054mm
+export clampTiltDirX = 0.1736_
+export clampTiltDirZ = 0.9848_
+export clampTiltStart = -26.345mm
+export clampTiltEnd = -4.081mm
+export clampUpperReliefX = 28.75mm
+export clampUpperReliefEnd = 27.506mm
+export clampOffsetDiameter = 9.5mm
+export clampOffsetX = 25.171mm
+export clampNearY = 5.5mm
+export clampFarY = 8.5mm
+export clampCornerOffsetDiameter = 8.787mm
+export clampCornerOffsetX = 22.504mm
+export clampCornerNearY = 5.143mm
+export clampCornerOffsetZ = -22.504mm
+export clampCornerFarY = 8.857mm
+export clampInnerDiameter = 8.0mm
+export clampTiltInnerX = 27.777mm
+export clampTiltInnerZ = -4.898mm
+export clampTiltNearStart = -19.018mm
+export clampTiltNearEnd = -16.249mm
+export clampTiltFarStart = -23.376mm
+export clampTiltFarEnd = -4.407mm
+export clampUpperInnerX = 27.849mm
+export clampUpperNearEnd = 19.625mm
+export clampUpperFarEnd = 24.712mm
+export counterboreDiameter = 6.5mm
+export leftPivotX = -23.92mm
+export pivotCounterboreStart = 8.5mm
+export upperLeftScrewX = -18.5mm
+export upperLeftScrewZ = 22.0mm
+export longCounterboreEnd = 9.8mm
+export lowerLeftScrewX = -17.0mm
+export lowerLeftScrewZ = -20.0mm
+export rightPivotX = 19.92mm
+export upperRightScrewX = 20.0mm
+export upperRightScrewZ = 17.0mm
+export rightCounterboreEnd = 7.8mm
+export sideScallopDiameter = 5.5mm
+export sideScallopX = 22.088mm
+export sideScallopZ = -15.0mm
+export sideScallopEnd = 4.649mm
+export filamentDiameter = 4.0mm
+export filamentTransverseX = 14.708mm
+export filamentZ = 30.0mm
+export filamentTransverseEnd = 9.242mm
+export filamentEntryAxisX = -1.248mm
+export filamentEntryAxisY = 3.964mm
+export filamentDirX = 0.9538_
+export filamentDirY = 0.3003_
+export filamentEntryStart = 20.136mm
+export filamentEntryEnd = 24.991mm
+export upperLeftPilotDiameter = 3.5mm
+export longPilotStart = 10.1mm
+export lowerLeftPilotDiameter = 3.5mm
+export screwDiameter = 3.4mm
+export pivotPilotEnd = 7.813mm
+export leftNutX = -22.0mm
+export leftNutZ = 15.0mm
+export nutPilotStart = 4.6mm
+export lugNutX = 8.0mm
+export lugNutZ = 28.0mm
+export lowerNutX = 12.0mm
+export lowerNutZ = -17.0mm
+export rightPilotStart = 8.1mm
+export upperLeftBossDiameter = 11.0mm
+export lugBossDiameter = 10.0mm
+export clampCornerLipDiameter = 9.184mm
+export clampAxialLipDiameter = 9.13mm
+export clampFarLipDiameter = 6.0mm
+export clampFarLipStart = -8.242mm
+export clampCornerOffsetLipDiameter = 5.287mm
+export nutLeftFlatX = -24.8mm
+export nutRightFlatX = -19.2mm
+export nutFullDepth = 4mm
+export nutRectEnd = 4.3mm
+export longCounterboreFullDepth = 9.5mm
+export rightCounterboreFullDepth = 7.5mm
+export nutAcrossFlats = 5.6mm
+export nutCornerRadius = 3.2331615074619044mm
+export bridgeLayerHeight = 0.3mm
+export lowerTransitionLength = 7.361mm
+export longPilotLength = 3.9mm
+export pivotMouthDiameter = 3.9mm
+
+// Positive dimensions and ordered extents guard intent without equality locks.
+// Unused detail parameters are guarded for their future feature families.
+assert(
+  plateWidth,
+  isGreaterThan = 0mm,
+  isLessThan = 2 * overallHeight,
+  error = "plateWidth: outside geometric bounds",
+)
+assert(
+  plateThickness,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "plateThickness: outside geometric bounds",
+)
+assert(
+  bottomZ,
+  isGreaterThan = -overallHeight,
+  isLessThan = 0mm,
+  error = "bottomZ: outside geometric bounds",
+)
+assert(
+  lugMaxZ,
+  isGreaterThan = bodyTopZ,
+  isLessThan = overallHeight,
+  error = "lugMaxZ: outside geometric bounds",
+)
+assert(
+  bodyTopZ,
+  isGreaterThan = 0mm,
+  isLessThan = lugMaxZ,
+  error = "bodyTopZ: outside geometric bounds",
+)
+assert(
+  leftTopChamferZ,
+  isGreaterThan = bottomZ,
+  isLessThan = bodyTopZ,
+  error = "leftTopChamferZ: outside geometric bounds",
+)
+assert(
+  rightTopChamferX,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth / 2,
+  error = "rightTopChamferX: outside geometric bounds",
+)
+assert(
+  leftFootX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = 0mm,
+  error = "leftFootX: outside geometric bounds",
+)
+assert(
+  leftShoulderZ,
+  isGreaterThan = bottomZ,
+  isLessThan = 0mm,
+  error = "leftShoulderZ: outside geometric bounds",
+)
+assert(
+  leftDiagonalAnchorX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "leftDiagonalAnchorX: outside geometric bounds",
+)
+assert(
+  leftDiagonalAnchorZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "leftDiagonalAnchorZ: outside geometric bounds",
+)
+assert(
+  rightBottomChamferZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "rightBottomChamferZ: outside geometric bounds",
+)
+assert(
+  halfWidth,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "halfWidth: outside geometric bounds",
+)
+assert(
+  overallHeight,
+  isGreaterThan = bodyTopZ - bottomZ,
+  isLessThan = 2 * plateWidth,
+  error = "overallHeight: outside geometric bounds",
+)
+assert(
+  leftKneeX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "leftKneeX: outside geometric bounds",
+)
+assert(
+  leftKneeZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "leftKneeZ: outside geometric bounds",
+)
+assert(
+  leftFootTopZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "leftFootTopZ: outside geometric bounds",
+)
+assert(
+  lugWebPeakX,
+  isGreaterThan = lugNutX + lugBossDiameter / 2,
+  isLessThan = plateWidth / 2,
+  error = "lugWebPeakX: outside geometric bounds",
+)
+assert(
+  keyUpperCounterboreDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "keyUpperCounterboreDiameter: outside geometric bounds",
+)
+assert(
+  keyAxisX,
+  isGreaterThan = -plateWidth / 2 + keyLowerRecessDiameter / 2,
+  isLessThan = plateWidth / 2 - (keyLowerRecessDiameter / 2),
+  error = "keyAxisX: outside geometric bounds",
+)
+assert(
+  keyUpperZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "keyUpperZ: outside geometric bounds",
+)
+assert(
+  keyMiddleEnd,
+  isGreaterThan = keyBackDepth,
+  isLessThan = plateThickness,
+  error = "keyMiddleEnd: outside geometric bounds",
+)
+assert(
+  keyLowerRecessDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "keyLowerRecessDiameter: outside geometric bounds",
+)
+assert(
+  keyBackDepth,
+  isGreaterThan = 0mm,
+  isLessThan = keyMiddleEnd,
+  error = "keyBackDepth: outside geometric bounds",
+)
+assert(
+  keyUpperBoreDiameter,
+  isGreaterThan = keyUpperRecessDiameter,
+  isLessThan = keyUpperCounterboreDiameter,
+  error = "keyUpperBoreDiameter: outside geometric bounds",
+)
+assert(
+  keyLowerExitDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = keyLowerRecessDiameter,
+  error = "keyLowerExitDiameter: outside geometric bounds",
+)
+assert(
+  keyLowerExitStart,
+  isGreaterThan = keyBackDepth,
+  isLessThan = plateThickness,
+  error = "keyLowerExitStart: outside geometric bounds",
+)
+assert(
+  clampCornerOuterDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "clampCornerOuterDiameter: outside geometric bounds",
+)
+assert(
+  clampCornerAxisX,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth / 2 + clampOuterDiameter / 2,
+  error = "clampCornerAxisX: outside geometric bounds",
+)
+assert(
+  clampCenterY,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness,
+  error = "clampCenterY: outside geometric bounds",
+)
+assert(
+  clampCornerAxisZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "clampCornerAxisZ: outside geometric bounds",
+)
+assert(
+  clampCornerStart,
+  isGreaterThan = bottomZ,
+  isLessThan = clampCornerEnd,
+  error = "clampCornerStart: outside geometric bounds",
+)
+assert(
+  clampCornerEnd,
+  isGreaterThan = clampCornerStart,
+  isLessThan = 0mm,
+  error = "clampCornerEnd: outside geometric bounds",
+)
+assert(
+  clampOuterDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "clampOuterDiameter: outside geometric bounds",
+)
+assert(
+  clampAxisX,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth / 2 + clampOuterDiameter / 2,
+  error = "clampAxisX: outside geometric bounds",
+)
+assert(
+  clampStartZ,
+  isGreaterThan = bottomZ,
+  isLessThan = clampEndZ,
+  error = "clampStartZ: outside geometric bounds",
+)
+assert(
+  clampEndZ,
+  isGreaterThan = clampStartZ,
+  isLessThan = bodyTopZ,
+  error = "clampEndZ: outside geometric bounds",
+)
+assert(
+  keyUpperRecessDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = keyUpperBoreDiameter,
+  error = "keyUpperRecessDiameter: outside geometric bounds",
+)
+assert(
+  clampReliefDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "clampReliefDiameter: outside geometric bounds",
+)
+assert(
+  clampTiltAxisX,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth / 2 + clampOuterDiameter / 2,
+  error = "clampTiltAxisX: outside geometric bounds",
+)
+assert(
+  clampTiltAxisZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "clampTiltAxisZ: outside geometric bounds",
+)
+assert(
+  clampTiltDirX,
+  isGreaterThan = 0_,
+  isLessThan = 1_,
+  error = "clampTiltDirX: outside geometric bounds",
+)
+assert(
+  clampTiltDirZ,
+  isGreaterThan = 0_,
+  isLessThan = 1_,
+  error = "clampTiltDirZ: outside geometric bounds",
+)
+assert(
+  clampTiltStart,
+  isGreaterThan = -overallHeight,
+  isLessThan = clampTiltEnd,
+  error = "clampTiltStart: outside geometric bounds",
+)
+assert(
+  clampTiltEnd,
+  isGreaterThan = clampTiltStart,
+  isLessThan = 0mm,
+  error = "clampTiltEnd: outside geometric bounds",
+)
+assert(
+  clampUpperReliefX,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth / 2 + clampOuterDiameter / 2,
+  error = "clampUpperReliefX: outside geometric bounds",
+)
+assert(
+  clampUpperReliefEnd,
+  isGreaterThan = 0mm,
+  isLessThan = lugMaxZ,
+  error = "clampUpperReliefEnd: outside geometric bounds",
+)
+assert(
+  clampOffsetDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "clampOffsetDiameter: outside geometric bounds",
+)
+assert(
+  clampOffsetX,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth / 2 + clampOuterDiameter / 2,
+  error = "clampOffsetX: outside geometric bounds",
+)
+assert(
+  clampNearY,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness,
+  error = "clampNearY: outside geometric bounds",
+)
+assert(
+  clampFarY,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness,
+  error = "clampFarY: outside geometric bounds",
+)
+assert(
+  clampCornerOffsetDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "clampCornerOffsetDiameter: outside geometric bounds",
+)
+assert(
+  clampCornerOffsetX,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth / 2 + clampOuterDiameter / 2,
+  error = "clampCornerOffsetX: outside geometric bounds",
+)
+assert(
+  clampCornerNearY,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness,
+  error = "clampCornerNearY: outside geometric bounds",
+)
+assert(
+  clampCornerOffsetZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "clampCornerOffsetZ: outside geometric bounds",
+)
+assert(
+  clampCornerFarY,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness,
+  error = "clampCornerFarY: outside geometric bounds",
+)
+assert(
+  clampInnerDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "clampInnerDiameter: outside geometric bounds",
+)
+assert(
+  clampTiltInnerX,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth / 2 + clampOuterDiameter / 2,
+  error = "clampTiltInnerX: outside geometric bounds",
+)
+assert(
+  clampTiltInnerZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "clampTiltInnerZ: outside geometric bounds",
+)
+assert(
+  clampTiltNearStart,
+  isGreaterThan = -overallHeight,
+  isLessThan = clampTiltNearEnd,
+  error = "clampTiltNearStart: outside geometric bounds",
+)
+assert(
+  clampTiltNearEnd,
+  isGreaterThan = clampTiltNearStart,
+  isLessThan = 0mm,
+  error = "clampTiltNearEnd: outside geometric bounds",
+)
+assert(
+  clampTiltFarStart,
+  isGreaterThan = -overallHeight,
+  isLessThan = clampTiltFarEnd,
+  error = "clampTiltFarStart: outside geometric bounds",
+)
+assert(
+  clampTiltFarEnd,
+  isGreaterThan = clampTiltFarStart,
+  isLessThan = 0mm,
+  error = "clampTiltFarEnd: outside geometric bounds",
+)
+assert(
+  clampUpperInnerX,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth / 2 + clampOuterDiameter / 2,
+  error = "clampUpperInnerX: outside geometric bounds",
+)
+assert(
+  clampUpperNearEnd,
+  isGreaterThan = 0mm,
+  isLessThan = clampUpperFarEnd,
+  error = "clampUpperNearEnd: outside geometric bounds",
+)
+assert(
+  clampUpperFarEnd,
+  isGreaterThan = clampUpperNearEnd,
+  isLessThan = bodyTopZ,
+  error = "clampUpperFarEnd: outside geometric bounds",
+)
+assert(
+  counterboreDiameter,
+  isGreaterThan = screwDiameter,
+  isLessThan = upperLeftBossDiameter,
+  error = "counterboreDiameter: outside geometric bounds",
+)
+assert(
+  leftPivotX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "leftPivotX: outside geometric bounds",
+)
+assert(
+  pivotCounterboreStart,
+  isGreaterThan = pivotPilotEnd,
+  isLessThan = plateThickness,
+  error = "pivotCounterboreStart: outside geometric bounds",
+)
+assert(
+  upperLeftScrewX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "upperLeftScrewX: outside geometric bounds",
+)
+assert(
+  upperLeftScrewZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "upperLeftScrewZ: outside geometric bounds",
+)
+assert(
+  longCounterboreEnd,
+  isGreaterThan = longCounterboreFullDepth,
+  isLessThan = longPilotStart,
+  error = "longCounterboreEnd: outside geometric bounds",
+)
+assert(
+  lowerLeftScrewX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "lowerLeftScrewX: outside geometric bounds",
+)
+assert(
+  lowerLeftScrewZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "lowerLeftScrewZ: outside geometric bounds",
+)
+assert(
+  rightPivotX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "rightPivotX: outside geometric bounds",
+)
+assert(
+  upperRightScrewX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "upperRightScrewX: outside geometric bounds",
+)
+assert(
+  upperRightScrewZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "upperRightScrewZ: outside geometric bounds",
+)
+assert(
+  rightCounterboreEnd,
+  isGreaterThan = rightCounterboreFullDepth,
+  isLessThan = rightPilotStart,
+  error = "rightCounterboreEnd: outside geometric bounds",
+)
+assert(
+  sideScallopDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "sideScallopDiameter: outside geometric bounds",
+)
+assert(
+  sideScallopX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "sideScallopX: outside geometric bounds",
+)
+assert(
+  sideScallopZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "sideScallopZ: outside geometric bounds",
+)
+assert(
+  sideScallopEnd,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness,
+  error = "sideScallopEnd: outside geometric bounds",
+)
+assert(
+  filamentDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = lugBossDiameter,
+  error = "filamentDiameter: outside geometric bounds",
+)
+assert(
+  filamentTransverseX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "filamentTransverseX: outside geometric bounds",
+)
+assert(
+  filamentZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "filamentZ: outside geometric bounds",
+)
+assert(
+  filamentTransverseEnd,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness,
+  error = "filamentTransverseEnd: outside geometric bounds",
+)
+assert(
+  filamentEntryAxisX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "filamentEntryAxisX: outside geometric bounds",
+)
+assert(
+  filamentEntryAxisY,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness,
+  error = "filamentEntryAxisY: outside geometric bounds",
+)
+assert(
+  filamentDirX,
+  isGreaterThan = 0_,
+  isLessThan = 1_,
+  error = "filamentDirX: outside geometric bounds",
+)
+assert(
+  filamentDirY,
+  isGreaterThan = 0_,
+  isLessThan = 1_,
+  error = "filamentDirY: outside geometric bounds",
+)
+assert(
+  filamentEntryStart,
+  isGreaterThan = 0mm,
+  isLessThan = filamentEntryEnd,
+  error = "filamentEntryStart: outside geometric bounds",
+)
+assert(
+  filamentEntryEnd,
+  isGreaterThan = filamentEntryStart,
+  isLessThan = plateWidth,
+  error = "filamentEntryEnd: outside geometric bounds",
+)
+assert(
+  upperLeftPilotDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = counterboreDiameter,
+  error = "upperLeftPilotDiameter: outside geometric bounds",
+)
+assert(
+  longPilotStart,
+  isGreaterThan = longCounterboreEnd,
+  isLessThan = plateThickness,
+  error = "longPilotStart: outside geometric bounds",
+)
+assert(
+  lowerLeftPilotDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = counterboreDiameter,
+  error = "lowerLeftPilotDiameter: outside geometric bounds",
+)
+assert(
+  screwDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = nutAcrossFlats,
+  error = "screwDiameter: outside geometric bounds",
+)
+assert(
+  pivotPilotEnd,
+  isGreaterThan = 0mm,
+  isLessThan = pivotCounterboreStart,
+  error = "pivotPilotEnd: outside geometric bounds",
+)
+assert(
+  leftNutX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "leftNutX: outside geometric bounds",
+)
+assert(
+  leftNutZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "leftNutZ: outside geometric bounds",
+)
+assert(
+  nutPilotStart,
+  isGreaterThan = nutRectEnd,
+  isLessThan = plateThickness,
+  error = "nutPilotStart: outside geometric bounds",
+)
+assert(
+  lugNutX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "lugNutX: outside geometric bounds",
+)
+assert(
+  lugNutZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "lugNutZ: outside geometric bounds",
+)
+assert(
+  lowerNutX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = plateWidth / 2,
+  error = "lowerNutX: outside geometric bounds",
+)
+assert(
+  lowerNutZ,
+  isGreaterThan = bottomZ,
+  isLessThan = lugMaxZ,
+  error = "lowerNutZ: outside geometric bounds",
+)
+assert(
+  rightPilotStart,
+  isGreaterThan = rightCounterboreEnd,
+  isLessThan = plateThickness,
+  error = "rightPilotStart: outside geometric bounds",
+)
+assert(
+  upperLeftBossDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = plateWidth,
+  error = "upperLeftBossDiameter: outside geometric bounds",
+)
+assert(
+  lugBossDiameter,
+  isGreaterThan = nutAcrossFlats,
+  isLessThan = 2 * (lugMaxZ - lugNutZ),
+  error = "lugBossDiameter: outside geometric bounds",
+)
+assert(
+  clampCornerLipDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = clampCornerOuterDiameter,
+  error = "clampCornerLipDiameter: outside geometric bounds",
+)
+assert(
+  clampAxialLipDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = clampOuterDiameter,
+  error = "clampAxialLipDiameter: outside geometric bounds",
+)
+assert(
+  clampFarLipDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = clampOffsetDiameter,
+  error = "clampFarLipDiameter: outside geometric bounds",
+)
+assert(
+  clampFarLipStart,
+  isGreaterThan = clampStartZ,
+  isLessThan = clampEndZ,
+  error = "clampFarLipStart: outside geometric bounds",
+)
+assert(
+  clampCornerOffsetLipDiameter,
+  isGreaterThan = 0mm,
+  isLessThan = clampCornerOffsetDiameter,
+  error = "clampCornerOffsetLipDiameter: outside geometric bounds",
+)
+assert(
+  nutLeftFlatX,
+  isGreaterThan = -plateWidth / 2,
+  isLessThan = nutRightFlatX,
+  error = "nutLeftFlatX: outside geometric bounds",
+)
+assert(
+  nutRightFlatX,
+  isGreaterThan = nutLeftFlatX,
+  isLessThan = 0mm,
+  error = "nutRightFlatX: outside geometric bounds",
+)
+assert(
+  nutFullDepth,
+  isGreaterThan = 0mm,
+  isLessThan = nutRectEnd,
+  error = "nutFullDepth: outside geometric bounds",
+)
+assert(
+  nutRectEnd,
+  isGreaterThan = nutFullDepth,
+  isLessThan = nutPilotStart,
+  error = "nutRectEnd: outside geometric bounds",
+)
+assert(
+  longCounterboreFullDepth,
+  isGreaterThan = 0mm,
+  isLessThan = longCounterboreEnd,
+  error = "longCounterboreFullDepth: outside geometric bounds",
+)
+assert(
+  rightCounterboreFullDepth,
+  isGreaterThan = 0mm,
+  isLessThan = rightCounterboreEnd,
+  error = "rightCounterboreFullDepth: outside geometric bounds",
+)
+assert(
+  nutAcrossFlats,
+  isGreaterThan = screwDiameter,
+  isLessThan = lugBossDiameter,
+  error = "nutAcrossFlats: outside geometric bounds",
+)
+assert(
+  nutCornerRadius,
+  isGreaterThan = screwDiameter / 2,
+  isLessThan = lugBossDiameter / 2,
+  error = "nutCornerRadius: outside geometric bounds",
+)
+assert(
+  bridgeLayerHeight,
+  isGreaterThan = 0mm,
+  isLessThan = nutFullDepth,
+  error = "bridgeLayerHeight: outside geometric bounds",
+)
+assert(
+  lowerTransitionLength,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness - keyBackDepth,
+  error = "lowerTransitionLength: outside geometric bounds",
+)
+assert(
+  longPilotLength,
+  isGreaterThan = 0mm,
+  isLessThan = plateThickness - longCounterboreEnd,
+  error = "longPilotLength: outside geometric bounds",
+)
+assert(
+  pivotMouthDiameter,
+  isGreaterThan = screwDiameter,
+  isLessThan = counterboreDiameter,
+  error = "pivotMouthDiameter: outside geometric bounds",
+)

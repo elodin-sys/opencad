@@ -1,0 +1,233 @@
+{
+  "named_faces": {
+    "floorUnderside": {
+      "plane": "z",
+      "at": -3.0,
+      "normal": "-",
+      "found": 1,
+      "area": 2463.0086404143976,
+      "ok": true,
+      "position": -3.0,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 4.082879184562589e-15,
+      "centroid_uv": [
+        -3.552713678800501e-15,
+        2.011996011973753e-15
+      ]
+    },
+    "chamberFloor": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1935.2210746113126,
+      "ok": true,
+      "position": 0.0,
+      "area_expected": 1935.22,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.5636058932253618e-15,
+      "centroid_uv": [
+        0.0,
+        2.5636058932253618e-15
+      ]
+    },
+    "lidUnderside": {
+      "plane": "z",
+      "at": 25.0,
+      "normal": "-",
+      "found": 1,
+      "area": 1850.3980729643881,
+      "ok": true,
+      "position": 25.0,
+      "area_expected": 1850.4,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.6841385179392576e-15,
+      "centroid_uv": [
+        0.0,
+        2.6841385179392576e-15
+      ]
+    },
+    "lidTop": {
+      "plane": "z",
+      "at": 28.0,
+      "normal": "+",
+      "found": 1,
+      "area": 2261.946710584651,
+      "ok": true,
+      "position": 28.0,
+      "area_expected": 2261.95,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.220446049250313e-15,
+      "centroid_uv": [
+        0.0,
+        2.220446049250313e-15
+      ]
+    },
+    "inletEnd": {
+      "plane": "z",
+      "at": 48.0,
+      "normal": "+",
+      "found": 1,
+      "area": 87.96459430051412,
+      "ok": true,
+      "position": 48.0,
+      "area_expected": 87.96,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.9546328455357134e-15,
+      "centroid_uv": [
+        -2.6645352591003757e-15,
+        1.2767564783189314e-15
+      ]
+    },
+    "outletEnd": {
+      "plane": "x",
+      "at": 58.0,
+      "normal": "+",
+      "found": 1,
+      "area": 75.39822368615503,
+      "ok": true,
+      "position": 57.99999999999999,
+      "centroid_uv": [
+        9.71445146547012e-16,
+        12.500000000000004
+      ]
+    },
+    "pinTop": {
+      "plane": "z",
+      "at": 12.0,
+      "normal": "+",
+      "found": 1,
+      "area": 28.274333882308145,
+      "ok": true,
+      "position": 12.0,
+      "area_expected": 28.27,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 8.929045451828506e-16,
+      "centroid_uv": [
+        8.881784197001252e-16,
+        9.174759717388443e-17
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "floorUnderside",
+      "plane": "z",
+      "at": -3.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "chamberFloor",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "area": 1935.22,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "lidUnderside",
+      "plane": "z",
+      "at": 25.0,
+      "normal": "-",
+      "area": 1850.4,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "lidTop",
+      "plane": "z",
+      "at": 28.0,
+      "normal": "+",
+      "area": 2261.95,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "inletEnd",
+      "plane": "z",
+      "at": 48.0,
+      "normal": "+",
+      "area": 87.96,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "outletEnd",
+      "plane": "x",
+      "at": 58.0,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": null,
+      "mode": "one"
+    },
+    {
+      "name": "pinTop",
+      "plane": "z",
+      "at": 12.0,
+      "normal": "+",
+      "area": 28.27,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 7
+}

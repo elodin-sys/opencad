@@ -1,0 +1,211 @@
+id: fda-pump
+title: 'FDA benchmark centrifugal blood pump (Interlaboratory Study 2): assembly, sealed flow domain and
+  pressure rise per operating condition'
+kind: machine
+truth_class: A
+role: validation
+source:
+  citation: FDA/OSEL-DAM CFD and Blood Damage Benchmarks, Blood Pump (Malinauskas et al. 2017 ASAIO J
+    63:150; Hariharan et al. 2018 CVET 9:623; Ponnaluri et al. 2022 ASAIO J 69:e1)
+  urls:
+  - https://github.com/FDA/OSEL-DAM-CFD-and-Blood-Damage-Benchmarks
+  - https://doi.org/10.1007/s13239-018-00378-y
+  accessed: '2026-09-25'
+  revision: ca35ecc44137fa6bd0d735190eb836ea0dc0d547
+  license: FDA public-domain benchmark data; papers cited, not redistributed
+intent: Analyse the FDA benchmark blood pump from its supplied CAD. Place the housing chamber model (the
+  inner surface of the chamber and tubing) and the rotor in their supplied relative position, scaled from
+  the CAD's 100-um units to millimetres; the rotor turns about its axis on a revolute joint with one blade
+  90 degrees to the outlet (the CAD orientation). Build the physical housing wall as a derived solid around
+  the chamber and the sealed flow region (chamber minus rotor) as a derived fluid body; name the inlet
+  (the curved inlet tube's open end), the outlet (the outlet tube's open end), the rotor surfaces and
+  the housing walls as boundaries. Declare the six operating conditions of the packet (C1-C6, flow in
+  L/min and rotor speed in rpm) and the blood-analog fluid. Predict the static pressure rise from inlet
+  to outlet at every condition with a steady OpenFOAM MRF analysis (a mesh-refinement pair at C5 only,
+  one mesh level elsewhere), and give the reduced Euler-head estimate at every condition under separate
+  observable ids for comparison. Nonclinical engineering use only.
+inputs:
+- path: inputs/fda-pump-packet.md
+  kind: text
+  sha256: 793748e01192fdbe2aa3c7c6f85d91bb6024efde62638bb466bc955d52a95377
+  note: pump geometry, CAD notes, experimental setup and the six operating conditions
+- path: inputs/pump_housing.step
+  kind: cad
+  sha256: c9cd9061f29473aa48cf422703992bb47675972ee91eaf048a5254fbc283d447
+  units: 0.1 mm
+  note: inner surface of the pump chamber and tubing (the flow region before the rotor is subtracted);
+    1 CAD unit = 100 um
+- path: inputs/pump_rotor.step
+  kind: cad
+  sha256: fa7a064cb1ed1475b7a09f6094579177e996403dd24c4f10875b879f4f7e40c8
+  units: 0.1 mm
+  note: the rotor in its proper position relative to the housing; 1 CAD unit = 100 um
+- path: inputs/coordinate_system.png
+  kind: drawing
+  sha256: fe11693f1ad0779ddbac38994541223399dff388a23fc52b0137366d31dc4245
+  note: the drawing coordinate system used by the CAD
+- path: inputs/front_view_with_dimensions.png
+  kind: drawing
+  sha256: f66eb511075ec0f7f5bc3430879ab2908690214e480c3e654cfe5e3c9bbaaaf7
+  note: front view with dimensions (not to scale)
+- path: inputs/side_view_with_dimensions.png
+  kind: drawing
+  sha256: ac754287f16c8479930d17e33e377c077629d438f69cdd1092d34a86d49dd28d
+  note: side view with dimensions (not to scale)
+- path: inputs/pump_and_rotor_iso.png
+  kind: image
+  sha256: 29b102d2816a726816feb51686762d7d17f7839e0c38ed345666d65c2fe7ecd9
+  note: isometric view of the housing and rotor
+- path: inputs/housing_rotor_clearance.png
+  kind: drawing
+  sha256: 36b979f9dd5fa87ce29410fe676d5afd8ab4e7e84cd76ba246eeed460ad2f98f
+  note: housing / rotor clearances
+- path: inputs/outlet_tube_detail.png
+  kind: drawing
+  sha256: f49aa7536314378cf0b49636f4303525f87396a9219ced30afe6e7dbb4c2e49f
+  note: outlet throat and diffuser
+- path: inputs/pump_experimental_setup.png
+  kind: image
+  sha256: eec0038ded8d1c5eeec7cfa58ef3cef013abd31b82d66bdf812e8e379d486b1b
+  note: flow-loop schematic with the pressure probe positions (not to scale)
+truth:
+- path: truth/pressure-head.yaml
+  kind: yaml
+  sha256: 5db7846311d25a9cbf4690b8f252ae0b026c53c84dd832619f048de9351a75d5
+  note: stated and digitized PIV-experiment pressure heads
+- path: truth/hariharan-fig5.png
+  kind: image
+  sha256: 8ea4508e2544aa353a6c7ca86599c2b0af4c1082094f3bda45919dd2818f1f2d
+  note: Fig. 5 crop used for digitization
+- path: truth/pump_housing.step
+  kind: cad
+  sha256: c9cd9061f29473aa48cf422703992bb47675972ee91eaf048a5254fbc283d447
+  units: 0.1 mm
+- path: truth/pump_rotor.step
+  kind: cad
+  sha256: fa7a064cb1ed1475b7a09f6094579177e996403dd24c4f10875b879f4f7e40c8
+  units: 0.1 mm
+arms:
+- id: supplied-cad
+  design: fda-pump
+  mode: analysis
+  inputs:
+  - inputs/fda-pump-packet.md
+  - inputs/pump_housing.step
+  - inputs/pump_rotor.step
+  - inputs/coordinate_system.png
+  - inputs/front_view_with_dimensions.png
+  - inputs/side_view_with_dimensions.png
+  - inputs/pump_and_rotor_iso.png
+  - inputs/housing_rotor_clearance.png
+  - inputs/outlet_tube_detail.png
+  - inputs/pump_experimental_setup.png
+  images: []
+  notes: 'Analysis mode: the reference CAD is among the inputs; the scored work is the placement, the
+    flow domain, the boundaries and the simulations.'
+observables:
+- id: rotor
+  kind: solid
+  point:
+  - 0.0
+  - 0.0
+  - 10.0
+  expected: 9768.34
+  tolerance_rel: 0.005
+  note: the rotor body, scaled to mm (0.1 x the CAD volume)
+- id: flowDomain
+  kind: solid
+  point:
+  - 0.0
+  - 0.0
+  - 100.0
+  expected: 78329.9
+  tolerance_rel: 0.005
+  note: 'the fluid body: housing chamber minus rotor, point in the straight inlet tube'
+performance:
+- id: pressureRiseC1
+  quantity: pressure_rise
+  unit: Pa
+  case: C1
+  evidence: A
+  value: 22398.0
+  uncertainty: 1941.0
+  z_max: 2.0
+  digitized: true
+  split: development
+  source: 'Hariharan 2018 Fig. 5 (digitized, +-4 mmHg added in quadrature): 168 +- 14 mmHg (PIV, n = 4
+    labs)'
+  note: 'static pressure rise outlet minus inlet at the probe stations; z against the inter-laboratory
+    SD (Ponnaluri 2022 criterion: within 2 SD)'
+- id: pressureRiseC2
+  quantity: pressure_rise
+  unit: Pa
+  case: C2
+  evidence: A
+  value: 46529.0
+  uncertainty: 2133.0
+  z_max: 2.0
+  digitized: false
+  split: held_out
+  source: 'Hariharan 2018 Results text: 349 +- 16 mmHg (PIV, n = 4 labs)'
+  note: 'static pressure rise outlet minus inlet at the probe stations; z against the inter-laboratory
+    SD (Ponnaluri 2022 criterion: within 2 SD)'
+- id: pressureRiseC3
+  quantity: pressure_rise
+  unit: Pa
+  case: C3
+  evidence: A
+  value: 41730.0
+  uncertainty: 2458.0
+  z_max: 2.0
+  digitized: true
+  split: held_out
+  source: 'Hariharan 2018 Fig. 5 (digitized, +-4 mmHg added in quadrature): 313 +- 18 mmHg (PIV, n = 4
+    labs)'
+  note: 'static pressure rise outlet minus inlet at the probe stations; z against the inter-laboratory
+    SD (Ponnaluri 2022 criterion: within 2 SD)'
+- id: pressureRiseC4
+  quantity: pressure_rise
+  unit: Pa
+  case: C4
+  evidence: A
+  value: 8266.0
+  uncertainty: 2666.0
+  z_max: 2.0
+  digitized: false
+  split: held_out
+  source: 'Hariharan 2018 Results text: 62 +- 20 mmHg (PIV, n = 4 labs)'
+  note: 'static pressure rise outlet minus inlet at the probe stations; z against the inter-laboratory
+    SD (Ponnaluri 2022 criterion: within 2 SD)'
+- id: pressureRiseC5
+  quantity: pressure_rise
+  unit: Pa
+  case: C5
+  evidence: A
+  value: 35330.0
+  uncertainty: 2981.0
+  z_max: 2.0
+  digitized: true
+  split: development
+  source: 'Hariharan 2018 Fig. 5 (digitized, +-4 mmHg added in quadrature): 265 +- 22 mmHg (PIV, n = 4
+    labs)'
+  note: 'static pressure rise outlet minus inlet at the probe stations; z against the inter-laboratory
+    SD (Ponnaluri 2022 criterion: within 2 SD)'
+- id: pressureRiseC6
+  quantity: pressure_rise
+  unit: Pa
+  case: C6
+  evidence: A
+  value: 27731.0
+  uncertainty: 4697.0
+  z_max: 2.0
+  digitized: true
+  split: held_out
+  source: 'Hariharan 2018 Fig. 5 (digitized, +-4 mmHg added in quadrature): 208 +- 35 mmHg (PIV, n = 4
+    labs)'
+  note: 'static pressure rise outlet minus inlet at the probe stations; z against the inter-laboratory
+    SD (Ponnaluri 2022 criterion: within 2 SD)'
+notes:
+- Development cases C5 and C1 (the published first-case recommendation); C2, C3, C4 and C6 are held out.
+- Uncertainty is the inter-laboratory SD of the PIV experiments; digitized points add 4 mmHg in quadrature.
+- PIV velocity fields (truth/raw/pump/PIV Data) are not scored in this revision.

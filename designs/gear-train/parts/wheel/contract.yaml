@@ -1,0 +1,356 @@
+schema_version: 1
+name: gear-train-wheel
+intent: >-
+  40-tooth spur wheel (module 2, pressure angle 20 deg, no profile shift, face width 8, D8 through bore) of the
+  gear-train assembly, drafted in its own frame: axis +z through the origin, bottom face z = 0, top face z = 8.
+  Each flank is a true involute of the base circle (r 37.588) from the base circle to the tip circle (r 42), continued
+  radially down to the root circle (r 37.5), with tip and root arcs and no fillets; tooth thickness 3.0916 at the
+  pitch circle (r 40), one tooth centred on +x. The bottom face seats on the carrier top, the bore axis is the
+  wheelSpin revolute joint axis, the flanks mesh with the pinion. Authoritative source: sources/gear-pair-spec.md.
+units:
+  length: mm
+  angle: deg
+material: null
+density_kg_m3: null
+process: null
+release_status: reconstruction
+
+frame:
+  origin: "centre of the bottom face on the gear axis: the bore axis meets the plane z = 0"
+  axes:
+    x: "radial, through the centre of one tooth (a tooth is centred on +x)"
+    y: "radial, 90 deg from +x (right-handed); y = 0 is the mid-plane of the +x tooth"
+    z: "gear axis and bore axis, up from the bottom face (z = 0) to the top face (z = 8)"
+  datums:
+    - name: A
+      description: "bottom face, z = 0, seats on the carrier top"
+    - name: B
+      description: "bore axis (x = y = 0, along z), the wheelSpin joint axis"
+    - name: C
+      description: "plane y = 0, the mid-plane of the tooth centred on +x"
+
+envelope:
+  min: [-42, -42, 0]
+  max: [42, 42, 8]
+  tolerance: 0.05
+
+parameters:
+  - name: toothCount
+    value: 40
+    unit: ""
+    provenance: stated
+    source: "gear-pair-spec.md, table row Wheel (40 teeth)"
+    tolerance: 0.01
+    description: "number of teeth"
+  - name: gearModule
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "gear-pair-spec.md, table row Module"
+    tolerance: 0.001
+    description: "module m"
+  - name: pressureAngle
+    value: 20
+    unit: deg
+    provenance: stated
+    source: "gear-pair-spec.md, table row Pressure angle"
+    tolerance: 0.01
+    description: "standard pressure angle"
+  - name: profileShift
+    value: 0
+    unit: ""
+    provenance: stated
+    source: "gear-pair-spec.md, table row Profile shift (0, both gears)"
+    tolerance: 0.001
+    description: "profile shift coefficient x"
+  - name: addendumCoef
+    value: 1.0
+    unit: ""
+    provenance: stated
+    source: "gear-pair-spec.md, table row Addendum / dedendum (1.0 m)"
+    tolerance: 0.001
+    description: "addendum as a multiple of the module"
+  - name: dedendumCoef
+    value: 1.25
+    unit: ""
+    provenance: stated
+    source: "gear-pair-spec.md, table row Addendum / dedendum (1.25 m)"
+    tolerance: 0.001
+    description: "dedendum as a multiple of the module"
+  - name: faceWidth
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "gear-pair-spec.md, table row Face width (z = 0 to z = 8)"
+    tolerance: 0.01
+    description: "gear thickness along z, from the seat face z = 0"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 9847.16
+        direction: increase
+        bbox_delta: [0, 0, 2]
+        tolerance_rel: 0.01
+      sweep:
+        values: [6, 8, 10]
+      infeasible_deltas: [-8]
+  - name: boreDiameter
+    value: 8
+    unit: mm
+    provenance: stated
+    source: "gear-pair-spec.md, table row Wheel (bore D8)"
+    tolerance: 0.01
+    description: "through-bore diameter on the axis"
+  - name: toothThinning
+    value: 0.05
+    unit: mm
+    provenance: stated
+    source: "gear-pair-spec.md, table row Circular backlash (thin each tooth by 0.05 mm at its pitch circle)"
+    tolerance: 0.001
+    description: "arc thickness removed from each tooth at the pitch circle, half from each flank"
+    edit_test:
+      delta: 0.05
+      expect:
+        volume_delta: -71.55
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.05
+      infeasible_deltas: [2.0]
+  - name: flankPoints
+    value: 14
+    unit: ""
+    provenance: inferred
+    rationale: "the intent and spec ask for 12-16 involute sample points per flank; 14 is the middle of that range"
+    tolerance: 2
+    description: "involute sample points per flank, base circle to tip circle"
+  - name: pitchRadius
+    value: 40
+    unit: mm
+    provenance: derived
+    formula: "gearModule * toothCount / 2"
+    tolerance: 0.001
+    description: "pitch circle radius"
+  - name: baseRadius
+    value: 37.587705
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius * cos(pressureAngle)"
+    tolerance: 0.001
+    description: "base circle radius; the involute starts here"
+  - name: tipRadius
+    value: 42
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius + (addendumCoef + profileShift) * gearModule"
+    tolerance: 0.001
+    description: "tip (addendum) circle radius"
+  - name: rootRadius
+    value: 37.5
+    unit: mm
+    provenance: derived
+    formula: "pitchRadius - (dedendumCoef - profileShift) * gearModule"
+    tolerance: 0.001
+    description: "root (dedendum) circle radius; below baseRadius, so each flank runs radially from base to root"
+  - name: toothThickness
+    value: 3.091593
+    unit: mm
+    provenance: derived
+    formula: "gearModule * (pi / 2 + 2 * profileShift * tan(pressureAngle)) - toothThinning"
+    tolerance: 0.001
+    description: "arc tooth thickness at the pitch circle, split equally about the tooth centreline"
+
+features:
+  - id: gearBody
+    kind: extrude
+    description: "closed 40-tooth outline (root arcs, radial flank stubs, involute flanks, tip arcs) extruded from z = 0 to z = faceWidth"
+    parameters: [faceWidth, toothCount, gearModule, tipRadius, rootRadius]
+    verify:
+      - method: bbox
+      - method: section
+        section: mid
+      - method: face
+        face: seat
+      - method: face
+        face: top
+      - method: dimension
+        dimension: faceWidthSpan
+      - method: dimension
+        dimension: tipSpanX
+      - method: dimension
+        dimension: tipSpanY
+  - id: involuteTeeth
+    kind: profile
+    description: >-
+      40 equal teeth on a 9 deg pitch, one centred on +x. Each flank is a true involute of the base circle from
+      baseRadius to tipRadius (flankPoints samples), continued radially from baseRadius down to rootRadius; tip arc
+      on tipRadius, root arc on rootRadius, no fillets; arc thickness toothThickness at pitchRadius, symmetric about
+      the tooth centreline.
+    parameters: [toothCount, gearModule, pressureAngle, profileShift, toothThinning, flankPoints, pitchRadius, baseRadius, tipRadius, rootRadius, toothThickness]
+    count: 40
+    verify:
+      - method: solid
+        points: [[39, 0, 4], [0, 39, 4], [-39, 0, 4], [0, -39, 4]]
+        note: "inside the teeth centred on +x, +y, -x, -y (phase)"
+      - method: void
+        points: [[39.8767, 3.1384, 4], [39.8767, -3.1384, 4]]
+        note: "tooth-space centres on the pitch circle at +-4.5 deg, about 1.5 mm from each flank"
+      - method: section
+        section: mid
+  - id: bore
+    kind: hole
+    description: "D8 bore through the full face width on the gear axis"
+    parameters: [boreDiameter]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: void
+        points: [[0, 0, 1.5], [0, 0, 4], [0, 0, 6.5]]
+      - method: section
+        section: nearSeat
+      - method: section
+        section: nearTop
+
+interfaces:
+  - name: carrierSeat
+    description: "the bottom face z = 0 seats on the carrier top; neither edit test moves it"
+    must_not_change: true
+    checks: [seat]
+  - name: jointAxis
+    description: "the bore axis is the wheelSpin revolute joint axis (own-frame point [0, 0, 0], axis [0, 0, 1])"
+    must_not_change: true
+    checks: [bore]
+  - name: meshFlanks
+    description: "the flanks mesh with the pinion: tip circle and tooth symmetry about the +x tooth centreline"
+    must_not_change: true
+    checks: [tipSpanX, tipSpanY, mirrorY]
+
+acceptance:
+  volume:
+    expected: 39388.63
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "(pi rootRadius^2 + toothCount * 2 * int_{rootRadius}^{tipRadius} psi(r) r dr - pi (boreDiameter/2)^2) * faceWidth = 4923.579 * 8; psi(r) = toothThickness/(2 pitchRadius) + inv(pressureAngle) - inv(acos(baseRadius/r)) above baseRadius, constant below; 14-point polyline flanks lose < 0.02 %"
+  surface_area:
+    expected: 14163.76
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "2 * 4923.579 (faces) + 8 * (514.443 outer outline + 25.133 bore); outline per tooth = 2 (involute rb tan^2(26.499 deg)/2 + radial 0.0877) + tip arc 42 * 2 * 0.017486 + root arc 37.5 * (2 pi/40 - 2 * 0.053549)"
+  center_of_mass:
+    expected: [0, 0, 4]
+    tolerance: 0.05
+    provenance: derived
+    note: "on the axis by the 40-fold pattern, at half the face width"
+  solid_count: 1
+  solids:
+    - name: wheel
+      contains_point: [20, 0, 4]
+      description: "the single wheel solid (hub region)"
+  sections:
+    - id: mid
+      plane: z
+      at: 4
+      expect:
+        area: 4923.58
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 1
+      description: "mid-thickness section: 40-tooth outline around the D8 bore"
+    - id: nearSeat
+      plane: z
+      at: 0.5
+      expect:
+        area: 4923.58
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 1
+      description: "section just above the seat face; the bore is open here"
+    - id: nearTop
+      plane: z
+      at: 7.5
+      expect:
+        area: 4923.58
+        area_tolerance_rel: 0.001
+        loops: 1
+        holes: 1
+      description: "section just below the top face; the bore is open here"
+  faces:
+    - name: seat
+      plane: z
+      at: 0
+      normal: "-"
+      center: [0, 0]
+      mode: one
+    - name: top
+      plane: z
+      at: 8
+      normal: "+"
+      area: 4923.58
+      area_tolerance_rel: 0.002
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 8
+      radius_tolerance: 0.02
+      axis_tolerance: 0.02
+      description: "D8 through bore; the joint axis"
+  dimensions:
+    - name: faceWidthSpan
+      axis: z
+      expected: 8
+      tolerance: 0.02
+      between: [seat, top]
+      description: "face width between the seat and top faces"
+    - name: tipSpanX
+      axis: x
+      expected: 84
+      tolerance: 0.05
+      description: "bbox extent along x: tip arcs of the teeth centred on +x and -x"
+    - name: tipSpanY
+      axis: y
+      expected: 84
+      tolerance: 0.05
+      description: "bbox extent along y: tip arcs of the teeth centred on +y and -y"
+  cylinder_counts:
+    - name: bores
+      diameter: 8
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+  gears:
+    - name: wheelTeeth
+      solid: wheel
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      at: 4
+      module: 2
+      teeth: 40
+      description: "tooth count and module from the mid-thickness section"
+  symmetry:
+    - name: mirrorY
+      plane: y
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 42000
+    volume_max: 44500
+
+references:
+  - path: sources/gear-pair-spec.md
+    kind: text
+    role: authoritative
+    sha256: 0acea6d35513df93499f95e7242721b64488c45819f6e58ebd09ed627fb09d87
+    units: mm
+    note: "gear-pair design specification; the wheel row, module, pressure angle, addendum/dedendum and backlash rows"
+
+open_questions:
+  - "Material, density and process are not stated; no mass claim is made."
+  - "The tooth-profile deviation against an independent involute (p95 <= 0.1 mm) and the meshing sweep (zero interference, flank gap <= 0.15 mm) need the pinion; they are assembly-level checks, not encoded here."
+  - "The half-pitch phase (4.5 deg, pi/40) that puts a tooth space toward the pinion is the assembly joint's rest angle; this part keeps a tooth centred on +x."
+  - "The bore fit (clearance on a D8 pin or shaft) is not stated; the bore is nominal D8."
+  - "flankPoints = 14 is chosen inside the stated 12-16 range."

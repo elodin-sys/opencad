@@ -1,0 +1,156 @@
+id: nasa-atb-axisymmetric-bump
+title: 'NASA TMR axisymmetric transonic bump (Bachalo–Johnson): cylinder with a circular-arc bump and
+  leading-edge fillet, revolved as one solid'
+truth_class: C
+role: validation
+source:
+  citation: 'NASA Turbulence Modeling Resource, ATB: Axisymmetric Transonic Bump; Bachalo & Johnson, AIAA
+    Journal 24(3), 1986, 437-443; surface points bumpgrd.surfpts_orig.dat'
+  urls:
+  - https://www.nasa.gov/reference/atb-axisymmetric-transonic-bump/
+  - https://tmbwg.github.io/turbmodels/axibump_val.html
+  - https://doi.org/10.2514/3.9286
+  accessed: '2026-09-16'
+  revision: TMR wording of 2024-09-03; surfpts from Axi_Bump_grids/bumpgrd.surfpts_orig.dat
+  license: US Government work (NASA)
+intent: 'Reconstruct the Bachalo-Johnson axisymmetric transonic bump as ONE solid of revolution for a
+  CFD outer-mould line. The attached spec is inch-native (cylinder diameter 6 in, bump chord 8 in, bump
+  height 3/4 in); convert to millimetres. Frame: +x along the cylinder axis with the bump chord occupying
+  x = 0 to x = c, origin on the axis. Revolve the meridian a full 360 degrees. The bump is a circular
+  arc of radius R1 = 0.5 (t^2 + 0.25 c^2) / t; blend it to the upstream cylinder with a leading-edge fillet
+  R2. The references list R2 as 18.30 cm (use 183.0 mm) with 20.32 cm as a documented alternate (open
+  question, inferred). No trailing-edge fillet. Axial extent is the x-range of the attached surface-point
+  file (nondimensional by the 8 in chord; multiply by 8 inches to get millimetres). Name the two planar
+  end caps. Expose cylinderDiameter, bumpChord, bumpHeight and filletRadius. One solid; export STEP and
+  STL.'
+inputs:
+- path: inputs/nasa-atb-bump-spec.md
+  kind: text
+  sha256: f773288693cfbcd96bc113422d051fd3f47b86791ad0c254f7c704e99ce86165
+  note: inch-native text spec; the unit trap is inches in the prose versus millimetre truth
+- path: inputs/bumpgrd.surfpts_orig.dat
+  kind: table
+  sha256: 46f028810ad0e6e68e20520452edb44c2dfe77b42ceefa59229733d92bb15b1f
+  units: chord
+  note: NASA TMR meridian, nondimensional by the 8 in chord (Y = 0.375 on the cylinder)
+truth:
+- path: truth/bump.step
+  kind: cad
+  sha256: ec625b869a13a301ebe46f2e8093613e935cd3b438dafa78e16b241d08b229f7
+  units: mm
+  note: OpenCascade revolve of the analytic meridian at R2 = 183.0 mm (scripts/derive_bump_truth.py)
+- path: truth/bump.stl
+  kind: mesh
+  sha256: 3efa69d46411228aa10c6081eaf1c97b316f6b242e0aedd3f7cd5cb45c95f6c1
+  units: mm
+  note: tessellation of bump.step
+- path: truth/bumpgrd.surfpts_orig.dat
+  kind: table
+  sha256: 46f028810ad0e6e68e20520452edb44c2dfe77b42ceefa59229733d92bb15b1f
+  units: chord
+  note: same file as the input; class-B profile reference for the open-polyline meridian check
+arms:
+- id: text-and-points
+  design: nasa-atb-axisymmetric-bump
+  inputs:
+  - inputs/nasa-atb-bump-spec.md
+  - inputs/bumpgrd.surfpts_orig.dat
+  profile:
+    table: inputs/bumpgrd.surfpts_orig.dat
+    units: mm
+    scale_to_mm: 203.2
+  notes: The spec is written in inches; the pipeline and the truth are millimetres. The surface-point
+    file is x/c and r/c — multiply by 8 inches (203.2 mm). R2 = 183.0 mm is the inferred value used for
+    the truth STEP; 203.2 mm is the documented alternate. Edit tests on bumpHeight and cylinderDiameter.
+observables:
+- id: bbox_size
+  kind: bbox_size
+  expected:
+  - 1550.010234
+  - 190.5
+  - 190.5
+  tolerance: 0.05
+- id: volume
+  kind: volume
+  from:
+    file: truth/bump.step
+    measure: volume
+  tolerance_rel: 0.002
+  note: band also covers the R2 = 203.2 mm alternate (volume +3726 mm3, 0.013 %)
+- id: solid_count
+  kind: solid_count
+  expected: 1
+- id: center_of_mass
+  kind: center_of_mass
+  from:
+    file: truth/bump.step
+    measure: center_of_mass
+  tolerance: 0.2
+- id: upstream_disk
+  kind: section
+  plane: x
+  at: -630.0
+  expected:
+    area: 18241.47
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.002
+  note: pi (d/2)^2 on the cylinder
+- id: crest_disk
+  kind: section
+  plane: x
+  at: 101.6
+  expected:
+    area: 28502.3
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.002
+  note: pi (d/2 + t)^2 at mid-chord
+- id: downstream_disk
+  kind: section
+  plane: x
+  at: 223.2
+  expected:
+    area: 18241.47
+    loops: 1
+    holes: 0
+  area_tolerance_rel: 0.002
+- id: inlet_cap
+  kind: face
+  plane: x
+  at: -650.00732
+  normal: '-'
+  expected: 18241.47
+  tolerance: 0.05
+  area_tolerance_rel: 0.002
+- id: outlet_cap
+  kind: face
+  plane: x
+  at: 900.00291
+  normal: +
+  expected: 18241.47
+  tolerance: 0.05
+  area_tolerance_rel: 0.002
+- id: meridian
+  kind: profile2d
+  plane: z
+  at: 0.0
+  reference: truth/bumpgrd.surfpts_orig.dat
+  reference_units: mm
+  reference_scale: 203.2
+  reference_closed: false
+  p95_max: 0.5
+  note: open-polyline one-way (published meridian onto the diametral section). TE of the NASA grid has
+    a tiny fillet the analytic truth omits (max ~0.36 mm).
+- id: deviation_vs_truth
+  kind: deviation
+  reference: truth/bump.stl
+  p95_max: 0.2
+  hausdorff_max: 1.0
+  silhouette_iou_min: 0.98
+notes:
+- Class C arithmetic truth from the published inch dimensions, revolved in millimetres. The surface-point
+  file is a class-B profile check, not the B-rep.
+- First revolve case through Codex. Volume band covers both documented R2 values; the meridian and deviation
+  checks are against R2 = 183.0 mm.
+- The inch-native spec is the unit trap (d = 6 in is 152.4 mm, not 6 mm).

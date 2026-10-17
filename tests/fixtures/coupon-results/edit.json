@@ -1,0 +1,116 @@
+{
+  "ok": true,
+  "tests": [
+    {
+      "parameter": "width",
+      "delta": 10.0,
+      "new_value": 70.0,
+      "volume": 11199.999941406228,
+      "volume_delta": 1599.999601846017,
+      "bbox_size_delta": [
+        10.0,
+        0.0,
+        0.0
+      ],
+      "checks": {
+        "volume_delta": {
+          "expected": 1600.0,
+          "measured": 1599.999601846017,
+          "ok": true
+        },
+        "direction": {
+          "expected": "increase",
+          "measured": "increase",
+          "ok": true
+        },
+        "bbox_delta": {
+          "expected": [
+            10.0,
+            0.0,
+            0.0
+          ],
+          "measured": [
+            10.0,
+            0.0,
+            0.0
+          ],
+          "ok": true
+        }
+      },
+      "ok": true
+    },
+    {
+      "parameter": "thickness",
+      "delta": 1.0,
+      "new_value": 5.0,
+      "volume": 11999.999514955562,
+      "volume_delta": 2399.999175395351,
+      "bbox_size_delta": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "checks": {
+        "volume_delta": {
+          "expected": 2400.0,
+          "measured": 2399.999175395351,
+          "ok": true
+        },
+        "direction": {
+          "expected": "increase",
+          "measured": "increase",
+          "ok": true
+        },
+        "bbox_delta": {
+          "expected": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "measured": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "ok": true
+        }
+      },
+      "ok": true
+    }
+  ],
+  "restore": {
+    "baseline_sha256": "9bb7eb93d1283453f165f137df4b6f83acd67b9ae5d24501378dd3cce85f2d5a",
+    "re_export_sha256": "9bb7eb93d1283453f165f137df4b6f83acd67b9ae5d24501378dd3cce85f2d5a",
+    "ok": true
+  },
+  "declared": 2,
+  "engine_calls": [
+    {
+      "cmd": "zoo kcl analyze --format json --volume-output-unit mm3 --center-of-mass-output-unit mm --surface-area-output-unit mm2 --mass-output-unit g --material-density 2700.0 --material-density-unit kg:m3 /var/folders/3b/t6tqt_q10xs05v1jkpnkztxm0000gn/T/opencad-edit-width-k_i1jhmu/part/main.kcl",
+      "ok": true,
+      "seconds": 1.88
+    },
+    {
+      "cmd": "zoo kcl analyze --format json --volume-output-unit mm3 --center-of-mass-output-unit mm --surface-area-output-unit mm2 --mass-output-unit g --material-density 2700.0 --material-density-unit kg:m3 /var/folders/3b/t6tqt_q10xs05v1jkpnkztxm0000gn/T/opencad-edit-thickness-w5az_loy/part/main.kcl",
+      "ok": true,
+      "seconds": 3.11
+    },
+    {
+      "cmd": "zoo kcl export --output-format step --deterministic /Users/danieldriscoll/dual/opencad/parts/coupon/main.kcl /var/folders/3b/t6tqt_q10xs05v1jkpnkztxm0000gn/T/opencad-restore-xctsmyj1",
+      "ok": true,
+      "seconds": 1.82
+    }
+  ],
+  "stage": "edit",
+  "provenance": {
+    "generated_at": "2026-09-15T06:54:14Z",
+    "opencad_version": "0.1.0",
+    "zoo_version": "zoo 0.2.196 (c8d8092200c3e41b38dda4bfdd84fa95d1b91f4f)",
+    "host": "Daniels-MacBook-Pro.local",
+    "git": {
+      "head": "10eb5fc1e12ffec35713a7a7113183467bd4b676",
+      "dirty": true
+    },
+    "contract": "/Users/danieldriscoll/dual/opencad/designs/coupon/contract.yaml"
+  }
+}

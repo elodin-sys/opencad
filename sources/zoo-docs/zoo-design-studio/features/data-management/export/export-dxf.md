@@ -1,0 +1,37 @@
+Source URL: https://zoo.dev/docs/zoo-design-studio/features/data-management/export/export-dxf
+Title: Export DXF
+
+# Export DXF
+
+Export sketch geometry as DXF from Zoo Design Studio.
+
+Export a sketch to DXF when you need its 2D geometry outside Zoo Design Studio.
+
+## Export a sketch to DXF
+
+Open the Feature Tree, right-click the sketch you want to send downstream, and select `Export to
+DXF`.
+
+<FramedImage
+  src="/documentation-assets/docs/zoo-design-studio/features/data-management/export/export-dxf/export-sketch-to-dxf.webp"
+  alt="Export to DXF selected from a sketch context menu in the Zoo Design Studio Feature Tree"
+  aspect="2690 / 1964"
+  maxHeightPx={620}
+/>
+<br />
+<div>
+  Right-click the sketch in the Feature Tree and select `Export to DXF`
+</div>
+
+Zoo Design Studio writes a `.dxf` file for the selected sketch.
+
+## Common use cases
+
+Use DXF export when another tool or process needs the sketch itself rather than the full 3D model.
+Common examples include laser cutting profiles, CNC setup, sharing 2D reference geometry with another
+CAD or CAM tool, and keeping sketch-level documentation with a project.
+
+## Learn more about sketching
+
+If you want more detail on creating and editing sketches, see
+[Sketching](/docs/zoo-design-studio/features/3d-design/parametric-modeling/sketching).
