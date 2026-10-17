@@ -1,5 +1,8 @@
 # opencad
 
+<img width="1153" height="550" alt="image" src="https://github.com/user-attachments/assets/fd9a67d6-287a-4395-9d39-f37878d37c13" />    
+
+
 Agentic CAD on a pluggable modelling backend ([Zoo](https://zoo.dev)/KCL, [CadQuery](https://cadquery.readthedocs.io),
 [build123d](https://build123d.readthedocs.io), or [FreeCAD](https://www.freecad.org) PartDesign), built the way
 [open-air](https://github.com/elodin-sys/open-air) does aero design: a cheap, reviewable **initialize** step that
