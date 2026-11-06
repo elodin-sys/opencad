@@ -21,9 +21,12 @@ def test_registry_default_is_build123d(monkeypatch):
     assert be.language.entry == "main.py"
     assert get("zoo").language.suffixes == (".kcl",)
     assert "zoo" in available()
-    for bid in ("cadquery", "build123d", "freecad"):
+    for bid in ("cadquery", "build123d", "freecad", "prism"):
         assert bid in available()
         assert get(bid).language.entry == "main.py"
+    prism = get("prism")
+    assert prism.engine.id == "prism" and "--backend prism" in prism.language.critics()["quick"]
+    assert "MILLIMETRES" in prism.language.rules() and prism.language.skills()[0].name == "SKILL.md"
 
 
 def test_set_backend_rejects_unknown(monkeypatch):

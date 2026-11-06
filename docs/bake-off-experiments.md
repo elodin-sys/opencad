@@ -182,6 +182,62 @@ One Astra turn (effort high, outside any bake-off cell: $9.40, 52 engine calls) 
 
 All three are ordinary positive-volume solids. The refusal follows an exact tangency or a point contact on a curved face, which the 0.01 mm overruns already in `kcl-docs/patterns.md` avoid.
 
+## 2026-11-06 — Benchy on the Prism backend
+
+Tag `prism-astra`. Effort **max**. `gpt-6-astra` through Prism's own harness, priced with the pinned fast-tier card. Backend `prism`: Prism's managed python-env (build123d 0.11.1, `navier_cad` 0.1) as
+the engine, the worker turns run as Prism sub-agents from a Prism session (no Codex, no Zoo). Gates 11 pass / 0 fail / 1 n/a; OpenCascade
+volume **14600.826 mm³** (contract 15550 ± 1555); all three edit tests inside their bands; no correction turn.
+
+| | Input tokens | Cached | Output | Codex USD | Zoo | Worker | Wall |
+|---|---:|---:|---:|---:|---|---:|---:|
+| Prism (blockout + model) | ≈4,346,472 | ≈4,195,779 | ≈17,106 | ≈$13.12 | — | 1,675 s | 1,721 s |
+
+Turns: blockout 967 s (19 requests, ≈843,760 input, ≈$3.10); model 708 s (43 requests, ≈3,502,712 input, ≈$10.02).
+
+What changed: the first cell whose tokens are not metered per request. Prism records each sub-agent's tool transcript and the usage of its
+last request only (final context 98,179 tokens for the model turn, 52,628 for the blockout), so `worker/prism_host.py` rebuilds the bill
+request by request from the transcript, pinned to those measured values, with every request after the first a prefix-cache hit. Output counts
+the visible generation only: Prism's record carries no reasoning tokens, and in the four Codex-metered benchy cells reasoning was 42–47 % of
+output, so the Prism output and USD figures are lower bounds (with a comparable reasoning share the cell would price near $14.5).
+
+Caveats: the blockout turn's 967 s includes about 13 minutes during which the sub-agent was stopped by an exhausted organisation AI
+allowance after it had written `main.py` and `result.md`; it was resumed for `metrics.json` and `done` only (cad-drive rule 4). Its working
+time was about 4 minutes, so the cell's wall time is overstated by roughly 13 minutes; the telemetry keeps the measured value.
+
+## 2026-11-06 — Bracket and the Aleph stack case on the Prism backend
+
+Tag `prism-astra`. Effort **max**. `gpt-6-astra` through Prism's own harness, priced with the pinned fast-tier card; usage rebuilt from Prism's thread
+record as for benchy (`usage_mode: prism-estimate`, output and USD are lower bounds). Backend `prism` as above. Run from a Prism session against
+the published contracts, like-for-like with the four Astra cells.
+
+| | Input tokens | Cached | Output | Codex USD | Zoo | Worker | Wall |
+|---|---:|---:|---:|---:|---|---:|---:|
+| Bracket (blockout + model) | ≈3,404,853 | ≈3,290,249 | ≈15,646 | ≈$10.44 | — | 594 s | 614 s |
+| Aleph stack case (14 turns) | ≈46,607,183 | ≈45,085,700 | ≈153,318 | ≈$135.93 | — | 5,351 s | 5,602 s |
+
+Bracket: PASS 11/11, OpenCascade volume **23489.535 mm³** (the analytic value), both edit tests exact (+3914.923 / −188.496 mm³); the model
+turn spent one correction on `fillet_safe(radius=5, min_radius=5)`, which refuses an equal requested/minimum radius, and used build123d's exact
+`fillet` instead. More tokens than the Codex cells on this trivial part (3.4 M vs 0.8–1.1 M): the Prism sub-agent's context carries the full
+brief, the worker pack and every critic transcript, and the worker ran 48 requests where Codex ran about 25 commands.
+
+Aleph stack case: FAIL 10/11 on `features`, the same 14 items as every other backend (13 passages with `b: outside-grid`, `rightWallGauge` with
+no surface samples), with the pipeline stopping after correction-1 because the workers changed nothing. Everything measurable passes on the
+composed part: volume 57209.4895 vs 57209.489541 mm³, area 40775.41 mm², sections 8/8, faces 49/49, cylinders 12/12, dimensions 24/24,
+clearances 57/57, probes 16/16, both edit tests and the 6-value sweep. Turns: blockout 397 s; partition 790 s plus a 426 s fix round (the
+measured datum check moved 17 items off the datum group); five modules in parallel 268–428 s; integrate 362 s; four module corrections
+234–390 s and the integrate-level correction 428 s, none of which changed geometry. Wall 1h 33m against 2h 25m–3h 21m for the Codex cells:
+the modules and corrections genuinely ran concurrently as five sub-agents. Cost is the highest of the five cells because the correction turns
+re-read the composed critic output on long threads (the integrate-level correction alone ≈5.0 M input tokens).
+
+Evaluator findings, recorded for the contract follow-up rather than worked around: every failing passage's second probe lies outside the
+part envelope (service and exhaust endpoints 3 mm beyond the case faces, `fanAmbient` at z = 44.52 above the 30.33 roof), so the flood-fill
+grid never contains it; `rightWallGauge`'s region ends exactly on the outer face at x = 94.51 while the tessellated STL reaches 94.510002, so
+the ray sampler finds no surface. Four kernels fail these identically.
+
+Pipeline fix found by this run: on a handback host a partition fix round whose problems were already resolved by the time the run continued
+was never consumed, so its turn went unrecorded (`stages/decompose.py` now re-dispatches a finished fix order; the 003 turn above was
+completed retroactively).
+
 ## Adding an entry
 
 Copy the block below, fill it from `results/<backend>/<part>/telemetry.jsonl` filtered by `--tag`, and from `cost.json` for Zoo credits. Record the tag, effort, tier, whether Zoo MCP was attached, gate verdict, OpenCascade volume, and one sentence on what changed.

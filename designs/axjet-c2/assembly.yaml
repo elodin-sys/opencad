@@ -1,0 +1,580 @@
+schema_version: 1
+kind: assembly
+name: axjet-c2
+intent: >-
+  AXJET-220 two-stage transonic axial compressor module per section 14.1 of
+  sources/axjet_design_and_implementation_guide.md (authoritative): bolt-on bellmouth lip, inlet frame with five struts,
+  hub fairing and front bearing housing, nose cone with the starter, 29-blade rotor_1 blisk, 41-vane stator_1 ring,
+  31-blade rotor_2 blisk, 47-vane OGV ring, stacked casing rings and the D40 drum shaft. One revolute joint (the spool on
+  case_r1) runs at 44,000 rpm design; an 8,000 rpm cold steady MRF case on the derived air body predicts the static
+  pressure rise and the rotor torque as a geometry check, and CalculiX cases predict the rotor_1 centrifugal tip growth
+  at design speed and its first natural frequency.
+units: {length: mm, angle: deg}
+frame:
+  origin: engine axis at the rotor_1 leading-edge plane (guide section 3)
+  axes:
+    x: "up, toward the aircraft dorsal intake; the +x inlet strut and the first hole of every flange lie on +x"
+    y: completes a right-handed frame
+    z: "engine axis, flow toward +z"
+  datums:
+    - {name: A, description: "rotor_1 leading-edge plane z = 0"}
+    - {name: B, description: "engine axis x = y = 0"}
+    - {name: C, description: "the +x direction: inlet strut and first flange hole"}
+envelope: {min: [-155.0, -155.0, -225.0], max: [155.0, 155.0, 262.0], tolerance: 0.5}
+datum_part: case_r1
+parts:
+  - name: case_r1
+    kind: modelled
+    design: axjet-c2-case_r1
+    intent: >-
+      Compressor casing ring over rotor 1 in the assembly frame (origin on the engine axis at the rotor_1 leading-edge
+      plane, z along the axis with the flow, x up). Ring z -18 ... 18, OD 200 between the flanges, bore D180.5 (r 90.25)
+      over its full length: the 0.5 mm sprayed Al-Si/polyester abradable that lines a recess over z -2 ... 18 is
+      modelled as part of this body and finished at D180.5, so the rotor_1 tips (r 90.0) run at the 0.25 mm cold
+      clearance. Front flange z -18 ... -12 and rear flange z 12 ... 18 (6 thick, inferred to match the inlet_frame
+      rear flange), OD 224, each with 8 x D5.5 (M5 clearance) holes on PCD 212 through the flange, one hole on +x,
+      45 deg pitch (revision 1: an M5 head or nut at r 106 clears the ring wall and the rim). Interfaces: front face
+      z -18 seats on the inlet_frame rear flange; rear face z 18 seats on the stator_1 front flange; the bore is the
+      rotor_1 tip shroud (the two eddy-current speed and clearance probes over the rotor_1 tips are not modelled).
+    material: 6061-T6
+    density_kg_m3: 2700
+  - name: bellmouth
+    kind: modelled
+    design: axjet-c2-bellmouth
+    intent: >-
+      Bolt-on test bellmouth lip in the assembly frame, axisymmetric about z, z -95 ... -72. Inner (flow) contour: the
+      quarter-ellipse of section 9 centred at (z -45, r 125) with axial semi-axis 50 and radial semi-axis 34.75, running
+      from r 95.8 at the rear face z -72 (the inlet_frame continues it to r 90.25 at z -45) to its front point r 125 at
+      z -95 (radial tangent); there a 6 mm quarter-round lip centred at (z -89, r 125), tangent to the ellipse at
+      (z -95, r 125) and to the outer skin at (z -89, r 131), closes the contour without a crease; the outer skin starts
+      at r 131 and returns to the rear flange (inferred profile). Rear flange z -77 ... -72 (5 thick, inferred to match
+      the inlet_frame front flange), OD 224, with 8 x M5 tapped blind holes from the rear face z -72 on PCD 216, one on
+      +x (modelled as D4.2 tap-drill holes 10 deep); the screws enter from behind the inlet_frame flange. Interfaces:
+      rear face z -72 (r 95.8 ... 112) seats on the inlet_frame front flange, and the inner contour meets the
+      inlet_frame contour at r 95.8 without a step.
+    material: 6061-T6
+    density_kg_m3: 2700
+  - name: inlet_frame
+    kind: modelled
+    design: axjet-c2-inlet_frame
+    intent: >-
+      Inlet frame with hub, struts, hub fairing and front bearing housing, one body in the assembly frame. Duct: front
+      flange z -72 ... -67 (OD 224, 8 x D5.5 through holes on PCD 216, one on +x, for the M5 screws into the
+      bellmouth, inserted from behind the flange; contour r 95.8 at the face); inner contour
+      continuing the bellmouth quarter-ellipse (centre z -45, r 125; semi-axes 50 axial, 34.75 radial) from r 95.8 at
+      z -72 to r 90.25 at z -45, then cylindrical r 90.25 to z -18; duct outer wall r 100 between the flanges
+      (inferred, as the casing rings); rear flange z -24 ... -18 (OD 224, 8 x D5.5 on PCD 212, one on +x, 45 deg
+      pitch) seating on case_r1 at z -18. Hub: outer surface r 32 from z -80 to -40; front bearing seat bore D52 H6
+      z -75 ... -35 (modelled D52.0; bearing_front sits in it at z -72 ... -42); front wall z -80 ... -75 with a D40
+      bore (inferred: clears the drum_shaft M20 nose thread and the nose nut) and 4 x M3 tapped holes on PCD 56
+      (inferred) for the nose cone; behind z -35 nothing of the inlet_frame lies inside r 30 (the spinning stack nut,
+      OD 56, sits at z -18 ... -8; the drum is D36 to D40 there). Fairing: a 3 mm shell rising straight from r 32 at
+      z -40 to r 57.6 at z -15, then cylindrical r 57.6
+      to its rear face at z -11, 3 mm ahead of the rotor_1 front face (z -8). Front seal sleeve: bore D97 (r 48.5) from
+      z -21 to -11, joined to the fairing by a web ahead of z -19 (inferred), so the rotor_1 seal arm (r 44 ... 48.1,
+      z -18 ... -8) runs inside it at 0.4 mm radial and at least 1 mm axial clearance. Struts: five symmetric NACA
+      0020-type sections, 30 mm axial chord (z -70 ... -40), 6 mm maximum thickness, radial from the hub (r 32) into the
+      duct wall, 72 deg pitch with one on +x (the +x service strut stays solid; its line passage is not modelled). The
+      flow path is
+      continuous with the bellmouth at z -72, the nose cone (r 32) at z -80 and case_r1 (r 90.25) at z -18.
+    material: 6061-T6
+    density_kg_m3: 2700
+  - name: nose_cone
+    kind: modelled
+    design: axjet-c2-nose_cone
+    intent: >-
+      Nose cone in its own frame: origin on the engine axis at its rear face, which seats on the inlet_frame hub front
+      face (assembly z -80); axes parallel to the assembly axes (z rearward with the flow, x up), so the cone lies at
+      z <= 0. Outer surface: D64 cylinder from z 0 to -50 (assembly -80 ... -130), then a tangent ogive (arc radius
+      35.14 = (32^2 + 35^2) / 64, tangent to the cylinder at z -50) to the tip at z -85 (assembly -165); 2 mm wall,
+      closed at the tip. Starter bulkhead: a 3 mm plate at z -28 ... -25 (assembly -108 ... -105) across the bore with a
+      D12 centre hole for the starter shaft and the motor's 4 x M3 pattern (D3.4 on PCD 30, inferred); the starter body
+      (D50 x 35, assembly z -143 ... -108) bolts to its front face z -28. Rear rim: an inner lip z -3 ... 0 from r 26 to
+      the wall (inferred) with 4 x D3.4 holes on PCD 56 (inferred) for the M3 screws into the hub. Interfaces: rear face
+      z 0 on the hub front face; the D64 surface continues the hub's r 32 flow surface without a step; the inner wall
+      stays at least 2 mm clear of the starter (r 25).
+    material: 6061-T6
+    density_kg_m3: 2700
+  - name: rotor_1
+    kind: modelled
+    design: axjet-c2-rotor_1
+    intent: >-
+      Rotor-1 blisk in its own frame: axis +z through the origin (the spool turns positively about +z), origin on the
+      axis at the blade leading-edge plane (assembly z 0), x parallel to the assembly x. 29 blades, radially stacked on
+      the section centroids, no lean or sweep; hub flow surface r 57.6 from z -8 to 0 (front hub extension), then
+      straight to r 61.0 at z 16; hub blade extent z 0 ... 16; flat tip at r 90.0, minimum tip thickness 0.8; root
+      fillet r 1.5 kept on the hub. Sections at hub / mean / tip (r 57.6 / 73.8 / 90.0) from section 4.3, angles from
+      the axial direction, positive in the direction of rotation: inlet metal 62.0 / 67.3 / 71.4 deg, camber 32.7 /
+      14.0 / 7.6 deg, exit metal 29.3 / 53.3 / 63.8 deg, stagger about 45.6 / 60.3 / 67.6 deg, maximum thickness 8 / 5
+      / 3.5 % of chord; chord 24 / 22 / 20 (hub solidity 1.7 to 1.8, section 4.2 item 4); circular-arc camber with
+      NACA-65 thickness, LE radius 0.3, TE thickness 0.5 (step-2 section files replace these when they exist). Disc: rim
+      r 50 ... 57.6 from z -8 to 16 under the front hub extension and the blade roots; web 10 thick at the bore, 6 thick
+      at r 50; bore D40 H6 through z -8 ... 24 (modelled D40.0, line-to-line on the drum; the 10 um interference and the
+      two D4 dowels are not modelled); front face z -8 bears on the stack nut (revision 1); seal arm r 44 ... 48.1 from z -18
+      to -8 with three teeth whose tips are at D96.2, running 0.4 inside the inlet_frame seal sleeve (D97); rear face
+      z 24 is a D100 spigot boss (r 20 ... 50) that carries the seal spacer. Behind z 16 nothing of rotor_1 lies outside
+      r 50, so it stays 4 mm from the stator_1 inner band (front face z 20, inner surface r 58). Mass about 0.9 kg.
+    material: 2618-T61
+    density_kg_m3: 2760
+  - name: stator_1
+    kind: modelled
+    design: axjet-c2-stator_1
+    intent: >-
+      Stator-1 vane ring with its casing ring, one body in the assembly frame. Casing: z 18 ... 58, OD 200 between the
+      flanges; front flange z 18 ... 24 and rear flange z 52 ... 58 (6 thick, inferred), OD 224, 8 x D5.5 (M5
+      clearance) on PCD 212, one hole on +x, as case_r1. Bore r 90.25 over z 18 ... 20 and z 38 ... 58 (over rotor 2 the 0.5 mm abradable in
+      its recess, z 40 ... 58, is modelled as part of the ring and finished at r 90.25, so the rotor_2 tips run at
+      0.25); outer band flow surface r 90.0 over z 20 ... 38 (band r 90.0 ... 93.5 integral with the ring). 41 vanes
+      between the bands, leading edge at z 22, axial extent set by chord and stagger within z 22 ... 36, chord 15,
+      radial stacking; sections at hub, mean and tip from section 4.3 (baseline, 0 deg exit flow): inlet metal 50.5 /
+      43.5 / 37.9 deg, camber 61.9 / 54.5 / 48.5 deg, exit metal -11.4 / -11.0 / -10.6 deg, stagger about 19.5 / 16.3 /
+      13.6 deg, maximum thickness 8 / 7 / 6 % of chord, LE radius 0.25, TE thickness 0.5. Inner band: flow surface
+      r 61.0 at z 20 rising straight to r 64.5 at z 38; front face z 20 (4 mm behind the rotor_1 hub trailing edge at
+      z 16); rear face z 38 (3 mm ahead of the rotor_2 front hub extension at z 41); inner surface r 58.0 carrying a
+      two-tooth labyrinth (tooth tips at r 58.0) that faces the seal spacer (OD 115) at 0.5 mm radial gap; nothing of
+      stator_1 lies inside r 58.0. Interfaces: front face z 18 on case_r1; rear face z 58 carries the ogv_ring.
+    material: 6061-T6
+    density_kg_m3: 2700
+  - name: seal_spacer
+    kind: modelled
+    design: axjet-c2-seal_spacer
+    intent: >-
+      S1 seal spacer in its own frame: axis +z through the origin, origin on the axis at its front face (assembly
+      z 24), x parallel to the assembly x. Plain ring OD 115 (r 57.5), ID 40 (modelled D40.0, line-to-line on the
+      drum), length 14 (z 0 ... 14, assembly 24 ... 38). Front face bears on the rotor_1 rear spigot boss (D100) at
+      assembly z 24; rear face carries the rotor_2 front face at assembly z 38; the OD runs 0.5 mm inside the stator_1
+      inner-band labyrinth (r 58.0) and is the rotating half of that seal.
+    material: 2618-T61
+    density_kg_m3: 2760
+  - name: rotor_2
+    kind: modelled
+    design: axjet-c2-rotor_2
+    intent: >-
+      Rotor-2 blisk in its own frame: axis +z through the origin (the spool turns positively about +z), origin on the
+      axis at the blade leading-edge plane (assembly z 42), x parallel to the assembly x. 31 blades, radially stacked on
+      the section centroids, no lean or sweep; hub flow surface r 64.8 at z 0 straight to r 66.5 at z 13 (assembly
+      42 ... 55); front hub extension r 64.8 from z -1 to 0 (assembly 41 ... 42; inferred, 3 mm behind the stator_1
+      inner band at assembly z 38); hub blade extent z 0 ... 13; flat tip at r 90.0, minimum tip thickness 0.8; root
+      fillet r 1.5 kept on the hub. Sections at hub / mean / tip (r 64.8 / 77.4 / 90.0) from section 4.3: inlet metal
+      66.7 / 70.1 / 73.1 deg, camber 26.3 / 13.6 / 8.5 deg, exit metal 40.4 / 56.5 / 64.6 deg, stagger about 53.6 /
+      63.3 / 68.8 deg, maximum thickness 8 / 5 / 3.5 % of chord; chord 22 / 20 / 18; circular-arc camber with NACA-65
+      thickness, LE radius 0.3, TE thickness 0.5. Disc in the proportions of rotor_1 (web 10 thick at the bore, 6 under
+      the rim), axial extent z -4 ... 20 (assembly 38 ... 62), bore D40 H6 (modelled D40.0, line-to-line on the drum;
+      dowels not modelled). Front face z -4 (assembly 38) bears on the seal spacer over r 20 ... 57.5, and nothing of
+      rotor_2 lies outside r 57.5 ahead of z -1 (0.5 mm radial and 3 mm axial to the stator_1 inner band). Behind the
+      hub trailing edge (z 13) the outer surface steps down to r 63.0 and continues as the rear seal sleeve OD 126 x
+      ID 60, z 20 ... 28 (assembly 62 ... 70), which runs 0.5 mm inside the OGV inner-band labyrinth (r 63.5). The disc
+      rear face z 20 (assembly 62) inside the sleeve bears on the drum D46 shoulder (r 20 ... 23, revision 1). Mass
+      about 1.0 kg.
+    material: 2618-T61
+    density_kg_m3: 2760
+  - name: ogv_ring
+    kind: modelled
+    design: axjet-c2-ogv_ring
+    intent: >-
+      Outlet guide vane ring with its casing ring, one body in the assembly frame. Casing: z 58 ... 80, OD 200 between
+      the flanges; front flange z 58 ... 64, OD 224, 8 x D5.5 (M5 clearance) on PCD 212 (one on +x) seating on
+      stator_1; rear flange z 74 ... 80, OD 224, 8 x D5.5 on PCD 212 for the diffuser of the full engine (inferred: the
+      same joint as the other casing rings). Outer band flow surface r 90.0 over z 59 ... 78 (band r 90.0 ... 93.5 integral with the
+      ring), bore r 90.25 over z 58 ... 59 and z 78 ... 80 (station 3). 47 vanes, single row, leading edge at z 61,
+      axial extent set by chord and stagger within z 61 ... 76, chord 14, radial stacking; sections at hub, mean and tip
+      from section 4.3 (baseline, 0 deg exit flow): inlet metal 53.8 / 48.9 / 44.5 deg, camber 65.3 / 60.4 / 56.0 deg,
+      exit metal -11.5 deg at all three, stagger about 21.1 / 18.7 / 16.5 deg, maximum thickness 8 / 7 / 6 % of chord,
+      LE radius 0.25, TE thickness 0.5 (the tandem pair and solidity-1.8 options of section 4.2 are not modelled).
+      Inner band: flow surface r 66.5 from its front face z 59 (4 mm behind the rotor_2 hub trailing edge at z 55) to
+      z 61, rising straight to r 67.5 at z 76, then r 67.5 to z 80; inner surface r 63.5 carrying a two-tooth labyrinth
+      (tooth tips at r 63.5) that faces the rotor_2 rear seal sleeve (OD 126, z 62 ... 70) at 0.5 mm radial gap;
+      nothing of the ogv_ring lies inside r 63.5. Interface: front face z 58 on stator_1.
+    material: 6061-T6
+    density_kg_m3: 2700
+  - name: drum_shaft
+    kind: modelled
+    design: axjet-c2-drum_shaft
+    intent: >-
+      Drum shaft in its own frame: axis +z through the origin, origin on the axis at the rotor_1 leading-edge plane
+      (assembly z 0), x parallel to the assembly x; z -90 ... 262. Front: M20 x 1 LH thread z -90 ... -75 (modelled as
+      a plain D20) for the nose nut and starter clutch; D25 h5 front bearing journal z -75 ... -40 (modelled D25.0);
+      step to a D36 neck at z -40 (the bearing inner-race spacer bears on the D25/D36 step). D36 neck z -40 ... -18 so
+      the stack nut passes over it; M39 x 1.5 stack_nut thread z -18 ... -8 (modelled as a plain D39); D40 h6 seats
+      (modelled D40.0) z -8 ... 62: rotor_1 z -8 ... 24, seal spacer z 24 ... 38, rotor_2 z 38 ... 62; integral
+      shoulder D46 x 6 at z 62 ... 68, its front face z 62 the rotor_2 rear stop; D40 drum z 68 ... 254. Rear flange
+      D60 x 8 at z 254 ... 262 with 6 x M5 tapped on PCD 50 and a D44 H7 x 2 recess in its rear face for the
+      coupling-hub spigot of the full engine. Bore D28 from z -30 through the flange (inferred: the source's z -45 bore
+      start would cut through the D25 journal, which ends at z -40), leaving a 4 mm wall under the D36 neck. The rotor
+      stack loads from the front against the z 62 shoulder (revision 1).
+    material: 17-4PH H1025
+    density_kg_m3: 7800
+  - name: bearing_front
+    kind: modelled
+    design: axjet-c2-bearing_front
+    intent: >-
+      Front bearing pair (2 x 25 x 52 x 15 hybrid angular-contact, Si3N4 balls, back-to-back) as one envelope ring in
+      its own frame: axis +z through the origin, origin on the axis at its front face (assembly z -72), x parallel to
+      the assembly x. OD 52 (line-to-line in the inlet_frame D52 H6 seat), ID 25 (line-to-line on the drum_shaft D25
+      journal), length 30 (z 0 ... 30, assembly -72 ... -42), 0.5 x 45 deg chamfers on all four edges.
+    material: steel
+    density_kg_m3: 7800
+  - name: stack_nut
+    kind: modelled
+    design: axjet-c2-stack_nut
+    intent: >-
+      Stack nut in its own frame: axis +z through the origin, origin on the axis at its front face (assembly z -18),
+      x parallel to the assembly x. Ring OD 56, ID 39 (the M39 x 1.5 thread modelled as a plain D39 bore on the drum's
+      plain D39 thread section), length 10 (z 0 ... 10, assembly -18 ... -8); six spanner notches in the OD at 60 deg
+      pitch, one centred on +x, 6 wide x 3 deep through the length (inferred). Its rear face (assembly z -8) clamps the
+      rotor_1 disc front face; the OD (r 28) stays inside the rotor_1 seal arm (r 44), and the tool enters axially from
+      the front through the seal arm (revision 1).
+    material: 17-4PH H1025
+    density_kg_m3: 7800
+  - name: starter
+    kind: purchased
+    catalog: {name: starter, kind: cylinder, point: [0.0, 0.0, -143.0], direction: [0.0, 0.0, 1.0], radius: 25.0, length: 35.0}
+    description: >-
+      1 kW-class outer-rotor brushless starter motor (D50 x 35, 22-28 V), catalog cylinder in its own frame, which is
+      the assembly frame: z -143 ... -108, its rear face on the nose_cone bulkhead at z -108; the one-way needle clutch
+      (z -105 ... -95) and the shaft are not modelled.
+  - name: air
+    kind: derived
+    role: fluid
+    material: air
+    density_kg_m3: 1.204
+    description: >-
+      The whole wetted region the air walls and minus bodies bound, built in the assembly source by the evaluator's
+      recipe: the padded box minus one fused tool of the walls (bellmouth, inlet_frame, nose_cone, case_r1, stator_1,
+      ogv_ring, bearing_front, starter, rigPlenum, rigExit, rigExitPlug) and the minus bodies (rotor_1, seal_spacer,
+      rotor_2, drum_shaft, stack_nut), clipped at the inlet cap z -220 and the outlet cap z 90, keeping the piece that
+      holds the seed (0, 0, -200). It is the gas path (plenum r 150, bellmouth, inlet duct, compressor annulus, exit
+      annulus r 67.5 ... 90.25 over z 80 ... 90) plus the seal pockets and labyrinth cavities connected to it; the closed
+      nose cavity and the drum bore are separate pieces and not part of it.
+  - name: rigPlenum
+    kind: derived
+    role: solid
+    description: >-
+      Test-cell plenum skin, rig hardware built in the assembly source, stationary, one solid revolved about z in the
+      assembly frame: wall r 150 ... 155 over z -225 ... -95 plus its rear wall z -95 ... -90 over r 125 ... 155, whose
+      inner edge meets the bellmouth lip at its tangent point (z -95, r 125). It bounds the r 150 plenum radially.
+  - name: rigExit
+    kind: derived
+    role: solid
+    description: >-
+      Exit duct outer sleeve, rig hardware built in the assembly source, stationary, one solid in the assembly frame:
+      r 90.25 ... 95 over z 80 ... 95, seated on the ogv_ring rear face at z 80; it bounds the exit annulus outside.
+  - name: rigExitPlug
+    kind: derived
+    role: solid
+    description: >-
+      Exit centre body, rig hardware built in the assembly source, stationary, one solid in the assembly frame: annulus
+      r 20 ... 67.5 over z 80 ... 95, seated on the OGV inner band rear face at z 80 and line-to-line on the D40 drum
+      (r 20, axisymmetric there, so the spinning drum does not interfere); it bounds the exit annulus inside and closes
+      the cavity behind the OGV band from the outlet plane.
+parameters:
+  - {name: designSpeed, value: 44000.0, unit: rpm, provenance: stated, tolerance: 1.0, source: "sources/axjet_design_and_implementation_guide.md section 1", description: "design spool speed, tip speed 415 m/s at r 90"}
+  - {name: coldSpeed, value: 8000.0, unit: rpm, provenance: stated, tolerance: 1.0, source: "sources/axjet_design_and_implementation_guide.md section 14.1", description: cold MRF case speed}
+  - {name: coldMassFlow, value: 0.418, unit: kg/s, provenance: stated, tolerance: 0.001, source: "sources/axjet_design_and_implementation_guide.md section 14.1", formula: "2.30 x coldSpeed / designSpeed", description: cold-case air mass flow (flow proportional to speed)}
+  - {name: rotor1BladeCount, value: 29.0, unit: "", provenance: stated, tolerance: 0.1, source: "sources/axjet_design_and_implementation_guide.md section 4.1"}
+  - {name: rotor1Pitch, value: 12.41, unit: deg, provenance: derived, tolerance: 0.01, formula: "360 / rotor1BladeCount", description: "one rotor_1 blade pitch, the range of the spin sweep"}
+  - {name: tipRadius, value: 90.0, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/axjet_design_and_implementation_guide.md section 4", description: constant compressor tip radius}
+  - {name: casingBoreRadius, value: 90.25, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/axjet_design_and_implementation_guide.md section 4.4 (bore D180.5)", description: finished casing bore over both rotors}
+  - {name: tipClearance, value: 0.25, unit: mm, provenance: stated, tolerance: 0.01, source: "sources/axjet_design_and_implementation_guide.md sections 2.3 and 4.1", formula: "casingBoreRadius - tipRadius", description: cold compressor tip clearance}
+  - {name: rotor1Station, value: 0.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 14.1", description: rotor_1 own origin on the drum (assembly z)}
+  - {name: sealSpacerStation, value: 24.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 14.1", description: seal_spacer front face on the drum}
+  - {name: rotor2Station, value: 42.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 14.1", description: rotor_2 leading-edge plane on the drum}
+  - {name: stackNutStation, value: -18.0, unit: mm, provenance: stated, tolerance: 0.05, source: "revision 1 reviewer notes, change 1 (approved; supersedes guide sections 8.1 and 14.1, z 62)", description: stack_nut front face on the drum}
+  - {name: drumShoulderStation, value: 62.0, unit: mm, provenance: stated, tolerance: 0.05, source: "revision 1 reviewer notes, change 1 (approved)", description: front face of the drum D46 shoulder (z 62 ... 68)}
+  - {name: bearingFrontStation, value: -72.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 14.1", description: front bearing ring front face in the hub}
+  - {name: noseConeStation, value: -80.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 14.1", description: nose_cone rear face on the hub front face}
+  - {name: starterFaceStation, value: -108.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 8.3", description: starter rear face on the bulkhead}
+  - {name: inletFlangeStation, value: -72.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 2.4", description: bellmouth to inlet_frame flange plane}
+  - {name: caseFrontStation, value: -18.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 4.4", description: inlet_frame to case_r1 flange plane}
+  - {name: caseRearStation, value: 18.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 4.4", description: case_r1 to stator_1 flange plane}
+  - {name: ogvFrontStation, value: 58.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 4.4", description: stator_1 to ogv_ring flange plane}
+  - {name: rowGap1, value: 4.0, unit: mm, provenance: derived, tolerance: 0.05, formula: "20 - 16 (stator_1 inner band front face minus rotor_1 hub trailing edge)", description: rotor_1 to stator_1 axial row gap}
+  - {name: rowGap2, value: 4.0, unit: mm, provenance: inferred, tolerance: 0.05, formula: "59 - 55 (OGV inner band front face minus rotor_2 hub trailing edge)", rationale: "the source gives the OGV ring z 58 ... 80 and vanes z 61 ... 76 but not the inner band front face; 4 mm mirrors rowGap1", description: rotor_2 to OGV axial row gap}
+  - {name: plenumRadius, value: 150.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 14.1", description: air plenum radius (inlet disc D300)}
+  - {name: plenumInletStation, value: -220.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 14.1", description: inlet cap plane}
+  - {name: outletCapStation, value: 90.0, unit: mm, provenance: stated, tolerance: 0.05, source: "sources/axjet_design_and_implementation_guide.md section 14.1", description: outlet cap plane}
+joints:
+  - name: rotorSpin
+    kind: revolute
+    parent: case_r1
+    child: drum_shaft
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0]}
+    drive: {kind: motor, case_value: speedRpm, description: "the spool speed per operating case; 44,000 rpm at design"}
+    description: the spool (drum, blisks, spacer and nut) about the engine axis; the front bearing pair carries it in the inlet_frame hub
+  - name: rotor1OnDrum
+    kind: rigid
+    parent: drum_shaft
+    child: rotor_1
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: rotor_1 on its D40 seat, clamped by the stack nut at z -8 (interference fit and dowels)
+  - name: spacerOnDrum
+    kind: rigid
+    parent: drum_shaft
+    child: seal_spacer
+    parent_frame: {origin: [0.0, 0.0, 24.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: seal spacer clamped between the blisks
+  - name: rotor2OnDrum
+    kind: rigid
+    parent: drum_shaft
+    child: rotor_2
+    parent_frame: {origin: [0.0, 0.0, 42.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: rotor_2 on its D40 seat, its rear face against the drum shoulder at z 62
+  - name: stackNutOnDrum
+    kind: rigid
+    parent: drum_shaft
+    child: stack_nut
+    parent_frame: {origin: [0.0, 0.0, -18.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: stack nut on the M39 thread at z -18 ... -8, clamping rotor_1, the seal spacer and rotor_2 against the z 62 shoulder
+  - name: inletFrameOnCase
+    kind: rigid
+    parent: case_r1
+    child: inlet_frame
+    parent_frame: {origin: [0.0, 0.0, -18.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, -18.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: inlet_frame rear flange bolted to the case_r1 front flange at z -18
+  - name: bellmouthOnFrame
+    kind: rigid
+    parent: inlet_frame
+    child: bellmouth
+    parent_frame: {origin: [0.0, 0.0, -72.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, -72.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: bellmouth lip bolted to the inlet_frame front flange at z -72
+  - name: stator1OnCase
+    kind: rigid
+    parent: case_r1
+    child: stator_1
+    parent_frame: {origin: [0.0, 0.0, 18.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 18.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: stator_1 front flange bolted to the case_r1 rear flange at z 18
+  - name: ogvOnCase
+    kind: rigid
+    parent: stator_1
+    child: ogv_ring
+    parent_frame: {origin: [0.0, 0.0, 58.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 58.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: ogv_ring front flange bolted to the stator_1 rear flange at z 58 (the casing stack)
+  - name: noseOnInlet
+    kind: rigid
+    parent: inlet_frame
+    child: nose_cone
+    parent_frame: {origin: [0.0, 0.0, -80.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: nose cone screwed to the hub front face at z -80
+  - name: starterOnNose
+    kind: rigid
+    parent: nose_cone
+    child: starter
+    parent_frame: {origin: [0.0, 0.0, -28.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, -108.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: starter body on the bulkhead front face (assembly z -108)
+  - name: bearingFrontInHub
+    kind: rigid
+    parent: inlet_frame
+    child: bearing_front
+    parent_frame: {origin: [0.0, 0.0, -72.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: front bearing pair in the D52 hub seat, front face at z -72; the drum journal turns in its bore
+  - name: airFixed
+    kind: rigid
+    parent: case_r1
+    child: air
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: the derived air body is built in the assembly frame
+  - name: rigPlenumFixed
+    kind: rigid
+    parent: case_r1
+    child: rigPlenum
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: the derived plenum skin is built in the assembly frame
+  - name: rigExitFixed
+    kind: rigid
+    parent: case_r1
+    child: rigExit
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: the derived exit sleeve is built in the assembly frame
+  - name: rigExitPlugFixed
+    kind: rigid
+    parent: case_r1
+    child: rigExitPlug
+    parent_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    child_frame: {origin: [0.0, 0.0, 0.0], axis: [0.0, 0.0, 1.0], ref: [1.0, 0.0, 0.0]}
+    description: the derived exit centre body is built in the assembly frame
+fluid_volumes:
+  - name: air
+    body: air
+    walls: [bellmouth, inlet_frame, nose_cone, case_r1, stator_1, ogv_ring, bearing_front, starter, rigPlenum, rigExit, rigExitPlug]
+    minus: [rotor_1, seal_spacer, rotor_2, drum_shaft, stack_nut]
+    caps:
+      - {name: inletCap, point: [0.0, 0.0, -220.0], normal: [0.0, 0.0, -1.0]}
+      - {name: outletCap, point: [0.0, 0.0, 90.0], normal: [0.0, 0.0, 1.0]}
+    seed: [0.0, 0.0, -200.0]
+    volume: {expected: 12170000.0, tolerance_rel: 0.05, provenance: derived, note: "amendment 1 probe on the placed bodies: gas path 11.86e6 (the source's air body) + 0.32e6 mm3 of seal pockets and labyrinth cavities; section 14.1 estimate 12.0e6"}
+    description: plenum, bellmouth, inlet duct and compressor annulus to station 3 plus 10 mm, with the seal pockets and labyrinth cavities connected to it; seed ahead of the nose tip (z -165)
+boundaries:
+  - {name: inlet, role: inlet, body: air, select: plane, point: [0.0, 0.0, -220.0], normal: [0.0, 0.0, -1.0], area: {expected: 70685.8, tolerance_rel: 0.02, provenance: derived, note: "pi x 150^2, the plenum inlet disc"}}
+  - {name: outlet, role: outlet, body: air, select: plane, point: [0.0, 0.0, 90.0], normal: [0.0, 0.0, 1.0], area: {expected: 11274.6, tolerance_rel: 0.02, provenance: derived, note: "pi x (90.25^2 - 67.5^2), the station-3 annulus of 111 cm2"}}
+  - {name: rotor1Wall, role: rotating_wall, body: air, select: touching, touching: rotor_1, description: rotor_1 blades and hub in the MRF zone}
+  - {name: rotor2Wall, role: rotating_wall, body: air, select: touching, touching: rotor_2, description: rotor_2 blades and hub in the MRF zone}
+  - {name: spacerWall, role: rotating_wall, body: air, select: touching, touching: seal_spacer, description: seal_spacer OD in the stator_1 labyrinth pocket}
+  - {name: drumWall, role: rotating_wall, body: air, select: touching, touching: drum_shaft, description: drum_shaft faces in the seal pockets and the hub cavity}
+  - {name: nutWall, role: rotating_wall, body: air, select: touching, touching: stack_nut, description: stack_nut faces in the cavity under the rotor_1 seal arm}
+  - {name: casingWall, role: wall, body: air, select: rest, description: "stationary walls: plenum skin, bellmouth, inlet frame and struts, nose cone, bearing, starter, casing rings and vanes, exit sleeve and plug"}
+  - {name: rotor1Bore, role: fixed, body: rotor_1, select: cylinder, point: [0.0, 0.0, 8.0], direction: [0.0, 0.0, 1.0], radius: 20.0, tolerance: 0.05, description: the D40 bore clamped on the drum for the CalculiX cases}
+  - {name: rotor1Free, role: other, body: rotor_1, select: rest, description: the traction-free rotor_1 faces for the CalculiX cases}
+operating_cases:
+  - id: cold
+    values: {speedRpm: 8000.0, flowLMin: 20900.0}
+    units: {speedRpm: rpm, flowLMin: L/min}
+    split: development
+    source: sources/axjet_design_and_implementation_guide.md section 14.1
+    description: "cold MRF sanity case: 0.418 kg/s at 1.204 kg/m3 (2.30 kg/s x 8/44); air 1.204 kg/m3, 1.813e-5 Pa s"
+  - id: design
+    values: {speedRpm: 44000.0}
+    units: {speedRpm: rpm}
+    split: held_out
+    source: sources/axjet_design_and_implementation_guide.md sections 1 and 14.1
+    description: "design point, 2.30 kg/s, OPR 2.33; structural cases only, no fluid simulation"
+observables:
+  - id: dpCold
+    quantity: pressure_rise
+    unit: Pa
+    simulation: mrfCold
+    case: cold
+    averaging: steady
+    description: >-
+      static pressure, outlet cap (z 90) minus inlet cap (z -220) patch averages. Meanline expectation about 2.9 kPa
+      static-to-static (3.2 kPa total-to-total scaled by (8/44)^2): class X, an estimate and not a reference, so no band.
+  - id: torqueCold
+    quantity: torque
+    unit: N m
+    simulation: mrfCold
+    case: cold
+    averaging: steady
+    description: driving torque the spool absorbs; estimate about 1.5 N m (215 kW x (8/44)^3 at 838 rad/s), not a band
+  - id: rotor1TipGrowth
+    quantity: max_displacement
+    unit: mm
+    simulation: rotor1Stress
+    case: design
+    body: rotor_1
+    averaging: maximum
+    max: 0.2
+    description: rotor_1 centrifugal displacement at 44,000 rpm; section 14.1 limit 0.20 mm (expect 0.10 to 0.15)
+  - id: rotor1Mode1
+    quantity: natural_frequency_1
+    unit: Hz
+    simulation: rotor1Modal
+    case: design
+    body: rotor_1
+    min: 2000.0
+    description: first rotor_1 mode, unloaded with the bore fixed; requirement first blade mode >= 2 kHz (section 13 step 7)
+simulations:
+  - id: mrfCold
+    physics: cfd_steady
+    solver: openfoam
+    cases: [cold]
+    bodies: [air, rotor_1, rotor_2, drum_shaft]
+    inputs:
+      fluidDensity: {value: 1.204, unit: kg/m3, provenance: stated, source: "sources/axjet_design_and_implementation_guide.md section 14.1 (cold case)"}
+      fluidViscosity: {value: 1.813e-5, unit: Pa s, provenance: stated, source: "sources/axjet_design_and_implementation_guide.md section 14.1 (cold case)"}
+    settings: {flow_key: flowLMin, speed_key: speedRpm, inlet_diameter_mm: 300.0, cell_mm: 6.0, surface_level: 3, iterations: 1500, processes: 8, timeout_s: 36000}
+    regions:
+      - {name: tip1, shape: rotor_tip, body: rotor_1, inside_mm: 1.0, outside_mm: 1.5, axial_margin_mm: 3.0, description: rotor_1 tips and the 0.25 mm gap to case_r1}
+      - {name: tip2, shape: rotor_tip, body: rotor_2, inside_mm: 1.0, outside_mm: 1.5, axial_margin_mm: 3.0, description: rotor_2 tips and the 0.25 mm gap to stator_1}
+    refinement:
+      - {factor: 1.0, regions: {tip1: 1, tip2: 1}}
+      - {factor: 0.8, regions: {tip1: 1, tip2: 1}}
+      - {factor: 0.64, regions: {tip1: 1, tip2: 1}}
+    outputs: [dpCold, torqueCold]
+    description: >-
+      steady MRF (k-omega SST) of the spool at 8,000 rpm about the rotorSpin axis; the tip regions are refined on every
+      level so each ladder step refines everywhere (the guide's bare 1.0 first level mixed a global and a regional step).
+      Expect resolved false on the first ladder (FAN-01 experience): a geometry check, not a performance prediction.
+  - id: rotor1Stress
+    physics: structural_static
+    solver: calculix
+    cases: [design]
+    bodies: [rotor_1]
+    inputs:
+      rotor_1.youngsModulus: {value: 7.45e+10, unit: Pa, provenance: stated, source: "sources/axjet_design_and_implementation_guide.md section 14.1 (2618-T61)"}
+      rotor_1.poissonRatio: {value: 0.33, unit: "", provenance: stated, source: "sources/axjet_design_and_implementation_guide.md section 14.1 (2618-T61)"}
+      rotor_1.density: {value: 2760.0, unit: kg/m3, provenance: stated, source: "sources/axjet_design_and_implementation_guide.md section 14.1 (2618-T61)"}
+    settings: {mesh_size_mm: 1.5, fixed_boundary: rotor1Bore}
+    refinement: [1.0, 0.7, 0.5]
+    outputs: [rotor1TipGrowth]
+    description: centrifugal load at the design speed of rotorSpin, bore fixed
+  - id: rotor1Modal
+    physics: modal
+    solver: calculix
+    cases: [design]
+    bodies: [rotor_1]
+    inputs:
+      rotor_1.youngsModulus: {value: 7.45e+10, unit: Pa, provenance: stated, source: "sources/axjet_design_and_implementation_guide.md section 14.1 (2618-T61)"}
+      rotor_1.poissonRatio: {value: 0.33, unit: "", provenance: stated, source: "sources/axjet_design_and_implementation_guide.md section 14.1 (2618-T61)"}
+      rotor_1.density: {value: 2760.0, unit: kg/m3, provenance: stated, source: "sources/axjet_design_and_implementation_guide.md section 14.1 (2618-T61)"}
+    settings: {modes: 6, mesh_size_mm: 1.5, fixed_boundary: rotor1Bore}
+    refinement: [1.0, 0.7, 0.5]
+    outputs: [rotor1Mode1]
+    description: >-
+      six modes of rotor_1 with the bore fixed, no loads (the design case only labels the run); mesh size and ladder
+      mirror rotor1Stress because the source states neither
+acceptance:
+  bbox_tolerance: 0.5
+  clearances:
+    - {name: rotor1Tip, a: rotor_1, b: case_r1, min_gap: 0.2, description: rotor_1 tips to the case_r1 bore (0.25 cold)}
+    - {name: rotor2Tip, a: rotor_2, b: stator_1, min_gap: 0.2, description: rotor_2 tips to the stator_1 bore (0.25 cold)}
+    - {name: rotor1ToStator1, a: rotor_1, b: stator_1, min_gap: 3.9, description: "axial row gap, 4.0 nominal (rotor_1 hub trailing edge z 16 to the stator_1 inner band z 20); 0.1 left for modelling tolerance"}
+    - {name: rotor1ToInletFrame, a: rotor_1, b: inlet_frame, min_gap: 0.3, description: "front labyrinth, 0.4 nominal; the fairing to rotor_1 face gap is 3"}
+    - {name: spacerSeal, a: seal_spacer, b: stator_1, min_gap: 0.4, description: seal spacer to the stator_1 inner-band labyrinth (0.5 nominal)}
+    - {name: sleeveSeal, a: rotor_2, b: ogv_ring, min_gap: 0.4, description: "rotor_2 rear sleeve to the OGV inner-band labyrinth (0.5 nominal); it also bounds the rotor_2 to OGV row gap, which is 4 mm at the hub and 6 mm blade to vane"}
+    - {name: drumToInletFrame, a: drum_shaft, b: inlet_frame, min_gap: 1.0, description: "the spinning drum clears the hub bores (8 mm nominal at the D36 neck in the D52 seat, 10 mm behind z -35)"}
+    - {name: stackNutToInletFrame, a: stack_nut, b: inlet_frame, min_gap: 1.0, description: "the spinning nut (r 28, z -18 ... -8) clears the inlet_frame, which keeps outside r 30 behind z -35 (revision 1)"}
+    - {name: bellmouthSeat, a: bellmouth, b: inlet_frame, max_gap: 0.05, description: flange contact at z -72}
+    - {name: inletFrameSeat, a: inlet_frame, b: case_r1, max_gap: 0.05, description: flange contact at z -18}
+    - {name: stator1Seat, a: stator_1, b: case_r1, max_gap: 0.05, description: flange contact at z 18}
+    - {name: ogvSeat, a: ogv_ring, b: stator_1, max_gap: 0.05, description: flange contact at z 58}
+    - {name: noseSeat, a: nose_cone, b: inlet_frame, max_gap: 0.05, description: nose_cone rear face on the hub at z -80}
+    - {name: starterSeat, a: starter, b: nose_cone, max_gap: 0.05, description: starter on the bulkhead at z -108}
+    - {name: frontBearingSeat, a: bearing_front, b: inlet_frame, max_gap: 0.05, description: bearing OD in the D52 hub seat}
+    - {name: frontBearingJournal, a: bearing_front, b: drum_shaft, max_gap: 0.05, description: bearing bore on the D25 journal}
+    - {name: rotor1Seat, a: rotor_1, b: drum_shaft, max_gap: 0.05, description: rotor_1 bore on the drum}
+    - {name: spacerSeat, a: seal_spacer, b: drum_shaft, max_gap: 0.05, description: seal_spacer bore on the drum}
+    - {name: rotor2Seat, a: rotor_2, b: drum_shaft, max_gap: 0.05, description: rotor_2 bore on the drum}
+    - {name: stackNutSeat, a: stack_nut, b: drum_shaft, max_gap: 0.05, description: stack nut on the D39 thread section at z -18 ... -8}
+  motions:
+    - {name: spin, drive: rotorSpin, range: [0.0, 12.41], steps: 12, interference_tolerance: 0.05, description: "one rotor_1 blade pitch (360/29 deg): every blade, seal and journal past its stationary neighbours"}
+references:
+  - {path: sources/axjet_design_and_implementation_guide.md, kind: text, role: authoritative, sha256: "c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490"}
+open_questions:
+  - "Changed (revision 1, reviewer notes): rotor stack loads from the front. The drum D46 x 6 shoulder moves from z -14 ... -8 to z 62 ... 68 (rotor_2 rear stop), the M39 thread (plain D39) moves to z -18 ... -8 behind a D36 neck z -40 ... -18, and the stack nut moves to z -18 ... -8 (joint stackNutOnDrum at drum z -18) clamping rotor_1; the inlet_frame keeps outside r 30 behind z -35 and the clearance stackNutToInletFrame (min 1.0) is added. Reason: with an integral shoulder at z -14 and the integral D60 flange the D40-bore blisks, the spacer and the ID 39 nut could not be fitted from either end."
+  - "Changed (revision 1, reviewer notes): every compressor casing flange (case_r1, stator_1 and ogv_ring front and rear, inlet_frame rear) is OD 224 with 8 x D5.5 (M5 clearance) on PCD 212, one hole on +x. Reason: 8 x D6.4 on PCD 206 broke 0.2 mm out of the OD 212 rims and no M6 head or nut could seat between the ring wall and the rim."
+  - "Changed (revision 1, reviewer notes): inlet struts are symmetric NACA 0020-type sections, 30 mm axial chord, 6 mm maximum thickness. Reason: the guide's 12 % section and 12 mm thickness disagree (12 mm is 40 % of 30 mm), and 12 mm struts block about 16 % of the annulus 40 mm ahead of rotor_1."
+  - "Changed (revision 1, reviewer notes): the bellmouth lip is a 6 mm quarter-round centred at (z -89, r 125), tangent to the ellipse at (z -95, r 125) and to the r 131 outer skin, so the part spans z -95 ... -72; the bellmouth carries 8 x M5 tapped blind holes (D4.2 x 10) from its rear face and the inlet_frame front flange 8 x D5.5 through holes on PCD 216, screws inserted from behind. Reason: the stated 3 mm lip left a 90 deg crease against the ellipse's radial tangent, and the solid lip covered the flange so the screws could not be fitted from the front."
+  - "Drum bore: section 8.1 starts the D28 bore at z -45, which would cut through the D25 journal (to z -40); the bore starts at z -30 (inferred)."
+  - "The section 14.1 clearance rotor2ToOgv (min_gap 4.0) cannot hold body to body because the rotor_2 rear sleeve runs 0.5 mm inside the OGV inner band; it is replaced by sleeveSeal (min 0.4) plus the part dimensions (rotor_2 hub trailing edge z 55, OGV band front face z 59, vanes from z 61)."
+  - "rotor1ToStator1 is exactly 4.0 by the stated geometry (rotor_1 rim to z 16, stator_1 inner band from z 20); min_gap is 3.9 to leave 0.1 for modelling tolerance."
+  - "Abradable liners over both rotors are modelled as part of case_r1 and stator_1 (finished bore D180.5) rather than as open 0.5 mm recesses, so the 0.25 mm cold tip clearance is what the clearances and the CFD see."
+  - "Rotation sense is not stated; the spool turns positively about +z and the blade angles are positive in that direction."
+  - "Inferred interface details: casing flange thickness 6, OGV rear flange as the other casing flanges, OGV inner band front face z 59, rotor_2 front hub extension from z 41, inlet_frame front wall bore D40, seal-sleeve web ahead of z -19, nose_cone and starter screw patterns, stack_nut notches, bellmouth outer-skin profile."
+  - "Stage-1 stator labyrinth gap: 0.5 mm (section 4.4) versus 0.4 mm (section 8.1 seals); 0.5 nominal with min_gap 0.4."
+  - "OGV vanes: z 61 ... 76 (15 mm) exceeds the 14 mm chord; the leading edge is at z 61 and chord with stagger set the trailing edge."
+  - "Cold-case flow: 0.418 kg/s at 1.204 kg/m3 is 20,830 L/min; the stated 20,900 L/min is used."
+  - "The envelope includes the derived plenum skin rigPlenum (r 155, z -225) and the air plenum (r 150, z -220); the part bodies alone span [-131, -131, -165] ... [131, 131, 262]."
+  - "Changed (amendment 1, evaluator evidence): derived solid bodies rigPlenum (r 150 ... 155 over z -225 ... -95 plus the rear wall z -95 ... -90 over r 125 ... 155), rigExit (r 90.25 ... 95 over z 80 ... 95) and rigExitPlug (r 20 ... 67.5 over z 80 ... 95) are added as stationary rig hardware built in the assembly source, each on a rigid joint to case_r1 in the assembly frame (rigPlenumFixed, rigExitFixed, rigExitPlugFixed). Reason: domains.json fluids.air reported sealed false, leaks_to [x-, x+, y-, y+], derived volume 19.87e6 mm3 against 12.0e6 and p99 87.6 mm against the source's air body, because no wall bounded the r 150 plenum radially or the exit annulus between the OGV rear face (z 80) and the outlet cap (z 90), inside and outside."
+  - "Changed (amendment 1, evaluator evidence): fluid volume air walls are now [bellmouth, inlet_frame, nose_cone, case_r1, stator_1, ogv_ring, bearing_front, starter, rigPlenum, rigExit, rigExitPlug] and minus [rotor_1, seal_spacer, rotor_2, drum_shaft, stack_nut]; caps and seed unchanged. Reason: with only the rig skins added the sealed region held 1.42e6 mm3 more than the source's air body (p99 39 mm), since bearing_front, starter and stack_nut were in neither list and read as air, joining the nose cavity and hub interior to the gas path through the 0.4-0.5 mm labyrinths."
+  - "Changed (amendment 1, evaluator evidence): air volume expected 12.17e6 mm3, tolerance 5 %, provenance derived (was 12.0e6, 20 %, the section 14.1 estimate). Reason: the probe with the new walls and minus bodies gives one sealed piece of 12.17e6 mm3 = gas path 11.86e6 + 0.32e6 of seal pockets and labyrinth cavities; the closed nose cavity and the drum bore drop out as separate pieces."
+  - "Changed (amendment 1, evaluator evidence): body air is the whole wetted region those walls and minus bodies bound, built by the evaluator's recipe (padded box minus one fused tool, clipped at the caps, the seed piece), so source and evaluator agree. The CFD mesh (6 mm cells, 0.75 mm at walls) does not enter the 0.4-0.5 mm labyrinths, so the meshed domain stays the gas path plus the open pockets; mrfCold settings, regions and ladder are unchanged."
+  - "Changed (amendment 1, evaluator evidence): boundaries rotor1Free (role other, body rotor_1, select rest) and the rotating walls spacerWall, drumWall and nutWall (touching seal_spacer, drum_shaft, stack_nut) are added; casingWall stays the rest. Reason: domains.json boundaries.rotor_1 had 3299 faces unassigned (only rotor1Bore named), failing boundaries_complete, and the spool faces now in the air body need rotating-wall labels."
+  - "Changed (amendment 1, evaluator evidence): envelope grows from [-150, -150, -220] ... [150, 150, 262] to [-155, -155, -225] ... [155, 155, 262] to include rigPlenum."
+  - "The rig bodies' material is not stated; they are boundaries for the fluid domain only and carry no mass properties. rigExitPlug runs line-to-line on the spinning D40 drum; it is axisymmetric there, so the spin sweep is expected to see no interference beyond the 0.05 tolerance (not yet measured; no clearance pair is added for it or for the rig seats, which the amendment does not request)."
+  - "Starter mass and density are not stated (catalog envelope only); inlet turbulence intensity is not stated (adapter default 5 %)."
+  - "mrfCold ladder: the guide's [1.0, {0.8, tips 1}, {0.64, tips 1}] mixes a global and a regional step; the tip regions are on all three levels so each step refines everywhere, as the guide intends."
+  - "Body names use underscores (case_r1, rotor_1, ...) because names must be identifiers; the design leaves follow (axjet-c2-case_r1, ...)."

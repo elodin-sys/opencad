@@ -96,14 +96,60 @@ def record(
     return row
 
 
+def priced_usage(usage: dict[str, Any], model: str) -> dict[str, Any]:
+    """The token and USD fields of a turn row from a usage dict (input, cached, output, reasoning)."""
+    from opencad.worker.pricing import cost_usd
+
+    out_tok = int(usage.get("output") or 0)
+    reasoning = int(usage.get("reasoning") or 0)
+    priced = cost_usd(usage, model=model)
+    return {
+        "tokens_input": usage.get("input"),
+        "tokens_cached": usage.get("cached"),
+        "tokens_output": out_tok,
+        "tokens_reasoning": reasoning,
+        "usd": priced["usd"],
+        "price_card": priced["card"],
+        "price_reason": priced["reason"],
+        "reasoning_share": round(reasoning / out_tok, 3) if out_tok else None,
+    }
+
+
+def restamp_turn(part: str, order_id: str, usage: dict[str, Any], *, results_dir: Path, thread_id: str, campaign: Path | None = None) -> int:
+    """Put a host's token record on a turn row written before the host had one (a Prism sub-agent's usage is read from the
+    thread store after the pipeline consumed the order). Rewrites the matching `turn` row (part, order and thread id) of the
+    part file and of that backend's campaign file in place; returns how many files changed."""
+    results_dir = Path(results_dir)
+    changed = 0
+    # results/<backend>/<part> -> results/<backend>/_campaign, not the current backend's campaign file
+    for path in (results_dir / PART_FILE, campaign or results_dir.parent / "_campaign" / PART_FILE):
+        if not path.exists():
+            continue
+        with path.open("r+", encoding="utf-8") as f:
+            fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+            rows = [json.loads(line) for line in f.read().splitlines() if line.strip()]
+            hit = False
+            for row in rows:
+                if (row.get("kind") == "turn" and row.get("part") == part and row.get("order_id") == order_id
+                        and str(row.get("thread_id") or "") == str(thread_id)):
+                    row.update(priced_usage(usage, str(row.get("model") or "")))
+                    if usage.get("mode"):
+                        row["usage_mode"] = usage["mode"]
+                    hit = True
+            if hit:
+                f.seek(0)
+                f.truncate()
+                f.write("".join(json.dumps(r, default=str) + "\n" for r in rows))
+                changed += 1
+    return changed
+
+
 def turn_data(result: Any, *, budget_s: float | None) -> dict[str, Any]:
     """Flatten a WorkerResult into a turn row (backend-independent fields first, Codex extras when present)."""
     s = result.summary()
     m = s.get("metrics") or {}
     tl = s.get("timeline") or {}
     usage = s.get("usage") or {}
-    out_tok = usage.get("output") or 0
-    reasoning = usage.get("reasoning") or 0
     d: dict[str, Any] = {
         "backend": s.get("backend"),
         "role": s.get("role"),
@@ -127,25 +173,10 @@ def turn_data(result: Any, *, budget_s: float | None) -> dict[str, Any]:
     }
     if s.get("usage_mode"):
         d["usage_mode"] = s.get("usage_mode")
-    if s.get("backend") == "codex":
-        from opencad.worker.pricing import cost_usd
-
-        priced = cost_usd(usage, model=s.get("model") or "gpt-6-astra")
-        d.update(
-            {
-                "tokens_input": usage.get("input"),
-                "tokens_cached": usage.get("cached"),
-                "tokens_output": out_tok,
-                "tokens_reasoning": reasoning,
-                "usd": priced["usd"],
-                "price_card": priced["card"],
-                "price_reason": priced["reason"],
-                "reasoning_share": round(reasoning / out_tok, 3) if out_tok else None,
-                "tool_seconds": tl.get("tool_seconds"),
-                "model_seconds": tl.get("model_seconds"),
-                "step_latency_s": tl.get("step_latency_s"),
-            }
-        )
+    # a Codex exec always carries usage; a Cursor/Prism-hosted turn does when the host recorded one (dispatch.json `usage`)
+    if s.get("backend") == "codex" or any(usage.get(k) for k in ("input", "cached", "output")):
+        d.update(priced_usage(usage, s.get("model") or "gpt-6-astra"))
+        d.update({"tool_seconds": tl.get("tool_seconds"), "model_seconds": tl.get("model_seconds"), "step_latency_s": tl.get("step_latency_s")})
     if s.get("thread_id"):
         est = transcript_usage(s.get("thread_id"), s.get("order_id"))
         if est is not None:

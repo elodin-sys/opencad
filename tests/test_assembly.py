@@ -54,6 +54,16 @@ def test_clearance_gap_and_interference():
     assert not r["ok"] and abs(r["interference_volume"] - 50) < 1e-6
 
 
+def test_mesh_distance_sees_face_interiors():
+    def cyl(r, z, h):
+        return BRepPrimAPI_MakeCylinder(gp_Ax2(gp_Pnt(0, 0, z), gp_Dir(0, 0, 1)), r, h).Shape()
+
+    # a land 0.25 under the middle of a bore whose vertices are only at its ends, and a collar 1.0 past the tube end
+    tube = BRepAlgoAPI_Cut(cyl(12, 0, 40), cyl(10.25, 0, 40)).Shape()
+    pin = BRepAlgoAPI_Fuse(BRepAlgoAPI_Fuse(cyl(9, 5, 37), cyl(10, 15, 10)).Shape(), cyl(11.5, 41, 1)).Shape()
+    assert abs(assembly.mesh_distance(pin, tube, 0.0003) - 0.25) < 0.01
+
+
 def test_select_solid_by_point():
     a = BRepPrimAPI_MakeBox(10, 10, 10).Shape()
     b = BRepPrimAPI_MakeBox(gp_Pnt(11.5, 0, 0), gp_Pnt(20, 10, 10)).Shape()

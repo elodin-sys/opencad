@@ -13,8 +13,9 @@ Treat the text after `/create-cad` as the design argument.
 1. Require exactly one design. Accept `designs/<name>`, `<name>`, or a `contract.yaml` or `assembly.yaml` path. When
    `designs/<name>/assembly.yaml` exists, the design is a machine: follow **Machines** below; the part sections do not apply.
 2. Work from the repository root with `source .venv/bin/activate`. Honour `--backend` /
-   `OPENCAD_BACKEND` (default `build123d`). Local backends (cadquery, build123d, freecad) need
-   no Zoo login; `python -m opencad preflight --backend <id>` must pass. A preflight
+   `OPENCAD_BACKEND` (default `build123d`). Local backends (cadquery, build123d, freecad, prism) need
+   no Zoo login; `python -m opencad preflight --backend <id>` must pass (prism probes Prism's managed
+   python-env, `OPENCAD_PRISM_PYTHON` relocates it). A preflight
    failure stops the run — do not spend Zoo credits (account exhausted). `codex --version`
    only matters with `--worker codex`.
 3. Reject `..`, absolute paths outside this repository, and anything that would write
@@ -67,6 +68,7 @@ turn (plan, model, correction) comes back as a work order with exit code 75 and 
 `NEXT {...}` line; you launch a `cad-worker` Task with `model=<NEXT.model>`
 (omit `model` only when `NEXT.model` is `inherit`), record its agent id in the
 order's `dispatch.json`, and re-run the printed `continue` command until the run exits 0 or 1.
+From Prism the Task is a `spawn_sub_agent` (cad-drive, "Prism host").
 
 ```bash
 mkdir -p results/_logs

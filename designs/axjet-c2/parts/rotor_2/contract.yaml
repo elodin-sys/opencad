@@ -1,0 +1,735 @@
+schema_version: 1
+name: axjet-c2-rotor_2
+intent: >-
+  Rotor-2 blisk of the AXJET-220 compressor module (assembly axjet-c2), in its own frame: axis +z
+  through the origin (the spool turns positively about +z), origin on the axis at the blade
+  leading-edge plane (assembly z 42), x parallel to the assembly x. 31 blades radially stacked on
+  the section centroids, no lean or sweep; hub flow surface r 64.8 at z 0 straight to r 66.5 at
+  z 13; front hub extension r 64.8 from z -1 to 0 (inferred, 3 mm behind the stator_1 inner band);
+  flat tip at r 90.0, minimum tip thickness 0.8; root fillet r 1.5 on the hub. Sections at
+  r 64.8 / 77.4 / 90.0 from guide section 4.3 (circular-arc camber, NACA-65 thickness, LE radius
+  0.3, TE thickness 0.5; chord 22 / 20 / 18). Disc z -4 ... 20 with bore D40.0; front face z -4
+  bears on the seal spacer over r 20 ... 57.5 and nothing lies outside r 57.5 ahead of z -1;
+  behind z 13 the outer surface steps to r 63.0 and continues as the rear seal sleeve OD 126 x
+  ID 60 to z 28; the disc rear face z 20 inside the sleeve bears on the drum D46 shoulder (r 20 ...
+  23, revision 1). Mass about
+  1.0 kg. Authoritative source: sources/axjet_design_and_implementation_guide.md (sections 3.2,
+  4.1-4.4, 8.1, 14.1).
+units:
+  length: mm
+  angle: deg
+material: "2618-T61 aluminium alloy, forged bar"
+density_kg_m3: 2760
+process: "5-axis milling from forged bar, flank-milled blades (nominal)"
+release_status: reconstruction
+
+frame:
+  origin: "on the rotor axis in the blade leading-edge plane at the hub (assembly z 42); the joint rotor2OnDrum attaches here"
+  axes:
+    x: "radial, parallel to the assembly x (engine up); the stacking line of blade 0 lies on +x"
+    y: "radial, completing a right-handed frame (y = z cross x)"
+    z: "along the rotor axis in the flow direction (assembly +z); the spool turns positively about +z"
+  datums:
+    - name: A
+      description: "bore axis: the D40.0 bore cylinder, coincident with the z axis"
+    - name: B
+      description: "front face z = -4 (assembly z 38), the annulus r 20 ... 57.5 bearing on the seal spacer"
+    - name: C
+      description: "blade 0 clocking: its section-centroid stacking line lies in the +x half of the xz plane; blades every 360/31 deg counter-clockwise about +z"
+
+envelope:
+  min: [-90.0, -90.0, -4.0]
+  max: [90.0, 90.0, 28.0]
+  tolerance: 0.5
+
+parameters:
+  - name: bladeCount
+    value: 31
+    unit: ""
+    provenance: stated
+    source: "guide sections 4.1 and 4.4 (31 blades); intent"
+    tolerance: 0.1
+    description: "number of blades, equally spaced about +z"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 850
+        direction: increase
+        tolerance_rel: 0.35
+  - name: firstBladeAngle
+    value: 0
+    unit: deg
+    provenance: inferred
+    rationale: "the guide fixes no blade clocking; putting blade 0's stacking line on +x makes the part reproducible and has no assembly consequence (the drum joint is axisymmetric)"
+    tolerance: 0.1
+    description: "angle of blade 0's stacking line from +x about +z"
+  - name: hubRadiusLe
+    value: 64.8
+    unit: mm
+    provenance: stated
+    source: "guide section 3.2 (R2 leading edge, hub r 64.8 at assembly z 42) and 4.4"
+    tolerance: 0.01
+    description: "hub flow-surface radius at the blade LE plane z 0; also the front hub extension radius and the hub section radius"
+  - name: hubRadiusTe
+    value: 66.5
+    unit: mm
+    provenance: stated
+    source: "guide section 3.2 (R2 trailing edge, hub r 66.5 at assembly z 55) and 4.4"
+    tolerance: 0.01
+    description: "hub flow-surface radius at the hub trailing-edge plane z 13 (straight line from z 0)"
+  - name: hubTeZ
+    value: 13
+    unit: mm
+    provenance: stated
+    source: "guide section 3.2 / 4.4 (blade axial extent assembly z 42 ... 55); intent hub blade extent z 0 ... 13"
+    tolerance: 0.01
+    description: "axial position of the hub trailing edge and of the step down to the sleeve radius"
+  - name: hubExtFrontZ
+    value: -1
+    unit: mm
+    provenance: inferred
+    rationale: "guide 4.4 gives R2 'same proportions' as R1 but no front hub extension; the intent places it 3 mm behind the stator_1 inner band rear end (assembly 38), as R1 sits 3 mm behind the inlet fairing"
+    tolerance: 0.1
+    description: "front end of the front hub extension (step from r 57.5 up to r 64.8)"
+  - name: tipRadius
+    value: 90.0
+    unit: mm
+    provenance: stated
+    source: "guide sections 4 and 4.4 (constant tip radius 90.0, flat tip)"
+    tolerance: 0.01
+    description: "blade tip radius; the tip is trimmed flat on the r 90.0 cylinder"
+    edit_test:
+      delta: -1
+      expect:
+        direction: decrease
+        bbox_delta: [-2, -2, 0]
+  - name: discFrontZ
+    value: -4
+    unit: mm
+    provenance: stated
+    source: "guide 4.4 / 8.1 (blisk 2 z 38 ... 62 assembly); intent front face z -4"
+    tolerance: 0.01
+    description: "front face plane (seal-spacer contact)"
+  - name: discRearZ
+    value: 20
+    unit: mm
+    provenance: stated
+    source: "guide 4.4 / 8.1 (disc to assembly z 62); revision 1 reviewer notes: the rear face bears on the drum D46 shoulder at assembly z 62"
+    tolerance: 0.01
+    description: "disc rear face plane inside the sleeve (drum-shoulder contact)"
+  - name: boreDiameter
+    value: 40.0
+    unit: mm
+    provenance: stated
+    source: "guide 4.4 (bore D40 H6) and 8.1 (D40 h6 drum); intent: modelled D40.0 line-to-line"
+    tolerance: 0.01
+    description: "through bore z -4 ... 20"
+  - name: frontLandRadius
+    value: 57.5
+    unit: mm
+    provenance: stated
+    source: "intent (front face over r 20 ... 57.5; nothing outside r 57.5 ahead of z -1); guide 8.1 seal spacer OD 115"
+    tolerance: 0.01
+    description: "outer radius of the front land z -4 ... -1, 0.5 mm inside the stator_1 inner band (r 58.0)"
+  - name: sleeveOuterRadius
+    value: 63.0
+    unit: mm
+    provenance: stated
+    source: "guide 4.4 (rear seal sleeve OD 126) and 14.1"
+    tolerance: 0.01
+    description: "outer radius behind the hub step (z 13 ... 28), 0.5 mm inside the OGV inner band (r 63.5)"
+  - name: sleeveInnerRadius
+    value: 30.0
+    unit: mm
+    provenance: stated
+    source: "guide 14.1 (rear seal sleeve OD 126 x ID 60)"
+    tolerance: 0.01
+    description: "sleeve bore z 20 ... 28 around the drum D46 shoulder (r 23, 7 mm radial clearance)"
+  - name: sleeveRearZ
+    value: 28
+    unit: mm
+    provenance: stated
+    source: "guide 14.1 (sleeve z 20 to 28 own frame) and 4.4 (z 62 ... 70 assembly)"
+    tolerance: 0.01
+    description: "rear end face of the seal sleeve"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 19283.2
+        direction: increase
+        bbox_delta: [0, 0, 2]
+        tolerance_rel: 0.02
+      sweep:
+        values: [24, 28, 32]
+      infeasible_deltas: [-10]
+  - name: rootFilletRadius
+    value: 1.5
+    unit: mm
+    provenance: stated
+    source: "guide 2.3 (root fillet >= 1.5) and 4.4 (r 1.5)"
+    tolerance: 0.01
+    description: "blade root fillet on the hub flow surface"
+  - name: tipMinThickness
+    value: 0.8
+    unit: mm
+    provenance: stated
+    source: "guide 2.3 (minimum blade thickness 0.8 at the tip) and 4.4"
+    tolerance: 0.01
+    description: "lower bound on the tip-section maximum thickness"
+  - name: meanSectionRadius
+    value: 77.4
+    unit: mm
+    provenance: stated
+    source: "guide 4.2 (rotor 2 U at r 64.8 / 77.4 / 90.0)"
+    tolerance: 0.01
+    description: "radius of the mean design section (hub section at hubRadiusLe, tip section at tipRadius)"
+  - name: hubInletAngle
+    value: 66.7
+    unit: deg
+    provenance: stated
+    source: "guide 4.3, R2 hub"
+    tolerance: 0.05
+    description: "inlet metal angle from axial, hub section"
+  - name: meanInletAngle
+    value: 70.1
+    unit: deg
+    provenance: stated
+    source: "guide 4.3, R2 mean"
+    tolerance: 0.05
+  - name: tipInletAngle
+    value: 73.1
+    unit: deg
+    provenance: stated
+    source: "guide 4.3, R2 tip"
+    tolerance: 0.05
+  - name: hubExitAngle
+    value: 40.4
+    unit: deg
+    provenance: stated
+    source: "guide 4.3, R2 hub"
+    tolerance: 0.05
+    description: "exit metal angle from axial, hub section"
+  - name: meanExitAngle
+    value: 56.5
+    unit: deg
+    provenance: stated
+    source: "guide 4.3, R2 mean"
+    tolerance: 0.05
+  - name: tipExitAngle
+    value: 64.6
+    unit: deg
+    provenance: stated
+    source: "guide 4.3, R2 tip"
+    tolerance: 0.05
+  - name: hubCamber
+    value: 26.3
+    unit: deg
+    provenance: derived
+    formula: "hubInletAngle - hubExitAngle"
+    source: "guide 4.3 tabulates 26.3"
+    tolerance: 0.05
+  - name: meanCamber
+    value: 13.6
+    unit: deg
+    provenance: derived
+    formula: "meanInletAngle - meanExitAngle"
+    source: "guide 4.3 tabulates 13.6"
+    tolerance: 0.05
+  - name: tipCamber
+    value: 8.5
+    unit: deg
+    provenance: derived
+    formula: "tipInletAngle - tipExitAngle"
+    source: "guide 4.3 tabulates 8.5"
+    tolerance: 0.05
+  - name: hubStagger
+    value: 53.55
+    unit: deg
+    provenance: derived
+    formula: "(hubInletAngle + hubExitAngle) / 2"
+    source: "guide 4.3 gives about 53.6"
+    tolerance: 0.1
+  - name: meanStagger
+    value: 63.3
+    unit: deg
+    provenance: derived
+    formula: "(meanInletAngle + meanExitAngle) / 2"
+    source: "guide 4.3 gives about 63.3"
+    tolerance: 0.1
+  - name: tipStagger
+    value: 68.85
+    unit: deg
+    provenance: derived
+    formula: "(tipInletAngle + tipExitAngle) / 2"
+    source: "guide 4.3 gives about 68.8"
+    tolerance: 0.1
+  - name: hubChord
+    value: 22
+    unit: mm
+    provenance: stated
+    source: "guide 4.2 item 4 (R2 chord 22 at the hub tapering to 18 at the tip)"
+    tolerance: 0.01
+  - name: meanChord
+    value: 20
+    unit: mm
+    provenance: stated
+    source: "guide 4.1 (R2 mean chord 20)"
+    tolerance: 0.01
+  - name: tipChord
+    value: 18
+    unit: mm
+    provenance: stated
+    source: "guide 4.2 item 4"
+    tolerance: 0.01
+  - name: hubThicknessRatio
+    value: 0.08
+    unit: ""
+    provenance: stated
+    source: "guide 4.3, R2 hub max thickness / chord 8 %"
+    tolerance: 0.001
+  - name: meanThicknessRatio
+    value: 0.05
+    unit: ""
+    provenance: stated
+    source: "guide 4.3, R2 mean 5 %"
+    tolerance: 0.001
+  - name: tipThicknessRatio
+    value: 0.035
+    unit: ""
+    provenance: stated
+    source: "guide 4.3, R2 tip 3.5 %"
+    tolerance: 0.001
+  - name: hubMaxThickness
+    value: 1.76
+    unit: mm
+    provenance: derived
+    formula: "hubThicknessRatio * hubChord"
+    tolerance: 0.01
+  - name: meanMaxThickness
+    value: 1.0
+    unit: mm
+    provenance: derived
+    formula: "meanThicknessRatio * meanChord"
+    tolerance: 0.01
+  - name: tipMaxThickness
+    value: 0.8
+    unit: mm
+    provenance: derived
+    formula: "max(tipThicknessRatio * tipChord, tipMinThickness) = max(0.63, 0.8)"
+    tolerance: 0.01
+    description: "the 0.8 mm tip minimum governs over 3.5 % of the 18 mm chord"
+  - name: leRadius
+    value: 0.3
+    unit: mm
+    provenance: stated
+    source: "guide 4.3 (leading-edge radius 0.3 mm, rotors)"
+    tolerance: 0.01
+  - name: teThickness
+    value: 0.5
+    unit: mm
+    provenance: stated
+    source: "guide 4.3 (trailing-edge thickness 0.5 mm)"
+    tolerance: 0.01
+
+features:
+  - id: disc
+    kind: revolve
+    description: "solid disc section revolved about z: bore r 20 from z -4 to 20, front face z -4 (r 20 ... 57.5), rear face z 20 (r 20 ... 30); no web relief (see open questions)"
+    parameters: [boreDiameter, discFrontZ, discRearZ]
+    verify:
+      - method: bbox
+      - method: face
+        face: frontFace
+      - method: face
+        face: nutFace
+      - method: section
+        section: discMid
+      - method: solid
+        points: [[30, 0, 8], [0, -40, 16.5]]
+  - id: bore
+    kind: hole
+    description: "D40.0 through bore on the drum (line-to-line; dowels not modelled)"
+    parameters: [boreDiameter]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: void
+        points: [[0, 0, 8]]
+  - id: frontLand
+    kind: revolve
+    description: "front land r 57.5 over z -4 ... -1 (continues the seal-spacer OD), then the step face at z -1 up to the front hub extension"
+    parameters: [frontLandRadius, discFrontZ, hubExtFrontZ]
+    verify:
+      - method: cylinder
+        cylinder: frontLand
+      - method: face
+        face: frontStep
+      - method: section
+        section: frontSection
+      - method: solid
+        points: [[0, -50, -2.5]]
+      - method: void
+        points: [[0, 60.5, -2.5]]
+  - id: hubFlowSurface
+    kind: revolve
+    description: "front hub extension r 64.8 over z -1 ... 0, then the straight conical hub flow surface r 64.8 at z 0 to r 66.5 at z 13, ending in the step face at z 13"
+    parameters: [hubRadiusLe, hubRadiusTe, hubTeZ, hubExtFrontZ]
+    verify:
+      - method: cylinder
+        cylinder: hubExtension
+      - method: face
+        face: hubRearStep
+  - id: rearSleeve
+    kind: revolve
+    description: "outer surface r 63.0 from z 13 to the sleeve end z 28; sleeve bore r 30 over z 20 ... 28 leaves the pocket around the drum shoulder"
+    parameters: [sleeveOuterRadius, sleeveInnerRadius, sleeveRearZ, discRearZ]
+    verify:
+      - method: cylinder
+        cylinder: sleeveOD
+      - method: cylinder
+        cylinder: sleeveID
+      - method: face
+        face: sleeveEnd
+      - method: section
+        section: sleeveSection
+      - method: solid
+        points: [[0, 45, 24]]
+      - method: void
+        points: [[25, 0, 24], [0, -65, 16]]
+  - id: blades
+    kind: loft
+    count: 31
+    description: "31 blades lofted through the hub / mean / tip sections (r 64.8 / 77.4 / 90.0): circular-arc camber lines from the inlet and exit metal angles, NACA-65 thickness at the stated t/c (tip raised to 0.8 mm), LE radius 0.3, TE thickness 0.5; sections stacked radially on their centroids (no lean or sweep); the hub section spans z 0 ... 13; blade 0 on +x. Hand: the LE leads in the direction of rotation (+theta) and the concave pressure surface faces +theta (the chord runs toward -theta from LE to TE), the same hand as rotor_1; the spool turns positively about +z"
+    parameters: [bladeCount, firstBladeAngle, hubRadiusLe, meanSectionRadius, tipRadius, hubInletAngle, meanInletAngle, tipInletAngle, hubExitAngle, meanExitAngle, tipExitAngle, hubCamber, meanCamber, tipCamber, hubStagger, meanStagger, tipStagger, hubChord, meanChord, tipChord, hubThicknessRatio, meanThicknessRatio, tipThicknessRatio, hubMaxThickness, meanMaxThickness, tipMaxThickness, leRadius, teThickness]
+    verify:
+      - method: section
+        section: bladeSection
+      - method: section
+        section: tipCut
+      - method: count
+        section: tipCut
+        count: 3
+        note: "the x = 87 plane cuts only blades -1, 0 and +1 near the tip"
+      - method: void
+        points: [[77.6, 7.891, 6.5]]
+      - method: solid
+        points: [[77.34, 3.039, 3.0], [77.373, 2.026, 3.5]]
+        note: "hand probe: metal near blade 0's LE on its +theta side"
+      - method: void
+        points: [[77.34, -3.039, 3.0], [77.373, -2.026, 3.5]]
+        note: "hand probe: where a mirrored blade 0 would put metal"
+  - id: tipTrim
+    kind: cut
+    description: "flat blade tips trimmed on the r 90.0 cylinder"
+    parameters: [tipRadius, tipMinThickness]
+    verify:
+      - method: bbox
+      - method: dimension
+        dimension: tipSpanY
+  - id: rootFillet
+    kind: fillet
+    description: "r 1.5 fillet between each blade and the hub flow surface, kept on the hub (it may stop at the LE and TE where the hub ends at the z -1 and z 13 steps)"
+    parameters: [rootFilletRadius]
+
+interfaces:
+  - name: drumBore
+    description: "D40.0 bore line-to-line on the D40 h6 drum; joint rotor2OnDrum attaches the own-frame origin with axis +z"
+    must_not_change: true
+    checks: [bore]
+  - name: spacerFace
+    description: "front face z -4 (assembly 38) bearing on the seal spacer over r 20 ... 57.5"
+    must_not_change: true
+    checks: [frontFace]
+  - name: stackNutFace
+    description: "disc rear face z 20 (assembly 62) inside the sleeve; it bears on the drum D46 shoulder over r 20 ... 23 (revision 1)"
+    must_not_change: true
+    checks: [nutFace]
+  - name: stator1Band
+    description: "front land r 57.5 and step at z -1: 0.5 mm radial and 3 mm axial to the stator_1 inner band (inner surface r 58.0, ends at assembly z 38)"
+    must_not_change: true
+    checks: [frontLand, frontStep]
+  - name: ogvSeal
+    description: "sleeve OD 126 runs 0.5 mm inside the OGV inner-band labyrinth (r 63.5)"
+    must_not_change: true
+    checks: [sleeveOD]
+
+acceptance:
+  volume:
+    expected: 367800
+    tolerance_rel: 0.02
+    provenance: derived
+    note: "revolved disc profile 354,638 mm3 (front land 27,391 + hub extension 11,935 + hub cone 159,694 + z 13-20 disc 78,486 + sleeve 77,132) + 31 blades x ~403 mm3 above the hub (NACA-65 area 0.65 t c plus TE allowance, span-averaged) + root fillets ~666; mass 367,800 mm3 x 2760 kg/m3 = 1.015 kg (stated about 1.0 kg)"
+  surface_area:
+    expected: 71400
+    tolerance_rel: 0.06
+    provenance: derived
+    note: "revolved faces 41,932 mm2 + 31 blades x ~951 mm2 (two flanks 2 x 1.01 x mean chord 20 x span 24.35, tip and TE faces, minus root footprint and fillet saving)"
+  center_of_mass:
+    expected: [0, 0, 11.4]
+    tolerance: 0.3
+    provenance: derived
+    note: "x = y = 0 by the 31-fold cyclic pattern; z = sum(V_i z_i)/V with the disc regions at z -2.5, -0.5, 6.56, 16.5, 24 and the blades at z ~5.5"
+  solid_count: 1
+  sections:
+    - id: frontSection
+      plane: z
+      at: -2.5
+      expect:
+        area: 9130.2
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "front land annulus r 20 ... 57.5"
+    - id: bladeSection
+      plane: z
+      at: 6.5
+      expect:
+        area: 14100
+        area_tolerance_rel: 0.05
+        loops: 1
+        holes: 1
+      description: "hub annulus r 20 ... 65.65 (12,283 mm2) plus 31 blade cuts (~1,770 mm2) and fillets, all fused"
+    - id: discMid
+      plane: z
+      at: 16.5
+      expect:
+        area: 11212.3
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "disc annulus r 20 ... 63 behind the hub step"
+    - id: sleeveSection
+      plane: z
+      at: 24
+      expect:
+        area: 9641.6
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "sleeve annulus r 30 ... 63 around the drum-shoulder pocket"
+    - id: tipCut
+      plane: x
+      at: 87
+      expect:
+        loops: 3
+        holes: 0
+      description: "plane x = 87 cuts only the tips of blades -1, 0, +1 (the hub ends at r 66.5)"
+  faces:
+    - name: frontFace
+      plane: z
+      at: -4
+      normal: "-"
+      area: 9130.2
+      area_tolerance_rel: 0.01
+      tolerance: 0.05
+      center: [0, 0]
+      mode: one
+    - name: frontStep
+      plane: z
+      at: -1
+      normal: "-"
+      area: 2804.8
+      area_tolerance_rel: 0.03
+      tolerance: 0.05
+      center: [0, 0]
+      mode: one
+    - name: hubRearStep
+      plane: z
+      at: 13
+      normal: "+"
+      area: 1423.9
+      area_tolerance_rel: 0.03
+      tolerance: 0.05
+      center: [0, 0]
+      mode: one
+    - name: nutFace
+      plane: z
+      at: 20
+      normal: "+"
+      area: 1570.8
+      area_tolerance_rel: 0.01
+      tolerance: 0.05
+      center: [0, 0]
+      mode: one
+    - name: sleeveEnd
+      plane: z
+      at: 28
+      normal: "+"
+      area: 9641.6
+      area_tolerance_rel: 0.01
+      tolerance: 0.05
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, -4]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 40.0
+      radius_tolerance: 0.02
+      axis_tolerance: 0.05
+      length: 24
+      length_tolerance: 0.05
+      t_range: [0, 24]
+      description: "D40.0 through bore z -4 ... 20"
+    - name: frontLand
+      point: [0, 0, -4]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 57.5
+      radius_tolerance: 0.02
+      axis_tolerance: 0.05
+      length: 3
+      length_tolerance: 0.05
+      t_range: [0, 3]
+      description: "front land z -4 ... -1"
+    - name: hubExtension
+      point: [0, 0, -1]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 64.8
+      radius_tolerance: 0.02
+      axis_tolerance: 0.05
+      length: 1
+      length_tolerance: 0.1
+      t_range: [0, 1]
+      description: "front hub extension z -1 ... 0"
+    - name: sleeveOD
+      point: [0, 0, 13]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 63.0
+      radius_tolerance: 0.02
+      axis_tolerance: 0.05
+      description: "outer surface r 63.0 from the hub step z 13 to the sleeve end (length moves with sleeveRearZ)"
+    - name: sleeveID
+      point: [0, 0, 20]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 60.0
+      radius_tolerance: 0.02
+      axis_tolerance: 0.05
+      description: "sleeve bore r 30 from the disc rear face z 20 to the sleeve end"
+  dimensions:
+    - name: axialLength
+      axis: z
+      expected: 32
+      tolerance: 0.05
+      description: "bbox extent z -4 ... 28"
+    - name: discLength
+      axis: z
+      expected: 24
+      tolerance: 0.05
+      between: [frontFace, nutFace]
+      description: "disc clamp length between the spacer face and the drum-shoulder face"
+    - name: tipSpanY
+      axis: y
+      expected: 180
+      tolerance: 0.1
+      description: "bbox extent in y = tip diameter (blades 8 and 23 cover the +-y directions)"
+  solids:
+    - name: blisk
+      contains_point: [30, 0, 8]
+      description: "the single solid"
+  hardware:
+    - name: s1InnerBand
+      kind: cylinder
+      point: [0, 0, -22]
+      direction: [0, 0, 1]
+      radius: 64.5
+      length: 18
+      exclude_cylinders:
+        - point: [0, 0, -23]
+          direction: [0, 0, 1]
+          radius: 58.0
+          length: 20
+      description: "stator_1 inner band keep-out: annulus r 58.0 ... 64.5, own z -22 ... -4 (assembly 20 ... 38)"
+    - name: ogvInnerBand
+      kind: cylinder
+      point: [0, 0, 16]
+      direction: [0, 0, 1]
+      radius: 67.5
+      length: 22
+      exclude_cylinders:
+        - point: [0, 0, 15]
+          direction: [0, 0, 1]
+          radius: 63.5
+          length: 24
+      description: "OGV inner band keep-out: annulus r 63.5 ... 67.5, own z 16 ... 38 (assembly 58 ... 80)"
+    - name: casingBore
+      kind: cylinder
+      point: [0, 0, -2]
+      direction: [0, 0, 1]
+      radius: 100
+      length: 18
+      exclude_cylinders:
+        - point: [0, 0, -3]
+          direction: [0, 0, 1]
+          radius: 90.25
+          length: 20
+      description: "stator-1 ring plain bore over R2 (D180.5): annulus r 90.25 ... 100, own z -2 ... 16 (assembly 40 ... 58)"
+  clearances:
+    - name: s1BandGap
+      a: all
+      b: s1InnerBand
+      min_gap: 0.4
+      description: "0.5 mm radial / 3 mm axial to the stator_1 inner band"
+    - name: ogvBandGap
+      a: all
+      b: ogvInnerBand
+      min_gap: 0.4
+      description: "sleeve 0.5 mm inside the OGV labyrinth r 63.5; hub step 3 mm ahead of the band"
+    - name: tipGap
+      a: all
+      b: casingBore
+      min_gap: 0.15
+      description: "cold tip clearance 0.25 mm (tip r 90.0 to bore r 90.25), floor 0.15 for tessellation"
+  probes:
+    - name: inDisc
+      state: solid
+      points: [[30, 0, 8], [0, -50, -2.5], [0, 45, 24]]
+    - name: inBore
+      state: void
+      points: [[0, 0, 8]]
+    - name: nutPocket
+      state: void
+      points: [[25, 0, 24]]
+    - name: frontKeepOut
+      state: void
+      points: [[0, 60.5, -2.5]]
+    - name: behindHubStep
+      state: void
+      points: [[0, -65, 16]]
+    - name: bladePassage
+      state: void
+      points: [[77.6, 7.891, 6.5]]
+  cylinder_counts:
+    - name: bores
+      diameter: 40.0
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 1
+  blockout:
+    volume_min: 355000
+    volume_max: 390000
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    revision: "AXJET-220/2 design and implementation guide (sections 2.3, 3.2, 4.1-4.4, 8.1, 14.1)"
+    note: "flow-path radii, blisk geometry, R2 section metal angles, rotor stack and the axjet-c2 body table"
+
+open_questions:
+  - "Changed (revision 1, reviewer notes): the disc rear face z 20 (assembly 62) bears on the new integral drum D46 shoulder (assembly z 62 ... 68, r 20 ... 23) instead of the stack nut, which moved to the front of the stack (assembly z -18 ... -8). Reason: the ID 39 nut could not pass the D40 drum to reach a thread behind rotor_2, and the old shoulder at z -14 blocked loading the blisks from either end. Geometry and acceptance values are unchanged; the face, interface and dimension descriptions now name the shoulder (the face keeps its name nutFace)."
+  - "The intent asks for a disc 'in the proportions of rotor_1 (web 10 thick at the bore, 6 under the rim)', but the full-annulus front face (r 20 ... 57.5 at z -4), the rear face at z 20 inside the sleeve and the solid sleeve OD 126 x ID 60 leave no room for a web relief that is not an internal undercut; the contract models a solid disc section (1.015 kg, matching the stated 1.0 kg). A lightened web needs an interface change."
+  - "Guide 4.3 gives the tip section 3.5 % of an 18 mm chord (0.63 mm), below the 0.8 mm tip minimum of 2.3 / 4.4; the contract raises the tip maximum thickness to 0.8 mm (4.4 % of chord). Confirm."
+  - "The hub surface offers only 1 mm ahead of the LE (step at z -1) and none aft of the TE (step at z 13), so the r 1.5 root fillet cannot wrap the LE and TE without overhanging the steps; the contract lets it stop at the hub edges. Confirm."
+  - "R2 tip relative Mach is 1.20; guide 4.3 calls for multiple-circular-arc tip profiles above M_rel 1.1, while the intent specifies circular-arc camber everywhere. The contract follows the intent."
+  - "Blade sections are the 4.3 baseline; the controlled-vortex and swirl redistribution of 4.2 (analysis step 2) would change the metal angles and hub solidity."
+  - "The OGV inner-band keep-out spans own z 16 ... 38 (OGV ring z 58 ... 80); the band's front end is not stated in the guide."
+  - "Dowels (2 x D4), the balance-correction land on the rear face at r 45, and the 10 um drum interference are not modelled."
+  - "Changed (revision 3, reviewer notes): feature blades states the hand (LE leads in the direction of rotation, +theta; concave pressure surface faces +theta; chord runs toward -theta from LE to TE; same hand as rotor_1; spool turns positively about +z) and adds hand probes: solid at [77.34, 3.039, 3.0] and [77.373, 2.026, 3.5], void at [77.34, -3.039, 3.0] and [77.373, -2.026, 3.5] (each at least 0.3 mm inside its region in theta and z; found by mirroring the built model, which keeps blade 0 on +x). Reason: the built rotor_2 was mirrored (mid-span area mean of n_z x n_theta -0.374 against rotor_1 +0.384); in mrfCold level 1 the axial velocity reversed inside rotor_2 (Uz -28.7 m/s at z 48), the swirl behind it reached 153-158 m/s (2.5 x the 63 m/s blade speed), the spool absorbed 6.35 N m (5.3 kW against about 1.3 kW) and the inlet sat 11.6 kPa above the outlet. The contract never stated the hand and its probes (passage-midline void, symmetric tip-cut count) could not tell it, so the mirrored model passed. No stated value changes."

@@ -207,6 +207,29 @@ def test_derived_fluid_caps_close_ports_locally():
     assert r["sealed"] and abs(r["volume"] - expected) < 1e-3 * expected, (r.get("volume"), expected)
 
 
+def test_derived_fluid_seals_a_bolted_flange_seat():
+    """Two duct rings whose flanges meet face to face at z = 20 (a zero-gap seat): the seam must not connect the bore to the outside."""
+    import math
+    from types import SimpleNamespace
+
+    from OCP.BRepAlgoAPI import BRepAlgoAPI_Cut, BRepAlgoAPI_Fuse
+    from OCP.BRepPrimAPI import BRepPrimAPI_MakeCylinder
+    from OCP.gp import gp_Ax2, gp_Dir, gp_Pnt
+
+    from opencad.assembly.domains import derive_fluid
+
+    def tube(ro, ri, z, h):
+        def cyl(r):
+            return BRepPrimAPI_MakeCylinder(gp_Ax2(gp_Pnt(0, 0, z), gp_Dir(0, 0, 1)), r, h).Shape()
+
+        return BRepAlgoAPI_Cut(cyl(ro), cyl(ri)).Shape()
+
+    rings = [BRepAlgoAPI_Fuse(tube(12, 10, z0, 20), tube(20, 10, fz, 2)).Shape() for z0, fz in ((0, 18), (20, 20))]
+    caps = [SimpleNamespace(name="in", point=[0.0, 0.0, 0.0], normal=[0.0, 0.0, -1.0]), SimpleNamespace(name="out", point=[0.0, 0.0, 40.0], normal=[0.0, 0.0, 1.0])]
+    r = derive_fluid(rings, [], caps, [0.0, 0.0, 20.0])
+    assert r["sealed"] and abs(r["volume"] - math.pi * 10**2 * 40) < 1e-3, (r.get("leaks_to"), r.get("volume"))
+
+
 def test_derived_fluid_box_reaches_caps_beyond_the_walls():
     """An open box around a plate with a hole: the caps lie 40 mm beyond the plate and the seed upstream of it."""
     from types import SimpleNamespace

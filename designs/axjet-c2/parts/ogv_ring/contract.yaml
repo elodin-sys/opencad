@@ -1,0 +1,1067 @@
+schema_version: 1
+name: axjet-c2-ogv_ring
+intent: >-
+  AXJET-220 outlet guide vane (OGV) ring of the axjet-c2 compressor module: the third stacked
+  casing ring (z 58 ... 80, OD 200, front and rear flanges OD 224 with 8 x D5.5 (M5 clearance) on
+  PCD 212, one hole on +x; revision 1 reviewer notes) with the 47-vane OGV row integral with its outer band (flow surface r 90.0 over
+  z 59 ... 78, station-3 bore r 90.25 at both ends) and an inner band (flow surface r 66.5 -> 67.5,
+  inner surface r 63.5 carrying a two-tooth labyrinth facing the rotor_2 rear seal sleeve OD 126
+  at 0.5 mm radial gap). Vanes: single row, chord 14, leading edge at z 61, radial stacking,
+  circular-arc camber with NACA-65 thickness from the section 4.3 baseline metal angles (0 deg
+  exit flow). One solid in the assembly frame; the front face z 58 seats on stator_1 (joint
+  ogvOnCase at [0, 0, 58], axis +z). Authoritative source: sources/axjet_design_and_implementation_guide.md
+  sections 3, 4.1-4.4, 11 and 14.1.
+units:
+  length: mm
+  angle: deg
+material: "aluminium 6061-T6"
+density_kg_m3: 2700
+process: "5-axis milling, vanes integral with both bands (guide section 11; LPBF AlSi10Mg with machined bands is the stated alternative)"
+release_status: reconstruction
+
+frame:
+  origin: "AXJET assembly frame (guide section 3): on the engine axis at the stage-1 rotor leading-edge plane; the ring itself spans z 58 ... 80"
+  axes:
+    x: "radial, up (toward the aircraft dorsal intake); one bolt hole of each flange and the first vane stacking line lie on +x"
+    y: "completes the right-handed frame (y = z cross x)"
+    z: "engine axis, flow direction (front to rear); the ring is a solid of revolution about z apart from vanes and holes"
+  datums:
+    - name: A
+      description: "front mating face z = 58 (normal -z), seats on the stator_1 rear flange; joint ogvOnCase at [0, 0, 58], axis +z"
+    - name: B
+      description: "engine axis (x = y = 0), axis of every bore, band and the bolt circles"
+    - name: C
+      description: "angular datum: the plane y = 0 through the +x bolt hole of the front flange"
+
+envelope:
+  min: [-112, -112, 58]
+  max: [112, 112, 80]
+  tolerance: 0.05
+
+parameters:
+  - name: ringFrontZ
+    value: 58
+    unit: mm
+    provenance: stated
+    source: "intent; guide 4.4 casing ('ogv-ring z 58 ... 80') and 14.1 body table"
+    tolerance: 0.01
+    description: "front face of the ring and front flange (mating face on stator_1)"
+  - name: ringRearZ
+    value: 80
+    unit: mm
+    provenance: stated
+    source: "intent; guide 4.4 and 14.1 (station 3 at z 80, section 3.1)"
+    tolerance: 0.01
+    description: "rear face of the ring, rear flange and inner band"
+  - name: casingOd
+    value: 200
+    unit: mm
+    provenance: stated
+    source: "intent 'OD 200 between the flanges'; guide 3.2 casing note and 4.4"
+    tolerance: 0.01
+    description: "outer diameter of the casing between the flanges (z 64 ... 74)"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 6315
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.01
+      sweep:
+        values: [196, 200, 204]
+      infeasible_deltas: [26, -20]
+  - name: flangeOd
+    value: 224
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 2 (approved; supersedes the intent's and guide 4.4 'flanges 212'): every compressor casing flange OD 224"
+    tolerance: 0.01
+    description: "outer diameter of the front and rear flanges"
+  - name: flangeThickness
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "intent: front flange z 58 ... 64, rear flange z 74 ... 80"
+    tolerance: 0.01
+    description: "axial thickness of each flange"
+  - name: boltCount
+    value: 8
+    unit: ""
+    provenance: stated
+    source: "guide 4.4 '8 x M6 flanges' (count); revision 1 reviewer notes: 8 x M5 per flange"
+    tolerance: 0.01
+    description: "bolt holes per flange, equally spaced"
+  - name: boltHoleDiameter
+    value: 5.5
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 2 (supersedes the intent's and guide 14.1 D6.4): 8 x D5.5"
+    tolerance: 0.01
+    description: "bolt clearance hole diameter (M5)"
+  - name: boltPcd
+    value: 212
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 2 (supersedes PCD 206 of the intent and guide 4.4): PCD 212"
+    tolerance: 0.01
+    description: "bolt pitch-circle diameter of both flanges"
+  - name: boltClockAngle
+    value: 0
+    unit: deg
+    provenance: stated
+    source: "intent 'one on +x' (front flange); rear flange inferred to the same clocking (same joint as the other casing rings)"
+    tolerance: 0.1
+    description: "angle of the first bolt hole from +x toward +y"
+  - name: outerFlowRadius
+    value: 90.0
+    unit: mm
+    provenance: stated
+    source: "intent 'outer band flow surface r 90.0 over z 59 ... 78'; guide 3.2 row 'z 61 ... 76 OGV vanes, tip 90.0'"
+    tolerance: 0.01
+    description: "outer flow surface (vane outer band) radius; the band r 90.0 ... 93.5 is integral with the casing"
+  - name: stationBoreRadius
+    value: 90.25
+    unit: mm
+    provenance: stated
+    source: "intent 'bore r 90.25 over z 58 ... 59 and z 78 ... 80 (station 3)'; guide 3.2 station 3 row"
+    tolerance: 0.01
+    description: "casing bore radius ahead of and behind the outer band"
+  - name: outerFlowFrontZ
+    value: 59
+    unit: mm
+    provenance: stated
+    source: "intent 'r 90.0 over z 59 ... 78'"
+    tolerance: 0.01
+    description: "front end of the r 90.0 outer flow surface (bore step to r 90.25 ahead of it)"
+  - name: outerFlowRearZ
+    value: 78
+    unit: mm
+    provenance: stated
+    source: "intent 'r 90.0 over z 59 ... 78'"
+    tolerance: 0.01
+    description: "rear end of the r 90.0 outer flow surface (bore step to r 90.25 behind it)"
+  - name: innerBandFrontZ
+    value: 59
+    unit: mm
+    provenance: stated
+    source: "intent 'from its front face z 59 (4 mm behind the rotor_2 hub trailing edge at z 55)'"
+    tolerance: 0.01
+    description: "front face of the inner band"
+  - name: hubFrontRadius
+    value: 66.5
+    unit: mm
+    provenance: stated
+    source: "intent 'flow surface r 66.5 ... to z 61'; guide 3.2 'OGV vanes hub 66.5 -> 67.5'"
+    tolerance: 0.01
+    description: "inner-band flow surface radius over z 59 ... 61; also the hub vane-section radius"
+  - name: hubRearRadius
+    value: 67.5
+    unit: mm
+    provenance: stated
+    source: "intent 'rising straight to r 67.5 at z 76, then r 67.5 to z 80'; guide 3.2 station 3 hub 67.5"
+    tolerance: 0.01
+    description: "inner-band flow surface radius over z 76 ... 80 (end of the straight ramp)"
+    edit_test:
+      delta: 0.5
+      expect:
+        volume_delta: 2315
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.08
+  - name: hubRampStartZ
+    value: 61
+    unit: mm
+    provenance: stated
+    source: "intent 'r 66.5 ... to z 61, rising straight'"
+    tolerance: 0.01
+    description: "start of the straight hub ramp 66.5 -> 67.5"
+  - name: hubRampEndZ
+    value: 76
+    unit: mm
+    provenance: stated
+    source: "intent 'rising straight to r 67.5 at z 76'"
+    tolerance: 0.01
+    description: "end of the straight hub ramp; also the aft limit of the vane row"
+  - name: innerBoreRadius
+    value: 63.5
+    unit: mm
+    provenance: stated
+    source: "intent 'inner surface r 63.5 ... (tooth tips at r 63.5) ... nothing of the ogv_ring lies inside r 63.5'; guide 4.4 'inner surface ... r 63.5 for the OGV'"
+    tolerance: 0.01
+    description: "inner-band inner surface and labyrinth tooth-tip radius; minimum radius of the part"
+  - name: labyrinthToothCount
+    value: 2
+    unit: ""
+    provenance: stated
+    source: "intent 'two-tooth labyrinth'; guide 4.4 and 8.1 seals"
+    tolerance: 0.01
+    description: "labyrinth teeth on the inner-band bore"
+  - name: labyrinthGrooveRadius
+    value: 64.5
+    unit: mm
+    provenance: inferred
+    rationale: "tooth height is not stated; teeth are formed by grooves cut 1.0 mm into the r 63.5 bore so that nothing lies inside r 63.5, leaving a band wall of at least 2.0 mm under the grooves (band 3 mm thick per guide 4.4)"
+    tolerance: 0.5
+    description: "groove floor radius around and between the two teeth"
+  - name: labyrinthToothWidth
+    value: 1.0
+    unit: mm
+    provenance: inferred
+    rationale: "tooth width is not stated; 1.0 mm rectangular lands, a common small-labyrinth tip width"
+    tolerance: 0.5
+    description: "axial width of each tooth tip"
+  - name: labyrinthToothPitch
+    value: 4.0
+    unit: mm
+    provenance: inferred
+    rationale: "tooth spacing is not stated; teeth centred at the quarter points of the 8 mm sleeve span (z 64 and z 68), symmetric about its mid-plane z 66"
+    tolerance: 1.0
+    description: "axial distance between the two tooth centres"
+  - name: labyrinthFrontZ
+    value: 62
+    unit: mm
+    provenance: inferred
+    rationale: "the groove region spans the rotor_2 rear seal sleeve, stated at z 62 ... 70 (guide 4.4 and 14.1 rotor-2 row)"
+    tolerance: 0.5
+    description: "front end of the labyrinth groove region"
+  - name: labyrinthRearZ
+    value: 70
+    unit: mm
+    provenance: inferred
+    rationale: "the groove region spans the rotor_2 rear seal sleeve, stated at z 62 ... 70"
+    tolerance: 0.5
+    description: "rear end of the labyrinth groove region"
+  - name: vaneCount
+    value: 47
+    unit: ""
+    provenance: stated
+    source: "intent '47 vanes, single row'; guide 4.1 'Stator vane count ... 47 (OGV)'"
+    tolerance: 0.01
+    description: "OGV vanes, equally spaced"
+  - name: vaneChord
+    value: 14
+    unit: mm
+    provenance: stated
+    source: "intent 'chord 14'; guide 4.1 '47 (OGV) / 14 mm / 1.34'"
+    tolerance: 0.01
+    description: "true chord of every vane section"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 1570
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.35
+      infeasible_deltas: [2.5]
+  - name: vaneLeZ
+    value: 61
+    unit: mm
+    provenance: stated
+    source: "intent 'leading edge at z 61'; guide 3.2 'z 61 ... 76 OGV vanes'"
+    tolerance: 0.01
+    description: "axial position of every section's leading-edge point"
+  - name: inletMetalHub
+    value: 53.8
+    unit: deg
+    provenance: stated
+    source: "guide 4.3 table, OGV hub, inlet metal angle"
+    tolerance: 0.1
+    description: "hub inlet metal angle from axial, positive in the rotation direction"
+  - name: inletMetalMean
+    value: 48.9
+    unit: deg
+    provenance: stated
+    source: "guide 4.3 table, OGV mean, inlet metal angle"
+    tolerance: 0.1
+    description: "mean inlet metal angle"
+  - name: inletMetalTip
+    value: 44.5
+    unit: deg
+    provenance: stated
+    source: "guide 4.3 table, OGV tip, inlet metal angle"
+    tolerance: 0.1
+    description: "tip inlet metal angle"
+  - name: exitMetalAngle
+    value: -11.5
+    unit: deg
+    provenance: stated
+    source: "guide 4.3 table, OGV exit metal angle -11.5 at hub, mean and tip (0 deg exit flow)"
+    tolerance: 0.1
+    description: "exit metal angle of all three sections"
+  - name: camberHub
+    value: 65.3
+    unit: deg
+    provenance: derived
+    formula: "inletMetalHub - exitMetalAngle"
+    source: "matches guide 4.3 table camber 65.3"
+    tolerance: 0.1
+    description: "hub circular-arc camber"
+  - name: camberMean
+    value: 60.4
+    unit: deg
+    provenance: derived
+    formula: "inletMetalMean - exitMetalAngle"
+    source: "matches guide 4.3 table camber 60.4"
+    tolerance: 0.1
+    description: "mean circular-arc camber"
+  - name: camberTip
+    value: 56.0
+    unit: deg
+    provenance: derived
+    formula: "inletMetalTip - exitMetalAngle"
+    source: "matches guide 4.3 table camber 56.0"
+    tolerance: 0.1
+    description: "tip circular-arc camber"
+  - name: staggerHub
+    value: 21.15
+    unit: deg
+    provenance: derived
+    formula: "(inletMetalHub + exitMetalAngle) / 2"
+    source: "guide 4.3 'stagger (approx.)' 21.1"
+    tolerance: 0.1
+    description: "hub chord-line angle from axial (circular arc)"
+  - name: staggerMean
+    value: 18.7
+    unit: deg
+    provenance: derived
+    formula: "(inletMetalMean + exitMetalAngle) / 2"
+    source: "guide 4.3 'stagger (approx.)' 18.7"
+    tolerance: 0.1
+    description: "mean chord-line angle from axial"
+  - name: staggerTip
+    value: 16.5
+    unit: deg
+    provenance: derived
+    formula: "(inletMetalTip + exitMetalAngle) / 2"
+    source: "guide 4.3 'stagger (approx.)' 16.5"
+    tolerance: 0.1
+    description: "tip chord-line angle from axial"
+  - name: tmaxHub
+    value: 0.08
+    unit: ""
+    provenance: stated
+    source: "guide 4.3 table, OGV hub max thickness / chord 8 %"
+    tolerance: 0.001
+    description: "hub maximum thickness as a fraction of chord"
+  - name: tmaxMean
+    value: 0.07
+    unit: ""
+    provenance: stated
+    source: "guide 4.3 table, OGV mean 7 %"
+    tolerance: 0.001
+    description: "mean maximum thickness / chord"
+  - name: tmaxTip
+    value: 0.06
+    unit: ""
+    provenance: stated
+    source: "guide 4.3 table, OGV tip 6 %"
+    tolerance: 0.001
+    description: "tip maximum thickness / chord"
+  - name: leRadius
+    value: 0.25
+    unit: mm
+    provenance: stated
+    source: "guide 4.3 'leading-edge radius ... 0.25 mm (stators)'; intent"
+    tolerance: 0.01
+    description: "leading-edge radius of every section"
+  - name: teThickness
+    value: 0.5
+    unit: mm
+    provenance: stated
+    source: "guide 4.3 'trailing-edge thickness 0.5 mm'; intent"
+    tolerance: 0.01
+    description: "trailing-edge thickness of every section"
+  - name: vaneMeanRadius
+    value: 78.25
+    unit: mm
+    provenance: derived
+    formula: "(hubFrontRadius + outerFlowRadius) / 2"
+    tolerance: 0.01
+    description: "radius of the mean section; hub section at hubFrontRadius, tip section at outerFlowRadius"
+  - name: vaneClockAngle
+    value: 0
+    unit: deg
+    provenance: inferred
+    rationale: "no vane clocking is stated; the first vane's stacking line is put on +x, the angular datum of the module"
+    tolerance: 3.8
+    description: "angle of the first vane stacking line from +x toward +y (half a vane pitch tolerance)"
+
+features:
+  - id: casingRing
+    kind: revolve
+    description: >-
+      Casing ring revolved about z: OD casingOd over z 64 ... 74, flanges OD flangeOd over z 58 ... 64 and
+      74 ... 80; bore r stationBoreRadius over z 58 ... 59 and 78 ... 80 and r outerFlowRadius over z 59 ... 78
+      (the outer vane band r 90.0 ... 93.5 is integral, so the solid is continuous from the bore to the OD).
+    parameters: [ringFrontZ, ringRearZ, casingOd, flangeOd, flangeThickness, outerFlowRadius, stationBoreRadius, outerFlowFrontZ, outerFlowRearZ]
+    verify:
+      - method: bbox
+      - method: solid
+        points: [[95, 0, 69], [0, 95, 69], [-95, 0, 69], [0, -95, 69], [92, 0, 69]]
+      - method: section
+        section: frontFlangeZ
+      - method: face
+        face: frontFace
+      - method: face
+        face: rearFlangeFace
+      - method: face
+        face: frontFlangeBack
+      - method: face
+        face: rearFlangeFront
+      - method: face
+        face: boreStepFront
+      - method: face
+        face: boreStepRear
+      - method: cylinder
+        cylinder: outerFlowBore
+      - method: cylinder
+        cylinder: stationBoreFront
+      - method: cylinder
+        cylinder: stationBoreRear
+      - method: cylinder
+        cylinder: casingOuter
+      - method: cylinder
+        cylinder: frontFlangeRim
+      - method: cylinder
+        cylinder: rearFlangeRim
+      - method: dimension
+        dimension: axialLength
+      - method: dimension
+        dimension: flangeSpan
+      - method: dimension
+        dimension: frontFlangeThick
+      - method: dimension
+        dimension: rearFlangeThick
+  - id: frontBoltHoles
+    kind: hole
+    description: >-
+      boltCount x boltHoleDiameter through the front flange (z 58 ... 64) on boltPcd, first hole on +x,
+      45 deg apart. Each hole (r 103.25 ... 108.75) lies wholly inside the r 100 ... 112 flange land; the holes
+      are cut through the flange thickness only.
+    parameters: [boltCount, boltHoleDiameter, boltPcd, boltClockAngle, flangeThickness, ringFrontZ]
+    count: 8
+    verify:
+      - method: cylinder
+        cylinder: frontBolt1
+      - method: cylinder
+        cylinder: frontBolt2
+      - method: cylinder
+        cylinder: frontBolt3
+      - method: cylinder
+        cylinder: frontBolt4
+      - method: cylinder
+        cylinder: frontBolt5
+      - method: cylinder
+        cylinder: frontBolt6
+      - method: cylinder
+        cylinder: frontBolt7
+      - method: cylinder
+        cylinder: frontBolt8
+      - method: void
+        points: [[106, 0, 61], [0, 106, 61]]
+  - id: rearBoltHoles
+    kind: hole
+    description: >-
+      boltCount x boltHoleDiameter through the rear flange (z 74 ... 80) on boltPcd for the diffuser joint,
+      clocked like the front pattern (inferred: same joint as the other casing rings), cut through the flange only.
+    parameters: [boltCount, boltHoleDiameter, boltPcd, boltClockAngle, flangeThickness, ringRearZ]
+    count: 8
+    verify:
+      - method: cylinder
+        cylinder: rearBolt1
+      - method: cylinder
+        cylinder: rearBolt2
+      - method: cylinder
+        cylinder: rearBolt3
+      - method: cylinder
+        cylinder: rearBolt4
+      - method: cylinder
+        cylinder: rearBolt5
+      - method: cylinder
+        cylinder: rearBolt6
+      - method: cylinder
+        cylinder: rearBolt7
+      - method: cylinder
+        cylinder: rearBolt8
+      - method: void
+        points: [[106, 0, 76.5], [-106, 0, 76.5]]
+  - id: innerBand
+    kind: revolve
+    description: >-
+      Inner band revolved about z from z 59 to z 80: flow surface r hubFrontRadius over z 59 ... 61, a straight
+      ramp to r hubRearRadius at z 76, r hubRearRadius to z 80; inner surface r innerBoreRadius (3 mm thick at the
+      front). Carried only by the vanes; nothing of the part lies inside r 63.5.
+    parameters: [innerBandFrontZ, ringRearZ, hubFrontRadius, hubRearRadius, hubRampStartZ, hubRampEndZ, innerBoreRadius]
+    verify:
+      - method: void
+        points: [[0, 0, 60.5], [60, 0, 76.5]]
+      - method: section
+        section: inletGapZ
+      - method: section
+        section: rearFlangeZ
+      - method: face
+        face: innerBandFrontFace
+      - method: face
+        face: innerBandRearFace
+      - method: cylinder
+        cylinder: hubFrontFlow
+      - method: cylinder
+        cylinder: hubRearFlow
+      - method: cylinder
+        cylinder: innerBoreFront
+      - method: cylinder
+        cylinder: innerBoreRear
+      - method: dimension
+        dimension: innerBandLength
+  - id: labyrinth
+    kind: cut
+    description: >-
+      Two-tooth labyrinth on the inner-band bore facing the rotor_2 rear sleeve (OD 126, z 62 ... 70): the bore is
+      grooved to r labyrinthGrooveRadius over z labyrinthFrontZ ... labyrinthRearZ except two teeth of width
+      labyrinthToothWidth centred labyrinthToothPitch apart about z 66 (tips z 63.5 ... 64.5 and 67.5 ... 68.5 at
+      r innerBoreRadius), giving the stated 0.5 mm radial gap to the sleeve.
+    parameters: [labyrinthToothCount, innerBoreRadius, labyrinthGrooveRadius, labyrinthToothWidth, labyrinthToothPitch, labyrinthFrontZ, labyrinthRearZ]
+    count: 2
+    verify:
+      - method: cylinder
+        cylinder: labyrinthTooth1
+      - method: cylinder
+        cylinder: labyrinthTooth2
+      - method: cylinder
+        cylinder: labyrinthGrooveFloor
+      - method: section
+        section: vaneRowZ
+  - id: vanes
+    kind: loft
+    description: >-
+      vaneCount OGV vanes, single row, integral with both bands. Each vane is lofted through three planar sections
+      normal to its radial stacking line at r hubFrontRadius, vaneMeanRadius and outerFlowRadius (extended about
+      0.5 mm into both bands and fused): circular-arc camber line from the inlet metal angle to exitMetalAngle
+      (camber and stagger as derived), chord vaneChord, NACA-65 thickness scaled to tmax/chord with a leRadius
+      leading edge and a teThickness trailing edge. Each section's leading edge sits at z vaneLeZ; tangentially the
+      section centroids lie on one radial line. Angles are measured from +z, positive in the rotation direction
+      (+theta, from +x toward +y). First vane at vaneClockAngle, pitch 360/47 deg. Trailing edges land at
+      z 74.1 (hub) ... 74.4 (tip), inside z 76.
+    parameters: [vaneCount, vaneChord, vaneLeZ, inletMetalHub, inletMetalMean, inletMetalTip, exitMetalAngle, camberHub, camberMean, camberTip, staggerHub, staggerMean, staggerTip, tmaxHub, tmaxMean, tmaxTip, leRadius, teThickness, vaneMeanRadius, vaneClockAngle, hubFrontRadius, outerFlowRadius]
+    count: 47
+    verify:
+      - method: section
+        section: vaneRowZ
+      - method: count
+        section: vaneRowZ
+        count: 1
+        note: "one connected region: casing, 47 vanes and inner band; 48 holes = bore + 47 passages"
+      - method: section
+        section: vaneAftZ
+      - method: void
+        points: [[78, 0, 76.5]]
+
+interfaces:
+  - name: frontMount
+    description: "front flange on stator_1 (joint ogvOnCase at [0, 0, 58], axis +z): the z 58 face and the 8 front bolt holes on PCD 212, one on +x; no edit test moves them"
+    must_not_change: true
+    checks: [frontFace, frontBolt1, frontBolt2, frontBolt3, frontBolt4, frontBolt5, frontBolt6, frontBolt7, frontBolt8]
+  - name: rearMount
+    description: "rear flange for the diffuser of the full engine: the z 80 casing face and the 8 rear bolt holes"
+    must_not_change: true
+    checks: [rearFlangeFace, rearBolt1, rearBolt2, rearBolt3, rearBolt4, rearBolt5, rearBolt6, rearBolt7, rearBolt8]
+  - name: annulus
+    description: "flow-path radii shared with stator_1 upstream and the diffuser downstream: outer flow surface r 90.0, station bores r 90.25, hub r 66.5 at the inlet"
+    must_not_change: true
+    checks: [outerFlowBore, stationBoreFront, stationBoreRear, hubFrontFlow]
+  - name: sleeveSeal
+    description: "inner-band bore and labyrinth tooth tips at r 63.5 facing the rotor_2 rear sleeve OD 126 at 0.5 mm radial gap"
+    must_not_change: true
+    checks: [innerBoreFront, innerBoreRear, labyrinthTooth1, labyrinthTooth2]
+
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 264230
+    tolerance: 3000
+    provenance: derived
+    note: >-
+      casing revolve with the OD 224 flanges pi*[sum(ro^2-ri^2)dz] = pi*56496.81 + 2*pi*(112^2-106^2)*6 = 226800
+      minus 16 holes x 6 x 23.758 (D5.5, wholly inside the flange land) = 2281 -> 224519 (revision 1: +25044 per
+      flange); inner band pi*9728.5 = 30563 minus grooves pi*(64.5^2-63.5^2)*6 = 2413
+      -> 28150; vanes 47 x 23.06 mm mean span x 10.67 mm2 mean section (0.65*tmax*c + 0.25*teThickness*c) = 11564
+      (+-2000 for the unstated TE blend and LE shape)
+  surface_area:
+    expected: 125880
+    tolerance_rel: 0.05
+    provenance: derived
+    note: "casing 71985 (OD 224 rims, faces less holes, bores, steps, hole walls; revision 1: +8653 per flange) + inner band 22561 (flow surfaces, faces, bore lands, groove floors and walls) + vanes 47 x (2 x 14.67 arc x 23.06 + TE) - band footprints = 31333"
+  center_of_mass:
+    expected: [0, 0, 69.03]
+    tolerance: 0.3
+    provenance: derived
+    note: "axisymmetric patterns put x = y = 0; z = (174429 x 68.992 + 28150 x 70.477 + 11564 x 66.3 + 2 x 25044 x 69) / 264233, the revision 1 flange growth centred on z 69 (flanges at z 61 and 77)"
+  solid_count: 1
+  sections:
+    - id: frontFlangeZ
+      plane: z
+      at: 58.5
+      expect:
+        area: 13629.6
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 9
+      description: "front flange only (inner band starts at z 59): pi*(112^2-90.25^2) - 8 x 23.758; holes = the r 90.25 bore and the 8 enclosed bolt holes"
+    - id: inletGapZ
+      plane: z
+      at: 60
+      expect:
+        area: 14996.4
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 10
+      description: "ahead of the vane leading edges: flange pi*(112^2-90^2) - 8 x 23.758 = 13771.2 plus the separate inner band pi*(66.5^2-63.5^2) = 1225.2; holes = casing bore, 8 bolt holes, band bore"
+    - id: vaneRowZ
+      plane: z
+      at: 66
+      expect:
+        area: 8202.7
+        area_tolerance_rel: 0.03
+        loops: 1
+        holes: 48
+      description: "through the vane row and the middle labyrinth groove: casing pi*(100^2-90^2) = 5969.0, band pi*(66.833^2-64.5^2) = 962.7, 47 vane cuts of about 1.13 mm x 23.17 mm = 1271; holes = bore + 47 passages"
+    - id: vaneAftZ
+      plane: z
+      at: 75.5
+      expect:
+        area: 15403.2
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 10
+      description: "behind the vane trailing edges (z <= 74.42): rear flange 13771.2 plus band pi*(67.467^2-63.5^2) = 1632.0; holes = casing bore, 8 bolt holes, band bore"
+    - id: rearFlangeZ
+      plane: z
+      at: 79
+      expect:
+        area: 15275.8
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 10
+      description: "rear flange pi*(112^2-90.25^2) - 8 x 23.758 = 13629.6 plus band pi*(67.5^2-63.5^2) = 1646.2; holes = casing bore, 8 bolt holes, band bore"
+  faces:
+    - name: frontFace
+      plane: z
+      at: 58
+      normal: "-"
+      area: 13629.6
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: frontFlangeBack
+      plane: z
+      at: 64
+      normal: "+"
+      area: 7802.2
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: rearFlangeFront
+      plane: z
+      at: 74
+      normal: "-"
+      area: 7802.2
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: rearFlangeFace
+      plane: z
+      at: 80
+      normal: "+"
+      center: [0, 0]
+      mode: one
+    - name: innerBandRearFace
+      plane: z
+      at: 80
+      normal: "+"
+      area: 1646.2
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: innerBandFrontFace
+      plane: z
+      at: 59
+      normal: "-"
+      area: 1225.2
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: boreStepFront
+      plane: z
+      at: 59
+      normal: "-"
+      area: 141.6
+      area_tolerance_rel: 0.05
+      center: [0, 0]
+      mode: one
+    - name: boreStepRear
+      plane: z
+      at: 78
+      normal: "+"
+      area: 141.6
+      area_tolerance_rel: 0.05
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: outerFlowBore
+      point: [0, 0, 59]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 90.0
+      radius_tolerance: 0.05
+      length: 19
+      t_range: [0, 19]
+      description: "outer flow surface (vane outer band) z 59 ... 78"
+    - name: stationBoreFront
+      point: [0, 0, 58]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 90.25
+      radius_tolerance: 0.05
+      length: 1
+      t_range: [0, 1]
+      description: "station bore ahead of the band, z 58 ... 59"
+    - name: stationBoreRear
+      point: [0, 0, 78]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 90.25
+      radius_tolerance: 0.05
+      length: 2
+      t_range: [0, 2]
+      description: "station-3 bore behind the band, z 78 ... 80"
+    - name: casingOuter
+      point: [0, 0, 64]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 100
+      radius_tolerance: 0.05
+      length: 10
+      t_range: [0, 10]
+      description: "casing OD 200 between the flanges"
+    - name: frontFlangeRim
+      point: [0, 0, 58]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 112
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "front flange OD 224"
+    - name: rearFlangeRim
+      point: [0, 0, 74]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 112
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "rear flange OD 224"
+    - name: hubFrontFlow
+      point: [0, 0, 59]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 66.5
+      radius_tolerance: 0.05
+      length: 2
+      t_range: [0, 2]
+      description: "inner-band flow surface z 59 ... 61"
+    - name: hubRearFlow
+      point: [0, 0, 76]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 67.5
+      radius_tolerance: 0.05
+      length: 4
+      t_range: [0, 4]
+      description: "inner-band flow surface z 76 ... 80 (station 3 hub)"
+    - name: innerBoreFront
+      point: [0, 0, 59]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 63.5
+      radius_tolerance: 0.05
+      length: 3
+      t_range: [0, 3]
+      description: "inner-band bore ahead of the labyrinth, z 59 ... 62"
+    - name: innerBoreRear
+      point: [0, 0, 70]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 63.5
+      radius_tolerance: 0.05
+      length: 10
+      t_range: [0, 10]
+      description: "inner-band bore behind the labyrinth, z 70 ... 80"
+    - name: labyrinthTooth1
+      point: [0, 0, 63.5]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 63.5
+      radius_tolerance: 0.05
+      length: 1
+      length_tolerance: 0.5
+      t_range: [0, 1]
+      description: "first tooth tip, z 63.5 ... 64.5 (position inferred)"
+    - name: labyrinthTooth2
+      point: [0, 0, 67.5]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 63.5
+      radius_tolerance: 0.05
+      length: 1
+      length_tolerance: 0.5
+      t_range: [0, 1]
+      description: "second tooth tip, z 67.5 ... 68.5 (position inferred)"
+    - name: labyrinthGrooveFloor
+      point: [0, 0, 64.5]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 64.5
+      radius_tolerance: 0.5
+      length: 3
+      length_tolerance: 1.0
+      t_range: [0, 3]
+      description: "groove floor between the teeth, z 64.5 ... 67.5 (inferred depth)"
+    - name: frontBolt1
+      point: [106, 0, 58]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "front flange hole at 0 deg (+x)"
+    - name: frontBolt2
+      point: [74.953, 74.953, 58]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "front flange hole at 45 deg"
+    - name: frontBolt3
+      point: [0, 106, 58]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "front flange hole at 90 deg"
+    - name: frontBolt4
+      point: [-74.953, 74.953, 58]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "front flange hole at 135 deg"
+    - name: frontBolt5
+      point: [-106, 0, 58]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "front flange hole at 180 deg"
+    - name: frontBolt6
+      point: [-74.953, -74.953, 58]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "front flange hole at 225 deg"
+    - name: frontBolt7
+      point: [0, -106, 58]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "front flange hole at 270 deg"
+    - name: frontBolt8
+      point: [74.953, -74.953, 58]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "front flange hole at 315 deg"
+    - name: rearBolt1
+      point: [106, 0, 74]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "rear flange hole at 0 deg (+x)"
+    - name: rearBolt2
+      point: [74.953, 74.953, 74]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "rear flange hole at 45 deg"
+    - name: rearBolt3
+      point: [0, 106, 74]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "rear flange hole at 90 deg"
+    - name: rearBolt4
+      point: [-74.953, 74.953, 74]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "rear flange hole at 135 deg"
+    - name: rearBolt5
+      point: [-106, 0, 74]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "rear flange hole at 180 deg"
+    - name: rearBolt6
+      point: [-74.953, -74.953, 74]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "rear flange hole at 225 deg"
+    - name: rearBolt7
+      point: [0, -106, 74]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "rear flange hole at 270 deg"
+    - name: rearBolt8
+      point: [74.953, -74.953, 74]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      radius_tolerance: 0.05
+      length: 6
+      t_range: [0, 6]
+      description: "rear flange hole at 315 deg"
+  dimensions:
+    - name: axialLength
+      axis: z
+      expected: 22
+      tolerance: 0.05
+      description: "bbox extent z 58 ... 80"
+    - name: flangeSpan
+      axis: x
+      expected: 224
+      tolerance: 0.05
+      description: "bbox extent along x = flange OD 224 (the holes are enclosed, so the rim is whole)"
+    - name: frontFlangeThick
+      axis: z
+      expected: 6
+      tolerance: 0.05
+      between: [frontFace, frontFlangeBack]
+      description: "front flange z 58 ... 64"
+    - name: rearFlangeThick
+      axis: z
+      expected: 6
+      tolerance: 0.05
+      between: [rearFlangeFront, rearFlangeFace]
+      description: "rear flange z 74 ... 80"
+    - name: innerBandLength
+      axis: z
+      expected: 21
+      tolerance: 0.05
+      between: [innerBandFrontFace, innerBandRearFace]
+      description: "inner band z 59 ... 80"
+  solids:
+    - name: ring
+      contains_point: [95, 0, 69]
+      description: "the single solid: casing, vanes and inner band"
+  hardware:
+    - name: rotor2SealSleeve
+      kind: cylinder
+      point: [0, 0, 62]
+      direction: [0, 0, 1]
+      radius: 63.0
+      length: 8
+      description: "rotor_2 rear seal sleeve OD 126, z 62 ... 70 (guide 4.4, 14.1), the labyrinth's running partner"
+  clearances:
+    - name: sleeveGap
+      a: all
+      b: rotor2SealSleeve
+      min_gap: 0.4
+      max_gap: 0.6
+      description: "stated 0.5 mm radial gap from the tooth tips (r 63.5) to the sleeve; the assembly's sleeveSeal min_gap is 0.4"
+  thickness:
+    - name: minWall
+      min: 0.4
+      stat: p05
+      description: "vanes stay at least the 0.5 mm trailing-edge thickness; bands and teeth are 1 mm or more"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[95, 0, 69], [0, 95, 69], [-95, 0, 69], [0, -95, 69], [92, 0, 69], [97.931, 40.564, 61], [97.931, 40.564, 77]]
+    - name: inVoid
+      state: void
+      points: [[0, 0, 60.5], [60, 0, 76.5], [106, 0, 61], [0, 106, 61], [106, 0, 76.5], [-106, 0, 76.5], [106, 0, 69], [78, 0, 76.5]]
+  cylinder_counts:
+    - name: boltHoles
+      diameter: 5.5
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 16
+      description: "8 holes in each flange"
+  blockout:
+    volume_min: 221300
+    volume_max: 271300
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    revision: "AXJET-220 design and implementation guide (V1)"
+    note: "sections 3 (frame), 3.2 (flow-path radii), 4.1-4.4 (OGV row, metal angles, casing rings, labyrinths), 11 (material), 14.1 (body table, joint ogvOnCase)"
+
+open_questions:
+  - "Changed (revision 1, reviewer notes): both flanges are OD 224 with 8 x D5.5 (M5 clearance) holes on PCD 212, one on +x, 45 deg pitch (was OD 212 with 8 x D6.4 on PCD 206). Reason: the stated holes broke 0.2 mm out of the OD 212 rim and reached r 99.8 inside the OD 200 body, so no M6 head or nut could seat; an M5 head or nut at r 106 clears the body and the rim by about 1.5 mm (as case_r1 and stator_1). Envelope, volume, surface area, centre of mass, the four flange sections, flange faces and rims, hole cylinders, the flange-span dimension, probes, the casingOd infeasible delta (now +26) and the blockout band are recomputed."
+  - "Rear flange hole pattern and clocking (one on +x) are inferred to match the front; the diffuser joint is not yet designed."
+  - "Labyrinth tooth geometry is inferred: grooves 1.0 mm deep (to r 64.5) over the sleeve span z 62 ... 70, two 1.0 mm teeth centred at z 64 and z 68 with tips at r 63.5. Only the tooth count, tip radius and the 0.5 mm radial gap are stated (section 8.1 lists 0.4 mm for the blisk-spigot seals; the intent's 0.5 mm is used)."
+  - "Rotation sense is not stated: angles are positive in the direction of rotation (Appendix B); rotation is inferred right-handed about +z (from +x toward +y), so the vane leading edges point toward +theta."
+  - "Vane clocking is not stated; the first vane's stacking line is inferred on +x."
+  - "Hub, mean and tip section radii are not stated for the OGV: hub r 66.5 (flow surface at the leading edge), tip r 90.0, mean r 78.25; the hub section lies up to 0.9 mm below the rising band and is fused into it."
+  - "Thickness distribution: NACA-65 per section 14 with a 0.25 mm LE radius and a 0.5 mm TE; the TE blend is not stated, so the vane volume carries +-2000 mm3 (total volume tolerance 3000 mm3)."
+  - "Stacking: 'radial stacking' with the leading edge at z 61 is read as every section's LE at z 61 axially and the section centroids on one radial line tangentially."
+  - "No vane root or tip fillets are stated (the blisks have r 1.5); junctions are left sharp."
+  - "The casing front-face corner (r 90.25, z 58) lies about 3 mm from the rotor_2 tip trailing edge (r 90.0, z 55); if the assembly's rotor2ToOgv min_gap 4.0 is measured body to body it may fail on this corner rather than on the vanes (z 61)."
+  - "No abradable recess is modelled: the guide applies the 0.5 mm abradable only over the rotors, and no rotor runs inside this ring."
+  - "Baseline turning 53.8 deg -> 0 deg exceeds the guide's 40 deg per-row limit; the tandem pair and solidity-1.8 options of section 4.2 are not modelled (per the intent)."

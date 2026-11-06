@@ -1,0 +1,141 @@
+{
+  "named_faces": {
+    "rearFace": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1056.9574323737493,
+      "ok": true,
+      "position": 0.0,
+      "area_expected": 1056.96,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.4253799589727968e-14,
+      "centroid_uv": [
+        -1.2434497875801753e-14,
+        6.9680747212419325e-15
+      ]
+    },
+    "bulkheadFront": {
+      "plane": "z",
+      "at": -28.0,
+      "normal": "-",
+      "found": 1,
+      "area": 2678.0192416260843,
+      "ok": true,
+      "position": -28.0,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.7878912751226894e-15,
+      "centroid_uv": [
+        8.881784197001252e-16,
+        2.6426268856356175e-15
+      ]
+    },
+    "bulkheadRear": {
+      "plane": "z",
+      "at": -25.0,
+      "normal": "+",
+      "found": 1,
+      "area": 2678.0192416260843,
+      "ok": true,
+      "position": -25.000000000000004,
+      "area_expected": 2678.02,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.7878912751226894e-15,
+      "centroid_uv": [
+        8.881784197001252e-16,
+        2.6426268856356175e-15
+      ]
+    },
+    "lipFront": {
+      "plane": "z",
+      "at": -3.0,
+      "normal": "-",
+      "found": 1,
+      "area": 667.3999433286161,
+      "ok": true,
+      "position": -3.0,
+      "area_expected": 667.4,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.8402538751055847e-14,
+      "centroid_uv": [
+        -3.552713678800501e-15,
+        1.8056346751227834e-14
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "rearFace",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "+",
+      "area": 1056.96,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "bulkheadFront",
+      "plane": "z",
+      "at": -28.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "bulkheadRear",
+      "plane": "z",
+      "at": -25.0,
+      "normal": "+",
+      "area": 2678.02,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "lipFront",
+      "plane": "z",
+      "at": -3.0,
+      "normal": "-",
+      "area": 667.4,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 6
+}

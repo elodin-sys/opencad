@@ -1,0 +1,473 @@
+schema_version: 1
+name: axjet-c2-bellmouth
+intent: >-
+  Bolt-on test bellmouth lip of the AXJET-220 compressor module (assembly axjet-c2), modelled
+  in the assembly frame, axisymmetric about z, z -95 ... -72. Inner (flow) contour: the
+  quarter-ellipse of section 9 centred at (z -45, r 125), axial semi-axis 50, radial semi-axis
+  34.75, from r 95.752 (text: 95.8) at the rear face z -72 to its front point r 125 at z -95
+  (radial tangent); there a 6 mm quarter-round lip centred at (z -89, r 125), tangent to the
+  ellipse at (z -95, r 125) and to the outer skin at (z -89, r 131), closes the contour without
+  a crease; the outer skin starts at r 131 and runs back (straight cone, inferred) to the rear
+  flange edge. Rear flange z -77 ... -72 (5 thick, inferred to match the inlet-frame front
+  flange), OD 224, with 8 x M5 tapped blind holes from the rear face on PCD 216 (one on +x),
+  modelled as D4.2 tap-drill holes 10 deep; the screws enter from behind the inlet-frame flange.
+  The rear face z -72 (r 95.752 ... 112) seats on the inlet-frame front flange (joint
+  bellmouthOnFrame at [0, 0, -72], axis +z) and the inner contour meets the inlet-frame contour
+  without a step. Authoritative source: sources/axjet_design_and_implementation_guide.md
+  sections 2.4, 3.2, 9, 11 and 14.1, as amended by the revision 1 reviewer notes (change 4).
+units:
+  length: mm
+  angle: deg
+material: "aluminium 6061-T6"
+density_kg_m3: 2700
+process: "CNC turning + milling (section 11)"
+release_status: prototype
+
+frame:
+  origin: >-
+    assembly frame of section 3: on the engine axis at the stage-1 rotor leading-edge plane;
+    the part occupies z -95 ... -72, so the origin lies 72 mm behind its rear face
+  axes:
+    x: "radial, up toward the aircraft dorsal intake; the first bolt hole sits on +x"
+    y: "radial, completes the right-handed frame (y = z cross x)"
+    z: "engine axis, flow toward +z; lip front at z -95, rear (seat) face at z -72"
+  datums:
+    - name: A
+      description: "rear face z -72 (r 95.752 ... 112), seats on the inlet-frame front flange; joint bellmouthOnFrame point [0, 0, -72], axis +z"
+    - name: B
+      description: "engine axis x = y = 0, axis of every surface of revolution"
+    - name: C
+      description: "the +x bolt hole (x 108, y 0) clocks the 8-hole pattern"
+
+envelope:
+  min: [-131, -131, -95]
+  max: [131, 131, -72]
+  tolerance: 0.05
+
+parameters:
+  - name: ellipseCenterZ
+    value: -45
+    unit: mm
+    provenance: stated
+    source: "guide section 9 / 14.1: quarter-ellipse from r 125 at z -95 to r 90.25 at z -45"
+    tolerance: 0.01
+    description: "axial station of the inner-contour ellipse centre"
+  - name: ellipseCenterR
+    value: 125
+    unit: mm
+    provenance: stated
+    source: "guide section 3.2 (r 125 at z -95) and section 9"
+    tolerance: 0.01
+    description: "radius of the ellipse centre; equals the inner-contour radius at the lip vertex z -95"
+  - name: ellipseAxialSemiAxis
+    value: 50
+    unit: mm
+    provenance: stated
+    source: "guide section 9: ellipse spans z -95 ... -45"
+    tolerance: 0.01
+    description: "axial semi-axis of the inner-contour ellipse"
+  - name: ellipseRadialSemiAxis
+    value: 34.75
+    unit: mm
+    provenance: stated
+    source: "guide section 9: ellipse spans r 125 ... 90.25"
+    tolerance: 0.01
+    description: "radial semi-axis of the inner-contour ellipse"
+  - name: lipVertexZ
+    value: -95
+    unit: mm
+    provenance: derived
+    formula: "ellipseCenterZ - ellipseAxialSemiAxis"
+    source: "guide section 3.2 row z -95 (bellmouth lip)"
+    tolerance: 0.01
+    description: "ellipse vertex (radial tangent), where the quarter-round lip joins tangentially; the front of the part"
+  - name: lipRadius
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 4 (approved; supersedes the guide's 3 mm full-round lip): 6 mm quarter-round lip centred at (z -89, r 125)"
+    tolerance: 0.01
+    description: "radius of the quarter-round lip centred at (lipVertexZ + lipRadius, ellipseCenterR), tangent to the ellipse at its vertex and to the outer skin"
+    edit_test:
+      delta: 0.5
+      expect:
+        volume_delta: 7541
+        direction: increase
+        bbox_delta: [1, 1, 0]
+        tolerance_rel: 0.05
+      sweep:
+        values: [5.5, 6.0, 6.5]
+      infeasible_deltas: [-6]
+  - name: lipFrontZ
+    value: -95
+    unit: mm
+    provenance: derived
+    formula: "lipVertexZ (the quarter-round lip is tangent to the ellipse at its vertex)"
+    source: "revision 1 reviewer notes, change 4: the bellmouth spans z -95 ... -72"
+    tolerance: 0.01
+    description: "front-most point of the part"
+  - name: skinStartZ
+    value: -89
+    unit: mm
+    provenance: derived
+    formula: "lipVertexZ + lipRadius"
+    source: "revision 1 reviewer notes, change 4: lip tangent to the outer skin at (z -89, r 131)"
+    tolerance: 0.01
+    description: "axial station of the lip centre and of the lip-to-skin tangent point"
+  - name: skinStartRadius
+    value: 131
+    unit: mm
+    provenance: derived
+    formula: "ellipseCenterR + lipRadius"
+    source: "guide section 14.1: outer skin from r 131 (kept by revision 1)"
+    tolerance: 0.01
+    description: "outer skin radius at the lip tangent point (z -89); the part's maximum radius"
+  - name: rearFaceZ
+    value: -72
+    unit: mm
+    provenance: stated
+    source: "guide section 2.4 inlet flange row and section 3.2 row z -72"
+    tolerance: 0.01
+    description: "rear (seat) face on the inlet-frame front flange"
+  - name: flangeThickness
+    value: 5
+    unit: mm
+    provenance: inferred
+    rationale: "the guide gives the inlet-frame front flange as z -72 ... -67 (5 thick) but no bellmouth flange thickness; the mating flange thickness is reused"
+    tolerance: 0.5
+    description: "axial thickness of the rear flange band z -77 ... -72"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: -7063
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.05
+  - name: flangeFrontZ
+    value: -77
+    unit: mm
+    provenance: derived
+    formula: "rearFaceZ - flangeThickness"
+    tolerance: 0.01
+    description: "front plane of the flange band, where the conical skin lands on the flange OD edge"
+  - name: flangeOuterDiameter
+    value: 224
+    unit: mm
+    provenance: stated
+    source: "guide section 2.4 (OD 224) and 14.1 bellmouth row"
+    tolerance: 0.01
+    description: "rear flange outside diameter"
+  - name: boltCircleDiameter
+    value: 216
+    unit: mm
+    provenance: stated
+    source: "guide section 2.4 (8 x M5 on PCD 216) and 14.1 bellmouth row"
+    tolerance: 0.01
+    description: "pitch circle of the 8 bolt holes"
+  - name: boltHoleDiameter
+    value: 4.2
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 4 (supersedes the guide's 8 x D5.5): 8 x M5 tapped blind holes from the rear face, modelled as D4.2 tap-drill holes"
+    tolerance: 0.01
+    description: "modelled diameter of the M5 tapped holes (thread not modelled)"
+  - name: boltHoleDepth
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 4: D4.2 tap-drill holes 10 deep from the rear face z -72"
+    tolerance: 0.05
+    description: "depth of the blind tapped holes (floor at z -82), 4.3 mm clear of the flow contour at the floor"
+  - name: boltCount
+    value: 8
+    unit: ""
+    provenance: stated
+    source: "guide section 2.4 and 14.1"
+    tolerance: 0.01
+    description: "number of equally spaced bolt holes"
+  - name: boltStartAngle
+    value: 0
+    unit: deg
+    provenance: stated
+    source: "work-order intent: one hole on +x (same clocking as the inlet-frame flange)"
+    tolerance: 0.1
+    description: "angle of the first bolt hole from +x about +z"
+  - name: rearInnerRadius
+    value: 95.752
+    unit: mm
+    provenance: derived
+    formula: "ellipseCenterR - ellipseRadialSemiAxis * sqrt(1 - ((rearFaceZ - ellipseCenterZ) / ellipseAxialSemiAxis)**2)"
+    source: "guide section 3.2 row z -72 gives the rounded value 95.8"
+    tolerance: 0.06
+    description: "inner-contour radius at the rear face, where the inlet-frame contour continues the ellipse"
+
+features:
+  - id: innerContour
+    kind: revolve
+    description: "quarter-ellipse flow contour from (z -95, r 125, radial tangent) to (z -72, r 95.752), revolved about z"
+    parameters: [ellipseCenterZ, ellipseCenterR, ellipseAxialSemiAxis, ellipseRadialSemiAxis, lipVertexZ, rearFaceZ, rearInnerRadius]
+    verify:
+      - method: section
+        section: skinMid
+      - method: void
+        points: [[0, 0, -85]]
+      - method: face
+        face: rearFace
+  - id: lip
+    kind: revolve
+    description: "6 mm quarter-round lip centred at (z -89, r 125) from the ellipse vertex (z -95, r 125, radial tangent, no crease) to the outer skin at (z -89, r 131, axial tangent)"
+    parameters: [lipRadius, lipVertexZ, lipFrontZ, skinStartZ, skinStartRadius]
+    verify:
+      - method: bbox
+      - method: section
+        section: lipSection
+      - method: solid
+        points: [[128, 0, -92]]
+      - method: void
+        points: [[128, 0, -97]]
+  - id: outerSkin
+    kind: revolve
+    description: "outer skin, a straight cone (inferred) from the lip tangent point (z -89, r 131) to the flange OD edge (z -77, r 112)"
+    parameters: [skinStartRadius, skinStartZ, flangeFrontZ, flangeOuterDiameter]
+    verify:
+      - method: section
+        section: skinMid
+      - method: solid
+        points: [[0, 115, -85]]
+      - method: dimension
+        dimension: spanX
+  - id: rearFlange
+    kind: revolve
+    description: "rear flange band z -77 ... -72, OD 224, rear face z -72 from r 95.752 to 112"
+    parameters: [flangeThickness, flangeFrontZ, rearFaceZ, flangeOuterDiameter]
+    verify:
+      - method: face
+        face: rearFace
+      - method: cylinder
+        cylinder: flangeOd
+      - method: solid
+        points: [[94.236, 39.034, -74.5]]
+  - id: boltHoles
+    kind: hole
+    description: "8 x M5 tapped blind holes on PCD 216, one on +x, every 45 deg, modelled as D4.2 tap-drill holes from the rear face z -72 to a flat floor at z -82 (boltHoleDepth); the screws enter from behind the inlet-frame flange"
+    parameters: [boltCount, boltCircleDiameter, boltHoleDiameter, boltHoleDepth, boltStartAngle]
+    count: 8
+    verify:
+      - method: cylinder
+        cylinder: boltHole000
+      - method: cylinder
+        cylinder: boltHole045
+      - method: cylinder
+        cylinder: boltHole090
+      - method: cylinder
+        cylinder: boltHole135
+      - method: cylinder
+        cylinder: boltHole180
+      - method: cylinder
+        cylinder: boltHole225
+      - method: cylinder
+        cylinder: boltHole270
+      - method: cylinder
+        cylinder: boltHole315
+      - method: section
+        section: flangeMid
+      - method: void
+        points: [[108, 0, -74.5], [108, 0, -81.5]]
+      - method: solid
+        points: [[111, 0, -83]]
+
+interfaces:
+  - name: frameSeat
+    description: "rear face z -72 (r 95.752 ... 112) and flange OD seat on the inlet-frame front flange (joint bellmouthOnFrame at [0, 0, -72], axis +z); neither edit test moves them"
+    must_not_change: true
+    checks: [rearFace, flangeOd, mirrorY]
+  - name: boltPattern
+    description: "8 x M5 tapped (D4.2 x 10) on PCD 216, one on +x, matching the inlet-frame 8 x D5.5 through holes; screws from behind the inlet-frame flange"
+    must_not_change: true
+    checks: [boltHole000, boltHole045, boltHole090, boltHole135, boltHole180, boltHole225, boltHole270, boltHole315]
+  - name: contourJoin
+    description: "inner contour reaches r 95.752 at z -72 so the inlet-frame contour continues the ellipse without a step; pinned by the rear-face and flange-section areas"
+    must_not_change: true
+    checks: [rearFace, flangeMid]
+
+acceptance:
+  volume:
+    expected: 280229
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "revision 1: pi*Int(r_o^2 - r_e^2)dz over z -95 ... -72 with r_o the 6 mm quarter-round lip (z -95 ... -89), the cone to (z -77, r 112) and the flange r 112 = 281337.6; minus 8 tapped holes pi*2.1^2*10 = 1108.4"
+  surface_area:
+    expected: 66730
+    tolerance_rel: 0.02
+    provenance: derived
+    note: "ellipse 26763 + quarter-round lip 2*pi*(125 + 12/pi)*(3*pi) = 7628 + cone 2*pi*121.5*sqrt(12^2+19^2) = 17155 + flange OD 3519 + rear face 10494 + hole walls 8*2*pi*2.1*10 = 1056 + hole floors 111"
+  center_of_mass:
+    expected: [0, 0, -84.05]
+    tolerance: 0.15
+    provenance: derived
+    note: "x = y = 0 by 8-fold symmetry; z = (first moment of the revolved profile - holes 1108.4 x (-77)) / 280229, profile integrated numerically"
+  solid_count: 1
+  sections:
+    - id: lipSection
+      plane: z
+      at: -93
+      expect:
+        area: 10919.7
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "ring through the quarter-round lip: ellipse r 115.270 to lip r 125 + sqrt(36 - 4^2) = 129.472"
+    - id: skinMid
+      plane: z
+      at: -83
+      expect:
+        area: 13425.2
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "ring between the ellipse (r 102.415) and the cone skin (r 121.5), 1 mm ahead of the tapped-hole floors"
+    - id: flangeMid
+      plane: z
+      at: -74.5
+      expect:
+        area: 9772.9
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 9
+      description: "flange ring r 96.943 ... 112 minus the 8 tapped holes: pi*(112^2 - 96.943^2) - 8*pi*2.1^2"
+  faces:
+    - name: rearFace
+      plane: z
+      at: -72
+      normal: "+"
+      area: 10493.8
+      area_tolerance_rel: 0.002
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: flangeOd
+      point: [0, 0, -72]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 112
+      radius_tolerance: 0.02
+      description: "rear flange OD 224, z -77 ... -72 (length not pinned: flangeThickness edit)"
+    - name: boltHole000
+      point: [108, 0, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.02
+      description: "M5 tapped hole on +x (D4.2), z -82 ... -72"
+    - name: boltHole045
+      point: [76.3675, 76.3675, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.02
+      description: "bolt hole at 45 deg"
+    - name: boltHole090
+      point: [0, 108, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.02
+      description: "bolt hole on +y"
+    - name: boltHole135
+      point: [-76.3675, 76.3675, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.02
+      description: "bolt hole at 135 deg"
+    - name: boltHole180
+      point: [-108, 0, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.02
+      description: "bolt hole on -x"
+    - name: boltHole225
+      point: [-76.3675, -76.3675, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.02
+      description: "bolt hole at 225 deg"
+    - name: boltHole270
+      point: [0, -108, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.02
+      description: "bolt hole on -y"
+    - name: boltHole315
+      point: [76.3675, -76.3675, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.02
+      description: "bolt hole at 315 deg"
+  dimensions:
+    - name: spanZ
+      axis: z
+      expected: 23
+      tolerance: 0.05
+      description: "bbox extent lip front z -95 to rear face z -72"
+    - name: spanX
+      axis: x
+      expected: 262
+      tolerance: 0.05
+      description: "bbox extent across the lip outer skin, 2 x 131"
+  solids:
+    - name: body
+      contains_point: [115, 0, -85]
+      description: "the single turned body"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[128, 0, -92], [0, 115, -85], [94.236, 39.034, -74.5], [111, 0, -83]]
+      description: "quarter-round lip, skin band, flange between holes, skin band 1 mm ahead of the tapped-hole floors"
+    - name: inFlow
+      state: void
+      points: [[0, 0, -85], [128, 0, -97]]
+      description: "on the axis inside the bellmouth, 2 mm ahead of the lip front"
+    - name: inBoltHole
+      state: void
+      points: [[108, 0, -74.5], [108, 0, -81.5]]
+      description: "+x tapped hole, 2.5 mm from its mouth and 0.5 mm short of its floor (depth >= 9.5)"
+  cylinder_counts:
+    - name: boltHoles
+      diameter: 4.2
+      radius_tolerance: 0.02
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 8
+      description: "8 x M5 tapped (D4.2) on PCD 216"
+  symmetry:
+    - name: mirrorY
+      plane: y
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 264000
+    volume_max: 298000
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    revision: "as received 2026-10-21"
+    note: "sections 2.4 (inlet flange), 3 (frame), 3.2 (flow-path radii), 9 (inlet), 11 (material), 14.1 (bellmouth row)"
+
+open_questions:
+  - "Changed (revision 1, reviewer notes): the lip is a 6 mm quarter-round centred at (z -89, r 125), tangent to the ellipse at (z -95, r 125) and to the outer skin at (z -89, r 131), so the part spans z -95 ... -72 (was a 3 mm full-round lip centred at (z -95, r 128), front z -98). Reason: the stated ellipse has a radial tangent at its front point while the stated lip circle had an axial tangent there, leaving a 90 deg concave crease in the flow surface. Envelope, spanZ, volume, surface area, centre of mass, the lip and skin sections, probes, both edit tests and the blockout band are recomputed."
+  - "Changed (revision 1, reviewer notes): the bellmouth carries 8 x M5 tapped blind holes from its rear face (z -72) on PCD 216, one on +x, modelled as D4.2 tap-drill holes 10 deep (was 8 x D5.5 blind holes 5 deep); the inlet-frame front flange carries 8 x D5.5 through holes and the screws go in from behind it. Reason: the solid turned lip covers the flange front face, so screws could not be fitted from the front; the flight inlet adapters and the V2 pitot-inlet duct use the same scheme."
+  - "Outer skin profile: the sources give only its ends (r 131 at the lip, the flange OD 224); the contract infers a straight cone from the lip tangent point (z -89, r 131) to the flange OD edge (z -77, r 112), which meets the lip with a convex kink on the outside. Confirm or supply the skin profile."
+  - "Flange thickness 5 (z -77 ... -72) is inferred from the inlet-frame front flange (z -72 ... -67); the guide and revision 1 state only the bellmouth extent (now z -95 ... -72)."
+  - "Rear inner radius: the ellipse gives r 95.752 at z -72 while the text rounds it to 95.8; the contract uses the ellipse value so the inlet-frame contour continues without a step."
+  - "Equal 45 deg spacing of the 8 holes is assumed from '8 x M5 on PCD 216, one on +x'; the spacing is not stated explicitly."
+  - "The lip OD 262 exceeds the 224 mm engine envelope of section 1; the test bellmouth is assumed to be a ground-rig part exempt from the installation envelope."

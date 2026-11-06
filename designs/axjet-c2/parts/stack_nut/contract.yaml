@@ -1,0 +1,407 @@
+schema_version: 1
+name: axjet-c2-stack_nut
+intent: >-
+  Stack nut of the AXJET-220 compressor module (assembly axjet-c2, body stack_nut), in its own
+  frame: axis +z through the origin, origin on the axis at its front face (assembly z -18), x
+  parallel to the assembly x. Ring OD 56, ID 39 (the M39 x 1.5 thread modelled as a plain D39 bore
+  on the drum's plain D39 thread section), length 10 (z 0 ... 10, assembly -18 ... -8); six spanner
+  notches in the OD at 60 deg pitch, one centred on +x, 6 wide x 3 deep through the length
+  (inferred). The rear face (assembly z -8) clamps the rotor_1 disc front face; the OD (r 28) sits
+  inside the rotor_1 seal arm (r 44) and the tool enters axially from the front through the seal
+  arm. Revision 1 (reviewer notes) moved the nut from assembly z 62 ... 72 to the front of the
+  stack. Authoritative source: sources/axjet_design_and_implementation_guide.md sections 8.1 and
+  14.1 (stack-nut row, joint stackNutOnDrum) as amended by the revision 1 reviewer notes.
+units:
+  length: mm
+  angle: deg
+material: "17-4PH H1025 stainless steel"
+density_kg_m3: 7800
+process: "turning, notches milled (nominal)"
+release_status: reconstruction
+
+frame:
+  origin: "on the nut axis at the front face: assembly point (0, 0, -18); the joint stackNutOnDrum attaches here"
+  axes:
+    x: "parallel to the assembly x (engine up, toward the dorsal intake); one spanner notch is centred on +x"
+    y: "parallel to the assembly y; completes the right-handed frame"
+    z: "along the engine axis, downstream (flow direction, toward the drum flange); front face z = 0, rear face z = 10 (assembly z = own z - 18)"
+  datums:
+    - name: A
+      description: "front face, plane z = 0, outward normal -z (assembly z -18), the joint origin; the rear face z = 10 (assembly z -8) is the clamp face on the rotor_1 disc front face"
+    - name: B
+      description: "nut axis: the z axis, axis of the D39 bore (drum M39 thread section) and of the D56 OD"
+    - name: C
+      description: "angular datum: the plane y = 0 through the centre of the +x spanner notch"
+
+envelope:
+  min: [-27.8388, -28, 0]
+  max: [27.8388, 28, 10]
+  tolerance: 0.05
+
+parameters:
+  - name: outerDiameter
+    value: 56
+    unit: mm
+    provenance: stated
+    source: "guide section 14.1, stack-nut row: ring OD 56"
+    tolerance: 0.01
+    description: "ring outside diameter; 16 mm radially inside the rotor_1 seal arm (r 44) and 2 mm inside the inlet_frame keep-out (r 30)"
+  - name: boreDiameter
+    value: 39
+    unit: mm
+    provenance: stated
+    source: "guide section 14.1, stack-nut row: ID 39; revision 1 reviewer notes: thread M39 x 1.5 at assembly z -18 ... -8"
+    tolerance: 0.01
+    description: "plain bore standing in for the M39 x 1.5 internal thread"
+  - name: nutLength
+    value: 10
+    unit: mm
+    provenance: stated
+    source: "guide section 14.1, stack-nut row: length 10; revision 1 reviewer notes: stack nut at assembly z -18 ... -8"
+    tolerance: 0.01
+    description: "axial length, front face z = 0 to the rear clamp face z = nutLength; fixed by the drum's 10 mm thread between the D36 neck and the rotor_1 seat, so it carries no edit test (a change would move the clamp face)"
+  - name: notchCount
+    value: 6
+    unit: ""
+    provenance: stated
+    source: "guide section 14.1, stack-nut row: 6 spanner notches"
+    tolerance: 0.01
+    description: "number of spanner notches in the OD"
+  - name: notchPitch
+    value: 60
+    unit: deg
+    provenance: derived
+    formula: "360 / notchCount"
+    tolerance: 0.01
+    description: "angular pitch of the equally spaced notches (intent: 60 deg pitch)"
+  - name: notchPhase
+    value: 0
+    unit: deg
+    provenance: inferred
+    rationale: "the guide does not clock the notches; the intent puts one notch centred on +x, matching the guide's 'one on +x' convention for hole and strut patterns"
+    tolerance: 0.5
+    description: "angle of the first notch centreline from +x about +z"
+  - name: notchWidth
+    value: 6
+    unit: mm
+    provenance: inferred
+    rationale: "the guide states only '6 spanner notches'; 6 mm width taken from the intent (marked inferred), a common hook/slotted-socket spanner slot for a D56 nut"
+    tolerance: 0.5
+    description: "width of each parallel-sided notch, symmetric about its radial centreline"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: -333.46
+        direction: decrease
+        bbox_delta: [-0.2520, 0, 0]
+        tolerance_rel: 0.03
+  - name: notchDepth
+    value: 3
+    unit: mm
+    provenance: inferred
+    rationale: "the guide gives no notch depth; 3 mm from the intent (marked inferred) leaves a 5.5 mm radial ligament under the notch floor to the D39 bore"
+    tolerance: 0.5
+    description: "radial depth of each notch from the OD on its centreline; flat floor at radius outerDiameter/2 - notchDepth = 25"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: -360
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [2, 3, 4, 5]
+      infeasible_deltas: [6]
+
+features:
+  - id: ring
+    kind: revolve
+    description: "plain annulus OD outerDiameter x ID boreDiameter from z = 0 to z = nutLength, coaxial with +z"
+    parameters: [outerDiameter, boreDiameter, nutLength]
+    verify:
+      - method: bbox
+      - method: section
+        section: mid
+      - method: section
+        section: cutYZ
+      - method: face
+        face: front
+      - method: face
+        face: rear
+      - method: dimension
+        dimension: length
+      - method: dimension
+        dimension: spanY
+      - method: cylinder
+        cylinder: od
+      - method: solid
+        points: [[20.5681, 11.875, 5], [0, 23.75, 5], [-20.5681, 11.875, 5], [-20.5681, -11.875, 5], [0, -23.75, 5], [20.5681, -11.875, 5]]
+  - id: bore
+    kind: hole
+    description: "plain D39 through bore standing in for the M39 x 1.5 internal thread (thread form not modelled)"
+    parameters: [boreDiameter, nutLength]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: void
+        points: [[0, 0, 5]]
+  - id: spannerNotches
+    kind: pattern
+    description: >-
+      notchCount parallel-sided notches through the full length (z 0 ... nutLength), each notchWidth
+      wide symmetric about a radial centreline and cut notchDepth deep from the OD to a flat floor
+      perpendicular to that centreline at radius outerDiameter/2 - notchDepth; centrelines at
+      notchPhase + k * notchPitch (0, 60, ..., 300 deg), one centred on +x
+    parameters: [notchCount, notchPitch, notchPhase, notchWidth, notchDepth, outerDiameter, nutLength]
+    count: 6
+    verify:
+      - method: void
+        points: [[26.5, 0, 5], [13.25, 22.9497, 5], [-13.25, 22.9497, 5], [-26.5, 0, 5], [-13.25, -22.9497, 5], [13.25, -22.9497, 5]]
+      - method: solid
+        points: [[21.5, 0, 5], [10.75, 18.6195, 5], [-10.75, 18.6195, 5], [-21.5, 0, 5], [-10.75, -18.6195, 5], [10.75, -18.6195, 5]]
+      - method: face
+        face: notchFloorPosX
+      - method: face
+        face: notchFloorNegX
+      - method: plane
+        plane: notchFloor60
+      - method: plane
+        plane: notchFloor120
+      - method: plane
+        plane: notchFloor240
+      - method: plane
+        plane: notchFloor300
+      - method: dimension
+        dimension: notchWidthX
+      - method: dimension
+        dimension: floorSpanX
+      - method: section
+        section: cutXZ
+
+interfaces:
+  - name: clampFace
+    description: "joint stackNutOnDrum is rigid at own point [0, 0, 0] (front face, assembly z -18), axis [0, 0, 1]; the rear face z = 10 (assembly z -8) clamps the rotor_1 disc front face; no edit test moves either face"
+    must_not_change: true
+    checks: [front, rear, length]
+  - name: threadBore
+    description: "D39 bore on the drum's plain D39 thread section (M39 x 1.5, assembly z -18 ... -8), coaxial with +z; it passes over the drum's D36 neck"
+    must_not_change: true
+    checks: [bore]
+  - name: armClearance
+    description: "D56 OD on the axis, 16 mm radially inside the rotor_1 seal arm (r 44 ... 48.1, assembly z -18 ... -8) and 2 mm inside the inlet_frame keep-out radius 30"
+    must_not_change: true
+    checks: [od, spanY]
+
+acceptance:
+  volume:
+    expected: 11623.50
+    tolerance_rel: 0.003
+    provenance: derived
+    note: "nutLength * (pi/4 * (outerDiameter^2 - boreDiameter^2) - 6 * Anotch); Anotch = a*sqrt(R^2 - a^2) + R^2*asin(a/R) - notchWidth*(R - notchDepth) = 17.678 with R = 28, a = 3; section 1268.418 - 106.068 = 1162.350"
+  surface_area:
+    expected: 5649.18
+    tolerance_rel: 0.01
+    provenance: derived
+    note: "2 faces * 1162.350 + bore pi*39*10 = 1225.221 + OD arcs (2*pi*28 - 6*2*28*asin(3/28))*10 = 1398.600 + 6 notches * (floor 6*10 + 2 walls 2.8388*10) = 700.659"
+  center_of_mass:
+    expected: [0, 0, 5]
+    tolerance: 0.05
+    provenance: derived
+    note: "six-fold symmetric about the z axis, prismatic along z: centroid on the axis at nutLength / 2"
+  solid_count: 1
+  sections:
+    - id: mid
+      plane: z
+      at: 5
+      expect:
+        area: 1162.35
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "notched annulus at mid-length: OD ring minus six notches, one D39 bore"
+    - id: cutXZ
+      plane: y
+      at: 0
+      expect:
+        area: 110
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 0
+      description: "through the +x and -x notch centres: two 5.5 x 10 ligaments, x 19.5 ... 25 and -25 ... -19.5"
+    - id: cutYZ
+      plane: x
+      at: 0
+      expect:
+        area: 170
+        area_tolerance_rel: 0.01
+        loops: 2
+        holes: 0
+      description: "between notches (90 and 270 deg): two full 8.5 x 10 wall sections, y 19.5 ... 28"
+  faces:
+    - name: front
+      plane: z
+      at: 0
+      normal: "-"
+      center: [0, 0]
+      mode: one
+    - name: rear
+      plane: z
+      at: 10
+      normal: "+"
+      area: 1162.35
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: notchFloorPosX
+      plane: x
+      at: 25
+      normal: "+"
+      area: 60
+      area_tolerance_rel: 0.02
+      center: [0, 5]
+      mode: one
+    - name: notchFloorNegX
+      plane: x
+      at: -25
+      normal: "-"
+      area: 60
+      area_tolerance_rel: 0.02
+      center: [0, 5]
+      mode: one
+    - name: notchWallPosXLow
+      plane: y
+      at: -3
+      normal: "+"
+      area: 28.388
+      area_tolerance_rel: 0.02
+      center: [26.4194, 5]
+      mode: one
+    - name: notchWallPosXHigh
+      plane: y
+      at: 3
+      normal: "-"
+      area: 28.388
+      area_tolerance_rel: 0.02
+      center: [26.4194, 5]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 39
+      radius_tolerance: 0.02
+      description: "plain D39 bore (M39 x 1.5 thread), through z 0 ... 10; length not pinned so nutLength edits keep the interface"
+    - name: od
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 56
+      radius_tolerance: 0.02
+      description: "D56 outside diameter, split into six arcs by the notches"
+  planes:
+    - name: notchFloor60
+      point: [12.5, 21.6506, 5]
+      normal: [0.5, 0.866025, 0]
+      area: 60
+      area_tolerance_rel: 0.02
+      description: "floor of the 60 deg notch at radius 25"
+    - name: notchFloor120
+      point: [-12.5, 21.6506, 5]
+      normal: [-0.5, 0.866025, 0]
+      area: 60
+      area_tolerance_rel: 0.02
+      description: "floor of the 120 deg notch at radius 25"
+    - name: notchFloor240
+      point: [-12.5, -21.6506, 5]
+      normal: [-0.5, -0.866025, 0]
+      area: 60
+      area_tolerance_rel: 0.02
+      description: "floor of the 240 deg notch at radius 25"
+    - name: notchFloor300
+      point: [12.5, -21.6506, 5]
+      normal: [0.5, -0.866025, 0]
+      area: 60
+      area_tolerance_rel: 0.02
+      description: "floor of the 300 deg notch at radius 25"
+  dimensions:
+    - name: length
+      axis: z
+      expected: 10
+      tolerance: 0.05
+      between: [front, rear]
+      description: "nut length between the clamp face and the rear face"
+    - name: spanY
+      axis: y
+      expected: 56
+      tolerance: 0.05
+      description: "bbox extent along y = OD (the 90 and 270 deg directions are not notched)"
+    - name: notchWidthX
+      axis: y
+      expected: 6
+      tolerance: 0.05
+      between: [notchWallPosXLow, notchWallPosXHigh]
+      description: "width of the +x notch between its side walls"
+    - name: floorSpanX
+      axis: x
+      expected: 50
+      tolerance: 0.05
+      between: [notchFloorNegX, notchFloorPosX]
+      description: "floor-to-floor distance of the +x and -x notches = outerDiameter - 2 * notchDepth"
+  solids:
+    - name: nut
+      contains_point: [0, 23.75, 5]
+      description: "the single nut body"
+  hardware:
+    - name: rotor1SealArm
+      kind: cylinder
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      radius: 48.1
+      length: 10
+      exclude_cylinders:
+        - point: [0, 0, -1]
+          direction: [0, 0, 1]
+          radius: 44
+          length: 12
+      description: "rotor_1 front seal arm r 44 ... 48.1, assembly z -18 ... -8 = own z 0 ... 10 (assembly brief, rotor_1 intent)"
+  clearances:
+    - name: armGap
+      a: nut
+      b: rotor1SealArm
+      min_gap: 15.9
+      description: "OD stays 16 mm inside the seal arm: 44 - 28 = 16.0 nominal, 0.1 allowance for the distance evaluation; the spanner socket enters axially through this annulus"
+  probes:
+    - name: inBore
+      state: void
+      points: [[0, 0, 5]]
+    - name: inNotches
+      state: void
+      points: [[26.5, 0, 5], [13.25, 22.9497, 5], [-13.25, 22.9497, 5], [-26.5, 0, 5], [-13.25, -22.9497, 5], [13.25, -22.9497, 5]]
+    - name: underNotchFloors
+      state: solid
+      points: [[21.5, 0, 5], [10.75, 18.6195, 5], [-10.75, 18.6195, 5], [-21.5, 0, 5], [-10.75, -18.6195, 5], [10.75, -18.6195, 5]]
+    - name: betweenNotches
+      state: solid
+      points: [[20.5681, 11.875, 5], [0, 23.75, 5], [-20.5681, 11.875, 5], [-20.5681, -11.875, 5], [0, -23.75, 5], [20.5681, -11.875, 5]]
+  blockout:
+    volume_min: 11300
+    volume_max: 12800
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    revision: "AXJET-220 Design and Implementation Guide (as supplied)"
+    note: "section 8.1 rotor stack and drum thread; section 14.1 stack-nut, rotor-2 and drum-shaft rows and the stackNutOnDrum joint"
+
+open_questions:
+  - "Spanner notch size (6 wide x 3 deep) and form (parallel sides, flat floor, through the length) are inferred; the guide only says '6 spanner notches'. Confirm against the spanner that will be used."
+  - "Notch clocking (one centred on +x) is an assembly convention from the intent; the real clocking is set by tightening torque."
+  - "Changed (revision 1, reviewer notes): the nut moves from assembly z 62 ... 72 (front face on rotor_2) to z -18 ... -8, own origin (front face) at assembly z -18 and the rear face clamping the rotor_1 disc front face at z -8; joint stackNutOnDrum at drum z -18. Reason: the ID 39 nut could not pass the D40 drum to reach a thread at z 62; the stack now loads from the front against the drum shoulder at z 62. The nut geometry is unchanged; the clamp interface moves to the rear face, so the nutLength edit test is withdrawn, and the rotor_2-sleeve clearance becomes a rotor_1 seal-arm clearance."
+  - "Tool access: the nut sits inside the rotor_1 seal arm (r 44) with 16 mm radial room over its whole length and its front face open toward the inlet_frame hub (keep-out r 30 behind assembly z -35); the notches are driven by a slotted socket entering axially through the seal arm before the front bearing pair and the inlet_frame are fitted. Confirm the tool."
+  - "The M39 x 1.5 internal thread is a plain D39 bore, line-to-line with the drum's plain D39 thread section; thread form, minor diameter and thread-start chamfer are not modelled."
+  - "No locking feature (tab washer, staking, thread locker) and no edge chamfers are stated; none are modelled."
+  - "Density 7800 kg/m3 is the guide's 17-4PH value from the drum-shaft and coupling-hub rows; the stack-nut row names the material only."

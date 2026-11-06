@@ -30,6 +30,7 @@ from typing import Any
 import yaml
 
 from opencad import telemetry, worker
+from opencad.worker import orders
 from opencad.backends.base import EngineError, is_tooling
 from opencad.codex import contract_digest
 from opencad.contract import load_contract
@@ -1087,7 +1088,9 @@ def run(ctx: Ctx) -> dict[str, Any]:
     summary["partition"] = r.summary()
     data = load_partition(ctx) if (wd / PARTITION_FILE).exists() else {"groups": []}
     problems = validate_partition(ctx, data) if data["groups"] else ["no groups"]
-    if problems:
+    # a handback host (Cursor, Prism) returns here after the fix turn with the problems already gone: the finished fix order
+    # still has to pass through dispatch so complete() records its turn
+    if problems or orders.find(ctx.results_dir, "partition-2") is not None:
         fix = ("The partition is not usable yet. Problems:\n- " + "\n- ".join(problems[:40]) + f"\nFix partition.yaml / {params.name} / {datum.name} in place and re-verify.")
         r2 = worker.dispatch(fix, role="partition", key="partition-2", results_dir=ctx.results_dir, part=ctx.name, cd=wd, run_dir=wd / "codex-partition-2",
                              resume=r.thread_id or None, add_dirs=[ctx.part_dir], timeout=ctx.timeout, deliverables=[wd / PARTITION_FILE])
@@ -1102,7 +1105,7 @@ def run(ctx: Ctx) -> dict[str, Any]:
     # 1b. the datum measured: failing datum-owned items move to the module whose region holds them; an exterior group when the envelope is oversized
     dm = measure_datum(ctx, data)
     summary["datum_check"] = {k: v for k, v in dm.items() if k != "step"}
-    if dm.get("problems"):
+    if dm.get("problems") or orders.find(ctx.results_dir, "partition-3") is not None:
         fix = ("The datum body was exported and measured against the contract. Problems:\n- " + "\n- ".join(dm["problems"][:40])
                + f"\nFix partition.yaml (group assignment, regions, an `exterior` group) and/or {datum.name} in place and re-verify.")
         r2b = worker.dispatch(fix, role="partition", key="partition-3", results_dir=ctx.results_dir, part=ctx.name, cd=wd, run_dir=wd / "codex-partition-3",

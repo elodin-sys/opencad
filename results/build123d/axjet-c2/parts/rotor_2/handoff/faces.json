@@ -1,0 +1,177 @@
+{
+  "named_faces": {
+    "frontFace": {
+      "plane": "z",
+      "at": -4.0,
+      "normal": "-",
+      "found": 1,
+      "area": 9130.253649495337,
+      "ok": true,
+      "position": -4.0,
+      "area_expected": 9130.2,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 7.146255301726905e-15,
+      "centroid_uv": [
+        7.105427357601002e-15,
+        7.62802007938585e-16
+      ]
+    },
+    "frontStep": {
+      "plane": "z",
+      "at": -1.0,
+      "normal": "-",
+      "found": 1,
+      "area": 2804.7825051984273,
+      "ok": true,
+      "position": -1.0,
+      "area_expected": 2804.8,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 9.494543635860726e-14,
+      "centroid_uv": [
+        -8.526512829121202e-14,
+        4.1767137594160024e-14
+      ]
+    },
+    "hubRearStep": {
+      "plane": "z",
+      "at": 13.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1423.9268702395711,
+      "ok": true,
+      "position": 13.0,
+      "area_expected": 1423.9,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.216975749073644e-13,
+      "centroid_uv": [
+        -9.947598300641403e-14,
+        7.010583815376004e-14
+      ]
+    },
+    "nutFace": {
+      "plane": "z",
+      "at": 20.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1570.7963267948974,
+      "ok": true,
+      "position": 20.0,
+      "area_expected": 1570.8,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 5.329070518200748e-15,
+      "centroid_uv": [
+        0.0,
+        5.329070518200748e-15
+      ]
+    },
+    "sleeveEnd": {
+      "plane": "z",
+      "at": 28.0,
+      "normal": "+",
+      "found": 1,
+      "area": 9641.54785386708,
+      "ok": true,
+      "position": 27.999999999999996,
+      "area_expected": 9641.6,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.1951286834231858e-14,
+      "centroid_uv": [
+        2.1316282072803006e-14,
+        5.24167075190898e-15
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "frontFace",
+      "plane": "z",
+      "at": -4.0,
+      "normal": "-",
+      "area": 9130.2,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "frontStep",
+      "plane": "z",
+      "at": -1.0,
+      "normal": "-",
+      "area": 2804.8,
+      "area_tolerance_rel": 0.03,
+      "tolerance": 0.05,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "hubRearStep",
+      "plane": "z",
+      "at": 13.0,
+      "normal": "+",
+      "area": 1423.9,
+      "area_tolerance_rel": 0.03,
+      "tolerance": 0.05,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "nutFace",
+      "plane": "z",
+      "at": 20.0,
+      "normal": "+",
+      "area": 1570.8,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "sleeveEnd",
+      "plane": "z",
+      "at": 28.0,
+      "normal": "+",
+      "area": 9641.6,
+      "area_tolerance_rel": 0.01,
+      "tolerance": 0.05,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 470
+}

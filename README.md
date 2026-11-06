@@ -4,13 +4,14 @@
 
 
 Agentic CAD on a pluggable modelling backend ([Zoo](https://zoo.dev)/KCL, [CadQuery](https://cadquery.readthedocs.io),
-[build123d](https://build123d.readthedocs.io), or [FreeCAD](https://www.freecad.org) PartDesign), built the way
+[build123d](https://build123d.readthedocs.io), [FreeCAD](https://www.freecad.org) PartDesign, or
+[Prism](https://navier.ai)'s managed build123d 0.11 + `navier_cad` environment), built the way
 [open-air](https://github.com/elodin-sys/open-air) does aero design: a cheap, reviewable **initialize** step that
 turns intent, documents, drawings, tables or a reference mesh into a part contract and a blockout checkpoint, and a
 **create** step in which a Cursor `cad-worker` sub-agent authors the source one work order at a
 time (Codex is opt-in) while an independent Python control plane measures it with OpenCascade and trimesh, evaluates twelve tiered
 gates, and writes a report and a handoff package. A sequestered truth corpus scores the
-result against external references. Pass `--backend cadquery|build123d|freecad|zoo` (or `OPENCAD_BACKEND`;
+result against external references. Pass `--backend cadquery|build123d|freecad|prism|zoo` (or `OPENCAD_BACKEND`;
 default build123d).
 
 ```
@@ -35,9 +36,10 @@ the worker sub-agent in `.cursor/agents/cad-worker.md`; agent rules in `AGENTS.m
 source .venv/bin/activate
 # Local backends need no Zoo login. Zoo (`--backend zoo`) is hosted and billed; this account is exhausted — do not re-run it.
 # FreeCAD: install the app; default freecadcmd is /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd (override OPENCAD_FREECADCMD). Never import FreeCAD into the venv.
+# Prism: install the Prism app; its managed python-env (~/Library/Application Support/prism/python-env/.venv, override OPENCAD_PRISM_PYTHON) is the engine. Never import it into the venv.
 codex login                     # only for --worker codex (opt-in); ~/.codex/config.toml: model = "gpt-6-astra"
 python3 smoke/run.py --sections env,skills,cli   # optional toolchain smoke
-python -m opencad preflight --backend cadquery  # or build123d / freecad / zoo
+python -m opencad preflight --backend cadquery  # or build123d / freecad / prism / zoo
 ```
 
 ## Your first part
@@ -93,7 +95,7 @@ never edited to pass (authoring errors the agent exposes are corrected and logge
 
 ## Cost and budget
 
-The local backends (CadQuery, build123d, FreeCAD) cost nothing per engine call. Zoo is hosted and billed per
+The local backends (CadQuery, build123d, FreeCAD, Prism) cost nothing per engine call. Zoo is hosted and billed per
 `zoo kcl analyze/export/snapshot` (about 40–55 calls per part); this account's allowance is exhausted, so Zoo runs
 are replay-only: `python -m opencad credits` shows the balance, and `run`, `blockout` and `truth run` refuse to
 start at zero credits.

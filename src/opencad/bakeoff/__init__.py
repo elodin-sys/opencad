@@ -13,10 +13,19 @@ from opencad.truth.manifest import case_dir
 
 CANDIDATES = ("cadquery", "build123d", "freecad")
 REFERENCE = ("zoo",)
+# cells that join an entry when they have a clean verdict but are not required for one: Prism's worker turns are Prism
+# sub-agents, run from Prism rather than by this campaign's Codex loop
+EXTRA = ("prism",)
 BAKEOFF_TAG = "bakeoff-astra"
 PUBLISHED = "published.yaml"
 # `thread-delta` marks a resumed turn re-metered after it was billed twice; `last` a running thread total
 PUBLISHABLE_USAGE = ("sum", "rollout")
+# usage rebuilt from a host's record rather than metered per request (worker/prism_host.py): published, shown as estimated
+ESTIMATED_USAGE = ("prism-estimate",)
+
+
+def all_backends() -> tuple[str, ...]:
+    return (*CANDIDATES, *EXTRA, *REFERENCE)
 
 # Design-ladder order (docs/design-ladder.md). Prove pair, the fast pair, then the remaining corpus.
 LADDER = (
@@ -161,7 +170,7 @@ def cell(backend: str, part: str) -> dict[str, Any]:
 
 
 def status(backends: tuple[str, ...] | None = None, parts: list[str] | None = None) -> list[dict[str, Any]]:
-    backends = backends or CANDIDATES + REFERENCE
+    backends = backends or all_backends()
     parts = ladder_parts(parts)
     return [cell(b, p) for p in parts for b in backends]
 
@@ -327,7 +336,7 @@ def write_report(path: Path | None = None) -> Path:
     path = path or (RESULTS_BASE / "_bakeoff" / "report.md")
     path.parent.mkdir(parents=True, exist_ok=True)
     parts = ladder_parts()
-    backends = list(CANDIDATES + REFERENCE)
+    backends = list(all_backends())
     rows = status(tuple(backends), parts)
     by = {(r["backend"], r["part"]): r for r in rows}
     lines = [
@@ -385,6 +394,8 @@ def write_report(path: Path | None = None) -> Path:
         f"Token totals, USD, and seconds are filtered to tag `{BAKEOFF_TAG}`; a re-run cell uses its own tag from `_bakeoff/cell-tags.json`, listed below the table.",
         "Codex USD uses the pinned fast-tier card. Zoo USD is the monetary balance delta; zoo credits is the prepaid balance drop.",
         "A non-zero fallback means a CAD turn left Astra for the Cursor worker.",
+        f"A `{EXTRA[0]}` cell's worker turns are Prism sub-agents; its tokens and USD are rebuilt from Prism's thread record (usage mode "
+        f"`{ESTIMATED_USAGE[0]}`, marked ≈): output excludes hidden reasoning, so they are lower bounds.",
         _orchestrator_line(),
         "",
         "| part | backend | model | fallbacks | tokens in | cached | out | reasoning | codex USD | zoo credits | zoo USD | worker seconds | evaluator seconds | wall seconds |",
@@ -403,13 +414,14 @@ def write_report(path: Path | None = None) -> Path:
                 fallback_notes.append(f"{backend}/{part} fallbacks={meter['fallbacks']}")
             if "last" in meter["usage_modes"]:
                 last_mode = True
+            est = "≈" if any(m in ESTIMATED_USAGE for m in meter["usage_modes"]) else ""
             lines.append("| " + " | ".join([
                 part, backend, meter["model"], _blank(meter["fallbacks"] if meter["turns"] else None),
-                _blank(meter["tokens_input"] if meter["turns"] else None),
-                _blank(meter["tokens_cached"] if meter["turns"] else None),
-                _blank(meter["tokens_output"] if meter["turns"] else None),
+                est + _blank(meter["tokens_input"] if meter["turns"] else None),
+                est + _blank(meter["tokens_cached"] if meter["turns"] else None),
+                est + _blank(meter["tokens_output"] if meter["turns"] else None),
                 _blank(meter["tokens_reasoning"] if meter["turns"] else None),
-                _blank(meter["codex_usd"] if meter["codex_usd"] is not None else meter["price_reason"]),
+                est + _blank(meter["codex_usd"] if meter["codex_usd"] is not None else meter["price_reason"]),
                 _blank(meter["zoo_credits"]), _blank(meter["zoo_usd"]),
                 _blank(meter["worker_s"]), _blank(meter["evaluator_s"]), _blank(meter["wall_s"]),
             ]) + " |")
@@ -442,13 +454,14 @@ def _tagged_turns(backend: str, part: str, tag: str) -> list[dict[str, Any]]:
 
 def publishable_cell(backend: str, part: str) -> dict[str, Any] | None:
     """One backend's snapshot for the published log, or None when it is not a clean comparison: no gate verdict, no Astra turns
-    on its tag, a fallback, or any turn billed outside PUBLISHABLE_USAGE."""
+    on its tag, a fallback, or any turn billed outside PUBLISHABLE_USAGE (ESTIMATED_USAGE is accepted and flagged `estimated`)."""
     gf = gate_path(backend, part)
     tag = cell_tag(backend, part)
     turns = _tagged_turns(backend, part, tag)
     if not gf.exists() or not turns:
         return None
-    if any(r.get("model") != "gpt-6-astra" or r.get("fallback_from") or r.get("usage_mode") not in PUBLISHABLE_USAGE for r in turns):
+    allowed = (*PUBLISHABLE_USAGE, *ESTIMATED_USAGE)
+    if any(r.get("model") != "gpt-6-astra" or r.get("fallback_from") or r.get("usage_mode") not in allowed for r in turns):
         return None
     fb = json.loads(gf.read_text(encoding="utf-8"))
     gates = fb.get("gates") or []
@@ -463,37 +476,55 @@ def publishable_cell(backend: str, part: str) -> dict[str, Any] | None:
         "failed_gates": [g["id"] for g in gates if g.get("ok") is False],
         **{k: meter[k] for k in ("turns", "tokens_input", "tokens_cached", "tokens_output", "codex_usd", "zoo_credits", "zoo_usd",
                                  "worker_s", "evaluator_s", "wall_s")},
+        **({"estimated": True, "usage_mode": meter["usage_modes"][0]} if any(m in ESTIMATED_USAGE for m in meter["usage_modes"]) else {}),
     }
 
 
 def _note(cells: dict[str, dict[str, Any]]) -> str:
     fails = {b: c["failed_gates"] for b, c in cells.items()}
+    estimated = [b for b, c in cells.items() if c.get("estimated")]
+    tail = (" " + ", ".join(estimated) + " tokens and USD are estimated from Prism's thread record (hidden reasoning excluded; lower bounds).") if estimated else ""
     if not any(fails.values()):
-        return f"All {len(cells)} backends pass every applicable gate."
+        return f"All {len(cells)} backends pass every applicable gate." + tail
     sets = {tuple(v) for v in fails.values()}
     if len(sets) == 1:
-        return "Every backend fails " + ", ".join(f"`{g}`" for g in next(iter(sets))) + "."
-    return "; ".join(f"{b} fails " + ", ".join(f"`{g}`" for g in v) if v else f"{b} passes" for b, v in fails.items()) + "."
+        return "Every backend fails " + ", ".join(f"`{g}`" for g in next(iter(sets))) + "." + tail
+    return "; ".join(f"{b} fails " + ", ".join(f"`{g}`" for g in v) if v else f"{b} passes" for b, v in fails.items()) + "." + tail
 
 
 def publish_entries(path: Path, parts: list[str] | None = None) -> list[dict[str, Any]]:
-    """Append each part whose four backends are clean comparisons (`publishable_cell`) to the published log, once per set of
-    cell tags. Earlier entries are never rewritten, so a later re-meter does not change what was published."""
+    """One entry per part in the published log. A part is published once its candidate and reference backends are clean
+    comparisons (`publishable_cell`); an EXTRA backend joins when its own cell is clean. A published cell is never rewritten (a
+    later re-meter or a re-run on another tag does not change it); a backend the part's entry does not have yet is appended to
+    that entry, with its tag and date, and the entry's note and date follow. Returns the entries created or extended."""
     data = (yaml.safe_load(path.read_text(encoding="utf-8")) or {}) if path.exists() else {}
     entries: list[dict[str, Any]] = list(data.get("entries") or [])
-    seen = {(e["part"], tuple(sorted((e.get("tags") or {}).items()))) for e in entries}
-    backends = (*CANDIDATES, *REFERENCE)
-    added = []
+    by_part = {e["part"]: e for e in entries}
+    required = (*CANDIDATES, *REFERENCE)
+    created: list[dict[str, Any]] = []
+    extended: list[dict[str, Any]] = []
     for part in ladder_parts(parts):
-        cells = {b: publishable_cell(b, part) for b in backends}
-        if any(c is None for c in cells.values()):
-            continue
-        tags = {b: c.pop("tag") for b, c in cells.items()}
-        if (part, tuple(sorted(tags.items()))) in seen:
-            continue
-        added.append({"part": part, "date": max(c.pop("date") for c in cells.values()), "tags": tags, "note": _note(cells), "backends": cells})
-    if added:
-        entries += sorted(added, key=lambda e: e["date"])
+        cells = {b: c for b in all_backends() if (c := publishable_cell(b, part)) is not None}
+        entry = by_part.get(part)
+        if entry is None:
+            if any(b not in cells for b in required):
+                continue
+            entry = {"part": part, "date": "", "tags": {}, "note": "", "backends": {}}
+            created.append(entry)
+            new = cells
+        else:
+            new = {b: c for b, c in cells.items() if b not in (entry.get("backends") or {})}
+            if not new:
+                continue
+            extended.append(entry)
+        for b, c in new.items():
+            entry["tags"][b] = c.pop("tag")  # the cell keeps its own `date`
+            entry["backends"][b] = c
+        entry["backends"] = {b: entry["backends"][b] for b in (*all_backends(), *sorted(entry["backends"])) if b in entry["backends"]}
+        entry["date"] = max([entry.get("date") or "", *(c["date"] for c in new.values())])
+        entry["note"] = _note(entry["backends"])
+    if created or extended:
+        entries += sorted(created, key=lambda e: e["date"])  # earlier entries keep their place in the file
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(yaml.safe_dump({"entries": entries}, sort_keys=False, allow_unicode=True), encoding="utf-8")
-    return added
+    return [*created, *extended]

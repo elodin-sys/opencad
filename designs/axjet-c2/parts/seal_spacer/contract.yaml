@@ -1,0 +1,223 @@
+schema_version: 1
+name: axjet-c2-seal_spacer
+intent: >-
+  S1 seal spacer of the AXJET-220 two-stage compressor module (assembly axjet-c2, body seal_spacer),
+  in its own frame: axis +z through the origin, origin on the axis at its front face (assembly z 24),
+  x parallel to the assembly x. Plain ring OD 115 (r 57.5), ID 40 (modelled D40.0, line-to-line on
+  the drum), length 14 (z 0 ... 14, assembly 24 ... 38). Front face bears on the rotor_1 rear spigot
+  boss (D100) at assembly z 24; rear face carries the rotor_2 front face at assembly z 38; the OD runs
+  0.5 mm inside the stator_1 inner-band labyrinth (r 58.0) and is the rotating half of that seal.
+  Authoritative source: sources/axjet_design_and_implementation_guide.md (sections 4.4, 8.1, 14.1).
+units:
+  length: mm
+  angle: deg
+material: "2618-T61 aluminium alloy"
+density_kg_m3: 2760
+process: "CNC turning from bar (nominal; the guide does not state the spacer's process)"
+release_status: reconstruction
+
+frame:
+  origin: "on the ring axis at the front face (the face that bears on the rotor-1 rear spigot boss); assembly z 24"
+  axes:
+    x: "radial, parallel to the assembly x (the ring is a solid of revolution about z, so x only fixes clocking)"
+    y: "radial, parallel to the assembly y; completes a right-handed frame"
+    z: "spool axis, from the front face (z 0, assembly z 24) aft to the rear face (z 14, assembly z 38) toward rotor-2"
+  datums:
+    - name: A
+      description: "front face, plane z = 0 (assembly z 24); bears on the rotor-1 rear spigot boss D100"
+    - name: B
+      description: "bore axis, the z axis through the origin; D40 bore line-to-line on the drum"
+    - name: C
+      description: "rear face, plane z = 14 (assembly z 38); carries the rotor-2 front face"
+
+envelope:
+  min: [-57.5, -57.5, 0]
+  max: [57.5, 57.5, 14]
+  tolerance: 0.05
+
+parameters:
+  - name: outerDiameter
+    value: 115
+    unit: mm
+    provenance: stated
+    source: "guide section 14.1 table, row seal-spacer (ring OD 115); section 4.4 (OD D115); section 8.1 rotor stack (OD D115)"
+    tolerance: 0.01
+    description: "ring OD; the rotating land of the S1 labyrinth, 0.5 mm radially inside the stator-1 inner band (r 58.0)"
+  - name: innerDiameter
+    value: 40
+    unit: mm
+    provenance: stated
+    source: "guide section 14.1 table, row seal-spacer (ID 40); section 8.1 rotor stack (ID D40); drum D40 h6"
+    tolerance: 0.01
+    description: "through bore on the D40 drum, modelled 40.0 line-to-line"
+  - name: spacerLength
+    value: 14
+    unit: mm
+    provenance: stated
+    source: "guide section 14.1 table, row seal-spacer (length 14); sections 4.4 and 8.1 (assembly z 24 ... 38)"
+    tolerance: 0.01
+    description: "axial length from the front face (z 0) to the rear face (z 14)"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 9130.25
+        direction: increase
+        bbox_delta: [0, 0, 1]
+        tolerance_rel: 0.02
+      sweep:
+        values: [10, 14, 18]
+      infeasible_deltas: [-20]
+
+features:
+  - id: ring
+    kind: extrude
+    description: "D115 disc extruded 14 along +z from the front face (z 0 ... 14), coaxial with z; its OD is the plain rotating land of the S1 two-tooth labyrinth (the teeth are on stator-1)"
+    parameters: [outerDiameter, spacerLength]
+    verify:
+      - method: bbox
+      - method: cylinder
+        cylinder: odSeal
+      - method: face
+        face: frontFace
+      - method: face
+        face: rearFace
+      - method: dimension
+        dimension: stackLength
+      - method: section
+        section: meridian_x
+      - method: solid
+        points: [[38.75, 0, 7], [0, 38.75, 7], [-38.75, 0, 7], [0, -38.75, 7]]
+  - id: bore
+    kind: hole
+    description: "D40 through bore along z, line-to-line on the drum (modelled 40.0)"
+    parameters: [innerDiameter]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: section
+        section: mid_z
+      - method: void
+        points: [[0, 0, 7]]
+
+interfaces:
+  - name: drumFit
+    description: "D40.0 bore on the D40 h6 drum; locates the spacer radially; the spacerLength edit does not change its diameter or axis"
+    must_not_change: true
+    checks: [bore]
+  - name: rotor1Seat
+    description: "front face z 0 (datum A, assembly z 24) bearing on the rotor-1 rear spigot boss D100; the spacerLength edit does not move it"
+    must_not_change: true
+    checks: [frontFace]
+  - name: labyrinthLand
+    description: "D115 OD running 0.5 mm radially inside the stator-1 inner band (r 58.0); rotating half of the S1 labyrinth; the spacerLength edit does not change its diameter or axis"
+    must_not_change: true
+    checks: [odSeal]
+
+acceptance:
+  volume:
+    expected: 127823.6
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "pi/4 * (outerDiameter^2 - innerDiameter^2) * spacerLength = pi/4 * (13225 - 1600) * 14"
+  surface_area:
+    expected: 25077.8
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "2 * pi/4 * (OD^2 - ID^2) + pi * OD * L + pi * ID * L = pi * (5812.5 + 1610 + 560)"
+  center_of_mass:
+    expected: [0, 0, 7]
+    tolerance: 0.05
+    provenance: derived
+    note: "solid of revolution about z: on the axis at spacerLength / 2"
+  solid_count: 1
+  sections:
+    - id: mid_z
+      plane: z
+      at: 7
+      expect:
+        area: 9130.25
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "annulus at mid-length: pi/4 * (115^2 - 40^2); one outer loop (OD) and one hole (bore)"
+    - id: meridian_x
+      plane: x
+      at: 0
+      expect:
+        area: 1050
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 0
+      description: "meridional cut through the axis: two 37.5 x 14 rectangles (r 20 ... 57.5, z 0 ... 14)"
+  faces:
+    - name: frontFace
+      plane: z
+      at: 0
+      normal: "-"
+      area: 9130.25
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: rearFace
+      plane: z
+      at: 14
+      normal: "+"
+      area: 9130.25
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 40
+      radius_tolerance: 0.02
+      axis_tolerance: 0.02
+      description: "D40 through bore on the drum, coaxial with z"
+    - name: odSeal
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 115
+      radius_tolerance: 0.02
+      axis_tolerance: 0.02
+      description: "D115 OD, the rotating labyrinth land 0.5 mm inside the stator-1 band r 58.0"
+  dimensions:
+    - name: stackLength
+      axis: z
+      expected: 14
+      tolerance: 0.02
+      between: [frontFace, rearFace]
+      description: "spacer length between the rotor-1 and rotor-2 seats (assembly z 24 ... 38)"
+  probes:
+    - name: inWall
+      state: solid
+      points: [[38.75, 0, 7], [0, 38.75, 7], [-38.75, 0, 7], [0, -38.75, 7]]
+      description: "mid-wall, mid-length in each quadrant"
+    - name: inBore
+      state: void
+      points: [[0, 0, 7]]
+      description: "on the axis inside the bore, 20 mm from the bore wall"
+    - name: outsideOd
+      state: void
+      points: [[59.5, 0, 7]]
+      description: "2 mm radially outside the OD; catches an oversize land"
+  blockout:
+    volume_min: 125000
+    volume_max: 147000
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    note: "AXJET-220 design and implementation guide; section 14.1 table row seal-spacer, section 4.4 (rotor-1 spigot, stator inner bands), section 8.1 (rotor stack)"
+
+open_questions:
+  - "Labyrinth radial gap: sections 4.4 and 14.1 and the intent give 0.5 mm (stator-1 band r 58.0 minus OD r 57.5), but section 8.1 lists 0.4 mm for the blisk-spigot-to-stator-band labyrinths and the assembly acceptance sets spacerSeal min_gap 0.4. The OD is kept at the twice-stated D115; the tooth-tip radius belongs to stator-1."
+  - "Section 4.4 says the rotor-1 rear spigot D100 'pilots' the spacer, which could mean a D100 recess in the spacer front face; the intent and the section 14.1 table call it a plain ring whose front face bears on the D100 boss, so no recess is modelled and radial location comes from the D40 bore."
+  - "Bore fit: the blisks carry a 10 um interference on the D40 h6 drum; the spacer fit is not stated and is modelled 40.0 line-to-line per the intent."
+  - "Edge breaks, surface finish, balance features and any anti-rotation dowel for the spacer are not stated; none are modelled."
+  - "Material 2618-T61 (2760 kg/m3) is from the section 14.1 table; Appendix C marks materials as assumed, vendor confirmation pending."

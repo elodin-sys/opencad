@@ -257,8 +257,22 @@ def dispatch(args: argparse.Namespace) -> int:
         except FileNotFoundError:
             print(f"error: {order_dir} is not a work order (no {orders.ORDER_FILE})", file=sys.stderr)
             return 2
-        out = orders.record_dispatch(order, args.agent_id, model=args.model or "inherit", finished=args.finished)
+        usage = None
+        if getattr(args, "prism_usage", False):
+            from opencad.worker import prism_host
+
+            usage = prism_host.usage_for_agents([args.agent_id, *prism_host.dispatched_agents(order.dir)])
+            if usage is None:
+                print(f"error: no Prism sub-agent record for {args.agent_id} in {prism_host.thread_db()}", file=sys.stderr)
+                return 1
+        out = orders.record_dispatch(order, args.agent_id, model=args.model or "inherit", finished=args.finished, usage=usage)
         print(out)
+        if usage:
+            from opencad import telemetry
+
+            n = telemetry.restamp_turn(order.part, order.id, usage, results_dir=order.dir.parent.parent, thread_id=args.agent_id)
+            print(f"usage {usage['mode']}: input {usage['input']} cached {usage['cached']} output {usage['output']} over {usage['requests']} requests"
+                  f"{'; turn row restamped' if n else '; kept for the turn row'}")
         return 0
     _prepare_worker(args)
     if args.cmd == "validate":

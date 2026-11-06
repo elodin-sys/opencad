@@ -6,7 +6,7 @@ stands alone.
 
 The system turns one immutable source bundle — `designs/<part>/contract.yaml` plus its
 brief and sources — into a worker-authored part on a chosen modelling backend (Zoo/KCL,
-CadQuery, build123d, or FreeCAD PartDesign), independently measured exports, a
+CadQuery, build123d, FreeCAD PartDesign, or Prism's managed build123d + `navier_cad` environment), independently measured exports, a
 12-gate verdict, a self-contained report, and a handoff package. A separate, SHA-pinned
 `truth/` corpus establishes reconstruction accuracy against external references. Select
 the backend with `--backend` / `OPENCAD_BACKEND`. Layout is `parts/<backend>/<part>` and
@@ -48,7 +48,8 @@ the backend with `--backend` / `OPENCAD_BACKEND`. Layout is `parts/<backend>/<pa
   OpenCascade (OCP) is authoritative for envelope, mass properties, sections, probes and
   faces. STL (trimesh) is a third witness for agreement. A **Backend** is a `Language` +
   `Engine` (`src/opencad/backends/`); Zoo is hosted CLI, CadQuery/build123d run in the
-  repo `.venv`, FreeCAD is `freecadcmd` (never imported).
+  repo `.venv`, FreeCAD is `freecadcmd` (never imported), Prism is the Prism app's managed python-env interpreter
+  (build123d 0.11 + `navier_cad`, never imported; its runner is self-contained because that env lacks `opencad`'s dependencies).
 - **`ok: true` is a claim.** Every stage writes `results/<backend>/<part>/<stage>.json` with a
   provenance stamp (zoo version, git head, engine-call ledger, worker agent/thread ids). The 12
   gates re-read those files; the report quotes evidence paths.
@@ -80,7 +81,7 @@ truth/              registry.yaml, cases/<case>/{manifest.yaml,mutants.yaml,inpu
                     change-request cases (<base>-ecr<n>: an arm with `ecr:`, inputs/contract-delta.yaml) and held-out assembly tasks (task.yaml)
 src/opencad/       the control plane (below)
 .cursor/skills/     cad-drive, initialize-cad, create-cad, cad-qa, regress, create-assembly (Cursor skills)
-.agents/skills/     backends/{zoo,cadquery,build123d,freecad}/ (worker packs; Zoo: kcl-docs, kcl-examples, kcl-research, zoo-tooling), codex-worker (opt-in Codex dispatch)
+.agents/skills/     backends/{zoo,cadquery,build123d,freecad,prism}/ (worker packs; Zoo: kcl-docs, kcl-examples, kcl-research, zoo-tooling), codex-worker (opt-in Codex dispatch)
 smoke/              toolchain smoke campaign (CLI, MCP, Codex worker when opted in)
 scripts/            setup_env.sh; derive_*_truth.py case builders (scorer-side OpenCascade, no Zoo); render_reference.py,
                     dimension_sheet.py, pdf_pages.py (agent-facing views and sheets from evaluator CAD); derive_ecr_case.py,
@@ -98,7 +99,7 @@ folders. Build a design's paths with `design_dir`, `part_dir` and `results_dir` 
 `io` (stage JSON, hashes, provenance), `zoo` (CLI wrappers + engine ledger + classify/lock), `worker/`
 (work orders, role profiles, dispatch policy, resumable state, opt-in Codex backend with budget fallback),
 `codex` (brief building blocks, report parsing, Codex event timeline), `telemetry` (per-turn/stage/attempt rows, bench,
-promote), `backends/` (registry, `pyrunner` for CadQuery and build123d, per-backend language and engine; Zoo's `kclsrc`
+promote), `backends/` (registry, `pyrunner` for CadQuery and build123d, `prism/runner.py` for Prism's interpreter, per-backend language and engine; Zoo's `kclsrc`
 tokenizer and parameter rewriter), `initialize` (headless contract draft), `interfaces` (preserved-item
 measurement for edits and change requests), `reference/` (mesh and profile ingest), `stages/` (blockout, plan,
 model, verify, export, inspect_stage, edit, ecr, decompose, pipeline), `geomcheck/` (brep via OCP, mesh via trimesh,
@@ -107,7 +108,7 @@ extra_kinds, mutants, assembly_task, assemble, machine, performance, effort, rep
 `sim/` (runtime, mesh, calculix, openfoam, reduced), `cli`/`orchestrator`.
 
 Modelling rules reach every brief through `language.rules()`: `KCL_RULES` in `backends/zoo/rules.py` for Zoo; for CadQuery,
-build123d and FreeCAD, `SHARED_RULES` in `backends/local.py` (millimetres, contract parameters as literal top-level constants,
+build123d, FreeCAD and Prism, `SHARED_RULES` in `backends/local.py` (millimetres, contract parameters as literal top-level constants,
 asserts but never an equality lock between parameters, no reference geometry) plus `backends/<id>/rules.py`.
 
 ## Configuration
@@ -123,9 +124,18 @@ asserts but never an equality lock between parameters, no reference geometry) pl
   spend cap, no credits) hands the turn to the `cad-worker` and records it in `results/<backend>/_campaign/worker-state.json`,
   unless `OPENCAD_CODEX_NO_FALLBACK=1`, which stops the run. A resume id recorded as a Cursor agent is not passed to `codex exec resume`.
   `/bake-off` and `python -m opencad.bakeoff run` set that variable and `--worker codex --tag bakeoff-astra`. Token USD uses the fast-tier card in `worker/pricing.py` (`usage.json` sums every `turn.completed`). A Zoo cell's monetary cost is the balance delta in `results/<backend>/<part>/cost.json`.
+- Prism-hosted turns (the `prism` cell, or any backend driven from Prism): the worker is a Prism sub-agent and Prism keeps only its tool
+  transcript and the measured usage of its last request, so `python -m opencad dispatch <order> --finished --prism-usage`
+  (`worker/prism_host.py`) rebuilds the per-request bill from that record (one request per tool call, context pinned to the
+  measured final input, prefix cache assumed, hidden reasoning excluded) into `dispatch.json` and the turn row, `usage_mode`
+  `prism-estimate`, priced with the same card. `bakeoff` treats `prism` as an EXTRA cell: in every table (marked ≈), in a
+  `published.yaml` entry when clean (flagged `estimated`), never required for one.
 - Backends: `--backend` / `OPENCAD_BACKEND` (default `build123d`). CadQuery, build123d and gmsh run in the repo `.venv` (`uv add`;
   pins in `uv.lock`). FreeCAD is the installed `freecadcmd` (`OPENCAD_FREECADCMD`, default
-  `/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd`), never imported into the venv. Hosted Zoo calls are billed and
+  `/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd`), never imported into the venv. Prism is the Prism app's
+  managed interpreter (`OPENCAD_PRISM_PYTHON`, default `~/Library/Application Support/prism/python-env/.venv/bin/python`:
+  build123d 0.11, `navier_cad`, `bd_warehouse`), never imported into the venv; the part is still authored in millimetres,
+  and its worker turns are Prism sub-agents when Prism orchestrates (`.cursor/skills/cad-drive`, "Prism host"). Hosted Zoo calls are billed and
   serialised by `OPENCAD_ZOO_LOCK` (default `~/.cache/opencad/zoo.lock`; one path per concurrent part).
 - Solvers: CalculiX `OPENCAD_CCX` (default FreeCAD's bundled `ccx`); OpenFOAM image `opencfd/openfoam-default:2412` in Apple
   `container`, Docker as fallback (`OPENCAD_CONTAINER=container|docker` pins one).

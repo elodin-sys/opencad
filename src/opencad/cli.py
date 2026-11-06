@@ -30,7 +30,7 @@ def _add_backend(p: argparse.ArgumentParser) -> None:
     p.add_argument(
         "--backend",
         default=None,
-        help="modelling backend: zoo, cadquery, build123d, freecad (default OPENCAD_BACKEND or build123d)",
+        help="modelling backend: zoo, cadquery, build123d, freecad, prism (default OPENCAD_BACKEND or build123d)",
     )
 
 
@@ -210,6 +210,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--agent-id", required=True)
     p.add_argument("--model", default=None, help="explicit model override; default inherit")
     p.add_argument("--finished", action="store_true", help="stamp the finish time (after the Task returned)")
+    p.add_argument(
+        "--prism-usage",
+        action="store_true",
+        help="Prism host: read the sub-agent's token record from Prism's thread store, keep it in dispatch.json and on the turn row "
+        "(usage_mode prism-estimate; the pipeline reads it when it consumes the order, an already-recorded turn row is restamped)",
+    )
 
     p = sub.add_parser(
         "engine", help="run the selected backend and append one ledger row: opencad engine [--ledger PATH] -- <cmd>"

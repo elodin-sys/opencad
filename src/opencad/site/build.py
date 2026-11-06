@@ -24,7 +24,7 @@ from opencad.assembly.viz import MODEL_VIEWER_CDN
 from opencad.paths import leaf_name
 from opencad.site import templates as t
 
-BACKENDS = ("build123d", "cadquery", "freecad", "zoo")
+BACKENDS = ("build123d", "cadquery", "freecad", "prism", "zoo")
 SECTIONS = ("machine", "part", "corpus")
 MARKER = ".opencad-site"
 STATIC = Path(__file__).parent / "static"

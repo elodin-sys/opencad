@@ -26,7 +26,7 @@ DEFAULT_CASES = ("bearing-housing", "enclosure-base")
 DEFAULT_BACKENDS = ("cadquery", "build123d", "freecad")
 ASSEMBLY_SUITE = ("gear-train", "compound-train", "planetary-set", "rack-pinion", "four-bar", "crank-slider")
 ASSEMBLY_BACKENDS = ("build123d",)
-LANE_ORDER = ("freecad", "build123d", "cadquery")
+LANE_ORDER = ("freecad", "prism", "build123d", "cadquery")
 EVENT_KINDS = {"NEXT": "next", "STALE": "stale", "EXPIRED": "expired"}
 
 

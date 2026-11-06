@@ -15,7 +15,7 @@ SECTION_TITLES = {
     "corpus": ("Reconstruction corpus", "Parts rebuilt from public references and scored against held-back truth geometry."),
 }
 SECTION_LABEL = {"machine": "Machine", "part": "Part", "corpus": "Reconstruction"}
-BACKEND_LABEL = {"build123d": "build123d", "cadquery": "CadQuery", "freecad": "FreeCAD", "zoo": "Zoo KCL"}
+BACKEND_LABEL = {"build123d": "build123d", "cadquery": "CadQuery", "freecad": "FreeCAD", "prism": "Prism", "zoo": "Zoo KCL"}
 
 CSS = """
 :root { --ink:#14212b; --muted:#5b6b75; --line:#dde3e6; --bg:#f5f6f4; --panel:#ffffff; --accent:#0f6e74; --accent-soft:#e3f0f0;
@@ -215,14 +215,15 @@ def index_page(designs: list[Design], cards: dict[str, str], built: str, bakeoff
     if bakeoffs:
         latest = max(bakeoffs, key=lambda x: x["date"])
         sections.append(f"""<section class="block" id="bakeoff"><div class="wrap"><p class="eyebrow">{len(bakeoffs)} published comparisons</p><h2>Bake-off</h2>
-<p class="sub">The same contract authored by the same agent on all four CAD backends, with every turn's tokens, dollars and time metered.
+<p class="sub">The same contract authored by the same agent on every CAD backend (CadQuery, build123d, FreeCAD, Zoo KCL and Prism), with each
+turn's tokens, dollars and time metered or, for a Prism cell, rebuilt from Prism's record.
 Latest: {e(_part_title(latest, {d.name: d.title for d in designs}))}, {e(latest['date'])}.</p>
 <div class="actions"><a class="btn" href="bakeoff/index.html">Open the bake-off log</a></div></div></section>""")
     body = f"""<section class="hero"><div class="wrap"><div>
 <p class="eyebrow">Agentic CAD pipeline</p>
 <h1>Parts and machines, modelled by agents and checked by OpenCascade.</h1>
 <p class="lede">Each design starts as a contract with a source for every number. A worker writes editable CAD on build123d, CadQuery,
-FreeCAD or Zoo; the exported STEP is measured independently against the contract; and every handoff ships a STEP and an STL you can print.</p>
+FreeCAD, Prism or Zoo; the exported STEP is measured independently against the contract; and every handoff ships a STEP and an STL you can print.</p>
 <div class="stats"><div><b>{len(designs)}</b>designs</div><div><b>{machines}</b>machines</div><div><b>{passing}</b>passing all gates</div>
 <div><b>{printable}</b>printable STLs</div><div><b>{len(backends)}</b>CAD backends</div></div></div>
 <a class="showcase" href="d/{e(feat.name)}/{e(feat.preferred.backend)}/">{feat_img}<span><b>Featured: {e(feat.title)}</b><span>Open the interactive review →</span></span></a>
@@ -364,21 +365,30 @@ def _bakeoff_entry(entry: dict[str, Any], titles: dict[str, str], prefs: dict[st
     title = e(_part_title(entry, titles))
     head = f'<a href="../d/{e(entry["part"])}/{e(prefs[entry["part"]])}/">{title}</a>' if entry["part"] in prefs else title
     rows = []
+    # the cheapest metered cell; an estimated cell (a Prism host's reconstruction, a lower bound) is shown with ≈ and never wins the tag
     usd = {b: c.get("codex_usd") for b, c in entry["backends"].items() if isinstance(c.get("codex_usd"), (int, float))}
-    cheapest = min(usd, key=usd.get) if usd else None
+    metered = {b: v for b, v in usd.items() if not entry["backends"][b].get("estimated")}
+    cheapest = min(metered, key=metered.get) if metered else None
+    estimated = False
     for b, c in entry["backends"].items():
         cls, word = ("pass", "PASS") if c["verdict"] == "PASS" else ("fail", "FAIL")
         gates = f'<span class="pill {cls}">{word} {c["passed"]}/{c["passed"] + c["failed"]}</span>'
         zoo = f"{c['zoo_credits']} credits, ${c['zoo_usd']:.2f}" if c.get("zoo_credits") is not None and c.get("zoo_usd") is not None else "—"
-        dollars = f"${c['codex_usd']:,.2f}" if b in usd else "—"
-        rows.append(f"<tr><td><b>{e(BACKEND_LABEL.get(b, b))}</b>{' <span class=\"tag\">lowest Codex</span>' if b == cheapest else ''}</td><td>{gates}</td>"
-                    f"<td class='num'>{dollars}</td><td class='num'>{e(zoo)}</td><td class='num'>{c['tokens_input'] / 1e6:.1f}M</td>"
+        est = "≈" if c.get("estimated") else ""
+        estimated = estimated or bool(c.get("estimated"))
+        dollars = f"{est}${c['codex_usd']:,.2f}" if b in usd else "—"
+        label = e(BACKEND_LABEL.get(b, b)) + (' <span class="tag">lowest Codex</span>' if b == cheapest else '') + (' <span class="tag">estimated</span>' if c.get("estimated") else '')
+        rows.append(f"<tr><td><b>{label}</b></td><td>{gates}</td>"
+                    f"<td class='num'>{dollars}</td><td class='num'>{e(zoo)}</td><td class='num'>{est}{c['tokens_input'] / 1e6:.1f}M</td>"
                     f"<td class='num'>{c['turns']}</td><td class='num'>{_duration(c.get('wall_s'))}</td></tr>")
     tags = sorted(set((entry.get("tags") or {}).values()))
-    return f"""<article class="panel"><div class="row"><span class="tag">{e(entry['date'])}</span><span class="tag">tag {e(', '.join(tags))}</span></div>
+    foot = ('<p class="ev" style="font-size:12px;margin:8px 0 0">≈ Prism cell: the worker turns ran as Prism sub-agents, so tokens and USD are rebuilt '
+            'from Prism\'s thread record (one request per tool call, context pinned to the measured final request, prefix cache assumed); hidden '
+            'reasoning tokens are not in that record, so these are lower bounds.</p>') if estimated else ""
+    return f"""<article class="panel"><div class="row"><span class="tag">tag {e(', '.join(tags))}</span></div>
 <h2 style="font-size:20px;margin:6px 0 8px">{head}</h2><p class="ev" style="font-size:13px;margin:0 0 12px">{_note_html(entry.get('note') or '')}</p>
 <div class="scroll"><table><tr><th>Backend</th><th>Gates</th><th class="num">Codex USD</th><th class="num">Zoo API</th><th class="num">Input tokens</th><th class="num">Turns</th><th class="num">Wall</th></tr>
-{''.join(rows)}</table></div></article>"""
+{''.join(rows)}</table></div>{foot}</article>"""
 
 
 def bakeoff_page(entries: list[dict[str, Any]], designs: list[Design], built: str) -> str:
@@ -388,13 +398,16 @@ def bakeoff_page(entries: list[dict[str, Any]], designs: list[Design], built: st
     if not body_entries:
         body_entries = '<p class="sub">No comparison has been published yet. <code>python -m opencad.bakeoff report</code> adds one when a part has a clean cell on every backend.</p>'
     body = f"""<div class="wrap"><div class="head" style="padding-top:28px"><p class="eyebrow" style="color:var(--accent)">Bake-off</p>
-<h1>One contract, four CAD backends</h1>
-<p>Each entry is the same design contract authored by Astra (<code>gpt-6-astra</code>, fast tier) on CadQuery, build123d, FreeCAD and Zoo KCL,
+<h1>One contract, every CAD backend</h1>
+<p>Each entry is the same design contract authored by Astra (<code>gpt-6-astra</code>, fast tier) on CadQuery, build123d, FreeCAD and Zoo KCL
+through the Codex CLI, and on Prism (its managed build123d 0.11 + <code>navier_cad</code> environment, the worker turns run as Prism sub-agents),
 then gated by the same OpenCascade evaluator. Codex USD comes from the pinned price card; local kernels cost nothing to run, and the Zoo API
 column is the prepaid balance drop for that cell. Newest first.</p></div>
-<div class="callout" style="margin-bottom:22px"><p><code>python -m opencad.bakeoff report</code> appends an entry once every backend has a gate verdict,
-Astra turns on its tag, no fallback to another worker, and every turn metered from a single exec (<code>sum</code> or <code>rollout</code>).
-Runs with a re-billed resumed thread or a voided Zoo cell stay in <code>docs/bake-off-experiments.md</code> and off this page. A published entry is not rewritten.</p></div>
+<div class="callout" style="margin-bottom:22px"><p><code>python -m opencad.bakeoff report</code> publishes a design once the candidate and reference backends have a gate verdict,
+Astra turns on their tag, no fallback to another worker, and every turn metered from a single exec (<code>sum</code> or <code>rollout</code>); a Prism cell joins
+when it is clean, with its usage rebuilt from Prism's thread record and marked ≈ estimated. One entry per design: a backend added later is appended
+to it, and a published cell is never rewritten.
+Runs with a re-billed resumed thread or a voided Zoo cell stay in <code>docs/bake-off-experiments.md</code> and off this page.</p></div>
 {body_entries}</div>"""
     return _page("Bake-off · opencad", "../", body, built)
 

@@ -362,6 +362,39 @@ def test_freecad_smoke_if_installed(tmp_path):
     assert row["ok"], row.get("stderr") or row.get("stdout")
 
 
+def test_prism_engine_runs_in_prisms_interpreter_if_installed(tmp_path):
+    """The prism runner is self-contained (Prism's python-env cannot import opencad): same payload, exact mass properties,
+    deterministic STEP, a guard refusal classed as program, and the navier_cad vocabulary allowed by hygiene."""
+    from opencad.backends.base import ProgramError
+    from opencad.backends.prism import prism_python
+    from opencad.contract import template_contract
+
+    if not Path(prism_python()).exists():
+        pytest.skip("Prism python-env not installed")
+    eng = get("prism").engine
+    pf = eng.preflight()
+    assert pf["ok"] and "build123d" in pf["version"] and "navier_cad" in pf["version"], pf
+    assert eng.version() == pf["version"]
+    entry = tmp_path / "plate" / "main.py"
+    entry.parent.mkdir()
+    entry.write_text(B3D_BORED_PLATE.replace("from build123d import", "from navier_cad.blends import fuse_all\nfrom build123d import"))
+    data = eng.analyze(entry)
+    assert data["volume_mm3"] == pytest.approx(20.0**2 * 8.0 - math.pi * 3.0**2 * 20.0, rel=1e-9)
+    assert data["bbox_min"] == pytest.approx([-10.0, -10.0, 0.0]) and data["bbox_max"] == pytest.approx([10.0, 10.0, 8.0])
+    a = eng.export(entry, tmp_path / "a", "step")[0]
+    b = eng.export(entry, tmp_path / "b", "step")[0]
+    assert sha256_file(a) == sha256_file(b) and not _noise_tokens(a)
+    assert analyze_step(a)["volume"] == pytest.approx(data["volume_mm3"], rel=1e-9)
+    stl = eng.export(entry, tmp_path / "s", "stl")[0]
+    assert stl.exists() and stl.stat().st_size > 84
+    hyg = get("prism").language.check(entry.parent, template_contract())["hygiene"]
+    assert hyg["dialect_ok"] and hyg["forbidden_imports"] == [] and hyg["feature_ops"] > 0
+    entry.write_text(B3D_BORED_PLATE.replace("holeDiameter = 6.0", "holeDiameter = 9.0"))
+    with pytest.raises(ProgramError) as info:
+        eng.analyze(entry)
+    assert info.value.guard and "infeasible" in str(info.value)
+
+
 def test_stl_to_glb_is_metres_y_up(tmp_path):
     import numpy as np
     import trimesh

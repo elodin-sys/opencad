@@ -1,0 +1,195 @@
+{
+  "named_faces": {
+    "frontFace": {
+      "plane": "z",
+      "at": 18.0,
+      "normal": "-",
+      "found": 1,
+      "area": 13629.603378058482,
+      "ok": true,
+      "position": 18.0,
+      "area_expected": 13629.6,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.0743263373514162e-14,
+      "centroid_uv": [
+        -1.0658141036401503e-14,
+        1.3497175855952885e-15
+      ]
+    },
+    "frontFlangeBack": {
+      "plane": "z",
+      "at": 24.0,
+      "normal": "+",
+      "found": 1,
+      "area": 7802.145355190259,
+      "ok": true,
+      "position": 24.0,
+      "area_expected": 7802.15,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 5.370192661296869e-14,
+      "centroid_uv": [
+        3.552713678800501e-14,
+        4.0270578262436907e-14
+      ]
+    },
+    "rearFlangeFront": {
+      "plane": "z",
+      "at": 52.0,
+      "normal": "-",
+      "found": 1,
+      "area": 7802.145355190273,
+      "ok": true,
+      "position": 52.0,
+      "area_expected": 7802.15,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 0.00505093617880803,
+      "centroid_uv": [
+        0.00505093617880803,
+        -4.473242096100767e-16
+      ]
+    },
+    "rearFace": {
+      "plane": "z",
+      "at": 58.0,
+      "normal": "+",
+      "found": 1,
+      "area": 13629.60337805849,
+      "ok": true,
+      "position": 58.0,
+      "area_expected": 13629.6,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 0.0010139451127031407,
+      "centroid_uv": [
+        0.0010139451127031407,
+        2.1629499764808372e-14
+      ]
+    },
+    "bandFrontFaces": {
+      "plane": "z",
+      "at": 20.0,
+      "normal": "-",
+      "found": 2,
+      "area": 895.5502558139415,
+      "mode": "sum",
+      "ok": true,
+      "position": 20.0,
+      "area_expected": 895.55,
+      "area_ok": true
+    },
+    "bandRearFaces": {
+      "plane": "z",
+      "at": 38.0,
+      "normal": "+",
+      "found": 2,
+      "area": 2275.4948289032545,
+      "mode": "sum",
+      "ok": true,
+      "position": 38.00000000000001,
+      "area_expected": 2275.49,
+      "area_ok": true
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "frontFace",
+      "plane": "z",
+      "at": 18.0,
+      "normal": "-",
+      "area": 13629.6,
+      "area_tolerance_rel": 0.003,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "frontFlangeBack",
+      "plane": "z",
+      "at": 24.0,
+      "normal": "+",
+      "area": 7802.15,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "rearFlangeFront",
+      "plane": "z",
+      "at": 52.0,
+      "normal": "-",
+      "area": 7802.15,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "rearFace",
+      "plane": "z",
+      "at": 58.0,
+      "normal": "+",
+      "area": 13629.6,
+      "area_tolerance_rel": 0.003,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "bandFrontFaces",
+      "plane": "z",
+      "at": 20.0,
+      "normal": "-",
+      "area": 895.55,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "sum"
+    },
+    {
+      "name": "bandRearFaces",
+      "plane": "z",
+      "at": 38.0,
+      "normal": "+",
+      "area": 2275.49,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "sum"
+    }
+  ],
+  "planar_faces_total": 12
+}

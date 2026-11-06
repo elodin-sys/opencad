@@ -1,0 +1,667 @@
+schema_version: 1
+name: axjet-c2-rotor_1
+intent: >-
+  Rotor-1 blisk of the AXJET-220/2 compressor module (assembly axjet-c2, body rotor_1), in its own
+  frame: axis +z through the origin (the spool turns positively about +z), origin on the axis at the
+  blade leading-edge plane (assembly z 0), x parallel to the assembly x. 29 blades, radially stacked
+  on the section centroids, no lean or sweep; hub flow surface r 57.6 from z -8 to 0 (front hub
+  extension), then straight to r 61.0 at z 16; hub blade extent z 0 ... 16; flat tip at r 90.0,
+  minimum tip thickness 0.8; root fillet r 1.5 on the hub. Sections at hub / mean / tip
+  (r 57.6 / 73.8 / 90.0) from guide section 4.3: inlet metal 62.0 / 67.3 / 71.4 deg, camber
+  32.7 / 14.0 / 7.6 deg, exit metal 29.3 / 53.3 / 63.8 deg, stagger 45.65 / 60.3 / 67.6 deg,
+  maximum thickness 8 / 5 / 3.5 % of chord, chord 24 / 22 / 20; circular-arc camber with NACA-65
+  thickness, LE radius 0.3, TE thickness 0.5. Disc: rim r 50 ... 57.6 from z -8 to 16; bore D40
+  (modelled 40.0, line-to-line on the drum) through z -8 ... 24; front face z -8 bears on the stack
+  nut (revision 1: the nut clamps the stack against the drum shoulder at z 62); seal arm r 44 ... 48.1 from z -18 to -8 with three teeth whose tips are at D96.2;
+  rear face z 24 is a D100 spigot boss (r 20 ... 50) that carries the seal spacer; behind z 16
+  nothing lies outside r 50. Mass about 0.9 kg. Authoritative source: the AXJET-220 design and
+  implementation guide, sections 3, 4.3, 4.4, 8.1 and 14.1.
+units:
+  length: mm
+  angle: deg
+material: "aluminium 2618-T61 forged bar (Ti-6Al-4V option)"
+density_kg_m3: 2760
+process: "5-axis milling from forged bar, flank-milled blades"
+release_status: reconstruction
+
+frame:
+  origin: "on the rotor axis at the blade leading-edge plane: the hub section's leading edge lies at z = 0 (assembly z 0)"
+  axes:
+    x: "parallel to the assembly x (engine up, toward the dorsal intake); the stacking line of blade 0 lies on +x"
+    y: "completes the right-handed frame (parallel to the assembly y)"
+    z: "the rotor axis, pointing downstream with the flow; the spool turns positively about +z (from +x toward +y)"
+  datums:
+    - name: A
+      description: "rotation axis = axis of the D40 bore (x = y = 0)"
+    - name: B
+      description: "disc front face, plane z = -8, clamped by the stack nut's rear face (revision 1)"
+    - name: C
+      description: "blade leading-edge plane z = 0 (the hub section's leading edge; joint rotor1OnDrum at [0, 0, 0], axis +z)"
+
+envelope:
+  min: [-90, -90, -18]
+  max: [90, 90, 24]
+  tolerance: 0.05
+
+parameters:
+  - name: bladeCount
+    value: 29
+    unit: ""
+    provenance: stated
+    source: "axjet guide section 4.1 (rotor blade count) and 4.4 (29 blades)"
+    tolerance: 0.01
+    description: "blade count, equally spaced about +z; feasible interval 17 ... 47 (guide 2.3)"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 1118
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.4
+      sweep:
+        values: [27, 29, 31]
+      infeasible_deltas: [-13, 19]
+  - name: bladePitch
+    value: 12.4138
+    unit: deg
+    provenance: derived
+    formula: "360 / bladeCount"
+    tolerance: 0.001
+    description: "angular spacing of the blade stacking lines"
+  - name: bladeClockingAngle
+    value: 0
+    unit: deg
+    provenance: defaulted
+    rationale: "the sources do not clock the blades; blade 0's stacking line is placed on +x"
+    tolerance: 0.01
+    description: "angle of blade 0's stacking line from +x about +z"
+  - name: hubRadius
+    value: 57.6
+    unit: mm
+    provenance: stated
+    source: "axjet guide 3.2 and 4.4 (hub r 57.6 from z -8 to 0; hub section radius)"
+    tolerance: 0.01
+    description: "front hub extension radius (z -8 ... 0) and hub section radius"
+  - name: hubRadiusTe
+    value: 61.0
+    unit: mm
+    provenance: stated
+    source: "axjet guide 3.2 and 4.4 (hub r 61.0 at z 16, straight from r 57.6 at z 0)"
+    tolerance: 0.01
+    description: "hub flow surface radius at the hub trailing edge z 16"
+  - name: frontFaceZ
+    value: -8
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.4 and 8.1 (front face z -8; hub extension from z -8); revision 1 reviewer notes: the face bears on the stack nut instead of a drum shoulder"
+    tolerance: 0.01
+    description: "disc front face and start of the front hub extension"
+  - name: hubLeZ
+    value: 0
+    unit: mm
+    provenance: stated
+    source: "axjet guide 3.2 and 4.4 (R1 leading edge z 0; blade axial extent z 0 ... 16)"
+    tolerance: 0.01
+    description: "hub leading-edge plane"
+  - name: hubTeZ
+    value: 16
+    unit: mm
+    provenance: stated
+    source: "axjet guide 3.2 and 4.4 (R1 trailing edge z 16); rim rear face; blades clipped at this plane"
+    tolerance: 0.01
+    description: "hub trailing-edge plane and rim rear face"
+  - name: tipRadius
+    value: 90.0
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4 and 4.4 (constant tip radius 90.0, flat tip)"
+    tolerance: 0.01
+    description: "flat blade tip radius (cylindrical tip face)"
+  - name: meanRadius
+    value: 73.8
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.2 (rotor 1 mean radius 73.8)"
+    tolerance: 0.01
+    description: "mean section radius"
+  - name: rootFilletRadius
+    value: 1.5
+    unit: mm
+    provenance: stated
+    source: "axjet guide 2.3 and 4.4 (root fillet r 1.5)"
+    tolerance: 0.01
+    description: "fillet at every blade-hub junction"
+  - name: minTipThickness
+    value: 0.8
+    unit: mm
+    provenance: stated
+    source: "axjet guide 2.3 and 4.4 (minimum blade thickness 0.8 at the tip)"
+    tolerance: 0.01
+    description: "lower bound on the tip section's maximum thickness"
+  - name: hubInletMetalAngle
+    value: 62.0
+    unit: deg
+    provenance: stated
+    source: "axjet guide 4.3, R1 hub"
+    tolerance: 0.1
+    description: "camber-line angle from +z at the LE, hub"
+  - name: meanInletMetalAngle
+    value: 67.3
+    unit: deg
+    provenance: stated
+    source: "axjet guide 4.3, R1 mean"
+    tolerance: 0.1
+  - name: tipInletMetalAngle
+    value: 71.4
+    unit: deg
+    provenance: stated
+    source: "axjet guide 4.3, R1 tip"
+    tolerance: 0.1
+  - name: hubCamber
+    value: 32.7
+    unit: deg
+    provenance: stated
+    source: "axjet guide 4.3, R1 hub"
+    tolerance: 0.1
+  - name: meanCamber
+    value: 14.0
+    unit: deg
+    provenance: stated
+    source: "axjet guide 4.3, R1 mean"
+    tolerance: 0.1
+  - name: tipCamber
+    value: 7.6
+    unit: deg
+    provenance: stated
+    source: "axjet guide 4.3, R1 tip"
+    tolerance: 0.1
+  - name: hubExitMetalAngle
+    value: 29.3
+    unit: deg
+    provenance: derived
+    formula: "hubInletMetalAngle - hubCamber (tabulated as 29.3 in guide 4.3)"
+    tolerance: 0.1
+  - name: meanExitMetalAngle
+    value: 53.3
+    unit: deg
+    provenance: derived
+    formula: "meanInletMetalAngle - meanCamber (tabulated as 53.3 in guide 4.3)"
+    tolerance: 0.1
+  - name: tipExitMetalAngle
+    value: 63.8
+    unit: deg
+    provenance: derived
+    formula: "tipInletMetalAngle - tipCamber (tabulated as 63.8 in guide 4.3)"
+    tolerance: 0.1
+  - name: hubStagger
+    value: 45.65
+    unit: deg
+    provenance: derived
+    formula: "(hubInletMetalAngle + hubExitMetalAngle) / 2 (circular arc; guide 4.3 gives about 45.6)"
+    tolerance: 0.1
+  - name: meanStagger
+    value: 60.3
+    unit: deg
+    provenance: derived
+    formula: "(meanInletMetalAngle + meanExitMetalAngle) / 2 (guide 4.3: 60.3)"
+    tolerance: 0.1
+  - name: tipStagger
+    value: 67.6
+    unit: deg
+    provenance: derived
+    formula: "(tipInletMetalAngle + tipExitMetalAngle) / 2 (guide 4.3: 67.6)"
+    tolerance: 0.1
+  - name: hubChord
+    value: 24
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.2 item 4 (chord 24 at the hub tapering to 20 at the tip for R1)"
+    tolerance: 0.01
+  - name: meanChord
+    value: 22
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.1 (rotor 1 mean chord 22)"
+    tolerance: 0.01
+  - name: tipChord
+    value: 20
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.2 item 4"
+    tolerance: 0.01
+  - name: hubThicknessRatio
+    value: 0.08
+    unit: ""
+    provenance: stated
+    source: "axjet guide 4.3, R1 hub max thickness / chord 8 %"
+    tolerance: 0.001
+    description: "hub section maximum thickness / chord (1.92 mm); feasible interval 0 < value <= 0.12"
+    edit_test:
+      delta: 0.02
+      expect:
+        volume_delta: 870
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.4
+      infeasible_deltas: [-0.08]
+  - name: meanThicknessRatio
+    value: 0.05
+    unit: ""
+    provenance: stated
+    source: "axjet guide 4.3, R1 mean 5 %"
+    tolerance: 0.001
+  - name: tipThicknessRatio
+    value: 0.035
+    unit: ""
+    provenance: stated
+    source: "axjet guide 4.3, R1 tip 3.5 %"
+    tolerance: 0.001
+  - name: tipMaxThickness
+    value: 0.8
+    unit: mm
+    provenance: derived
+    formula: "max(tipThicknessRatio * tipChord, minTipThickness) = max(0.70, 0.8)"
+    tolerance: 0.01
+    description: "tip section maximum thickness actually built (4.0 % of the tip chord)"
+  - name: leRadius
+    value: 0.3
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.3 (leading-edge radius 0.3 mm, rotors)"
+    tolerance: 0.01
+  - name: teThickness
+    value: 0.5
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.3 (trailing-edge thickness 0.5 mm)"
+    tolerance: 0.01
+  - name: boreRadius
+    value: 20.0
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.4 and 8.1 (bore D40 H6 on the D40 h6 drum; modelled 40.0 line-to-line)"
+    tolerance: 0.01
+  - name: rearFaceZ
+    value: 24
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.4 and 8.1 (disc axial extent z -8 ... 24; seal spacer from z 24)"
+    tolerance: 0.01
+    description: "rear face of the D100 spigot boss"
+  - name: spigotRadius
+    value: 50.0
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.4 (rear spigot D100; rim inner radius r 50)"
+    tolerance: 0.01
+    description: "D100 rear spigot radius; also the rim inner radius and the r 50 limit behind z 16"
+  - name: sealArmInnerRadius
+    value: 44.0
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.4 (seal arm r 44 ... 48.1)"
+    tolerance: 0.01
+  - name: sealToothTipRadius
+    value: 48.1
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.4 (three teeth to D96.2; 0.4 mm radial gap to the D97 sleeve)"
+    tolerance: 0.01
+  - name: sealArmFrontZ
+    value: -18
+    unit: mm
+    provenance: stated
+    source: "axjet guide 4.4 and 8.1 (seal arm to z -18)"
+    tolerance: 0.01
+  - name: sealToothCount
+    value: 3
+    unit: ""
+    provenance: stated
+    source: "axjet guide 4.4 and 8.1 (three teeth, 0.4 mm)"
+    tolerance: 0.01
+  - name: sealArmLandRadius
+    value: 46.1
+    unit: mm
+    provenance: inferred
+    rationale: "not stated; 2.0 mm tooth height below the D96.2 tips leaves a 2.1 mm arm wall on r 44"
+    tolerance: 0.2
+    description: "outer radius of the seal arm wall between the teeth"
+  - name: sealToothWidth
+    value: 0.8
+    unit: mm
+    provenance: inferred
+    rationale: "not stated; rectangular teeth 0.8 mm wide axially (machinable land for a 0.4 mm labyrinth)"
+    tolerance: 0.2
+  - name: sealToothPitch
+    value: 3.0
+    unit: mm
+    provenance: inferred
+    rationale: "not stated; three teeth spread over the 10 mm arm"
+    tolerance: 0.2
+  - name: firstToothZ
+    value: -16.0
+    unit: mm
+    provenance: inferred
+    rationale: "not stated; front tooth centre 2 mm behind the arm's front end, teeth at z -16, -13, -10"
+    tolerance: 0.2
+
+features:
+  - id: disc
+    kind: revolve
+    description: >-
+      Solid revolved disc: bore r 20 from z -8 to 24; front face z -8 from the bore out to the hub
+      extension (interrupted by the seal-arm root r 44 ... 46.1); front hub extension r 57.6 over
+      z -8 ... 0; straight (conical) hub flow surface r 57.6 -> 61.0 over z 0 ... 16; rim rear face
+      z 16 from r 61.0 down to r 50; D100 spigot r 50 over z 16 ... 24; rear face z 24 from r 20 to
+      50. The stated web thickness (10 at the bore, 6 at r 50) is not modelled (open question).
+    parameters: [boreRadius, frontFaceZ, rearFaceZ, hubRadius, hubRadiusTe, hubLeZ, hubTeZ, spigotRadius]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: cylinder
+        cylinder: frontHubExtension
+      - method: cylinder
+        cylinder: spigot
+      - method: face
+        face: frontFace
+      - method: face
+        face: rearFace
+      - method: face
+        face: rimRearFace
+      - method: section
+        section: discFront
+      - method: section
+        section: discRear
+      - method: dimension
+        dimension: hubAxialLength
+      - method: solid
+        points: [[35, 0, 8], [0, -25, 0], [-45, 0, 20], [54, 0, 4], [-59.0, 0, 12]]
+      - method: void
+        points: [[0, 0, 8], [0, 55, 18], [70, 0, 20], [0, -85, 18], [-62, 0, 22], [62, 0, -4]]
+  - id: sealArm
+    kind: revolve
+    description: "front seal arm: wall r 44 ... 46.1 projecting forward from the front face z -8 to z -18"
+    parameters: [sealArmInnerRadius, sealArmLandRadius, sealArmFrontZ, frontFaceZ]
+    verify:
+      - method: cylinder
+        cylinder: sealArmBore
+      - method: face
+        face: sealArmFront
+      - method: section
+        section: sealArm
+      - method: solid
+        points: [[0, 45.05, -15]]
+      - method: void
+        points: [[0, 0, -13], [-30, 0, -13], [0, 52, -12]]
+  - id: sealTeeth
+    kind: pattern
+    count: 3
+    description: "three rectangular labyrinth teeth on the seal arm, tips at r 48.1 (D96.2), centres z -16, -13, -10, 0.8 wide"
+    parameters: [sealToothTipRadius, sealToothCount, sealToothWidth, sealToothPitch, firstToothZ, sealArmLandRadius]
+    verify:
+      - method: cylinder
+        cylinder: sealToothTip
+      - method: solid
+        points: [[47.1, 0, -16.0], [0, 47.1, -13.0], [-47.1, 0, -10.0]]
+      - method: void
+        points: [[47.1, 0, -14.5], [0, -47.1, -11.5]]
+  - id: blades
+    kind: loft
+    count: 29
+    description: >-
+      29 blades lofted through hub / mean / tip sections at r 57.6 / 73.8 / 90.0: circular-arc
+      camber lines from the section metal angles, NACA-65 thickness (max 8 / 5 / 4.0 % of chord;
+      the tip uses tipMaxThickness 0.8), LE radius 0.3, TE thickness 0.5; stacked radially on the
+      section centroids, the hub section's LE at z 0; the LE leads in the direction of rotation
+      (+theta) and the concave pressure surface faces +theta. Extended past both ends and trimmed
+      to the flow annulus (hub surface ... r 90.0, z <= 16), fused into the rim, patterned 29 times
+      about +z with blade 0 on +x.
+    parameters: [bladeCount, bladePitch, bladeClockingAngle, hubRadius, meanRadius, tipRadius, hubInletMetalAngle, meanInletMetalAngle, tipInletMetalAngle, hubCamber, meanCamber, tipCamber, hubExitMetalAngle, meanExitMetalAngle, tipExitMetalAngle, hubStagger, meanStagger, tipStagger, hubChord, meanChord, tipChord, hubThicknessRatio, meanThicknessRatio, tipThicknessRatio, tipMaxThickness, minTipThickness, leRadius, teThickness, hubLeZ, hubTeZ]
+    verify:
+      - method: cylinder
+        cylinder: bladeTip
+      - method: dimension
+        dimension: tipDiameterX
+      - method: dimension
+        dimension: tipDiameterY
+      - method: section
+        section: bladeRow
+      - method: void
+        points: [[74.560, 8.109, 8.0], [84.502, 9.190, 8.0]]
+  - id: rootFillet
+    kind: fillet
+    description: "r 1.5 fillet along every blade-hub junction (kept on the hub, guide 2.3 minimum)"
+    parameters: [rootFilletRadius]
+
+interfaces:
+  - name: drumSeat
+    description: "D40 bore on the drum, front face z -8 clamped by the stack nut (OD 56, inside the seal arm), rear face z 24 and the D100 spigot carrying the seal spacer; no edit test moves them"
+    must_not_change: true
+    checks: [bore, frontFace, rearFace, spigot, hubAxialLength]
+  - name: frontLabyrinth
+    description: "seal arm and its three teeth (tips D96.2) running 0.4 mm inside the inlet-frame seal sleeve (D97)"
+    must_not_change: true
+    checks: [sealToothTip, sealArmBore, sealArmFront]
+  - name: flowPath
+    description: "front hub extension r 57.6, flat blade tips r 90.0 (0.25 mm cold clearance to the D180.5 bore), rim rear face z 16 and nothing outside r 50 behind it (4 mm to the stator_1 inner band)"
+    must_not_change: true
+    checks: [frontHubExtension, bladeTip, rimRearFace, discRear]
+
+acceptance:
+  bbox_tolerance: 0.05
+  volume:
+    expected: 306386
+    tolerance_rel: 0.07
+    provenance: derived
+    note: "revolved solid disc profile 290175 (Pappus, incl. seal arm 5944 and teeth 1421) + 29 blades x (535 exposed loft + 24 root fillet) = 16211; stated 0.9 kg / 2760 kg/m3 = 326087 (+6.4 %) lies inside the band"
+  surface_area:
+    expected: 83170
+    tolerance_rel: 0.08
+    provenance: derived
+    note: "revolved profile surfaces 44367 - 29 blade root footprints 905 + 29 blades x 1369 (2.02 x chord x span + tip face)"
+  center_of_mass:
+    expected: [0, 0, 6.75]
+    tolerance: 0.3
+    provenance: derived
+    note: "x = y = 0 by the 29-fold pattern; z = (290175 x 6.710 + 16211 x 7.5) / 306386"
+  solid_count: 1
+  sections:
+    - id: discFront
+      plane: z
+      at: -4
+      expect:
+        area: 9166.4
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "solid annulus r 20 ... 57.6 through the front hub extension, ahead of the blades"
+    - id: bladeRow
+      plane: z
+      at: 8
+      expect:
+        loops: 1
+        holes: 1
+      description: "disc plus the 29 blade cuts, all attached to the rim; one hole (the bore)"
+    - id: discRear
+      plane: z
+      at: 20
+      expect:
+        area: 6597.3
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "spigot boss annulus r 20 ... 50: nothing outside r 50 behind z 16"
+    - id: sealArm
+      plane: z
+      at: -17
+      expect:
+        area: 594.4
+        area_tolerance_rel: 0.05
+        loops: 1
+        holes: 1
+      description: "seal arm wall r 44 ... 46.1 ahead of the first tooth"
+  faces:
+    - name: frontFace
+      plane: z
+      at: -8
+      normal: "-"
+      area: 8572.0
+      area_tolerance_rel: 0.02
+      center: [0, 0]
+      mode: sum
+    - name: rearFace
+      plane: z
+      at: 24
+      normal: "+"
+      area: 6597.3
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: rimRearFace
+      plane: z
+      at: 16
+      normal: "+"
+      area: 3835.9
+      area_tolerance_rel: 0.03
+      center: [0, 0]
+      mode: one
+    - name: sealArmFront
+      plane: z
+      at: -18
+      normal: "-"
+      area: 594.4
+      area_tolerance_rel: 0.05
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, -8]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 20.0
+      radius_tolerance: 0.01
+      length: 32
+      length_tolerance: 0.05
+      t_range: [0, 32]
+      description: "D40 bore on the drum, z -8 ... 24"
+    - name: frontHubExtension
+      point: [0, 0, -8]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 57.6
+      radius_tolerance: 0.01
+      length: 8
+      length_tolerance: 0.1
+      t_range: [0, 8]
+      description: "front hub extension r 57.6, z -8 ... 0"
+    - name: spigot
+      point: [0, 0, 16]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 50.0
+      radius_tolerance: 0.01
+      length: 8
+      length_tolerance: 0.05
+      t_range: [0, 8]
+      description: "D100 rear spigot, z 16 ... 24"
+    - name: sealArmBore
+      point: [0, 0, -18]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 44.0
+      radius_tolerance: 0.01
+      length: 10
+      length_tolerance: 0.05
+      t_range: [0, 10]
+      description: "seal arm inner surface r 44, z -18 ... -8"
+    - name: sealToothTip
+      point: [0, 0, -18]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 48.1
+      radius_tolerance: 0.02
+      description: "labyrinth tooth tips D96.2 (any of the three)"
+    - name: bladeTip
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 90.0
+      radius_tolerance: 0.02
+      description: "flat blade tip r 90.0 (any of the 29 tip faces)"
+  dimensions:
+    - name: spanZ
+      axis: z
+      expected: 42
+      tolerance: 0.05
+      description: "bbox z extent: seal arm front z -18 to rear face z 24"
+    - name: hubAxialLength
+      axis: z
+      expected: 32
+      tolerance: 0.05
+      between: [frontFace, rearFace]
+      description: "disc front face z -8 to rear face z 24 (bore length)"
+    - name: tipDiameterX
+      axis: x
+      expected: 180
+      tolerance: 0.05
+      description: "bbox x extent over the blade tips (blade 0 on +x; the nearest tips come within 0.01 of -x)"
+    - name: tipDiameterY
+      axis: y
+      expected: 180
+      tolerance: 0.05
+      description: "bbox y extent over the blade tips"
+  solids:
+    - name: body
+      contains_point: [35, 0, 8]
+      description: "the single blisk solid"
+  thickness:
+    - name: tipThickness
+      min: 0.35
+      stat: p05
+      region: [[84, -9, -1], [91, 9, 17]]
+      description: "proxy: 5th-percentile local thickness of blade 0's outer 6 mm; the 0.8 mm minimum applies to the tip section's maximum thickness (tipMaxThickness), the LE (r 0.3) and TE (0.5) are thinner by definition"
+  probes:
+    - name: inDisc
+      state: solid
+      points: [[35, 0, 8], [0, -25, 0], [-45, 0, 20], [54, 0, 4], [-59.0, 0, 12], [0, 45.05, -15]]
+    - name: inTeeth
+      state: solid
+      points: [[47.1, 0, -16.0], [0, 47.1, -13.0], [-47.1, 0, -10.0]]
+    - name: inBore
+      state: void
+      points: [[0, 0, 8], [0, 0, -13], [-30, 0, -13]]
+    - name: behindRim
+      state: void
+      points: [[0, 55, 18], [70, 0, 20], [0, -85, 18], [-62, 0, 22]]
+    - name: aheadOfFrontFace
+      state: void
+      points: [[62, 0, -4], [0, 52, -12]]
+    - name: sealGrooves
+      state: void
+      points: [[47.1, 0, -14.5], [0, -47.1, -11.5]]
+    - name: bladePassage
+      state: void
+      points: [[74.560, 8.109, 8.0], [84.502, 9.190, 8.0]]
+  blockout:
+    volume_min: 295000
+    volume_max: 335000
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    revision: "AXJET-220/2 design and implementation guide (undated)"
+    note: "sections 3.2 (flow path), 4.1-4.4 (stage data, metal angles, blisk geometry), 8.1 (rotor stack), 14.1 (rotor-1 body)"
+
+open_questions:
+  - "Changed (revision 1, reviewer notes): the disc front face z -8 bears on the stack nut (assembly z -18 ... -8, OD 56, inside the seal arm r 44) instead of an integral drum shoulder, which moved to assembly z 62 ... 68 behind rotor_2. Reason: with the shoulder at z -14 and the integral D60 drum flange, the D40-bore blisks could not be fitted from either end; the stack now loads from the front and the nut tool enters axially through the seal arm. Geometry and acceptance values are unchanged."
+  - "Web conflict: the stated web (10 mm thick at the bore, 6 mm at r 50) cannot coexist with the stated rear face z 24 spanning r 20 ... 50, the rim z -8 ... 16 and the front face z -8; the contract models a solid disc (0.85 kg, matching the stated 0.9 kg), a webbed disc with cavities would weigh about 0.55-0.65 kg. Decide the web cavities before the stress and modal cases."
+  - "Tip thickness: 3.5 % of the 20 mm tip chord is 0.70 mm, below the 0.8 mm minimum; the contract builds the tip at 0.8 mm (4.0 %)."
+  - "Hub axial chord: chord 24 at stagger 45.65 deg gives 16.78 mm, 0.78 mm more than the hub blade extent z 0 ... 16; the blade is clipped at z 16 (the exposed root overhangs by about 0.1-0.2 mm, the rest is inside the rim). Confirm, or shorten the hub chord to 22.9."
+  - "Hub solidity: chord 24 with 29 blades gives 1.92 at r 57.6 (1.87 at the mid-chord hub radius 59.3), above the 1.7-1.8 the guide asks for in 4.2 item 4."
+  - "Seal teeth shape (rectangular, 2.0 mm high, 0.8 mm wide, pitch 3.0, centres z -16 / -13 / -10) is inferred; the guide gives only the tip diameter D96.2 and the count."
+  - "Blade clocking (blade 0 on +x) is defaulted; the sources do not clock the blades."
+  - "Transonic tip sections: the guide prefers multiple-circular-arc profiles above M_rel 1.1 (tip 1.30); the intent fixes circular-arc camber with NACA-65 thickness for all three sections."
+  - "Edge breaks and chamfers on the bore, faces and spigot are not stated; the contract keeps them sharp."

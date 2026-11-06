@@ -1,0 +1,237 @@
+{
+  "named_faces": {
+    "bellmouthFace": {
+      "plane": "z",
+      "at": -72.0,
+      "normal": "-",
+      "found": 1,
+      "area": 10414.466215887289,
+      "ok": true,
+      "position": -72.0,
+      "area_expected": 10414.5,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 4.2927602711964753e-14,
+      "centroid_uv": [
+        1.7763568394002505e-14,
+        3.907985046680551e-14
+      ]
+    },
+    "frontFlangeBack": {
+      "plane": "z",
+      "at": -67.0,
+      "normal": "+",
+      "found": 1,
+      "area": 7802.145355190259,
+      "ok": true,
+      "position": -67.0,
+      "area_expected": 7802.1,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.0641845307724054e-13,
+      "centroid_uv": [
+        -1.0302869668521453e-13,
+        2.6645352591003757e-14
+      ]
+    },
+    "caseFace": {
+      "plane": "z",
+      "at": -18.0,
+      "normal": "+",
+      "found": 1,
+      "area": 13629.603378058484,
+      "ok": true,
+      "position": -18.0,
+      "area_expected": 13629.6,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.07157025572446e-14,
+      "centroid_uv": [
+        -1.0658141036401503e-14,
+        1.7763568394002505e-14
+      ]
+    },
+    "noseFace": {
+      "plane": "z",
+      "at": -80.0,
+      "normal": "-",
+      "found": 1,
+      "area": 1940.7188617550933,
+      "ok": true,
+      "position": -80.0,
+      "area_expected": 1940.7,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 3.1580332478073507e-14,
+      "centroid_uv": [
+        -2.842170943040401e-14,
+        -1.3766765505351941e-14
+      ]
+    },
+    "bearingShoulder": {
+      "plane": "z",
+      "at": -75.0,
+      "normal": "+",
+      "found": 1,
+      "area": 867.0795723907836,
+      "ok": true,
+      "position": -75.0,
+      "area_expected": 867.08,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.3092638912203256e-14,
+      "centroid_uv": [
+        2.1316282072803006e-14,
+        8.88178419700125e-15
+      ]
+    },
+    "hubRearFace": {
+      "plane": "z",
+      "at": -35.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1261.5248997218582,
+      "ok": true,
+      "position": -35.0,
+      "area_expected": 1261.5,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 2.6407442894293542e-14,
+      "centroid_uv": [
+        -1.7763568394002505e-14,
+        1.9539925233402755e-14
+      ]
+    },
+    "rearFaces": {
+      "plane": "z",
+      "at": -11.0,
+      "normal": "+",
+      "found": 2,
+      "area": 1999.9378832752654,
+      "mode": "sum",
+      "ok": true,
+      "position": -11.0,
+      "area_expected": 1999.9,
+      "area_ok": true
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "bellmouthFace",
+      "plane": "z",
+      "at": -72.0,
+      "normal": "-",
+      "area": 10414.5,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "frontFlangeBack",
+      "plane": "z",
+      "at": -67.0,
+      "normal": "+",
+      "area": 7802.1,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "caseFace",
+      "plane": "z",
+      "at": -18.0,
+      "normal": "+",
+      "area": 13629.6,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "noseFace",
+      "plane": "z",
+      "at": -80.0,
+      "normal": "-",
+      "area": 1940.7,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "bearingShoulder",
+      "plane": "z",
+      "at": -75.0,
+      "normal": "+",
+      "area": 867.08,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "hubRearFace",
+      "plane": "z",
+      "at": -35.0,
+      "normal": "+",
+      "area": 1261.5,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "rearFaces",
+      "plane": "z",
+      "at": -11.0,
+      "normal": "+",
+      "area": 1999.9,
+      "area_tolerance_rel": 0.005,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "sum"
+    }
+  ],
+  "planar_faces_total": 264
+}

@@ -178,7 +178,7 @@ def _machine_section(reg: dict[str, Any]) -> list[str]:
 
 def _assembly_section() -> list[str]:
     """Held-out assembly tasks (task.yaml cases): latest scorecard per backend, reported as-is (pipeline frozen, no tuning)."""
-    backends = ("cadquery", "build123d", "freecad", "zoo")
+    backends = ("cadquery", "build123d", "freecad", "prism", "zoo")
     cases = [tp.parent.name for tp in sorted((TRUTH / "cases").glob("*/task.yaml"))]
     if not cases:
         return []

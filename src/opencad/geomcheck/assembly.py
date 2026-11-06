@@ -85,16 +85,22 @@ def _mesh(shape: TopoDS_Shape, deflection: float) -> trimesh.Trimesh:
         return trimesh.load(path, force="mesh")
 
 
+DISTANCE_SAMPLES = 2e4  # target KD-tree points per mesh; sets the subdivision edge h
+
+
 def mesh_distance(a: TopoDS_Shape, b: TopoDS_Shape, deflection: float) -> float:
-    """Closest approach of two tessellations: vertex KD-tree candidates, then exact point-to-mesh distances (error ~ deflection)."""
+    """Closest approach of two tessellations: KD-tree candidates, then exact point-to-mesh distances (error ~ deflection).
+    The tree holds `dst` subdivided to edges <= h, so a big face whose vertices sit only on its rim cannot hide its interior."""
     from scipy.spatial import cKDTree
 
     ma, mb = _mesh(a, deflection), _mesh(b, deflection)
     best = float("inf")
     for src, dst in ((ma, mb), (mb, ma)):
-        d0, _ = cKDTree(dst.vertices).query(src.vertices)
-        near = src.vertices[np.argsort(d0)[:2000]]
-        _, d, _ = trimesh.proximity.closest_point(dst, near)
+        h = max(float(np.sqrt(dst.area / DISTANCE_SAMPLES)), deflection)
+        pts, _ = trimesh.remesh.subdivide_to_size(dst.vertices, dst.faces, max_edge=h, max_iter=30)
+        d0, _ = cKDTree(pts).query(src.vertices)
+        n = int(np.clip(np.count_nonzero(d0 <= d0.min() + h), 2000, 5000))
+        _, d, _ = trimesh.proximity.closest_point(dst, src.vertices[np.argsort(d0)[:n]])
         best = min(best, float(d.min()))
     return best
 

@@ -14,6 +14,8 @@ Interpret the invocation as:
 
 Default backends, in order: `cadquery`, `build123d`, `freecad`, then `zoo`. Astra (`gpt-6-astra` via the Codex CLI) authors every CAD turn, including draft, blockout, plan, model, and correction. The zoo arm executes geometry through the `zoo` CLI. This session only starts commands, watches logs, and writes the report. Do not launch a `cad-worker` task. Do not judge renders in this session; a render pass is a read-only Astra dispatch.
 
+The `prism` backend is an extra cell, run from Prism rather than by this session: its worker turns are Prism sub-agents on `gpt-6-astra` at max effort (`OPENCAD_MODEL=gpt-6-astra`, `.cursor/skills/cad-drive`, "Prism host"), tagged with their own tag (for example `--tag prism-astra`, listed in `results/_bakeoff/cell-tags.json` as `"prism/<design>"`), and each order is metered with `python -m opencad dispatch <order> --agent-id <id> --model gpt-6-astra --finished --prism-usage` (usage rebuilt from Prism's thread record, `usage_mode: prism-estimate`). `python -m opencad.bakeoff report` then shows the cell in every table marked ≈, and `published.yaml` includes it in a design's entry when it is clean, flagged `estimated`; an entry never waits on a prism cell. The render review (section 4) is the same read-only dispatch as a Prism sub-agent writing `results/prism/<design>/bakeoff-review/result.md`.
+
 Set these for every command below. An exhausted Codex budget must fail the cell, not hand it to Cursor. Astra runs on the fast tier at max reasoning.
 
 ```bash

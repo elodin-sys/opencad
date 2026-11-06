@@ -232,3 +232,51 @@ def test_write_report_has_assemblies_section(tmp_path):
     text = out.read_text()
     assert "## Assemblies" in text and "fusion-01184-assembly" in text
     assert "placement" in text or "pending" in text
+
+
+def test_published_log_adds_a_clean_prism_cell_as_estimated(tmp_path, monkeypatch):
+    """A prism cell (usage rebuilt from Prism's record) joins an entry flagged `estimated`; it is never required for one."""
+    from opencad import bakeoff
+
+    monkeypatch.setattr(bakeoff, "RESULTS_BASE", tmp_path)
+    monkeypatch.setattr(bakeoff, "results_dir", lambda part, backend=None: tmp_path / backend / part)
+    (tmp_path / "_bakeoff").mkdir()
+    (tmp_path / "_bakeoff" / "cell-tags.json").write_text(json.dumps({"prism/bracket": "prism-astra"}), encoding="utf-8")
+    for part in ("bracket", "benchy"):
+        for backend in (*CANDIDATES, "zoo", *(("prism",) if part == "bracket" else ())):
+            d = tmp_path / backend / part
+            d.mkdir(parents=True)
+            (d / "gate_feedback.json").write_text(json.dumps({"ok": True, "passed": ["envelope"], "failed": [], "not_applicable": [],
+                                                              "gates": [{"id": "envelope", "ok": True}]}))
+            prism = backend == "prism"
+            row = {"kind": "turn", "tag": "prism-astra" if prism else BAKEOFF_TAG, "model": "gpt-6-astra", "ts": "2026-11-06T01:00:00Z",
+                   "seconds": 10, "tokens_input": 100, "usd": 1.0, "usage_mode": "prism-estimate" if prism else "sum"}
+            (d / "telemetry.jsonl").write_text(json.dumps(row) + "\n")
+    added = bakeoff.publish_entries(tmp_path / "_bakeoff" / "published.yaml", ["bracket", "benchy"])
+    by = {e["part"]: e for e in added}
+    assert set(by) == {"bracket", "benchy"}, "benchy publishes without a prism cell"
+    assert "prism" not in by["benchy"]["backends"]
+    cell = by["bracket"]["backends"]["prism"]
+    assert cell["estimated"] and cell["usage_mode"] == "prism-estimate" and by["bracket"]["tags"]["prism"] == "prism-astra"
+    assert list(by["bracket"]["backends"]) == ["cadquery", "build123d", "freecad", "prism", "zoo"]
+    assert "estimated from Prism's thread record" in by["bracket"]["note"]
+    text = write_report(tmp_path / "report.md").read_text()
+    assert "| bracket | prism | gpt-6-astra | 0 | ≈100 |" in text and "prism-estimate" in text
+    # a prism cell that becomes clean later is appended to benchy's existing entry: one entry per part, earlier cells untouched
+    import yaml
+
+    log = tmp_path / "_bakeoff" / "published.yaml"
+    before = {b: dict(c) for b, c in yaml.safe_load(log.read_text())["entries"][1]["backends"].items()}
+    d = tmp_path / "prism" / "benchy"
+    d.mkdir(parents=True)
+    (d / "gate_feedback.json").write_text(json.dumps({"ok": False, "passed": [], "failed": ["envelope"], "not_applicable": [], "gates": [{"id": "envelope", "ok": False}]}))
+    (d / "telemetry.jsonl").write_text(json.dumps({"kind": "turn", "tag": BAKEOFF_TAG, "model": "gpt-6-astra", "ts": "2026-11-07T01:00:00Z", "seconds": 10,
+                                                   "tokens_input": 100, "usd": 1.0, "usage_mode": "prism-estimate"}) + "\n")
+    changed = bakeoff.publish_entries(log, ["bracket", "benchy"])
+    entries = yaml.safe_load(log.read_text())["entries"]
+    assert [e["part"] for e in changed] == ["benchy"] and [e["part"] for e in entries] == ["bracket", "benchy"]
+    benchy = entries[1]
+    assert list(benchy["backends"]) == ["cadquery", "build123d", "freecad", "prism", "zoo"] and benchy["date"] == "2026-11-07"
+    assert {b: c for b, c in benchy["backends"].items() if b != "prism"} == before
+    assert benchy["backends"]["prism"]["date"] == "2026-11-07" and benchy["note"].startswith("cadquery passes; build123d passes; freecad passes; prism fails `envelope`; zoo passes.")
+    assert bakeoff.publish_entries(log, ["bracket", "benchy"]) == []

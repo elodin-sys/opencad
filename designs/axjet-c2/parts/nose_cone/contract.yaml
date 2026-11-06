@@ -1,0 +1,610 @@
+schema_version: 1
+name: axjet-c2-nose_cone
+intent: >-
+  Nose cone of the AXJET-220 compressor module (assembly axjet-c2, body nose_cone) in its own
+  frame: a 2 mm aluminium shell of revolution, a D64 cylinder 50 mm long followed by a tangent
+  ogive (arc radius 35.140625) 35 mm long to a closed tip, housing the Ø50 x 35 starter motor.
+  An internal 3 mm bulkhead at z -28 ... -25 carries the starter (D12 shaft hole, 4 x M3 motor
+  pattern) and a 3 mm inner rear lip carries 4 x M3 clearance holes to the inlet-frame hub, whose
+  front face the rear face z 0 seats on (assembly z -80). Authoritative source: the AXJET design
+  and implementation guide, sections 3.2, 8.3, 11 and 14.1.
+units:
+  length: mm
+  angle: deg
+material: "aluminium 6061-T6"
+density_kg_m3: 2700
+process: "turning + milling"
+release_status: reconstruction
+
+frame:
+  origin: "on the engine axis at the rear face of the cone (the face that seats on the inlet-frame hub front face, assembly z -80)"
+  axes:
+    x: "up, parallel to the assembly x axis (first hole of each bolt pattern on +x)"
+    y: "completes the right-handed frame, parallel to the assembly y axis"
+    z: "along the engine axis, rearward with the flow; the cone lies at z <= 0 and its tip is at z -85 (assembly z = own z - 80)"
+  datums:
+    - name: A
+      description: "rear face z = 0 (annulus r 26 ... 32), seats on the inlet-frame hub front face"
+    - name: B
+      description: "engine axis (x = y = 0), axis of the D64 outer cylinder"
+    - name: C
+      description: "bulkhead front face z = -28, the starter mounting face (joint starterOnNose)"
+
+envelope:
+  min: [-32, -32, -85]
+  max: [32, 32, 0]
+  tolerance: 0.05
+
+parameters:
+  - name: outerDiameter
+    value: 64
+    unit: mm
+    provenance: stated
+    source: "guide 3.2 (nose-cone cylinder Ø64, hub r 32) and 14.1 nose-cone row"
+    tolerance: 0.01
+    description: "outer diameter of the cylinder, flush with the hub's r 32 flow surface"
+  - name: cylinderLength
+    value: 50
+    unit: mm
+    provenance: stated
+    source: "guide 3.2 / 14.1: Ø64 cylinder assembly z -80 ... -130 (own 0 ... -50)"
+    tolerance: 0.01
+    description: "axial length of the cylindrical section, rear face to the ogive tangent plane"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 3895.57
+        direction: increase
+        bbox_delta: [0, 0, 10]
+        tolerance_rel: 0.02
+      sweep:
+        values: [50, 55, 60]
+      infeasible_deltas: [-30]
+  - name: ogiveLength
+    value: 35
+    unit: mm
+    provenance: stated
+    source: "guide 3.2: tangent ogive from z -130 to the tip at z -165 (own -50 ... -85)"
+    tolerance: 0.01
+    description: "axial length of the tangent ogive"
+  - name: ogiveRadius
+    value: 35.140625
+    unit: mm
+    provenance: derived
+    formula: "((outerDiameter / 2)**2 + ogiveLength**2) / outerDiameter"
+    tolerance: 0.001
+    description: "tangent-ogive arc radius; arc centre at r = outerDiameter/2 - ogiveRadius (across the axis), z = -cylinderLength"
+  - name: wallThickness
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "guide 14.1 nose-cone row: 2 mm wall"
+    tolerance: 0.01
+    description: "shell wall, normal to the surface (inner ogive = outer arc offset inward, same centre)"
+    edit_test:
+      delta: -0.5
+      expect:
+        volume_delta: -7182.2
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.03
+      infeasible_deltas: [-2, 6]
+  - name: bulkheadFrontZ
+    value: -28
+    unit: mm
+    provenance: stated
+    source: "guide 8.3: bulkhead at assembly z -108 ... -105 (own -28 ... -25)"
+    tolerance: 0.01
+    description: "z of the bulkhead front face, the starter mounting face"
+  - name: bulkheadThickness
+    value: 3
+    unit: mm
+    provenance: stated
+    source: "guide 14.1: starter bulkhead 3 mm thick"
+    tolerance: 0.01
+    description: "bulkhead plate thickness (z -28 ... -25)"
+  - name: shaftHoleDiameter
+    value: 12
+    unit: mm
+    provenance: stated
+    source: "guide 14.1: Ø12 shaft hole"
+    tolerance: 0.01
+    description: "central starter-shaft hole through the bulkhead"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: -122.52
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+  - name: starterBoltCount
+    value: 4
+    unit: ""
+    provenance: stated
+    source: "guide 14.1: the motor's 4 x M3 pattern"
+    tolerance: 0.5
+    description: "starter mounting holes in the bulkhead"
+  - name: starterBoltDiameter
+    value: 3.4
+    unit: mm
+    provenance: inferred
+    rationale: "M3 clearance hole, ISO 273 medium series; the guide names M3 but no hole size"
+    tolerance: 0.1
+    description: "starter mounting hole diameter"
+  - name: starterBoltPcd
+    value: 30
+    unit: mm
+    provenance: inferred
+    rationale: "typical M3 face pattern of a Ø50 outer-rotor motor; the guide gives no PCD (intent: inferred)"
+    tolerance: 0.5
+    description: "pitch circle of the starter holes, first hole on +x"
+  - name: rimBoltCount
+    value: 4
+    unit: ""
+    provenance: stated
+    source: "guide 14.1: 4 x M3 to the hub"
+    tolerance: 0.5
+    description: "screws from the rear lip into the hub front face"
+  - name: rimBoltDiameter
+    value: 3.4
+    unit: mm
+    provenance: inferred
+    rationale: "M3 clearance hole, ISO 273 medium series"
+    tolerance: 0.1
+    description: "rear-lip hole diameter"
+  - name: rimBoltPcd
+    value: 56
+    unit: mm
+    provenance: inferred
+    rationale: "midway across the hub front face between its Ø52 bore and r 32 (intent: inferred); leaves 0.3 mm to the lip edges"
+    tolerance: 0.5
+    description: "pitch circle of the rear-lip holes, first hole on +x"
+  - name: lipThickness
+    value: 3
+    unit: mm
+    provenance: inferred
+    rationale: "intent: inner lip z -3 ... 0 (inferred); gives M3 heads a 3 mm seat"
+    tolerance: 0.2
+    description: "axial thickness of the inner rear lip"
+  - name: lipInnerDiameter
+    value: 52
+    unit: mm
+    provenance: inferred
+    rationale: "intent: lip from r 26 (inferred), equal to the hub bore Ø52 H6 so nothing steps inside the hub"
+    tolerance: 0.5
+    description: "inner diameter of the rear lip"
+  - name: starterDiameter
+    value: 50
+    unit: mm
+    provenance: stated
+    source: "guide 8.3 / 14.1: starter Ø50 x 35"
+    tolerance: 0.01
+    description: "starter body diameter (keep-out for the clearance assert; not part geometry)"
+  - name: starterLength
+    value: 35
+    unit: mm
+    provenance: stated
+    source: "guide 8.3: starter body assembly z -143 ... -108 (own -63 ... -28)"
+    tolerance: 0.01
+    description: "starter body length forward of the bulkhead front face"
+  - name: starterClearance
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "intent: the inner wall stays at least 2 mm clear of the starter (r 25)"
+    tolerance: 0.01
+    description: "minimum gap between the inner wall and the starter body"
+
+features:
+  - id: outerSkin
+    kind: revolve
+    description: "outer profile revolved about z: D64 cylinder z 0 ... -cylinderLength, then a tangent ogive (arc radius ogiveRadius, tangent at z -cylinderLength) to the sharp tip at z -(cylinderLength + ogiveLength) = -85"
+    parameters: [outerDiameter, cylinderLength, ogiveLength, ogiveRadius]
+    verify:
+      - method: bbox
+      - method: cylinder
+        cylinder: outerCylinderSpan
+      - method: dimension
+        dimension: lengthZ
+      - method: section
+        section: s_ogive
+  - id: shellCavity
+    kind: cavity
+    description: "revolved inner cavity leaving the 2 mm wall: D60 bore z -50 ... 0 and the inner ogive (outer arc offset by wallThickness, same centre) ending at z -82.99; the tip stays closed and solid"
+    parameters: [wallThickness]
+    verify:
+      - method: cylinder
+        cylinder: boreFront
+      - method: cylinder
+        cylinder: boreRear
+      - method: section
+        section: s_cyl
+      - method: section
+        section: s_tip
+      - method: void
+        points: [[0, 0, -45], [0, 0, -70], [20, 0, -40]]
+      - method: solid
+        points: [[31, 0, -40], [24.5, 0, -70], [0, 0, -84]]
+  - id: bulkhead
+    kind: wall
+    description: "3 mm plate across the bore at z -28 ... -25, joined to the wall; the starter body bolts to its front face z -28"
+    parameters: [bulkheadFrontZ, bulkheadThickness]
+    verify:
+      - method: face
+        face: bulkheadFront
+      - method: face
+        face: bulkheadRear
+      - method: dimension
+        dimension: bulkheadThick
+      - method: dimension
+        dimension: bulkheadStation
+      - method: section
+        section: s_bulk
+      - method: solid
+        points: [[22, 0, -26.5], [0, 22, -26.5]]
+  - id: shaftHole
+    kind: hole
+    description: "D12 central hole through the bulkhead for the starter shaft"
+    parameters: [shaftHoleDiameter]
+    verify:
+      - method: cylinder
+        cylinder: shaftHole
+      - method: void
+        points: [[0, 0, -26.5]]
+  - id: starterBolts
+    kind: pattern
+    description: "4 x D3.4 through the bulkhead on PCD 30 at 0, 90, 180, 270 deg (first on +x) for the motor's M3 screws"
+    parameters: [starterBoltCount, starterBoltDiameter, starterBoltPcd]
+    count: 4
+    verify:
+      - method: cylinder
+        cylinder: bulkheadHole1
+      - method: cylinder
+        cylinder: bulkheadHole2
+      - method: cylinder
+        cylinder: bulkheadHole3
+      - method: cylinder
+        cylinder: bulkheadHole4
+      - method: section
+        section: s_bulk
+      - method: void
+        points: [[15, 0, -26.5], [0, 15, -26.5], [-15, 0, -26.5], [0, -15, -26.5]]
+  - id: rearLip
+    kind: boss
+    description: "inner lip z -3 ... 0 from r 26 (D52) out to the wall; its rear face plus the wall end form the hub seat"
+    parameters: [lipThickness, lipInnerDiameter]
+    verify:
+      - method: face
+        face: rearFace
+      - method: face
+        face: lipFront
+      - method: cylinder
+        cylinder: lipBore
+      - method: dimension
+        dimension: lipThick
+      - method: solid
+        points: [[19.8, 19.8, -1.5]]
+  - id: rimBolts
+    kind: pattern
+    description: "4 x D3.4 through the lip on PCD 56 at 0, 90, 180, 270 deg (first on +x) for M3 screws into the hub"
+    parameters: [rimBoltCount, rimBoltDiameter, rimBoltPcd]
+    count: 4
+    verify:
+      - method: cylinder
+        cylinder: rimHole1
+      - method: cylinder
+        cylinder: rimHole2
+      - method: cylinder
+        cylinder: rimHole3
+      - method: cylinder
+        cylinder: rimHole4
+      - method: section
+        section: s_lip
+      - method: void
+        points: [[28, 0, -1.5], [0, 28, -1.5], [-28, 0, -1.5], [0, -28, -1.5]]
+
+interfaces:
+  - name: hubSeat
+    description: "rear face z 0 seats on the inlet-frame hub front face (assembly z -80, joint noseOnInlet); the D64 surface continues the hub's r 32 flow surface without a step; 4 x M3 into the hub on PCD 56"
+    must_not_change: true
+    checks: [rearFace, outerCylinder, rimHole1, rimHole2, rimHole3, rimHole4]
+  - name: starterMount
+    description: "bulkhead front face z -28 carries the starter body (joint starterOnNose at own [0, 0, -28]) with the motor's 4 x M3 pattern on PCD 30"
+    must_not_change: true
+    checks: [bulkheadFront, bulkheadStation, bulkheadHole1, bulkheadHole2, bulkheadHole3, bulkheadHole4]
+
+acceptance:
+  volume:
+    expected: 42110.98
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "wall shell pi(32^2-30^2)50 = 19477.87 + ogive shell 72833.74 - 60236.89 = 12596.85 + bulkhead 3 pi(30^2-6^2-4*1.7^2) = 8034.06 + lip 3 pi(30^2-26^2-4*1.7^2) = 2002.20"
+  surface_area:
+    expected: 38892.07
+    tolerance_rel: 0.01
+    provenance: derived
+    note: "outer cylinder 10053.10 + outer ogive 6700.64 + inner ogive 5904.59 + bore 2 pi 30 (22+22) + bulkhead faces, hole walls and lip faces; formula table in brief section 5"
+  center_of_mass:
+    expected: [0, 0, -36.547]
+    tolerance: 0.2
+    provenance: derived
+    note: "first moments of the four regions above; ogive shell by quadrature of pi r(z)^2 z"
+  solid_count: 1
+  sections:
+    - id: s_cyl
+      plane: z
+      at: -40
+      expect:
+        area: 389.56
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 1
+      description: "cylindrical wall r 30 ... 32 in front of the bulkhead"
+    - id: s_bulk
+      plane: z
+      at: -26.5
+      expect:
+        area: 3067.58
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 5
+      description: "bulkhead mid-plane: disc r 32 minus the D12 hole and 4 x D3.4"
+    - id: s_lip
+      plane: z
+      at: -1.5
+      expect:
+        area: 1056.96
+        area_tolerance_rel: 0.01
+        loops: 1
+        holes: 5
+      description: "rear lip: annulus r 26 ... 32 minus 4 x D3.4 (the bore loop counts as a hole)"
+    - id: s_ogive
+      plane: z
+      at: -70
+      expect:
+        area: 380.31
+        area_tolerance_rel: 0.02
+        loops: 1
+        holes: 1
+      description: "ogive wall at z -70: outer r 25.753, inner r 23.285"
+    - id: s_tip
+      plane: z
+      at: -84
+      expect:
+        area: 103.50
+        area_tolerance_rel: 0.03
+        loops: 1
+        holes: 0
+      description: "closed tip: solid disc r 5.740 ahead of the cavity end (z -82.99)"
+  faces:
+    - name: rearFace
+      plane: z
+      at: 0
+      normal: "+"
+      area: 1056.96
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: bulkheadFront
+      plane: z
+      at: -28
+      normal: "-"
+      center: [0, 0]
+      mode: one
+    - name: bulkheadRear
+      plane: z
+      at: -25
+      normal: "+"
+      area: 2678.02
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: lipFront
+      plane: z
+      at: -3
+      normal: "-"
+      area: 667.40
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: outerCylinder
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 64
+      description: "D64 flow surface (no length, so the cylinderLength edit keeps it)"
+    - name: outerCylinderSpan
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 64
+      length: 50
+      t_range: [-50, 0]
+      description: "D64 cylinder from the rear face to the ogive tangent plane"
+    - name: boreFront
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 60
+      length: 22
+      t_range: [-50, -28]
+      description: "inner wall between the ogive tangent plane and the bulkhead"
+    - name: boreRear
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 60
+      length: 22
+      t_range: [-25, -3]
+      description: "inner wall between the bulkhead and the rear lip"
+    - name: lipBore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 52
+      length: 3
+      t_range: [-3, 0]
+      description: "rear lip bore"
+    - name: shaftHole
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 12
+      length: 3
+      t_range: [-28, -25]
+      description: "starter shaft hole"
+    - name: bulkheadHole1
+      point: [15, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 3.4
+      length: 3
+      t_range: [-28, -25]
+    - name: bulkheadHole2
+      point: [0, 15, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 3.4
+      length: 3
+      t_range: [-28, -25]
+    - name: bulkheadHole3
+      point: [-15, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 3.4
+      length: 3
+      t_range: [-28, -25]
+    - name: bulkheadHole4
+      point: [0, -15, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 3.4
+      length: 3
+      t_range: [-28, -25]
+    - name: rimHole1
+      point: [28, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 3.4
+      length: 3
+      t_range: [-3, 0]
+    - name: rimHole2
+      point: [0, 28, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 3.4
+      length: 3
+      t_range: [-3, 0]
+    - name: rimHole3
+      point: [-28, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 3.4
+      length: 3
+      t_range: [-3, 0]
+    - name: rimHole4
+      point: [0, -28, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 3.4
+      length: 3
+      t_range: [-3, 0]
+  dimensions:
+    - name: lengthZ
+      axis: z
+      expected: 85
+      tolerance: 0.05
+      description: "rear face to tip (bbox extent)"
+    - name: diameterX
+      axis: x
+      expected: 64
+      tolerance: 0.05
+    - name: diameterY
+      axis: y
+      expected: 64
+      tolerance: 0.05
+    - name: bulkheadStation
+      axis: z
+      expected: 28
+      tolerance: 0.05
+      between: [bulkheadFront, rearFace]
+      description: "starter mounting face 28 mm ahead of the hub seat"
+    - name: bulkheadThick
+      axis: z
+      expected: 3
+      tolerance: 0.05
+      between: [bulkheadFront, bulkheadRear]
+    - name: lipThick
+      axis: z
+      expected: 3
+      tolerance: 0.05
+      between: [lipFront, rearFace]
+  solids:
+    - name: body
+      contains_point: [31, 0, -40]
+      description: "the single nose-cone solid"
+  hardware:
+    - name: starterBody
+      kind: cylinder
+      point: [0, 0, -63]
+      direction: [0, 0, 1]
+      radius: 25
+      length: 32.5
+      description: "starter Ø50 body (own z -63 ... -28), stopped 2.5 mm short of its bolted seat on the bulkhead front face so the intended contact is not scored as a gap"
+  clearances:
+    - name: starterGap
+      a: body
+      b: starterBody
+      min_gap: 2.0
+      description: "inner wall at least 2 mm clear of the starter; design minimum 2.142 at the starter front corner (r 25, z -63) against the inner ogive"
+  thickness:
+    - name: wall
+      min: 1.9
+      stat: p05
+      description: "stated 2 mm wall; 0.1 mm allowance for ray sampling at edges"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[31, 0, -40], [0, -31, -40], [22, 0, -26.5], [0, 22, -26.5], [19.8, 19.8, -1.5], [24.5, 0, -70], [0, 0, -84]]
+    - name: inCavity
+      state: void
+      points: [[0, 0, -45], [0, 0, -70], [20, 0, -40], [0, 0, -15]]
+    - name: inHoles
+      state: void
+      points: [[0, 0, -26.5], [15, 0, -26.5], [0, 15, -26.5], [-15, 0, -26.5], [0, -15, -26.5], [28, 0, -1.5], [0, 28, -1.5], [-28, 0, -1.5], [0, -28, -1.5]]
+  cylinder_counts:
+    - name: starterBoltHoles
+      diameter: 3.4
+      kind: hole
+      direction: [0, 0, 1]
+      region: [[-20, -20, -29], [20, 20, -24]]
+      expected: 4
+    - name: rimBoltHoles
+      diameter: 3.4
+      kind: hole
+      direction: [0, 0, 1]
+      region: [[-35, -35, -4], [35, 35, 1]]
+      expected: 4
+  blockout:
+    volume_min: 226700
+    volume_max: 240700
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    revision: "as supplied 2026-10-21 (sha256 c40b531fa235)"
+    note: "sections 3.2 (flow-path stations), 8.3 (starter), 11 (material, process), 14.1 (nose-cone and starter rows, joints)"
+
+open_questions:
+  - "Hole sizes D3.4 (M3 clearance) and the pitch circles PCD 30 (starter) and PCD 56 (hub) are inferred; the motor datasheet and the inlet-frame hub drawing must confirm them."
+  - "Hole clocking is inferred (first hole of each pattern on +x); the hub's tapped holes and the motor orientation must agree."
+  - "The rear lip (r 26 ... 30, z -3 ... 0) is inferred; its D52 bore must clear the nose nut and clutch cup (assembly z -95 ... -75, own -15 ... +5), whose diameters the guide does not give."
+  - "The guide routes the starter wires through the bulkhead (8.3) but dimensions no wire passage; none is modelled."
+  - "The stated 2 mm starter clearance has 0.14 mm margin at the starter front corner (r 25, z -63) against the inner ogive; cylinderLength below 49.66 or a thicker wall violates it."
+  - "No tip radius or flat is stated; the tangent ogive ends in a sharp point (inner cavity ends at z -82.99, so the tip is solid for 2.01 mm)."
+  - "No centring spigot or pilot on the hub seat is stated; radial alignment of the D64 surface to the hub's r 32 relies on the screws."
+  - "Changed (revision 2, reviewer notes): feature starterBolts now verifies `method: section, section: s_bulk` instead of `method: count, section: s_bulk, count: 5`; count scores the section's loop count (1), which contradicts s_bulk's own loops 1 / holes 5. No geometry, parameter or intent change."

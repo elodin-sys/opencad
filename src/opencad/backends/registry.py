@@ -33,7 +33,7 @@ def set_backend(backend_id: str) -> str:
 
 def available() -> list[str]:
     _load("zoo")
-    for name in ("cadquery", "build123d", "freecad"):
+    for name in ("cadquery", "build123d", "freecad", "prism"):
         try:
             _load(name)
         except Exception:
@@ -63,3 +63,5 @@ def _load(backend_id: str) -> None:
         from opencad.backends import build123d as _b3d  # noqa: F401
     elif backend_id == "freecad":
         from opencad.backends import freecad as _fc  # noqa: F401
+    elif backend_id == "prism":
+        from opencad.backends import prism as _prism  # noqa: F401

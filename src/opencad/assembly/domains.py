@@ -29,6 +29,24 @@ def _compound(shapes: list[Any]):
     return comp
 
 
+def _fuse(shapes: list[Any]):
+    """One solid tool: a compound tool leaves a zero-gap seat between two walls (a bolted flange) open as a seam."""
+    from OCP.BRepAlgoAPI import BRepAlgoAPI_Fuse
+    from OCP.TopTools import TopTools_ListOfShape
+
+    if len(shapes) == 1:
+        return shapes[0]
+    args, tools = TopTools_ListOfShape(), TopTools_ListOfShape()
+    args.Append(shapes[0])
+    for s in shapes[1:]:
+        tools.Append(s)
+    op = BRepAlgoAPI_Fuse()
+    op.SetArguments(args)
+    op.SetTools(tools)
+    op.Build()
+    return op.Shape() if op.IsDone() else None
+
+
 def _half_space(point: list[float], normal: list[float]):
     """The solid half-space on the side opposite to `normal` (the fluid side of an outward cap normal)."""
     from OCP.BRepBuilderAPI import BRepBuilderAPI_MakeFace
@@ -86,7 +104,10 @@ def derive_fluid(walls: list[Any], minus: list[Any], caps: list[Any], seed: list
     pts = [list(cap.point) for cap in caps]
     lo = [min([lo[i], *(p[i] for p in pts)]) - PAD_MM for i in range(3)]
     hi = [max([hi[i], *(p[i] for p in pts)]) + PAD_MM for i in range(3)]
-    cut = BRepAlgoAPI_Cut(make_box(lo, hi), _compound([*walls, *minus]))
+    tool = _fuse([*walls, *minus])
+    if tool is None:
+        return {"ok": False, "error": "fusing the walls and minus bodies failed"}
+    cut = BRepAlgoAPI_Cut(make_box(lo, hi), tool)
     cut.Build()
     if not cut.IsDone():
         return {"ok": False, "error": "walls/minus subtraction failed"}
@@ -225,23 +246,33 @@ def _face_points(face: Any, limit: int = TOUCH_SAMPLES) -> list[np.ndarray]:
     return pts
 
 
-def _touches(face: Any, other: Any, tol: float) -> bool:
-    from OCP.BRepBuilderAPI import BRepBuilderAPI_MakeVertex
+def _surface_distance(other: Any) -> Any:
+    """One extrema object per body, loaded with its faces only: a fresh one per point rebuilt every face box and classified
+    the point against the solid, about 0.4 s a query on a bladed rotor."""
     from OCP.BRepExtrema import BRepExtrema_DistShapeShape
+    from OCP.TopAbs import TopAbs_FACE
+
+    d = BRepExtrema_DistShapeShape()
+    d.LoadS2(_compound(list(brep._explore(other, TopAbs_FACE))))
+    return d
+
+
+def _touches(face: Any, dist: Any, tol: float) -> bool:
+    from OCP.BRepBuilderAPI import BRepBuilderAPI_MakeVertex
     from OCP.gp import gp_Pnt
 
     pts = _face_points(face)
     if not pts:
         return False
     for p in pts:
-        d = BRepExtrema_DistShapeShape(BRepBuilderAPI_MakeVertex(gp_Pnt(*p)).Vertex(), other)
-        d.Perform()
-        if not d.IsDone() or d.Value() > tol:
+        dist.LoadS1(BRepBuilderAPI_MakeVertex(gp_Pnt(*p)).Vertex())
+        dist.Perform()
+        if not dist.IsDone() or dist.Value() > tol:
             return False
     return True
 
 
-def _selects(b: Any, row: dict[str, Any], shapes: dict[str, Any]) -> bool:
+def _selects(b: Any, row: dict[str, Any], dists: dict[str, Any]) -> bool:
     cos_tol = math.cos(math.radians(ANGLE_TOL_DEG))
     if b.select == "plane":
         if row["type"] != "plane":
@@ -260,8 +291,8 @@ def _selects(b: Any, row: dict[str, Any], shapes: dict[str, Any]) -> bool:
         lo, hi = b.region
         return all(l - 1e-9 <= x <= h + 1e-9 for x, l, h in zip(row["centroid"], lo, hi))
     if b.select == "touching":
-        other = shapes.get(b.touching)
-        return other is not None and _touches(row["face"], other, b.tolerance)
+        dist = dists.get(b.touching)
+        return dist is not None and _touches(row["face"], dist, b.tolerance)
     return False
 
 
@@ -276,10 +307,11 @@ def boundaries(actx: AsmCtx, shapes: dict[str, Any]) -> dict[str, Any]:
             out[body] = {"ok": False, "error": f"{body} missing from the export"}
             continue
         rows = face_table(shape)
+        dists = {s.touching: _surface_distance(shapes[s.touching]) for s in specs if s.select == "touching" and s.touching in shapes}
         claims: dict[int, list[str]] = {}
         for b in [s for s in specs if s.select != "rest"]:
             for row in rows:
-                if _selects(b, row, shapes):
+                if _selects(b, row, dists):
                     claims.setdefault(row["id"], []).append(b.name)
         rest = [s for s in specs if s.select == "rest"]
         for row in rows:

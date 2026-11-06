@@ -1,0 +1,1506 @@
+{
+  "ok": true,
+  "summary": {
+    "pass": 11,
+    "fail": 0,
+    "not_applicable": 1
+  },
+  "passed": [
+    "contract_provenance",
+    "envelope",
+    "mass_properties",
+    "features",
+    "export_agreement",
+    "edit_robustness",
+    "source_hygiene",
+    "export_integrity",
+    "traceability",
+    "evidence_separation",
+    "independence"
+  ],
+  "failed": [],
+  "not_applicable": [
+    "reference_fidelity"
+  ],
+  "tier_a_failed": [],
+  "retryable_failed": [],
+  "tiers": {
+    "A": "design feasibility / interpretation: fix the contract or the model",
+    "B": "model consistency: reconcile before trusting the part",
+    "C": "artifact truth: fix inputs or generation; never auto-fixed"
+  },
+  "gates": [
+    {
+      "id": "contract_provenance",
+      "tier": "A",
+      "title": "Contract validates; stated/measured sources resolve to bundle files; no blocking open questions; interfaces pinned by checks",
+      "ok": true,
+      "evidence": [
+        "designs/axjet-c2/parts/ogv_ring/contract.yaml: 45 parameters {'stated': 32, 'inferred': 6, 'derived': 7}; sources unresolved {}; unanchored 32",
+        "open questions: 12 (blocking []); interfaces 4, unenforced [] (fails only for release_status prototype)"
+      ],
+      "failure_means": "the contract is not a usable specification",
+      "knob": "re-run /initialize-cad with better sources, or resolve the blocking question",
+      "details": {
+        "provenance": {
+          "stated": 32,
+          "inferred": 6,
+          "derived": 7
+        },
+        "soft_values": 6,
+        "open_questions": [
+          "Changed (revision 1, reviewer notes): both flanges are OD 224 with 8 x D5.5 (M5 clearance) holes on PCD 212, one on +x, 45 deg pitch (was OD 212 with 8 x D6.4 on PCD 206). Reason: the stated holes broke 0.2 mm out of the OD 212 rim and reached r 99.8 inside the OD 200 body, so no M6 head or nut could seat; an M5 head or nut at r 106 clears the body and the rim by about 1.5 mm (as case_r1 and stator_1). Envelope, volume, surface area, centre of mass, the four flange sections, flange faces and rims, hole cylinders, the flange-span dimension, probes, the casingOd infeasible delta (now +26) and the blockout band are recomputed.",
+          "Rear flange hole pattern and clocking (one on +x) are inferred to match the front; the diffuser joint is not yet designed.",
+          "Labyrinth tooth geometry is inferred: grooves 1.0 mm deep (to r 64.5) over the sleeve span z 62 ... 70, two 1.0 mm teeth centred at z 64 and z 68 with tips at r 63.5. Only the tooth count, tip radius and the 0.5 mm radial gap are stated (section 8.1 lists 0.4 mm for the blisk-spigot seals; the intent's 0.5 mm is used).",
+          "Rotation sense is not stated: angles are positive in the direction of rotation (Appendix B); rotation is inferred right-handed about +z (from +x toward +y), so the vane leading edges point toward +theta.",
+          "Vane clocking is not stated; the first vane's stacking line is inferred on +x.",
+          "Hub, mean and tip section radii are not stated for the OGV: hub r 66.5 (flow surface at the leading edge), tip r 90.0, mean r 78.25; the hub section lies up to 0.9 mm below the rising band and is fused into it.",
+          "Thickness distribution: NACA-65 per section 14 with a 0.25 mm LE radius and a 0.5 mm TE; the TE blend is not stated, so the vane volume carries +-2000 mm3 (total volume tolerance 3000 mm3).",
+          "Stacking: 'radial stacking' with the leading edge at z 61 is read as every section's LE at z 61 axially and the section centroids on one radial line tangentially.",
+          "No vane root or tip fillets are stated (the blisks have r 1.5); junctions are left sharp.",
+          "The casing front-face corner (r 90.25, z 58) lies about 3 mm from the rotor_2 tip trailing edge (r 90.0, z 55); if the assembly's rotor2ToOgv min_gap 4.0 is measured body to body it may fail on this corner rather than on the vanes (z 61).",
+          "No abradable recess is modelled: the guide applies the 0.5 mm abradable only over the rotors, and no rotor runs inside this ring.",
+          "Baseline turning 53.8 deg -> 0 deg exceeds the guide's 40 deg per-row limit; the tandem pair and solidity-1.8 options of section 4.2 are not modelled (per the intent)."
+        ],
+        "unresolved_sources": {},
+        "unanchored_sources": [
+          "ringFrontZ",
+          "ringRearZ",
+          "casingOd",
+          "flangeOd",
+          "flangeThickness",
+          "boltCount",
+          "boltHoleDiameter",
+          "boltPcd",
+          "boltClockAngle",
+          "outerFlowRadius",
+          "stationBoreRadius",
+          "outerFlowFrontZ",
+          "outerFlowRearZ",
+          "innerBandFrontZ",
+          "hubFrontRadius",
+          "hubRearRadius",
+          "hubRampStartZ",
+          "hubRampEndZ",
+          "innerBoreRadius",
+          "labyrinthToothCount",
+          "vaneCount",
+          "vaneChord",
+          "vaneLeZ",
+          "inletMetalHub",
+          "inletMetalMean",
+          "inletMetalTip",
+          "exitMetalAngle",
+          "tmaxHub",
+          "tmaxMean",
+          "tmaxTip",
+          "leRadius",
+          "teThickness"
+        ],
+        "blocking_questions": [],
+        "unenforced_interfaces": [],
+        "interface_checks": [
+          "frontFace",
+          "frontBolt1",
+          "frontBolt2",
+          "frontBolt3",
+          "frontBolt4",
+          "frontBolt5",
+          "frontBolt6",
+          "frontBolt7",
+          "frontBolt8",
+          "rearFlangeFace",
+          "rearBolt1",
+          "rearBolt2",
+          "rearBolt3",
+          "rearBolt4",
+          "rearBolt5",
+          "rearBolt6",
+          "rearBolt7",
+          "rearBolt8",
+          "outerFlowBore",
+          "stationBoreFront",
+          "stationBoreRear",
+          "hubFrontFlow",
+          "innerBoreFront",
+          "innerBoreRear",
+          "labyrinthTooth1",
+          "labyrinthTooth2"
+        ]
+      }
+    },
+    {
+      "id": "envelope",
+      "tier": "A",
+      "title": "Bounding box of the exported STEP equals the contract envelope",
+      "ok": true,
+      "evidence": [
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json bbox.max_error = 0.0 (tol 0.05)",
+        "results/build123d/axjet-c2/parts/ogv_ring/verify.json engine bbox.max_error = 0.0"
+      ],
+      "failure_means": "the part is the wrong size, position, or orientation",
+      "knob": "fix the frame/parameters in the model (worker correction) or a mis-read dimension in the contract",
+      "details": {
+        "inspect": {
+          "expected_min": [
+            -112.0,
+            -112.0,
+            58.0
+          ],
+          "expected_max": [
+            112.0,
+            112.0,
+            80.0
+          ],
+          "measured_min": [
+            -112.0,
+            -112.0,
+            58.0
+          ],
+          "measured_max": [
+            112.0,
+            112.0,
+            80.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        },
+        "engine": {
+          "expected_min": [
+            -112.0,
+            -112.0,
+            58.0
+          ],
+          "expected_max": [
+            112.0,
+            112.0,
+            80.0
+          ],
+          "measured_min": [
+            -112.0,
+            -112.0,
+            58.0
+          ],
+          "measured_max": [
+            112.0,
+            112.0,
+            80.0
+          ],
+          "max_error": 0.0,
+          "tolerance": 0.05,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "mass_properties",
+      "tier": "A",
+      "title": "Volume, surface area and centre of mass within contract tolerance (independent STEP measurement)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json volume = 263986.352 vs 264230.0",
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json surface_area = 126280.6431 vs 125880.0",
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json center_of_mass = [0.0, -0.0, 69.056] vs [0.0, 0.0, 69.03]"
+      ],
+      "failure_means": "material is missing or extra somewhere, or a feature is mis-placed",
+      "knob": "worker correction with the measured deltas; or a wrong analytic expectation in the contract",
+      "details": {
+        "volume": {
+          "declared": true,
+          "expected": 264230.0,
+          "measured": 263986.352,
+          "error": 243.648,
+          "band": 3000.0,
+          "ok": true
+        },
+        "surface_area": {
+          "declared": true,
+          "expected": 125880.0,
+          "measured": 126280.6431,
+          "error": 400.6431,
+          "band": 6294.0,
+          "ok": true
+        },
+        "center_of_mass": {
+          "declared": true,
+          "expected": [
+            0.0,
+            0.0,
+            69.03
+          ],
+          "measured": [
+            0.0,
+            -0.0,
+            69.056
+          ],
+          "errors": [
+            0.0,
+            0.0,
+            0.026
+          ],
+          "tolerance": 0.3,
+          "ok": true
+        }
+      }
+    },
+    {
+      "id": "features",
+      "tier": "A",
+      "title": "Every required feature, section, named face, cylinder axis, plane, dimension, body, clearance, passage, wall, gear and symmetry check verified on the STEP",
+      "ok": true,
+      "evidence": [
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json features: 6/6 ok; failed required []; failed optional []; unverified []",
+        "sections failed []; faces failed []; cylinders failed []; planes failed []; dimensions failed []",
+        "multi-body/interior checks: all ok or none declared"
+      ],
+      "failure_means": "a hole, wall, cavity, channel, face or declared mirror is missing or in the wrong place",
+      "knob": "worker correction naming the failed feature and its probe evidence",
+      "details": {
+        "failed_required": [],
+        "failed_optional": [],
+        "unverified": [],
+        "sections_failed": [],
+        "faces_failed": [],
+        "cylinders_failed": [],
+        "planes_failed": [],
+        "dimensions_failed": [],
+        "multibody_failed": {
+          "solids": [],
+          "clearances": [],
+          "passages": [],
+          "thickness": [],
+          "probes": [],
+          "cylinder_counts": [],
+          "gears": [],
+          "meshes": []
+        },
+        "symmetry_failed": [],
+        "cylinders": {
+          "outerFlowBore": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "stationBoreFront": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "stationBoreRear": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "casingOuter": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "frontFlangeRim": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearFlangeRim": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "hubFrontFlow": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "hubRearFlow": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "innerBoreFront": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "innerBoreRear": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "labyrinthTooth1": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "labyrinthTooth2": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "labyrinthGrooveFloor": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "frontBolt1": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "frontBolt2": {
+            "found": true,
+            "axis_offset": 0.00045085944935429164,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "frontBolt3": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "frontBolt4": {
+            "found": true,
+            "axis_offset": 0.00045085944652058875,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "frontBolt5": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "frontBolt6": {
+            "found": true,
+            "axis_offset": 0.0004508594436868859,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "frontBolt7": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "frontBolt8": {
+            "found": true,
+            "axis_offset": 0.00045085944652058875,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearBolt1": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearBolt2": {
+            "found": true,
+            "axis_offset": 0.00045085944935429164,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearBolt3": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearBolt4": {
+            "found": true,
+            "axis_offset": 0.00045085944652058875,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearBolt5": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearBolt6": {
+            "found": true,
+            "axis_offset": 0.0004508594436868859,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearBolt7": {
+            "found": true,
+            "axis_offset": 0.0,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          },
+          "rearBolt8": {
+            "found": true,
+            "axis_offset": 0.00045085944652058875,
+            "axis_tolerance": 0.05,
+            "radius_error": 0.0,
+            "ok": true
+          }
+        },
+        "interfaces": {
+          "frontFace": {
+            "ok": true,
+            "kind": "face"
+          },
+          "frontBolt1": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "frontBolt2": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "frontBolt3": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "frontBolt4": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "frontBolt5": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "frontBolt6": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "frontBolt7": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "frontBolt8": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearFlangeFace": {
+            "ok": true,
+            "kind": "face"
+          },
+          "rearBolt1": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearBolt2": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearBolt3": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearBolt4": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearBolt5": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearBolt6": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearBolt7": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "rearBolt8": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "outerFlowBore": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "stationBoreFront": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "stationBoreRear": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "hubFrontFlow": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "innerBoreFront": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "innerBoreRear": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "labyrinthTooth1": {
+            "ok": true,
+            "kind": "cylinder"
+          },
+          "labyrinthTooth2": {
+            "ok": true,
+            "kind": "cylinder"
+          }
+        }
+      }
+    },
+    {
+      "id": "reference_fidelity",
+      "tier": "A",
+      "title": "Deviation from the reference model within the contract band (when a reference exists)",
+      "ok": null,
+      "evidence": [
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json deviation.p95 = None hausdorff = None silhouette_iou_min = None",
+        "declared band: none"
+      ],
+      "failure_means": "the reconstruction departs from the measured reference beyond the declared band",
+      "knob": "compare silhouettes; fix the contract measurement or the model",
+      "details": {
+        "deviation": {
+          "declared": false,
+          "ok": null
+        },
+        "not_applicable": true
+      }
+    },
+    {
+      "id": "export_agreement",
+      "tier": "B",
+      "title": "Engine, STEP (OpenCascade) and STL (trimesh) volumes agree",
+      "ok": true,
+      "evidence": [
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json agreement engine=263986.3519805826 step=263986.351980624 stl=263946.3571107855 (rel tol 0.002; independent=False)",
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json agreement.manifold = 263946.3571107854 (Manifold kernel witness, rel vs STEP 0.00015150355137139393; disclosed, not gated)"
+      ],
+      "failure_means": "the exported files do not represent the modelled solid",
+      "knob": "re-export; report an exchange failure if persistent",
+      "details": {
+        "engine": 263986.3519805826,
+        "kcl": 263986.3519805826,
+        "step": 263986.351980624,
+        "stl": 263946.3571107855,
+        "tolerance_rel": 0.002,
+        "engine_missing": false,
+        "engine_class": "ok",
+        "engine_independent": false,
+        "manifold": 263946.3571107854,
+        "manifold_vs_step_rel": 0.00015150355137139393,
+        "engine_vs_step_rel": 1.569924136586829e-13,
+        "kcl_vs_step_rel": 1.569924136586829e-13,
+        "stl_vs_step_rel": 0.00015150355137095295,
+        "ok": true
+      }
+    },
+    {
+      "id": "edit_robustness",
+      "tier": "B",
+      "title": "Declared parameter edits rebuild with the expected effect, undriven interfaces stay put, sweeps regenerate, infeasible values are refused; baseline re-export hash unchanged",
+      "ok": true,
+      "evidence": [
+        "results/build123d/axjet-c2/parts/ogv_ring/edit.json 3/3 edit tests ok; restore.ok = True",
+        "sweep 3/3 values; infeasible refused 3/3; interfaces pinned 26"
+      ],
+      "failure_means": "the model is not parametric in the contract's terms, an edit moved an interface it does not own, an impossible value built silently, or the deliverable changed",
+      "knob": "make features derive from the named constants; guard impossible values with asserts",
+      "details": {
+        "tests": [
+          {
+            "parameter": "casingOd",
+            "delta": 2.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 6315.0,
+                "measured": 6314.6012337137945,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 21,
+                "driven": [
+                  "axialLength",
+                  "boreStepFront",
+                  "boreStepRear",
+                  "casingOuter",
+                  "flangeSpan",
+                  "frontFace",
+                  "frontFlangeBack",
+                  "frontFlangeRim",
+                  "frontFlangeThick",
+                  "frontFlangeZ",
+                  "outerFlowBore",
+                  "rearFlangeFace",
+                  "rearFlangeFront",
+                  "rearFlangeRim",
+                  "rearFlangeThick",
+                  "stationBoreFront",
+                  "stationBoreRear"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": {
+              "values": [
+                {
+                  "value": 196.0,
+                  "volume": 251545.64507240918,
+                  "bbox_size": [
+                    224.0,
+                    224.0,
+                    22.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        -0.0,
+                        -0.0,
+                        -0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": -12440.706908214837,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                },
+                {
+                  "value": 200.0,
+                  "ok": true,
+                  "note": "baseline value"
+                },
+                {
+                  "value": 204.0,
+                  "volume": 276678.3863011273,
+                  "bbox_size": [
+                    224.0,
+                    224.0,
+                    22.0
+                  ],
+                  "checks": {
+                    "valid": {
+                      "ok": true
+                    },
+                    "solid_count": {
+                      "expected": 1,
+                      "measured": 1,
+                      "ok": true
+                    },
+                    "bbox_linear": {
+                      "expected": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "measured": [
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ok": true
+                    },
+                    "volume_monotonic": {
+                      "volume_delta": 12692.034320503299,
+                      "ok": true
+                    },
+                    "interfaces_preserved": {
+                      "ok": true,
+                      "moved": []
+                    }
+                  },
+                  "ok": true
+                }
+              ],
+              "declared": 3,
+              "passed": 3,
+              "ok": true
+            },
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": 26.0,
+                  "value": 226.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: casingOd must be smaller than flangeOd\", \"class\": \"program\", \"timings\": {\"failed_s\": 2.519, \"main_s\": 2.519}}"
+                },
+                {
+                  "delta": -20.0,
+                  "value": 180.0,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: casingOd does not clear the outer flow bore\", \"class\": \"program\", \"timings\": {\"failed_s\": 2.495, \"main_s\": 2.495}}"
+                }
+              ],
+              "declared": 2,
+              "refused": 2,
+              "ok": true
+            }
+          },
+          {
+            "parameter": "hubRearRadius",
+            "delta": 0.5,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 2315.0,
+                "measured": 2337.652939781372,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 23,
+                "driven": [
+                  "hubFrontFlow",
+                  "hubRearFlow",
+                  "inletGapZ",
+                  "innerBandFrontFace",
+                  "innerBandLength",
+                  "innerBandRearFace",
+                  "innerBoreFront",
+                  "innerBoreRear",
+                  "rearFlangeZ"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": null
+          },
+          {
+            "parameter": "vaneChord",
+            "delta": 1.0,
+            "ok": true,
+            "checks": {
+              "volume_delta": {
+                "expected": 1570.0,
+                "measured": 1465.2515085911728,
+                "ok": true
+              },
+              "direction": {
+                "expected": "increase",
+                "measured": "increase",
+                "ok": true
+              },
+              "bbox_delta": {
+                "expected": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "measured": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "ok": true
+              },
+              "solid_count": {
+                "expected": 1,
+                "measured": 1,
+                "ok": true
+              },
+              "valid": {
+                "ok": true
+              },
+              "interfaces_preserved": {
+                "preserved": 26,
+                "driven": [
+                  "vaneAftZ",
+                  "vaneRowZ"
+                ],
+                "ok": true,
+                "moved": []
+              }
+            },
+            "error": null,
+            "sweep": null,
+            "infeasible": {
+              "deltas": [
+                {
+                  "delta": 2.5,
+                  "value": 16.5,
+                  "outcome": "refused",
+                  "ok": true,
+                  "error": "rebuild failed: build123d runner failed (1): | {\"ok\": false, \"error\": \"AssertionError: infeasible: vaneChord trailing edge passes the vane aft limit\", \"class\": \"program\", \"timings\": {\"failed_s\": 2.489, \"main_s\": 2.489}}"
+                }
+              ],
+              "declared": 1,
+              "refused": 1,
+              "ok": true
+            }
+          }
+        ],
+        "restore": {
+          "baseline_sha256": "cd9c67f6f06ef687805fd540d99c23b4977c7a0a0f901192b0beb2e4ab002351",
+          "re_export_sha256": "cd9c67f6f06ef687805fd540d99c23b4977c7a0a0f901192b0beb2e4ab002351",
+          "ok": true
+        },
+        "sweep": {
+          "values": 3,
+          "passed": 3
+        },
+        "infeasible": {
+          "declared": 3,
+          "refused": 3
+        }
+      }
+    },
+    {
+      "id": "source_hygiene",
+      "tier": "B",
+      "title": "Dialect, units, formatted, lint-clean, named parameters match the contract, asserts present",
+      "ok": true,
+      "evidence": [
+        "results/build123d/axjet-c2/parts/ogv_ring/verify.json hygiene: dialect=True unit=True legacy=[] params_ok=True asserts=20",
+        "format ok=True lint ok=True"
+      ],
+      "failure_means": "the source is not maintainable as the contract's parametric program",
+      "knob": "worker correction: rename constants, add asserts, format",
+      "details": {
+        "hygiene": {
+          "settings": "build123d",
+          "kcl_version_2": true,
+          "dialect_ok": true,
+          "default_unit_mm": true,
+          "unit_ok": true,
+          "legacy_v1": [],
+          "legacy": [],
+          "imports": [
+            "math",
+            "build123d"
+          ],
+          "forbidden_imports": [],
+          "asserts": 20,
+          "sketch_blocks": 8,
+          "feature_ops": 8,
+          "construction_ops": {
+            "calls": 8,
+            "has_result": true
+          },
+          "parameters": {
+            "ringFrontZ": {
+              "found": true,
+              "value": 58.0,
+              "expected": 58.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "ringRearZ": {
+              "found": true,
+              "value": 80.0,
+              "expected": 80.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "casingOd": {
+              "found": true,
+              "value": 200.0,
+              "expected": 200.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "flangeOd": {
+              "found": true,
+              "value": 224.0,
+              "expected": 224.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "flangeThickness": {
+              "found": true,
+              "value": 6.0,
+              "expected": 6.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "boltCount": {
+              "found": true,
+              "value": 8.0,
+              "expected": 8.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "boltHoleDiameter": {
+              "found": true,
+              "value": 5.5,
+              "expected": 5.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "boltPcd": {
+              "found": true,
+              "value": 212.0,
+              "expected": 212.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "boltClockAngle": {
+              "found": true,
+              "value": 0.0,
+              "expected": 0.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "outerFlowRadius": {
+              "found": true,
+              "value": 90.0,
+              "expected": 90.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "stationBoreRadius": {
+              "found": true,
+              "value": 90.25,
+              "expected": 90.25,
+              "file": "main.py",
+              "ok": true
+            },
+            "outerFlowFrontZ": {
+              "found": true,
+              "value": 59.0,
+              "expected": 59.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "outerFlowRearZ": {
+              "found": true,
+              "value": 78.0,
+              "expected": 78.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "innerBandFrontZ": {
+              "found": true,
+              "value": 59.0,
+              "expected": 59.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "hubFrontRadius": {
+              "found": true,
+              "value": 66.5,
+              "expected": 66.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "hubRearRadius": {
+              "found": true,
+              "value": 67.5,
+              "expected": 67.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "hubRampStartZ": {
+              "found": true,
+              "value": 61.0,
+              "expected": 61.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "hubRampEndZ": {
+              "found": true,
+              "value": 76.0,
+              "expected": 76.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "innerBoreRadius": {
+              "found": true,
+              "value": 63.5,
+              "expected": 63.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "labyrinthToothCount": {
+              "found": true,
+              "value": 2.0,
+              "expected": 2.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "labyrinthGrooveRadius": {
+              "found": true,
+              "value": 64.5,
+              "expected": 64.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "labyrinthToothWidth": {
+              "found": true,
+              "value": 1.0,
+              "expected": 1.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "labyrinthToothPitch": {
+              "found": true,
+              "value": 4.0,
+              "expected": 4.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "labyrinthFrontZ": {
+              "found": true,
+              "value": 62.0,
+              "expected": 62.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "labyrinthRearZ": {
+              "found": true,
+              "value": 70.0,
+              "expected": 70.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "vaneCount": {
+              "found": true,
+              "value": 47.0,
+              "expected": 47.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "vaneChord": {
+              "found": true,
+              "value": 14.0,
+              "expected": 14.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "vaneLeZ": {
+              "found": true,
+              "value": 61.0,
+              "expected": 61.0,
+              "file": "main.py",
+              "ok": true
+            },
+            "inletMetalHub": {
+              "found": true,
+              "value": 53.8,
+              "expected": 53.8,
+              "file": "main.py",
+              "ok": true
+            },
+            "inletMetalMean": {
+              "found": true,
+              "value": 48.9,
+              "expected": 48.9,
+              "file": "main.py",
+              "ok": true
+            },
+            "inletMetalTip": {
+              "found": true,
+              "value": 44.5,
+              "expected": 44.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "exitMetalAngle": {
+              "found": true,
+              "value": -11.5,
+              "expected": -11.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "camberHub": {
+              "found": true,
+              "value": 65.3,
+              "expected": 65.3,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            },
+            "camberMean": {
+              "found": true,
+              "value": 60.4,
+              "expected": 60.4,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            },
+            "camberTip": {
+              "found": true,
+              "value": 56.0,
+              "expected": 56.0,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            },
+            "staggerHub": {
+              "found": true,
+              "value": 21.15,
+              "expected": 21.15,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            },
+            "staggerMean": {
+              "found": true,
+              "value": 18.7,
+              "expected": 18.7,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            },
+            "staggerTip": {
+              "found": true,
+              "value": 16.5,
+              "expected": 16.5,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            },
+            "tmaxHub": {
+              "found": true,
+              "value": 0.08,
+              "expected": 0.08,
+              "file": "main.py",
+              "ok": true
+            },
+            "tmaxMean": {
+              "found": true,
+              "value": 0.07,
+              "expected": 0.07,
+              "file": "main.py",
+              "ok": true
+            },
+            "tmaxTip": {
+              "found": true,
+              "value": 0.06,
+              "expected": 0.06,
+              "file": "main.py",
+              "ok": true
+            },
+            "leRadius": {
+              "found": true,
+              "value": 0.25,
+              "expected": 0.25,
+              "file": "main.py",
+              "ok": true
+            },
+            "teThickness": {
+              "found": true,
+              "value": 0.5,
+              "expected": 0.5,
+              "file": "main.py",
+              "ok": true
+            },
+            "vaneMeanRadius": {
+              "found": true,
+              "value": 78.25,
+              "expected": 78.25,
+              "file": "main.py",
+              "ok": true,
+              "formula": true
+            },
+            "vaneClockAngle": {
+              "found": true,
+              "value": 0.0,
+              "expected": 0.0,
+              "file": "main.py",
+              "ok": true
+            }
+          },
+          "parameters_ok": true,
+          "unused_parameters": {},
+          "lines": 304,
+          "numeric_literals": 193,
+          "source_size": {
+            "lines": 304,
+            "numeric_literals": 193,
+            "max_lines": 4000,
+            "max_literals": 6000,
+            "ok": true
+          },
+          "ok": true
+        },
+        "format": {
+          "ok": true,
+          "findings": []
+        },
+        "lint": {
+          "ok": true,
+          "code": 0,
+          "output": "\u001b[1;32mAll checks passed!\u001b[0m\n"
+        }
+      }
+    },
+    {
+      "id": "export_integrity",
+      "tier": "C",
+      "title": "Deterministic STEP (two exports identical), valid B-rep, expected solid count, watertight STL (solid shells == solids)",
+      "ok": true,
+      "evidence": [
+        "results/build123d/axjet-c2/parts/ogv_ring/export.json step.deterministic = True sha256 cd9c67f6f06e; stl=present; glb=present",
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json valid = True solids = 1 (expected 1)",
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json mesh watertight = True components = 1 void_shells = 0",
+        "kernel: evaluator OpenCascade, engine_independent = False; manifold witness = 263946.3571107854"
+      ],
+      "failure_means": "the exchange files are not trustworthy deliverables",
+      "knob": "fix the model topology; never ship a non-deterministic or invalid export",
+      "details": {
+        "export": {
+          "step": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/build123d/axjet-c2/parts/ogv_ring/export/axjet-c2-ogv_ring.step",
+            "sha256": "cd9c67f6f06ef687805fd540d99c23b4977c7a0a0f901192b0beb2e4ab002351",
+            "bytes": 14989090,
+            "deterministic": true,
+            "second_sha256": "cd9c67f6f06ef687805fd540d99c23b4977c7a0a0f901192b0beb2e4ab002351",
+            "determinism_source": "edit restore re-export"
+          },
+          "stl": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/build123d/axjet-c2/parts/ogv_ring/export/axjet-c2-ogv_ring.stl",
+            "sha256": "3761730371d4fb97b9dea54eeb3ea3ba1bda8e7cbb7c260f43a4927e5b14da31",
+            "bytes": 1213884
+          },
+          "glb": {
+            "path": "/Users/danieldriscoll/dual/opencad/results/build123d/axjet-c2/parts/ogv_ring/export/axjet-c2-ogv_ring.glb",
+            "sha256": "cf6bb2304127539b471c94f97bad5a97a626bc26a7af9b5674d08a6378931100",
+            "bytes": 436256
+          }
+        },
+        "valid": true,
+        "solid_count": {
+          "expected": 1,
+          "measured": 1,
+          "ok": true
+        },
+        "mesh": {
+          "manifold_volume": 263946.3571107854,
+          "faces": 24276,
+          "vertices": 12012,
+          "watertight": true,
+          "components_watertight": [
+            true
+          ],
+          "solids_watertight": true,
+          "winding_consistent": true,
+          "components": 1,
+          "void_shells": 0,
+          "solid_shells": 1,
+          "degenerate_faces": 0,
+          "volume": 263946.3571107855,
+          "surface_area": 126281.98539025937,
+          "bbox_min": [
+            -111.99752044677734,
+            -111.99752044677734,
+            58.0
+          ],
+          "bbox_max": [
+            111.99752044677734,
+            111.99752044677734,
+            80.0
+          ],
+          "center_of_mass": [
+            0.0002841254352157454,
+            0.0005595178370759963,
+            69.055874223482
+          ],
+          "open_edges": {
+            "count": 0,
+            "bbox_min": null,
+            "bbox_max": null,
+            "centroid": null
+          }
+        }
+      }
+    },
+    {
+      "id": "traceability",
+      "tier": "C",
+      "title": "Every stage JSON present with tool versions, git head, worker thread ids, engine-call ledger; no --allow-errors",
+      "ok": true,
+      "evidence": [
+        "stages present: {'plan': True, 'model': True, 'verify': True, 'export': True, 'inspect': True, 'edit': True}",
+        "model thread d337254d-17cb-4169-ab37-c57784fb09c7; engine versions ['0.12.0']; engine calls 10; allow-errors used: False"
+      ],
+      "failure_means": "a headline number cannot be traced to evidence",
+      "knob": "re-run the missing stage; never hand-edit stage JSONs",
+      "details": {
+        "stages_present": {
+          "plan": true,
+          "model": true,
+          "verify": true,
+          "export": true,
+          "inspect": true,
+          "edit": true
+        },
+        "engine_calls_total": 10,
+        "allow_errors": false,
+        "engine_versions": [
+          "0.12.0"
+        ],
+        "zoo_versions": [
+          "0.12.0"
+        ]
+      }
+    },
+    {
+      "id": "evidence_separation",
+      "tier": "C",
+      "title": "Contract agreement, reference agreement and physical validation are reported as separate verdicts",
+      "ok": true,
+      "evidence": [
+        "results/build123d/axjet-c2/parts/ogv_ring/inspect.json carries contract checks (volume/bbox/features) and a separate deviation block (reference = None)",
+        "release_status = reconstruction; physical validation: not performed"
+      ],
+      "failure_means": "a CAD match is being presented as engineering or experimental validation",
+      "knob": "keep verdict categories separate in the report",
+      "details": {
+        "release_status": "reconstruction",
+        "physical_validation": "not performed"
+      }
+    },
+    {
+      "id": "independence",
+      "tier": "C",
+      "title": "The source is editable construction: no import of reference geometry, construction ops present, no traced geometry",
+      "ok": true,
+      "evidence": [
+        "results/build123d/axjet-c2/parts/ogv_ring/verify.json hygiene.forbidden_imports = [] construction_ops = {'calls': 8, 'has_result': True} lines = 304"
+      ],
+      "failure_means": "the deliverable is a re-export or a trace of the reference, not a design",
+      "knob": "rebuild from construction with dimensions as parameters; the reference is for scoring only",
+      "details": {
+        "imports": [
+          "math",
+          "build123d"
+        ],
+        "construction_ops": {
+          "calls": 8,
+          "has_result": true
+        },
+        "sketch_blocks": 8,
+        "feature_ops": 8,
+        "source_size": {
+          "lines": 304,
+          "numeric_literals": 193,
+          "max_lines": 4000,
+          "max_literals": 6000,
+          "ok": true
+        }
+      }
+    }
+  ],
+  "retry": {
+    "attempted": false
+  }
+}

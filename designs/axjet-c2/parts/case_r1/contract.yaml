@@ -1,0 +1,528 @@
+schema_version: 1
+name: axjet-c2-case_r1
+intent: >-
+  Compressor casing ring case_r1 of the AXJET-220 two-stage compressor module (assembly axjet-c2),
+  the datum part of the module, modelled in the assembly frame. A turned 6061-T6 ring z -18 ... 18 with
+  a D180.5 bore over its full length (the rotor_1 tip shroud: tips at r 90.0 run at the 0.25 mm cold
+  clearance), OD 200 between two flanges (front z -18 ... -12, rear z 12 ... 18, OD 224), each flange
+  with 8 x D5.5 (M5 clearance) bolt holes on PCD 212 through the flange, one hole on +x, 45 deg pitch
+  (revision 1 reviewer notes; an M5 head or nut at r 106 clears the ring wall and the rim). The 0.5 mm sprayed Al-Si/polyester
+  abradable that lines a recess over z -2 ... 18 is part of this body and finished at D180.5. The front
+  face seats on the inlet_frame rear flange, the rear face on the stator_1 front flange. Authoritative
+  source: sources/axjet_design_and_implementation_guide.md sections 4.4, 11 and 14.1.
+units:
+  length: mm
+  angle: deg
+material: "aluminium 6061-T6 with a sprayed Al-Si/polyester abradable lining (lining merged into the body)"
+density_kg_m3: 2700
+process: "turning + milling from 6061-T6; abradable sprayed into the bore recess, bonded and machined in situ to D180.5 H7"
+release_status: reconstruction
+
+frame:
+  origin: "on the engine axis (the bore axis) at the rotor_1 leading-edge plane, which is midway between the two flange faces: the front face is z = -18, the rear face z = +18"
+  axes:
+    x: "radial, up; the first bolt hole of each flange is centred on +x (x = 106, y = 0)"
+    y: "completes the right-handed set (y = z cross x): looking downstream along +z with +x up, +y points to the right"
+    z: "along the engine axis in the flow direction, from the inlet_frame (front, z < 0) toward stator_1 (rear, z > 0)"
+  datums:
+    - name: A
+      description: "front flange face, plane z = -18, outward normal -z; seats on the inlet_frame rear flange (joint inletFrameOnCase at [0, 0, -18], axis +z)"
+    - name: B
+      description: "bore axis = the z axis (bore D180.5 over z -18 ... 18); joints rotorSpin and airFixed sit on it at [0, 0, 0]"
+    - name: C
+      description: "rear flange face, plane z = +18, outward normal +z; seats on the stator_1 front flange (joint stator1OnCase at [0, 0, 18], axis +z)"
+    - name: D
+      description: "angular clock: the bolt hole on +x (angle 0 measured from +x toward +y) in each flange"
+
+envelope:
+  min: [-112, -112, -18]
+  max: [112, 112, 18]
+  tolerance: 0.05
+
+parameters:
+  - name: frontFaceZ
+    value: -18
+    unit: mm
+    provenance: stated
+    source: "guide section 14.1 (case-r1: ring z -18 ... 18) and section 4.4 (case-r1 z -18 ... 18); intent"
+    tolerance: 0.01
+    description: "axial position of the front flange face (datum A)"
+  - name: rearFaceZ
+    value: 18
+    unit: mm
+    provenance: stated
+    source: "guide section 14.1 (case-r1: ring z -18 ... 18); section 4.4 (stator-1 ring starts at z 18)"
+    tolerance: 0.01
+    description: "axial position of the rear flange face (datum C)"
+  - name: boreDiameter
+    value: 180.5
+    unit: mm
+    provenance: stated
+    source: "guide section 4.4 (bore D180.5 over the rotors, abradable machined to D180.5), section 11 (bore D180.5 H7), section 14.1"
+    tolerance: 0.01
+    description: "finished bore over the full length z -18 ... 18 (r 90.25), including the merged abradable lining; rotor_1 tip shroud"
+  - name: ringOuterDiameter
+    value: 200
+    unit: mm
+    provenance: stated
+    source: "guide section 3.2 (compressor rings OD 200), section 4.4, section 14.1"
+    tolerance: 0.01
+    description: "ring outside diameter between the flanges, z -12 ... 12"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 15155.04
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [196, 200, 204]
+      infeasible_deltas: [-20]
+  - name: flangeOuterDiameter
+    value: 224
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 2 (approved; supersedes guide sections 3.2, 4.4 and 14.1 'flanges 212'): every compressor casing flange OD 224"
+    tolerance: 0.01
+    description: "outside diameter of both flanges (inside the engine's 224 mm envelope)"
+    edit_test:
+      delta: 4
+      expect:
+        volume_delta: 17040.0
+        direction: increase
+        bbox_delta: [4, 4, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [224, 228, 232]
+      infeasible_deltas: [-26]
+  - name: flangeThickness
+    value: 6
+    unit: mm
+    provenance: inferred
+    rationale: "the guide gives no case-r1 flange thickness; the intent infers 6 to match the mating inlet_frame rear flange (z -24 ... -18, guide sections 9 and 14.1), giving flanges z -18 ... -12 and 12 ... 18"
+    source: "intent (6 thick, inferred to match the inlet_frame rear flange)"
+    tolerance: 0.5
+    description: "axial thickness of each flange, measured inward from the flange face"
+  - name: boltCircleDiameter
+    value: 212
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 2 (supersedes guide 4.4 and 14.1 PCD 206): 8 x M5 on PCD 212"
+    tolerance: 0.01
+    description: "pitch circle of the bolt holes in both flanges (r 106; holes span r 103.25 ... 108.75 on the r 100 ... 112 flange)"
+  - name: boltHoleDiameter
+    value: 5.5
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 2 (supersedes guide 14.1 D6.4): 8 x D5.5 M5 clearance holes"
+    tolerance: 0.01
+    description: "bolt hole diameter, through each flange"
+  - name: boltHoleCount
+    value: 8
+    unit: ""
+    provenance: stated
+    source: "guide sections 4.4 and 14.1 (8 holes per flange); revision 1: 8 x M5"
+    tolerance: 0.1
+    description: "holes per flange"
+  - name: boltStartAngle
+    value: 0
+    unit: deg
+    provenance: stated
+    source: "guide section 14.1 (one hole on +x); intent"
+    tolerance: 0.01
+    description: "angle of the first hole from +x toward +y, same in both flanges"
+  - name: boltPitchAngle
+    value: 45
+    unit: deg
+    provenance: derived
+    formula: "360 / boltHoleCount"
+    source: "intent states 45 deg pitch"
+    tolerance: 0.01
+    description: "angular pitch of the bolt holes"
+
+features:
+  - id: ring_body
+    kind: revolve
+    description: "turned ring z -18 ... 18 between the bore r 90.25 and OD 200 (between the flanges, z -12 ... 12)"
+    parameters: [frontFaceZ, rearFaceZ, boreDiameter, ringOuterDiameter]
+    verify:
+      - method: bbox
+      - method: section
+        section: mid_ring
+      - method: cylinder
+        cylinder: ringOd
+      - method: solid
+        points: [[95, 0, 0], [0, -95, -6], [-95, 0, 8]]
+      - method: void
+        points: [[106, 0, 0], [0, -106, 0]]
+  - id: bore_shroud
+    kind: hole
+    description: "plain cylindrical bore D180.5 over the full length; the rotor_1 tip shroud (tips r 90.0 over the blade row z 0 ... 16, 0.25 mm cold clearance)"
+    parameters: [boreDiameter, frontFaceZ, rearFaceZ]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: void
+        points: [[0, 0, 0], [80, 0, -10], [0, 89, 8]]
+  - id: abradable_lining
+    kind: other
+    description: "0.5 mm sprayed Al-Si/polyester abradable lining a recess over z -2 ... 18, modelled as part of this body with no internal boundary and finished at D180.5 together with the plain bore: the bore stays one continuous cylinder z -18 ... 18 (the metal recess r 90.75 is not a modelled surface)"
+    parameters: [boreDiameter]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: section
+        section: lining_zone
+  - id: front_flange
+    kind: revolve
+    description: "front flange z -18 ... -12, OD 224; its front face z -18 (datum A) seats on the inlet_frame rear flange"
+    parameters: [frontFaceZ, flangeOuterDiameter, flangeThickness]
+    verify:
+      - method: face
+        face: frontFace
+      - method: face
+        face: frontFlangeBack
+      - method: cylinder
+        cylinder: frontFlangeOd
+      - method: dimension
+        dimension: frontFlangeThickness
+      - method: solid
+        points: [[97.931, 40.564, -15]]
+      - method: void
+        points: [[105.322, 43.626, -15]]
+  - id: rear_flange
+    kind: revolve
+    description: "rear flange z 12 ... 18, OD 224; its rear face z 18 (datum C) seats on the stator_1 front flange"
+    parameters: [rearFaceZ, flangeOuterDiameter, flangeThickness]
+    verify:
+      - method: face
+        face: rearFace
+      - method: face
+        face: rearFlangeBack
+      - method: cylinder
+        cylinder: rearFlangeOd
+      - method: dimension
+        dimension: rearFlangeThickness
+      - method: solid
+        points: [[-97.931, -40.564, 15]]
+      - method: void
+        points: [[-105.322, -43.626, 15]]
+  - id: front_bolt_holes
+    kind: pattern
+    count: 8
+    description: "8 x D5.5 through the front flange (z -18 ... -12) on PCD 212, first hole on +x, 45 deg pitch; each hole spans r 103.25 ... 108.75, 3.25 mm inside the r 112 rim and 3.25 mm outside the r 100 ring wall"
+    parameters: [boltCircleDiameter, boltHoleDiameter, boltHoleCount, boltStartAngle, boltPitchAngle, flangeThickness]
+    verify:
+      - method: cylinder
+        cylinder: frontHole0
+      - method: cylinder
+        cylinder: frontHole1
+      - method: cylinder
+        cylinder: frontHole2
+      - method: cylinder
+        cylinder: frontHole3
+      - method: cylinder
+        cylinder: frontHole4
+      - method: cylinder
+        cylinder: frontHole5
+      - method: cylinder
+        cylinder: frontHole6
+      - method: cylinder
+        cylinder: frontHole7
+      - method: void
+        points: [[106, 0, -15], [74.953, 74.953, -15], [0, 106, -15], [-74.953, 74.953, -15], [-106, 0, -15], [-74.953, -74.953, -15], [0, -106, -15], [74.953, -74.953, -15]]
+  - id: rear_bolt_holes
+    kind: pattern
+    count: 8
+    description: "8 x D5.5 through the rear flange (z 12 ... 18) on PCD 212, first hole on +x, 45 deg pitch, aligned with the front pattern"
+    parameters: [boltCircleDiameter, boltHoleDiameter, boltHoleCount, boltStartAngle, boltPitchAngle, flangeThickness]
+    verify:
+      - method: cylinder
+        cylinder: rearHole0
+      - method: cylinder
+        cylinder: rearHole1
+      - method: cylinder
+        cylinder: rearHole2
+      - method: cylinder
+        cylinder: rearHole3
+      - method: cylinder
+        cylinder: rearHole4
+      - method: cylinder
+        cylinder: rearHole5
+      - method: cylinder
+        cylinder: rearHole6
+      - method: cylinder
+        cylinder: rearHole7
+      - method: void
+        points: [[106, 0, 15], [74.953, 74.953, 15], [0, 106, 15], [-74.953, 74.953, 15], [-106, 0, 15], [-74.953, -74.953, 15], [0, -106, 15], [74.953, -74.953, 15]]
+
+interfaces:
+  - name: inletFrameSeat
+    description: "joint inletFrameOnCase (rigid, own-frame point [0, 0, -18], axis +z): the front face z = -18 seats on the inlet_frame rear flange (z -24 ... -18, OD 224, 8 x D5.5 on PCD 212) with the 8 front holes on its holes, and the bore continues the inlet_frame wall r 90.25; neither edit test moves or resizes these items"
+    must_not_change: true
+    checks: [frontFace, bore, frontHole0, frontHole1, frontHole2, frontHole3, frontHole4, frontHole5, frontHole6, frontHole7]
+  - name: stator1Seat
+    description: "joint stator1OnCase (rigid, own-frame point [0, 0, 18], axis +z): the rear face z = 18 seats on the stator_1 front flange (flanges as case-r1) with the 8 rear holes on its holes"
+    must_not_change: true
+    checks: [rearFace, lengthZ, rearHole0, rearHole1, rearHole2, rearHole3, rearHole4, rearHole5, rearHole6, rearHole7]
+  - name: rotor1TipShroud
+    description: "joints rotorSpin (revolute) and airFixed (rigid) at own-frame point [0, 0, 0], axis +z: the bore D180.5 on the z axis is the rotor_1 tip shroud (tips r 90.0, 0.25 mm cold clearance) and the outer wall of the air body over z -18 ... 18"
+    must_not_change: true
+    checks: [bore, frontFace, rearFace]
+
+acceptance:
+  volume:
+    expected: 303414.2
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "pi*(100^2-90.25^2)*36 + 2*pi*(112^2-100^2)*6 - 16*6*pi*2.75^2 = 209787.3 + 95906.9 - 2280.8 (the D5.5 holes lie wholly inside the flange land)"
+  surface_area:
+    expected: 88460.6
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "bore 20414.07 + ring OD 15079.64 + flange ODs 2*2*pi*112*6 = 8444.60 + front/rear faces 2*13629.60 + flange back faces 2*7802.15 + 16 hole walls 2*pi*2.75*6 = 1658.76"
+  center_of_mass:
+    expected: [0, 0, 0]
+    tolerance: 0.05
+    provenance: derived
+    note: "axisymmetric ring, 8 equally spaced holes per flange, flanges symmetric about z = 0"
+  solid_count: 1
+  sections:
+    - id: mid_ring
+      plane: z
+      at: -6
+      expect:
+        area: 5827.46
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "ring wall between the front flange and the lining zone: annulus r 90.25 ... 100, pi*(100^2-90.25^2)"
+    - id: lining_zone
+      plane: z
+      at: 8
+      expect:
+        area: 5827.46
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "over the rotor_1 tips inside the abradable zone: still annulus r 90.25 ... 100 (an open recess r 90.75 would lose 284 mm2)"
+    - id: front_flange_mid
+      plane: z
+      at: -15
+      expect:
+        area: 13629.60
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 9
+      description: "front flange: annulus r 90.25 ... 112 minus 8 hole areas pi*2.75^2 = 23.758; holes = the bore plus the 8 bolt holes"
+    - id: rear_flange_mid
+      plane: z
+      at: 15
+      expect:
+        area: 13629.60
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 9
+      description: "rear flange, same as front_flange_mid"
+  faces:
+    - name: frontFace
+      plane: z
+      at: -18
+      normal: "-"
+      center: [0, 0]
+      mode: one
+    - name: rearFace
+      plane: z
+      at: 18
+      normal: "+"
+      center: [0, 0]
+      mode: one
+    - name: frontFlangeBack
+      plane: z
+      at: -12
+      normal: "+"
+      area: 7802.15
+      area_tolerance_rel: 0.005
+      tolerance: 0.5
+      center: [0, 0]
+      mode: one
+    - name: rearFlangeBack
+      plane: z
+      at: 12
+      normal: "-"
+      area: 7802.15
+      area_tolerance_rel: 0.005
+      tolerance: 0.5
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, -18]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 180.5
+      radius_tolerance: 0.01
+      length: 36
+      length_tolerance: 0.05
+      t_range: [0, 36]
+      description: "finished bore D180.5 (r 90.25) over z -18 ... 18, one continuous cylinder through the lining zone"
+    - name: ringOd
+      point: [0, 0, -12]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 200
+      radius_tolerance: 0.02
+      length: 24
+      length_tolerance: 0.5
+      t_range: [0, 24]
+      description: "ring OD 200 between the flanges, z -12 ... 12"
+    - name: frontFlangeOd
+      point: [0, 0, -18]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 224
+      radius_tolerance: 0.02
+      length: 6
+      length_tolerance: 0.5
+      t_range: [0, 6]
+      description: "front flange OD 224, z -18 ... -12"
+    - name: rearFlangeOd
+      point: [0, 0, 12]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 224
+      radius_tolerance: 0.02
+      length: 6
+      length_tolerance: 0.5
+      t_range: [0, 6]
+      description: "rear flange OD 224, z 12 ... 18"
+    - {name: frontHole0, point: [106, 0, -18], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "front flange hole at 0 deg (+x)"}
+    - {name: frontHole1, point: [74.953, 74.953, -18], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "front flange hole at 45 deg"}
+    - {name: frontHole2, point: [0, 106, -18], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "front flange hole at 90 deg (+y)"}
+    - {name: frontHole3, point: [-74.953, 74.953, -18], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "front flange hole at 135 deg"}
+    - {name: frontHole4, point: [-106, 0, -18], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "front flange hole at 180 deg (-x)"}
+    - {name: frontHole5, point: [-74.953, -74.953, -18], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "front flange hole at 225 deg"}
+    - {name: frontHole6, point: [0, -106, -18], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "front flange hole at 270 deg (-y)"}
+    - {name: frontHole7, point: [74.953, -74.953, -18], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "front flange hole at 315 deg"}
+    - {name: rearHole0, point: [106, 0, 12], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "rear flange hole at 0 deg (+x)"}
+    - {name: rearHole1, point: [74.953, 74.953, 12], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "rear flange hole at 45 deg"}
+    - {name: rearHole2, point: [0, 106, 12], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "rear flange hole at 90 deg (+y)"}
+    - {name: rearHole3, point: [-74.953, 74.953, 12], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "rear flange hole at 135 deg"}
+    - {name: rearHole4, point: [-106, 0, 12], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "rear flange hole at 180 deg (-x)"}
+    - {name: rearHole5, point: [-74.953, -74.953, 12], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "rear flange hole at 225 deg"}
+    - {name: rearHole6, point: [0, -106, 12], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "rear flange hole at 270 deg (-y)"}
+    - {name: rearHole7, point: [74.953, -74.953, 12], direction: [0, 0, 1], kind: hole, diameter: 5.5, radius_tolerance: 0.02, length: 6, length_tolerance: 0.5, t_range: [0, 6], description: "rear flange hole at 315 deg"}
+  dimensions:
+    - name: lengthZ
+      axis: z
+      expected: 36
+      tolerance: 0.05
+      between: [frontFace, rearFace]
+      description: "ring length between the mating faces, z -18 ... 18"
+    - name: frontFlangeThickness
+      axis: z
+      expected: 6
+      tolerance: 0.5
+      between: [frontFace, frontFlangeBack]
+      description: "front flange thickness (inferred value)"
+    - name: rearFlangeThickness
+      axis: z
+      expected: 6
+      tolerance: 0.5
+      between: [rearFlangeBack, rearFace]
+      description: "rear flange thickness (inferred value)"
+  solids:
+    - name: ring
+      contains_point: [95, 0, 0]
+      description: "the single solid: ring, flanges and merged abradable lining"
+  hardware:
+    - name: rotor1TipSweep
+      kind: cylinder
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      radius: 90.0
+      length: 16
+      description: "rotor_1 blade-tip swept envelope: tip r 90.0 over the blade row z 0 ... 16 (guide sections 3.2 and 4.4)"
+  clearances:
+    - name: rotor1TipClearance
+      a: ring
+      b: rotor1TipSweep
+      min_gap: 0.20
+      max_gap: 0.30
+      description: "cold tip clearance 0.25 nominal (90.25 - 90.0, guide sections 2.3 and 4.1); 0.20 is the assembly rotor1Tip min_gap; 0.30 catches a bore left at the recess radius"
+  thickness:
+    - name: ringWall
+      min: 9.5
+      stat: p05
+      region: [[-101, -101, -11], [101, 101, 11]]
+      description: "radial ring wall between the flanges, 100 - 90.25 = 9.75; the region excludes the flanges"
+  probes:
+    - name: ringMaterial
+      state: solid
+      points: [[95, 0, 0], [0, 95, 8], [-95, 0, -6], [0, -95, 0], [0, 91.5, 4]]
+      description: "ring wall, including behind the merged lining (r 91.5 over z -2 ... 18)"
+    - name: flangeMaterial
+      state: solid
+      points: [[97.931, 40.564, -15], [-97.931, -40.564, -15], [97.931, 40.564, 15], [-97.931, -40.564, 15]]
+      description: "flange land on PCD 212 midway between holes (22.5 deg), 3 mm from every face"
+    - name: boreVoid
+      state: void
+      points: [[0, 0, 0], [80, 0, -10], [0, -80, 10], [0, 89, 8]]
+      description: "bore interior; (0, 89, 8) sits 1.25 mm inside the bore over the rotor_1 tips"
+    - name: betweenFlangesVoid
+      state: void
+      points: [[106, 0, 0], [0, -106, 0]]
+      description: "outside the OD 200 ring between the flanges"
+    - name: outsideFlangeVoid
+      state: void
+      points: [[105.322, 43.626, -15], [-105.322, -43.626, 15]]
+      description: "2 mm outside the OD 224 flanges at 22.5 deg"
+    - name: boltHoleVoid
+      state: void
+      points: [[106, 0, -15], [74.953, 74.953, -15], [0, 106, -15], [-74.953, 74.953, -15], [-106, 0, -15], [-74.953, -74.953, -15], [0, -106, -15], [74.953, -74.953, -15], [106, 0, 15], [74.953, 74.953, 15], [0, 106, 15], [-74.953, 74.953, 15], [-106, 0, 15], [-74.953, -74.953, 15], [0, -106, 15], [74.953, -74.953, 15]]
+      description: "the 16 bolt-hole centres at mid flange thickness"
+  cylinder_counts:
+    - name: boltHoles
+      diameter: 5.5
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [0, 0, 1]
+      expected: 16
+      description: "8 holes per flange"
+    - name: frontBoltHoles
+      diameter: 5.5
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [0, 0, 1]
+      region: [[-115, -115, -19], [115, 115, -11]]
+      expected: 8
+      description: "front flange pattern"
+    - name: rearBoltHoles
+      diameter: 5.5
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [0, 0, 1]
+      region: [[-115, -115, 11], [115, 115, 19]]
+      expected: 8
+      description: "rear flange pattern"
+  blockout:
+    volume_min: 297300
+    volume_max: 313300
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    revision: "AXJET-220/2 design and implementation guide (undated; design-point values, nothing measured on hardware)"
+    note: "case-r1 definition in sections 4.4 and 14.1; materials and bore tolerance in section 11; cold tip clearance in sections 2.3, 4.1 and 8.2; inlet_frame rear flange (thickness basis) in sections 9 and 14.1; eddy-current probes in section 10"
+
+open_questions:
+  - "Changed (revision 1, reviewer notes): both flanges are OD 224 with 8 x D5.5 (M5 clearance) holes on PCD 212, one on +x, 45 deg pitch, through the 6 mm flange (was OD 212 with 8 x D6.4 on PCD 206). Reason: the stated holes spanned r 99.8 ... 106.2 on a r 100 ... 106 flange, broke 0.2 mm out of the rim and left no seat for an M6 head or nut; an M5 head or nut at r 106 now clears the ring wall and the rim by about 1.5 mm. Envelope, volume, surface area, flange sections and faces, hole cylinders, probes, hole-count regions, the flange-OD edit test and the blockout band are recomputed; the inlet_frame rear flange and the stator_1 front flange match."
+  - "Flange thickness 6 (z -18 ... -12 and 12 ... 18) is inferred from the inlet_frame rear flange; the guide does not state the case-r1 flange thickness."
+  - "Hole depth: the contract drills each hole through its own flange only; drilling both flanges in one pass would now clear the ring OD by 3.25 mm, but the source does not state it."
+  - "The abradable is merged into the body: the metal recess (r 90.75 over z -2 ... 18) and the bond line are not represented, and the mass uses 2700 kg/m3 throughout (the abradable density is not stated)."
+  - "The two eddy-current speed and tip-clearance probes in case-r1 over the rotor_1 tips (guide section 10) are not modelled; their bosses, angular positions, axial station and bore sizes are not stated."
+  - "No fillets, chamfers, centring spigots, dowels or seal grooves are stated, so none are modelled; section 11 asks the bore to be concentric to the bearing bores within 0.03 TIR, which implies a pilot or dowels between the rings that the guide does not define."
+  - "The bore is modelled at nominal D180.5; section 11 calls D180.5 H7 (+0.040 / 0), which would open the cold clearance to at most 0.27."

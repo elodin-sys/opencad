@@ -1,0 +1,209 @@
+{
+  "named_faces": {
+    "front": {
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "found": 1,
+      "area": 1162.3499398890083,
+      "ok": true,
+      "position": 0.0,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.1298607425913995e-12,
+      "centroid_uv": [
+        1.1125544929768694e-12,
+        1.969969487229939e-13
+      ]
+    },
+    "rear": {
+      "plane": "z",
+      "at": 10.0,
+      "normal": "+",
+      "found": 1,
+      "area": 1162.3499398890083,
+      "ok": true,
+      "position": 10.0,
+      "area_expected": 1162.35,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.1298607425913995e-12,
+      "centroid_uv": [
+        1.1125544929768694e-12,
+        1.969969487229939e-13
+      ]
+    },
+    "notchFloorPosX": {
+      "plane": "x",
+      "at": 25.0,
+      "normal": "+",
+      "found": 1,
+      "area": 59.999999999999986,
+      "ok": true,
+      "position": 25.0,
+      "area_expected": 60.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        5.0
+      ],
+      "center_error": 8.926082647349966e-16,
+      "centroid_uv": [
+        8.881784197001254e-17,
+        5.000000000000001
+      ]
+    },
+    "notchFloorNegX": {
+      "plane": "x",
+      "at": -25.0,
+      "normal": "-",
+      "found": 1,
+      "area": 59.999999999999986,
+      "ok": true,
+      "position": -25.0,
+      "area_expected": 60.0,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        5.0
+      ],
+      "center_error": 8.926082647349966e-16,
+      "centroid_uv": [
+        -8.881784197001254e-17,
+        5.000000000000001
+      ]
+    },
+    "notchWallPosXLow": {
+      "plane": "y",
+      "at": -3.0,
+      "normal": "+",
+      "found": 1,
+      "area": 28.38821814149998,
+      "ok": true,
+      "position": -3.0,
+      "area_expected": 28.388,
+      "area_ok": true,
+      "center_expected": [
+        26.4194,
+        5.0
+      ],
+      "center_error": 1.0907075001398425e-05,
+      "centroid_uv": [
+        26.419410907075,
+        5.000000000000002
+      ]
+    },
+    "notchWallPosXHigh": {
+      "plane": "y",
+      "at": 3.0,
+      "normal": "-",
+      "found": 1,
+      "area": 28.38821814149998,
+      "ok": true,
+      "position": 3.0,
+      "area_expected": 28.388,
+      "area_ok": true,
+      "center_expected": [
+        26.4194,
+        5.0
+      ],
+      "center_error": 1.0907075001398425e-05,
+      "centroid_uv": [
+        26.419410907075,
+        5.000000000000002
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "front",
+      "plane": "z",
+      "at": 0.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "rear",
+      "plane": "z",
+      "at": 10.0,
+      "normal": "+",
+      "area": 1162.35,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "notchFloorPosX",
+      "plane": "x",
+      "at": 25.0,
+      "normal": "+",
+      "area": 60.0,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        0.0,
+        5.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "notchFloorNegX",
+      "plane": "x",
+      "at": -25.0,
+      "normal": "-",
+      "area": 60.0,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        0.0,
+        5.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "notchWallPosXLow",
+      "plane": "y",
+      "at": -3.0,
+      "normal": "+",
+      "area": 28.388,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        26.4194,
+        5.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "notchWallPosXHigh",
+      "plane": "y",
+      "at": 3.0,
+      "normal": "-",
+      "area": 28.388,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        26.4194,
+        5.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 20
+}

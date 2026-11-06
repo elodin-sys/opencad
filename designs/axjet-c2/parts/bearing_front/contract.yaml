@@ -1,0 +1,290 @@
+schema_version: 1
+name: axjet-c2-bearing_front
+intent: >-
+  Front bearing pair of the AXJET-220 compressor module (assembly axjet-c2, body bearing_front):
+  2 x 25 x 52 x 15 hybrid angular-contact bearings (Si3N4 balls, 15 deg contact, P4, back-to-back)
+  modelled as ONE envelope ring in its own frame: axis +z through the origin, origin on the axis
+  at its front face (assembly z -72), x parallel to the assembly x. OD 52 (line-to-line in the
+  inlet_frame D52 H6 seat), ID 25 (line-to-line on the drum_shaft D25 journal), length 30
+  (z 0 ... 30, assembly -72 ... -42), 0.5 x 45 deg chamfers on all four circular edges.
+  Authoritative source: sources/axjet_design_and_implementation_guide.md, section 14.1 body table
+  (row bearing-front) and section 8.1 (front bearing row).
+units:
+  length: mm
+  angle: deg
+material: "steel (envelope of a hybrid bearing pair: steel rings, Si3N4 balls)"
+density_kg_m3: 7800
+process: "purchased bearing pair (2 x 25 x 52 x 15 hybrid angular-contact, P4); modelled as a turned envelope ring"
+release_status: reconstruction
+
+frame:
+  origin: "on the bearing axis at the ring's front face (the inlet side); this point is assembly z = -72 and the own-frame point [0, 0, 0] of joint bearingFrontInHub"
+  axes:
+    x: "radial, parallel to the assembly +x (the +x inlet-strut direction)"
+    y: "radial, parallel to the assembly +y (completes the right-handed frame)"
+    z: "along the bearing and rotor axis, from the front face rearward (downstream); z 0 ... 30 = assembly z -72 ... -42"
+  datums:
+    - name: A
+      description: "front face, plane z = 0, outward normal -z (the joint datum of bearingFrontInHub)"
+    - name: B
+      description: "bore axis: the centreline of the D25 bore, coincident with the z axis"
+    - name: C
+      description: "outer cylinder D52, coaxial with B: the seat in the inlet_frame D52 H6 hub bore"
+    - name: D
+      description: "rear face, plane z = 30 (assembly z -42), outward normal +z"
+
+envelope:
+  min: [-26, -26, 0]
+  max: [26, 26, 30]
+  tolerance: 0.05
+
+parameters:
+  - name: outerDiameter
+    value: 52
+    unit: mm
+    provenance: stated
+    source: "intent ('OD 52, line-to-line in the inlet_frame D52 H6 seat'); guide 14.1 body table, row bearing-front ('ring OD 52'); guide 8.1 front bearing '25 x 52 x 15'"
+    tolerance: 0.01
+    description: "outer diameter of the envelope ring; nominal, line-to-line with the D52 H6 hub bore"
+  - name: innerDiameter
+    value: 25
+    unit: mm
+    provenance: stated
+    source: "intent ('ID 25, line-to-line on the drum_shaft D25 journal'); guide 14.1 body table, row bearing-front ('ID 25'); guide 8.1 drum shaft 'D25 h5 journal z -75 ... -40'"
+    tolerance: 0.01
+    description: "bore diameter of the envelope ring; nominal, line-to-line with the D25 h5 journal"
+  - name: ringLength
+    value: 30
+    unit: mm
+    provenance: stated
+    source: "intent ('length 30 (z 0 ... 30, assembly -72 ... -42)'); guide 14.1 row bearing-front ('length 30 (the DB pair as one envelope ring)') = 2 x 15 bearing width"
+    tolerance: 0.01
+    description: "axial length of the ring along +z from the front face; the back-to-back pair 2 x 15"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 3265.69
+        direction: increase
+        bbox_delta: [0, 0, 2]
+        tolerance_rel: 0.02
+      sweep:
+        values: [15, 30, 45]
+      infeasible_deltas: [-30]
+  - name: chamferSize
+    value: 0.5
+    unit: mm
+    provenance: stated
+    source: "intent ('0.5 x 45 deg chamfers on all four edges'); guide 14.1 row bearing-front ('0.5 mm chamfers')"
+    tolerance: 0.01
+    description: "leg of the equal-leg 45 deg chamfer on each of the four circular edges (outer and inner, front and rear)"
+    edit_test:
+      delta: 0.5
+      expect:
+        volume_delta: -181.43
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.3
+      sweep:
+        values: [0.25, 0.5, 0.75]
+      infeasible_deltas: [-1.0, 7.0]
+
+features:
+  - id: ring
+    kind: revolve
+    description: "annular envelope ring OD outerDiameter x ID innerDiameter, z 0 ... ringLength on the +z axis (revolved rectangle or extruded annulus); front face at z = 0"
+    parameters: [outerDiameter, innerDiameter, ringLength]
+    verify:
+      - method: bbox
+      - method: cylinder
+        cylinder: outerSeat
+      - method: dimension
+        dimension: spanX
+      - method: dimension
+        dimension: spanY
+      - method: dimension
+        dimension: ringLengthDim
+      - method: face
+        face: frontFace
+      - method: face
+        face: rearFace
+      - method: section
+        section: mid_z
+      - method: solid
+        points: [[19.25, 0, 15], [-19.25, 0, 15], [0, 19.25, 15], [0, -19.25, 15], [19.25, 0, 2], [0, -19.25, 28]]
+  - id: bore
+    kind: hole
+    description: "D25 through bore on the z axis (line-to-line on the drum_shaft D25 h5 journal)"
+    parameters: [innerDiameter]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: void
+        points: [[0, 0, 15], [0, 0, 5], [0, 0, 25]]
+      - method: count
+        section: axial_x
+        count: 2
+  - id: chamfers
+    kind: chamfer
+    description: "0.5 x 45 deg equal-leg chamfers on all four circular edges: outer front, outer rear, inner front, inner rear"
+    parameters: [chamferSize]
+    count: 4
+    verify:
+      - method: section
+        section: front_chamfer
+      - method: section
+        section: rear_chamfer
+      - method: face
+        face: rearFace
+
+interfaces:
+  - name: hubSeat
+    description: "outer cylinder D52 sits line-to-line in the inlet_frame D52 H6 hub bore (assembly z -72 ... -42 inside the bore z -75 ... -35); neither edit test changes the diameter or the x/y spans"
+    must_not_change: true
+    checks: [outerSeat, spanX, spanY]
+  - name: journalBore
+    description: "bore D25 sits line-to-line on the drum_shaft D25 h5 journal (assembly z -75 ... -40); neither edit test changes it"
+    must_not_change: true
+    checks: [bore]
+  - name: frontDatum
+    description: "front face at z = 0 (assembly z -72), outward normal -z: the joint frame of bearingFrontInHub (point [0, 0, 0], axis [0, 0, 1]); ringLength grows the ring toward +z and chamferSize does not move the plane, so its position is pinned without an area"
+    must_not_change: true
+    checks: [frontFace]
+
+acceptance:
+  volume:
+    expected: 48924.81
+    tolerance_rel: 0.001
+    provenance: derived
+    note: "pi*(Ro^2 - Ri^2)*L - 2*pi*c^2*(Ro + Ri) = 48985.28 - 60.48, Ro = 26, Ri = 12.5, L = 30, c = 0.5 (Pappus on the four c^2/2 triangles: centroid radii Ro - c/3 and Ri + c/3)"
+  surface_area:
+    expected: 10381.06
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "2*pi*(Ro + Ri)*(L - 2c) + 2*pi*((Ro - c)^2 - (Ri + c)^2) + 2*pi*c*sqrt(2)*((2Ro - c) + (2Ri + c)); without chamfers it would be 10522.76"
+  center_of_mass:
+    expected: [0, 0, 15]
+    tolerance: 0.05
+    provenance: derived
+    note: "axisymmetric about z, equal chamfers at both ends, so the centroid is on the axis at L/2"
+  solid_count: 1
+  sections:
+    - id: mid_z
+      plane: z
+      at: 15
+      expect:
+        area: 1632.84
+        area_tolerance_rel: 0.002
+        loops: 1
+        holes: 1
+      description: "full annulus pi*(Ro^2 - Ri^2) at mid-length"
+    - id: front_chamfer
+      plane: z
+      at: 0.25
+      expect:
+        area: 1572.37
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "annulus r 12.75 ... 25.75 halfway up the front chamfers: pi*((Ro - c + 0.25)^2 - (Ri + c - 0.25)^2); 1632.84 if the chamfers were missing"
+    - id: rear_chamfer
+      plane: z
+      at: 29.75
+      expect:
+        area: 1572.37
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "same annulus halfway down the rear chamfers"
+    - id: axial_x
+      plane: x
+      at: 0
+      expect:
+        area: 809.0
+        area_tolerance_rel: 0.003
+        loops: 2
+        holes: 0
+        islands_min: 2
+      description: "axial section through the axis: two 13.5 x 30 wall rectangles (y = +-12.5 ... +-26) less four 0.125 mm2 chamfer corners each; two islands prove the bore is through"
+  faces:
+    - name: frontFace
+      plane: z
+      at: 0
+      normal: "-"
+      mode: one
+    - name: rearFace
+      plane: z
+      at: 30
+      normal: "+"
+      area: 1511.89
+      area_tolerance_rel: 0.005
+      mode: one
+  cylinders:
+    - name: bore
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 25
+      radius_tolerance: 0.01
+      axis_tolerance: 0.02
+      description: "D25 through bore (cylindrical between the chamfers, z 0.5 ... 29.5); line-to-line on the drum_shaft journal"
+    - name: outerSeat
+      point: [0, 0, 0]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 52
+      radius_tolerance: 0.01
+      axis_tolerance: 0.02
+      description: "D52 outer cylinder (z 0.5 ... 29.5 between the chamfers); line-to-line in the inlet_frame D52 H6 seat"
+  dimensions:
+    - name: ringLengthDim
+      axis: z
+      expected: 30
+      tolerance: 0.02
+      between: [frontFace, rearFace]
+      description: "ring length between the front and rear faces"
+    - name: spanX
+      axis: x
+      expected: 52
+      tolerance: 0.05
+      description: "bbox extent along x = outer diameter"
+    - name: spanY
+      axis: y
+      expected: 52
+      tolerance: 0.05
+      description: "bbox extent along y = outer diameter"
+  solids:
+    - name: ring
+      contains_point: [19.25, 0, 15]
+      description: "the single envelope ring"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[19.25, 0, 15], [-19.25, 0, 15], [0, 19.25, 15], [0, -19.25, 15], [19.25, 0, 2], [0, -19.25, 28]]
+      description: "mid-wall (r 19.25) points around the ring and near both ends"
+    - name: inBore
+      state: void
+      points: [[0, 0, 15], [0, 0, 5], [0, 0, 25]]
+      description: "on the axis inside the D25 bore"
+    - name: outsideOd
+      state: void
+      points: [[30, 0, 15], [0, -30, 15]]
+      description: "4 mm outside the D52 outer cylinder"
+  blockout:
+    volume_min: 47500
+    volume_max: 50500
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    note: "AXJET-220 design and implementation guide; 14.1 body table row bearing-front (ring OD 52, ID 25, length 30, 0.5 mm chamfers, steel 7800, own origin at its front face, assembly z -72); 8.1 front bearing and drum-shaft rows; hub bore D52 H6 z -75 ... -35 in the inlet-frame row"
+
+open_questions:
+  - "The real pair is two 15 mm bearings with races, Si3N4 balls, cage and a split face at z = 15; the envelope ring omits all of it (no split face, no 15 deg contact geometry)."
+  - "Mass: a solid steel envelope at 7800 kg/m3 gives 0.382 kg, which overstates a real hybrid pair (hollow between the races, Si3N4 balls lighter than steel); assembly mass totals that include this ring are conservative."
+  - "Guide 8.1 seats the steel outer rings on two Viton O-rings as a squeeze-film damper, which implies a radial clearance and O-ring grooves; the intent models the OD line-to-line in the D52 H6 seat, so no damper clearance or grooves are represented."
+  - "Fits are nominal: the H6 hub bore and h5 journal tolerance bands and the bearing P4 ring tolerances are not modelled (line-to-line per the intent)."
+  - "Axial stack: the ring spans assembly z -72 ... -42, leaving 2 mm to the D25/D40 step at z -40 (presumably the 'spacer' of guide 8.1) and 3 mm between the nose nut rear face (z -75) and the ring front face; the sources do not define what fills either gap. Neither changes this ring."
+  - "Real bearing rings carry corner radii, not 45 deg chamfers; the stated 0.5 x 45 deg envelope chamfer is used as given."

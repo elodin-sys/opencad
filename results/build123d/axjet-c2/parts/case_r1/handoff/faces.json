@@ -1,0 +1,139 @@
+{
+  "named_faces": {
+    "frontFace": {
+      "plane": "z",
+      "at": -18.0,
+      "normal": "-",
+      "found": 1,
+      "area": 13629.603378058482,
+      "ok": true,
+      "position": -18.0,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.0743263373514162e-14,
+      "centroid_uv": [
+        -1.0658141036401503e-14,
+        1.3497175855952885e-15
+      ]
+    },
+    "rearFace": {
+      "plane": "z",
+      "at": 18.0,
+      "normal": "+",
+      "found": 1,
+      "area": 13629.603378058482,
+      "ok": true,
+      "position": 18.0,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 1.3497175855952885e-15,
+      "centroid_uv": [
+        0.0,
+        1.3497175855952885e-15
+      ]
+    },
+    "frontFlangeBack": {
+      "plane": "z",
+      "at": -12.0,
+      "normal": "+",
+      "found": 1,
+      "area": 7802.145355190259,
+      "ok": true,
+      "position": -12.0,
+      "area_expected": 7802.15,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 5.370192661296869e-14,
+      "centroid_uv": [
+        3.552713678800501e-14,
+        4.0270578262436907e-14
+      ]
+    },
+    "rearFlangeBack": {
+      "plane": "z",
+      "at": 12.0,
+      "normal": "-",
+      "found": 1,
+      "area": 7802.145355190259,
+      "ok": true,
+      "position": 12.0,
+      "area_expected": 7802.15,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 5.864516177162671e-14,
+      "centroid_uv": [
+        4.263256414560601e-14,
+        4.0270578262436907e-14
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "frontFace",
+      "plane": "z",
+      "at": -18.0,
+      "normal": "-",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "rearFace",
+      "plane": "z",
+      "at": 18.0,
+      "normal": "+",
+      "area": null,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "frontFlangeBack",
+      "plane": "z",
+      "at": -12.0,
+      "normal": "+",
+      "area": 7802.15,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.5,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "rearFlangeBack",
+      "plane": "z",
+      "at": 12.0,
+      "normal": "-",
+      "area": 7802.15,
+      "area_tolerance_rel": 0.005,
+      "tolerance": 0.5,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 4
+}

@@ -148,6 +148,20 @@ def test_snappy_refines_only_inside_a_tip_annulus(tmp_path, monkeypatch):
     assert cells["plain"] + 0.5 * annulus < cells["tip"] < cells["plain"] + 3 * annulus, cells
 
 
+def test_a_blade_row_on_a_spinning_drum_gets_its_own_mrf_band(tmp_path):
+    import trimesh
+
+    # a drum r 20 on the spinning joint; a row fixed to it with blades out to r 90 over z 40 ... 50 and a sleeve r 60 back to z 80
+    row = trimesh.util.concatenate([trimesh.creation.cylinder(90.0, 10.0, transform=trimesh.transformations.translation_matrix([0, 0, 45])),
+                                    trimesh.creation.cylinder(60.0, 30.0, transform=trimesh.transformations.translation_matrix([0, 0, 65]))])
+    row.export(tmp_path / "row.stl")
+    joints = [SimpleNamespace(name="spin", parent="case", child="drum", closure=False), SimpleNamespace(name="rowOnDrum", parent="drum", child="row", closure=False)]
+    geom = SimpleNamespace(contract=SimpleNamespace(joints=joints), joint_of=lambda b: next(j for j in joints if j.child == b), stl=lambda b: tmp_path / f"{b}.stl")
+    sim = SimpleNamespace(bodies=["air", "drum", "row"], settings={})
+    [(p1, p2, r)] = openfoam.blade_bands(sim, geom, "drum", "air", np.zeros(3), np.array([0.0, 0.0, 1.0]))
+    assert p1[2] == pytest.approx((40 - 2.7) * 1e-3) and p2[2] == pytest.approx((50 + 2.7) * 1e-3) and r == pytest.approx(92.7e-3)  # the sleeve stays out
+
+
 CONTRACT = copy.deepcopy(MIXER)
 CONTRACT["fluid_volumes"][0]["caps"].append({"name": "outletCap", "point": [30.0, 0.0, 15.0], "normal": [1.0, 0.0, 0.0]})
 CONTRACT["fluid_volumes"][0]["volume"] = None

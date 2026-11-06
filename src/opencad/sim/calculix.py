@@ -21,6 +21,7 @@ from typing import Any
 
 import numpy as np
 
+from opencad.assembly.joints import chain
 from opencad.sim import FORMAL_ORDER, failed, observable, predict, refinement, study, unavailable
 
 
@@ -54,6 +55,7 @@ CCX = os.environ.get("OPENCAD_CCX", "/Applications/FreeCAD.app/Contents/Resource
 SIGMA = 5.670374419e-8
 MM = 1e-3
 SMOOTH_S = 0.1  # half-width of the speed-corner smoothing (COMSOL's 0.2 s transition zone)
+ITERATIVE_NODES = 200_000  # past this a static deck uses ITERATIVE CHOLESKY: SPOOLES ran a 0.9 M-node blisk out of 64 GB
 
 
 def available() -> bool:
@@ -479,8 +481,9 @@ def _brake_observables(sim, obs, mesh, temps, disc, pad, exposed, eps, hist, hfi
 # ------------------------------------------------------------------------------------------------------- structural and modal
 
 def _fixed_nodes(mesh: Any, geom: Any, body: str) -> np.ndarray:
+    # mid-edge nodes too: a quadratic face held only at its corners is a soft support
     labs = [lab for lab, r in _roles(geom, body).items() if r == "fixed"]
-    return np.unique(np.concatenate([mesh.surface_nodes(f"{body}:{lab}") for lab in labs])) if labs else np.array([], int)
+    return np.unique(np.concatenate([mesh.face_nodes.get(f"{body}:{lab}", np.array([], int)) for lab in labs])) if labs else np.array([], int)
 
 
 def _solid_deck(sim: Any, geom: Any, body: str, size: float) -> tuple[Any, list[str], np.ndarray]:
@@ -504,9 +507,11 @@ def structural_static(sim: Any, obs: list[Any], geom: Any, cases: dict[str, Any]
         mesh, deck, fixed = _solid_deck(sim, geom, body, h0 * f)
         if len(fixed) == 0:
             return unavailable(f"{body} has no `fixed` boundary: the static problem is singular")
-        deck += ["*STEP", "*STATIC"]
-        j = geom.joint_of(body)
-        if j is not None and j.rotates and j.drive is not None:
+        solver = sim.settings.get("solver") or ("ITERATIVE CHOLESKY" if len(mesh.nodes) > ITERATIVE_NODES else None)
+        deck += ["*STEP", "*STATIC" + (f", SOLVER={solver}" if solver else "")]
+        # a blade row fixed to a spinning drum turns on the drum's joint
+        j = next((x for x in reversed(chain(geom.contract, body)) if x.rotates), None)
+        if j is not None and j.drive is not None:
             rpm = j.drive.speed if j.drive.speed is not None else (case.values.get(j.drive.case_value) if case and j.drive.case_value else None)
             if rpm:
                 o, ax = geom.joint_axis(j.name)

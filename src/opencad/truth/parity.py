@@ -27,7 +27,7 @@ from opencad.truth.manifest import CaseManifest, Observable, case_dir
 POINT_MATCH_MM = 0.5
 SECTION_AT_MM = 0.05
 PASSAGE_DRIFT_MM = 2.0
-BACKENDS = ("cadquery", "build123d", "freecad", "zoo")
+BACKENDS = ("cadquery", "build123d", "freecad", "prism", "zoo")
 
 
 def manifest_root(case_id: str) -> Path:

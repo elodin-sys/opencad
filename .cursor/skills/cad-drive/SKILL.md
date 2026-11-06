@@ -119,6 +119,27 @@ tolerance ideal geometry assumes), write that evidence to a markdown file and ru
 `asm-draft` turn continues the drafter's thread on a staged copy of the published contract. The bundle is re-checked and
 re-published, and the machine is re-placed from `assemble`. Truth stays sequestered throughout.
 
+## Prism host (`--backend prism`, or any backend driven from Prism)
+
+When the orchestrator is the Prism agent rather than Cursor, the loop is the same with these substitutions:
+
+- The `cad-worker` Task is `spawn_sub_agent`: `task_prompt` is the worker prompt template of `.cursor/skills/regress/SKILL.md`
+  (first line: read `.cursor/agents/cad-worker.md`), with the order's `brief.md` path and `NEXT.images`. Prism sub-agents cannot
+  spawn their own, which is what the worker rules require.
+- `NEXT.model` is a Cursor slug; map it to a Prism model id and reasoning effort: `grok-4.7-xhigh-fast` → `grok-4.7` at `xhigh`,
+  `claude-opus-5-5-max` → `claude-opus-5-5` at `max`, `gpt-6-astra` → `gpt-6-astra` (effort from `OPENCAD_CODEX_EFFORT`, `max`
+  for a bake-off cell), `inherit` → `model: null`. Record the Prism id with `python -m opencad dispatch <order> --agent-id
+  <sub-agent id> --model <id>`; the sub-agent's completion notification is the moment to run `dispatch --finished --prism-usage`
+  and then `NEXT.continue`. `--prism-usage` reads the sub-agent's token record from Prism's thread store
+  (`~/Library/Application Support/prism/threads/chat.sqlite`, `OPENCAD_PRISM_THREADS` relocates it) into `dispatch.json`, so the
+  turn row carries tokens and USD like a Codex turn (`usage_mode: prism-estimate`: rebuilt per request from the transcript and
+  pinned to the measured final request; hidden reasoning is not in the record, so output and USD are lower bounds). Run it
+  again after `continue` when the pipeline consumed the order first: an already-written turn row is restamped in place.
+- `source .venv/bin/activate` is not needed; run every command as `.venv/bin/python -m opencad ...` from the repository root.
+- The prism backend's worker verifies through the pipeline's critics (`quick`, the ledger wrapper), which build the part in
+  Prism's python-env. `prism_cad_run` reads a script as metres and is not a critic for a millimetre part; the worker pack
+  (`.agents/skills/backends/prism/SKILL.md`) says when an inline probe is acceptable.
+
 ## Several parts at once
 
 Each part has its own state (`results/<part>/pipeline-state.json`) and orders, so two or three

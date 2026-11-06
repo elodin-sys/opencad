@@ -24,6 +24,7 @@ class Mesh:
     elem_ids: dict[str, np.ndarray] = field(default_factory=dict)
     faces: dict[str, list[tuple[int, int]]] = field(default_factory=dict)  # "body:label" -> [(element id, face 1..4)]
     tris: dict[str, np.ndarray] = field(default_factory=dict)  # "body:label" -> (K, 3) corner node ids
+    face_nodes: dict[str, np.ndarray] = field(default_factory=dict)  # "body:label" -> every node on it, mid-edge nodes included
     unmatched: dict[str, list[int]] = field(default_factory=dict)
 
     def index(self) -> dict[int, int]:
@@ -144,6 +145,7 @@ def tet_mesh(bodies: dict[str, Path], labels: dict[str, dict[str, list[dict[str,
                     npe = {2: 3, 9: 6}[int(et)]
                     tri = np.asarray(en, int).reshape(-1, npe)[:, :3]
                     mesh.tris[key] = np.vstack([mesh.tris[key], tri]) if key in mesh.tris else tri
+                    mesh.face_nodes[key] = np.union1d(mesh.face_nodes.get(key, np.array([], int)), np.asarray(en, int))
                     mesh.faces.setdefault(key, []).extend(lookup[frozenset(map(int, t))] for t in tri)
         return mesh
     finally:

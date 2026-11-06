@@ -12,7 +12,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = ap.add_subparsers(dest="verb", required=True)
 
     def backend(p: argparse.ArgumentParser) -> None:
-        p.add_argument("--backend", default=None, help="build123d (default), cadquery, freecad or zoo (a KCL assembly source)")
+        p.add_argument("--backend", default=None, help="build123d (default), cadquery, freecad, prism or zoo (a KCL assembly source)")
 
     p = sub.add_parser("stage", help="designs/.staging-<asm>/ with the sources copied in and the draft request recorded")
     p.add_argument("name")

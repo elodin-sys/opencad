@@ -1,0 +1,1091 @@
+schema_version: 1
+name: axjet-c2-inlet_frame
+intent: >-
+  Inlet frame of the AXJET-220 compressor module (body inlet_frame of the assembly axjet-c2), one 6061-T6 body in the
+  assembly frame: the duct from the bolt-on bellmouth flange (z -72, OD 224, 8 x D5.5 through holes on PCD 216 for M5
+  screws inserted from behind into the bellmouth) along the bellmouth quarter-ellipse to the r 90.25 casing bore and the
+  rear flange (z -24 ... -18, OD 224, 8 x D5.5 on PCD 212) that seats on case_r1 at z -18; the hub (r 32, z -80 ... -40)
+  that is the front bearing housing (bore D52 H6, z -75 ... -35) with a front wall (D40 bore, 4 x M3 for the nose cone);
+  a 3 mm hub fairing rising from r 32 at z -40 to r 57.6 at z -15 and ending at z -11 with the front seal sleeve (bore
+  D97, z -21 ... -11) around the rotor_1 seal arm; nothing of the frame inside r 30 behind z -35 (the spinning stack nut,
+  OD 56, sits at z -18 ... -8); five radial NACA 0020-type struts (z -70 ... -40, 30 mm chord, 6 mm thick, 72 deg pitch,
+  one on +x). Authoritative source: sources/axjet_design_and_implementation_guide.md (sections 2.4, 3.2, 4.4, 8.1, 9,
+  14.1) and the orchestrator's intent for this body, as amended by the revision 1 reviewer notes (changes 1 to 4).
+units:
+  length: mm
+  angle: deg
+material: "aluminium 6061-T6"
+density_kg_m3: 2700
+process: "turning and milling from 6061-T6 (guide section 11: struts machined integral or printed AlSi10Mg and bonded); modelled as one body"
+release_status: reconstruction
+
+frame:
+  origin: "on the engine axis at the stage-1 rotor leading-edge plane (the axjet-c2 assembly frame, guide section 3); the part spans z -80 ... -11"
+  axes:
+    x: "radial, up toward the aircraft's dorsal intake; the first strut and the first hole of each bolt pattern lie on +x"
+    y: "completes the right-handed frame; y = 0 is the mirror plane of the strut and hole patterns"
+    z: "engine axis, flow toward +z; hub front face z -80, bellmouth face z -72, case face z -18, fairing rear face z -11"
+  datums:
+    - name: A
+      description: "rear flange face, plane z = -18, normal +z; seats on case_r1 (joint inletFrameOnCase at [0, 0, -18], axis +z)"
+    - name: B
+      description: "engine axis x = y = 0: common axis of the D52 bearing bore, the r 90.25 duct bore and every revolved surface"
+    - name: C
+      description: "front flange face, plane z = -72, normal -z; the bellmouth mounts here (joint bellmouthOnFrame at [0, 0, -72])"
+    - name: D
+      description: "hub front face, plane z = -80, normal -z; the nose cone mounts here (joint noseOnInlet at [0, 0, -80])"
+    - name: E
+      description: "clocking: the +x half-plane through the first strut, the first front D5.5 hole and the first rear D5.5 hole"
+
+envelope:
+  min: [-112, -112, -80]
+  max: [112, 112, -11]
+  tolerance: 0.1
+
+parameters:
+  - name: frontFlangeFrontZ
+    value: -72
+    unit: mm
+    provenance: stated
+    source: "intent; guide 2.4 and 14.1 (front flange z -72 ... -67)"
+    tolerance: 0.01
+    description: "front flange front face, the bellmouth mating face"
+  - name: frontFlangeRearZ
+    value: -67
+    unit: mm
+    provenance: stated
+    source: "intent; guide 2.4 and 14.1"
+    tolerance: 0.01
+    description: "front flange rear face; the duct outer wall starts here"
+  - name: frontFlangeDia
+    value: 224
+    unit: mm
+    provenance: stated
+    source: "intent; guide 2.4 (OD 224)"
+    tolerance: 0.01
+    description: "front flange outer diameter"
+  - name: frontBoltPcd
+    value: 216
+    unit: mm
+    provenance: stated
+    source: "intent; guide 2.4 (8 x M5 on PCD 216)"
+    tolerance: 0.01
+    description: "pitch circle of the front flange through holes"
+  - name: frontBoltCount
+    value: 8
+    unit: ""
+    provenance: stated
+    source: "intent; guide 2.4 and 14.1"
+    tolerance: 0.01
+    description: "M5 clearance through holes in the front flange, one on +x, 45 deg pitch"
+  - name: frontBoltDia
+    value: 5.5
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 4 (approved; supersedes the guide's tapped M5): 8 x D5.5 through holes on PCD 216, screws inserted from behind into the bellmouth's tapped holes"
+    tolerance: 0.05
+    description: "front flange through-hole diameter (M5 clearance)"
+  - name: ellipseCentreZ
+    value: -45
+    unit: mm
+    provenance: stated
+    source: "intent (bellmouth quarter-ellipse centre z -45, r 125); guide 9"
+    tolerance: 0.01
+    description: "axial position of the inner-contour ellipse centre"
+  - name: ellipseCentreR
+    value: 125
+    unit: mm
+    provenance: stated
+    source: "intent; guide 9 (ellipse from r 125 at z -95)"
+    tolerance: 0.01
+    description: "radius of the inner-contour ellipse centre"
+  - name: ellipseAxial
+    value: 50
+    unit: mm
+    provenance: stated
+    source: "intent (semi-axes 50 axial, 34.75 radial)"
+    tolerance: 0.01
+    description: "axial semi-axis of the inner-contour ellipse"
+  - name: ellipseRadial
+    value: 34.75
+    unit: mm
+    provenance: stated
+    source: "intent (semi-axes 50 axial, 34.75 radial)"
+    tolerance: 0.01
+    description: "radial semi-axis of the inner-contour ellipse"
+  - name: frontContourRadius
+    value: 95.752
+    unit: mm
+    provenance: derived
+    formula: "ellipseCentreR - ellipseRadial * sqrt(1 - ((frontFlangeFrontZ - ellipseCentreZ) / ellipseAxial)^2)"
+    source: "guide 2.4 and intent state r 95.8 at the face; the ellipse gives 95.752"
+    tolerance: 0.06
+    description: "inner contour radius at the bellmouth face z -72"
+  - name: ductRadius
+    value: 90.25
+    unit: mm
+    provenance: stated
+    source: "intent; guide 3.2 and 9 (r 90.25 from z -45, cylindrical to z -18)"
+    tolerance: 0.01
+    description: "cylindrical duct bore z -45 ... -18, continuous with the case_r1 bore D180.5"
+  - name: ductOuterRadius
+    value: 100
+    unit: mm
+    provenance: inferred
+    rationale: "the intent infers the duct outer wall r 100 between the flanges from the casing rings (OD 200, guide 4.4); no source dimension"
+    tolerance: 0.5
+    description: "outer wall radius between the front flange (z -67) and the rear flange (z -24)"
+    edit_test:
+      delta: 1
+      expect:
+        volume_delta: 27152.8
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [98, 100, 102]
+      infeasible_deltas: [-7]
+  - name: rearFlangeFrontZ
+    value: -24
+    unit: mm
+    provenance: stated
+    source: "intent; guide 9 (rear flange z -24 ... -18)"
+    tolerance: 0.01
+    description: "rear flange front face"
+  - name: rearFlangeRearZ
+    value: -18
+    unit: mm
+    provenance: stated
+    source: "intent; guide 9 and 14.1 (seats on case_r1 at z -18)"
+    tolerance: 0.01
+    description: "rear flange face, datum A"
+  - name: rearFlangeDia
+    value: 224
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 2 (approved; supersedes guide 9 OD 212): every compressor casing flange OD 224"
+    tolerance: 0.01
+    description: "rear flange outer diameter"
+  - name: rearBoltPcd
+    value: 212
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 2 (supersedes guide 14.1 PCD 206): 8 x M5 on PCD 212"
+    tolerance: 0.01
+    description: "pitch circle of the rear flange holes"
+  - name: rearBoltCount
+    value: 8
+    unit: ""
+    provenance: stated
+    source: "intent; guide 14.1"
+    tolerance: 0.01
+    description: "rear flange through holes, one on +x, 45 deg pitch"
+  - name: rearBoltDia
+    value: 5.5
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 2 (supersedes guide 14.1 D6.4): D5.5 M5 clearance"
+    tolerance: 0.01
+    description: "rear flange through-hole diameter"
+  - name: hubRadius
+    value: 32
+    unit: mm
+    provenance: stated
+    source: "intent; guide 3.2 and 9 (hub r 32, nose cone D64)"
+    tolerance: 0.01
+    description: "hub outer surface z -80 ... -40"
+  - name: hubFrontZ
+    value: -80
+    unit: mm
+    provenance: stated
+    source: "intent; guide 3.2 (nose cone joins the hub at z -80)"
+    tolerance: 0.01
+    description: "hub front face, datum D"
+  - name: fairingStartZ
+    value: -40
+    unit: mm
+    provenance: stated
+    source: "intent; guide 9 (fairing rises from r 32 at z -40)"
+    tolerance: 0.01
+    description: "end of the r 32 hub surface and start of the fairing cone"
+  - name: bearingBoreDia
+    value: 52
+    unit: mm
+    provenance: stated
+    source: "intent; guide 9 (bore D52 H6, modelled D52.0)"
+    tolerance: 0.01
+    description: "front bearing seat bore"
+  - name: bearingBoreFrontZ
+    value: -75
+    unit: mm
+    provenance: stated
+    source: "intent; guide 9 (z -75 ... -35)"
+    tolerance: 0.01
+    description: "front end of the bearing bore (front wall rear face)"
+  - name: bearingBoreRearZ
+    value: -35
+    unit: mm
+    provenance: stated
+    source: "intent; guide 9 (z -75 ... -35)"
+    tolerance: 0.01
+    description: "rear end of the bearing bore; the hub ring ends here and the bore opens into the fairing"
+  - name: frontWallBoreDia
+    value: 40
+    unit: mm
+    provenance: inferred
+    rationale: "intent: D40 clears the drum_shaft M20 nose thread and the nose nut; no source dimension"
+    tolerance: 1.0
+    description: "bore of the hub front wall z -80 ... -75"
+  - name: noseScrewPcd
+    value: 56
+    unit: mm
+    provenance: inferred
+    rationale: "intent infers PCD 56 for the nose-cone screws; it sits between the D52 bore and the r 32 hub"
+    tolerance: 1.0
+    description: "pitch circle of the nose-cone tapped holes in the hub front face"
+  - name: noseScrewCount
+    value: 4
+    unit: ""
+    provenance: stated
+    source: "guide 14.1 nose-cone row (4 x M3 to the hub); intent"
+    tolerance: 0.01
+    description: "M3 tapped holes in the hub front face"
+  - name: noseScrewTapDia
+    value: 2.5
+    unit: mm
+    provenance: defaulted
+    rationale: "ISO tap-drill diameter of the stated M3 x 0.5 thread; threads are not modelled"
+    tolerance: 0.05
+    description: "modelled diameter of the M3 tapped holes"
+  - name: noseScrewDepth
+    value: 6
+    unit: mm
+    provenance: inferred
+    rationale: "blind depth for 1.5 d thread plus run-out; not stated; the hole floor (z -74) stays inside the r 26 ... 32 hub ring"
+    tolerance: 1.0
+    description: "depth of the M3 tapped holes from the hub front face"
+  - name: noseScrewClock
+    value: 45
+    unit: deg
+    provenance: inferred
+    rationale: "angular position not stated; 45 deg keeps the screws off the +x line where the starter wires leave through the hub and keeps the y = 0 mirror"
+    tolerance: 5
+    description: "angle of the first M3 hole from +x; the others follow at 90 deg"
+  - name: fairingThickness
+    value: 3
+    unit: mm
+    provenance: stated
+    source: "intent; guide 9 (3 mm fairing); read as the normal shell thickness"
+    tolerance: 0.01
+    description: "fairing shell thickness, normal to the cone and the cylinder"
+  - name: fairingRadius
+    value: 57.6
+    unit: mm
+    provenance: stated
+    source: "intent; guide 3.2 and 9 (r 57.6 at z -15)"
+    tolerance: 0.01
+    description: "fairing outer radius at the shoulder and over the rear cylinder"
+  - name: fairingShoulderZ
+    value: -15
+    unit: mm
+    provenance: stated
+    source: "intent; guide 3.2 and 9"
+    tolerance: 0.01
+    description: "where the fairing cone reaches r 57.6"
+  - name: fairingRearZ
+    value: -11
+    unit: mm
+    provenance: stated
+    source: "intent; guide 4.4 and 9 (ends at z -11, 3 mm ahead of the rotor_1 face at z -8)"
+    tolerance: 0.01
+    description: "fairing and seal sleeve rear face"
+  - name: sealBoreDia
+    value: 97
+    unit: mm
+    provenance: stated
+    source: "intent; guide 4.4 and 9 (seal sleeve bore D97)"
+    tolerance: 0.01
+    description: "front seal sleeve bore around the rotor_1 seal arm (r 48.1), 0.4 mm radial gap"
+  - name: sealFrontZ
+    value: -21
+    unit: mm
+    provenance: stated
+    source: "intent; guide 9 (seal sleeve z -21 ... -11)"
+    tolerance: 0.01
+    description: "front end of the D97 seal bore"
+  - name: sealSleeveWall
+    value: 3
+    unit: mm
+    provenance: inferred
+    rationale: "sleeve wall not stated; 3 mm matches the fairing shell; the sleeve merges into the fairing cone ahead of z -16.76 and that overlap is the web the intent infers"
+    tolerance: 0.5
+    description: "seal sleeve wall thickness (OD 103)"
+  - name: strutCount
+    value: 5
+    unit: ""
+    provenance: stated
+    source: "intent; guide 3.2, 9 and 14.1 (five struts, one on +x)"
+    tolerance: 0.01
+    description: "number of radial struts"
+  - name: strutPitch
+    value: 72
+    unit: deg
+    provenance: derived
+    formula: "360 / strutCount"
+    source: "intent states 72 deg pitch with one on +x"
+    tolerance: 0.01
+    description: "angular pitch of the struts, first strut on +x"
+  - name: strutLeadZ
+    value: -70
+    unit: mm
+    provenance: stated
+    source: "intent; guide 3.2 and 9 (struts z -70 ... -40)"
+    tolerance: 0.01
+    description: "strut leading edge plane"
+  - name: strutChord
+    value: 30
+    unit: mm
+    provenance: stated
+    source: "intent; guide 9 (30 mm axial chord)"
+    tolerance: 0.01
+    description: "strut axial chord"
+  - name: strutTrailZ
+    value: -40
+    unit: mm
+    provenance: derived
+    formula: "strutLeadZ + strutChord"
+    source: "intent and guide 9 state z -40"
+    tolerance: 0.01
+    description: "strut trailing edge plane"
+  - name: strutThickness
+    value: 6
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 3 (approved; supersedes guide 9 and 14.1 '12 mm max thickness'): symmetric NACA 0020-type section, 6 mm on the 30 mm chord"
+    tolerance: 0.01
+    description: "strut maximum thickness (tangential), NACA 0020-type symmetric form (t/c 0.20, maximum at 30 % chord)"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: 12260.7
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.1
+      sweep:
+        values: [4, 6, 8]
+      infeasible_deltas: [-6]
+
+features:
+  - id: duct
+    kind: revolve
+    description: >-
+      Duct wall revolved about z. Inner contour on the bellmouth quarter-ellipse
+      r = 125 - 34.75 * sqrt(1 - ((z + 45) / 50)^2) from r 95.752 at z -72 to r 90.25 at z -45, then cylindrical r 90.25
+      to z -18; outer wall r 100 from the front flange (z -67) to the rear flange (z -24).
+    parameters: [ellipseCentreZ, ellipseCentreR, ellipseAxial, ellipseRadial, frontContourRadius, ductRadius, ductOuterRadius]
+    verify:
+      - method: cylinder
+        cylinder: ductBore
+      - method: cylinder
+        cylinder: ductOuter
+      - method: section
+        section: ductFairing
+      - method: solid
+        points: [[-95, 0, -35]]
+      - method: void
+        points: [[0, 70, -20]]
+  - id: frontFlange
+    kind: revolve
+    description: "front flange z -72 ... -67, OD 224, inner edge on the ellipse; its front face is the bellmouth mating face (datum C)"
+    parameters: [frontFlangeFrontZ, frontFlangeRearZ, frontFlangeDia]
+    verify:
+      - method: face
+        face: bellmouthFace
+      - method: face
+        face: frontFlangeBack
+      - method: cylinder
+        cylinder: frontFlangeRim
+      - method: section
+        section: frontFlange
+      - method: solid
+        points: [[101.627, 42.095, -69.5]]
+  - id: frontBolts
+    kind: hole
+    count: 8
+    description: "8 x D5.5 (M5 clearance) through the front flange z -72 ... -67 on PCD 216, first on +x, 45 deg pitch; the screws enter from behind the flange into the bellmouth's tapped holes (revision 1)"
+    parameters: [frontBoltPcd, frontBoltCount, frontBoltDia]
+    verify:
+      - method: cylinder
+        cylinder: frontBolt0
+      - method: cylinder
+        cylinder: frontBolt1
+      - method: cylinder
+        cylinder: frontBolt2
+      - method: cylinder
+        cylinder: frontBolt3
+      - method: cylinder
+        cylinder: frontBolt4
+      - method: cylinder
+        cylinder: frontBolt5
+      - method: cylinder
+        cylinder: frontBolt6
+      - method: cylinder
+        cylinder: frontBolt7
+      - method: void
+        points: [[108, 0, -69.5]]
+  - id: rearFlange
+    kind: revolve
+    description: "rear flange z -24 ... -18, OD 224, bore r 90.25; its rear face seats on case_r1 (datum A)"
+    parameters: [rearFlangeFrontZ, rearFlangeRearZ, rearFlangeDia]
+    verify:
+      - method: face
+        face: caseFace
+      - method: cylinder
+        cylinder: rearFlangeRim
+      - method: solid
+        points: [[0, 95, -21]]
+  - id: rearBolts
+    kind: hole
+    count: 8
+    description: "8 x D5.5 (M5 clearance) through the rear flange on PCD 212, first on +x, 45 deg pitch; each hole (r 103.25 ... 108.75) lies wholly inside the r 100 ... 112 flange land"
+    parameters: [rearBoltPcd, rearBoltCount, rearBoltDia]
+    verify:
+      - method: cylinder
+        cylinder: rearBolt0
+      - method: cylinder
+        cylinder: rearBolt1
+      - method: cylinder
+        cylinder: rearBolt2
+      - method: cylinder
+        cylinder: rearBolt3
+      - method: cylinder
+        cylinder: rearBolt4
+      - method: cylinder
+        cylinder: rearBolt5
+      - method: cylinder
+        cylinder: rearBolt6
+      - method: cylinder
+        cylinder: rearBolt7
+      - method: void
+        points: [[106, 0, -21]]
+  - id: hub
+    kind: revolve
+    description: "hub ring r 26 ... 32 from z -80 to z -35; its outer surface r 32 runs z -80 ... -40 and is the strut root and the nose-cone continuation"
+    parameters: [hubRadius, hubFrontZ, fairingStartZ]
+    verify:
+      - method: cylinder
+        cylinder: hubOuter
+      - method: solid
+        points: [[0, -29, -55]]
+  - id: frontWall
+    kind: revolve
+    description: "hub front wall z -80 ... -75, r 20 ... 32 (D40 bore); its front face carries the nose cone (datum D)"
+    parameters: [hubFrontZ, bearingBoreFrontZ, frontWallBoreDia]
+    verify:
+      - method: face
+        face: noseFace
+      - method: cylinder
+        cylinder: frontWallBore
+      - method: section
+        section: frontWall
+      - method: solid
+        points: [[0, 25, -77.5]]
+      - method: void
+        points: [[0, 0, -77.5]]
+  - id: bearingSeat
+    kind: hole
+    description: "front bearing seat bore D52 (H6, modelled 52.0) z -75 ... -35, shoulder face at z -75, open to the rear into the fairing; bearing_front sits at z -72 ... -42"
+    parameters: [bearingBoreDia, bearingBoreFrontZ, bearingBoreRearZ]
+    verify:
+      - method: cylinder
+        cylinder: bearingBore
+      - method: face
+        face: bearingShoulder
+      - method: face
+        face: hubRearFace
+      - method: void
+        points: [[0, 0, -55]]
+  - id: noseScrews
+    kind: hole
+    count: 4
+    description: "4 x M3 tapped blind holes in the hub front face on PCD 56 at 45, 135, 225, 315 deg; modelled D2.5 x 6 deep, flat floor at z -74"
+    parameters: [noseScrewPcd, noseScrewCount, noseScrewTapDia, noseScrewDepth, noseScrewClock]
+    verify:
+      - method: cylinder
+        cylinder: noseScrew0
+      - method: cylinder
+        cylinder: noseScrew1
+      - method: cylinder
+        cylinder: noseScrew2
+      - method: cylinder
+        cylinder: noseScrew3
+      - method: void
+        points: [[19.799, 19.799, -78]]
+  - id: fairing
+    kind: revolve
+    description: >-
+      Hub fairing, a 3 mm shell (normal thickness): outer cone from r 32 at z -40 straight to r 57.6 at z -15, outer
+      cylinder r 57.6 to the rear face at z -11; inner surface offset 3 mm (inner cone through r 29.904 at z -37.854,
+      inner cylinder r 54.6 from z -13.736). The region between the hub ring and the inner cone ahead of z -35 is solid.
+    parameters: [fairingStartZ, fairingThickness, fairingRadius, fairingShoulderZ, fairingRearZ]
+    verify:
+      - method: cylinder
+        cylinder: fairingOuter
+      - method: cylinder
+        cylinder: fairingInner
+      - method: section
+        section: ductFairing
+      - method: solid
+        points: [[0, 56.1, -12.5]]
+      - method: void
+        points: [[0, 0, -25]]
+  - id: sealSleeve
+    kind: revolve
+    description: >-
+      Front seal sleeve: bore D97 from z -21 to z -11, wall 3 mm (OD 103), joined to the fairing where the sleeve runs
+      into the fairing cone (z -21 ... -16.76, the web). Nothing lies inside r 48.5 behind z -21, so the rotor_1 seal arm
+      (r 44 ... 48.1, z -18 ... -8) runs at 0.4 mm radial and 3 mm axial clearance.
+    parameters: [sealBoreDia, sealFrontZ, sealSleeveWall, fairingRearZ]
+    verify:
+      - method: cylinder
+        cylinder: sealBore
+      - method: cylinder
+        cylinder: sealSleeveOuter
+      - method: face
+        face: rearFaces
+      - method: section
+        section: sealSleeve
+      - method: solid
+        points: [[0, -50, -15]]
+      - method: void
+        points: [[0, 46, -18.5], [46, 0, -15]]
+  - id: struts
+    kind: pattern
+    count: 5
+    description: >-
+      Five radial struts at 0, 72, 144, 216, 288 deg (first on +x, it carries the oil-mist, starter and instrumentation
+      lines; solid in the model, its line passage is not modelled), z -70 ... -40: symmetric NACA 0020-type thickness
+      form (closed trailing edge) with 6 mm maximum thickness at 30 % chord, section area 122.6 mm2, extruded radially from inside the hub ring (r 29) to inside the
+      duct wall (r ductOuterRadius - 1.5), so the wetted strut runs from the hub r 32 to the duct contour.
+    parameters: [strutCount, strutPitch, strutLeadZ, strutChord, strutTrailZ, strutThickness]
+    verify:
+      - method: section
+        section: ductStruts
+      - method: solid
+        points: [[60, 0, -58], [-48.541, 35.267, -58]]
+      - method: void
+        points: [[48.541, 35.267, -55], [60, 0, -71.5], [60, 0, -38.5]]
+
+interfaces:
+  - name: caseJoint
+    description: "rear flange face z -18 seating on case_r1 (joint inletFrameOnCase at [0, 0, -18], axis +z), the r 90.25 bore that continues the casing bore, the OD 224 rim and the +x hole of the D5.5 pattern on PCD 212"
+    must_not_change: true
+    checks: [caseFace, ductBore, rearFlangeRim, rearBolt0]
+  - name: bellmouthJoint
+    description: "front flange face z -72 carrying the bellmouth (joint bellmouthOnFrame at [0, 0, -72]), its OD 224 rim, the +x D5.5 through hole (screws from behind into the bellmouth) and the face-to-face flange span"
+    must_not_change: true
+    checks: [bellmouthFace, frontFlangeRim, frontBolt0, flangeSpan]
+  - name: noseJoint
+    description: "hub front face z -80 and the r 32 hub surface the nose cone continues (joint noseOnInlet at [0, 0, -80]), with the first M3 hole"
+    must_not_change: true
+    checks: [noseFace, hubOuter, noseScrew0]
+  - name: bearingSeat
+    description: "D52 bore and its z -75 shoulder holding bearing_front (joint bearingFrontInHub at [0, 0, -72])"
+    must_not_change: true
+    checks: [bearingBore, bearingShoulder]
+  - name: rotorSeal
+    description: "D97 seal bore around the rotor_1 seal arm and the z -11 rear faces 3 mm ahead of the rotor_1 front face"
+    must_not_change: true
+    checks: [sealBore, rearFaces]
+  - name: clocking
+    description: "strut and hole patterns clocked with one feature on +x and mirrored about y = 0"
+    must_not_change: true
+    checks: [mirrorY]
+
+acceptance:
+  volume:
+    expected: 501106
+    tolerance_rel: 0.01
+    provenance: derived
+    note: "revision 1: Pappus on the duct profile (350327.1, plus the OD 224 rear flange ring 2*pi*(112^2-106^2)*6 = 24655.0) and the hub-fairing-sleeve profile (91683.0) + 5 x 7329.9 exposed strut volume (NACA 0020, 6 mm) - 8 x 118.79 (front D5.5 through) - 8 x 142.55 (rear D5.5) - 4 x 29.45 (M3); brief section 5"
+  surface_area:
+    expected: 170569
+    tolerance_rel: 0.02
+    provenance: derived
+    note: "revision 1: Pappus per profile segment (duct 98087.8 plus the OD 224 rear flange growth 8653.2, hub 45547.0) + 5 x 3508.2 net strut sides (perimeter 62.72 x span 59.81 minus 2 x 122.6 footprints) + hole walls minus hole mouths; brief section 5"
+  center_of_mass:
+    expected: [0, 0, -44.233]
+    tolerance: 0.3
+    provenance: derived
+    note: "z from the first moments of the same decomposition; x = y = 0 by the 5-, 8- and 4-fold patterns"
+  solid_count: 1
+  sections:
+    - id: ductStruts
+      plane: z
+      at: -55
+      expect:
+        area: 8081.8
+        area_tolerance_rel: 0.03
+        loops: 1
+        holes: 6
+      description: "duct ring r 90.952 ... 100 + hub ring r 26 ... 32 + five 6 mm struts (5.286 mm thick at mid chord x 59.05 span = 312.13 each): one region, holes = bearing bore + 5 passages"
+    - id: frontFlange
+      plane: z
+      at: -71
+      expect:
+        area: 11768.5
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 10
+      description: "flange ring r 95.318 ... 112 with 8 D5.5 through holes, and the hub ring r 26 ... 32 (ahead of the strut leading edge)"
+    - id: ductFairing
+      plane: z
+      at: -30
+      expect:
+        area: 6909.1
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 2
+      description: "duct ring r 90.25 ... 100 and the fairing cone ring r 37.946 ... 42.24"
+    - id: sealSleeve
+      plane: z
+      at: -13
+      expect:
+        area: 1999.9
+        area_tolerance_rel: 0.005
+        loops: 2
+        holes: 2
+      description: "fairing cylinder r 54.6 ... 57.6 and seal sleeve r 48.5 ... 51.5"
+    - id: frontWall
+      plane: z
+      at: -77
+      expect:
+        area: 1940.7
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 5
+      description: "front wall r 20 ... 32 with the D40 bore and the four M3 holes"
+  faces:
+    - name: bellmouthFace
+      plane: z
+      at: -72
+      normal: "-"
+      area: 10414.5
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: frontFlangeBack
+      plane: z
+      at: -67
+      normal: "+"
+      area: 7802.1
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: caseFace
+      plane: z
+      at: -18
+      normal: "+"
+      area: 13629.6
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: noseFace
+      plane: z
+      at: -80
+      normal: "-"
+      area: 1940.7
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: bearingShoulder
+      plane: z
+      at: -75
+      normal: "+"
+      area: 867.08
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: hubRearFace
+      plane: z
+      at: -35
+      normal: "+"
+      area: 1261.5
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: rearFaces
+      plane: z
+      at: -11
+      normal: "+"
+      area: 1999.9
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: sum
+  cylinders:
+    - name: bearingBore
+      point: [0, 0, -75]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 52
+      radius_tolerance: 0.01
+      length: 40
+      t_range: [0, 40]
+      description: "front bearing seat D52 H6, z -75 ... -35"
+    - name: frontWallBore
+      point: [0, 0, -80]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 40
+      length: 5
+      t_range: [0, 5]
+      description: "front wall bore z -80 ... -75"
+    - name: hubOuter
+      point: [0, 0, -80]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 32
+      length: 40
+      t_range: [0, 40]
+      description: "hub outer surface z -80 ... -40 (strut roots on it)"
+    - name: ductBore
+      point: [0, 0, -45]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 90.25
+      length: 27
+      t_range: [0, 27]
+      description: "cylindrical duct bore z -45 ... -18"
+    - name: ductOuter
+      point: [0, 0, -67]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 100
+      length: 43
+      t_range: [0, 43]
+      description: "duct outer wall z -67 ... -24"
+    - name: frontFlangeRim
+      point: [0, 0, -72]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 112
+      length: 5
+      t_range: [0, 5]
+      description: "front flange OD 224"
+    - name: rearFlangeRim
+      point: [0, 0, -24]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 112
+      length: 6
+      t_range: [0, 6]
+      description: "rear flange OD 224"
+    - name: fairingOuter
+      point: [0, 0, -15]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 57.6
+      length: 4
+      t_range: [0, 4]
+      description: "fairing outer cylinder z -15 ... -11"
+    - name: fairingInner
+      point: [0, 0, -13.736]
+      direction: [0, 0, 1]
+      kind: hole
+      radius: 54.6
+      length: 2.736
+      length_tolerance: 0.2
+      t_range: [0, 2.736]
+      description: "fairing inner cylinder z -13.736 ... -11"
+    - name: sealBore
+      point: [0, 0, -21]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 97
+      radius_tolerance: 0.02
+      length: 10
+      t_range: [0, 10]
+      description: "front seal sleeve bore z -21 ... -11"
+    - name: sealSleeveOuter
+      point: [0, 0, -16.764]
+      direction: [0, 0, 1]
+      kind: pin
+      radius: 51.5
+      length: 5.764
+      length_tolerance: 0.3
+      t_range: [0, 5.764]
+      description: "seal sleeve outer surface behind its junction with the fairing cone"
+    - name: frontBolt0
+      point: [108, 0, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 5
+      t_range: [0, 5]
+    - name: frontBolt1
+      point: [76.368, 76.368, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 5
+      t_range: [0, 5]
+    - name: frontBolt2
+      point: [0, 108, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 5
+      t_range: [0, 5]
+    - name: frontBolt3
+      point: [-76.368, 76.368, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 5
+      t_range: [0, 5]
+    - name: frontBolt4
+      point: [-108, 0, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 5
+      t_range: [0, 5]
+    - name: frontBolt5
+      point: [-76.368, -76.368, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 5
+      t_range: [0, 5]
+    - name: frontBolt6
+      point: [0, -108, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 5
+      t_range: [0, 5]
+    - name: frontBolt7
+      point: [76.368, -76.368, -72]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 5
+      t_range: [0, 5]
+    - name: rearBolt0
+      point: [106, 0, -24]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 6
+      t_range: [0, 6]
+    - name: rearBolt1
+      point: [74.953, 74.953, -24]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 6
+      t_range: [0, 6]
+    - name: rearBolt2
+      point: [0, 106, -24]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 6
+      t_range: [0, 6]
+    - name: rearBolt3
+      point: [-74.953, 74.953, -24]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 6
+      t_range: [0, 6]
+    - name: rearBolt4
+      point: [-106, 0, -24]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 6
+      t_range: [0, 6]
+    - name: rearBolt5
+      point: [-74.953, -74.953, -24]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 6
+      t_range: [0, 6]
+    - name: rearBolt6
+      point: [0, -106, -24]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 6
+      t_range: [0, 6]
+    - name: rearBolt7
+      point: [74.953, -74.953, -24]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 5.5
+      length: 6
+      t_range: [0, 6]
+    - name: noseScrew0
+      point: [19.799, 19.799, -80]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 2.5
+      length: 6
+      t_range: [0, 6]
+    - name: noseScrew1
+      point: [-19.799, 19.799, -80]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 2.5
+      length: 6
+      t_range: [0, 6]
+    - name: noseScrew2
+      point: [-19.799, -19.799, -80]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 2.5
+      length: 6
+      t_range: [0, 6]
+    - name: noseScrew3
+      point: [19.799, -19.799, -80]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 2.5
+      length: 6
+      t_range: [0, 6]
+  dimensions:
+    - name: axialLength
+      axis: z
+      expected: 69
+      tolerance: 0.1
+      description: "bbox extent z -80 ... -11"
+    - name: outerDiameter
+      axis: x
+      expected: 224
+      tolerance: 0.1
+      description: "bbox extent along x, the front flange OD"
+    - name: flangeSpan
+      axis: z
+      expected: 54
+      tolerance: 0.05
+      between: [bellmouthFace, caseFace]
+      description: "bellmouth face z -72 to case face z -18"
+    - name: noseToBellmouth
+      axis: z
+      expected: 8
+      tolerance: 0.05
+      between: [noseFace, bellmouthFace]
+      description: "hub front face z -80 to bellmouth face z -72"
+  solids:
+    - name: body
+      contains_point: [-95, 0, -35]
+      description: "the single inlet-frame body (point in the duct wall)"
+  hardware:
+    - name: sealArm
+      kind: cylinder
+      point: [0, 0, -18]
+      direction: [0, 0, 1]
+      radius: 48.1
+      length: 10
+      description: "rotor_1 seal arm swept envelope r <= 48.1 (teeth to D96.2), z -18 ... -8"
+    - name: rotor1Hub
+      kind: cylinder
+      point: [0, 0, -8]
+      direction: [0, 0, 1]
+      radius: 57.6
+      length: 8
+      description: "rotor_1 front face and front hub extension r 57.6, z -8 ... 0"
+    - name: drumKeepOut
+      kind: cylinder
+      point: [0, 0, -34]
+      direction: [0, 0, 1]
+      radius: 29.5
+      length: 26
+      description: "drum shaft (D36 neck, D39 thread, D40 seat) and spinning stack nut (OD 56, z -18 ... -8) keep-out behind z -35 (revision 1): with min_gap 0.5 nothing of the frame lies inside r 30; the cylinder starts 1 mm behind the hub ring's rear face (z -35)"
+  clearances:
+    - name: sealRadialGap
+      a: all
+      b: sealArm
+      min_gap: 0.35
+      max_gap: 0.45
+      description: "0.4 mm radial labyrinth gap between the D97 bore and the seal arm teeth"
+    - name: rotorAxialGap
+      a: all
+      b: rotor1Hub
+      min_gap: 2.9
+      max_gap: 3.1
+      description: "3 mm axial gap from the z -11 rear faces to the rotor_1 front face"
+    - name: drumClearance
+      a: all
+      b: drumKeepOut
+      min_gap: 0.5
+      description: "nothing of the frame inside r 30 behind z -35 (revision 1; the stack nut at r 28 spins there)"
+  thickness:
+    - name: fairingShell
+      min: 2.8
+      stat: p05
+      max_thickness: 3.3
+      region: [[-60, -60, -34], [60, 60, -24]]
+      description: "3 mm fairing shell measured normal to the cone, away from the hub and sleeve junctions"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[101.627, 42.095, -69.5], [0, 95, -21], [-95, 0, -35], [0, -29, -55], [0, 25, -77.5], [60, 0, -58], [-48.541, 35.267, -58], [0, -50, -15], [0, 56.1, -12.5]]
+      description: "front flange, rear flange, duct wall, hub ring, front wall, two struts, seal sleeve, fairing cylinder (the fairing cone is pinned by section ductFairing and thickness fairingShell)"
+    - name: inVoid
+      state: void
+      points: [[0, 0, -55], [0, 0, -77.5], [0, 0, -25], [48.541, 35.267, -55], [0, 46, -18.5], [46, 0, -15], [108, 0, -69.5], [106, 0, -21], [29, 0, -25], [19.799, 19.799, -78], [0, 70, -20], [60, 0, -71.5], [60, 0, -38.5]]
+      description: "bearing bore, front wall bore, drum space, strut passage, seal-arm path and its axial clearance, bolt holes, the r 30 stack-nut keep-out, screw hole, gas path, ahead of and behind the strut"
+  cylinder_counts:
+    - name: frontBolts
+      diameter: 5.5
+      kind: hole
+      direction: [0, 0, 1]
+      region: [[-115, -115, -73], [115, 115, -66]]
+      expected: 8
+    - name: rearBolts
+      diameter: 5.5
+      kind: hole
+      direction: [0, 0, 1]
+      region: [[-115, -115, -25], [115, 115, -17]]
+      expected: 8
+    - name: noseScrews
+      diameter: 2.5
+      kind: hole
+      direction: [0, 0, 1]
+      region: [[-35, -35, -81], [35, 35, -73]]
+      expected: 4
+  symmetry:
+    - name: mirrorY
+      plane: y
+      at: 0
+      max_deviation: 0.1
+      p95_deviation: 0.05
+  blockout:
+    volume_min: 383000
+    volume_max: 588000
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    note: "AXJET-220 design and implementation guide; sections 2.4, 3.2, 4.4, 8.1, 9, 11, 14.1 define the inlet frame"
+
+open_questions:
+  - "Changed (revision 1, reviewer notes): the rear flange is OD 224 with 8 x D5.5 (M5 clearance) on PCD 212, one on +x (was OD 212 with 8 x D6.4 on PCD 206). Reason: the stated holes broke 0.2 mm out of the OD 212 rim and reached r 99.8 inside the r 100 wall, so no M6 head or nut could seat; an M5 head or nut at r 106 clears the wall and the rim by about 1.5 mm (case_r1 matches)."
+  - "Changed (revision 1, reviewer notes): the struts are symmetric NACA 0020-type sections, 30 mm axial chord, 6 mm maximum thickness (was 12 mm). Reason: the guide's '12 % section' and '12 mm max thickness' disagree (12 mm is 40 % of 30 mm), and 12 mm struts block about 16 % of the annulus and shed bluff wakes 40 mm ahead of rotor_1."
+  - "Changed (revision 1, reviewer notes): the front flange carries 8 x D5.5 through holes on PCD 216 (was 8 x M5 tapped, modelled D4.2); the M5 screws go in from behind the flange into tapped blind holes in the bellmouth. Reason: the bellmouth's solid lip covered the flange front face, so screws could not be fitted from the front."
+  - "Changed (revision 1, reviewer notes): nothing of the frame may lie inside r 30 behind z -35 (was r 22), so the spinning stack nut (r 28, z -18 ... -8) clears it; the geometry already met this (the hub ring ends at z -35 and the fairing's inner cone is at r >= 32.8 behind it), so only the keep-out hardware and clearance changed."
+  - "The +x strut carries the oil-mist, starter and instrumentation lines, but no passage is dimensioned; it stays solid in the model (revision 1 confirms)."
+  - "Tapped holes are modelled at ISO tap-drill diameters (M3 as D2.5 x 6 blind); threads are not modelled."
+  - "Nose-cone screws: PCD 56, the 45 deg clocking and the 6 mm depth are inferred; the nose cone's 2 mm wall (r 30 ... 32) needs lugs to reach r 28. Confirm with the nose_cone design."
+  - "The D40 front wall bore is inferred; the nose nut (z -95 ... -75) must pass through it, and its OD is not stated."
+  - "Seal sleeve wall (3 mm, OD 103) is inferred; a sleeve of any practical wall merges into the fairing cone between z -21 and about -16.8, so the literal 'web ahead of z -19' would need a wall under 0.8 mm. The merged length is taken as the web. Confirm the sleeve OD and the web."
+  - "The fairing's 3 mm is read as normal shell thickness (4.29 mm radially); a radial reading would make the inner cone meet the D97 bore at z -20.96 instead of -19.69."
+  - "Bearing retention is not defined: the bore is open to the rear at z -35 (the bearing must enter from the rear past the D40 front wall), and the 3 mm gap between the front wall (z -75) and the bearing face (z -72) and the rear retainer are not specified."
+  - "The guide's r 95.8 at the flange face is 0.05 mm above the ellipse value 95.752; the ellipse governs."
+  - "No fillets are stated at the strut roots and tips, the flange roots or the fairing junction; sharp junctions are modelled."

@@ -214,6 +214,30 @@ def tip_band(geom: Any, body: str, depth: float) -> tuple[np.ndarray, np.ndarray
     return o, ax, float(r.max()), float(t[tip].min()), float(t[tip].max())
 
 
+BLADE_BAND = 0.75  # a co-rotating body's MRF cylinder spans the surface beyond this fraction of its tip radius
+
+
+def blade_bands(sim: Any, geom: Any, rotor: str, fluid: str, o: np.ndarray, ax: np.ndarray) -> list[tuple[np.ndarray, np.ndarray, float]]:
+    """(p1 m, p2 m, radius m) per simulated body fixed to the rotor's spinning joint (a blade row on a drum): a cylinder over the axial
+    span of its surface beyond BLADE_BAND of its tip radius, so a spool's rows turn while the stator rows between them stay put."""
+    import trimesh
+
+    from opencad.assembly.joints import chain
+
+    spin = geom.joint_of(rotor).name
+    out = []
+    for b in sim.bodies:
+        if b in (rotor, fluid) or spin not in {j.name for j in chain(geom.contract, b)}:
+            continue
+        w = np.asarray(trimesh.load(geom.stl(b), force="mesh").vertices) - o
+        t = w @ ax
+        r = np.linalg.norm(w - np.outer(t, ax), axis=1)
+        band = t[r >= BLADE_BAND * r.max()]
+        m = float(sim.settings.get("mrf_margin_mm", max(0.5, 0.03 * r.max())))  # reaches the longer hub chord, short of the next row
+        out.append(((o + (band.min() - m) * ax) * MM, (o + (band.max() + m) * ax) * MM, (float(r.max()) + m) * MM))
+    return out
+
+
 def region_entries(sim: Any, geom: Any, rotor: str | None, levels: dict[str, int], finest: int, finest_mm: float) -> tuple[str, str, float, dict[str, Any]]:
     """snappyHexMesh geometry and refinementRegions entries for the regions a level refines, `n` levels past the finest surface cells
     (snappy level `finest`, `finest_mm` in size), with their volume in cells at that size (for the memory estimate) and a record of each."""
@@ -314,8 +338,10 @@ mergeTolerance 1e-6;
         corners = np.array([[x, y, z] for x in (lo_r[0], hi_r[0]) for y in (lo_r[1], hi_r[1]) for z in (lo_r[2], hi_r[2])])
         t = (corners - o) @ ax
         margin = float(sim.settings.get("mrf_margin_mm", max(0.5, 0.05 * r_max)))
-        p1, p2 = (o + (t.min() - margin) * ax) * MM, (o + (t.max() + margin) * ax) * MM
-        zone = f"{{ name rotor; type cellZoneSet; action new; source cylinderToCell; p1 {_vec(p1)}; p2 {_vec(p2)}; radius {(r_max + margin) * MM:.9g}; }}"
+        cyls = [((o + (t.min() - margin) * ax) * MM, (o + (t.max() + margin) * ax) * MM, (r_max + margin) * MM)]
+        cyls += [c for c in blade_bands(sim, geom, rotor, fluid, o, ax) if c[2] > cyls[0][2]]
+        zone = " ".join(f"{{ name rotor; type cellZoneSet; action {'add' if i else 'new'}; source cylinderToCell; p1 {_vec(p1)}; p2 {_vec(p2)}; "
+                        f"radius {r:.9g}; }}" for i, (p1, p2, r) in enumerate(cyls))
         mrf = f"MRF1 {{ cellZone rotor; active yes; nonRotatingPatches ({' '.join(walls + inlets + outlets)}); origin {_vec(o * MM)}; axis {_vec(ax)}; omega {omega:.9g}; }}"
     _write(case_dir / "system" / "topoSetDict", "dictionary", "topoSetDict", f"actions ( {zone} );")
     _write(case_dir / "constant" / "MRFProperties", "dictionary", "MRFProperties", mrf)

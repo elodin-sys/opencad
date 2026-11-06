@@ -11,7 +11,8 @@ opencad: an agentic CAD pipeline for parts and machines with a scorer-only truth
 - `truth/` is scorer-only: never edit a case to pass; never tune against a case without a `truth/calibration-log.yaml` entry.
 - Pipeline commands run in the foreground from the repo root with output redirected to `results/_logs/<name>.log` (never through `tee`); never detach (`nohup`, `setsid`, `disown`, `&`, `start_new_session`). Wait on worker orders with `python -m opencad next --watch --pid <pid>`. Never start a run for a part with a pending order (`python -m opencad next`).
 - Never edit `src/opencad` while a pipeline segment is running (the interpreter keeps its imported modules); between segments is safe.
-- Default backend `build123d` (`--backend`, `OPENCAD_BACKEND`).
+- Default backend `build123d` (`--backend`, `OPENCAD_BACKEND`); the others are `cadquery`, `freecad`, `prism` (Prism's managed build123d 0.11 + `navier_cad` env, millimetres) and `zoo`.
+- From Prism, a work order's `cad-worker` Task is a `spawn_sub_agent` (`.cursor/skills/cad-drive`, "Prism host"); the loop is otherwise the same.
 - Codex only when asked (`--worker codex`); its scratch is `results/_spikes/<name>`, never `/tmp`.
 - Visuals are animated GLBs and the HTML viewer; no GIFs or MP4s.
 - Never commit, amend, push or open pull requests.

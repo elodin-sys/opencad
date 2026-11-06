@@ -1,0 +1,135 @@
+{
+  "named_faces": {
+    "frontFace": {
+      "plane": "z",
+      "at": -8.0,
+      "normal": "-",
+      "found": 2,
+      "area": 8571.992634952432,
+      "mode": "sum",
+      "ok": true,
+      "position": -8.0,
+      "area_expected": 8572.0,
+      "area_ok": true
+    },
+    "rearFace": {
+      "plane": "z",
+      "at": 24.0,
+      "normal": "+",
+      "found": 1,
+      "area": 6597.344572538565,
+      "ok": true,
+      "position": 24.0,
+      "area_expected": 6597.3,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 9.107847672554967e-15,
+      "centroid_uv": [
+        -7.105427357601002e-15,
+        5.697876033428613e-15
+      ]
+    },
+    "rimRearFace": {
+      "plane": "z",
+      "at": 16.0,
+      "normal": "+",
+      "found": 1,
+      "area": 3835.884630033137,
+      "ok": true,
+      "position": 16.0,
+      "area_expected": 3835.9,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 4.584270652298852e-14,
+      "centroid_uv": [
+        -4.263256414560601e-14,
+        1.685283998985463e-14
+      ]
+    },
+    "sealArmFront": {
+      "plane": "z",
+      "at": -18.0,
+      "normal": "-",
+      "found": 1,
+      "area": 594.4207459857244,
+      "ok": true,
+      "position": -18.0,
+      "area_expected": 594.4,
+      "area_ok": true,
+      "center_expected": [
+        0.0,
+        0.0
+      ],
+      "center_error": 9.599293038013905e-14,
+      "centroid_uv": [
+        -7.815970093361102e-14,
+        5.5728842020400056e-14
+      ]
+    }
+  },
+  "contract_faces": [
+    {
+      "name": "frontFace",
+      "plane": "z",
+      "at": -8.0,
+      "normal": "-",
+      "area": 8572.0,
+      "area_tolerance_rel": 0.02,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "sum"
+    },
+    {
+      "name": "rearFace",
+      "plane": "z",
+      "at": 24.0,
+      "normal": "+",
+      "area": 6597.3,
+      "area_tolerance_rel": 0.01,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "rimRearFace",
+      "plane": "z",
+      "at": 16.0,
+      "normal": "+",
+      "area": 3835.9,
+      "area_tolerance_rel": 0.03,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    },
+    {
+      "name": "sealArmFront",
+      "plane": "z",
+      "at": -18.0,
+      "normal": "-",
+      "area": 594.4,
+      "area_tolerance_rel": 0.05,
+      "tolerance": null,
+      "center": [
+        0.0,
+        0.0
+      ],
+      "mode": "one"
+    }
+  ],
+  "planar_faces_total": 968
+}

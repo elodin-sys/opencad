@@ -1,0 +1,898 @@
+schema_version: 1
+name: axjet-c2-drum_shaft
+intent: >-
+  Drum shaft (body drum_shaft of the axjet-c2 compressor module) of the AXJET-220 engine, a
+  turned 17-4PH H1025 hollow shaft per section 8.1 and the section 14.1 parts table of
+  sources/axjet_design_and_implementation_guide.md (authoritative). Own frame: axis +z through
+  the origin, origin on the axis at the rotor_1 leading-edge plane (assembly z 0), x parallel to
+  the assembly x; z -90 ... 262. Front: M20 x 1 LH nose-nut / starter-clutch thread z -90 ... -75
+  (modelled as plain D20), D25 h5 front bearing journal z -75 ... -40 (modelled D25.0), step to
+  a D36 neck at z -40 (bearing inner-race spacer abutment on the D25/D36 step). D36 neck
+  z -40 ... -18 so the stack nut passes over it; M39 x 1.5 stack-nut thread z -18 ... -8
+  (modelled as plain D39); D40 h6 seats (modelled D40.0) z -8 ... 62: rotor_1 z -8 ... 24, seal
+  spacer z 24 ... 38, rotor_2 z 38 ... 62; integral D46 x 6 shoulder z 62 ... 68 whose front face
+  z 62 is the rotor_2 rear stop; D40 drum z 68 ... 254. Rear flange D60 x 8 at z 254 ... 262 with
+  6 x M5 tapped holes on PCD 50 and a D44 H7 x 2 recess in its rear face for the coupling-hub
+  spigot. Bore D28 from z -30 through the flange (inferred start; the source's z -45 would cut
+  through the D25 journal), 4 mm wall under the D36 neck. Revision 1 (reviewer notes): the rotor
+  stack loads from the front against the z 62 shoulder and the stack nut clamps it at z -8.
+units:
+  length: mm
+  angle: deg
+material: "17-4PH H1025"
+density_kg_m3: 7800
+process: "turning, grinding of journals and seats, bore honed; flange holes drilled and tapped"
+release_status: reconstruction
+
+frame:
+  origin: "on the spin axis at the rotor_1 leading-edge plane (assembly z 0); the thread-to-seat step is at z -8, the shoulder front face at z 62 and the flange rear face at z 262"
+  axes:
+    x: "parallel to the assembly x (engine up); bolt hole 1 of the flange pattern lies on +x"
+    y: "completes a right-handed frame (parallel to the assembly y)"
+    z: "along the spin axis, flow direction: nose thread at z -90, coupling flange at z 262"
+  datums:
+    - name: A
+      description: "spin axis: the common axis of the D25 journal and the D40 rotor seats (the z axis); rotorSpin revolute joint axis +z through the origin"
+    - name: B
+      description: "shoulder front face z 62, normal -z: rotor_2 rear stop (the stack bears on it from the front)"
+    - name: C
+      description: "journal step face z -40 (D25/D36), normal -z: front bearing inner-race spacer abutment"
+    - name: D
+      description: "flange rear face z 262, normal +z: coupling-hub face (couplingOnDrum parent frame in the full engine)"
+    - name: E
+      description: "rigid mount stations: stackNutOnDrum z -18 on the D39 thread, rotor1OnDrum z 0, spacerOnDrum z 24 and rotor2OnDrum z 42 on the D40 seat (all on the axis, axis +z)"
+
+envelope:
+  min: [-30, -30, -90]
+  max: [30, 30, 262]
+  tolerance: 0.1
+
+parameters:
+  - name: shaftFrontZ
+    value: -90
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1, drum shaft row: thread M20 x 1 (LH) z -90 ... -75"
+    tolerance: 0.01
+    description: "front end face of the nose thread"
+  - name: journalFrontZ
+    value: -75
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: journal z -75 ... -40, thread z -90 ... -75"
+    tolerance: 0.01
+    description: "nose thread to journal step"
+  - name: journalRearZ
+    value: -40
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: journal z -75 ... -40; revision 1 reviewer notes, change 1: the bearing spacer bears on the D25/D36 step at z -40"
+    tolerance: 0.01
+    description: "journal to neck step (bearing spacer abutment)"
+  - name: shoulderFrontZ
+    value: 62
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 1 (approved; supersedes guide section 8.1 z -14 ... -8): integral shoulder D46 x 6 at z 62 ... 68"
+    tolerance: 0.01
+    description: "shoulder front face, rotor_2 rear stop (rotor_2 disc rear face z 62)"
+  - name: shoulderRearZ
+    value: 68
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 1: shoulder at z 62 ... 68"
+    tolerance: 0.01
+    description: "shoulder rear face, start of the aft D40 drum"
+  - name: nutThreadFrontZ
+    value: -18
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 1 (supersedes guide section 8.1 z 62 ... 72): M39 x 1.5 thread at z -18 ... -8"
+    tolerance: 0.01
+    description: "front end of the stack-nut thread (end of the D36 neck)"
+  - name: nutThreadRearZ
+    value: -8
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 1: thread z -18 ... -8; rotor_1 disc front face z -8"
+    tolerance: 0.01
+    description: "rear end of the stack-nut thread, step up to the D40 seat (rotor_1 front face plane)"
+  - name: flangeFrontZ
+    value: 254
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: flange D60 x 8 at z 254 ... 262"
+    tolerance: 0.01
+    description: "flange front face (end of the D40 drum)"
+  - name: shaftRearZ
+    value: 262
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: flange at z 254 ... 262; section 14.1: coupling flange (z 262)"
+    tolerance: 0.01
+    description: "flange rear face, rear end of the shaft"
+  - name: boreStartZ
+    value: -30
+    unit: mm
+    provenance: inferred
+    source: "user intent: bore D28 from z -30 through the flange"
+    rationale: "the guide's tube runs from z -45, but a D28 bore there would cut through the D25 journal (ends at z -40) and split the shaft; the intent moves the blind end to z -30, leaving a 10 mm solid web behind the journal step"
+    tolerance: 1.0
+    description: "flat floor of the blind D28 bore"
+    edit_test:
+      delta: 10
+      expect:
+        volume_delta: 6157.5
+        direction: increase
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [-35, -30, -20]
+      infeasible_deltas: [-15]
+  - name: noseThreadDia
+    value: 20
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: thread M20 x 1 (LH); intent: modelled as a plain D20"
+    tolerance: 0.01
+    description: "nose thread, nominal major diameter, no thread form"
+  - name: journalDia
+    value: 25
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: D25 h5 journal; intent: modelled D25.0"
+    tolerance: 0.01
+    description: "front bearing journal"
+  - name: drumDia
+    value: 40
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: tube D40 h6; intent: modelled D40.0"
+    tolerance: 0.01
+    description: "drum outer diameter (rotor_1, seal spacer and rotor_2 seats, aft drum)"
+  - name: neckDia
+    value: 36
+    unit: mm
+    provenance: stated
+    source: "revision 1 reviewer notes, change 1: the drum is D36 between the front-bearing step (z -40) and the thread (z -18) so the nut passes over it"
+    tolerance: 0.01
+    description: "neck diameter z -40 ... -18 (4 mm wall over the D28 bore from z -30)"
+  - name: shoulderDia
+    value: 46
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: shoulder D46 x 6; revision 1 moves it to z 62 ... 68"
+    tolerance: 0.01
+    description: "rotor_2 rear-stop shoulder"
+  - name: nutThreadDia
+    value: 39
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: thread M39 x 1.5 (revision 1: at z -18 ... -8); intent: modelled as a plain D39"
+    tolerance: 0.01
+    description: "stack-nut thread, nominal major diameter, no thread form"
+  - name: flangeDia
+    value: 60
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: flange D60 x 8"
+    tolerance: 0.01
+    description: "rear flange outer diameter"
+  - name: boreDia
+    value: 28
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: tube D40 h6 x D28"
+    tolerance: 0.01
+    description: "drum bore"
+    edit_test:
+      delta: 2
+      expect:
+        volume_delta: -26420.8
+        direction: decrease
+        bbox_delta: [0, 0, 0]
+        tolerance_rel: 0.02
+      sweep:
+        values: [24, 28, 32]
+      infeasible_deltas: [12]
+  - name: recessDia
+    value: 44
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: D44 H7 x 2 recess in the flange rear face"
+    tolerance: 0.01
+    description: "coupling-hub spigot recess diameter (modelled D44.0)"
+  - name: recessDepth
+    value: 2
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: D44 H7 x 2 recess"
+    tolerance: 0.01
+    description: "recess depth from the flange rear face"
+  - name: boltCircleDia
+    value: 50
+    unit: mm
+    provenance: stated
+    source: "guide section 8.1: 6 x M5 on PCD 50"
+    tolerance: 0.01
+    description: "flange bolt pitch circle"
+  - name: boltCount
+    value: 6
+    unit: ""
+    provenance: stated
+    source: "guide section 8.1: 6 x M5 on PCD 50"
+    tolerance: 0.01
+    description: "number of tapped flange holes, equally spaced"
+  - name: boltHoleDia
+    value: 4.2
+    unit: mm
+    provenance: defaulted
+    rationale: "M5 x 0.8 tapped holes modelled as their ISO 2306 tap-drill diameter (thread form is cosmetic); the source gives only the thread size"
+    tolerance: 0.1
+    description: "modelled diameter of the M5 tapped holes"
+  - name: boltStartAngle
+    value: 0
+    unit: deg
+    provenance: inferred
+    rationale: "the source does not clock the pattern; the guide's flange patterns put one hole on +x (case-r1, comb-outer-case), so hole 1 is on +x and the rest follow every 60 deg"
+    tolerance: 1.0
+    description: "angle of bolt hole 1 from +x about +z"
+
+features:
+  - id: noseThread
+    kind: revolve
+    description: "M20 x 1 LH nose-nut and starter-clutch thread z -90 ... -75, modelled as a plain D20 cylinder; solid (the bore starts at z -30)"
+    parameters: [shaftFrontZ, journalFrontZ, noseThreadDia]
+    verify:
+      - method: cylinder
+        cylinder: noseThread
+      - method: face
+        face: frontEnd
+      - method: section
+        section: secNose
+      - method: solid
+        points: [[0, 0, -82.5]]
+      - method: void
+        points: [[0, 11.5, -82.5]]
+  - id: frontJournal
+    kind: revolve
+    description: "D25 h5 front bearing journal z -75 ... -40 (modelled D25.0), solid"
+    parameters: [journalFrontZ, journalRearZ, journalDia]
+    verify:
+      - method: cylinder
+        cylinder: frontJournal
+      - method: face
+        face: threadStep
+      - method: face
+        face: journalStep
+      - method: dimension
+        dimension: journalSpan
+      - method: section
+        section: secJournal
+      - method: solid
+        points: [[0, 0, -57.5]]
+      - method: void
+        points: [[0, 16, -57.5]]
+  - id: drum
+    kind: revolve
+    description: "D40 h6 drum (modelled D40.0) in two runs: the rotor/spacer seat z -8 ... 62 and z 68 ... 254 behind the shoulder"
+    parameters: [nutThreadRearZ, shoulderFrontZ, shoulderRearZ, flangeFrontZ, drumDia]
+    verify:
+      - method: cylinder
+        cylinder: drumSeat
+      - method: cylinder
+        cylinder: drumAft
+      - method: dimension
+        dimension: seatSpan
+      - method: section
+        section: secSeat
+      - method: section
+        section: secDrumAft
+      - method: solid
+        points: [[17, 0, 10], [0, 17, 160]]
+  - id: neck
+    kind: revolve
+    description: "D36 neck z -40 ... -18 between the front-bearing step and the stack-nut thread, so the ID 39 nut passes over it; solid ahead of the bore floor (z -30), 4 mm wall over the bore behind it"
+    parameters: [journalRearZ, nutThreadFrontZ, neckDia]
+    verify:
+      - method: cylinder
+        cylinder: drumNeck
+      - method: face
+        face: journalStep
+      - method: dimension
+        dimension: neckSpan
+      - method: section
+        section: secWeb
+      - method: section
+        section: secNeck
+      - method: solid
+        points: [[16, 0, -24]]
+      - method: void
+        points: [[0, 19, -30]]
+  - id: shoulder
+    kind: revolve
+    description: "D46 x 6 shoulder z 62 ... 68; its front face z 62 is the rotor_2 rear stop, inside the rotor_2 rear seal sleeve (ID 60)"
+    parameters: [shoulderFrontZ, shoulderRearZ, shoulderDia]
+    verify:
+      - method: cylinder
+        cylinder: shoulderRim
+      - method: face
+        face: shoulderStop
+      - method: face
+        face: shoulderRear
+      - method: dimension
+        dimension: shoulderSpan
+      - method: section
+        section: secShoulder
+      - method: solid
+        points: [[21.5, 0, 65]]
+      - method: void
+        points: [[21.5, 0, 72]]
+  - id: nutThread
+    kind: revolve
+    description: "M39 x 1.5 stack-nut thread z -18 ... -8, modelled as a plain D39 band (1.5 mm radial step above the D36 neck at its front, 0.5 mm below the D40 seat at its rear)"
+    parameters: [nutThreadFrontZ, nutThreadRearZ, nutThreadDia]
+    verify:
+      - method: cylinder
+        cylinder: nutThread
+      - method: face
+        face: nutThreadFront
+      - method: face
+        face: seatStep
+      - method: dimension
+        dimension: nutThreadSpan
+      - method: section
+        section: secNutThread
+      - method: solid
+        points: [[16.75, 0, -13]]
+      - method: void
+        points: [[21.5, 0, -11]]
+  - id: flange
+    kind: revolve
+    description: "D60 x 8 rear coupling flange z 254 ... 262"
+    parameters: [flangeFrontZ, shaftRearZ, flangeDia]
+    verify:
+      - method: cylinder
+        cylinder: flangeRim
+      - method: face
+        face: flangeFront
+      - method: face
+        face: flangeRear
+      - method: dimension
+        dimension: flangeSpan
+      - method: dimension
+        dimension: overallWidthX
+      - method: bbox
+      - method: solid
+        points: [[0, 27, 257]]
+  - id: couplingRecess
+    kind: pocket
+    description: "D44 H7 x 2 recess (modelled D44.0) in the flange rear face z 260 ... 262 for the coupling-hub spigot; the bore opens into its floor"
+    parameters: [recessDia, recessDepth, shaftRearZ]
+    verify:
+      - method: cylinder
+        cylinder: couplingRecess
+      - method: face
+        face: recessFloor
+      - method: dimension
+        dimension: recessSpan
+      - method: section
+        section: secRecess
+  - id: boltHoles
+    kind: pattern
+    description: "6 x M5 tapped holes through the flange (z 254 ... 262) on PCD 50, modelled as D4.2 tap-drill through holes, hole 1 on +x, then every 60 deg"
+    parameters: [boltCircleDia, boltCount, boltHoleDia, boltStartAngle, flangeFrontZ, shaftRearZ]
+    count: 6
+    verify:
+      - method: cylinder
+        cylinder: boltHole1
+      - method: cylinder
+        cylinder: boltHole2
+      - method: cylinder
+        cylinder: boltHole3
+      - method: cylinder
+        cylinder: boltHole4
+      - method: cylinder
+        cylinder: boltHole5
+      - method: cylinder
+        cylinder: boltHole6
+      - method: section
+        section: secFlange
+      - method: void
+        points: [[25, 0, 258], [12.5, 21.6506, 258], [-12.5, 21.6506, 258], [-25, 0, 258], [-12.5, -21.6506, 258], [12.5, -21.6506, 258]]
+  - id: bore
+    kind: hole
+    description: "D28 blind bore from a flat floor at z -30 through the flange into the recess floor (z 260); z -40 ... -30 stays solid"
+    parameters: [boreDia, boreStartZ, shaftRearZ]
+    verify:
+      - method: cylinder
+        cylinder: bore
+      - method: face
+        face: boreFloor
+      - method: section
+        section: secWeb
+      - method: section
+        section: secSeat
+      - method: solid
+        points: [[0, 0, -35]]
+      - method: void
+        points: [[0, 0, -28], [0, 0, 100]]
+
+interfaces:
+  - name: spinAxis
+    description: "rotorSpin revolute joint (parent case-r1): axis +z through the own-frame origin; carried by the coaxial D25 journal and D40 seat; no edit test moves either"
+    must_not_change: true
+    checks: [frontJournal, drumSeat]
+  - name: rotorSeat
+    description: "rigid mounts rotor1OnDrum (z 0), spacerOnDrum (z 24) and rotor2OnDrum (z 42) on the D40 seat z -8 ... 62; rotor_2 stops on the shoulder front face z 62 and the stack nut clamps rotor_1 at z -8; the rotor stack (32 + 14 + 24) fills the 70 mm seat"
+    must_not_change: true
+    checks: [drumSeat, shoulderStop, seatSpan]
+  - name: frontBearing
+    description: "front bearing pair on the D25 journal z -75 ... -40; the inner-race spacer bears on the D25/D36 step face z -40"
+    must_not_change: true
+    checks: [frontJournal, journalStep, journalSpan]
+  - name: noseNut
+    description: "nose nut and starter clutch cup on the M20 x 1 LH thread (modelled D20) z -90 ... -75"
+    must_not_change: true
+    checks: [noseThread, frontEnd]
+  - name: stackNut
+    description: "stackNutOnDrum rigid mount at z -18: the stack nut passes over the D36 neck and runs on the M39 x 1.5 thread (modelled D39) z -18 ... -8, its rear face clamping rotor_1 at z -8"
+    must_not_change: true
+    checks: [nutThread, nutThreadSpan, drumNeck]
+  - name: couplingFlange
+    description: "coupling-hub interface of the full engine: flange rear face z 262, D44 x 2 spigot recess and 6 tapped holes on PCD 50; the bore edits change none of these"
+    must_not_change: true
+    checks: [flangeRear, couplingRecess, boltHole1, boltHole2, boltHole3, boltHole4, boltHole5, boltHole6]
+
+acceptance:
+  volume:
+    expected: 228247.9
+    tolerance_rel: 0.002
+    provenance: derived
+    note: "outer stepped revolve pi*sum(r^2*L) = 410522.1 (r 10x15, 12.5x35, 18x22, 19.5x10, 20x70, 23x6, 20x186, 30x8) minus bore pi*14^2*292 (z -30 ... 262), recess annulus pi*(22^2-14^2)*2 and 6 holes 6*pi*2.1^2*8"
+  surface_area:
+    expected: 74668.4
+    tolerance_rel: 0.005
+    provenance: derived
+    note: "outer cylinders 2*pi*sum(r*L) + annular step faces (z -75, -40, -18, -8, 62, 68) + end faces net of the 6 holes + bore wall 2*pi*14*290 + bore floor + recess wall 2*pi*22*2 + recess floor + 6 hole walls 2*pi*2.1*8"
+  center_of_mass:
+    expected: [0, 0, 99.928]
+    tolerance: 0.1
+    provenance: derived
+    note: "x = y = 0 by the 6-fold hole pattern; z = sum(V_i*z_i)/V over the same solids and voids as the volume"
+  solid_count: 1
+  sections:
+    - id: secNose
+      plane: z
+      at: -82.5
+      expect:
+        area: 314.159
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "solid D20 nose thread"
+    - id: secJournal
+      plane: z
+      at: -57.5
+      expect:
+        area: 490.874
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "solid D25 journal"
+    - id: secWeb
+      plane: z
+      at: -35
+      expect:
+        area: 1017.876
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 0
+      description: "solid D36 web between the journal step (z -40) and the bore floor (z -30)"
+    - id: secNeck
+      plane: z
+      at: -24
+      expect:
+        area: 402.124
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "D36 x D28 neck tube, 4 mm wall"
+    - id: secNutThread
+      plane: z
+      at: -13
+      expect:
+        area: 578.838
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "D39 x D28 tube under the stack-nut thread"
+    - id: secSeat
+      plane: z
+      at: 10
+      expect:
+        area: 640.885
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "D40 x D28 tube at the rotor_1 seat"
+    - id: secShoulder
+      plane: z
+      at: 65
+      expect:
+        area: 1046.150
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "D46 shoulder over the D28 bore"
+    - id: secDrumAft
+      plane: z
+      at: 160
+      expect:
+        area: 640.885
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 1
+      description: "D40 x D28 tube behind the shoulder"
+    - id: secFlange
+      plane: z
+      at: 257
+      expect:
+        area: 2128.555
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 7
+      description: "D60 flange with the D28 bore and the 6 bolt holes"
+    - id: secRecess
+      plane: z
+      at: 261
+      expect:
+        area: 1223.776
+        area_tolerance_rel: 0.005
+        loops: 1
+        holes: 7
+      description: "flange ring r 22 ... 30 around the D44 recess with the 6 bolt holes"
+  faces:
+    - name: frontEnd
+      plane: z
+      at: -90
+      normal: "-"
+      area: 314.159
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: threadStep
+      plane: z
+      at: -75
+      normal: "-"
+      area: 176.715
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: journalStep
+      plane: z
+      at: -40
+      normal: "-"
+      area: 527.002
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: boreFloor
+      plane: z
+      at: -30
+      normal: "+"
+      area: 615.752
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: nutThreadFront
+      plane: z
+      at: -18
+      normal: "-"
+      area: 176.715
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: seatStep
+      plane: z
+      at: -8
+      normal: "-"
+      area: 62.046
+      area_tolerance_rel: 0.01
+      center: [0, 0]
+      mode: one
+    - name: shoulderStop
+      plane: z
+      at: 62
+      normal: "-"
+      area: 405.265
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: shoulderRear
+      plane: z
+      at: 68
+      normal: "+"
+      area: 405.265
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: flangeFront
+      plane: z
+      at: 254
+      normal: "-"
+      area: 1487.670
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: recessFloor
+      plane: z
+      at: 260
+      normal: "+"
+      area: 904.779
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+    - name: flangeRear
+      plane: z
+      at: 262
+      normal: "+"
+      area: 1223.776
+      area_tolerance_rel: 0.005
+      center: [0, 0]
+      mode: one
+  cylinders:
+    - name: noseThread
+      point: [0, 0, -90]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 20
+      radius_tolerance: 0.02
+      length: 15
+      length_tolerance: 0.1
+      t_range: [0, 15]
+      description: "M20 nose thread, plain D20"
+    - name: frontJournal
+      point: [0, 0, -75]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 25
+      radius_tolerance: 0.02
+      length: 35
+      length_tolerance: 0.1
+      t_range: [0, 35]
+      description: "D25 h5 front bearing journal"
+    - name: drumNeck
+      point: [0, 0, -40]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 36
+      radius_tolerance: 0.02
+      length: 22
+      length_tolerance: 0.1
+      t_range: [0, 22]
+      description: "D36 neck between the journal step and the stack-nut thread"
+    - name: nutThread
+      point: [0, 0, -18]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 39
+      radius_tolerance: 0.02
+      length: 10
+      length_tolerance: 0.1
+      t_range: [0, 10]
+      description: "M39 x 1.5 stack-nut thread, plain D39"
+    - name: drumSeat
+      point: [0, 0, -8]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 40
+      radius_tolerance: 0.02
+      length: 70
+      length_tolerance: 0.1
+      t_range: [0, 70]
+      description: "D40 seat for rotor_1 (z -8 ... 24), seal spacer (24 ... 38) and rotor_2 (38 ... 62)"
+    - name: shoulderRim
+      point: [0, 0, 62]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 46
+      radius_tolerance: 0.02
+      length: 6
+      length_tolerance: 0.1
+      t_range: [0, 6]
+      description: "D46 rotor_2 stop shoulder"
+    - name: drumAft
+      point: [0, 0, 68]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 40
+      radius_tolerance: 0.02
+      length: 186
+      length_tolerance: 0.1
+      t_range: [0, 186]
+      description: "D40 drum from the shoulder to the flange"
+    - name: flangeRim
+      point: [0, 0, 254]
+      direction: [0, 0, 1]
+      kind: pin
+      diameter: 60
+      radius_tolerance: 0.02
+      length: 8
+      length_tolerance: 0.1
+      t_range: [0, 8]
+      description: "D60 flange rim"
+    - name: bore
+      point: [0, 0, 260]
+      direction: [0, 0, -1]
+      kind: hole
+      diameter: 28
+      radius_tolerance: 0.02
+      length: 290
+      length_tolerance: 0.2
+      t_range: [0, 290]
+      description: "D28 bore from its mouth in the recess floor (z 260) forward to its flat floor at z -30"
+    - name: couplingRecess
+      point: [0, 0, 262]
+      direction: [0, 0, -1]
+      kind: hole
+      diameter: 44
+      radius_tolerance: 0.02
+      length: 2
+      length_tolerance: 0.05
+      description: "D44 H7 x 2 coupling-hub spigot recess, mouth in the flange rear face z 262, floor z 260"
+    - name: boltHole1
+      point: [25, 0, 254]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.05
+      length: 8
+      length_tolerance: 0.1
+      t_range: [0, 8]
+      description: "M5 tapped hole at 0 deg (+x), PCD 50"
+    - name: boltHole2
+      point: [12.5, 21.6506, 254]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.05
+      length: 8
+      length_tolerance: 0.1
+      t_range: [0, 8]
+      description: "M5 tapped hole at 60 deg, PCD 50"
+    - name: boltHole3
+      point: [-12.5, 21.6506, 254]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.05
+      length: 8
+      length_tolerance: 0.1
+      t_range: [0, 8]
+      description: "M5 tapped hole at 120 deg, PCD 50"
+    - name: boltHole4
+      point: [-25, 0, 254]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.05
+      length: 8
+      length_tolerance: 0.1
+      t_range: [0, 8]
+      description: "M5 tapped hole at 180 deg, PCD 50"
+    - name: boltHole5
+      point: [-12.5, -21.6506, 254]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.05
+      length: 8
+      length_tolerance: 0.1
+      t_range: [0, 8]
+      description: "M5 tapped hole at 240 deg, PCD 50"
+    - name: boltHole6
+      point: [12.5, -21.6506, 254]
+      direction: [0, 0, 1]
+      kind: hole
+      diameter: 4.2
+      radius_tolerance: 0.05
+      length: 8
+      length_tolerance: 0.1
+      t_range: [0, 8]
+      description: "M5 tapped hole at 300 deg, PCD 50"
+  dimensions:
+    - name: overallLengthZ
+      axis: z
+      expected: 352
+      tolerance: 0.1
+      description: "bbox extent z -90 ... 262"
+    - name: overallWidthX
+      axis: x
+      expected: 60
+      tolerance: 0.1
+      description: "bbox extent along x = flange diameter"
+    - name: journalSpan
+      axis: z
+      expected: 35
+      tolerance: 0.05
+      between: [threadStep, journalStep]
+      description: "D25 journal length z -75 ... -40"
+    - name: shoulderSpan
+      axis: z
+      expected: 6
+      tolerance: 0.05
+      between: [shoulderStop, shoulderRear]
+      description: "shoulder width z 62 ... 68"
+    - name: seatSpan
+      axis: z
+      expected: 70
+      tolerance: 0.05
+      between: [seatStep, shoulderStop]
+      description: "rotor stack seat z -8 ... 62 (rotor_1 32 + seal spacer 14 + rotor_2 24)"
+    - name: nutThreadSpan
+      axis: z
+      expected: 10
+      tolerance: 0.05
+      between: [nutThreadFront, seatStep]
+      description: "stack-nut thread length z -18 ... -8"
+    - name: flangeSpan
+      axis: z
+      expected: 8
+      tolerance: 0.05
+      between: [flangeFront, flangeRear]
+      description: "flange thickness z 254 ... 262"
+    - name: recessSpan
+      axis: z
+      expected: 2
+      tolerance: 0.05
+      between: [recessFloor, flangeRear]
+      description: "recess depth z 260 ... 262"
+    - name: neckSpan
+      axis: z
+      expected: 22
+      tolerance: 0.05
+      between: [journalStep, nutThreadFront]
+      description: "D36 neck length z -40 ... -18"
+  solids:
+    - name: shaft
+      contains_point: [17, 0, 10]
+      description: "the single turned solid"
+  probes:
+    - name: inMaterial
+      state: solid
+      points: [[0, 0, -82.5], [0, 0, -57.5], [0, 0, -35], [16, 0, -24], [16.75, 0, -13], [17, 0, 10], [21.5, 0, 65], [0, 17, 160], [0, 27, 257]]
+    - name: inVoid
+      state: void
+      points: [[0, 11.5, -82.5], [0, 16, -57.5], [0, 19, -30], [0, 0, -28], [21.5, 0, -11], [21.5, 0, 72], [0, 0, 100], [25, 0, 258], [12.5, 21.6506, 258], [-12.5, 21.6506, 258], [-25, 0, 258], [-12.5, -21.6506, 258], [12.5, -21.6506, 258]]
+  cylinder_counts:
+    - name: boltHoleCount
+      diameter: 4.2
+      radius_tolerance: 0.05
+      kind: hole
+      direction: [0, 0, 1]
+      region: [[-30, -30, 253], [30, 30, 263]]
+      expected: 6
+      description: "the six flange holes on PCD 50"
+  blockout:
+    volume_min: 390000
+    volume_max: 431000
+
+references:
+  - path: sources/axjet_design_and_implementation_guide.md
+    kind: text
+    role: authoritative
+    sha256: c40b531fa23522311faeef914583f07ccabf09f123bd24fbb9fe16b467501490
+    units: mm
+    revision: "AXJET-220 design and implementation guide (as supplied); sections 3, 8.1, 11, 12, 14.1"
+    note: "drum shaft row of section 8.1, drum-shaft row and joints of the section 14.1 parts table"
+
+open_questions:
+  - "Changed (revision 1, reviewer notes): the D46 x 6 shoulder moves from z -14 ... -8 to z 62 ... 68 (rotor_2 rear stop), the M39 x 1.5 thread (plain D39) moves from z 62 ... 72 to z -18 ... -8, and the drum between the front-bearing step and the thread becomes a D36 neck (z -40 ... -18; the spacer now bears on the D25/D36 step); stackNutOnDrum moves to z -18. Reason: with an integral shoulder at z -14 and the integral D60 flange, the D40-bore blisks and spacer could not be fitted from either end and the ID 39 nut could not pass the D40 drum to reach its thread; the stack now loads from the front against the z 62 shoulder. Volume, area, centre of mass, sections, faces, cylinders, spans, probes and the blockout band are recomputed."
+  - "Bore start: the guide says the D28 tube runs from z -45, which would cut through the D25 journal (ends at z -40); the intent's z -30 (10 mm solid web behind the journal step) is inferred, not stated."
+  - "Bore floor form (flat vs drill point) and the bore's exit through the flange are not stated; modelled as a flat floor at z -30 and a plain bore opening into the recess floor."
+  - "M5 tapped holes: depth (through vs blind) and modelled diameter are not stated; modelled as D4.2 tap-drill holes through the 8 mm flange. Their edge lies 0.9 mm outside the D44 recess wall."
+  - "Bolt-pattern clocking is not stated; hole 1 on +x (guide convention for flange patterns) must match the coupling hub of the full engine."
+  - "Fits are modelled at nominal size (D25 h5, D40 h6, D44 H7 as 25.0, 40.0, 44.0); rotor bores D40 H6 with 10 um interference will show as coincident surfaces in the assembly."
+  - "Threads (M20 x 1 LH, M39 x 1.5) are plain cylinders at the major diameter; thread run-outs, undercuts, edge chamfers and fillets at the steps are not given and are not modelled."
+  - "Mass: the modelled shaft is 1.78 kg at 7800 kg/m3, above the guide's 1.6 kg budget for 'drum shaft, nuts, spacers' combined (section 12, an estimate)."

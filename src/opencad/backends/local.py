@@ -487,6 +487,26 @@ class LocalPythonEngine:
             return {"ok": False, "version": None, "error": (r.stderr or r.stdout)[:400], "class": "program"}
         return {"ok": True, "version": r.stdout.strip(), "error": None}
 
+    def _argv(
+        self,
+        entry: Path,
+        *,
+        analyze: Path | None,
+        export_step: Path | None,
+        export_stl: Path | None,
+        out_json: Path,
+    ) -> list[str]:
+        """The runner command line: this interpreter and `python -I -m <module>`; an engine on another interpreter overrides it."""
+        return runner_argv(
+            venv_python(),
+            self.module,
+            entry,
+            analyze=analyze,
+            export_step=export_step,
+            export_stl=export_stl,
+            extra=["--out", str(out_json)],
+        )
+
     def _run(
         self,
         entry: Path,
@@ -499,14 +519,12 @@ class LocalPythonEngine:
     ) -> dict[str, Any]:
         out_json = Path(tempfile.mkdtemp(prefix="opencad-run-")) / "out.json"
         entry = Path(entry).resolve()  # the runner starts in entry.parent: a relative entry or output path would land under it
-        argv = runner_argv(
-            venv_python(),
-            self.module,
+        argv = self._argv(
             entry,
             analyze=Path(analyze).resolve() if analyze else out_json,
             export_step=Path(export_step).resolve() if export_step else None,
             export_stl=Path(export_stl).resolve() if export_stl else None,
-            extra=["--out", str(out_json)],
+            out_json=out_json,
         )
         row = run_script(argv, backend_id=self.id, cwd=entry.parent, timeout=timeout, lock=lock, payload=out_json)
         payload: dict[str, Any] = {}

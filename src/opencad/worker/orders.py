@@ -31,7 +31,7 @@ DISPATCH_FILE = "dispatch.json"
 DONE_FILE = "done"
 LEDGER_FILE = "engine-ledger.jsonl"
 REPORT_SECTIONS = ("Result", "Files changed", "Verification", "Open questions")
-LOCAL_CAD_BACKENDS = ("cadquery", "build123d", "freecad")
+LOCAL_CAD_BACKENDS = ("cadquery", "build123d", "freecad", "prism")
 
 
 def _memory_line() -> str:
@@ -203,9 +203,12 @@ def idle_seconds(order: WorkOrder, now: float | None = None) -> float:
     return max(0.0, (now if now is not None else time.time()) - last_activity(order))
 
 
-def record_dispatch(order: WorkOrder, agent_id: str, model: str = "inherit", finished: bool = False) -> Path:
+def record_dispatch(
+    order: WorkOrder, agent_id: str, model: str = "inherit", finished: bool = False, usage: dict[str, Any] | None = None
+) -> Path:
     """The orchestrator's record of which agent ran the turn (resume identity and the model on the telemetry row). Every call
-    without `finished` is a dispatch; a second one is a re-dispatch after an interrupted worker."""
+    without `finished` is a dispatch; a second one is a re-dispatch after an interrupted worker. `usage` (input, cached, output,
+    reasoning, mode) is the host's token record for the turn when it has one; `complete()` puts it on the turn row."""
     prev = (load_json(order.dispatch_path) if order.dispatch_path.exists() else {}) or {}
     now = utc_now()
     data = {
@@ -220,6 +223,10 @@ def record_dispatch(order: WorkOrder, agent_id: str, model: str = "inherit", fin
             *(prev.get("dispatches") or []),
             {"agent_id": agent_id, "at": now, "ts": round(time.time(), 3)},
         ]
+    if usage:
+        data["usage"] = {k: int(usage.get(k) or 0) for k in ("input", "cached", "output", "reasoning")}
+        data["usage_mode"] = str(usage.get("mode") or "")
+        data["usage_detail"] = {k: v for k, v in usage.items() if k not in ("input", "cached", "output", "reasoning", "mode")}
     dump_json(order.dispatch_path, data)
     return order.dispatch_path
 
@@ -602,7 +609,7 @@ def complete(order: WorkOrder) -> WorkerResult:
         exit_code=0 if not failure else 1,
         seconds=seconds,
         commands=int(metrics.get("commands") or 0),
-        usage={},
+        usage=dict(dispatch.get("usage") or {}),
         run_dir=order.dir,
         result_md=result_md,
         failure=failure,
@@ -613,6 +620,7 @@ def complete(order: WorkOrder) -> WorkerResult:
         order_id=order.id,
         metrics=metrics,
         fallback_from=order.context.get("fallback_from"),
+        usage_mode=str(dispatch.get("usage_mode") or ""),
     )
     order.status = "done" if not failure else "failed"
     order.finished_at = utc_now()

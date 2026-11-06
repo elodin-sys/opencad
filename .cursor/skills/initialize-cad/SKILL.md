@@ -39,7 +39,9 @@ are worker turns; meshes and tables go through the deterministic ingest commands
 Environment: `source .venv/bin/activate` from the repository root (create it with
 `scripts/setup_env.sh`). `python -m opencad preflight --backend <id>` must pass; a
 preflight failure stops the run. Zoo login is only required for `--backend zoo` (account
-exhausted — prefer a local backend). `codex --version` only when `--worker codex` is used.
+exhausted — prefer a local backend: cadquery, build123d, freecad, or prism, which builds in
+Prism's managed python-env). `codex --version` only when `--worker codex` is used. From Prism,
+worker turns are `spawn_sub_agent` calls (`.cursor/skills/cad-drive`, "Prism host").
 
 ## 1. Resolve and guard
 

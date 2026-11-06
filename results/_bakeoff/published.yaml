@@ -1,14 +1,14 @@
 entries:
 - part: bracket
-  date: '2026-10-14'
+  date: '2026-11-06'
   tags:
     cadquery: bakeoff-astra
     build123d: bakeoff-astra
     freecad: bakeoff-astra
     zoo: bakeoff-astra
-  note: All 4 backends pass every applicable gate. Zoo credits for this cell were
-    not kept (a later run on the same part replaced its cost.json); docs/bake-off-experiments.md
-    records 97 credits, $0.80.
+    prism: prism-astra
+  note: All 5 backends pass every applicable gate. prism tokens and USD are estimated
+    from Prism's thread record (hidden reasoning excluded; lower bounds).
   backends:
     cadquery:
       verdict: PASS
@@ -58,6 +58,25 @@ entries:
       worker_s: 187
       evaluator_s: 19
       wall_s: 206
+    prism:
+      date: '2026-11-06'
+      verdict: PASS
+      passed: 11
+      failed: 0
+      not_applicable: 1
+      failed_gates: []
+      turns: 2
+      tokens_input: 3404853
+      tokens_cached: 3290249
+      tokens_output: 15646
+      codex_usd: 10.4372
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 594
+      evaluator_s: 20
+      wall_s: 614
+      estimated: true
+      usage_mode: prism-estimate
     zoo:
       verdict: PASS
       passed: 11
@@ -75,13 +94,15 @@ entries:
       evaluator_s: 22
       wall_s: 423
 - part: aleph-stack-case
-  date: '2026-10-16'
+  date: '2026-11-06'
   tags:
     cadquery: bakeoff-astra
     build123d: bakeoff-astra
     freecad: bakeoff-astra
     zoo: bakeoff-astra
-  note: Every backend fails `features`.
+    prism: prism-astra
+  note: Every backend fails `features`. prism tokens and USD are estimated from Prism's
+    thread record (hidden reasoning excluded; lower bounds).
   backends:
     cadquery:
       verdict: FAIL
@@ -134,6 +155,26 @@ entries:
       worker_s: 9239
       evaluator_s: 2823
       wall_s: 12062
+    prism:
+      date: '2026-11-06'
+      verdict: FAIL
+      passed: 10
+      failed: 1
+      not_applicable: 1
+      failed_gates:
+      - features
+      turns: 14
+      tokens_input: 46607183
+      tokens_cached: 45085700
+      tokens_output: 153318
+      codex_usd: 135.9329
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 5351
+      evaluator_s: 251
+      wall_s: 5602
+      estimated: true
+      usage_mode: prism-estimate
     zoo:
       verdict: FAIL
       passed: 10
@@ -152,13 +193,15 @@ entries:
       evaluator_s: 1248
       wall_s: 9231
 - part: benchy
-  date: '2026-10-17'
+  date: '2026-11-06'
   tags:
     cadquery: bakeoff-astra
     build123d: bakeoff-astra
     freecad: bakeoff-astra
     zoo: bakeoff-astra
-  note: All 4 backends pass every applicable gate.
+    prism: prism-astra
+  note: All 5 backends pass every applicable gate. prism tokens and USD are estimated
+    from Prism's thread record (hidden reasoning excluded; lower bounds).
   backends:
     cadquery:
       verdict: PASS
@@ -208,6 +251,25 @@ entries:
       worker_s: 1474
       evaluator_s: 36
       wall_s: 1510
+    prism:
+      date: '2026-11-06'
+      verdict: PASS
+      passed: 11
+      failed: 0
+      not_applicable: 1
+      failed_gates: []
+      turns: 2
+      tokens_input: 4346472
+      tokens_cached: 4195779
+      tokens_output: 17106
+      codex_usd: 13.116
+      zoo_credits: null
+      zoo_usd: null
+      worker_s: 1675
+      evaluator_s: 46
+      wall_s: 1721
+      estimated: true
+      usage_mode: prism-estimate
     zoo:
       verdict: PASS
       passed: 11

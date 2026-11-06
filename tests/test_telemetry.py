@@ -591,3 +591,36 @@ def test_concurrent_appends_keep_long_rows_whole(tmp_path: Path):
         t.join()
     rows = [json.loads(line) for line in path.read_text().splitlines()]
     assert len(rows) == 120 and all(len(r["pad"]) == 100_000 for r in rows)
+
+
+def test_restamp_turn_prices_a_hosted_turn_in_its_own_backend_files(tmp_path: Path):
+    """A Prism-hosted turn's usage lands on its own row (part, order, thread) in the part file and that backend's campaign file;
+    another backend's row with the same order id is untouched."""
+    prism = tmp_path / "prism" / "benchy"
+    other = tmp_path / "build123d" / "benchy"
+    for d in (prism, other):
+        d.mkdir(parents=True)
+    row = {"kind": "turn", "part": "benchy", "order_id": "002-model", "thread_id": "agent-1", "model": "gpt-6-astra", "seconds": 5}
+    stale = {**row, "thread_id": "agent-0"}
+    for path in (prism / "telemetry.jsonl", prism.parent / "_campaign" / "telemetry.jsonl", other / "telemetry.jsonl", other.parent / "_campaign" / "telemetry.jsonl"):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(stale) + "\n" + json.dumps(row) + "\n" + json.dumps({"kind": "stage", "part": "benchy", "stage": "verify"}) + "\n")
+    usage = {"input": 1_000_000, "cached": 900_000, "output": 5_000, "reasoning": 0, "mode": "prism-estimate"}
+    assert telemetry.restamp_turn("benchy", "002-model", usage, results_dir=prism, thread_id="agent-1") == 2
+    for path in (prism / "telemetry.jsonl", prism.parent / "_campaign" / "telemetry.jsonl"):
+        rows = [json.loads(line) for line in path.read_text().splitlines()]
+        hit = [r for r in rows if r.get("thread_id") == "agent-1"][0]
+        assert hit["tokens_input"] == 1_000_000 and hit["usage_mode"] == "prism-estimate" and hit["usd"] == 100_000 * 20e-6 + 900_000 * 2e-6 + 5_000 * 100e-6
+        assert "tokens_input" not in [r for r in rows if r.get("thread_id") == "agent-0"][0] and len(rows) == 3
+    for path in (other / "telemetry.jsonl", other.parent / "_campaign" / "telemetry.jsonl"):
+        assert "tokens_input" not in path.read_text()
+
+
+def test_turn_data_prices_a_hosted_turn_that_carries_usage():
+    """A Cursor/Prism-hosted turn gets token and USD fields when dispatch.json carried a usage record, and none otherwise."""
+    base = dict(thread_id="t", exit_code=0, seconds=10, commands=3, run_dir=Path("/tmp/x"), result_md="## Result\nok", backend="cursor",
+                role="model", model="gpt-6-astra", order_id="002-model")
+    plain = telemetry.turn_data(WorkerResult(usage={}, **base), budget_s=100)
+    assert "tokens_input" not in plain and "usd" not in plain
+    priced = telemetry.turn_data(WorkerResult(usage={"input": 100, "cached": 50, "output": 10, "reasoning": 0}, usage_mode="prism-estimate", **base), budget_s=100)
+    assert priced["tokens_input"] == 100 and priced["usage_mode"] == "prism-estimate" and priced["usd"] == pytest.approx(50 * 20e-6 + 50 * 2e-6 + 10 * 100e-6)
